@@ -1,0 +1,59 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.CommandModel>
+@{Layout = "_layout.cshtml";}
+
+@section MainContent
+{
+	<form action="/command" method="POST" enctype="multipart/form-data">
+		<div class="grid">
+			<div class="row">
+				<div class="span3">
+					<label>Command</label>
+					<input type="text" name="File">
+				</div>
+				<div class="span3">
+					<label>Arguments</label>
+					<input type="text" name="Arguments">
+				</div>
+				<div class="span3">
+					<label>&nbsp</label>
+					<input class="bg-blue fg-white" type="submit" value="Submit">
+				</div>
+			</div>
+		</div>
+	</form>
+
+	@if(Model != null){
+		@if(Model.outputTable != null){
+		    <table id="Output" class="table striped"> 
+		        <tbody>
+		            @foreach (string str in Model.outputTable)
+		            {
+		                <tr>
+		                    <td class="right">@str</td>
+		                </tr>
+		            }
+		        </tbody>
+		    </table>
+		}
+		<br />
+		@if(Model.errorTable != null){
+		    <table id="Error" class="table striped"> 
+		        <tbody>
+		            @foreach (string str in Model.errorTable)
+		            {
+		                <tr>
+		                    <td class="right">@str</td>
+		                </tr>
+		            }
+		        </tbody>
+		    </table>
+		}
+	}
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+    </script>
+}

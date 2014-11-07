@@ -1,0 +1,30 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<Antd.CpuinfoModel>>
+@{Layout = "_layout.cshtml";}
+
+@section MainContent
+{
+    <table id="cpuinfo" class="table striped"> 
+        <thead>
+            <tr>
+                <th class="text-left" style="width: 100px;" rowspan="2">CPUINFO</th>
+                <th class="text-left">&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Antd.CpuinfoModel row in Model)
+            {
+                <tr>
+                    <td class="right">@row.key</td>
+                    <td class="right">@row.value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+    </script>
+}
