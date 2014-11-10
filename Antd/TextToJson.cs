@@ -1,4 +1,13 @@
-﻿using System;
+﻿
+///-------------------------------------------------------------------------------------
+/// Copyright (c) 2014 Anthilla S.r.l. (http://www.anthilla.com)
+///
+/// Licensed under the BSD licenses.
+///
+/// 141110
+///-------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

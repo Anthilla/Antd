@@ -98,14 +98,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextToJson.cs" />
     <Compile Include="File\Meminfo.cs" />
-    <Compile Include="Models\MeminfoModel.cs" />
-    <Compile Include="Models\CpuinfoModel.cs" />
     <Compile Include="File\Cpuinfo.cs" />
-    <Compile Include="Models\VersionModel.cs" />
+    <Compile Include="Models\ObjectsModel.cs" />
     <Compile Include="File\_LinqFiles.cs" />
     <Compile Include="File\Version.cs" />
     <Compile Include="Command\Command.cs" />
-    <Compile Include="Models\CommandModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -183,18 +180,6 @@
     <Content Include="Content\Scripts\selectize.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Style\anthilla_logo_300x50.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Style\anthilla_logo_300x50_bianco.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Style\anthilla_logo_300x50_verde.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Style\anthilla_logo_80x50_small.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Style\iconFont.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -213,14 +198,9 @@
     <Content Include="Content\Style\windowed.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Extensions\DeNSo.OperationsLog.dll" />
-    <Content Include="Extensions\DeNSo.OperationsLog.pdb" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Extensions\" />
-    <Folder Include="File\" />
-    <Folder Include="Models\" />
-    <Folder Include="Command\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

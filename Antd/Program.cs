@@ -1,4 +1,14 @@
-﻿using System;
+﻿
+///-------------------------------------------------------------------------------------
+/// Copyright (c) 2014 Anthilla S.r.l. (http://www.anthilla.com)
+///
+/// Licensed under the BSD licenses.
+///
+/// 141110
+///-------------------------------------------------------------------------------------
+
+
+using System;
 using System.Threading;
 using Microsoft.Owin.Hosting;
 using Nancy;
@@ -36,8 +46,6 @@ namespace Antd
         public void Configuration(IAppBuilder app)
         {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service configuration");
-            //var configuration = new HubConfiguration { EnableDetailedErrors = true };
-            //app.MapSignalR(configuration);
             StaticConfiguration.DisableErrorTraces = false;
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    disableerrortraces -> false");
             Database.Start();
