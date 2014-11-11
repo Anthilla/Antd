@@ -1,7 +1,7 @@
 ANTD
 ====
 
-Remote monitor for GNU/Linux servers
+**Remote monitor for GNU/Linux servers**
 
 About
 -----
