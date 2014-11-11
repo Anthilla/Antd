@@ -1,4 +1,4 @@
-Antd
+ANTD
 ====
 
 Remote monitor for GNU/Linux servers
@@ -10,17 +10,18 @@ Antd is a remote server monitor that allows to inspect and manage your server th
 
 ### Nancy
 
-Antd is based on Nancy framework.
+Antd is based on [Nancy](https://github.com/NancyFx/Nancy/wiki/Introduction) framework.
 
 ### Self hosted
-
 Antd is self hosted, it not requires any installation and it runs everywhere.
 
 ### API
-
 Antd supplies a basic set of API, but they can be implemented in any way.
 
+>
+>
 > Copyright (c) 2014, [Anthilla S.r.l.] (http://www.anthilla.com)
+>
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without
@@ -46,3 +47,5 @@ Antd supplies a basic set of API, but they can be implemented in any way.
 > SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 >
 > 20141110
+>
+>
