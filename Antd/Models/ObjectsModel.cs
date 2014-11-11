@@ -1,8 +1,7 @@
-﻿
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
-/// 
+///
 ///     Redistribution and use in source and binary forms, with or without
 ///     modification, are permitted provided that the following conditions are met:
 ///         * Redistributions of source code must retain the above copyright
@@ -13,7 +12,7 @@
 ///         * Neither the name of the Anthilla S.r.l. nor the
 ///           names of its contributors may be used to endorse or promote products
 ///           derived from this software without specific prior written permission.
-/// 
+///
 ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -34,39 +33,51 @@ using System.Collections.Generic;
 namespace Antd
 {
     #region Version Model
+
     public class VersionModel
-	{
-		public string key { get; set; }
-		public string value { get; set; }
-	}
+    {
+        public string key { get; set; }
+
+        public string value { get; set; }
+    }
+
     #endregion Version Model
 
     #region CpuInfo Model
+
     public class CpuinfoModel
     {
         public string key { get; set; }
+
         public string value { get; set; }
     }
+
     #endregion CpuInfo Model
 
     #region MemInfo Model
+
     public class MeminfoModel
     {
         public string key { get; set; }
+
         public string value { get; set; }
     }
+
     #endregion MemInfo Model
 
     #region Command Model
+
     public class OutputModel
     {
         public string key { get; set; }
+
         public string value { get; set; }
     }
 
     public class ErrorModel
     {
         public string key { get; set; }
+
         public string value { get; set; }
     }
 
@@ -75,11 +86,13 @@ namespace Antd
         public DateTime date { get; set; }
 
         public string output { get; set; }
+
         public string error { get; set; }
 
         public List<string> outputTable { get; set; }
+
         public List<string> errorTable { get; set; }
     }
+
     #endregion Command Model
 }
-

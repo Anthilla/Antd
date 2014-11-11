@@ -1,8 +1,7 @@
-﻿
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
-/// 
+///
 ///     Redistribution and use in source and binary forms, with or without
 ///     modification, are permitted provided that the following conditions are met:
 ///         * Redistributions of source code must retain the above copyright
@@ -13,7 +12,7 @@
 ///         * Neither the name of the Anthilla S.r.l. nor the
 ///           names of its contributors may be used to endorse or promote products
 ///           derived from this software without specific prior written permission.
-/// 
+///
 ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,32 +26,30 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-      
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Antd
 {
     public class Command
     {
-		public static string GetText(string file, string args)
+        public static string GetText(string file, string args)
         {
             string output = string.Empty;
             string error = string.Empty;
 
-			Process process = new Process ();
-			process.StartInfo.FileName = file;
-			process.StartInfo.Arguments = args;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
-			process.StartInfo.UseShellExecute = false;
-			process.Start ();
+            Process process = new Process();
+            process.StartInfo.FileName = file;
+            process.StartInfo.Arguments = args;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
 
             using (StreamReader streamReader = process.StandardOutput)
             {
@@ -63,61 +60,61 @@ namespace Antd
             {
                 error = streamReader.ReadToEnd();
             }
-			process.WaitForExit ();
+            process.WaitForExit();
 
-			Tuple<string, string> result = new Tuple<string, string> (output, error);
-			string json = JsonConvert.SerializeObject (result);
-			return json;
+            Tuple<string, string> result = new Tuple<string, string>(output, error);
+            string json = JsonConvert.SerializeObject(result);
+            return json;
         }
 
-		public static CommandModel GetModel(string file, string args)
-		{
-			string output = string.Empty;
-			string error = string.Empty;
+        public static CommandModel GetModel(string file, string args)
+        {
+            string output = string.Empty;
+            string error = string.Empty;
 
-			Process process = new Process ();
-			process.StartInfo.FileName = file;
-			process.StartInfo.Arguments = args;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
-			process.StartInfo.UseShellExecute = false;
-			process.Start ();
+            Process process = new Process();
+            process.StartInfo.FileName = file;
+            process.StartInfo.Arguments = args;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
 
-			using (StreamReader streamReader = process.StandardOutput)
-			{
-				output = streamReader.ReadToEnd();
-			}
+            using (StreamReader streamReader = process.StandardOutput)
+            {
+                output = streamReader.ReadToEnd();
+            }
 
-			using (StreamReader streamReader = process.StandardError)
-			{
-				error = streamReader.ReadToEnd();
-			}
-			process.WaitForExit ();
+            using (StreamReader streamReader = process.StandardError)
+            {
+                error = streamReader.ReadToEnd();
+            }
+            process.WaitForExit();
 
-			CommandModel command = new CommandModel ();
-			command.date = DateTime.Now;
-			command.output = output;
-			command.outputTable = TextToList(output);
-			command.error = error;
-			command.errorTable = TextToList(error);
-			return command;
-		}
+            CommandModel command = new CommandModel();
+            command.date = DateTime.Now;
+            command.output = output;
+            command.outputTable = TextToList(output);
+            command.error = error;
+            command.errorTable = TextToList(error);
+            return command;
+        }
 
-		private static List<string> TextToList(string text)
-		{
-			List<string> stringList = new List<string>();
+        private static List<string> TextToList(string text)
+        {
+            List<string> stringList = new List<string>();
 
-			string[] rowDivider = new String[] { "\n" };
-			string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
-			foreach (string row in rowList)
-			{
-				if(row != null && row != "")
-				{
-					stringList.Add(row);
-				}
-			}
+            string[] rowDivider = new String[] { "\n" };
+            string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (string row in rowList)
+            {
+                if (row != null && row != "")
+                {
+                    stringList.Add(row);
+                }
+            }
 
-			return stringList;
-		}
+            return stringList;
+        }
     }
 }

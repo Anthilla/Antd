@@ -1,8 +1,7 @@
-﻿
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
-/// 
+///
 ///     Redistribution and use in source and binary forms, with or without
 ///     modification, are permitted provided that the following conditions are met:
 ///         * Redistributions of source code must retain the above copyright
@@ -13,7 +12,7 @@
 ///         * Neither the name of the Anthilla S.r.l. nor the
 ///           names of its contributors may be used to endorse or promote products
 ///           derived from this software without specific prior written permission.
-/// 
+///
 ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -40,93 +39,93 @@ namespace Antd
         {
             Get["/"] = x =>
             {
-				return Response.AsRedirect("/meminfo");
+                return Response.AsRedirect("/meminfo");
             };
 
-			Get["/meminfo"] = x =>
-			{
-				List<MeminfoModel> meminfo = Meminfo.GetModel();
-				if (meminfo == null)
-				{
-					return View["page-meminfo"];
-				}
-				return View["page-meminfo", meminfo];
-			};
-
-			Get["/meminfo/text"] = x =>
+            Get["/meminfo"] = x =>
             {
-				var meminfo = Meminfo.GetText();
-				return Response.AsJson(meminfo);
+                List<MeminfoModel> meminfo = Meminfo.GetModel();
+                if (meminfo == null)
+                {
+                    return View["page-meminfo"];
+                }
+                return View["page-meminfo", meminfo];
             };
 
-			Get["/cpuinfo"] = x =>
-			{
-				List<CpuinfoModel> cpuinfo = Cpuinfo.GetModel();
-				if (cpuinfo == null)
-				{
-					return View["page-cpuinfo"];
-				}
-				return View["page-cpuinfo", cpuinfo];
-			};
+            Get["/meminfo/text"] = x =>
+            {
+                var meminfo = Meminfo.GetText();
+                return Response.AsJson(meminfo);
+            };
 
-			Get["/cpuinfo/text"] = x =>
-			{
-				var cpuinfo = Cpuinfo.GetText();
-				return Response.AsJson(cpuinfo);
-			};
+            Get["/cpuinfo"] = x =>
+            {
+                List<CpuinfoModel> cpuinfo = Cpuinfo.GetModel();
+                if (cpuinfo == null)
+                {
+                    return View["page-cpuinfo"];
+                }
+                return View["page-cpuinfo", cpuinfo];
+            };
 
-			Get["/version"] = x =>
-			{
-				VersionModel version = Version.GetModel();
-				if (version == null)
-				{
-					return View["page-version"];
-				}
-				return View["page-version", version];
-			};
+            Get["/cpuinfo/text"] = x =>
+            {
+                var cpuinfo = Cpuinfo.GetText();
+                return Response.AsJson(cpuinfo);
+            };
 
-			Get["/version/text"] = x =>
-			{
-				var version = Version.GetText();
-				return Response.AsJson(version);
-			};
+            Get["/version"] = x =>
+            {
+                VersionModel version = Version.GetModel();
+                if (version == null)
+                {
+                    return View["page-version"];
+                }
+                return View["page-version", version];
+            };
 
-			Get["/command"] = x =>
-			{
-				ViewBag.Output = "";
-				ViewBag.Error = "";
-				return View["page-command"];
-			};
+            Get["/version/text"] = x =>
+            {
+                var version = Version.GetText();
+                return Response.AsJson(version);
+            };
 
-			Post["/command"] = x =>
-			{
-				string file = (string)this.Request.Form.File;
-				string args = (string)this.Request.Form.Arguments;
+            Get["/command"] = x =>
+            {
+                ViewBag.Output = "";
+                ViewBag.Error = "";
+                return View["page-command"];
+            };
 
-				CommandModel command = Command.GetModel(file, args);
-				ViewBag.Output = command.output;
-				ViewBag.Error = command.error;
-				return View["page-command", command];
-			};
+            Post["/command"] = x =>
+            {
+                string file = (string)this.Request.Form.File;
+                string args = (string)this.Request.Form.Arguments;
 
-//			Get["/command/get/{file}/{argument}"] = x =>
-//			{
-//				string file = x.file;
-//				string argument = x.argument;
-//
-//				var a = argument.Replace("_", " ");
-//				var b = a.Replace(",", "/");
-//
-//				string command = Command.GetText(file, b);
-//				return JsonConvert.SerializeObject(command);
-//			};
+                CommandModel command = Command.GetModel(file, args);
+                ViewBag.Output = command.output;
+                ViewBag.Error = command.error;
+                return View["page-command", command];
+            };
 
-			Get["/command/text"] = x =>
-			{
-				var command = Command.GetText("", "");
-				var json = JsonConvert.SerializeObject(command);
-				return json;
-			};
+            //			Get["/command/get/{file}/{argument}"] = x =>
+            //			{
+            //				string file = x.file;
+            //				string argument = x.argument;
+            //
+            //				var a = argument.Replace("_", " ");
+            //				var b = a.Replace(",", "/");
+            //
+            //				string command = Command.GetText(file, b);
+            //				return JsonConvert.SerializeObject(command);
+            //			};
+
+            Get["/command/text"] = x =>
+            {
+                var command = Command.GetText("", "");
+                var json = JsonConvert.SerializeObject(command);
+                return json;
+            };
         }
     }
 }

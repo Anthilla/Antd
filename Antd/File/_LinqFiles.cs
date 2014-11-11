@@ -1,8 +1,7 @@
-﻿
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
-/// 
+///
 ///     Redistribution and use in source and binary forms, with or without
 ///     modification, are permitted provided that the following conditions are met:
 ///         * Redistributions of source code must retain the above copyright
@@ -13,7 +12,7 @@
 ///         * Neither the name of the Anthilla S.r.l. nor the
 ///           names of its contributors may be used to endorse or promote products
 ///           derived from this software without specific prior written permission.
-/// 
+///
 ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,9 +29,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Antd
 {
@@ -40,24 +37,24 @@ namespace Antd
     {
         public static void GetFiles()
         {
-            // Modify this path as necessary. 
+            // Modify this path as necessary.
             string startFolder = @"/framework/anthilla";
-//            string startFolder = @"c:\LinqFiles\";
+            //            string startFolder = @"c:\LinqFiles\";
 
             // Take a snapshot of the file system.
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(startFolder);
 
-            // This method assumes that the application has discovery permissions 
+            // This method assumes that the application has discovery permissions
             // for all folders under the specified path.
             IEnumerable<System.IO.FileInfo> fileList = dir.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
 
             string searchTerm = @"loading";
-//            string searchTerm = @"Information";
+            //            string searchTerm = @"Information";
 
-            // Search the contents of each file. 
-            // A regular expression created with the RegEx class 
-            // could be used instead of the Contains method. 
-            // queryMatchingFiles is an IEnumerable<string>. 
+            // Search the contents of each file.
+            // A regular expression created with the RegEx class
+            // could be used instead of the Contains method.
+            // queryMatchingFiles is an IEnumerable<string>.
             var queryMatchingFiles =
                 from file in fileList
                 let fileText = GetFileText(file.FullName)
@@ -75,13 +72,13 @@ namespace Antd
             Console.WriteLine("Press any key to exit");
         }
 
-        // Read the contents of the file. 
-		public static string GetFileText(string name)
+        // Read the contents of the file.
+        public static string GetFileText(string name)
         {
             string fileContents = String.Empty;
 
-            // If the file has been deleted since we took  
-            // the snapshot, ignore it and return the empty string. 
+            // If the file has been deleted since we took
+            // the snapshot, ignore it and return the empty string.
             if (System.IO.File.Exists(name))
             {
                 fileContents = System.IO.File.ReadAllText(name);

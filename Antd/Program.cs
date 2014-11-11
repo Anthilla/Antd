@@ -79,14 +79,13 @@ namespace Antd
     {
         public static void Start()
         {
-            var root = "/framework/anthilla";
-//            var root = @"D:\Anthilla";
+            var root = "/database/directory";
             Start(root);
         }
 
         public static void Start(string root)
         {
-            DeNSo.Configuration.BasePath = new string[] { System.IO.Path.Combine(root, "AnthDB") };
+            DeNSo.Configuration.BasePath = new string[] { System.IO.Path.Combine(root, "Database") };
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.DBCheckTimeSpan = new System.TimeSpan(0, 1, 0);
             DeNSo.Configuration.ReindexCheck = new System.TimeSpan(0, 1, 0);
