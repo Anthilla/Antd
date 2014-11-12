@@ -107,25 +107,6 @@ namespace Antd
                 ViewBag.Error = command.error;
                 return View["page-command", command];
             };
-
-            //			Get["/command/get/{file}/{argument}"] = x =>
-            //			{
-            //				string file = x.file;
-            //				string argument = x.argument;
-            //
-            //				var a = argument.Replace("_", " ");
-            //				var b = a.Replace(",", "/");
-            //
-            //				string command = Command.GetText(file, b);
-            //				return JsonConvert.SerializeObject(command);
-            //			};
-
-            Get["/command/text"] = x =>
-            {
-                var command = Command.GetText("", "");
-                var json = JsonConvert.SerializeObject(command);
-                return json;
-            };
         }
     }
 }

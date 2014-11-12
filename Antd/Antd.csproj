@@ -92,11 +92,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="ConsoleTime.cs" />
+    <Compile Include="Config\StartupConfig.cs" />
+    <Compile Include="Config\ConsoleTime.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextToJson.cs" />
+    <Compile Include="File\_TextToJson.cs" />
     <Compile Include="File\Meminfo.cs" />
     <Compile Include="File\Cpuinfo.cs" />
     <Compile Include="Models\ObjectsModel.cs" />

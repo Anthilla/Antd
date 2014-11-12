@@ -37,8 +37,11 @@ namespace Antd
 {
     internal static class Program
     {
+        private static StartupConfig appConfig = new StartupConfig();
+
         private static void Main(string[] args)
         {
+            Console.Title = "ANTD";
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) =>
@@ -47,15 +50,37 @@ namespace Antd
                     stop.Set();
                     e.Cancel = true;
                 };
-            var url = "http://+:7777/";
-            using (WebApp.Start<Startup>(url))
+
+            string port;
+            bool portExist;
+            bool dbrootExist;
+            string uri;
+
+            portExist = appConfig.CheckValue("server", "port");
+            if (portExist == false)
+            {
+                appConfig.WriteValue("server", "port", "7777");
+            }
+
+            dbrootExist = appConfig.CheckValue("server", "dbroot");
+            if (dbrootExist == false)
+            {
+                appConfig.WriteValue("server", "dbroot", "/database/directory");
+            }
+
+            port = appConfig.ReadValue("server", "port");
+
+            uri = "http://+:" + port + "/";
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing");
+            using (WebApp.Start<Startup>(uri))
             {
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url -> {0}", url);
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
-                stop.WaitOne();
                 Console.WriteLine("");
+                stop.WaitOne();
             }
         }
     }
@@ -76,9 +101,12 @@ namespace Antd
 
     public class Database
     {
+        private static StartupConfig appConfig = new StartupConfig();
+
         public static void Start()
         {
-            var root = "/database/directory";
+            string root;
+            root = appConfig.ReadValue("server", "dbroot");
             Start(root);
         }
 

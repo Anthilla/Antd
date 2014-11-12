@@ -6,14 +6,14 @@ ANTD
 About
 -----
 
-Antd is a remote server monitor that allows to inspect and manage your server through a web browser.
+Antd is a remote server monitor that allows the user to inspect and manage servers through a web browser.
 
 ### Nancy
 
 Antd is based on [Nancy](https://github.com/NancyFx/Nancy/wiki/Introduction) framework.
 
 ### Self hosted
-Antd is self hosted, it not requires any installation and it runs everywhere.
+Antd is self hosted, it does not require any installation and runs everywhere.
 
 ### API
 Antd supplies a basic set of API, but they can be implemented in any way.
