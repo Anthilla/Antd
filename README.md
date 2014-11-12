@@ -1,4 +1,4 @@
-ANTD
+Antd
 ====
 
 About
@@ -54,23 +54,23 @@ Help us and propose ideas and ways how organize the project.
 
 ### Communicate by Email
 
-    Email: osdev@anthilla.com
+Email: osdev@anthilla.com
 
 ### Getting Started
 
-    Fork the repository on GitHub
-    Play with the project, submit bugs, submit patches, Submit extensions, Submit Ideas(!!!),
+Fork the repository on GitHub
+Play with the project, submit bugs, submit patches, Submit extensions, Submit Ideas(!!!),
 
 ### Contribution Flow
 
 This is a rough outline of what a contributor's workflow looks like:
 
-    Create a topic branch from where you want to base your work (usually master).
-    Make commits of logical units.
-    Make sure your commit messages are in the proper format (see below).
-    Push your changes to a topic branch in your fork of the repository.
-    Make sure the tests pass, and add any new tests as appropriate.
-    Submit a pull request to the original repository.
+Create a topic branch from where you want to base your work (usually master).
+Make commits of logical units.
+Make sure your commit messages are in the proper format (see below).
+Push your changes to a topic branch in your fork of the repository.
+Make sure the tests pass, and add any new tests as appropriate.
+Submit a pull request to the original repository.
 
 Thanks for your contributions!
 
