@@ -4,26 +4,26 @@ Antd
 About
 -----
 
-Antd would be a appication and configuration init and configuration daemon.
-thinking about a linux/unix system as "applicative appliance system", Antd can be invoked by the base init system after the base boot of the system to a known minimal runlevel
-and execute base and applicative processes, settingd, and check the configuration, both locally or distributed and use and internal nosql database for complex elaborations
+Antd aims to be an application & configuration init and a configuration daemon.
+Thinking about a Linux/Unix system as "applicative appliance system", Antd can be invoked by the base init system just after the base boot of the system into a known minimal runlevel
+and execute base and applicative processes, settings, and check the configuration. It can work both locally and in distributed environments and uses and internal nosql database for complex data management and 
 to start, control, check, monitor of the system and application stack.
  
 Antd can work with systemd or other init systems.
 
-- Antd is wrote in c#
-- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy/wiki/Introduction) framework
-- Antd is wrote as web service with API REST service and Rendered web interface.
-- Antd is relead under BSD-3 license
-- Antd is self hosted, no external webserver is required.
+- Antd is written in C#
+- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy/wiki/Introduction) frameworks
+- Antd is implemented as web service with REST API service and rendered web interface
+- Antd is released under the BSD 3 clause license
+- Antd is self hosted, no external webserver is needed
 
 Antd would be a single daemon to maintain the linux/unix appliance system (processes, clustering, configuration, configuration store, configuration dispatching, monitoring)
-using, when is possible direct command or kernel related userspace commands or direct access to pseudo filesystems (linux) like /proc /sys and dbus implementatons.
+using, whenever possible, shell commands, kernel related userspace commands or direct access to pseudo filesystems (linux) like /proc /sys and dbus.
 
-### Target Achievement
-- total administration, easy to use to inspecting journals and starting and stopping services.
-- swiss knife for administration configuration and monitoring
-- single machine to big clustered enviroments or distributed installations
+### Target Achievements
+- total administration, easy to use for inspecting journals and starting and stopping services.
+- swiss knife for administration, configuration and monitoring
+- single machine to big clustered enviroments or distributed installations scalability
 - de-structured clustering (orchestrated executions and management of processes and application on distributed enviroments
 - capable of full machine control and check
 - unique interface, from low level to highest application level
@@ -40,17 +40,17 @@ Getting Started
 
 1. download the source files
 2. import nuget packages necessary to build with "Restore nuget packages" available both in Mono Develop + nuget and Visual Studio.
-3. in a linux installation install mono (minimal 3.2.1)
-4. build it with xbuild or from ide
-5. Execute it.
+3. on a Linux system install mono (3.2.1 or higher)
+4. build it with xbuild or from the IDE
+5. run it!
  
 The Antd API uses JSON over HTTP
 
 How to Contribute
 -----------------
 
-The projects is in very early stage.
-Help us and propose ideas and ways how organize the project.
+The project is in a very early stage.
+Help us sharing ideas and ways to organize and improve the project!
 
 ### Communicate by Email
 
@@ -59,7 +59,7 @@ Email: osdev@anthilla.com
 ### Getting Started
 
 Fork the repository on GitHub
-Play with the project, submit bugs, submit patches, Submit extensions, Submit Ideas(!!!),
+Play with the project, submit bugs, submit patches, submit extensions, submit ideas (!!!),
 
 ### Contribution Flow
 
@@ -74,7 +74,7 @@ Submit a pull request to the original repository.
 
 Thanks for your contributions!
 
-Antd is released under the BSD-3 license. See the LICENSE file for details.
+Antd is released under the BSD 3 clause license. See the LICENSE file for details.
 
 Specific components of Antd use code derivative from software distributed under other licenses; in those cases the appropriate licenses are stipulated alongside the code.
 
