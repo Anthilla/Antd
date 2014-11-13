@@ -12,7 +12,7 @@ to start, control, check, monitor of the system and application stack.
 Antd can work with systemd or other init systems.
 
 - Antd is written in C#
-- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy/wiki/Introduction) frameworks
+- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy) frameworks
 - Antd is implemented as web service with REST API service and rendered web interface
 - Antd is released under the BSD 3 clause license
 - Antd is self hosted, no external webserver is needed
@@ -34,6 +34,15 @@ using, whenever possible, shell commands, kernel related userspace commands or d
 - [LuCI OpenWRT](http://wiki.openwrt.org/doc/howto/luci.essentials)
 - [Cockipt Project](http://cockipt-project.org)
 - [CoreOS](https://coreos.com/using-coreos/) [fleet and etcd](https://github.com/coreos/fleet/blob/master)
+
+### References:
+- [C5](https://github.com/sestoft/C5/)
+- [DensoDb](https://github.com/ppossanzini/DensoDB)
+- [jQuery](https://github.com/jquery/jquery)
+- [Owin](https://github.com/owin/owin)
+- [Nancy](https://github.com/NancyFx/Nancy)
+- [Newtonsoft Json](https://github.com/JamesNK/Newtonsoft.Json)
+- [Metro UI](https://github.com/olton/Metro-UI-CSS)
 
 Getting Started
 ---------------
