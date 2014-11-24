@@ -78,26 +78,34 @@ namespace Antd
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
-            process.Start();
 
-            using (StreamReader streamReader = process.StandardOutput)
+            try 
             {
-                output = streamReader.ReadToEnd();
-            }
+                process.Start();
 
-            using (StreamReader streamReader = process.StandardError)
+                using (StreamReader streamReader = process.StandardOutput) {
+                    output = streamReader.ReadToEnd();
+                }
+
+                using (StreamReader streamReader = process.StandardError) {
+                    error = streamReader.ReadToEnd();
+                }
+                process.WaitForExit();
+
+                CommandModel command = new CommandModel();
+                command.date = DateTime.Now;
+                command.output = output;
+                command.outputTable = TextToList(output);
+                command.error = error;
+                command.errorTable = TextToList(error);
+                return command;
+            } catch (Exception ex) 
             {
-                error = streamReader.ReadToEnd();
+                CommandModel command = new CommandModel();
+                command.error = ex.Message;
+                command.errorTable = TextToList(ex.Message);
+                return command;
             }
-            process.WaitForExit();
-
-            CommandModel command = new CommandModel();
-            command.date = DateTime.Now;
-            command.output = output;
-            command.outputTable = TextToList(output);
-            command.error = error;
-            command.errorTable = TextToList(error);
-            return command;
         }
 
         private static List<string> TextToList(string text)
