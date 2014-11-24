@@ -99,7 +99,8 @@ namespace Antd
                 command.error = error;
                 command.errorTable = TextToList(error);
                 return command;
-            } catch (Exception ex) 
+            }
+            catch (Exception ex) 
             {
                 CommandModel command = new CommandModel();
                 command.error = ex.Message;
