@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using IniParser;
+using IniParser.Model;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -13,10 +15,13 @@ namespace Antd
         public string file;
         public string path;
 
+        public FileIniDataParser parser;
+        /*
         [DllImport("kernel32")]
         private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
         [DllImport("kernel32")]
         private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
+        */
 
         /// <summary>
         /// INIFile Constructor
@@ -29,6 +34,7 @@ namespace Antd
             Directory.CreateDirectory(folder);
             file = "coreparam.ini";
             path = Path.Combine(folder, file);
+            parser = new FileIniDataParser();
         }
 
         /// <summary>
@@ -50,7 +56,15 @@ namespace Antd
                 }
                 File.WriteAllText(this.path, "");
             }
-            WritePrivateProfileString(section, key, value, this.path);
+            IniData data = parser.ReadFile(this.path);
+            if (!data.Sections.ContainsSection(section)) {
+                data.Sections.AddSection(section);
+            }
+            if (!data[section].ContainsKey(key)) {
+                data[section].AddKey(key);
+            }
+            data[section][key] = value;
+            parser.WriteFile(this.path, data);
         }
 
         /// <summary>
@@ -61,9 +75,17 @@ namespace Antd
         /// <returns></returns>
         public string ReadValue(string section, string key)
         {
-            StringBuilder temp = new StringBuilder(255);
-            int i = GetPrivateProfileString(section, key, "", temp, 255, this.path);
-            return temp.ToString();
+            if (File.Exists(this.path)) 
+            {
+                IniData data = parser.ReadFile(this.path);
+                return    (!data.Sections.ContainsSection(section)) ? null
+                        : (!data.Sections[section].ContainsKey(key)) ? null
+                        : data[section][key];
+            } 
+            else 
+            {
+                return null;
+            }
         }
 
         /// <summary>
