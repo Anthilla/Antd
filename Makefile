@@ -6,5 +6,5 @@ antd:
 clean:
 	rm -rf Antd/bin
 
-run:
+run: antd
 	mono Antd/bin/Debug/Antd.exe

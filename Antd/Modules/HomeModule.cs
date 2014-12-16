@@ -52,11 +52,11 @@ namespace Antd {
             };
 
             Get["/network"] = x => {
-                List<NetworkModel> meminfo = Network.GetModel();
-                if (meminfo == null) {
+                NetworkModel network = Network.GetModel();
+                if (network == null) {
                     return View["page-network"];
                 }
-                return View["page-network", meminfo];
+                return View["page-network", network];
             };
 
             Get["/cpuinfo"] = x => {

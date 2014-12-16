@@ -63,8 +63,7 @@ namespace Antd {
     #region Network Model
 
     public class NetworkModel {
-        public string key { get; set; }
-        public string value { get; set; }
+        public string hostname { get; set; }
     }
 
     #endregion Network Model

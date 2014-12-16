@@ -28,7 +28,7 @@
     ///     20141110
     ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<Antd.NetworkModel>>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.NetworkModel>
 @{Layout = "_layout.cshtml";}
 @section MainContent
 {
@@ -40,12 +40,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Antd.NetworkModel row in Model) {
-                <tr>
-                    <td class="right">@row.key</td>
-                    <td class="right">@row.value</td>
-                </tr>
-            }
+            <div class="span3">
+                <label>hostname</label>
+                <input type="text" name="Arguments">@Model.hostname</input>
+            </div>
         </tbody>
     </table>
 }

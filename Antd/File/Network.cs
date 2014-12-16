@@ -32,12 +32,14 @@ using Newtonsoft.Json;
 
 namespace Antd {
     public class Network {
-        public static string GetText() {
-            return null;
-        }
+        public static NetworkModel GetModel() {
+            string hostnameContent = "";
+            hostnameContent = LinqFiles.GetFileText("/cfg/network/hostname");
 
-        public static List<NetworkModel> GetModel() {
-            return new List<NetworkModel> { new NetworkModel() };
+            var network = new NetworkModel();
+            network.hostname = hostnameContent;
+
+            return network;
         }
     }
 }
