@@ -31,22 +31,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Antd
-{
-    public class TextToJson
-    {
-        public static List<MeminfoModel> Meminfo(string meminfoText)
-        {
+namespace Antd {
+    public class TextToJson {
+        public static List<MeminfoModel> Meminfo(string meminfoText) {
             List<MeminfoModel> meminfoList = new List<MeminfoModel>();
 
             string[] rowDivider = new String[] { "\n" };
             string[] cellDivider = new String[] { ": " };
 
             string[] rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList)
-            {
-                if (row != null && row != "")
-                {
+            foreach (string row in rowList) {
+                if (row != null && row != "") {
                     string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
                     MeminfoModel meminfo = new MeminfoModel();
                     meminfo.key = cellList[0];
@@ -58,31 +53,24 @@ namespace Antd
             return meminfoList;
         }
 
-        public static List<CpuinfoModel> Cpuinfo(string cpuinfoText)
-        {
+        public static List<CpuinfoModel> Cpuinfo(string cpuinfoText) {
             List<CpuinfoModel> cpuinfoList = new List<CpuinfoModel>();
-
             string[] rowDivider = new String[] { "\n" };
             string[] cellDivider = new String[] { ": " };
-
             string[] rowList = cpuinfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList)
-            {
-                if (row != null && row != "")
-                {
+            foreach (string row in rowList) {
+                if (row != null && row != "") {
                     string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
                     CpuinfoModel cpuinfo = new CpuinfoModel();
                     cpuinfo.key = cellList[0];
-                    cpuinfo.value = cellList[1];
+                    cpuinfo.value = (cellList.Length > 1) ? cellList[1] : "";
                     cpuinfoList.Add(cpuinfo);
                 }
             }
-
             return cpuinfoList;
         }
 
-        public static VersionModel Version(string versionText)
-        {
+        public static VersionModel Version(string versionText) {
             VersionModel version = new VersionModel();
             version.key = "";
             version.value = versionText;
