@@ -31,74 +31,67 @@ using System.Collections.Generic;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace Antd
-{
-    public class HomeModule : NancyModule
-    {
-        public HomeModule()
-        {
-            Get["/"] = x =>
-            {
+namespace Antd {
+    public class HomeModule : NancyModule {
+        public HomeModule() {
+            Get["/"] = x => {
                 return Response.AsRedirect("/meminfo");
             };
 
-            Get["/meminfo"] = x =>
-            {
+            Get["/meminfo"] = x => {
                 List<MeminfoModel> meminfo = Meminfo.GetModel();
-                if (meminfo == null)
-                {
+                if (meminfo == null) {
                     return View["page-meminfo"];
                 }
                 return View["page-meminfo", meminfo];
             };
 
-            Get["/meminfo/text"] = x =>
-            {
+            Get["/meminfo/text"] = x => {
                 var meminfo = Meminfo.GetText();
                 return Response.AsJson(meminfo);
             };
 
-            Get["/cpuinfo"] = x =>
-            {
+            Get["/network"] = x => {
+                List<NetworkModel> meminfo = Network.GetModel();
+                if (meminfo == null) {
+                    return View["page-network"];
+                }
+                return View["page-network", meminfo];
+            };
+
+            Get["/cpuinfo"] = x => {
                 List<CpuinfoModel> cpuinfo = Cpuinfo.GetModel();
-                if (cpuinfo == null)
-                {
+                if (cpuinfo == null) {
                     return View["page-cpuinfo"];
                 }
                 return View["page-cpuinfo", cpuinfo];
             };
 
-            Get["/cpuinfo/text"] = x =>
-            {
+            Get["/cpuinfo/text"] = x => {
                 var cpuinfo = Cpuinfo.GetText();
                 return Response.AsJson(cpuinfo);
             };
 
-            Get["/version"] = x =>
-            {
+            Get["/version"] = x => {
                 VersionModel version = Version.GetModel();
-                if (version == null)
-                {
+                if (version == null) {
                     return View["page-version"];
                 }
                 return View["page-version", version];
             };
 
-            Get["/version/text"] = x =>
-            {
+            Get["/version/text"] = x => {
                 var version = Version.GetText();
                 return Response.AsJson(version);
             };
 
-            Get["/command"] = x =>
-            {
+            Get["/command"] = x => {
                 ViewBag.Output = "";
                 ViewBag.Error = "";
                 return View["page-command"];
             };
 
-            Post["/command"] = x =>
-            {
+            Post["/command"] = x => {
                 string file = (string)this.Request.Form.File;
                 string args = (string)this.Request.Form.Arguments;
 

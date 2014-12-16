@@ -31,21 +31,13 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Antd {
-    public class Cpuinfo {
+    public class Network {
         public static string GetText() {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/cpuinfo");
-
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+            return null;
         }
 
-        public static List<CpuinfoModel> GetModel() {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/cpuinfo");
-
-            var meminfo = TextToJson.Cpuinfo(meminfoContent);
-            return meminfo;
+        public static List<NetworkModel> GetModel() {
+            return new List<NetworkModel> { new NetworkModel() };
         }
     }
 }
