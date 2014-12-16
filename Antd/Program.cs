@@ -64,7 +64,7 @@ namespace Antd {
 
             port = appConfig.ReadValue("server", "port");
 
-            uri = "http://localhost:" + port + "/";
+            uri = "http://+:" + port + "/";
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing");
             using (WebApp.Start<Startup>(uri)) {
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
