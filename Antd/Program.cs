@@ -66,14 +66,21 @@ namespace Antd {
 
             uri = "http://+:" + port + "/";
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing");
-            using (WebApp.Start<Startup>(uri)) {
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
-                Console.WriteLine("");
-                stop.WaitOne();
+            try {
+                using (WebApp.Start<Startup>(uri)) {
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
+                    Console.WriteLine("");
+                    stop.WaitOne();
+                }
+            } catch(System.Reflection.TargetInvocationException ex) {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Register +: urlacl");
+                Console.WriteLine("on windows:");
+                Console.WriteLine("netsh http add urlacl url=http://+:7777/ user=UserName");
             }
         }
     }
