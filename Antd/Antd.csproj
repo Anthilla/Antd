@@ -97,6 +97,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Config\StartupConfig.cs" />
     <Compile Include="Config\ConsoleTime.cs" />
+    <Compile Include="File\Network.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -128,7 +129,12 @@
     <None Include="Content\fonts\metroSysIcons.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Views\page-network.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\_layout.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

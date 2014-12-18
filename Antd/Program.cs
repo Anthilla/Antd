@@ -33,19 +33,15 @@ using Microsoft.Owin.Hosting;
 using Nancy;
 using Owin;
 
-namespace Antd
-{
-    internal static class Program
-    {
+namespace Antd {
+    internal static class Program {
         private static StartupConfig appConfig = new StartupConfig();
 
-        private static void Main(string[] args)
-        {
+        private static void Main(string[] args) {
             Console.Title = "ANTD";
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
-                (sender, e) =>
-                {
+                (sender, e) => {
                     Console.WriteLine("^C");
                     stop.Set();
                     e.Cancel = true;
@@ -57,14 +53,12 @@ namespace Antd
             string uri;
 
             portExist = appConfig.CheckValue("server", "port");
-            if (portExist == false)
-            {
+            if (portExist == false) {
                 appConfig.WriteValue("server", "port", "7777");
             }
 
             dbrootExist = appConfig.CheckValue("server", "dbroot");
-            if (dbrootExist == false)
-            {
+            if (dbrootExist == false) {
                 appConfig.WriteValue("server", "dbroot", "/database/directory");
             }
 
@@ -72,23 +66,27 @@ namespace Antd
 
             uri = "http://+:" + port + "/";
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing");
-            using (WebApp.Start<Startup>(uri))
-            {
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
-                Console.WriteLine("");
-                stop.WaitOne();
+            try {
+                using (WebApp.Start<Startup>(uri)) {
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
+                    Console.WriteLine("");
+                    stop.WaitOne();
+                }
+            } catch(System.Reflection.TargetInvocationException ex) {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Register +: urlacl");
+                Console.WriteLine("on windows:");
+                Console.WriteLine("netsh http add urlacl url=http://+:7777/ user=UserName");
             }
         }
     }
 
-    internal class Startup
-    {
-        public void Configuration(IAppBuilder app)
-        {
+    internal class Startup {
+        public void Configuration(IAppBuilder app) {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service configuration");
             StaticConfiguration.DisableErrorTraces = false;
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    disableerrortraces -> false");
@@ -99,19 +97,16 @@ namespace Antd
         }
     }
 
-    public class Database
-    {
+    public class Database {
         private static StartupConfig appConfig = new StartupConfig();
 
-        public static void Start()
-        {
+        public static void Start() {
             string root;
             root = appConfig.ReadValue("server", "dbroot");
             Start(root);
         }
 
-        public static void Start(string root)
-        {
+        public static void Start(string root) {
             DeNSo.Configuration.BasePath = new string[] { System.IO.Path.Combine(root, "Database") };
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.DBCheckTimeSpan = new System.TimeSpan(0, 1, 0);
@@ -121,8 +116,7 @@ namespace Antd
             DeNSo.Session.Start();
         }
 
-        public static void ShutDown()
-        {
+        public static void ShutDown() {
             DeNSo.Session.ShutDown();
         }
     }
