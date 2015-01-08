@@ -47,11 +47,23 @@ using, whenever possible, shell commands, kernel related userspace commands or d
 Getting Started
 ---------------
 
+<b>Windows</b>
+
 1. download the source files
 2. import nuget packages necessary to build with "Restore nuget packages" available both in Mono Develop + nuget and Visual Studio.
-3. on a Linux system install mono (3.2.1 or higher)
-4. build it with xbuild or from the IDE
-5. run it!
+3. run it!
+ 
+<b>Gentoo Linux</b>
+
+1. add dotnet repository (`layman -a dotnet`)
+2. `emerge antd`
+3. run it! (`antd` or `sudo antd` for root permissions)
+
+<b>Any Linux</b>
+
+1. install mono (3.2.1 or higher)
+2. build it with xbuild or from the IDE
+3. run it!
  
 The Antd API uses JSON over HTTP
 
