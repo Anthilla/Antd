@@ -59,6 +59,15 @@ namespace Antd {
                 return View["page-network", network];
             };
 
+            Post["/network"] = x => {
+                string hostname = (string)this.Request.Form.Hostname;
+                NetworkModel network = Network.GetModel(hostname);
+                if (network == null) {
+                    return View["page-network"];
+                }
+                return View["page-network", network];
+            };
+
             Get["/cpuinfo"] = x => {
                 List<CpuinfoModel> cpuinfo = Cpuinfo.GetModel();
                 if (cpuinfo == null) {

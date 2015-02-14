@@ -31,18 +31,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Antd
-{
-    public class LinqFiles
-    {
-        public static string GetFileText(string name)
-        {
+namespace Antd {
+    public class LinqFiles {
+        public static string GetFileText(string name) {
             string fileContents = String.Empty;
-            if (System.IO.File.Exists(name))
-            {
+            if (System.IO.File.Exists(name)) {
                 fileContents = System.IO.File.ReadAllText(name);
             }
             return fileContents;
+        }
+        public static void SetFileText(string name, string text) {
+            string fileContents = String.Empty;
+            if (System.IO.File.Exists(name)) {
+                System.IO.File.WriteAllText(name, text);
+            }
         }
     }
 }
