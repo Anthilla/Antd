@@ -28,35 +28,70 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.CommandModel>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.CommandModel[]>
+@using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
 @section MainContent
 {
-    <form action="/command" method="POST" enctype="multipart/form-data">
-        <div class="grid">
-            <div class="row">
-                <div class="span3">
-                    <label>Command</label>
-                    <input type="text" name="File">
-                </div>
-                <div class="span3">
-                    <label>Arguments</label>
-                    <input type="text" name="Arguments">
-                </div>
-                <div class="span3">
-                    <label>&nbsp</label>
-                    <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
-                </div>
+
+    <div class="grid">
+        <div class="row">
+            <div class="span12">
+                <a href="/sys/cfg" class="tile bg-anth-blue">
+                    <div class="tile-content icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="tile-status">
+                        <span class="name">Cfg</span>
+                    </div>
+                </a>
+
+                <a href="/sys/datarepo" class="tile bg-anth-blue">
+                    <div class="tile-content icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="tile-status">
+                        <span class="name">DataRepo</span>
+                    </div>
+                </a>
+
+                <a href="/sys/network" class="tile bg-anth-blue">
+                    <div class="tile-content icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="tile-status">
+                        <span class="name">Network</span>
+                    </div>
+                </a>
+
+                <a href="/sys/anthillasp" class="tile bg-anth-blue">
+                    <div class="tile-content icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="tile-status">
+                        <span class="name">AnthillaSP</span>
+                    </div>
+                </a>
+
+                <a href="/sys/zfsmount" class="tile bg-anth-blue">
+                    <div class="tile-content icon">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="tile-status">
+                        <span class="name">ZfsMount</span>
+                    </div>
+                </a>
             </div>
         </div>
-    </form>
+    </div>
 
     @if (Model != null) {
-        @if (Model.outputTable != null) {
+        @foreach (Antd.CommandModel command in Model)
+        @if (command != null) {
             <table id="Output" class="table striped">
                 <tbody>
-                    @foreach (string str in Model.outputTable) {
+                    @foreach (string str in command.outputTable) {
                         <tr>
                             <td class="right">@str</td>
                         </tr>
@@ -64,11 +99,14 @@
                 </tbody>
             </table>
         }
-        <br />
-        @if (Model.errorTable != null) {
+    }
+    <br />
+    @if (Model != null) {
+        @foreach (Antd.CommandModel command in Model)
+        @if (command != null) {
             <table id="Error" class="table striped">
                 <tbody>
-                    @foreach (string str in Model.errorTable) {
+                    @foreach (string str in command.errorTable) {
                         <tr>
                             <td class="right">@str</td>
                         </tr>

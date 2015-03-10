@@ -27,19 +27,65 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Auth;
+using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Cookies;
+using Nancy.Extensions;
+using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 
 namespace Antd {
 
-    public static class ConsoleTime {
+    public static class Extension {
 
-        public static string GetTime(DateTime dt) {
-            var str = "[";
-            str += dt.ToString("MM/dd/yy");
-            str += " ";
-            str += dt.ToString("H:mm:ss");
-            str += "] ";
-            return str;
+        public static Guid ToGuid(this Guid? source) {
+            return source ?? Guid.Empty;
+        }
+    }
+
+    public class LoginModule : NancyModule {
+
+        public LoginModule() {
+            Get["/login"] = x => {
+                dynamic model = new ExpandoObject();
+                model.Errored = this.Request.Query.error.HasValue;
+                return View["login", model];
+            };
+
+            Post["/login"] = x => {
+                string username = (string)this.Request.Form.Username;
+                string password = (string)this.Request.Form.Password;
+
+                DateTime? expiry = DateTime.Now.AddHours(12);
+                if (this.Request.Form.RememberMe.HasValue) {
+                    expiry = DateTime.Now.AddDays(3);
+                }
+
+                Guid? validationGuid = UserDatabase.ValidateUser(username, password);
+
+                if (validationGuid == null) {
+                    return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
+                }
+                else {
+                    NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
+                    return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
+                }
+            };
+
+            Get["/logout"] = x => {
+                var request = this.Request;
+                var cookies = request.Cookies;
+                cookies.Clear();
+                return this.LogoutAndRedirect("~/");
+            };
+
+            Get["/get/user/{usr}"] = x => {
+                var u = (string)x.usr;
+                var i = MapSystemUser.GetRootPwd(u);
+                return JsonConvert.SerializeObject(i);
+            };
         }
     }
 }

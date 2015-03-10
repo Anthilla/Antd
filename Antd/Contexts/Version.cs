@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,23 +25,28 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
-@{Layout = "_layout.cshtml";}
+using Newtonsoft.Json;
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+namespace Antd {
+
+    public class Version {
+
+        public static string GetText() {
+            string meminfoContent = "";
+            meminfoContent = LinqFiles.GetFileText("/proc/version");
+
+            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
+            return meminfoJson;
+        }
+
+        public static VersionModel GetModel() {
+            string meminfoContent = "";
+            meminfoContent = LinqFiles.GetFileText("/proc/version");
+
+            var meminfo = TextToJson.Version(meminfoContent);
+            return meminfo;
+        }
+    }
 }

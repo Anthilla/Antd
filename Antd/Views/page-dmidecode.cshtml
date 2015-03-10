@@ -1,4 +1,5 @@
-﻿///-------------------------------------------------------------------------------------
+﻿@*
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -25,30 +26,36 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------
+///-------------------------------------------------------------------------------------*@
 
-using Newtonsoft.Json;
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.CommandModel>
+@{Layout = "_layout.cshtml";}
 
-namespace Antd
+@section MainContent
 {
-    public class Version
-    {
-        public static string GetText()
-        {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/version");
-
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+    @if (Model != null) {
+        @if (Model.outputTable != null) {
+            <table id="Output" class="table striped">
+                <tbody>
+                    @foreach (string str in Model.outputTable) {
+                        <tr>
+                            <td class="right">@str</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-
-        public static VersionModel GetModel()
-        {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/version");
-
-            var meminfo = TextToJson.Version(meminfoContent);
-            return meminfo;
+        <br />
+        @if (Model.errorTable != null) {
+            <table id="Error" class="table striped">
+                <tbody>
+                    @foreach (string str in Model.errorTable) {
+                        <tr>
+                            <td class="right">@str</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
     }
 }

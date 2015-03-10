@@ -27,22 +27,15 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
+using Nancy.Security;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Antd
-{
-    public class LinqFiles
-    {
-        public static string GetFileText(string name)
-        {
-            string fileContents = String.Empty;
-            if (System.IO.File.Exists(name))
-            {
-                fileContents = System.IO.File.ReadAllText(name);
-            }
-            return fileContents;
-        }
+namespace Antd.Auth {
+
+    public class UserIdentity : IUserIdentity {
+
+        public string UserName { get; set; }
+
+        public IEnumerable<string> Claims { get; set; }
     }
 }

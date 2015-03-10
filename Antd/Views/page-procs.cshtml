@@ -28,21 +28,49 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<Antd.ProcModel>>
 @{Layout = "_layout.cshtml";}
 
 @section MainContent
 {
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+    @if (Model != null) {
+        @if (Model != null) {
+            <table id="Output" class="table striped">
+                <tbody>
+                    @foreach (Antd.ProcModel proc in Model) {
+                        <tr>
+                            <td class="right"><a class="kill-this" data-pid="@proc.PID"><i class="icon-cancel fg-red"></i></a></td>
+                            <td class="right">@proc.UID</td>
+                            <td class="right">@proc.PID</td>
+                            <td class="right">@proc.PPID</td>
+                            <td class="right">@proc.C</td>
+                            <td class="right">@proc.STIME</td>
+                            <td class="right">@proc.TTY</td>
+                            <td class="right">@proc.TIME</td>
+                            <td class="right">@proc.CMD</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $('.kill-this').click(function () {
+            var self = $(this);
+            var pid = self.attr('data-pid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/procs/kill/',
+                type: 'POST',
+                data: { data: pid },
+                success: function () {
+                    self.parend('tr').hide();
+                    return false;
+                }
+            });
+        });
+    </script>
 }

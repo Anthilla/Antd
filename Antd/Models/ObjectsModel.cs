@@ -31,9 +31,11 @@ using System;
 using System.Collections.Generic;
 
 namespace Antd {
+
     #region Version Model
 
     public class VersionModel {
+
         public string key { get; set; }
 
         public string value { get; set; }
@@ -44,6 +46,7 @@ namespace Antd {
     #region CpuInfo Model
 
     public class CpuinfoModel {
+
         public string key { get; set; }
 
         public string value { get; set; }
@@ -54,7 +57,9 @@ namespace Antd {
     #region MemInfo Model
 
     public class MeminfoModel {
+
         public string key { get; set; }
+
         public string value { get; set; }
     }
 
@@ -63,6 +68,7 @@ namespace Antd {
     #region Network Model
 
     public class NetworkModel {
+
         public string hostname { get; set; }
     }
 
@@ -71,18 +77,23 @@ namespace Antd {
     #region Command Model
 
     public class OutputModel {
+
         public string key { get; set; }
 
         public string value { get; set; }
     }
 
     public class ErrorModel {
+
         public string key { get; set; }
 
         public string value { get; set; }
     }
 
     public class CommandModel {
+
+        public Tuple<string, string> input { get; set; }
+
         public DateTime date { get; set; }
 
         public string output { get; set; }

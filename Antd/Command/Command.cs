@@ -32,55 +32,58 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
-namespace Antd
-{
-    public class Command
-    {
-        public static string GetText(string file, string args)
-        {
+namespace Antd {
+
+    public class Command {
+
+        public static CommandModel Launch(string file, string args) {
             string output = string.Empty;
             string error = string.Empty;
-
             Process process = new Process();
             process.StartInfo.FileName = file;
             process.StartInfo.Arguments = args;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
-            process.Start();
+            try {
+                process.Start();
+                using (StreamReader streamReader = process.StandardOutput) {
+                    output = streamReader.ReadToEnd();
+                }
 
-            using (StreamReader streamReader = process.StandardOutput)
-            {
-                output = streamReader.ReadToEnd();
+                using (StreamReader streamReader = process.StandardError) {
+                    error = streamReader.ReadToEnd();
+                }
+                process.WaitForExit();
+                CommandModel command = new CommandModel();
+                command.input = new Tuple<string, string>(file, args);
+                command.date = DateTime.Now;
+                command.output = output;
+                command.outputTable = TextToList(output);
+                command.error = error;
+                command.errorTable = TextToList(error);
+                return command;
             }
-
-            using (StreamReader streamReader = process.StandardError)
-            {
-                error = streamReader.ReadToEnd();
+            catch (Exception ex) {
+                CommandModel command = new CommandModel();
+                command.error = ex.Message;
+                command.errorTable = TextToList(ex.Message);
+                return command;
             }
-            process.WaitForExit();
-
-            Tuple<string, string> result = new Tuple<string, string>(output, error);
-            string json = JsonConvert.SerializeObject(result);
-            return json;
         }
 
-        public static CommandModel GetModel(string file, string args)
-        {
+        public static CommandModel Launch(string file, string args, string dir) {
             string output = string.Empty;
             string error = string.Empty;
-
             Process process = new Process();
             process.StartInfo.FileName = file;
             process.StartInfo.Arguments = args;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
-
-            try 
-            {
+            process.StartInfo.WorkingDirectory = dir.ToString();
+            try {
                 process.Start();
 
                 using (StreamReader streamReader = process.StandardOutput) {
@@ -91,8 +94,8 @@ namespace Antd
                     error = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
-
                 CommandModel command = new CommandModel();
+                command.input = new Tuple<string, string>(file, args);
                 command.date = DateTime.Now;
                 command.output = output;
                 command.outputTable = TextToList(output);
@@ -100,8 +103,7 @@ namespace Antd
                 command.errorTable = TextToList(error);
                 return command;
             }
-            catch (Exception ex) 
-            {
+            catch (Exception ex) {
                 CommandModel command = new CommandModel();
                 command.error = ex.Message;
                 command.errorTable = TextToList(ex.Message);
@@ -109,16 +111,12 @@ namespace Antd
             }
         }
 
-        private static List<string> TextToList(string text)
-        {
+        public static List<string> TextToList(string text) {
             List<string> stringList = new List<string>();
-
             string[] rowDivider = new String[] { "\n" };
             string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList)
-            {
-                if (row != null && row != "")
-                {
+            foreach (string row in rowList) {
+                if (row != null && row != "") {
                     stringList.Add(row);
                 }
             }

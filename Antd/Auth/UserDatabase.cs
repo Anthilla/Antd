@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,23 +25,39 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
-@{Layout = "_layout.cshtml";}
+using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+namespace Antd.Auth {
+
+    public class UserDatabase : IUserMapper {
+
+        public static List<Tuple<string, string, Guid>> USERS() {
+            List<Tuple<string, string, Guid>> userList = MapSystemUser.SystemuUsers();
+            return userList;
+        }
+
+        public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
+            var Users = USERS();
+            var UserRecord = Users.Where(u => u.Item3 == identifier).FirstOrDefault();
+            return UserRecord == null
+                       ? null
+                       : new UserIdentity { UserName = UserRecord.Item1 };
+        }
+
+        public static Guid? ValidateUser(string username, string password) {
+            var Users = USERS();
+            var UserRecord = Users.Where(u => u.Item1 == username && u.Item2 == password).FirstOrDefault();
+            if (UserRecord == null) {
+                return null;
+            }
+            return UserRecord.Item3;
+        }
+    }
 }

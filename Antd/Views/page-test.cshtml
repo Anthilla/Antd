@@ -33,16 +33,33 @@
 
 @section MainContent
 {
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+    <legend>SignalR Test</legend>
+    <div class="container">
+        <input type="text" id="dataToSend" />
+        <input type="button" id="sendmessage" value="Send" />
+        <input type="hidden" id="displayname" />
+        <ul id="discussion">
+        </ul>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var connection = $.hubConnection();
+            var proxy = connection.createHubProxy('anthillaHub');
+            //connection.logging = true;
+            connection.start()
+                    .done(function () {
+                        $('#sendmessage').click(function () {
+                            proxy.invoke('Start', $("#dataToSend").val());
+                        });
+                        $('#discussion').append('<li>Open Connection</li>');
+                        $('#discussion').append('<li>Subscribed</li>');
+                    })
+                    .fail(function () { $('#discussion').append('<li>Could not Connect!</li>'); });
+
+            proxy.on('flush', function (message) {
+                var encodedMsg = $('<div />').text(message).html();
+                $('#discussion').append('<li>' + encodedMsg + '</li>');
+            });
+        });
+    </script>
 }

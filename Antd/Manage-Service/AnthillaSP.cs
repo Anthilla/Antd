@@ -27,29 +27,48 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.UnitFiles;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 
-namespace Antd
-{
-    public class Meminfo
-    {
-        public static string GetText()
-        {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/meminfo");
+namespace Antd.ServiceManagement {
 
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+    public class AnthillaSP {
+
+        public static CommandModel EnableAnthillaServer() {
+            return Systemctl.Enable("/cfg/anthilla.units.d/anthillaserver.service");
         }
 
-        public static List<MeminfoModel> GetModel()
-        {
-            string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/meminfo");
-
-            var meminfo = TextToJson.Meminfo(meminfoContent);
-            return meminfo;
+        public static CommandModel EnableAnthillaSP() {
+            return Systemctl.Enable("/cfg/anthilla.units.d/anthillasp.service");
         }
+
+        public static CommandModel StartAnthillaServer() {
+            return Systemctl.Start("anthillaserver.service");
+        }
+
+        public static CommandModel StartAnthillaSP() {
+            return Systemctl.Start("anthillasp.service");
+        }
+
+        public static CommandModel StopAnthillaServer() {
+            return Systemctl.Stop("anthillaserver.service");
+        }
+
+        public static CommandModel StopAnthillaSP() {
+            return Systemctl.Stop("anthillasp.service");
+        }
+
+        public static CommandModel StatusAnthillaServer() {
+            return Systemctl.Status("anthillaserver.service");
+        }
+
+        public static CommandModel StatusAnthillaSP() {
+            return Systemctl.Status("anthillasp.service");
+        }
+
+        public static string AnthillaServerPID { get { return Service.GetPID("AnthillaServer.exe"); } }
+
+        public static string AnthillaSPPID { get { return Service.GetPID("AnthillaSP.exe"); } }
     }
 }

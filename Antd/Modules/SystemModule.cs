@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,23 +25,52 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
-@{Layout = "_layout.cshtml";}
+using Nancy;
+using Nancy.Security;
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+namespace Antd {
+
+    public class SystemModule : NancyModule {
+
+        public SystemModule()
+            : base("/sys") {
+            this.RequiresAuthentication();
+
+            Get["/"] = x => {
+                return View["page-m-system"];
+            };
+
+            Get["/cfg"] = x => {
+                CommandModel[] commands = Cfg.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+
+            Get["/datarepo"] = x => {
+                CommandModel[] commands = SystemDataRepo.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+
+            Get["/network"] = x => {
+                CommandModel[] commands = Network.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+
+            Get["/anthillasp"] = x => {
+                CommandModel[] commands = SetAnthillaSP.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+
+            Get["/anthillaas"] = x => {
+                CommandModel[] commands = SetAnthillaAS.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+
+            Get["/zfsmount"] = x => {
+                CommandModel[] commands = ZfsMount.LaunchDefaults();
+                return View["page-m-system", commands];
+            };
+        }
+    }
 }

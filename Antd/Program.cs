@@ -27,92 +27,106 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
-using System.Threading;
+using Antd.UnitFiles;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
 using Nancy;
 using Owin;
+using System;
+using System.Threading;
 
 namespace Antd {
+
     internal static class Program {
-        private static StartupConfig appConfig = new StartupConfig();
 
         private static void Main(string[] args) {
+            DateTime startTime = DateTime.Now;
             Console.Title = "ANTD";
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading application...");
+
+            SystemConfig.FirstLaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core system configuration...");
+
+            Cfg.FirstLaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core cfg configuration...");
+
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
                     Console.WriteLine("^C");
+                    Database.ShutDown();
                     stop.Set();
                     e.Cancel = true;
                 };
+            string uri = SelfConfig.GetAntdUri();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing antd");
+            using (WebApp.Start<Startup>(uri)) {
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url -> {0}", uri);
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
+                var elapsed = DateTime.Now - startTime;
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
-            string port;
-            bool portExist;
-            bool dbrootExist;
-            string uri;
+                Console.WriteLine("");
+                ServiceUnitInfo.SetDefaultUnitInfo();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
 
-            portExist = appConfig.CheckValue("server", "port");
-            if (portExist == false) {
-                appConfig.WriteValue("server", "port", "7777");
-            }
-
-            dbrootExist = appConfig.CheckValue("server", "dbroot");
-            if (dbrootExist == false) {
-                appConfig.WriteValue("server", "dbroot", "/database/directory");
-            }
-
-            port = appConfig.ReadValue("server", "port");
-
-            uri = "http://+:" + port + "/";
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing");
-            try {
-                using (WebApp.Start<Startup>(uri)) {
-                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
-                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
-                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server port -> {0}", port);
-                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url  -> {0}", uri);
-                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
-                    Console.WriteLine("");
-                    stop.WaitOne();
-                }
-            } catch(System.Reflection.TargetInvocationException ex) {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Register +: urlacl");
-                Console.WriteLine("on windows:");
-                Console.WriteLine("netsh http add urlacl url=http://+:7777/ user=UserName");
+                stop.WaitOne();
             }
         }
     }
 
     internal class Startup {
+
         public void Configuration(IAppBuilder app) {
+            //write defaults and stuff
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting default configuration...");
+            SelfConfig.WriteDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: antd...");
+            SystemConfig.WriteDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
+            Cfg.LaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
+            Network.LaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
+            SystemDataRepo.LaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
+            ZfsMount.LaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: zfsMount...");
+            Command.Launch("chmod", "777 *.xml");
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    check configuration...");
+
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service configuration");
-            StaticConfiguration.DisableErrorTraces = false;
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    disableerrortraces -> false");
+            var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
+            app.MapSignalR(hubConfiguration);
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    signalR -> loaded");
+            bool errorTrace = false;
+            StaticConfiguration.DisableErrorTraces = errorTrace;
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    disableerrortraces -> {0}", errorTrace);
             Database.Start();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    denso-db -> loaded");
             app.UseNancy();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    nancy-fx -> loaded");
+
         }
     }
 
     public class Database {
-        private static StartupConfig appConfig = new StartupConfig();
 
         public static void Start() {
-            string root;
-            root = appConfig.ReadValue("server", "dbroot");
-            Start(root);
-        }
+            string[] databases;
 
-        public static void Start(string root) {
-            DeNSo.Configuration.BasePath = new string[] { System.IO.Path.Combine(root, "Database") };
+            string root = SelfConfig.GetAntdDb();
+            databases = new string[] { root };
+
+            DeNSo.Configuration.BasePath = databases;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.DBCheckTimeSpan = new System.TimeSpan(0, 1, 0);
             DeNSo.Configuration.ReindexCheck = new System.TimeSpan(0, 1, 0);
-
-            DeNSo.Session.DefaultDataBase = "Data";
+            DeNSo.Configuration.EnableOperationsLog = false;
+            string db = "AntDB";
+            DeNSo.Session.DefaultDataBase = db;
             DeNSo.Session.Start();
         }
 

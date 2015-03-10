@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,23 +25,23 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
-@{Layout = "_layout.cshtml";}
+using Antd.UnitFiles;
+using Nancy;
+using Nancy.Security;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Dynamic;
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+namespace Antd {
+
+    public class TestModule : NancyModule {
+        public TestModule() : base("/test"){
+
+            Get["/"] = x => {
+                return Response.AsText("Hello World!");
+            };
+        }
+    }
 }

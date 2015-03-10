@@ -27,15 +27,28 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using Nancy;
+using Nancy.Security;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Antd {
+
     public class HomeModule : NancyModule {
+
         public HomeModule() {
+            this.RequiresAuthentication();
+
             Get["/"] = x => {
-                return Response.AsRedirect("/meminfo");
+                return Response.AsRedirect("/anthillasp");
+            };
+
+            Get["/info"] = x => {
+                return View["page-info"];
+            };
+
+            Get["/paramlist"] = x => {
+                return View["page-paramlist"];
             };
 
             Get["/meminfo"] = x => {
@@ -52,7 +65,7 @@ namespace Antd {
             };
 
             Get["/network"] = x => {
-                NetworkModel network = Network.GetModel();
+                NetworkModel network = NetworkInfo.GetModel();
                 if (network == null) {
                     return View["page-network"];
                 }
@@ -85,9 +98,37 @@ namespace Antd {
                 return Response.AsJson(version);
             };
 
+            Get["/dmidecode"] = x => {
+                CommandModel command = Command.Launch("dmidecode", "");
+                return View["page-dmidecode", command];
+            };
+
+            Get["/dmidecode/uuid"] = x => {
+                CommandModel command = Command.Launch("dmidecode", "");
+                string uuid = Dmidecode.GetUUID(command.outputTable);
+                return Response.AsJson(uuid);
+            };
+
+            Get["/dmidecode/text"] = x => {
+                CommandModel command = Command.Launch("dmidecode", "");
+                return JsonConvert.SerializeObject(command.output);
+            };
+
+            Get["/ifconfig"] = x => {
+                CommandModel command = Command.Launch("ifconfig", "");
+                return View["page-ifconfig", command];
+            };
+
+            Get["/ifconfig/ether"] = x => {
+                return JsonConvert.SerializeObject(Ifconfig.GetEther());
+            };
+
+            Get["/ifconfig/text"] = x => {
+                CommandModel command = Command.Launch("ifconfig", "");
+                return JsonConvert.SerializeObject(command.output);
+            };
+
             Get["/command"] = x => {
-                ViewBag.Output = "";
-                ViewBag.Error = "";
                 return View["page-command"];
             };
 
@@ -95,10 +136,24 @@ namespace Antd {
                 string file = (string)this.Request.Form.File;
                 string args = (string)this.Request.Form.Arguments;
 
-                CommandModel command = Command.GetModel(file, args);
-                ViewBag.Output = command.output;
-                ViewBag.Error = command.error;
+                CommandModel command = Command.Launch(file, args);
                 return View["page-command", command];
+            };
+
+            Get["/procs"] = x => {
+                List<ProcModel> procs = Proc.All;
+                return View["page-procs", procs];
+            };
+
+            Get["/procs/text"] = x => {
+                CommandModel command = Command.Launch("ps", "-aef");
+                return JsonConvert.SerializeObject(command.output.Replace("\"", ""));
+            };
+
+            Post["/procs/kill"] = x => {
+                string pid = (string)this.Request.Form.data;
+                CommandModel command = Command.Launch("kill", pid);
+                return Response.AsRedirect("/procs");
             };
         }
     }

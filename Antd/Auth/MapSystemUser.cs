@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,23 +25,29 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
-@{Layout = "_layout.cshtml";}
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="right">@Model.value</td>
-            </tr>
-        </tbody>
-    </table>
+namespace Antd.Auth {
+
+    public class MapSystemUser {
+
+        public static List<Tuple<string, string, Guid>> SystemuUsers() {
+            List<Tuple<string, string, Guid>> userList = new List<Tuple<string, string, Guid>>() { };
+            userList.Add(new Tuple<string, string, Guid>("root", "root", new Guid("00000000-0000-0000-0000-000000000500")));
+            return userList;
+        }
+
+        public static string GetRootPwd(string username) {
+            CommandModel command = Command.Launch("cat", "/etc/shadow");
+            List<string> sysUserList = command.outputTable;
+            var s = (from r in sysUserList
+                     where r.Contains(username)
+                     select r).FirstOrDefault();
+            return s;
+        }
+    }
 }

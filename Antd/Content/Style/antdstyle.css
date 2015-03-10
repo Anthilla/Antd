@@ -1,0 +1,53 @@
+.metro .bg-anth-green
+{
+    background-color: #ffffff !important;
+}
+
+.metro .bg-anth-green
+{
+    background-color: #a7bd39 !important;
+}
+
+.metro .bg-anth-gray
+{
+    background-color: #3a3a3a !important;
+}
+
+.metro .bg-anth-violet
+{
+    background-color: #996baf !important;
+}
+
+.metro .bg-anth-orange
+{
+    background-color: #f06305 !important;
+}
+
+.metro .bg-anth-blue
+{
+    background-color: #60a1e4 !important;
+}
+
+.metro .navigation-bar.anth-green
+{
+    background-color: #a7bd39;
+}
+
+    .metro .navigation-bar.anth-green .element-menu > li > a
+    {
+        color: #ffffff;
+    }
+
+    .metro .navigation-bar.anth-green .element:hover,
+    .metro .navigation-bar.anth-green .element-menu > li:hover
+    {
+        background-color: #cbd982 !important;
+    }
+
+            .metro .navigation-bar .navigation-bar-content .element:hover,
+            .metro .navbar .navigation-bar-content .element:hover,
+            .metro .navigation-bar .navbar-content .element:hover,
+            .metro .navbar .navbar-content .element:hover
+            {
+                background-color: #798929;
+            }

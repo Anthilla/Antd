@@ -28,20 +28,38 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.VersionModel>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
-@section MainContent
-{
-    <table id="meminfo" class="table striped">
-        <thead>
-            <tr>
-                <th class="text-left">VERSION</th>
-            </tr>
-        </thead>
+@section MainContent {
+    <legend>Self-config</legend>
+    <table class="table striped">
         <tbody>
             <tr>
-                <td class="right">@Model.value</td>
+                <td class="right" style="width: 150px;">Application Port</td>
+                <td class="right">
+                    <p>@Antd.SelfConfig.GetAntdPort()</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="right">Database path</td>
+                <td class="right">
+                    <p>@Antd.SelfConfig.GetAntdDb()</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <legend>System-config</legend>
+    <table class="table striped">
+        <tbody>
+            <tr>
+                <td class="right" style="width: 150px;">Core startup script</td>
+                <td class="right">
+                    @foreach (string s in Antd.SystemConfig.baseScriptArgs) {
+                        <p>@s</p>
+                    }
+                </td>
             </tr>
         </tbody>
     </table>
