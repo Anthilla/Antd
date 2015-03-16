@@ -103,6 +103,10 @@ namespace Antd {
         public List<string> outputTable { get; set; }
 
         public List<string> errorTable { get; set; }
+
+        public bool isError() {
+            return !String.IsNullOrEmpty(this.error);
+        }
     }
 
     #endregion Command Model

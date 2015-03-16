@@ -74,10 +74,10 @@ namespace Antd {
             proc.STIME = procJsonCell[4];
             proc.TTY = procJsonCell[5];
             proc.TIME = procJsonCell[6];
-            proc.CMD = procJsonCell[7];
-            int i = procJsonCell.Length;
-            if (i > 8) {
+            if (procJsonCell.Length > 8) {
                 proc.CMD = procJsonCell[7] + " " + procJsonCell[8];
+            } else if (procJsonCell.Length > 7) {
+                proc.CMD = procJsonCell[7];
             }
             return proc;
         }

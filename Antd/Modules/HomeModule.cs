@@ -127,7 +127,8 @@ namespace Antd {
 
             Get["/dmidecode/uuid"] = x => {
                 CommandModel command = Command.Launch("dmidecode", "");
-                string uuid = Dmidecode.GetUUID(command.outputTable);
+                string uuid = command.isError() ? null
+                    : Dmidecode.GetUUID(command.outputTable);
                 return Response.AsJson(uuid);
             };
 
