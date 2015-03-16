@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Log;
+using Antd.ViewModels;
 using Nancy;
 using Nancy.Security;
 using System.Collections.Generic;
@@ -41,13 +41,24 @@ namespace Antd {
             : base("/dir") {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
-                return View["page-dir"];
+            Get["/tree/{path*}"] = x => {
+                var p = x.path;
+                DirectoryModel dirs = new DirectoryModel();
+                dirs.parents = new DirectoryLister("/" + p, false).ParentList.Reverse();
+                dirs.children = new DirectoryLister("/" + p, false).FullList;
+                return View["page-dir", dirs];
+            };
+
+            Get["/tttt/{path*}"] = x => {
+                var p = x.path;
+                HashSet<string> directories = new DirectoryLister("/" + p, false).FullList;
+                var i = directories.FirstOrDefault();
+                return Response.AsText(i);
             };
 
             Get["/directory/tree/{path*}"] = x => {
                 var p = x.path;
-                HashSet<string> directories = new DirectoryLister("/" + p).FullList;
+                HashSet<string> directories = new DirectoryLister("/" + p, true).FullList;
                 return View["page-dir", directories.ToList()];
             };
 

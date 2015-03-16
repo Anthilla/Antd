@@ -28,21 +28,32 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<string>>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Antd.ViewModels.DirectoryModel>
+@using System.Collections.Generic
+@using System.Linq
 @{Layout = "_layout.cshtml";}
 
 @section MainContent
 {
-@*    <input type="text" id="append" /> | <a href="#" id="appender"><i class="icon-arrow-right"></i></a> | <a id="appendose" href="#"><i class="icon-broadcast"></i></a>
-    <hr />
-    @foreach(string el in Model) {
-        <p>@el</p>
+    @functions{
+        public string MakeUrl(string path){
+            string a = path.Replace(@"\", @"/").Replace(":", "");
+            Console.WriteLine(a);
+            return "/dir/tree" + a;
+        }
     }
+    <nav class="breadcrumbs mini">
+        <ul>
+            @foreach (string dir in Model.parents) {
+                @*<li><a href="/dir/tree/@dir">@dir</a></li>*@
+                <li><a href="#">@MakeUrl(dir)</a></li>
+            }
+        </ul>
+    </nav>
 
-    <script type="text/javascript">
-        $('#appender').click(function(){
-            var text = ("/directory/tree/" + $('#append').val()).replace(/\/\//g, "/"); ;
-            $('#appendose').attr('href', text).text(text);
-        });
-    </script>*@
+    <ul>
+        @foreach (string el in Model.children) {
+            <li><a href="/dir/tree/@el">@el</a></li>
+        }
+    </ul>
 }

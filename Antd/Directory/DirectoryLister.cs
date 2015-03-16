@@ -8,17 +8,37 @@ namespace Antd {
 
         private DirectoryInfo root;
 
-        public DirectoryLister(string _path) {
+        public DirectoryLister(string _path, bool getSubDir) {
             root = new DirectoryInfo(_path);
-            WalkDirectoryTree(root);
+            WalkDirectoryTree(root, getSubDir);
+            UpwalkDirectoryTree(root);
         }
 
-        private HashSet<string> _cache = new HashSet<string>() { };
+        private HashSet<string> _parents = new HashSet<string>() { };
 
-        private void WalkDirectoryTree(System.IO.DirectoryInfo root) {
-            System.IO.FileInfo[] files = null;
-            System.IO.DirectoryInfo[] subDirs = null;
-            _cache.Add(root.FullName);
+        private void UpwalkDirectoryTree(DirectoryInfo root) {
+            try {
+                _parents.Add(root.FullName);
+                DirectoryInfo parent = Directory.GetParent(root.FullName);
+                UpwalkDirectoryTree(parent);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public HashSet<string> ParentList {
+            get {
+                return _parents;
+            }
+        }
+
+        private HashSet<string> _tree = new HashSet<string>() { };
+
+        private void WalkDirectoryTree(DirectoryInfo root, bool getSubDir) {
+            FileInfo[] files = null;
+            DirectoryInfo[] subDirs = null;
+            //_tree.Add(root.FullName);
             // First, process all the files directly under this folder 
             try {
                 files = root.GetFiles("*.*");
@@ -30,32 +50,34 @@ namespace Antd {
                 // You may decide to do something different here. For example, you 
                 // can try to elevate your privileges and access the file again.
             }
-            catch (System.IO.DirectoryNotFoundException e) {
+            catch (DirectoryNotFoundException e) {
                 Console.WriteLine(e.Message);
             }
             if (files != null) {
-                foreach (System.IO.FileInfo fi in files) {
+                foreach (FileInfo fi in files) {
                     // In this example, we only access the existing FileInfo object. If we 
                     // want to open, delete or modify the file, then 
                     // a try-catch block is required here to handle the case 
                     // where the file has been deleted since the call to TraverseTree().
-                    _cache.Add(fi.Attributes + " | " + fi.IsReadOnly + " | " + fi.FullName);
+                    _tree.Add(fi.FullName);
                     //Console.WriteLine(fi.FullName);
                 }
                 // Now find all the subdirectories under this directory.
                 subDirs = root.GetDirectories();
-                foreach (System.IO.DirectoryInfo dirInfo in subDirs) {
+                foreach (DirectoryInfo dirInfo in subDirs) {
                     // Resursive call for each subdirectory.
-                    _cache.Add(dirInfo.Attributes + " | " + dirInfo.FullName);
+                    _tree.Add(dirInfo.FullName);
                     //Console.WriteLine(dirInfo.FullName);
-                    WalkDirectoryTree(dirInfo);
+                    if (getSubDir == true) {
+                        WalkDirectoryTree(dirInfo, true);
+                    }
                 }
             }
         }
 
         public HashSet<string> FullList {
             get {
-                return _cache;
+                return _tree;
             }
         }
 

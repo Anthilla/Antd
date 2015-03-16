@@ -41,7 +41,7 @@ namespace Antd {
             };
 
             Get["/acl"] = x => {
-                var c = new DirectoryLister("/sys").GetFileACL();
+                var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
             };
 
