@@ -136,9 +136,15 @@
     <Compile Include="Config\Anth_ParamWriter.cs" />
     <Compile Include="Config\SystemConfig.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="Directory\DirectoryWatcher.cs" />
+    <Compile Include="Directory\DirectoryLister.cs" />
+    <Compile Include="Log\LogRepository.cs" />
+    <Compile Include="Log\LogModel.cs" />
     <Compile Include="Manage-Service\AnthillaSP.cs" />
     <Compile Include="Manage-Service\AnthillaAS.cs" />
     <Compile Include="Manage-Service\ServiceActions.cs" />
+    <Compile Include="Modules\LogModule.cs" />
+    <Compile Include="Program\Timestamp.cs" />
     <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
     <Compile Include="Manage-System\04AnthillaAS.cs" />
@@ -149,7 +155,7 @@
     <Compile Include="Modules\AnthillaSPModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Config\ConsoleTime.cs" />
+    <Compile Include="Program\ConsoleTime.cs" />
     <Compile Include="Contexts\Network.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -191,6 +197,15 @@
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Views\page-log.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-directories-watch.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-directories.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-m-service-as.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

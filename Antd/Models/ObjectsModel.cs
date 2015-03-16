@@ -106,4 +106,15 @@ namespace Antd {
     }
 
     #endregion Command Model
+
+    #region Directory Model
+    public class _dirObject {
+        public bool isDirectory { get; set; }
+        public bool isFile { get; set; }
+    }
+
+    public class AntdirModel : _dirObject {
+        public string name { get; set; }
+    }
+    #endregion Directory Model
 }

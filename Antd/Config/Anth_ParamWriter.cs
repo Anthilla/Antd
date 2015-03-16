@@ -26,7 +26,7 @@ namespace Antd {
 
         public Anth_ParamWriter(string[] fileNames, string newFolder) {
             folder = Path.Combine(root, newFolder); ;
-            Directory.CreateDirectory(folder);
+            System.IO.Directory.CreateDirectory(folder);
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
                 var p = Path.Combine(folder, fileName + ".xml");

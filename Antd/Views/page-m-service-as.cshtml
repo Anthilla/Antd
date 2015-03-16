@@ -38,7 +38,7 @@
             <div class="span12">
                 <legend style="display: inline-block;">AnthillaStorage</legend>
 
-                <a href="#" id="UnitStg" class="tile bg-gray">
+                <a href="/anthillaas/unit/set/anthillastorage" id="UnitStg" class="tile bg-gray">
                     <div class="tile-content icon">
                         <i class="icon-icon-clipboard-2"></i>
                     </div>
@@ -47,7 +47,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StatusStg" class="tile bg-anth-blue">
+                <a href="/anthillaas/unit/status/anthillastorage" id="StatusStg" class="tile bg-anth-blue">
                     <div class="tile-content icon">
                         <i class="icon-pause-2"></i>
                     </div>
@@ -56,7 +56,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StartStg" class="tile bg-anth-green">
+                <a href="/anthillaas/unit/start/anthillastorage" id="StartStg" class="tile bg-anth-green">
                     <div class="tile-content icon">
                         <i class="icon-play-2"></i>
                     </div>
@@ -65,7 +65,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StopStg" class="tile bg-anth-orange">
+                <a href="/anthillaas/unit/stop/anthillafirewall" id="StopStg" class="tile bg-anth-orange">
                     <div class="tile-content icon">
                         <i class="icon-stop-2"></i>
                     </div>
@@ -76,7 +76,7 @@
 
                 <legend style="display: inline-block;">AnthillaFirewall</legend>
 
-                <a href="#" id="UnitFrw" class="tile bg-gray">
+                <a href="/anthillaas/unit/set/anthillafirewall" id="UnitFrw" class="tile bg-gray">
                     <div class="tile-content icon">
                         <i class="icon-icon-clipboard-2"></i>
                     </div>
@@ -85,7 +85,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StatusFrw" class="tile bg-anth-blue">
+                <a href="/anthillaas/unit/status/anthillafirewall" id="StatusFrw" class="tile bg-anth-blue">
                     <div class="tile-content icon">
                         <i class="icon-pause-2"></i>
                     </div>
@@ -94,7 +94,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StartFrw" class="tile bg-anth-green">
+                <a href="/anthillaas/unit/start/anthillafirewall" id="StartFrw" class="tile bg-anth-green">
                     <div class="tile-content icon">
                         <i class="icon-play-2"></i>
                     </div>
@@ -103,7 +103,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StopFrw" class="tile bg-anth-orange">
+                <a href="/anthillaas/unit/stop/anthillafirewall" id="StopFrw" class="tile bg-anth-orange">
                     <div class="tile-content icon">
                         <i class="icon-stop-2"></i>
                     </div>
@@ -114,7 +114,7 @@
 
                 <legend style="display: inline-block;">AnthillaAS</legend>
 
-                <a href="#" id="UnitAas" class="tile bg-gray">
+                <a href="/anthillaas/unit/set/anthillaas" id="UnitAas" class="tile bg-gray">
                     <div class="tile-content icon">
                         <i class="icon-icon-clipboard-2"></i>
                     </div>
@@ -123,7 +123,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StatusAas" class="tile bg-anth-blue">
+                <a href="/anthillaas/unit/status/anthillaas" id="StatusAas" class="tile bg-anth-blue">
                     <div class="tile-content icon">
                         <i class="icon-pause-2"></i>
                     </div>
@@ -132,7 +132,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StartAas" class="tile bg-anth-green">
+                <a href="/anthillaas/unit/start/anthillaas" id="StartAas" class="tile bg-anth-green">
                     <div class="tile-content icon">
                         <i class="icon-play-2"></i>
                     </div>
@@ -141,7 +141,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StopAas" class="tile bg-anth-orange">
+                <a href="/anthillaas/unit/stop/anthillaas" id="StopAas" class="tile bg-anth-orange">
                     <div class="tile-content icon">
                         <i class="icon-stop-2"></i>
                     </div>
@@ -152,163 +152,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $("#UnitStg").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/set/anthillastorage/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla storage unit created');
-                }
-            });
-        });
-
-        $("#StatusStg").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/status/anthillastorage/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla storage status');
-                }
-            });
-        });
-
-        $("#StartStg").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/start/anthillastorage/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla storage start');
-                }
-            });
-        });
-
-        $("#StopStg").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/stop/anthillastorage/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla storage stop');
-                }
-            });
-        });
-
-        $("#UnitFrw").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/set/anthillafirewall/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla firewall unit created');
-                }
-            });
-        });
-
-        $("#StatusFrw").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/status/anthillafirewall/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla firewall status');
-                }
-            });
-        });
-
-        $("#StartFrw").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/start/anthillafirewall/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla firewall start');
-                }
-            });
-        });
-
-        $("#StopFrw").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/stop/anthillafirewall/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla firewall stop');
-                }
-            });
-        });
-
-        $("#UnitAas").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/set/anthillaas/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla as unit created');
-                }
-            });
-        });
-
-        $("#StatusAas").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/status/anthillaas/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla as status');
-                }
-            });
-        });
-
-        $("#StartAas").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/start/anthillaas/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla as start');
-                }
-            });
-        });
-
-        $("#StopAas").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillaas/unit/stop/anthillaas/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla as stop');
-                }
-            });
-        });
-    </script>
 
 @if (Model != null) {
     @if (Model.outputTable != null) {

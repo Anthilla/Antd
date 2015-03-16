@@ -27,12 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.UnitFiles;
 using Nancy;
-using Nancy.Security;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.IO;
 
 namespace Antd {
 
@@ -42,6 +39,18 @@ namespace Antd {
             Get["/"] = x => {
                 return Response.AsText("Hello World!");
             };
+
+            Get["/acl"] = x => {
+                var c = new DirectoryLister("/sys").GetFileACL();
+                return Response.AsJson(c);
+            };
+
+            //Get["/dir"] = x => {
+            //    DirectoryInfo root = new DirectoryInfo("/cfg");
+            //    DirectoryLister.WalkDirectoryTree(root);
+            //    var i = DirectoryLister.cache;
+            //    return Response.AsJson(i);
+            //};
         }
     }
 }

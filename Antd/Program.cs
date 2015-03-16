@@ -71,6 +71,21 @@ namespace Antd {
                 Console.WriteLine("");
                 ServiceUnitInfo.SetDefaultUnitInfo();
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
+                UnitFile.WriteForSelf();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file created");
+                Systemctl.Enable("antd.service");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file enabled");
+
+                Console.WriteLine("");
+                string[] watchThese = new string[] { 
+                    "/cfg",
+                    "/proc/sys",
+                    "/sys/class/net"
+                };
+                foreach (string folder in watchThese) {
+                    new DirectoryWatcher(folder).Watch();
+                    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "watcher enabled for {0}", folder);
+                }
 
                 stop.WaitOne();
             }

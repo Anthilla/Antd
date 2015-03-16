@@ -38,7 +38,7 @@
             <div class="span12">
                 <legend style="display: inline-block;">AnthillaServer</legend>
 
-                <a href="#" id="UnitSrv" class="tile bg-gray">
+                <a href="/anthillasp/unit/set/anthillaserver" id="UnitSrv" class="tile bg-gray">
                     <div class="tile-content icon">
                         <i class="icon-icon-clipboard-2"></i>
                     </div>
@@ -47,7 +47,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StatusSrv" class="tile bg-anth-blue">
+                <a href="/anthillasp/unit/status/anthillaserver" id="StatusSrv" class="tile bg-anth-blue">
                     <div class="tile-content icon">
                         <i class="icon-pause-2"></i>
                     </div>
@@ -56,7 +56,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StartSrv" class="tile bg-anth-green">
+                <a href="/anthillasp/unit/start/anthillaserver" id="StartSrv" class="tile bg-anth-green">
                     <div class="tile-content icon">
                         <i class="icon-play-2"></i>
                     </div>
@@ -65,7 +65,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StopSrv" class="tile bg-anth-orange">
+                <a href="/anthillasp/unit/stop/anthillaserver" id="StopSrv" class="tile bg-anth-orange">
                     <div class="tile-content icon">
                         <i class="icon-stop-2"></i>
                     </div>
@@ -76,7 +76,7 @@
 
                 <legend style="display: inline-block;">AnthillaSP</legend>
 
-                <a href="#" id="UnitAsp" class="tile bg-gray">
+                <a href="/anthillasp/unit/set/anthillasp" id="UnitAsp" class="tile bg-gray">
                     <div class="tile-content icon">
                         <i class="icon-icon-clipboard-2"></i>
                     </div>
@@ -85,7 +85,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StatusAsp" class="tile bg-anth-blue">
+                <a href="/anthillasp/unit/status/anthillasp" id="StatusAsp" class="tile bg-anth-blue">
                     <div class="tile-content icon">
                         <i class="icon-pause-2"></i>
                     </div>
@@ -94,7 +94,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StartAsp" class="tile bg-anth-green">
+                <a href="/anthillasp/unit/start/anthillasp" id="StartAsp" class="tile bg-anth-green">
                     <div class="tile-content icon">
                         <i class="icon-play-2"></i>
                     </div>
@@ -103,7 +103,7 @@
                     </div>
                 </a>
 
-                <a href="#" id="StopAsp" class="tile bg-anth-orange">
+                <a href="/anthillasp/unit/stop/anthillasp" id="StopAsp" class="tile bg-anth-orange">
                     <div class="tile-content icon">
                         <i class="icon-stop-2"></i>
                     </div>
@@ -114,111 +114,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $("#UnitSrv").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/set/anthillaserver/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla server unit created');
-                }
-            });
-        });
-
-        $("#StatusSrv").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/status/anthillaserver/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla server status');
-                }
-            });
-        });
-
-        $("#StartSrv").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/start/anthillaserver/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla server start');
-                }
-            });
-        });
-
-        $("#StopSrv").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/stop/anthillaserver/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla server stop');
-                }
-            });
-        });
-
-        $("#UnitAsp").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/set/anthillasp/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla sp unit created');
-                }
-            });
-        });
-
-        $("#StatusAsp").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/status/anthillasp/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla sp status');
-                }
-            });
-        });
-
-        $("#StartAsp").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/start/anthillasp/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla sp start');
-                }
-            });
-        });
-
-        $("#StopAsp").click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/anthillasp/unit/stop/anthillasp/',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (data) {
-                    console.log('anthilla sp stop');
-                }
-            });
-        });
-    </script>
 
 @if (Model != null) {
     @if (Model.outputTable != null) {
