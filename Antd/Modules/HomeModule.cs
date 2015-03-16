@@ -46,16 +46,6 @@ namespace Antd {
                 return Response.AsRedirect("/anthillasp");
             };
 
-            Get["/directory/tree/{path*}"] = x => {
-                var p = x.path;
-                HashSet<string> directories = new DirectoryLister("/" + p).FullList;
-                return View["page-directories", directories.ToList()];
-            };
-
-            //Get["/directory/watch/"] = x => {
-            //    return View["page-directories-watch"];
-            //};
-
             Get["/info"] = x => {
                 return View["page-info"];
             };
