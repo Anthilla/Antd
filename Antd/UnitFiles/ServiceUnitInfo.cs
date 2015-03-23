@@ -1,7 +1,7 @@
 ﻿namespace Antd.UnitFiles {
     public class ServiceUnitInfo {
         public static void SetDefaultUnitInfo() {
-            SetAntdUnitsInfo();
+            //SetAntdUnitsInfo();
             SetAnthillaASUnitsInfo();
             SetAnthillaSPUnitsInfo();
         }
