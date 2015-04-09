@@ -39,7 +39,7 @@ namespace Antd {
         private static List<ProcModel> GetAllProc() {
             CommandModel command = Command.Launch("ps", "-aef");
             var output = JsonConvert.SerializeObject(command.output);
-            List<ProcModel> procs = Proc.MapProcJson(output);
+            List<ProcModel> procs = MapProcJson(output);
             return procs;
         }
 

@@ -121,4 +121,12 @@ namespace Antd {
         public string name { get; set; }
     }
     #endregion Directory Model
+
+    #region Unit Model
+    public class UnitModel {
+        public string name { get; set; }
+
+        public string status { get; set; }
+    }
+    #endregion Unit Model
 }
