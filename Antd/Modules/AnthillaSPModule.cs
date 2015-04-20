@@ -46,14 +46,12 @@ namespace Antd {
 
             Get["/unit/set/anthillasp"] = x => {
                 CreateUnit.ForAnthillaSP();
-                AnthillaSP.EnableAnthillaSP();
-                return Response.AsJson(true);
+                return View["page-m-service-sp"];
             };
 
             Get["/unit/set/anthillaserver"] = x => {
                 CreateUnit.ForAnthillaServer();
-                AnthillaSP.EnableAnthillaServer();
-                return Response.AsJson(true);
+                return View["page-m-service-sp"];
             };
 
             Get["/unit/start/anthillasp"] = x => {

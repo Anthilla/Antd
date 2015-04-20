@@ -46,20 +46,17 @@ namespace Antd {
 
             Get["/unit/set/anthillaas"] = x => {
                 CreateUnit.ForAnthillaAS();
-                AnthillaAS.EnableAnthillaAS();
-                return Response.AsJson(true);
+                return View["page-m-service-as"];
             };
 
             Get["/unit/set/anthillafirewall"] = x => {
                 CreateUnit.ForAnthillaFirewall();
-                AnthillaAS.EnableAnthillaFirewall();
-                return Response.AsJson(true);
+                return View["page-m-service-as"];
             };
 
             Get["/unit/set/anthillastorage"] = x => {
                 CreateUnit.ForAnthillaStorage();
-                AnthillaAS.EnableAnthillaStorage();
-                return Response.AsJson(true);
+                return View["page-m-service-as"];
             };
 
             Get["/unit/start/anthillaas"] = x => {
