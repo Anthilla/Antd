@@ -32,5 +32,23 @@
 @{Layout = "_layout.cshtml";}
 
 @section MainContent {
+    <form action="/jobs" method="POST" enctype="multipart/form-data">
+        <div class="grid">
+            <div class="row">
+                <div class="span3">
+                    <label>Command</label>
+                    <input type="text" name="File">
+                </div>
+                <div class="span3">
+                    <label>Arguments</label>
+                    <input type="text" name="Arguments">
+                </div>
+                <div class="span3">
+                    <label>&nbsp</label>
+                    <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
+                </div>
+            </div>
+        </div>
+    </form>
     <p>@Model.Message</p>
 }

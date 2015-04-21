@@ -46,7 +46,8 @@ namespace Antd {
                 return View["page-scheduler"];
             };
 
-            Get["/quartz"] = x => {
+            Post["/"] = x => {
+                //todo, prendi i dati dalla view!
                 string[] data = new string[] { 
                     "primo valore" + Guid.NewGuid().ToString().Substring(0,4),
                     "secondo valore" + Guid.NewGuid().ToString().Substring(0,4)

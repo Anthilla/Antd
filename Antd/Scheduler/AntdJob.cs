@@ -27,8 +27,10 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Newtonsoft.Json;
 using Quartz;
 using System;
+using System.Linq;
 
 namespace Antd.Scheduler {
     public class AntdJob {
@@ -42,9 +44,14 @@ namespace Antd.Scheduler {
             public void Execute(IJobExecutionContext context) {
                 JobKey key = context.JobDetail.Key;
                 JobDataMap dataMap = context.JobDetail.JobDataMap;
-                string data0 = dataMap.GetString("data0");
-                string data1 = dataMap.GetString("data1");
-                Console.Error.WriteLine("data0 is " + data0 + " and data1 is" + data1);
+                string dataJson = dataMap.GetString("data");
+                string[] data = JsonConvert.DeserializeObject<string[]>(dataJson);
+                string d = "";
+                foreach (string e in data) {
+                    d += e + ", ";
+                }
+                d.Substring(0, d.Length - 2);
+                Console.Error.WriteLine("recieved data: " + data);
             }
         }
     }
