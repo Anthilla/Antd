@@ -36,6 +36,10 @@
         <div class="grid">
             <div class="row">
                 <div class="span3">
+                    <label>Job</label>
+                    <input type="text" name="Alias">
+                </div>
+                <div class="span3">
                     <label>Command</label>
                     <input type="text" name="Command">
                 </div>
@@ -65,14 +69,14 @@
         <tbody>
             @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
                 @functions{                
-                    public string SetData(string json){
+                    public string SetData(string json) {
                         string[] data = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
                         string d = String.Join(", ", data);
                         return d;
                     }
                 }
                 @if (job != null) {
-                    <tr>
+<tr>
                         <td class="right">@SetData(job.Data)</td>
                         <td class="right">@job.Interval</td>
                     </tr>

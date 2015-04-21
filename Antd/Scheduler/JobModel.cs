@@ -38,6 +38,8 @@ namespace Antd.Scheduler {
 
         public string Guid { get; set; }
 
+        public string Alias { get; set; }
+
         public string Data { get; set; }
 
         public int Interval { get; set; }

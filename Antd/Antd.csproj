@@ -153,6 +153,7 @@
     <Compile Include="Scheduler\JobModel.cs" />
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />
+    <Compile Include="Scheduler\JobTrigger.cs" />
     <Compile Include="Systemd\Units.cs" />
     <Compile Include="Directory\DirectoryWatcher.cs" />
     <Compile Include="Directory\DirectoryLister.cs" />

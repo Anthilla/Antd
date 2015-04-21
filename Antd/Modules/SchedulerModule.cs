@@ -50,7 +50,7 @@ namespace Antd {
             };
 
             Post["/"] = x => {
-                //todo, prendi i dati dalla view!
+                string _alias = (string)this.Request.Form.Alias;
                 string _command = (string)this.Request.Form.Command;
                 string _args = (string)this.Request.Form.Arguments;
                 int _int = (int)this.Request.Form.Interval;
@@ -60,7 +60,7 @@ namespace Antd {
                 };
                 string guid = Guid.NewGuid().ToString();
                 string dataJson = JsonConvert.SerializeObject(data);
-                JobRepository.Create(guid, dataJson, _int);
+                JobRepository.Create(guid, _alias, dataJson, _int);
                 JobScheduler.LauchJob<AntdJob.CommandJob>(
                     guid,
                     dataJson,
