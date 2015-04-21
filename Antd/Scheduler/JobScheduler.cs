@@ -45,7 +45,7 @@ namespace Antd.Scheduler {
                 __scheduler.Start();
                 List<JobModel> taskList = JobRepository.GetAll();
                 foreach (JobModel task in taskList) {
-                    LauchJob<AntdJob.Command>(
+                    LauchJob<AntdJob.CommandJob>(
                         task.Guid,
                         task.Data,
                         task.Interval
@@ -68,6 +68,7 @@ namespace Antd.Scheduler {
             IJobDetail job = JobBuilder.Create<T>()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .UsingJobData("data", _data)
+                .UsingJobData("jobID", _identity)
                 .Build();
             return job;
         }
@@ -84,18 +85,5 @@ namespace Antd.Scheduler {
                 .Build();
             return trigger;
         }
-
-        //string[] data = new string[] { 
-        //    "primo valore" + Guid.NewGuid().ToString().Substring(0,4),
-        //    "secondo valore" + Guid.NewGuid().ToString().Substring(0,4)
-        //};
-        //int i = new Random().Next(1, 10);
-        //string guid = Guid.NewGuid().ToString();
-        //TaskRepository.Create(guid, data[0], data[1], i);
-        //TaskScheduler.LauchJob(
-        //    TaskScheduler.DefineJob<UbearJobs.Command>(guid, data),
-        //    TaskScheduler.DefineTrigger(guid, i)
-        //    );
-        //return Response.AsText("job launched");
     }
 }

@@ -34,20 +34,26 @@ using System.Linq;
 
 namespace Antd.Scheduler {
     public class AntdJob {
-        public class Hello : IJob {
+        public class HelloJob : IJob {
             public void Execute(IJobExecutionContext context) {
                 Console.WriteLine("Greetings from HelloJob!");
             }
         }
 
-        public class Command : IJob {
+        public class CommandJob : IJob {
             public void Execute(IJobExecutionContext context) {
                 JobKey key = context.JobDetail.Key;
                 JobDataMap dataMap = context.JobDetail.JobDataMap;
                 string dataJson = dataMap.GetString("data");
                 string[] data = JsonConvert.DeserializeObject<string[]>(dataJson);
-                string d = String.Join(", ", data);
-                Console.Error.WriteLine("recieved data: " + d);
+                string command = data[0];
+                string arguments = data[1];
+                string jobId = dataMap.GetString("jobID");
+                CommandModel cmd = Command.Launch(command, arguments);
+                string output = cmd.output;
+                JobRepository.AddResult(jobId, output);
+                //string d = String.Join(", ", data);
+                //Console.Error.WriteLine("recieved data: " + d);
             }
         }
     }

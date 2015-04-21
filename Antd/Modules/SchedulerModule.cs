@@ -61,7 +61,7 @@ namespace Antd {
                 string guid = Guid.NewGuid().ToString();
                 string dataJson = JsonConvert.SerializeObject(data);
                 JobRepository.Create(guid, dataJson, _int);
-                JobScheduler.LauchJob<AntdJob.Command>(
+                JobScheduler.LauchJob<AntdJob.CommandJob>(
                     guid,
                     dataJson,
                     _int

@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace Antd.Scheduler {
@@ -53,6 +54,15 @@ namespace Antd.Scheduler {
             task.Guid = guid;
             task.Data = data;
             task.Interval = interval;
+            task.Results = new ExpandoObject() as IDictionary<String, object>;
+            DeNSo.Session.New.Set(task);
+        }
+
+        public static void AddResult(string guid, string data) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            var p = task.Results as IDictionary<String, object>;
+            p[DateTime.Now.ToString("yyyyMMddHHmmssfff")] = data;
+            task.Results = p;
             DeNSo.Session.New.Set(task);
         }
 

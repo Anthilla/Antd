@@ -27,6 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Antd.Scheduler {
@@ -39,5 +41,7 @@ namespace Antd.Scheduler {
         public string Data { get; set; }
 
         public int Interval { get; set; }
+
+        public IDictionary<String, object> Results { get; set; }
     }
 }
