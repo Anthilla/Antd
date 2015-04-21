@@ -150,6 +150,7 @@
     <Compile Include="Config\SelfConfig.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Scheduler\AntdJob.cs" />
+    <Compile Include="Scheduler\AntdJobTrigger.cs" />
     <Compile Include="Scheduler\JobModel.cs" />
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />
