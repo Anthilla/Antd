@@ -64,7 +64,7 @@
         </thead>
         <tbody>
             @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
-                    @functions{                
+                @functions{                
                     public string SetData(string json){
                         string[] data = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
                         string d = String.Join(", ", data);
