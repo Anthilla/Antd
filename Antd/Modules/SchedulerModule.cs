@@ -32,6 +32,7 @@ using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace Antd {
@@ -48,21 +49,24 @@ namespace Antd {
 
             Post["/"] = x => {
                 //todo, prendi i dati dalla view!
+                string _command = (string)this.Request.Form.Command;
+                string _args = (string)this.Request.Form.Arguments;
+                int _int = (int)this.Request.Form.Interval;
                 string[] data = new string[] { 
-                    "primo valore" + Guid.NewGuid().ToString().Substring(0,4),
-                    "secondo valore" + Guid.NewGuid().ToString().Substring(0,4)
+                    _command,
+                    _args
                 };
-                int i = new Random().Next(1, 10);
                 string guid = Guid.NewGuid().ToString();
                 string dataJson = JsonConvert.SerializeObject(data);
-                JobRepository.Create(guid, dataJson, i);
+                JobRepository.Create(guid, dataJson, _int);
                 JobScheduler.LauchJob<AntdJob.Command>(
                     guid,
                     dataJson,
-                    i
+                    _int
                 );
                 dynamic model = new ExpandoObject();
                 model.Message = "Job created and executed.";
+                model.JobList = JobRepository.GetAll();
                 return View["page-scheduler", model];
             };
         }

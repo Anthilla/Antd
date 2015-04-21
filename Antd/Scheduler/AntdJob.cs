@@ -46,11 +46,7 @@ namespace Antd.Scheduler {
                 JobDataMap dataMap = context.JobDetail.JobDataMap;
                 string dataJson = dataMap.GetString("data");
                 string[] data = JsonConvert.DeserializeObject<string[]>(dataJson);
-                string d = "";
-                foreach (string e in data) {
-                    d += e + ", ";
-                }
-                d.Substring(0, d.Length - 2);
+                string d = String.Join(", ", data);
                 Console.Error.WriteLine("recieved data: " + data);
             }
         }

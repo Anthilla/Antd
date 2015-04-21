@@ -37,11 +37,15 @@
             <div class="row">
                 <div class="span3">
                     <label>Command</label>
-                    <input type="text" name="File">
+                    <input type="text" name="Command">
                 </div>
                 <div class="span3">
                     <label>Arguments</label>
                     <input type="text" name="Arguments">
+                </div>
+                <div class="span3">
+                    <label>Interval</label>
+                    <input type="number" name="Interval">
                 </div>
                 <div class="span3">
                     <label>&nbsp</label>
@@ -51,4 +55,20 @@
         </div>
     </form>
     <p>@Model.Message</p>
+    <table id="Output" class="table striped">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Interval</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
+                <tr>
+                    <td class="right">@String.Join(" ", job.Data);</td>
+                    <td class="right">@job.Interval</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
