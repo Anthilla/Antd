@@ -90,6 +90,9 @@ namespace Antd {
                 //    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "watcher enabled for {0}", folder);
                 //}
 
+                JobScheduler.Start(true);
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "task scheduler -> loaded");
+
                 stop.WaitOne();
             }
         }
@@ -126,9 +129,6 @@ namespace Antd {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    denso-db -> loaded");
             app.UseNancy();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    nancy-fx -> loaded");
-            JobScheduler.Start(false);
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    task scheduler -> loaded");
-
         }
     }
 
