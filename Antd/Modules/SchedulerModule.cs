@@ -27,8 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Scheduler;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
+using System;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -40,6 +44,25 @@ namespace Antd {
 
             Get["/"] = x => {
                 return View["page-scheduler"];
+            };
+
+            Get["/quartz"] = x => {
+                string[] data = new string[] { 
+                    "primo valore" + Guid.NewGuid().ToString().Substring(0,4),
+                    "secondo valore" + Guid.NewGuid().ToString().Substring(0,4)
+                };
+                int i = new Random().Next(1, 10);
+                string guid = Guid.NewGuid().ToString();
+                string dataJson = JsonConvert.SerializeObject(data);
+                JobRepository.Create(guid, dataJson, i);
+                JobScheduler.LauchJob<AntdJob.Command>(
+                    guid,
+                    dataJson,
+                    i
+                );
+                dynamic model = new ExpandoObject();
+                model.Message = "Job created and executed.";
+                return View["page-scheduler", model];
             };
         }
     }

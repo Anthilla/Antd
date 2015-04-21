@@ -47,10 +47,7 @@ namespace Antd.Scheduler {
                 foreach (JobModel task in taskList) {
                     LauchJob<AntdJob.Command>(
                         task.Guid,
-                        new string[] { 
-                            task.Data0,
-                            task.Data1
-                        },
+                        task.Data,
                         task.Interval
                     );
                 }
@@ -61,18 +58,16 @@ namespace Antd.Scheduler {
             __scheduler.Shutdown();
         }
 
-        public static void LauchJob<T>(string _identity, string[] _jobData, int _interval) where T : IJob {
-            IJobDetail job = DefineJob<T>(_identity, _jobData);
+        public static void LauchJob<T>(string _identity, string _data, int _interval) where T : IJob {
+            IJobDetail job = DefineJob<T>(_identity, _data);
             ITrigger trigger = DefineTrigger(_identity, _interval);
             __scheduler.ScheduleJob(job, trigger);
         }
 
-        private static IJobDetail DefineJob<T>(string _identity, string[] _jobData) where T : IJob {
-            //todo
-            //customize .UsingJobData()
+        private static IJobDetail DefineJob<T>(string _identity, string _data) where T : IJob {
             IJobDetail job = JobBuilder.Create<T>()
-                .WithIdentity(_identity, Guid.NewGuid().ToString()) // name "_identity", group "Guid.NewGuid().ToString()"
-                .UsingJobData("data", _jobData[0])
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .UsingJobData("data", _data)
                 .Build();
             return job;
         }
@@ -81,7 +76,7 @@ namespace Antd.Scheduler {
             //todo
             //customize triggers' timers
             ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString()) // name "_identity", group "Guid.NewGuid().ToString()"
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .StartNow()
                 .WithSimpleSchedule(x => x
                     .WithIntervalInSeconds(_interval)

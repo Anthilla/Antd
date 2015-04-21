@@ -31,7 +31,6 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
-@section MainContent
-{
-<p>Hello Scheduler!1</p>
+@section MainContent {
+    <p>@Model.Message</p>
 }

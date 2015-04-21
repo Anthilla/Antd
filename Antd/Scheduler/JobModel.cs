@@ -36,9 +36,7 @@ namespace Antd.Scheduler {
 
         public string Guid { get; set; }
 
-        public string Data0 { get; set; }
-
-        public string Data1 { get; set; }
+        public string Data { get; set; }
 
         public int Interval { get; set; }
     }

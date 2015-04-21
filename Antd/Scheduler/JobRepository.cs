@@ -41,22 +41,20 @@ namespace Antd.Scheduler {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
-        public static void Create(string guid, string data0, string data1, int interval) {
+        public static void Create(string guid, string data, int interval) {
             JobModel task = new JobModel();
             task._Id = Guid.NewGuid().ToString();
             task.Guid = guid;
-            task.Data0 = data0;
-            task.Data1 = data1;
+            task.Data = data;
             task.Interval = interval;
             DeNSo.Session.New.Set(task);
         }
 
-        public static void Edit(string guid, string data0, string data1, int interval) {
+        public static void Edit(string guid, string data, int interval) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             task._Id = Guid.NewGuid().ToString();
             task.Guid = guid;
-            task.Data0 = data0;
-            task.Data1 = data1;
+            task.Data = data;
             task.Interval = interval;
             DeNSo.Session.New.Set(task);
         }
