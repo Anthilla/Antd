@@ -64,10 +64,13 @@
         </thead>
         <tbody>
             @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
-                <tr>
-                    <td class="right">@String.Join(" ", job.Data);</td>
-                    <td class="right">@job.Interval</td>
-                </tr>
+
+                @if (job != null) {
+                    <tr>
+                        <td class="right">@String.Join(" ", job.Data);</td>
+                        <td class="right">@job.Interval</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

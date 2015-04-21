@@ -34,7 +34,13 @@ using System.Linq;
 namespace Antd.Scheduler {
     public class JobRepository {
         public static List<JobModel> GetAll() {
-            return DeNSo.Session.New.Get<JobModel>().ToList();
+            var list = DeNSo.Session.New.Get<JobModel>().ToArray();
+            if (list.Length == 0) {
+                return new List<JobModel>() { };
+            }
+            else {
+                return list.ToList();
+            }
         }
 
         public static JobModel GetByGuid(string guid) {

@@ -44,7 +44,10 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["page-scheduler"];
+                dynamic model = new ExpandoObject();
+                model.Message = "";
+                model.JobList = JobRepository.GetAll();
+                return View["page-scheduler", model];
             };
 
             Post["/"] = x => {

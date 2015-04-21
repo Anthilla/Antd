@@ -47,7 +47,7 @@ namespace Antd.Scheduler {
                 string dataJson = dataMap.GetString("data");
                 string[] data = JsonConvert.DeserializeObject<string[]>(dataJson);
                 string d = String.Join(", ", data);
-                Console.Error.WriteLine("recieved data: " + data);
+                Console.Error.WriteLine("recieved data: " + d);
             }
         }
     }
