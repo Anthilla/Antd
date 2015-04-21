@@ -34,8 +34,11 @@ using System.Linq;
 namespace Antd.Scheduler {
     public class JobRepository {
         public static List<JobModel> GetAll() {
-            List<JobModel> list = DeNSo.Session.New.Get<JobModel>().ToList();
-            return list;
+            return DeNSo.Session.New.Get<JobModel>().ToList();
+        }
+
+        public static JobModel GetByGuid(string guid) {
+            return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
         public static void Create(string guid, string data0, string data1, int interval) {
@@ -46,6 +49,21 @@ namespace Antd.Scheduler {
             task.Data1 = data1;
             task.Interval = interval;
             DeNSo.Session.New.Set(task);
+        }
+
+        public static void Edit(string guid, string data0, string data1, int interval) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            task._Id = Guid.NewGuid().ToString();
+            task.Guid = guid;
+            task.Data0 = data0;
+            task.Data1 = data1;
+            task.Interval = interval;
+            DeNSo.Session.New.Set(task);
+        }
+
+        public static void Delete(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            DeNSo.Session.New.Delete(task);
         }
     }
 }

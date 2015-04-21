@@ -45,19 +45,14 @@ namespace Antd.Scheduler {
                 __scheduler.Start();
                 List<JobModel> taskList = JobRepository.GetAll();
                 foreach (JobModel task in taskList) {
-                    LauchJob(
-                        DefineJob<AntdJob.Command>(
-                            task.Guid,
-                            new string[] { 
-                                task.Data0,
-                                task.Data1
-                            }
-                        ),
-                        DefineTrigger(
-                            task.Guid,
-                            task.Interval
-                            )
-                        );
+                    LauchJob<AntdJob.Command>(
+                        task.Guid,
+                        new string[] { 
+                            task.Data0,
+                            task.Data1
+                        },
+                        task.Interval
+                    );
                 }
             }
         }
@@ -66,22 +61,23 @@ namespace Antd.Scheduler {
             __scheduler.Shutdown();
         }
 
-        public static void LauchJob(IJobDetail job, ITrigger trigger) {
+        public static void LauchJob<T>(string _identity, string[] _jobData, int _interval) where T : IJob {
+            IJobDetail job = DefineJob<T>(_identity, _jobData);
+            ITrigger trigger = DefineTrigger(_identity, _interval);
             __scheduler.ScheduleJob(job, trigger);
         }
 
-        public static IJobDetail DefineJob<T>(string _identity, string[] _jobData) where T : IJob {
+        private static IJobDetail DefineJob<T>(string _identity, string[] _jobData) where T : IJob {
             //todo
             //customize .UsingJobData()
             IJobDetail job = JobBuilder.Create<T>()
                 .WithIdentity(_identity, Guid.NewGuid().ToString()) // name "_identity", group "Guid.NewGuid().ToString()"
-                .UsingJobData("data0", _jobData[0])
-                .UsingJobData("data1", _jobData[1])
+                .UsingJobData("data", _jobData[0])
                 .Build();
             return job;
         }
 
-        public static ITrigger DefineTrigger(string _identity, int _interval) {
+        private static ITrigger DefineTrigger(string _identity, int _interval) {
             //todo
             //customize triggers' timers
             ITrigger trigger = TriggerBuilder.Create()

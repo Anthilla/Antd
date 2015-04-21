@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Scheduler;
 using Antd.UnitFiles;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
@@ -125,6 +126,8 @@ namespace Antd {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    denso-db -> loaded");
             app.UseNancy();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    nancy-fx -> loaded");
+            JobScheduler.Start(false);
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    task scheduler -> loaded");
 
         }
     }
