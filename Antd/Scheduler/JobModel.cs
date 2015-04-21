@@ -44,6 +44,8 @@ namespace Antd.Scheduler {
 
         public int Interval { get; set; }
 
+        public AntdJobTrigger Trigger { get; set; }
+
         public IDictionary<String, object> Results { get; set; }
     }
 }
