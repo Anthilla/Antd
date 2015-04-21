@@ -304,6 +304,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Extensions\" />
+    <Folder Include="Scheduler\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
