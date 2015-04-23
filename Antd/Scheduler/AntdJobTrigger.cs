@@ -44,11 +44,9 @@ namespace Antd.Scheduler {
 
         public DateTime Hour { get; set; }
 
-        public dynamic TriggerSetting { get; set; }
+        public TriggerPeriod TriggerSetting { get; set; }
 
         public class TriggerSettingIsOneTimeOnly {
-            public bool Active { get; set; }
-
             public DateTime Date { get; set; }
         }
 
