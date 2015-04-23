@@ -45,11 +45,7 @@ namespace Antd.Scheduler {
                 __scheduler.Start();
                 List<JobModel> taskList = JobRepository.GetAll();
                 foreach (JobModel task in taskList) {
-                    LauchJob<AntdJob.CommandJob>(
-                        task.Guid,
-                        task.Data,
-                        task.Interval
-                    );
+                    LauchJob<AntdJob.CommandJob>(task);
                 }
             }
         }
@@ -58,111 +54,82 @@ namespace Antd.Scheduler {
             __scheduler.Shutdown();
         }
 
-        public static void LauchJob<T>(string _identity, string _data, int _interval) where T : IJob {
-            IJobDetail job = DefineJob<T>(_identity, _data);
-            ITrigger trigger = DefineTrigger(_identity, _interval);
+        public static void LauchJob<T>(JobModel _job) where T : IJob {
+            IJobDetail job = DefineJob<T>(_job);
+            ITrigger trigger = DefineTrigger(_job.Trigger, _job.Alias);
+
             __scheduler.ScheduleJob(job, trigger);
         }
 
-        private static IJobDetail DefineJob<T>(string _identity, string _data) where T : IJob {
+        private static IJobDetail DefineJob<T>(JobModel _job) where T : IJob {
             IJobDetail job = JobBuilder.Create<T>()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .UsingJobData("data", _data)
-                .UsingJobData("jobID", _identity)
+                .WithIdentity(_job.Alias, Guid.NewGuid().ToString())
+                .UsingJobData("data", _job.Data)
+                .UsingJobData("jobID", _job.Guid)
                 .Build();
             return job;
         }
 
-        private static ITrigger DefineTrigger(AntdJobTrigger _trigger) {
-            _trigger.TriggerSetting = AntdJobTrigger.TriggerPeriod.IsDaily;
+        private static ITrigger DefineTrigger(TriggerModel _trigger, string _identity) {
+            _trigger.TriggerSetting = TriggerModel.TriggerPeriod.IsDaily;
             ITrigger trigger;
-            int caseSwitch = 1;
             switch (_trigger.TriggerSetting) {
-                case 1:
-                    Console.WriteLine("Case 1");
+                case TriggerModel.TriggerPeriod.IsOneTimeOnly:
+                    trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
                     break;
-                case 2:
-                    Console.WriteLine("Case 2");
+                case TriggerModel.TriggerPeriod.IsDaily:
+                    trigger = DefineDailyTrigger(_trigger, _identity);
+                    break;
+                case TriggerModel.TriggerPeriod.IsWeekly:
+                    trigger = DefineWeeklyTrigger(_trigger, _identity);
+                    break;
+                case TriggerModel.TriggerPeriod.IsMonthly:
+                    trigger = DefineMonthlyTrigger(_trigger, _identity);
                     break;
                 default:
-                    trigger = DefineOneTimeOnlyTrigger();
+                    trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
                     break;
             }
             return trigger;
         }
 
-        private static ITrigger DefineOneTimeOnlyTrigger() {
-            //parametri per definire l'identita del trigger
-            string _identity = "";
-            string _group = Guid.NewGuid().ToString();
-            //parametri di inizio e fine della schedulazione, validi per tutti
-            DateTime _startTime = DateTime.Now; //lo startTime definisce anche l'ora a cui far scattare il trigger
-            DateTime _endTime = DateTime.Now.AddDays(7);
+        private static ITrigger DefineOneTimeOnlyTrigger(TriggerModel setting, string _identity) {
             ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, _group)
-                .StartAt(_startTime)
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(setting.StartTime)
                 .Build();
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineDailyTrigger() {
-            //parametri per definire l'identita del trigger
-            string _identity = "";
-            string _group = Guid.NewGuid().ToString();
-            //parametri di inizio e fine della schedulazione, validi per tutti
-            DateTime _startTime = DateTime.Now; //lo startTime definisce anche l'ora a cui far scattare il trigger
-            DateTime _endTime = DateTime.Now.AddDays(7);
-            //paramtro per il dailyTrigger -> ogni quanti giorni?
-            int _daySpan = 1;
+        private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {
             ITrigger dailyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, _group)
-                .StartAt(_startTime)
-                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(_daySpan)))
-                .EndAt(_endTime)
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(setting.StartTime)
+                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(setting.TimeSpan)))
+                .EndAt(setting.EndTime)
                 .Build();
             return dailyTrigger;
         }
 
-        private static ITrigger DefineTrigger() {
-            //parametri per definire l'identita del trigger
-            string _identity = "";
-            string _group = Guid.NewGuid().ToString();
-            //parametri di inizio e fine della schedulazione, validi per tutti
-            DateTime _startTime = DateTime.Now; //lo startTime definisce anche l'ora a cui far scattare il trigger
-            DateTime _endTime = DateTime.Now.AddDays(7);
-            //parametri per il weeklyTrigger -> quale giorno della settimana?
-            //int _dayOfWeek = 1;
-            //TODO - E SE VOLESSI FARE PIù GIORNI SETTIMANALMENTE?????????????????????????????????????????????????
-            DayOfWeek _dayOfWeek = DayOfWeek.Sunday; //todo, definire il giorno in un altro modo... -> es: from int
-            int _weeklyHour = _startTime.Hour;
-            int _weeklyMinute = _startTime.Minute;
-            //usare cron expression, per settare giorni differenti della settimana
+        private static ITrigger DefineWeeklyTrigger(TriggerModel setting, string _identity) {
+            int _weeklyHour = setting.StartTime.Hour;
+            int _weeklyMinute = setting.StartTime.Minute;
             ITrigger weeklyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, _group)
-                .StartAt(_startTime)
-                .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(_dayOfWeek, _weeklyHour, _weeklyMinute))
-                .EndAt(_endTime)
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(setting.StartTime)
+                .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(setting.DayOfTheWeek, _weeklyHour, _weeklyMinute))
+                .EndAt(setting.EndTime)
                 .Build();
             return weeklyTrigger;
         }
 
-        private static ITrigger DefineTrigger() {
-            //parametri per definire l'identita del trigger
-            string _identity = "";
-            string _group = Guid.NewGuid().ToString();
-            //parametri di inizio e fine della schedulazione, validi per tutti
-            DateTime _startTime = DateTime.Now; //lo startTime definisce anche l'ora a cui far scattare il trigger
-            DateTime _endTime = DateTime.Now.AddDays(7);
-            //parametri per il monthlyTrigger   -> quali mesi dell'anno?            <-  la definizione dei giorni vale SOLO per
-            //                                  -> per questi mesi, quali giorni?   <-  i mesi (o il mese) specificato   
-            //                                      L> c'è periodicità nel mese?    -> se sì, definire una periodicità settimanale (vedi weeklyTrigger)
-            //                                                                      -> se no, definire quali giorni del mese attivare il trigger (da 0 a 31)
-            string _cronExpression = "0 0/2 8-17 * * ?";
+        private static ITrigger DefineMonthlyTrigger(TriggerModel setting, string _identity) {
+            //string _cronExpression = "0 0/2 8-17 * * ?";
             ITrigger monthlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, _group)
-                .StartAt(_startTime)
-                .WithCronSchedule(_cronExpression)
-                .EndAt(_endTime)
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(setting.StartTime)
+                .WithCronSchedule(setting.CronExpression)
+                .EndAt(setting.EndTime)
                 .Build();
             return monthlyTrigger;
         }

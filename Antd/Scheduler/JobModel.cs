@@ -44,8 +44,32 @@ namespace Antd.Scheduler {
 
         public int Interval { get; set; }
 
-        public AntdJobTrigger Trigger { get; set; }
+        public TriggerModel Trigger { get; set; }
 
         public IDictionary<String, object> Results { get; set; }
+    }
+
+    public class TriggerModel {
+
+        public enum TriggerPeriod : byte {
+            IsOneTimeOnly = 0,
+            IsDaily = 1,
+            IsWeekly = 2,
+            IsMonthly = 3
+        }
+
+        public TriggerPeriod TriggerSetting { get; set; }
+
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
+        public DateTime Hour { get; set; }
+
+        public int TimeSpan { get; set; }
+
+        public DayOfWeek DayOfTheWeek { get; set; }
+
+        public string CronExpression { get; set; }
     }
 }

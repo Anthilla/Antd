@@ -48,7 +48,7 @@ namespace Antd.Scheduler {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
-        public static void Create(string guid, string alias, string data, int interval) {
+        public static JobModel Create(string guid, string alias, string data, int interval) {
             JobModel task = new JobModel();
             task._Id = Guid.NewGuid().ToString();
             task.Guid = guid;
@@ -57,6 +57,7 @@ namespace Antd.Scheduler {
             task.Interval = interval;
             task.Results = new ExpandoObject() as IDictionary<String, object>;
             DeNSo.Session.New.Set(task);
+            return task;
         }
 
         public static void AddResult(string guid, string data) {
