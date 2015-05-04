@@ -38,15 +38,19 @@
     @functions{
         public string MakeUrl(string path){
             string a = path.Replace(@"\", @"/").Replace(":", "");
-            Console.WriteLine(a);
             return "/dir/tree" + a;
+        }
+
+        public string MakeLabel(string path) {
+            string a = path.Replace(@"\", @"/").Replace(":", "");
+            return a;
         }
     }
     <nav class="breadcrumbs mini">
         <ul>
             @foreach (string dir in Model.parents) {
                 @*<li><a href="/dir/tree/@dir">@dir</a></li>*@
-                <li><a href="@MakeUrl(dir)">@MakeUrl(dir)</a></li>
+                <li><a href="@MakeUrl(dir)">@MakeLabel(dir)</a></li>
             }
         </ul>
     </nav>
