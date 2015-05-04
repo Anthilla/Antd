@@ -46,7 +46,7 @@
         <ul>
             @foreach (string dir in Model.parents) {
                 @*<li><a href="/dir/tree/@dir">@dir</a></li>*@
-                <li><a href="#">@MakeUrl(dir)</a></li>
+                <li><a href="@MakeUrl(dir)">@MakeUrl(dir)</a></li>
             }
         </ul>
     </nav>

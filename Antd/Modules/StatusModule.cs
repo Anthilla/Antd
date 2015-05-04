@@ -16,8 +16,13 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.UNITS = Units.All;
-                vmod.ETC = "fai cose per ottenere la lista completa di etc";
-                vmod.PROCS = "non so se si deve mappare la cartella o il comando ps-aef";
+                HashSet<string> etcDirectories = new DirectoryLister("/etc", true).FullList;
+                vmod.ETC = etcDirectories;
+                HashSet<string> procDirectories = new DirectoryLister("/proc", true).FullList;
+                vmod.PROCS.LIST = procDirectories;
+                List<ProcModel> procs = Proc.All;
+                vmod.PROCS.CMD = procs;
+
                 return View["page-status", vmod];
             };
         }
