@@ -171,8 +171,9 @@ namespace Antd {
             };
 
             Get["/units"] = x => {
-                List<UnitModel> u = Units.All;
-                return JsonConvert.SerializeObject(u);
+                List<UnitModel> units = Units.All;
+                //return JsonConvert.SerializeObject(u);
+                return View["page-units", units];
             };
         }
     }
