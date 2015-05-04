@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Nancy;
 using Nancy.Security;
+using System.Dynamic;
+using Antd.Systemd;
 
 namespace Antd {
 
@@ -12,7 +14,11 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["page-status"];
+                dynamic vmod = new ExpandoObject();
+                vmod.UNITS = Units.All;
+                vmod.ETC = "fai cose per ottenere la lista completa di etc";
+                vmod.PROCS = "non so se si deve mappare la cartella o il comando ps-aef";
+                return View["page-status", vmod];
             };
         }
     }
