@@ -148,6 +148,7 @@
     <Compile Include="Config\Anth_ParamWriter.cs" />
     <Compile Include="Config\SystemConfig.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="Manage-Service\Actions.cs" />
     <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Scheduler\AntdJob.cs" />

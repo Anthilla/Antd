@@ -45,11 +45,11 @@ namespace Antd {
             Console.Title = "ANTD";
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading application...");
 
-            SystemConfig.FirstLaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core system configuration...");
+            //SystemConfig.FirstLaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core system configuration...");
 
-            Cfg.FirstLaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core cfg configuration...");
+            //Cfg.FirstLaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core cfg configuration...");
 
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
@@ -69,15 +69,15 @@ namespace Antd {
                 var elapsed = DateTime.Now - startTime;
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
-                Console.WriteLine("");
-                ServiceUnitInfo.SetDefaultUnitInfo();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
+                //Console.WriteLine("");
+                //ServiceUnitInfo.SetDefaultUnitInfo();
+                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
 
-                UnitFile.WriteForSelf();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file created");
+                //UnitFile.WriteForSelf();
+                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file created");
 
-                Systemctl.Enable("antd.service");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file enabled");
+                //Systemctl.Enable("antd.service");
+                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file enabled");
 
                 //Console.WriteLine("");
                 //string[] watchThese = new string[] { 
@@ -103,18 +103,20 @@ namespace Antd {
         public void Configuration(IAppBuilder app) {
             //write defaults and stuff
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting default configuration...");
-            SelfConfig.WriteDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: antd...");
-            SystemConfig.WriteDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
-            Cfg.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
-            Network.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
-            SystemDataRepo.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
-            ZfsMount.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: zfsMount...");
+
+            //SelfConfig.WriteDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: antd...");
+            //SystemConfig.WriteDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
+            //Cfg.LaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
+            //Network.LaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
+            //SystemDataRepo.LaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
+            //ZfsMount.LaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: zfsMount...");
+
             Command.Launch("chmod", "777 *.xml");
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    check configuration...");
 
