@@ -155,6 +155,7 @@
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />
     <Compile Include="Scheduler\JobTrigger.cs" />
+    <Compile Include="Sysctl\Sysctl.cs" />
     <Compile Include="Systemd\Units.cs" />
     <Compile Include="Directory\DirectoryWatcher.cs" />
     <Compile Include="Directory\DirectoryLister.cs" />

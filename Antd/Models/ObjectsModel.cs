@@ -129,4 +129,12 @@ namespace Antd {
         public string status { get; set; }
     }
     #endregion Unit Model
+
+    #region Sysctl Model
+    public class SysctlModel {
+        public string param { get; set; }
+
+        public string value { get; set; }
+    }
+    #endregion Sysctl Model
 }
