@@ -79,7 +79,7 @@
                 <tr>
                     <td>@proc.param </td>
                     <td><input type="text" value="@proc.value" data-param="@proc.param"/> </td>
-                    <td><p class="button bg-emerald" data-param="@proc.param">Change Value</p> </td>
+                    <td><p class="button bg-emerald fg-white" data-param="@proc.param">Change Value</p> </td>
                 </tr>
             }
         </tbody>
@@ -92,7 +92,7 @@
             var v = $('input[data-param="' + p + '"]').val();
             var s = {
                 param: p,
-                value: $('#' + guid + 'TagsEdit').val(),
+                value: v,
             };
             $.ajax({
                 url: '/status/sysctl/' + s.param + '/' + s.value,
