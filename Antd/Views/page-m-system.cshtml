@@ -89,7 +89,7 @@
     @if (Model != null) {
         @foreach (Antd.CommandModel command in Model)
         @if (command != null) {
-            <table id="Output" class="table striped">
+            <table id="Output" class="table">
                 <tbody>
                     @foreach (string str in command.outputTable) {
                         <tr>
@@ -104,7 +104,7 @@
     @if (Model != null) {
         @foreach (Antd.CommandModel command in Model)
         @if (command != null) {
-            <table id="Error" class="table striped">
+            <table id="Error" class="table">
                 <tbody>
                     @foreach (string str in command.errorTable) {
                         <tr>
