@@ -3,7 +3,6 @@ using Nancy;
 using Nancy.Security;
 using System.Dynamic;
 using Antd.Systemd;
-using Newtonsoft.Json;
 
 namespace Antd {
 

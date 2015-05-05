@@ -32,7 +32,9 @@
 @{Layout = "_layout.cshtml";}
 @section MainContent
 {
-    <table id="units" class="table striped" style="width: 28% !important;">
+    <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 80%; padding-left: 5px;" placeholder="Search">
+    <hr />
+    <table id="units" class="table striped searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">UNIT</th>
@@ -49,7 +51,7 @@
         </tbody>
     </table>
 
-    <table id="etc" class="table striped" style="width: 28% !important;">
+    <table id="etc" class="table striped searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">ETC</th>
@@ -64,18 +66,40 @@
         </tbody>
     </table>
 
-@*    <table id="proc" class="table striped" style="width: 28% !important;">
+    <table id="proc" class="table striped searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">PROC</th>
+                <th class="text-left">&nbsp</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (string proc in Model.PROCS.LIST) {
+            @foreach (Antd.SysctlModel proc in Model.PROCS) {
                 <tr>
-                    <td>@proc </td>
+                    <td>@proc.param </td>
+                    <td>@proc.value </td>
                 </tr>
             }
         </tbody>
-    </table>*@
+    </table>
+
+    <script type="text/javascript">
+        $('.search-field').keyup(function () {
+            var queryString = $(this).val();
+            var table = $('.searchable');
+            var tableBody = table.children('tbody');
+            var row = tableBody.children('tr');
+            row.each(function (index) {
+                var thisRow = $(this);
+                var queriedText = $(this).text();
+                if (queriedText.indexOf(queryString) != -1) {
+                    thisRow.show();
+                }
+                if (queriedText.indexOf(queryString) < 0) {
+                    thisRow.hide();
+                }
+            });
+        });
+
+    </script>
 }

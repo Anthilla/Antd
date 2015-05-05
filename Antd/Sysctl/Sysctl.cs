@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Antd.Sysctl {
     public class Sysctl {
@@ -17,7 +18,7 @@ namespace Antd.Sysctl {
 
         public static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
             string sysctlJson = _sysctlJson;
-            sysctlJson = System.Text.RegularExpressions.Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+            sysctlJson = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n").Replace("\t", " ");
             string[] rowDivider = new String[] { "\n" };
             string[] sysctlJsonRow = new string[] { };
             sysctlJsonRow = sysctlJson.Split(rowDivider, StringSplitOptions.None).ToArray();
