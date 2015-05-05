@@ -16,7 +16,7 @@ namespace Antd.Sysctl {
 
         public static List<SysctlModel> All { get { return GetAllSysctls(); } }
 
-        public static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
+        private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
             string sysctlJson = _sysctlJson;
             sysctlJson = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n").Replace("\t", " ");
             string[] rowDivider = new String[] { "\n" };
@@ -35,12 +35,19 @@ namespace Antd.Sysctl {
             return sysctls;
         }
 
-        public static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
+        private static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
             string[] sysctlJsonCell = _sysctlJsonCell;
             SysctlModel sysctl = new SysctlModel();
             sysctl.param = sysctlJsonCell[0];
             sysctl.value = sysctlJsonCell[1];
             return sysctl;
+        }
+
+        public static string Config(string param, string value) {
+            ///sbin/sysctl -w kernel.domainname="example.com" 
+            CommandModel command = Command.Launch("sysctl", "-w " + param + "=\"" + value + "\"");
+            var output = JsonConvert.SerializeObject(command.output);
+            return output;
         }
     }
 }

@@ -19,6 +19,13 @@ namespace Antd {
                 vmod.PROCS = Antd.Sysctl.Sysctl.All;
                 return View["page-status", vmod];
             };
+
+            Post["/sysctl/{param}/{value}"] = x => {
+                string param = x.param;
+                string value = x.value;
+                var output = Antd.Sysctl.Sysctl.Config(param, value);
+                return View["page-status", output];
+            };
         }
     }
 }
