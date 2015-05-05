@@ -55,6 +55,12 @@ namespace Antd {
                 var output = Antd.Sysctl.Sysctl.Config(param, value);
                 return View["page-status", output];
             };
+
+            Get["/sysctl"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.PROCS = Antd.Sysctl.Sysctl.All;
+                return View["page-sysctl", vmod];
+            };
         }
     }
 }

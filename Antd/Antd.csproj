@@ -224,6 +224,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Views\page-sysctl.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\page-status.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
