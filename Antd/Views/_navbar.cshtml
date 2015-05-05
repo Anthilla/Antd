@@ -1,12 +1,20 @@
-﻿<nav id="nav-bar" class="navigation-bar anth-green" style="border-top: 5px solid white; border-bottom: 5px solid #cbd982;">
-    <nav class="navigation-bar-content">
-        <a href="/" class="element nav-button"><i class="icon-home on-left"></i>Antd</a>
-        <a href="/sys" class="element nav-button"><i class="icon-screen on-left"></i>Antd</a>
-        <a href="/mgmt/anthillasp" class="element nav-button"><i class="icon-laptop on-left"></i>AnthillaSP</a>
-        <a href="/mgmt/anthillaas" class="element nav-button"><i class="icon-laptop on-left"></i>AnthillaAS</a>
+@using System.Linq
+@using System.Collections.Generic
 
-        <a href="/info" class="element place-right nav-button"><i class="icon-info on-left"></i>System Info</a>
-        <a href="/command" class="element place-right nav-button"><i class="icon-console on-left"></i>System Console</a>
-        <a href="/paramlist" class="element place-right nav-button"><i class="icon-list"></i></a>
+<nav id="nav-bar" class="navigation-bar bg-grayDarker" style="padding-left: 15px; padding-right: 20px;">
+    <nav class="navigation-bar-content">
+        <a href="/" class="element nav-button no-overlay fg-anthilla-green">ANTD </a>
+        <div class="element-divider"></div>
+
+        <div class="element-divider place-right"></div>
+        <div id="clock" class="element place-right no-overlay"></div>
+        <script type="text/ecmascript">
+            $("#clock").clock({ "format": "24", "calendar": "false", "seconds": "false" });
+        </script>
+        <div class="element-divider place-right"></div>
+        <a class="element place-right nav-button no-overlay" href="~/logout" id="LogOut">
+            <i class="icon-exit" style="line-height: 5px;"></i>
+        </a>
+        <div class="element-divider place-right"></div>
     </nav>
 </nav>

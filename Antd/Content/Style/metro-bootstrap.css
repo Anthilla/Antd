@@ -9501,7 +9501,7 @@ a
         .metro .listview-outlook .list:focus,
         .metro .listview-outlook .list.active
         {
-            background-color: #cde6f7 !important;
+            background-color: #60a1e4; /*edit*/
             outline: 1px #999999 dotted;
             color: #555555 !important;
         }
@@ -9514,7 +9514,7 @@ a
 
             .metro .listview-outlook .list:hover .list-content
             {
-                border-left: 3px #b1d6f0 solid;
+                border-left: 3px #60a1e4 solid; /*60a1e4   - > 60a1e4 */
             }
 
     .metro .listview-outlook .list-group
@@ -9667,14 +9667,14 @@ a
 
     .metro .treeview li a:hover
     {
-        background-color: #e6f2fa;
+        /*background-color: #e6f2fa;*/
     }
 
     .metro .treeview .active
     {
-        background-color: #e1e1e1;
-        font-weight: bold;
-        color: #1d1d1d;
+        /*background-color: #e1e1e1;*/
+        /*font-weight: bold;*/
+        /*color: #1d1d1d;*/
     }
 
     .metro .treeview a .value

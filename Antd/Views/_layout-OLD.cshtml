@@ -1,0 +1,72 @@
+﻿@*
+///-------------------------------------------------------------------------------------
+///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+///     All rights reserved.
+///
+///     Redistribution and use in source and binary forms, with or without
+///     modification, are permitted provided that the following conditions are met:
+///         * Redistributions of source code must retain the above copyright
+///           notice, this list of conditions and the following disclaimer.
+///         * Redistributions in binary form must reproduce the above copyright
+///           notice, this list of conditions and the following disclaimer in the
+///           documentation and/or other materials provided with the distribution.
+///         * Neither the name of the Anthilla S.r.l. nor the
+///           names of its contributors may be used to endorse or promote products
+///           derived from this software without specific prior written permission.
+///
+///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+///
+///     20141110
+///-------------------------------------------------------------------------------------*@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Antd</title>
+
+    <script src="/Content/Scripts/jquery-2.1.3.min.js" type="text/javascript"></script>
+    <script src="/Content/Scripts/jquery.signalR-2.2.0.min.js" type="text/javascript"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="/Content/Scripts/jquery.widget.min.js" type="text/javascript"></script>
+    <script src="/Content/Scripts/jquery.mousewheel.js" type="text/javascript"></script>
+    <script src="/Content/Scripts/metro.min.js" type="text/javascript"></script>
+
+    <link href="/Content/Style/iconFont.css" rel="stylesheet" />
+    <link href="/Content/Style/antdstyle.css" rel="stylesheet" />
+    <link href="/Content/Style/metro-bootstrap.css" rel="stylesheet" />
+</head>
+<body class="metro" style="margin-left: 15px; margin-right: 15px;">
+
+    <nav id="nav-bar" class="navigation-bar anth-green" style="border-top: 5px solid white; border-bottom: 5px solid #cbd982;">
+        <nav class="navigation-bar-content">
+            <a href="/" class="element nav-button"><i class="icon-home on-left"></i>Antd</a>
+            <a href="/units" class="element nav-button"><i class="icon-gift on-left"></i>Units</a>
+            <a href="/status" class="element nav-button"><i class="icon-coffee on-left"></i>status?</a>
+@*            <a href="/sys" class="element nav-button"><i class="icon-screen on-left"></i>Antd</a>
+            <a href="/anthillasp" class="element nav-button"><i class="icon-laptop on-left"></i>AnthillaSP</a>
+            <a href="/anthillaas" class="element nav-button"><i class="icon-laptop on-left"></i>AnthillaAS</a>*@
+
+            <a href="/jobs" class="element place-right nav-button"><i class="icon-clock on-left"></i>Task Scheduler</a>
+            <a href="/info" class="element place-right nav-button"><i class="icon-info on-left"></i>System Info</a>
+            <a href="/log" class="element place-right nav-button"><i class="icon-eye on-left"></i>System Log</a>
+            <a href="/command" class="element place-right nav-button"><i class="icon-console on-left"></i>System Console</a>
+            <a href="/paramlist" class="element place-right nav-button"><i class="icon-list"></i></a>
+            <a href="/dir/tree/cfg" class="element place-right nav-button"><i class="icon-folder on-left"></i>Directory List</a>
+        </nav>
+    </nav>
+    @RenderSection("MainContent", required: false)
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
