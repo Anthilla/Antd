@@ -66,14 +66,14 @@
             }
         </tbody>
     </table>*@
-    <table id="proc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
+    @*    <table id="SELF" class="table searchable" style="width: 45% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
         <thead>
             <tr>
                 <th class="text-left">Antd Custom Configuration</th>
                 <th class="text-left">&nbsp</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="SELFTable">
             @foreach (Antd.SysctlModel proc in Model.SELF) {
                 <tr>
                     <td>@proc.param </td>
@@ -81,20 +81,52 @@
                 </tr>
             }
         </tbody>
-    </table>
+    </table>*@
 
-    <table id="proc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
+    @*   <table id="LOCAL" class="table searchable">
         <thead>
             <tr>
-                <th class="text-left">Local Configuration</th>
+                <th class="text-left">Configuration</th>
+                <th class="text-left">Local</th>
                 <th class="text-left">&nbsp</th>
+                <th class="text-left">Custom</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="LOCALTable">
             @foreach (Antd.SysctlModel proc in Model.LOCAL) {
                 <tr>
                     <td>@proc.param </td>
                     <td>@proc.value </td>
+                    <td><i class="arrow-right"></i></td>
+                    <td>@GetCustomValueForParam(proc.param)</td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+    <table id="STATUS" class="table searchable">
+        <thead>
+            <tr>
+                <th class="text-left">Configuration</th>
+                <th class="text-left">Local</th>
+                <th class="text-left">&nbsp</th>
+                <th class="text-left">Custom</th>
+            </tr>
+        </thead>
+        <tbody id="LOCALTable">
+            @foreach (dynamic proc in Model.STATUS) {
+                <tr>
+                    <td>@proc.name </td>
+                    <td>@proc.localvalue </td>
+                    <td>
+                        @if (proc.isdifferent == true) { 
+                            <i class="arrow-right bg-orange"></i>
+                        }
+                        @if (proc.isdifferent == false) { 
+                            <i class="arrow-right"></i>
+                        }
+                    </td>
+                    <td>@proc.customvalue</td>
                 </tr>
             }
         </tbody>
