@@ -86,8 +86,8 @@ namespace Antd.Sysctl {
         private static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
             string[] sysctlJsonCell = _sysctlJsonCell;
             SysctlModel sysctl = new SysctlModel();
-            sysctl.param = sysctlJsonCell[0];
-            if (sysctlJsonCell[1] != null) {
+            if (sysctlJsonCell.Length > 0) {
+                sysctl.param = sysctlJsonCell[0];
                 sysctl.value = sysctlJsonCell[1];
             }
             return sysctl;

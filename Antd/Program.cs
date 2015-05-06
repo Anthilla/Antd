@@ -72,11 +72,11 @@ namespace Antd {
 
 
                 //create basic custom sysctl.config -> atm is == to local sysctl.config
-                //Sysctl.Sysctl.WriteConfig();
-                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> created");
+                Sysctl.Sysctl.WriteConfig();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> created");
                 //load custom sysctl.config
-                //Sysctl.Sysctl.LoadConfig();
-                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> loaded");
+                Sysctl.Sysctl.LoadConfig();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> loaded");
                 
                 //Console.WriteLine("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
