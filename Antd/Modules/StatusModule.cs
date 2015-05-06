@@ -45,7 +45,7 @@ namespace Antd {
                 vmod.UNITS = Units.All;
                 HashSet<string> etcDirectories = new DirectoryLister("/etc", false).FullList;
                 vmod.ETC = etcDirectories;
-                vmod.PROCS = Antd.Sysctl.Sysctl.All;
+                vmod.PROCS = Antd.Sysctl.Sysctl.Local;
                 return View["page-status", vmod];
             };
 
@@ -58,7 +58,13 @@ namespace Antd {
 
             Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.PROCS = Antd.Sysctl.Sysctl.All;
+                vmod.PROCS = Antd.Sysctl.Sysctl.Local;
+                return View["page-sysctl", vmod];
+            };
+
+            Get["/sysctl/self"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.PROCS = Antd.Sysctl.Sysctl.Self;
                 return View["page-sysctl", vmod];
             };
         }

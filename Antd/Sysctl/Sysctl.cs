@@ -37,6 +37,9 @@ using System.Text.RegularExpressions;
 namespace Antd.Sysctl {
     public class Sysctl {
 
+        public static string root = "/cfg";
+        public static string file = "antd.sysctl.conf";
+
         private static List<SysctlModel> GetAllSysctls() {
             CommandModel command = Command.Launch("sysctl", "--all");
             var output = JsonConvert.SerializeObject(command.output);
@@ -44,7 +47,17 @@ namespace Antd.Sysctl {
             return sysctls;
         }
 
-        public static List<SysctlModel> All { get { return GetAllSysctls(); } }
+        public static List<SysctlModel> Local { get { return GetAllSysctls(); } }
+
+        private static List<SysctlModel> ReadSysctlCustomFile() {
+            string path = Path.Combine(root, file);
+            string text = File.ReadAllText(path);
+            var output = JsonConvert.SerializeObject(text.Replace("\"", ""));
+            List<SysctlModel> sysctls = MapSysctlJson(output);
+            return sysctls;
+        }
+
+        public static List<SysctlModel> Self { get { return ReadSysctlCustomFile(); } }
 
         private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
             string sysctlJson2 = _sysctlJson;
@@ -57,11 +70,14 @@ namespace Antd.Sysctl {
             List<SysctlModel> sysctls = new List<SysctlModel>() { };
             foreach (string rowJson in sysctlJsonRow) {
                 if (rowJson != null && rowJson != "") {
-                    string[] sysctlJsonCell = new string[] { };
-                    string[] cellDivider = new String[] { " = " };
-                    sysctlJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    SysctlModel sysctl = MapSysctl(sysctlJsonCell);
-                    sysctls.Add(sysctl);
+                    var fCh = rowJson.ToArray()[0];
+                    if(fCh != '#'){
+                        string[] sysctlJsonCell = new string[] { };
+                        string[] cellDivider = new String[] { " = " };
+                        sysctlJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
+                        SysctlModel sysctl = MapSysctl(sysctlJsonCell);
+                        sysctls.Add(sysctl);
+                    }
                 }
             }
             return sysctls;
@@ -71,7 +87,9 @@ namespace Antd.Sysctl {
             string[] sysctlJsonCell = _sysctlJsonCell;
             SysctlModel sysctl = new SysctlModel();
             sysctl.param = sysctlJsonCell[0];
-            sysctl.value = sysctlJsonCell[1];
+            if (sysctlJsonCell[1] != null) {
+                sysctl.value = sysctlJsonCell[1];
+            }
             return sysctl;
         }
 
@@ -83,11 +101,8 @@ namespace Antd.Sysctl {
             return output;
         }
 
-        public static string root = "/cfg";
-        public static string file = "antd.sysctl.config";
-
         public static void WriteConfig() {
-            var parameters = All;
+            var parameters = Local;
             Directory.CreateDirectory(root);
             string path = Path.Combine(root, file);
             if (File.Exists(path)) {
