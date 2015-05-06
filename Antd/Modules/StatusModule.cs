@@ -48,24 +48,6 @@ namespace Antd {
                 //vmod.ETC = etcDirectories;
                 vmod.SELF = Antd.Sysctl.Sysctl.Self;
                 vmod.LOCAL = Antd.Sysctl.Sysctl.Local;
-
-                var list = new List<dynamic>() { };
-                foreach (SysctlModel pp in Antd.Sysctl.Sysctl.Local) {
-                    dynamic m = new ExpandoObject();
-                    m.name = pp.param;
-                    m.localvalue = pp.value;
-                    m.customvalue = (from s in Antd.Sysctl.Sysctl.Self
-                                     where s.param == pp.param
-                                     select s.value).FirstOrDefault();
-                    if (m.localvalue != m.customvalue) {
-                    }
-                    else {
-                        m.isdifferent = false;
-                    }
-                    list.Add(m);
-                }
-
-                vmod.STATUS = list;
                 return View["page-status", vmod];
             };
 
