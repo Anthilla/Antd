@@ -32,9 +32,10 @@
 @{Layout = "_layout.cshtml";}
 @section MainContent
 {
+    <legend>Sysctl configuration</legend>
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 80%; padding-left: 5px;" placeholder="Search">
     <hr />
-    <table id="units" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
+    @*    <table id="units" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">UNIT</th>
@@ -49,9 +50,9 @@
                 </tr>
             }
         </tbody>
-    </table>
+    </table>*@
 
-    <table id="etc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
+    @*    <table id="etc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">ETC</th>
@@ -64,17 +65,33 @@
                 </tr>
             }
         </tbody>
+    </table>*@
+    <table id="proc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
+        <thead>
+            <tr>
+                <th class="text-left">Antd Custom Configuration</th>
+                <th class="text-left">&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Antd.SysctlModel proc in Model.SELF) {
+                <tr>
+                    <td>@proc.param </td>
+                    <td>@proc.value </td>
+                </tr>
+            }
+        </tbody>
     </table>
 
     <table id="proc" class="table searchable" style="width: 28% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
-                <th class="text-left">PROC</th>
+                <th class="text-left">Local Configuration</th>
                 <th class="text-left">&nbsp</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (Antd.SysctlModel proc in Model.PROCS) {
+            @foreach (Antd.SysctlModel proc in Model.LOCAL) {
                 <tr>
                     <td>@proc.param </td>
                     <td>@proc.value </td>

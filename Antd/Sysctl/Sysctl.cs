@@ -52,7 +52,7 @@ namespace Antd.Sysctl {
         private static List<SysctlModel> ReadSysctlCustomFile() {
             string path = Path.Combine(root, file);
             string text = File.ReadAllText(path);
-            var output = JsonConvert.SerializeObject(text.Replace("\"", ""));
+            var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;
         }
@@ -71,7 +71,7 @@ namespace Antd.Sysctl {
             foreach (string rowJson in sysctlJsonRow) {
                 if (rowJson != null && rowJson != "") {
                     var fCh = rowJson.ToArray()[0];
-                    if(fCh != '#'){
+                    if (fCh != '#') {
                         string[] sysctlJsonCell = new string[] { };
                         string[] cellDivider = new String[] { " = " };
                         sysctlJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
@@ -86,7 +86,7 @@ namespace Antd.Sysctl {
         private static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
             string[] sysctlJsonCell = _sysctlJsonCell;
             SysctlModel sysctl = new SysctlModel();
-            if (sysctlJsonCell.Length > 0) {
+            if (sysctlJsonCell.Length > 1) {
                 sysctl.param = sysctlJsonCell[0];
                 sysctl.value = sysctlJsonCell[1];
             }
@@ -112,7 +112,7 @@ namespace Antd.Sysctl {
                 sw.WriteLine("# " + path);
                 sw.WriteLine("# Custom Configuration for Antd");
                 foreach (SysctlModel p in parameters) {
-                    sw.WriteLine(p.param + "=" + p.value);
+                    sw.WriteLine(p.param + " = " + p.value);
                 }
                 sw.WriteLine("");
             }

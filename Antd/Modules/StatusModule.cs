@@ -42,10 +42,11 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.UNITS = Units.All;
-                HashSet<string> etcDirectories = new DirectoryLister("/etc", false).FullList;
-                vmod.ETC = etcDirectories;
-                vmod.PROCS = Antd.Sysctl.Sysctl.Local;
+                //vmod.UNITS = Units.All;
+                //HashSet<string> etcDirectories = new DirectoryLister("/etc", false).FullList;
+                //vmod.ETC = etcDirectories;
+                vmod.SELF = Antd.Sysctl.Sysctl.Self;
+                vmod.LOCAL = Antd.Sysctl.Sysctl.Local;
                 return View["page-status", vmod];
             };
 
