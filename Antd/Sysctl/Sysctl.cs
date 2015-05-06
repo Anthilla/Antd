@@ -78,6 +78,8 @@ namespace Antd.Sysctl {
         public static string Config(string param, string value) {
             CommandModel command = Command.Launch("sysctl", "-w " + param + "=\"" + value + "\"");
             var output = JsonConvert.SerializeObject(command.output);
+            WriteConfig();
+            LoadConfig();
             return output;
         }
 

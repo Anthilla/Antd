@@ -69,9 +69,16 @@ namespace Antd {
                 var elapsed = DateTime.Now - startTime;
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
-                Console.WriteLine("");
-                ServiceUnitInfo.SetDefaultUnitInfo();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
+                //create basic custom sysctl.config -> atm is == to local sysctl.config
+                Sysctl.Sysctl.WriteConfig();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> created");
+                //load custom sysctl.config
+                Sysctl.Sysctl.LoadConfig();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> loaded");
+                
+                //Console.WriteLine("");
+                //ServiceUnitInfo.SetDefaultUnitInfo();
+                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
 
                 //UnitFile.WriteForSelf();
                 //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file created");
