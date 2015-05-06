@@ -53,7 +53,7 @@ namespace Antd {
                 string param = x.param;
                 string value = x.value;
                 var output = Antd.Sysctl.Sysctl.Config(param, value);
-                return View["page-status", output];
+                return Response.AsJson(output);
             };
 
             Get["/sysctl"] = x => {
