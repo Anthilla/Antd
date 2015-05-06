@@ -30,6 +30,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -46,8 +47,10 @@ namespace Antd.Sysctl {
         public static List<SysctlModel> All { get { return GetAllSysctls(); } }
 
         private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
-            string sysctlJson = _sysctlJson;
-            sysctlJson = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n").Replace("\t", " ");
+            string sysctlJson2 = _sysctlJson;
+            sysctlJson2 = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+            string sysctlJson = sysctlJson2;
+            sysctlJson = Regex.Replace(sysctlJson2, @"\\t", " ");
             string[] rowDivider = new String[] { "\n" };
             string[] sysctlJsonRow = new string[] { };
             sysctlJsonRow = sysctlJson.Split(rowDivider, StringSplitOptions.None).ToArray();
@@ -73,10 +76,34 @@ namespace Antd.Sysctl {
         }
 
         public static string Config(string param, string value) {
-            ///sbin/sysctl -w kernel.domainname="example.com" 
             CommandModel command = Command.Launch("sysctl", "-w " + param + "=\"" + value + "\"");
             var output = JsonConvert.SerializeObject(command.output);
             return output;
+        }
+
+        public static string root = "/cfg";
+        public static string file = "antd.sysctl.config";
+
+        public static void WriteConfig() {
+            var parameters = All;
+            Directory.CreateDirectory(root);
+            string path = Path.Combine(root, file);
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.WriteLine("# " + path);
+                sw.WriteLine("# Custom Configuration for Antd");
+                foreach (SysctlModel p in parameters) {
+                    sw.WriteLine(p.param + "=" + p.value);
+                }
+                sw.WriteLine("");
+            }
+        }
+
+        public static void LoadConfig() {
+            string path = Path.Combine(root, file);
+            Command.Launch("sysctl", "-p " + path);
         }
     }
 }

@@ -27,12 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Antd {
     public class Action {
         public static string Mount(string arguments, string source, string location) {
