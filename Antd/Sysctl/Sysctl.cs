@@ -124,7 +124,7 @@ namespace Antd.Sysctl {
                 foreach (SysctlModel p in parameters) {
                     sw.WriteLine(p.param + " = " + p.value);
                 }
-                sw.WriteLine("vm.swappiness = 30");
+                sw.WriteLine("vm.swappiness = 61");
                 sw.WriteLine("");
             }
         }
