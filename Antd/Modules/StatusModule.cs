@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -43,6 +44,8 @@ namespace Antd {
                 vmod.RUNNING = Antd.Sysctl.Sysctl.Running;
                 vmod.ANTDFILE = Antd.Sysctl.Sysctl.Antd;
                 vmod.STOCKFILE = Antd.Sysctl.Sysctl.Stock;
+
+                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Running);
                 return View["page-sysctl", vmod];
             };
 

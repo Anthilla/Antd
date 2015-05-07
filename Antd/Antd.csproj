@@ -198,6 +198,7 @@
     <Compile Include="UnitFiles\UnitRepo.cs" />
     <Compile Include="UnitFiles\UnitFile.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
+    <Compile Include="ViewModels\Status.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -225,6 +226,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="ViewHelpers\Status.cs" />
     <None Include="Views\page-sysctl.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
