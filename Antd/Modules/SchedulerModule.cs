@@ -60,7 +60,7 @@ namespace Antd {
                 };
                 string guid = Guid.NewGuid().ToString();
                 string dataJson = JsonConvert.SerializeObject(data);
-                var task = JobRepository.Create(guid, _alias, dataJson, _int);
+                JobModel task = JobRepository.Create(guid, _alias, dataJson, _int);
                 JobScheduler.LauchJob<AntdJob.CommandJob>(task);
                 dynamic model = new ExpandoObject();
                 model.Message = "Job created and executed.";

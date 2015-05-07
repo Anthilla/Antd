@@ -52,7 +52,7 @@
         </tbody>
     </table>*@
 
-@*    <table id="etc" class="table searchable" style="width: 45% !important; display: inline-block !important; float: left;">
+    @*    <table id="etc" class="table searchable" style="width: 45% !important; display: inline-block !important; float: left;">
         <thead>
             <tr>
                 <th class="text-left">ETC</th>
@@ -67,24 +67,7 @@
         </tbody>
     </table>*@
 
-    <table id="SELF" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
-        <thead>
-            <tr>
-                <th class="text-left">Antd Custom Configuration</th>
-                <th class="text-left">&nbsp</th>
-            </tr>
-        </thead>
-        <tbody id="SELFTable">
-            @foreach (Antd.SysctlModel proc in Model.SELF) {
-                <tr>
-                    <td>@proc.param </td>
-                    <td>@proc.value </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-       <table id="LOCAL" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
+    <table id="LOCAL" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
         <thead>
             <tr>
                 <th class="text-left">Local Configuration</th>
@@ -92,6 +75,10 @@
             </tr>
         </thead>
         <tbody id="LOCALTable">
+            <tr>
+                <td>parametro.fasullo </td>
+                <td>100 </td>
+            </tr>
             @foreach (Antd.SysctlModel proc in Model.LOCAL) {
                 <tr>
                     <td>@proc.param </td>
@@ -101,35 +88,39 @@
         </tbody>
     </table>
 
-    @*    <table id="STATUS" class="table searchable">
+    <table id="SELF" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
         <thead>
             <tr>
-                <th class="text-left">Configuration</th>
-                <th class="text-left">Local</th>
+                <th class="text-left">Antd Custom Configuration</th>
                 <th class="text-left">&nbsp</th>
-                <th class="text-left">Custom</th>
             </tr>
         </thead>
-        <tbody id="LOCALTable">
-            @foreach (dynamic proc in Model.STATUS) {
+        <tbody id="SELFTable">
+            <tr>
+                <td>parametro.fasullo </td>
+                <td>10 </td>
+            </tr>
+            @foreach (Antd.SysctlModel proc in Model.SELF) {
                 <tr>
-                    <td>@proc.name </td>
-                    <td>@proc.localvalue </td>
-                    <td>
-                        @if (proc.isdifferent == true) { 
-                            <i class="arrow-right bg-orange"></i>
-                        }
-                        @if (proc.isdifferent == false) { 
-                            <i class="arrow-right"></i>
-                        }
-                    </td>
-                    <td>@proc.customvalue</td>
+                    <td>@proc.param </td>
+                    <td>@proc.value </td>
                 </tr>
             }
         </tbody>
-    </table>*@
+    </table>
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            var localRows = $('#LOCALTable tr');
+            var selfRows = $('#SELFTable tr');
+
+            var localRowsLenght = localRows.lenght;
+            console.log(localRowsLenght);
+            var selfRowsLenght = selfRows.lenght;
+            console.log(selfRowsLenght);
+            alert(localRowsLenght + selfRowsLenght);
+        });
+
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');

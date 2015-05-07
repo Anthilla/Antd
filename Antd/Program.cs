@@ -70,13 +70,12 @@ namespace Antd {
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
 
-
                 //create basic custom sysctl.config -> atm is == to local sysctl.config
                 Sysctl.Sysctl.WriteConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> created");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> created");
                 //load custom sysctl.config
                 Sysctl.Sysctl.LoadConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "XX sysctl.config -> loaded");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> loaded");
                 
                 //Console.WriteLine("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
