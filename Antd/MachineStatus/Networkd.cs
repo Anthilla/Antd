@@ -38,14 +38,16 @@ using System.Text.RegularExpressions;
 namespace Antd.Status {
     public class Networkd {
 
-        private static void EnableRequiredServices() {
+        public static void EnableRequiredServices() {
             Systemctl.Start("systemd-networkd.service");
             Systemctl.Start("systemd-resolved.service");
             Systemctl.Enable("systemd-networkd.service");
             Systemctl.Enable("systemd-resolved.service");
         }
 
-        //public static void MountDir() { }
+        public static void MountNetworkdDir() {
+            Action.Mount("--bind", "/etc/systemd/network", "/cfg/networkd");
+        }
 
         //public string matchName { get; set; }
         //public string matchHost { get; set; }
@@ -60,8 +62,8 @@ namespace Antd.Status {
         public static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
                                       string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
                                       string addressAddress, string routeGateway) {
-            Directory.CreateDirectory("/cfg/network");
-            string path = Path.Combine("/cfg/network", filename + ".network");
+            Directory.CreateDirectory("/cfg/networkd");
+            string path = Path.Combine("/cfg/networkd", filename + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
@@ -76,9 +78,9 @@ namespace Antd.Status {
                 if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
                 if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
                 if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
-                if (addressAddress != "") sw.WriteLine("");
-                if (addressAddress != "") sw.WriteLine("[Address]");
-                if (addressAddress != "") sw.WriteLine("Address=" + addressAddress);
+                sw.WriteLine("");
+                sw.WriteLine("[Address]");
+                sw.WriteLine("Address=" + addressAddress);
                 if (routeGateway != "") sw.WriteLine("");
                 if (routeGateway != "") sw.WriteLine("[Route]");
                 if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
@@ -104,7 +106,7 @@ namespace Antd.Status {
         }
 
         public static string ReadAntdUnit() {
-            string path = Path.Combine("/cfg/network", "antd.network");
+            string path = Path.Combine("/cfg/networkd", "antd.network");
             string text = File.ReadAllText(path);
             return text;
         }

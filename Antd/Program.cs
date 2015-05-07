@@ -77,7 +77,14 @@ namespace Antd {
 
                 Mount.WriteConfig();
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "mounts -> created");
-                
+
+                Networkd.EnableRequiredServices();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> enabled");
+                Networkd.CreateFirstUnit();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> unit created");
+                Networkd.MountNetworkdDir();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> mounted");
+
                 //Console.WriteLine("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
                 //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
@@ -115,8 +122,8 @@ namespace Antd {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
             Cfg.LaunchDefaults();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
-            Network.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
+            //Network.LaunchDefaults();
+            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
             SystemDataRepo.LaunchDefaults();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
             ZfsMount.LaunchDefaults();
