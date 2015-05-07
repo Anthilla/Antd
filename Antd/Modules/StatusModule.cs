@@ -44,7 +44,8 @@ namespace Antd {
             Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.RUNNING = Antd.Sysctl.Sysctl.Running;
-                vmod.PROCS = Antd.Sysctl.Sysctl.Self;
+                vmod.ANTDFILE = Antd.Sysctl.Sysctl.Antd;
+                vmod.ANTDFILE = Antd.Sysctl.Sysctl.Stock;
 
                 return View["page-sysctl", vmod];
             };

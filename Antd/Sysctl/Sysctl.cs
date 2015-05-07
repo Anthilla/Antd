@@ -57,7 +57,19 @@ namespace Antd.Sysctl {
             return sysctls;
         }
 
-        public static List<SysctlModel> Self { get { return ReadSysctlCustomFile(); } }
+        public static List<SysctlModel> Antd { get { return ReadSysctlCustomFile(); } }
+
+        private static List<SysctlModel> ReadSysctlStockFile() {
+            //asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            string path = Path.Combine(root, file);
+            //asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            string text = File.ReadAllText(path);
+            var output = JsonConvert.SerializeObject(text);
+            List<SysctlModel> sysctls = MapSysctlJson(output);
+            return sysctls;
+        }
+
+        public static List<SysctlModel> Stock { get { return ReadSysctlStockFile(); } }
 
         private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
             string sysctlJson2 = _sysctlJson;
@@ -102,7 +114,7 @@ namespace Antd.Sysctl {
         }
 
         public static void WriteConfig() {
-            var parameters = Local;
+            var parameters = Stock;
             Directory.CreateDirectory(root);
             string path = Path.Combine(root, file);
             if (File.Exists(path)) {
