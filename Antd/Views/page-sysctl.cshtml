@@ -34,73 +34,22 @@
 @section MainContent {
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
 
-@*    <table id="STOCKFILE" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
-        <thead>
-            <tr>
-                <th class="text-left">Antd File ()</th>
-                <th class="text-left">&nbsp</th>
-            </tr>
-        </thead>
-        <tbody id="STOCKFILETable">
-            @foreach (Antd.SysctlModel proc in Model.STOCKFILE) {
-                <tr>
-                    <td>@proc.param </td>
-                    <td>@proc.value </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <table id="RUNNING" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
-        <thead>
-            <tr>
-                <th class="text-left">RUNNING</th>
-                <th class="text-left">&nbsp</th>
-            </tr>
-        </thead>
-        <tbody id="RUNNINGTable">
-            @foreach (Antd.SysctlModel proc in Model.RUNNING) {
-                <tr>
-                    <td>@proc.param </td>
-                    <td>@proc.value </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <table id="ANTDFILE" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
-        <thead>
-            <tr>
-                <th class="text-left">Antd File ()</th>
-                <th class="text-left">&nbsp</th>
-            </tr>
-        </thead>
-        <tbody id="ANTDFILETable">
-            @foreach (Antd.SysctlModel proc in Model.ANTDFILE) {
-                <tr>
-                    <td>@proc.param </td>
-                    <td>@proc.value </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@
-
     <table id="ANTDFILE" class="table searchable" >
         <thead>
             <tr>
-                <th class="text-left">Parameter</th>
-                <th class="text-left">Stock (filename)</th>
-                <th class="text-left">Running</th>
-                <th class="text-left">Antd (filename)</th>
+                <th class="text-left" style="width: 35%;">&nbsp</th>
+                <th class="text-left" style="text-align: center;">Stock (filename)</th>
+                <th class="text-left" style="text-align: center;">Running</th>
+                <th class="text-left" style="text-align: center;">Antd (filename)</th>
             </tr>
         </thead>
         <tbody id="ANTDFILETable">
             @foreach (Antd.ViewModels.StatusViewModel value in Model.ALL) {
                 <tr>
-                    <td><label>@value.label </label></td>
-                    <td>@value.stockValue </td>
-                    <td>@value.runningValue </td>
-                    <td>@value.antdValue </td>
+                    <td style="text-align: right;"><label>@value.label </label></td>
+                    <td style="text-align: center;">@value.stockValue </td>
+                    <td style="text-align: center;">@value.runningValue </td>
+                    <td style="text-align: center;">@value.antdValue </td>
                 </tr>
             }
         </tbody>
