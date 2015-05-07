@@ -95,12 +95,12 @@
                     <label>Start Time</label>
                 </div>
                 <div class="span10">
-                    <select id="CronStartTimeHour">
+                    <select id="CronStartTimeHour" name="CronStartTimeHour">
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
-                    <select id="CronStartTimeMinute">
+                    <select id="CronStartTimeMinute" name="CronStartTimeMinute">
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
@@ -161,6 +161,23 @@
                         <input class="cronMonthOfTheYear" type="checkbox" checked="checked" value="@GetMonthNumber(month)"/>
                         <p style="display: inline-block;">@month</p>
                     }
+                </div>
+            </div>
+            <div class="row">
+                <div class="span2">
+                    <label>End Time</label>
+                </div>
+                <div class="span10">
+                    <select id="CronEndTimeHour" name="CronEndTimeHour">
+                        @for (int i = 0; i < 24; i++) {
+                            <option value="@i.ToString()" >@i.ToString() </option>
+                        }
+                    </select>
+                    <select id="CronEndTimeMinute" name="CronEndTimeMinute">
+                        @for (int i = 0; i < 60; i++) {
+                            <option value="@i.ToString()" >@i.ToString() </option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="row">

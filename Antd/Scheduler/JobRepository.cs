@@ -48,16 +48,35 @@ namespace Antd.Scheduler {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
-        public static JobModel Create(string guid, string alias, string data, int interval) {
+        public static JobModel Create(string guid, string alias, string data) {
             JobModel task = new JobModel();
             task._Id = Guid.NewGuid().ToString();
             task.Guid = guid;
             task.Alias = alias;
             task.Data = data;
-            task.Interval = interval;
             task.Results = new ExpandoObject() as IDictionary<String, object>;
             DeNSo.Session.New.Set(task);
             return task;
+        }
+
+        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, int eh, int em, string _cron) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            TriggerModel trigger = new TriggerModel();
+            trigger.TriggerSetting = period;
+            trigger.StartHour = sh;
+            trigger.StartMinute = sm;
+            trigger.EndHour = eh;
+            trigger.EndMinute = em;
+            trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
+            trigger.EndTime = new DateTime(2000, 1, 1, eh, em, 1, 1);
+            if (_cron != "") {
+                trigger.CronExpression = _cron;
+            }
+            else {
+                trigger.CronExpression = "";
+            }
+            task.Trigger = trigger;
+            DeNSo.Session.New.Set(task);
         }
 
         public static void AddResult(string guid, string data) {

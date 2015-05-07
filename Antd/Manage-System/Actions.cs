@@ -27,66 +27,74 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Scheduler;
+using Newtonsoft.Json;
+using System;
 namespace Antd {
     public class Action {
-        public static string Mount(string arguments, string source, string location) {
-            CommandModel command = Command.Launch("mount", arguments + " " + source + " " + location);
-            return command.output;
+
+        public static void Schedule(string _alias, string _command, string _args) {
+            int startH = DateTime.Now.Hour;
+            int startM = DateTime.Now.Minute + 1;
+            int endH = startH + 1;
+            int endM = startM;
+            string[] data = new string[] { 
+                    _command,
+                    _args
+                };
+            string guid = Guid.NewGuid().ToString();
+            string dataJson = JsonConvert.SerializeObject(data);
+            JobModel task = JobRepository.Create(guid, _alias, dataJson);
+            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startH, startM, endH, endM, "");
+            JobScheduler.LauchJob<AntdJob.CommandJob>(task);
         }
 
-        public static string Mkdir(string arguments, string dir) {
-            CommandModel command = Command.Launch("mkdir", arguments + " " + dir);
-            return command.output;
+        public static void Mount(string arguments, string source, string location) {
+            Schedule("_mount_", "mount", arguments + " " + source + " " + location);
         }
 
-        public static string Dhclient(string name) {
-            CommandModel command = Command.Launch("dhclient", name);
-            return command.output;
+        public static void Mkdir(string arguments, string dir) {
+            Schedule("_mkdir_", "mkdir", arguments + " " + dir);
         }
 
-        public static string SshKeygen(string arguments) {
-            CommandModel command = Command.Launch("ssh-keygen", arguments);
-            return command.output;
+        public static void Dhclient(string name) {
+            Schedule("_dhclient_", "dhclient", name);
         }
 
-        public static string Sshd(string arguments) {
-            CommandModel command = Command.Launch("/usr/sbin/sshd", arguments);
-            return command.output;
+        public static void SshKeygen(string arguments) {
+            Schedule("_ssh-keygen_", "ssh-keygen", arguments);
         }
 
-        public static string Sleep(string arguments) {
-            CommandModel command = Command.Launch("sleep", arguments);
-            return command.output;
+        public static void Sshd(string arguments) {
+            Schedule("_/usr/sbin/sshd_", "/usr/sbin/sshd", arguments);
         }
 
-        public static string QemuNbd(string arguments, string source) {
-            CommandModel command = Command.Launch("qemu-nbd", arguments + " " + source);
-            return command.output;
+        public static void Sleep(string arguments) {
+            Schedule("_sleep_", "sleep", arguments);
         }
 
-        public static string Kpartx(string arguments, string source) {
-            CommandModel command = Command.Launch("kpartx", arguments + " " + source);
-            return command.output;
+        public static void QemuNbd(string arguments, string source) {
+            Schedule("_qemu-nbd_", "qemu-nbd", arguments + " " + source);
         }
 
-        public static string Zpool(string arguments) {
-            CommandModel command = Command.Launch("zpool", arguments);
-            return command.output;
+        public static void Kpartx(string arguments, string source) {
+            Schedule("_kpartx_", "kpartx", arguments + " " + source);
         }
 
-        public static string Zfs(string arguments) {
-            CommandModel command = Command.Launch("zfs", arguments);
-            return command.output;
+        public static void Zpool(string arguments) {
+            Schedule("_zpool_", "zpool", arguments);
         }
 
-        public static string Rsync(string arguments, string sourceA, string sourceB) {
-            CommandModel command = Command.Launch("rsync", arguments + " " + sourceA + " " + sourceB);
-            return command.output;
+        public static void Zfs(string arguments) {
+            Schedule("_zfs_", "zfs", arguments);
         }
 
-        public static string Remove(string arguments, string source) {
-            CommandModel command = Command.Launch("rm", arguments + " " + source);
-            return command.output;
+        public static void Rsync(string arguments, string sourceA, string sourceB) {
+            Schedule("_rsync_", "rsync", arguments + " " + sourceA + " " + sourceB);
+        }
+
+        public static void Remove(string arguments, string source) {
+            Schedule("_rm_", "rm", arguments + " " + source);
         }
     }
 }

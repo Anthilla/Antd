@@ -77,14 +77,8 @@ namespace Antd.Scheduler {
                 case TriggerModel.TriggerPeriod.IsOneTimeOnly:
                     trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
                     break;
-                case TriggerModel.TriggerPeriod.IsDaily:
-                    trigger = DefineDailyTrigger(_trigger, _identity);
-                    break;
-                case TriggerModel.TriggerPeriod.IsWeekly:
-                    trigger = DefineWeeklyTrigger(_trigger, _identity);
-                    break;
-                case TriggerModel.TriggerPeriod.IsMonthly:
-                    trigger = DefineMonthlyTrigger(_trigger, _identity);
+                case TriggerModel.TriggerPeriod.IsCron:
+                    trigger = DefineCronTrigger(_trigger, _identity);
                     break;
                 default:
                     trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
@@ -101,30 +95,40 @@ namespace Antd.Scheduler {
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {
-            ITrigger dailyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(setting.StartTime)
-                .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(setting.TimeSpan)))
-                .EndAt(setting.EndTime)
-                .Build();
-            return dailyTrigger;
-        }
+        //private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {
+        //    ITrigger dailyTrigger = TriggerBuilder.Create()
+        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
+        //        .StartAt(setting.StartTime)
+        //        .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(setting.TimeSpan)))
+        //        .EndAt(setting.EndTime)
+        //        .Build();
+        //    return dailyTrigger;
+        //}
 
-        private static ITrigger DefineWeeklyTrigger(TriggerModel setting, string _identity) {
-            int _weeklyHour = setting.StartTime.Hour;
-            int _weeklyMinute = setting.StartTime.Minute;
-            ITrigger weeklyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(setting.StartTime)
-                .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(setting.DayOfTheWeek, _weeklyHour, _weeklyMinute))
-                .EndAt(setting.EndTime)
-                .Build();
-            return weeklyTrigger;
-        }
+        //private static ITrigger DefineWeeklyTrigger(TriggerModel setting, string _identity) {
+        //    int _weeklyHour = setting.StartTime.Hour;
+        //    int _weeklyMinute = setting.StartTime.Minute;
+        //    ITrigger weeklyTrigger = TriggerBuilder.Create()
+        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
+        //        .StartAt(setting.StartTime)
+        //        .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(setting.DayOfTheWeek, _weeklyHour, _weeklyMinute))
+        //        .EndAt(setting.EndTime)
+        //        .Build();
+        //    return weeklyTrigger;
+        //}
 
-        private static ITrigger DefineMonthlyTrigger(TriggerModel setting, string _identity) {
-            //string _cronExpression = "0 0/2 8-17 * * ?";
+        //private static ITrigger DefineMonthlyTrigger(TriggerModel setting, string _identity) {
+        //    //string _cronExpression = "0 0/2 8-17 * * ?";
+        //    ITrigger monthlyTrigger = TriggerBuilder.Create()
+        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
+        //        .StartAt(setting.StartTime)
+        //        .WithCronSchedule(setting.CronExpression)
+        //        .EndAt(setting.EndTime)
+        //        .Build();
+        //    return monthlyTrigger;
+        //}
+
+        private static ITrigger DefineCronTrigger(TriggerModel setting, string _identity) {
             ITrigger monthlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .StartAt(setting.StartTime)

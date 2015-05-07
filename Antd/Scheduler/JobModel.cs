@@ -55,7 +55,8 @@ namespace Antd.Scheduler {
             IsOneTimeOnly = 0,
             IsDaily = 1,
             IsWeekly = 2,
-            IsMonthly = 3
+            IsMonthly = 3,
+            IsCron = 4
         }
 
         public TriggerPeriod TriggerSetting { get; set; }
@@ -64,11 +65,13 @@ namespace Antd.Scheduler {
 
         public DateTime EndTime { get; set; }
 
-        public DateTime Hour { get; set; }
+        public int StartHour { get; set; }
 
-        public int TimeSpan { get; set; }
+        public int StartMinute { get; set; }
 
-        public DayOfWeek DayOfTheWeek { get; set; }
+        public int EndHour { get; set; }
+
+        public int EndMinute { get; set; }
 
         public string CronExpression { get; set; }
     }

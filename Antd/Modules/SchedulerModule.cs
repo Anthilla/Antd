@@ -53,14 +53,23 @@ namespace Antd {
                 string _alias = (string)this.Request.Form.Alias;
                 string _command = (string)this.Request.Form.Command;
                 string _args = (string)this.Request.Form.Arguments;
-                int _int = (int)this.Request.Form.Interval;
+
+                int startH = (int)this.Request.Form.CronStartTimeHour.Value;
+                int startM = (int)this.Request.Form.CronStartTimeMinute.Value;
+
+                int endH = (int)this.Request.Form.CronEndTimeHour.Value;
+                int endM = (int)this.Request.Form.CronEndTimeMinute.Value;
+
+                string _cron = (string)this.Request.Form.CronResult;
+
                 string[] data = new string[] { 
                     _command,
                     _args
                 };
                 string guid = Guid.NewGuid().ToString();
                 string dataJson = JsonConvert.SerializeObject(data);
-                JobModel task = JobRepository.Create(guid, _alias, dataJson, _int);
+                JobModel task = JobRepository.Create(guid, _alias, dataJson);
+                JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startH, startM, endH, endM, _cron);
                 JobScheduler.LauchJob<AntdJob.CommandJob>(task);
                 dynamic model = new ExpandoObject();
                 model.Message = "Job created and executed.";
