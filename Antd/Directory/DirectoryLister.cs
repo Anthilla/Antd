@@ -43,6 +43,7 @@ namespace Antd {
             UpwalkDirectoryTree(root);
         }
 
+        #region parents
         private HashSet<string> _parents = new HashSet<string>() { };
 
         private void UpwalkDirectoryTree(DirectoryInfo root) {
@@ -61,8 +62,13 @@ namespace Antd {
                 return _parents;
             }
         }
+        #endregion parents
+
+        #region tree
 
         private HashSet<string> _tree = new HashSet<string>() { };
+
+        private HashSet<DirItemModel> _tree2 = new HashSet<DirItemModel>() { };
 
         private void WalkDirectoryTree(DirectoryInfo root, bool getSubDir) {
             FileInfo[] files = null;
@@ -71,16 +77,25 @@ namespace Antd {
                 files = root.GetFiles("*.*");
             }
             catch (UnauthorizedAccessException e) {
+                Console.WriteLine(e.Message);
             }
             catch (DirectoryNotFoundException e) {
                 Console.WriteLine(e.Message);
             }
             if (files != null) {
                 foreach (FileInfo fi in files) {
+                    _tree2.Add(new DirItemModel() {
+                        isFile = true,
+                        path = fi.FullName
+                    });
                     _tree.Add(fi.FullName);
                 }
                 subDirs = root.GetDirectories();
                 foreach (DirectoryInfo dirInfo in subDirs) {
+                    _tree2.Add(new DirItemModel() {
+                        isFile = false,
+                        path = dirInfo.FullName
+                    });
                     _tree.Add(dirInfo.FullName);
                     if (getSubDir == true) {
                         WalkDirectoryTree(dirInfo, true);
@@ -94,6 +109,7 @@ namespace Antd {
                 return _tree;
             }
         }
+        #endregion tree
 
         public DirectorySecurity GetFileACL() {
             var acc = root.GetAccessControl();

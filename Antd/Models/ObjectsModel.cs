@@ -120,6 +120,12 @@ namespace Antd {
     public class AntdirModel : _dirObject {
         public string name { get; set; }
     }
+
+    public class DirItemModel {
+        public bool isFile { get; set; }
+
+        public string path { get; set; }
+    }
     #endregion Directory Model
 
     #region Unit Model
