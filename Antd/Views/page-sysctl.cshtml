@@ -52,7 +52,7 @@
                     <td style="text-align: center;">@value.stockValue </td>
                     <td style="text-align: center;">@value.runningValue </td>
                     <td style="text-align: center;">@value.antdValue
-                        <div class="border-3-anthilla-orange value-comparer" style="position: absolute; z-index: 99; height: 40px; width: 550px; margin-left: -600px; margin-top: -25px; background-color: transparent !important; display: none;"></div>
+@*                        <div class="border-3-anthilla-orange value-comparer" style="position: absolute; z-index: 99; height: 40px; width: 550px; margin-left: -600px; margin-top: -25px; background-color: transparent !important; display: none;"></div>*@
                     </td>
                 </tr>
             }
@@ -62,7 +62,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             var table = $('#SysctlBodyTable');
-            table.find('tr').each(function (index) {
+            $('#SysctlBodyTable > tr').each(function (index) {
                 var thisRow = $(this);
                 var stockValue = thisRow.find('td').eq(1).text();
                 var runningValue = thisRow.find('td').eq(2).text();
