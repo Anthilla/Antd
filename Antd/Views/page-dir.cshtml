@@ -59,12 +59,12 @@
         @foreach (Antd.DirItemModel el in Model.children2) {
             if (el.isFile == true) {
             <li>
-                <p>@el</p>
+                <p>@el.path</p>
             </li>
             }
             if (el.isFile == false) {
             <li>
-                <a href="/dir/tree/@el">@el</a>
+                <a href="/dir/tree/@el.path">@el.path</a>
             </li>
             }
         }
