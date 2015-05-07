@@ -148,6 +148,7 @@
     <Compile Include="Config\Anth_ParamWriter.cs" />
     <Compile Include="Config\SystemConfig.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="MachineStatus\Mount.cs" />
     <Compile Include="Manage-System\Actions.cs" />
     <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
@@ -156,7 +157,7 @@
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />
     <Compile Include="Scheduler\JobTrigger.cs" />
-    <Compile Include="Sysctl\Sysctl.cs" />
+    <Compile Include="MachineStatus\Sysctl.cs" />
     <Compile Include="Systemd\Units.cs" />
     <Compile Include="Directory\DirectoryWatcher.cs" />
     <Compile Include="Directory\DirectoryLister.cs" />

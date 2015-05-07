@@ -137,4 +137,20 @@ namespace Antd {
         public string value { get; set; }
     }
     #endregion Sysctl Model
+
+    #region Mount Model
+    public class MountModel {
+        public string device { get; set; }
+
+        public string mountpoint { get; set; }
+        
+        public string fstype { get; set; }
+
+        public string rorw { get; set; }
+        
+        public string dv1 { get; set; }
+     
+        public string dv2 { get; set; }
+    }
+    #endregion Mount Model
 }

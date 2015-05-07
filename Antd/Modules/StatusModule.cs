@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Status;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
@@ -41,26 +42,26 @@ namespace Antd {
 
             Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
+                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["page-status-sysctl", vmod];
             };
 
             Get["/mount"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
+                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["page-status-mount", vmod];
             };
 
             Get["/networkd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
+                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["page-status-networkd", vmod];
             };
 
             Post["/sysctl/{param}/{value}"] = x => {
                 string param = x.param;
                 string value = x.value;
-                var output = Antd.Sysctl.Sysctl.Config(param, value);
+                var output = Sysctl.Config(param, value);
                 return Response.AsJson(output);
             };
         }

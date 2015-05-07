@@ -28,7 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Scheduler;
-using Antd.UnitFiles;
+using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
 using Nancy;
@@ -70,11 +70,9 @@ namespace Antd {
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
 
-                //create basic custom sysctl.config -> atm is == to local sysctl.config
-                Sysctl.Sysctl.WriteConfig();
+                Sysctl.WriteConfig();
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> created");
-                //load custom sysctl.config
-                Sysctl.Sysctl.LoadConfig();
+                Sysctl.LoadConfig();
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> loaded");
                 
                 //Console.WriteLine("");

@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd.ViewHelpers {
-    public class Status {
+    public class VHStatus {
         public static List<StatusViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
             HashSet<string> paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { };
             foreach (SysctlModel data in stockData) {
