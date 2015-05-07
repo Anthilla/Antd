@@ -69,54 +69,6 @@
     </table>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#SysctlBodyTable');
-            $('#SysctlBodyTable > tr').each(function (index) {
-                var thisRow = $(this);
-                var stockValue = thisRow.find('td').eq(1).text();
-                var runningValue = thisRow.find('td').eq(2).text();
-                var antdValue = thisRow.find('td').eq(3).text();
-                var c = thisRow.find('.value-comparer');
-                c.show();
-                if (runningValue == stockValue) {
-                    c.show();
-                    c.css("margin-left", "-600px");
-                    return false;
-                }
-                else if (runningValue == antdValue) {
-                    c.show();
-                    c.css("margin-left", "-250px");
-                    return false;
-
-                }
-                else {
-                    c.hide();
-                    return false;
-                }
-            });
-        });
-
-        $('div.value-comparer').click(function () {
-            jQuery.support.cors = true;
-            var p = $(this).attr('data-param');
-            var v = $('input[data-param="' + p + '"]').val();
-            var s = {
-                param: p,
-                value: v,
-            };
-            $.ajax({
-                url: '/status/sysctl/' + s.param + '/' + s.value,
-                type: 'POST',
-                data: JSON.stringify(s),
-                contentType: "application/json;charset=utf-8",
-                success: function () {
-                    alert('new value for "' + s.param + '" is: ' + s.value);
-                    location.reload(true);
-                    return false;
-                }
-            });
-        });
-
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');
