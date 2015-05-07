@@ -45,7 +45,6 @@ namespace Antd {
                 var p = x.path;
                 DirectoryViewModel dirs = new DirectoryViewModel();
                 dirs.parents = new DirectoryLister("/" + p, false).ParentList.Reverse();
-                dirs.children = new DirectoryLister("/" + p, false).FullList;
                 dirs.children2 = new DirectoryLister("/" + p, false).FullList2;
                 return View["page-dir", dirs];
             };
