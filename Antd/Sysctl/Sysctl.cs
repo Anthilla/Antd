@@ -60,9 +60,7 @@ namespace Antd.Sysctl {
         public static List<SysctlModel> Antd { get { return ReadSysctlCustomFile(); } }
 
         private static List<SysctlModel> ReadSysctlStockFile() {
-            //asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-            string path = Path.Combine(root, file);
-            //asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            string path = Path.Combine("/etc", "sysctl.conf");
             string text = File.ReadAllText(path);
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);

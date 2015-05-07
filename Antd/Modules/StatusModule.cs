@@ -45,8 +45,7 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.RUNNING = Antd.Sysctl.Sysctl.Running;
                 vmod.ANTDFILE = Antd.Sysctl.Sysctl.Antd;
-                vmod.ANTDFILE = Antd.Sysctl.Sysctl.Stock;
-
+                vmod.STOCKFILE = Antd.Sysctl.Sysctl.Stock;
                 return View["page-sysctl", vmod];
             };
 
@@ -56,8 +55,6 @@ namespace Antd {
                 var output = Antd.Sysctl.Sysctl.Config(param, value);
                 return Response.AsJson(output);
             };
-
-
         }
     }
 }

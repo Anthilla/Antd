@@ -34,7 +34,24 @@
 @section MainContent {
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
 
-    <table id="RUNNING" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
+    <table id="STOCKFILE" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
+        <thead>
+            <tr>
+                <th class="text-left">Antd File ()</th>
+                <th class="text-left">&nbsp</th>
+            </tr>
+        </thead>
+        <tbody id="STOCKFILETable">
+            @foreach (Antd.SysctlModel proc in Model.STOCKFILE) {
+                <tr>
+                    <td>@proc.param </td>
+                    <td>@proc.value </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table id="RUNNING" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
         <thead>
             <tr>
                 <th class="text-left">RUNNING</th>
@@ -42,10 +59,6 @@
             </tr>
         </thead>
         <tbody id="RUNNINGTable">
-            <tr>
-                <td>parametro.fasullo </td>
-                <td>100 </td>
-            </tr>
             @foreach (Antd.SysctlModel proc in Model.RUNNING) {
                 <tr>
                     <td>@proc.param </td>
@@ -55,7 +68,7 @@
         </tbody>
     </table>
 
-    <table id="ANTDFILE" class="table searchable" style="width: 50% !important; display: inline-block !important; float: left; border-left: 5px solid green;">
+    <table id="ANTDFILE" class="table searchable" style="width: 30% !important; display: inline-block !important; float: left; border-left: 5px solid #A7BD39;">
         <thead>
             <tr>
                 <th class="text-left">Antd File ()</th>
@@ -63,11 +76,7 @@
             </tr>
         </thead>
         <tbody id="ANTDFILETable">
-            <tr>
-                <td>parametro.fasullo </td>
-                <td>10 </td>
-            </tr>
-            @foreach (Antd.SysctlModel proc in Model.SELF) {
+            @foreach (Antd.SysctlModel proc in Model.ANTDFILE) {
                 <tr>
                     <td>@proc.param </td>
                     <td>@proc.value </td>
@@ -77,26 +86,26 @@
     </table>
 
     <script type="text/javascript">
-        $('p.button').click(function () {
-            jQuery.support.cors = true;
-            var p = $(this).attr('data-param');
-            var v = $('input[data-param="' + p + '"]').val();
-            var s = {
-                param: p,
-                value: v,
-            };
-            $.ajax({
-                url: '/status/sysctl/' + s.param + '/' + s.value,
-                type: 'POST',
-                data: JSON.stringify(s),
-                contentType: "application/json;charset=utf-8",
-                success: function () {
-                    alert('new value for "' + s.param + '" is: ' + s.value);
-                    location.reload(true);
-                    return false;
-                }
-            });
-        });
+        //$('p.button').click(function () {
+        //    jQuery.support.cors = true;
+        //    var p = $(this).attr('data-param');
+        //    var v = $('input[data-param="' + p + '"]').val();
+        //    var s = {
+        //        param: p,
+        //        value: v,
+        //    };
+        //    $.ajax({
+        //        url: '/status/sysctl/' + s.param + '/' + s.value,
+        //        type: 'POST',
+        //        data: JSON.stringify(s),
+        //        contentType: "application/json;charset=utf-8",
+        //        success: function () {
+        //            alert('new value for "' + s.param + '" is: ' + s.value);
+        //            location.reload(true);
+        //            return false;
+        //        }
+        //    });
+        //});
 
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
