@@ -113,7 +113,6 @@ namespace Antd.Status {
                                 p.dv1 + " " +
                                 p.dv2);
                 }
-                sw.WriteLine("vm.swappiness = 61");
                 sw.WriteLine("");
             }
         }
