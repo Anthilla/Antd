@@ -227,7 +227,13 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\Status.cs" />
-    <None Include="Views\page-sysctl.cshtml">
+    <None Include="Views\page-status-networkd.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-status-mount.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-status-sysctl.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-status.cshtml">

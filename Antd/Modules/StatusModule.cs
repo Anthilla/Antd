@@ -42,7 +42,19 @@ namespace Antd {
             Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
-                return View["page-sysctl", vmod];
+                return View["page-status-sysctl", vmod];
+            };
+
+            Get["/mount"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
+                return View["page-status-mount", vmod];
+            };
+
+            Get["/networkd"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.ALL = Status.Sysctl(Antd.Sysctl.Sysctl.Stock, Antd.Sysctl.Sysctl.Running, Antd.Sysctl.Sysctl.Antd);
+                return View["page-status-networkd", vmod];
             };
 
             Post["/sysctl/{param}/{value}"] = x => {
