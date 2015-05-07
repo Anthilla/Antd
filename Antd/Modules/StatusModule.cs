@@ -41,14 +41,12 @@ namespace Antd {
             : base("/status") {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.UNITS = Units.All;
-                //HashSet<string> etcDirectories = new DirectoryLister("/etc", false).FullList;
-                //vmod.ETC = etcDirectories;
-                //vmod.SELF = Antd.Sysctl.Sysctl.Self;
-                //vmod.LOCAL = Antd.Sysctl.Sysctl.Running;
-                return View["page-status", vmod];
+                vmod.RUNNING = Antd.Sysctl.Sysctl.Running;
+                vmod.PROCS = Antd.Sysctl.Sysctl.Self;
+
+                return View["page-sysctl", vmod];
             };
 
             Post["/sysctl/{param}/{value}"] = x => {
@@ -58,19 +56,7 @@ namespace Antd {
                 return Response.AsJson(output);
             };
 
-            Get["/sysctl"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.RUNNING = Antd.Sysctl.Sysctl.Running;
-                vmod.PROCS = Antd.Sysctl.Sysctl.Self;
 
-                return View["page-sysctl", vmod];
-            };
-
-            Get["/sysctl/self"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.PROCS = Antd.Sysctl.Sysctl.Self;
-                return View["page-sysctl", vmod];
-            };
         }
     }
 }
