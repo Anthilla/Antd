@@ -61,7 +61,7 @@ namespace Antd {
 
             Get["/user"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                vmod.ALL = User.Running;
                 return View["page-status-user", vmod];
             };
 

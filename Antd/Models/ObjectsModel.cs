@@ -162,17 +162,21 @@ namespace Antd {
 
     #region User Model
     public class UserModel {
-        public string device { get; set; }
+        public string username { get; set; }
 
-        public string mountpoint { get; set; }
+        public string password { get; set; }
 
-        public string fstype { get; set; }
+        public string lastchanged { get; set; }
 
-        public string rorw { get; set; }
+        public string minimumnumberofdays { get; set; }
 
-        public string dv1 { get; set; }
+        public string maximumnumberofdays { get; set; }
 
-        public string dv2 { get; set; }
+        public string warn { get; set; }
+
+        public string inactive { get; set; }
+
+        public string expire { get; set; }
     }
     #endregion User Model
 

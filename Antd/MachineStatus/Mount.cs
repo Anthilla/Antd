@@ -87,10 +87,10 @@ namespace Antd.Status {
             if (mountJsonCell.Length > 1) {
                 mount.device = mountJsonCell[0];
                 mount.mountpoint = mountJsonCell[1];
-                mount.fstype = mountJsonCell[1];
-                mount.rorw = mountJsonCell[1];
-                mount.dv1 = mountJsonCell[1];
-                mount.dv2 = mountJsonCell[1];
+                mount.fstype = mountJsonCell[2];
+                mount.rorw = mountJsonCell[3];
+                mount.dv1 = mountJsonCell[4];
+                mount.dv2 = mountJsonCell[5];
             }
             return mount;
         }

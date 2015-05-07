@@ -38,7 +38,7 @@ namespace Antd.Status {
     public class User {
 
         private static List<UserModel> GetAllUsers() {
-            string path = Path.Combine("/proc", "mounts");
+            string path = Path.Combine("/etc", "shadow");
             string text = File.ReadAllText(path);
             var output = JsonConvert.SerializeObject(text);
             List<UserModel> mounts = MapUserJson(output);
@@ -47,15 +47,15 @@ namespace Antd.Status {
 
         public static List<UserModel> Running { get { return GetAllUsers(); } }
 
-        private static List<UserModel> ReadUserCustomFile() {
-            string path = Path.Combine("/cfg", "antd.mounts");
-            string text = File.ReadAllText(path);
-            var output = JsonConvert.SerializeObject(text);
-            List<UserModel> mounts = MapUserJson(output);
-            return mounts;
-        }
+        //private static List<UserModel> ReadUserCustomFile() {
+        //    string path = Path.Combine("/cfg", "antd.mounts");
+        //    string text = File.ReadAllText(path);
+        //    var output = JsonConvert.SerializeObject(text);
+        //    List<UserModel> mounts = MapUserJson(output);
+        //    return mounts;
+        //}
 
-        public static List<UserModel> Antd { get { return ReadUserCustomFile(); } }
+        //public static List<UserModel> Antd { get { return ReadUserCustomFile(); } }
 
         private static List<UserModel> MapUserJson(string _mountJson) {
             string mountJson2 = _mountJson;
@@ -71,7 +71,7 @@ namespace Antd.Status {
                     var fCh = rowJson.ToArray()[0];
                     if (fCh != '#') {
                         string[] mountJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { " " };
+                        string[] cellDivider = new String[] { ":" };
                         mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
                         UserModel mount = MapUser(mountJsonCell);
                         mounts.Add(mount);
@@ -81,40 +81,29 @@ namespace Antd.Status {
             return mounts;
         }
 
+        //public string username { get; set; }
+        //public string password { get; set; }
+        //public string lastchanged { get; set; }
+        //public string minimumnumberofdays { get; set; }
+        //public string maximumnumberofdays { get; set; }
+        //public string warn { get; set; }
+        //public string inactive { get; set; }
+        //public string expire { get; set; }
+
         private static UserModel MapUser(string[] _mountJsonCell) {
             string[] mountJsonCell = _mountJsonCell;
             UserModel mount = new UserModel();
             if (mountJsonCell.Length > 1) {
-                mount.device = mountJsonCell[0];
-                mount.mountpoint = mountJsonCell[1];
-                mount.fstype = mountJsonCell[1];
-                mount.rorw = mountJsonCell[1];
-                mount.dv1 = mountJsonCell[1];
-                mount.dv2 = mountJsonCell[1];
+                mount.username = mountJsonCell[0];
+                mount.password = mountJsonCell[1];
+                mount.lastchanged = mountJsonCell[2];
+                mount.minimumnumberofdays = mountJsonCell[3];
+                mount.maximumnumberofdays = mountJsonCell[4];
+                mount.warn = mountJsonCell[5];
+                mount.inactive = mountJsonCell[6];
+                mount.expire = mountJsonCell[7];
             }
             return mount;
-        }
-
-        public static void WriteConfig() {
-            var parameters = Running;
-            Directory.CreateDirectory("/cfg");
-            string path = Path.Combine("/cfg", "antd.mounts");
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
-            using (StreamWriter sw = File.CreateText(path)) {
-                sw.WriteLine("# " + path);
-                sw.WriteLine("# Custom Configuration for Antd");
-                foreach (UserModel p in parameters) {
-                    sw.WriteLine(p.device + " " +
-                                p.mountpoint + " " +
-                                p.fstype + " " +
-                                p.rorw + " " +
-                                p.dv1 + " " +
-                                p.dv2);
-                }
-                sw.WriteLine("");
-            }
         }
     }
 }
