@@ -71,7 +71,7 @@ namespace Antd.Status {
                     var fCh = rowJson.ToArray()[0];
                     if (fCh != '#') {
                         string[] mountJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { " = " };
+                        string[] cellDivider = new String[] { " " };
                         mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
                         MountModel mount = MapMount(mountJsonCell);
                         mounts.Add(mount);
