@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.UnitFiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,84 +38,75 @@ using System.Text.RegularExpressions;
 namespace Antd.Status {
     public class Networkd {
 
-        private static List<NetworkdModel> GetAllNetworkds() {
-            string path = Path.Combine("/proc", "mounts");
-            string text = File.ReadAllText(path);
-            var output = JsonConvert.SerializeObject(text);
-            List<NetworkdModel> mounts = MapNetworkdJson(output);
-            return mounts;
+        private static void EnableRequiredServices() {
+            Systemctl.Start("systemd-networkd.service");
+            Systemctl.Start("systemd-resolved.service");
+            Systemctl.Enable("systemd-networkd.service");
+            Systemctl.Enable("systemd-resolved.service");
         }
 
-        public static List<NetworkdModel> Running { get { return GetAllNetworkds(); } }
+        //public static void MountDir() { }
 
-        private static List<NetworkdModel> ReadNetworkdCustomFile() {
-            string path = Path.Combine("/cfg", "antd.mounts");
-            string text = File.ReadAllText(path);
-            var output = JsonConvert.SerializeObject(text);
-            List<NetworkdModel> mounts = MapNetworkdJson(output);
-            return mounts;
-        }
+        //public string matchName { get; set; }
+        //public string matchHost { get; set; }
+        //public string matchVirtualization { get; set; }
+        //public string networkDHCP { get; set; }
+        //public string networkDNS { get; set; }
+        //public string networkBridge { get; set; }
+        //public string networkIPForward { get; set; }
+        //public string addressAddress { get; set; }
+        //public string routeGateway { get; set; }
 
-        public static List<NetworkdModel> Antd { get { return ReadNetworkdCustomFile(); } }
-
-        private static List<NetworkdModel> MapNetworkdJson(string _mountJson) {
-            string mountJson2 = _mountJson;
-            mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-            string mountJson = mountJson2;
-            mountJson = Regex.Replace(mountJson2, @"\\t", " ");
-            string[] rowDivider = new String[] { "\n" };
-            string[] mountJsonRow = new string[] { };
-            mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<NetworkdModel> mounts = new List<NetworkdModel>() { };
-            foreach (string rowJson in mountJsonRow) {
-                if (rowJson != null && rowJson != "") {
-                    var fCh = rowJson.ToArray()[0];
-                    if (fCh != '#') {
-                        string[] mountJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { " " };
-                        mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                        NetworkdModel mount = MapNetworkd(mountJsonCell);
-                        mounts.Add(mount);
-                    }
-                }
-            }
-            return mounts;
-        }
-
-        private static NetworkdModel MapNetworkd(string[] _mountJsonCell) {
-            string[] mountJsonCell = _mountJsonCell;
-            NetworkdModel mount = new NetworkdModel();
-            if (mountJsonCell.Length > 1) {
-                mount.device = mountJsonCell[0];
-                mount.mountpoint = mountJsonCell[1];
-                mount.fstype = mountJsonCell[1];
-                mount.rorw = mountJsonCell[1];
-                mount.dv1 = mountJsonCell[1];
-                mount.dv2 = mountJsonCell[1];
-            }
-            return mount;
-        }
-
-        public static void WriteConfig() {
-            var parameters = Running;
-            Directory.CreateDirectory("/cfg");
-            string path = Path.Combine("/cfg", "antd.mounts");
+        public static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
+                                      string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
+                                      string addressAddress, string routeGateway) {
+            Directory.CreateDirectory("/cfg/network");
+            string path = Path.Combine("/cfg/network", filename + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
             using (StreamWriter sw = File.CreateText(path)) {
-                sw.WriteLine("# " + path);
-                sw.WriteLine("# Custom Configuration for Antd");
-                foreach (NetworkdModel p in parameters) {
-                    sw.WriteLine(p.device + " " +
-                                p.mountpoint + " " +
-                                p.fstype + " " +
-                                p.rorw + " " +
-                                p.dv1 + " " +
-                                p.dv2);
-                }
+                sw.WriteLine("[Match]");
+                sw.WriteLine("Name=" + matchName);
+                if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
+                if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
+                sw.WriteLine("");
+                sw.WriteLine("[Network]");
+                if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
+                if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
+                if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
+                if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
+                if (addressAddress != "") sw.WriteLine("");
+                if (addressAddress != "") sw.WriteLine("[Address]");
+                if (addressAddress != "") sw.WriteLine("Address=" + addressAddress);
+                if (routeGateway != "") sw.WriteLine("");
+                if (routeGateway != "") sw.WriteLine("[Route]");
+                if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
+
                 sw.WriteLine("");
             }
+        }
+
+        //[Match]
+        //Name=enp1s0
+
+        //[Network]
+        //DNS=10.1.10.1
+
+        //[Address]
+        //Address=10.1.10.9/24
+
+        //[Route]
+        //Gateway=10.1.10.1
+
+        public static void CreateFirstUnit() {
+            CreateUnit("antd", "eth0", "", "", "", "10.1.10.1", "", "", "10.1.10.9/24", "10.1.10.1");
+        }
+
+        public static string ReadAntdUnit() {
+            string path = Path.Combine("/cfg/network", "antd.network");
+            string text = File.ReadAllText(path);
+            return text;
         }
     }
 }

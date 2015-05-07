@@ -178,17 +178,23 @@ namespace Antd {
 
     #region Networkd Model
     public class NetworkdModel {
-        public string device { get; set; }
+        public string matchName { get; set; }
 
-        public string mountpoint { get; set; }
+        public string matchHost { get; set; }
 
-        public string fstype { get; set; }
+        public string matchVirtualization { get; set; }
 
-        public string rorw { get; set; }
+        public string networkDHCP { get; set; }
 
-        public string dv1 { get; set; }
+        public string networkDNS { get; set; }
 
-        public string dv2 { get; set; }
+        public string networkBridge { get; set; }
+
+        public string networkIPForward { get; set; }
+
+        public string addressAddress { get; set; }
+
+        public string routeGateway { get; set; }
     }
     #endregion Networkd Model
 }
