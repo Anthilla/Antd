@@ -56,7 +56,7 @@
         @*@foreach (string el in Model.children) {
             <li><a href="/dir/tree/@el">@el</a></li>
         }*@
-        @foreach (Antd.DirItemModel el in Model.children) {
+        @foreach (Antd.DirItemModel el in Model.children2) {
             if (el.isFile == true) {
             <li>
                 <p>@el</p>
