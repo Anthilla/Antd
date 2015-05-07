@@ -34,7 +34,7 @@ using System.Linq;
 
 namespace Antd.ViewHelpers {
     public class VHStatus {
-        public static List<StatusViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
+        public static List<StatusSysctlViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
             HashSet<string> paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { };
             foreach (SysctlModel data in stockData) {
                 paramNames.Add(data.param);
@@ -45,9 +45,9 @@ namespace Antd.ViewHelpers {
             foreach (SysctlModel data in antdData) {
                 paramNames.Add(data.param);
             }
-            List<StatusViewModel> list = new List<StatusViewModel>() { };
+            List<StatusSysctlViewModel> list = new List<StatusSysctlViewModel>() { };
             foreach (string par in paramNames) {
-                var model = new StatusViewModel();
+                var model = new StatusSysctlViewModel();
                 model.label = par;
 
                 var stockValue = (from s in stockData

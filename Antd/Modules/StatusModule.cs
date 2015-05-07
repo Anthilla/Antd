@@ -48,7 +48,8 @@ namespace Antd {
 
             Get["/mount"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                vmod.RUNNING = Mount.Running;
+                vmod.ANTD = Mount.Antd;
                 return View["page-status-mount", vmod];
             };
 
