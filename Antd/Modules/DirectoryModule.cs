@@ -49,19 +49,6 @@ namespace Antd {
                 return View["page-dir", dirs];
             };
 
-            Get["/tttt/{path*}"] = x => {
-                var p = x.path;
-                HashSet<string> directories = new DirectoryLister("/" + p, false).FullList;
-                var i = directories.FirstOrDefault();
-                return Response.AsText(i);
-            };
-
-            Get["/directory/tree/{path*}"] = x => {
-                var p = x.path;
-                HashSet<string> directories = new DirectoryLister("/" + p, true).FullList;
-                return View["page-dir", directories.ToList()];
-            };
-
             Get["/directory/watch/"] = x => {
                 return View["page-directories-watch"];
             };

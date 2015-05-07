@@ -109,6 +109,12 @@ namespace Antd {
                 return _tree;
             }
         }
+
+        public HashSet<DirItemModel> FullList2 {
+            get {
+                return _tree2;
+            }
+        }
         #endregion tree
 
         public DirectorySecurity GetFileACL() {
