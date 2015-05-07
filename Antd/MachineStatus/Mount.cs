@@ -95,30 +95,27 @@ namespace Antd.Status {
             return mount;
         }
 
-        //public static string Config(string param, string value) {
-        //    CommandModel command = Command.Launch("mount", "-w " + param + "=\"" + value + "\"");
-        //    var output = JsonConvert.SerializeObject(command.output);
-        //    WriteConfig();
-        //    LoadConfig();
-        //    return output;
-        //}
-
-        //public static void WriteConfig() {
-        //    var parameters = Stock;
-        //    Directory.CreateDirectory(root);
-        //    string path = Path.Combine(root, file);
-        //    if (File.Exists(path)) {
-        //        File.Delete(path);
-        //    }
-        //    using (StreamWriter sw = File.CreateText(path)) {
-        //        sw.WriteLine("# " + path);
-        //        sw.WriteLine("# Custom Configuration for Antd");
-        //        foreach (MountModel p in parameters) {
-        //            sw.WriteLine(p.param + " = " + p.value);
-        //        }
-        //        sw.WriteLine("vm.swappiness = 61");
-        //        sw.WriteLine("");
-        //    }
-        //}
+        public static void WriteConfig() {
+            var parameters = Running;
+            Directory.CreateDirectory("/cfg");
+            string path = Path.Combine("/cfg", "antd.mounts");
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.WriteLine("# " + path);
+                sw.WriteLine("# Custom Configuration for Antd");
+                foreach (MountModel p in parameters) {
+                    sw.WriteLine(p.device + " " +
+                                p.mountpoint + " " +
+                                p.fstype + " " +
+                                p.rorw + " " +
+                                p.dv1 + " " +
+                                p.dv2);
+                }
+                sw.WriteLine("vm.swappiness = 61");
+                sw.WriteLine("");
+            }
+        }
     }
 }

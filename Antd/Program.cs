@@ -74,6 +74,9 @@ namespace Antd {
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> created");
                 Sysctl.LoadConfig();
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> loaded");
+
+                Mount.WriteConfig();
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "mounts -> created");
                 
                 //Console.WriteLine("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
