@@ -47,7 +47,7 @@ namespace Antd.Sysctl {
             return sysctls;
         }
 
-        public static List<SysctlModel> Local { get { return GetAllSysctls(); } }
+        public static List<SysctlModel> Running { get { return GetAllSysctls(); } }
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
             string path = Path.Combine(root, file);
