@@ -36,7 +36,7 @@
 @section MainContent
 {
     @functions{
-        public string MakeUrl(string path){
+        public string MakeUrl(string path) {
             string a = path.Replace(@"\", @"/").Replace(":", "");
             return "/dir/tree" + a;
         }
@@ -49,15 +49,26 @@
     <nav class="breadcrumbs mini">
         <ul>
             @foreach (string dir in Model.parents) {
-                @*<li><a href="/dir/tree/@dir">@dir</a></li>*@
                 <li><a href="@MakeUrl(dir)">@MakeLabel(dir)</a></li>
             }
         </ul>
     </nav>
 
     <ul>
-        @foreach (string el in Model.children) {
+        @*@foreach (string el in Model.children) {
             <li><a href="/dir/tree/@el">@el</a></li>
+        }*@
+        @foreach (Antd.DirItemModel el in Model.children) {
+            if (el.isFile == true) {
+            <li>
+                <p>@el</p>
+            </li>
+            }
+            if (el.isFile == false) {
+            <li>
+                <a href="/dir/tree/@el">@el</a>
+            </li>
+            }
         }
     </ul>
 }

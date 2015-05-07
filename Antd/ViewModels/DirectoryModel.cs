@@ -30,8 +30,9 @@
 using System.Collections.Generic;
 
 namespace Antd.ViewModels {
-    public class DirectoryModel {
+    public class DirectoryViewModel {
         public IEnumerable<string> parents { get; set; }
         public IEnumerable<string> children { get; set; }
+        public IEnumerable<DirItemModel> children2 { get; set; }
     }
 }
