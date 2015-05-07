@@ -46,7 +46,8 @@ namespace Antd.Status {
         }
 
         public static void MountNetworkdDir() {
-            Action.Mount("--bind", "/etc/systemd/network", "/cfg/networkd");
+            Command.Launch("mount", "-bind /etc/systemd/network /cfg/networkd");
+            //Action.Mount("--bind", "/etc/systemd/network", "/cfg/networkd");
         }
 
         //public string matchName { get; set; }

@@ -46,7 +46,7 @@ namespace Antd {
             string guid = Guid.NewGuid().ToString();
             string dataJson = JsonConvert.SerializeObject(data);
             JobModel task = JobRepository.Create(guid, _alias, dataJson);
-            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startH, startM, endH, endM, "");
+            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsOneTimeOnly, startH, startM, endH, endM, "");
             JobScheduler.LauchJob<AntdJob.CommandJob>(task);
         }
 

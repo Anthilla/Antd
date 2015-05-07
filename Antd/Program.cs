@@ -69,21 +69,22 @@ namespace Antd {
                 var elapsed = DateTime.Now - startTime;
                 Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
 
-
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "doing more operations--------------------------");
                 Sysctl.WriteConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> created");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     sysctl.config -> created");
                 Sysctl.LoadConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "sysctl.config -> loaded");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     sysctl.config -> loaded");
 
                 Mount.WriteConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "mounts -> created");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     mounts -> created");
 
                 Networkd.EnableRequiredServices();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> enabled");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> enabled");
                 Networkd.CreateFirstUnit();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> unit created");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> unit created");
                 Networkd.MountNetworkdDir();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "networkd -> mounted");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> mounted");
+                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "done-------------------------------------------");
 
                 //Console.WriteLine("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
@@ -122,8 +123,8 @@ namespace Antd {
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
             Cfg.LaunchDefaults();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
-            //Network.LaunchDefaults();
-            //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
+            Network.LaunchDefaults();
+            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
             SystemDataRepo.LaunchDefaults();
             Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
             ZfsMount.LaunchDefaults();

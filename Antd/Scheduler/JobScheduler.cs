@@ -71,7 +71,6 @@ namespace Antd.Scheduler {
         }
 
         private static ITrigger DefineTrigger(TriggerModel _trigger, string _identity) {
-            _trigger.TriggerSetting = TriggerModel.TriggerPeriod.IsDaily;
             ITrigger trigger;
             switch (_trigger.TriggerSetting) {
                 case TriggerModel.TriggerPeriod.IsOneTimeOnly:
@@ -93,6 +92,16 @@ namespace Antd.Scheduler {
                 .StartAt(setting.StartTime)
                 .Build();
             return oneTimeOnlyTrigger;
+        }
+
+        private static ITrigger DefineCronTrigger(TriggerModel setting, string _identity) {
+            ITrigger monthlyTrigger = TriggerBuilder.Create()
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(setting.StartTime)
+                .WithCronSchedule(setting.CronExpression)
+                .EndAt(setting.EndTime)
+                .Build();
+            return monthlyTrigger;
         }
 
         //private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {
@@ -127,15 +136,5 @@ namespace Antd.Scheduler {
         //        .Build();
         //    return monthlyTrigger;
         //}
-
-        private static ITrigger DefineCronTrigger(TriggerModel setting, string _identity) {
-            ITrigger monthlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(setting.StartTime)
-                .WithCronSchedule(setting.CronExpression)
-                .EndAt(setting.EndTime)
-                .Build();
-            return monthlyTrigger;
-        }
     }
 }
