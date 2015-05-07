@@ -59,6 +59,12 @@ namespace Antd {
                 return View["page-status-networkd", vmod];
             };
 
+            Get["/user"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                return View["page-status-user", vmod];
+            };
+
             Post["/sysctl/{param}/{value}"] = x => {
                 string param = x.param;
                 string value = x.value;

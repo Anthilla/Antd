@@ -148,6 +148,7 @@
     <Compile Include="Config\Anth_ParamWriter.cs" />
     <Compile Include="Config\SystemConfig.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="MachineStatus\User.cs" />
     <Compile Include="MachineStatus\Mount.cs" />
     <Compile Include="Manage-System\Actions.cs" />
     <Compile Include="Modules\StatusModule.cs" />
@@ -228,6 +229,9 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\Status.cs" />
+    <None Include="Views\page-status-user.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\page-status-networkd.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -159,4 +159,20 @@ namespace Antd {
         public string dv2 { get; set; }
     }
     #endregion Mount Model
+
+    #region User Model
+    public class UserModel {
+        public string device { get; set; }
+
+        public string mountpoint { get; set; }
+
+        public string fstype { get; set; }
+
+        public string rorw { get; set; }
+
+        public string dv1 { get; set; }
+
+        public string dv2 { get; set; }
+    }
+    #endregion User Model
 }
