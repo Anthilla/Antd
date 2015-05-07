@@ -198,7 +198,7 @@
     <Compile Include="UnitFiles\UnitRepo.cs" />
     <Compile Include="UnitFiles\UnitFile.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
-    <Compile Include="ViewModels\Status.cs" />
+    <Compile Include="ViewModels\StatusViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

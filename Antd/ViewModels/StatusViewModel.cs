@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-namespace Antd.ViewHelpers {
+namespace Antd.ViewModels {
     public class StatusViewModel {
         public string label { get; set; }
 
