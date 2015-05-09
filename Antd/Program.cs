@@ -62,61 +62,61 @@ namespace Antd {
                 };
             string uri = SelfConfig.GetAntdUri();
             ConsoleLogger.Log("initializing antd");
-            try {
-                using (WebApp.Start<Startup>(uri)) {
-                    ConsoleLogger.Log("loading service");
-                    ConsoleLogger.Log("    service type -> server");
-                    ConsoleLogger.Log("                 -> server url -> {0}", uri);
-                    ConsoleLogger.Log("service is now running");
-                    var elapsed = DateTime.Now - startTime;
-                    ConsoleLogger.Log("loaded in: {0}", elapsed);
+            //try {
+            using (WebApp.Start<Startup>(uri)) {
+                ConsoleLogger.Log("loading service");
+                ConsoleLogger.Log("    service type -> server");
+                ConsoleLogger.Log("                 -> server url -> {0}", uri);
+                ConsoleLogger.Log("service is now running");
+                var elapsed = DateTime.Now - startTime;
+                ConsoleLogger.Log("loaded in: {0}", elapsed);
 
-                    ConsoleLogger.Log("doing more operations--------------------------");
-                    Sysctl.WriteConfig();
-                    ConsoleLogger.Log("     sysctl.config -> created");
-                    Sysctl.LoadConfig();
-                    ConsoleLogger.Log("     sysctl.config -> loaded");
+                ConsoleLogger.Log("doing more operations--------------------------");
+                Sysctl.WriteConfig();
+                ConsoleLogger.Log("     sysctl.config -> created");
+                Sysctl.LoadConfig();
+                ConsoleLogger.Log("     sysctl.config -> loaded");
 
-                    Mount.WriteConfig();
-                    ConsoleLogger.Log("     mounts -> created");
+                Mount.WriteConfig();
+                ConsoleLogger.Log("     mounts -> created");
 
-                    Networkd.EnableRequiredServices();
-                    ConsoleLogger.Log("     networkd -> enabled");
-                    Networkd.CreateFirstUnit();
-                    ConsoleLogger.Log("     networkd -> unit created");
-                    Networkd.MountNetworkdDir();
-                    ConsoleLogger.Log("     networkd -> mounted");
-                    ConsoleLogger.Log("done-------------------------------------------");
+                Networkd.EnableRequiredServices();
+                ConsoleLogger.Log("     networkd -> enabled");
+                Networkd.CreateFirstUnit();
+                ConsoleLogger.Log("     networkd -> unit created");
+                Networkd.MountNetworkdDir();
+                ConsoleLogger.Log("     networkd -> mounted");
+                ConsoleLogger.Log("done-------------------------------------------");
 
-                    //ConsoleLogger.Log("");
-                    //ServiceUnitInfo.SetDefaultUnitInfo();
-                    //ConsoleLogger.Log("misc -> default unit info saved to database");
+                //ConsoleLogger.Log("");
+                //ServiceUnitInfo.SetDefaultUnitInfo();
+                //ConsoleLogger.Log("misc -> default unit info saved to database");
 
-                    //UnitFile.WriteForSelf();
-                    //ConsoleLogger.Log("self -> unit file created");
+                //UnitFile.WriteForSelf();
+                //ConsoleLogger.Log("self -> unit file created");
 
-                    //Systemctl.Enable("antd.service");
-                    //ConsoleLogger.Log("self -> unit file enabled");
+                //Systemctl.Enable("antd.service");
+                //ConsoleLogger.Log("self -> unit file enabled");
 
-                    //Console.WriteLine("");
-                    //string[] watchThese = new string[] { 
-                    //    "/cfg",
-                    //    "/proc/sys",
-                    //    "/sys/class/net"
-                    //};
-                    //foreach (string folder in watchThese) {
-                    //    new DirectoryWatcher(folder).Watch();
-                    //    ConsoleLogger.Log("watcher enabled for {0}", folder);
-                    //}
+                //Console.WriteLine("");
+                //string[] watchThese = new string[] { 
+                //    "/cfg",
+                //    "/proc/sys",
+                //    "/sys/class/net"
+                //};
+                //foreach (string folder in watchThese) {
+                //    new DirectoryWatcher(folder).Watch();
+                //    ConsoleLogger.Log("watcher enabled for {0}", folder);
+                //}
 
-                    stop.WaitOne();
-                }
-            } catch (System.Reflection.TargetInvocationException ex) {
+                stop.WaitOne();
+            }
+            /*} catch (System.Reflection.TargetInvocationException ex) {
                 ConsoleLogger.Warn(ex.Message);
                 ConsoleLogger.Warn("Register +: urlacl");
                 ConsoleLogger.Warn("on windows:");
                 ConsoleLogger.Warn("netsh http add urlacl url=http://+:7777/ user=UserName");
-            }
+            }*/
         }
     }
 
