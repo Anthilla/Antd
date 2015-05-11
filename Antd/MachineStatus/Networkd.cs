@@ -27,14 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Common;
 using Antd.UnitFiles;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Antd.Status {
     public class Networkd {
@@ -115,9 +110,37 @@ namespace Antd.Status {
             return text;
         }
 
-        public static void TryCreateUnit(string text) {
+        public static List<string> ReadUnits() {
+            List<string> list = new List<string>() { };
+            string[] dirs = Directory.GetFiles("/cfg/networkd");
+            foreach (string file in dirs) {
+                string path = Path.Combine("/cfg/networkd", file);
+                string text;
+                if (!File.Exists(path)) {
+                    text = "Unit file does not exist!";
+                }
+                else {
+                    text = File.ReadAllText(path);
+                }
+                list.Add(text);
+            }
+            return list;
+        }
+
+        //public static void TryCreateUnit(string text) {
+        //    Directory.CreateDirectory("/cfg/networkd");
+        //    string path = Path.Combine("/cfg/networkd", "test.network");
+        //    if (File.Exists(path)) {
+        //        File.Delete(path);
+        //    }
+        //    using (StreamWriter sw = File.CreateText(path)) {
+        //        sw.Write(text);
+        //    }
+        //}
+
+        public static void CreateCustomUnit(string text, string fname) {
             Directory.CreateDirectory("/cfg/networkd");
-            string path = Path.Combine("/cfg/networkd", "test.network");
+            string path = Path.Combine("/cfg/networkd", fname + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }

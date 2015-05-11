@@ -55,13 +55,14 @@ namespace Antd {
 
             Get["/networkd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.UnitText = Antd.Status.Networkd.ReadAntdUnit();
+                vmod.UnitTexts = Antd.Status.Networkd.ReadUnits();
                 return View["page-status-networkd", vmod];
             };
 
             Post["/networkd"] = x => {
+                string fname = this.Request.Form.File;
                 string txt = this.Request.Form.Text;
-                Antd.Status.Networkd.TryCreateUnit(txt);
+                Antd.Status.Networkd.CreateCustomUnit(txt, fname);
                 return Response.AsRedirect("/status/networkd");
             };
 
