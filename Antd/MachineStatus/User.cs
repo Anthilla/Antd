@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,7 @@ namespace Antd.Status {
     public class User {
 
         private static List<UserModel> GetAllUsers() {
-            string path = Path.Combine("/etc", "shadow");
-            string text = File.ReadAllText(path);
+            string text = FileSystem.ReadFile("/etc", "shadow");
             var output = JsonConvert.SerializeObject(text);
             List<UserModel> mounts = MapUserJson(output);
             return mounts;
@@ -48,8 +48,7 @@ namespace Antd.Status {
         public static List<UserModel> Running { get { return GetAllUsers(); } }
 
         //private static List<UserModel> ReadUserCustomFile() {
-        //    string path = Path.Combine("/cfg", "antd.mounts");
-        //    string text = File.ReadAllText(path);
+        //    string text = FileSystem.ReadFile("/cfg", "antd.mounts");
         //    var output = JsonConvert.SerializeObject(text);
         //    List<UserModel> mounts = MapUserJson(output);
         //    return mounts;

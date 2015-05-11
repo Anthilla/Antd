@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,7 @@ namespace Antd.Status {
         public static List<SysctlModel> Running { get { return GetAllSysctls(); } }
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
-            string path = Path.Combine("/cfg", "antd.sysctl.conf");
-            string text = File.ReadAllText(path);
+            string text = FileSystem.ReadFile("/cfg", "antd.sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;
@@ -57,8 +57,7 @@ namespace Antd.Status {
         public static List<SysctlModel> Antd { get { return ReadSysctlCustomFile(); } }
 
         private static List<SysctlModel> ReadSysctlStockFile() {
-            string path = Path.Combine("/etc", "sysctl.conf");
-            string text = File.ReadAllText(path);
+            string text = FileSystem.ReadFile("/etc", "sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;

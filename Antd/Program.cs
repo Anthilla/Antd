@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Antd.Scheduler;
 using Antd.Status;
 using Microsoft.AspNet.SignalR;
@@ -43,13 +44,13 @@ namespace Antd {
         private static void Main(string[] args) {
             DateTime startTime = DateTime.Now;
             Console.Title = "ANTD";
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading application...");
+            ConsoleLogger.Log("loading application...");
 
             SystemConfig.FirstLaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core system configuration...");
+            ConsoleLogger.Log("setting core system configuration...");
 
             Cfg.FirstLaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting core cfg configuration...");
+            ConsoleLogger.Log("setting core cfg configuration...");
 
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
@@ -60,41 +61,42 @@ namespace Antd {
                     e.Cancel = true;
                 };
             string uri = SelfConfig.GetAntdUri();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "initializing antd");
+            ConsoleLogger.Log("initializing antd");
+            //try {
             using (WebApp.Start<Startup>(uri)) {
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    service type -> server");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "                 -> server url -> {0}", uri);
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "service is now running");
+                ConsoleLogger.Log("loading service");
+                ConsoleLogger.Log("    service type -> server");
+                ConsoleLogger.Log("                 -> server url -> {0}", uri);
+                ConsoleLogger.Log("service is now running");
                 var elapsed = DateTime.Now - startTime;
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loaded in: " + elapsed);
+                ConsoleLogger.Log("loaded in: {0}", elapsed);
 
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "doing more operations--------------------------");
+                ConsoleLogger.Log("doing more operations--------------------------");
                 Sysctl.WriteConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     sysctl.config -> created");
+                ConsoleLogger.Log("     sysctl.config -> created");
                 Sysctl.LoadConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     sysctl.config -> loaded");
+                ConsoleLogger.Log("     sysctl.config -> loaded");
 
                 Mount.WriteConfig();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     mounts -> created");
+                ConsoleLogger.Log("     mounts -> created");
 
                 Networkd.EnableRequiredServices();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> enabled");
+                ConsoleLogger.Log("     networkd -> enabled");
                 Networkd.CreateFirstUnit();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> unit created");
+                ConsoleLogger.Log("     networkd -> unit created");
                 Networkd.MountNetworkdDir();
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "     networkd -> mounted");
-                Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "done-------------------------------------------");
+                ConsoleLogger.Log("     networkd -> mounted");
+                ConsoleLogger.Log("done-------------------------------------------");
 
-                //Console.WriteLine("");
+                //ConsoleLogger.Log("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
-                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "misc -> default unit info saved to database");
+                //ConsoleLogger.Log("misc -> default unit info saved to database");
 
                 //UnitFile.WriteForSelf();
-                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file created");
+                //ConsoleLogger.Log("self -> unit file created");
 
                 //Systemctl.Enable("antd.service");
-                //Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "self -> unit file enabled");
+                //ConsoleLogger.Log("self -> unit file enabled");
 
                 //Console.WriteLine("");
                 //string[] watchThese = new string[] { 
@@ -104,11 +106,17 @@ namespace Antd {
                 //};
                 //foreach (string folder in watchThese) {
                 //    new DirectoryWatcher(folder).Watch();
-                //    Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "watcher enabled for {0}", folder);
+                //    ConsoleLogger.Log("watcher enabled for {0}", folder);
                 //}
 
                 stop.WaitOne();
             }
+            /*} catch (System.Reflection.TargetInvocationException ex) {
+                ConsoleLogger.Warn(ex.Message);
+                ConsoleLogger.Warn("Register +: urlacl");
+                ConsoleLogger.Warn("on windows:");
+                ConsoleLogger.Warn("netsh http add urlacl url=http://+:7777/ user=UserName");
+            }*/
         }
     }
 
@@ -116,35 +124,35 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             //write defaults and stuff
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "setting default configuration...");
+            ConsoleLogger.Log("setting default configuration...");
             SelfConfig.WriteDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: antd...");
+            ConsoleLogger.Log("    set configuration for: antd...");
             SystemConfig.WriteDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: system...");
+            ConsoleLogger.Log("    set configuration for: system...");
             Cfg.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: cfg...");
+            ConsoleLogger.Log("    set configuration for: cfg...");
             Network.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: network...");
+            ConsoleLogger.Log("    set configuration for: network...");
             SystemDataRepo.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: systemDataRepo...");
+            ConsoleLogger.Log("    set configuration for: systemDataRepo...");
             ZfsMount.LaunchDefaults();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    set configuration for: zfsMount...");
+            ConsoleLogger.Log("    set configuration for: zfsMount...");
             Command.Launch("chmod", "777 *.xml");
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    check configuration...");
+            ConsoleLogger.Log("    check configuration...");
 
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "loading service configuration");
+            ConsoleLogger.Log("loading service configuration");
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
             app.MapSignalR(hubConfiguration);
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    signalR -> loaded");
+            ConsoleLogger.Log("    signalR -> loaded");
             bool errorTrace = false;
             StaticConfiguration.DisableErrorTraces = errorTrace;
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    disableerrortraces -> {0}", errorTrace);
+            ConsoleLogger.Log("    disableerrortraces -> {0}", errorTrace);
             Database.Start();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    denso-db -> loaded");
+            ConsoleLogger.Log("    denso-db -> loaded");
             app.UseNancy();
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    nancy-fx -> loaded");
+            ConsoleLogger.Log("    nancy-fx -> loaded");
             JobScheduler.Start(true);
-            Console.WriteLine(ConsoleTime.GetTime(DateTime.Now) + "    scheduler -> loaded");
+            ConsoleLogger.Log("    scheduler -> loaded");
         }
     }
 
