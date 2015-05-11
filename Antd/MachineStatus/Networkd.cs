@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Antd.UnitFiles;
 using Newtonsoft.Json;
 using System;
@@ -46,8 +47,17 @@ namespace Antd.Status {
         }
 
         public static void MountNetworkdDir() {
-            Command.Launch("mount", "-bind /etc/systemd/network /cfg/networkd");
-            //Action.Mount("--bind", "/etc/systemd/network", "/cfg/networkd");
+            Command.Launch("mount", "--bind /etc/systemd/network /cfg/networkd");
+        }
+
+        public static string RestartNetworkdDir() {
+            var r = Systemctl.Restart("systemd-networkd");
+            return r.output;
+        }
+
+        public static string StatusNetworkdDir() {
+            var r = Systemctl.Status("systemd-networkd");
+            return r.output;
         }
 
         //public string matchName { get; set; }
@@ -66,50 +76,66 @@ namespace Antd.Status {
             Directory.CreateDirectory("/cfg/networkd");
             string path = Path.Combine("/cfg/networkd", filename + ".network");
             if (File.Exists(path)) {
+                ConsoleLogger.Log("------------------------------");
+                ConsoleLogger.Log("removing file");
+                ConsoleLogger.Log("removing file");
+                ConsoleLogger.Log("removing file");
+                ConsoleLogger.Log("------------------------------");
                 File.Delete(path);
             }
-            using (StreamWriter sw = File.CreateText(path)) {
-                sw.WriteLine("[Match]");
-                sw.WriteLine("Name=" + matchName);
-                if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
-                if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
-                sw.WriteLine("");
-                sw.WriteLine("[Network]");
-                if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
-                if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
-                if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
-                if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
-                sw.WriteLine("");
-                sw.WriteLine("[Address]");
-                sw.WriteLine("Address=" + addressAddress);
-                if (routeGateway != "") sw.WriteLine("");
-                if (routeGateway != "") sw.WriteLine("[Route]");
-                if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
-
-                sw.WriteLine("");
+            else {
+                using (StreamWriter sw = File.CreateText(path)) {
+                    ConsoleLogger.Log("------------------------------");
+                    ConsoleLogger.Log("writing file");
+                    ConsoleLogger.Log("writing file");
+                    ConsoleLogger.Log("writing file");
+                    ConsoleLogger.Log("------------------------------");
+                    sw.WriteLine("[Match]");
+                    sw.WriteLine("Name=" + matchName);
+                    if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
+                    if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
+                    sw.WriteLine("");
+                    sw.WriteLine("[Network]");
+                    if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
+                    if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
+                    if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
+                    if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
+                    sw.WriteLine("");
+                    sw.WriteLine("[Address]");
+                    sw.WriteLine("Address=" + addressAddress);
+                    if (routeGateway != "") sw.WriteLine("");
+                    if (routeGateway != "") sw.WriteLine("[Route]");
+                    if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
+                    sw.WriteLine("");
+                }
             }
         }
 
-        //[Match]
-        //Name=enp1s0
-
-        //[Network]
-        //DNS=10.1.10.1
-
-        //[Address]
-        //Address=10.1.10.9/24
-
-        //[Route]
-        //Gateway=10.1.10.1
-
         public static void CreateFirstUnit() {
-            CreateUnit("antd", "eth0", "", "", "", "10.1.10.1", "", "", "10.1.10.9/24", "10.1.10.1");
+            CreateUnit("antd", "eth0", "", "", "", "192.168.56.1", "", "", "192.168.56.101/24", "192.168.56.1");
         }
 
         public static string ReadAntdUnit() {
             string path = Path.Combine("/cfg/networkd", "antd.network");
-            string text = File.ReadAllText(path);
+            string text;
+            if (!File.Exists(path)) {
+                text = "Unit file doesn't exist!";
+            }
+            else {
+                text = File.ReadAllText(path);
+            }
             return text;
+        }
+
+        public static void TryCreateUnit(string text) {
+            Directory.CreateDirectory("/cfg/networkd");
+            string path = Path.Combine("/cfg/networkd", "test.network");
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.Write(text);
+            }
         }
     }
 }

@@ -86,6 +86,9 @@ namespace Antd {
                 ConsoleLogger.Log("     networkd -> unit created");
                 Networkd.MountNetworkdDir();
                 ConsoleLogger.Log("     networkd -> mounted");
+                Networkd.RestartNetworkdDir();
+                ConsoleLogger.Log("     networkd -> apply new configuration");
+                ConsoleLogger.Log(Networkd.StatusNetworkdDir());
                 ConsoleLogger.Log("done-------------------------------------------");
 
                 //ConsoleLogger.Log("");
@@ -131,8 +134,8 @@ namespace Antd {
             ConsoleLogger.Log("    set configuration for: system...");
             Cfg.LaunchDefaults();
             ConsoleLogger.Log("    set configuration for: cfg...");
-            Network.LaunchDefaults();
-            ConsoleLogger.Log("    set configuration for: network...");
+            //Network.LaunchDefaults();
+            //ConsoleLogger.Log("    set configuration for: network...");
             SystemDataRepo.LaunchDefaults();
             ConsoleLogger.Log("    set configuration for: systemDataRepo...");
             ZfsMount.LaunchDefaults();

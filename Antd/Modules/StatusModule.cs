@@ -55,8 +55,14 @@ namespace Antd {
 
             Get["/networkd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                vmod.UnitText = Antd.Status.Networkd.ReadAntdUnit();
                 return View["page-status-networkd", vmod];
+            };
+
+            Post["/networkd"] = x => {
+                string txt = this.Request.Form.Text;
+                Antd.Status.Networkd.TryCreateUnit(txt);
+                return Response.AsRedirect("/status/networkd");
             };
 
             Get["/user"] = x => {
