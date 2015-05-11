@@ -31,7 +31,6 @@ using Antd.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -46,15 +45,6 @@ namespace Antd.Status {
         }
 
         public static List<UserModel> Running { get { return GetAllUsers(); } }
-
-        //private static List<UserModel> ReadUserCustomFile() {
-        //    string text = FileSystem.ReadFile("/cfg", "antd.mounts");
-        //    var output = JsonConvert.SerializeObject(text);
-        //    List<UserModel> mounts = MapUserJson(output);
-        //    return mounts;
-        //}
-
-        //public static List<UserModel> Antd { get { return ReadUserCustomFile(); } }
 
         private static List<UserModel> MapUserJson(string _mountJson) {
             string mountJson2 = _mountJson;
@@ -80,15 +70,6 @@ namespace Antd.Status {
             return mounts;
         }
 
-        //public string username { get; set; }
-        //public string password { get; set; }
-        //public string lastchanged { get; set; }
-        //public string minimumnumberofdays { get; set; }
-        //public string maximumnumberofdays { get; set; }
-        //public string warn { get; set; }
-        //public string inactive { get; set; }
-        //public string expire { get; set; }
-
         private static UserModel MapUser(string[] _mountJsonCell) {
             string[] mountJsonCell = _mountJsonCell;
             UserModel mount = new UserModel();
@@ -103,6 +84,10 @@ namespace Antd.Status {
                 mount.expire = mountJsonCell[7];
             }
             return mount;
+        }
+
+        public static void CreateUser(string user) {
+            Command.Launch("useradd", user);
         }
     }
 }

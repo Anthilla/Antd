@@ -72,6 +72,12 @@ namespace Antd {
                 return View["page-status-user", vmod];
             };
 
+            Post["/user"] = x => {
+                string fname = this.Request.Form.Name;
+                Antd.Status.User.CreateUser(fname);
+                return Response.AsRedirect("/status/user");
+            };
+
             Post["/sysctl/{param}/{value}"] = x => {
                 string param = x.param;
                 string value = x.value;
