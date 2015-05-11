@@ -72,6 +72,9 @@ namespace Antd {
                 ConsoleLogger.Log("loaded in: {0}", elapsed);
 
                 ConsoleLogger.Log("doing more operations--------------------------");
+                JobScheduler.Start(false);
+                ConsoleLogger.Log("     scheduler -> loaded");
+
                 Sysctl.WriteConfig();
                 ConsoleLogger.Log("     sysctl.config -> created");
                 Sysctl.LoadConfig();
@@ -82,10 +85,10 @@ namespace Antd {
 
                 Networkd.EnableRequiredServices();
                 ConsoleLogger.Log("     networkd -> enabled");
-                Networkd.CreateFirstUnit();
-                ConsoleLogger.Log("     networkd -> unit created");
                 Networkd.MountNetworkdDir();
                 ConsoleLogger.Log("     networkd -> mounted");
+                Networkd.CreateFirstUnit();
+                ConsoleLogger.Log("     networkd -> unit created");
                 Networkd.RestartNetworkdDir();
                 ConsoleLogger.Log("     networkd -> apply new configuration");
                 ConsoleLogger.Log(Networkd.StatusNetworkdDir());
@@ -154,8 +157,6 @@ namespace Antd {
             ConsoleLogger.Log("    denso-db -> loaded");
             app.UseNancy();
             ConsoleLogger.Log("    nancy-fx -> loaded");
-            JobScheduler.Start(true);
-            ConsoleLogger.Log("    scheduler -> loaded");
         }
     }
 

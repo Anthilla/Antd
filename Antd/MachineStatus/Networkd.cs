@@ -75,39 +75,27 @@ namespace Antd.Status {
                                       string addressAddress, string routeGateway) {
             Directory.CreateDirectory("/cfg/networkd");
             string path = Path.Combine("/cfg/networkd", filename + ".network");
-            if (File.Exists(path)) {
-                ConsoleLogger.Log("------------------------------");
-                ConsoleLogger.Log("removing file");
-                ConsoleLogger.Log("removing file");
-                ConsoleLogger.Log("removing file");
-                ConsoleLogger.Log("------------------------------");
-                File.Delete(path);
-            }
-            else {
-                using (StreamWriter sw = File.CreateText(path)) {
-                    ConsoleLogger.Log("------------------------------");
-                    ConsoleLogger.Log("writing file");
-                    ConsoleLogger.Log("writing file");
-                    ConsoleLogger.Log("writing file");
-                    ConsoleLogger.Log("------------------------------");
-                    sw.WriteLine("[Match]");
-                    sw.WriteLine("Name=" + matchName);
-                    if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
-                    if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
-                    sw.WriteLine("");
-                    sw.WriteLine("[Network]");
-                    if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
-                    if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
-                    if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
-                    if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
-                    sw.WriteLine("");
-                    sw.WriteLine("[Address]");
-                    sw.WriteLine("Address=" + addressAddress);
-                    if (routeGateway != "") sw.WriteLine("");
-                    if (routeGateway != "") sw.WriteLine("[Route]");
-                    if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
-                    sw.WriteLine("");
-                }
+            //if (File.Exists(path)) {
+            //    File.Delete(path);
+            //}
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.WriteLine("[Match]");
+                sw.WriteLine("Name=" + matchName);
+                if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
+                if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
+                sw.WriteLine("");
+                sw.WriteLine("[Network]");
+                if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
+                if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
+                if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
+                if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
+                sw.WriteLine("");
+                sw.WriteLine("[Address]");
+                sw.WriteLine("Address=" + addressAddress);
+                if (routeGateway != "") sw.WriteLine("");
+                if (routeGateway != "") sw.WriteLine("[Route]");
+                if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
+                sw.WriteLine("");
             }
         }
 

@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -44,8 +45,13 @@ namespace Antd.Scheduler {
             else {
                 __scheduler.Start();
                 List<JobModel> taskList = JobRepository.GetAll();
-                foreach (JobModel task in taskList) {
-                    LauchJob<AntdJob.CommandJob>(task);
+                ConsoleLogger.Log("{0} job(s) scheduled", taskList.ToArray().Length);
+                if (taskList.ToArray().Length > 0) {
+                    foreach (JobModel task in taskList) {
+                        if (task != null) {
+                            LauchJob<AntdJob.CommandJob>(task);
+                        }
+                    }
                 }
             }
         }
