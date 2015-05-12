@@ -47,9 +47,20 @@
                     <p id="LoadLayout" class="button bg-anthilla-violet" style="width: 90%;">Load layout</p>
                 </div>
             </div>
+            <hr />
+            <div class="row">
+                <div class="span5">
+                    <label id="layoutName"></label>
+                </div>
+                <div class="span5">
+                    <p class="fg-anthilla-green" style="display: inline-block !important;">save in</p>
+                    <input type="text" name="ConfigFilePath" readonly="readonly" />
+                    <input type="text" name="ConfigFileName" />
+                </div>
+            </div>
             <div class="row">
                 <div class="span10">
-                    <p id="test"></p>
+                    <textarea name="FileContent" style="width: 90%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -106,7 +117,9 @@
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
                 success: function (layout) {
-                    $('p#test').text(layout.content);
+                    $('#layoutName').text(layout.layoutname);
+                    $('input[name="ConfigFilePath"]').val(layout.path);
+                    $('textarea[name="FileContent"]').val(layout.content);
                     return false;
                 }
             });
