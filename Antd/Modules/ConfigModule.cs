@@ -31,6 +31,7 @@ using Nancy;
 using Nancy.Security;
 using System.Linq;
 using System.Dynamic;
+using Antd.Common;
 
 namespace Antd {
 
@@ -45,6 +46,10 @@ namespace Antd {
             };
 
             Post["/file"] = x => {
+                string filename = this.Request.Form.ConfigFileName;
+                string root = this.Request.Form.ConfigFilePath;
+                string content = this.Request.Form.FileContent;
+                FileSystem.WriteFile(root, filename, content);
                 return Response.AsRedirect("/config/file");
             };
         }

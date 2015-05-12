@@ -18,5 +18,16 @@ namespace Antd.Common {
                 return String.Empty;
             }
         }
+
+        public static void WriteFile(string directory, string filename, string content) {
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, filename);
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.Write(content);
+            }
+        }
     }
 }
