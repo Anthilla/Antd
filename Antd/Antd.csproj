@@ -154,8 +154,10 @@
     <Compile Include="MachineStatus\User.cs" />
     <Compile Include="MachineStatus\Mount.cs" />
     <Compile Include="Manage-System\Actions.cs" />
+    <Compile Include="Modules\FileLayoutModule.cs" />
     <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
+    <Compile Include="Reposotories\FileLayoutRepository.cs" />
     <Compile Include="Scheduler\AntdJob.cs" />
     <Compile Include="Scheduler\JobModel.cs" />
     <Compile Include="Scheduler\JobRepository.cs" />

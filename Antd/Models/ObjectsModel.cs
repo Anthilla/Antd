@@ -201,4 +201,18 @@ namespace Antd {
         public string routeGateway { get; set; }
     }
     #endregion Networkd Model
+
+    #region FileLayout Model
+    public class FileLayoutModel {
+        public string _Id { get; set; }
+
+        public string guid { get; set; }
+
+        public string layoutname { get; set; }
+
+        public string content { get; set; }
+
+        public string path { get; set; }
+    }
+    #endregion FileLayout Model
 }
