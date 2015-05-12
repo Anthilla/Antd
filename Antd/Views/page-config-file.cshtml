@@ -106,6 +106,7 @@
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
                 success: function (layout) {
+                    $('p#test').text(layout.content);
                     return false;
                 }
             });
