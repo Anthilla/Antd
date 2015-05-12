@@ -38,7 +38,18 @@
             <div class="row">
                 <div class="span6">
                     <label>layout name</label>
-                    <input name="Name" type="text" style="width: 90%; height: 30px;" />
+                    <div class="input-control text" data-role="input-control">
+                        <input id="select-file-layout" name="Layout" type="text">
+                    </div>
+                </div>
+                <div class="span6">
+                    <label>&nbsp</label>
+                    <p id="LoadLayout" class="button bg-anthilla-violet" style="width: 90%;">Load layout</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span10">
+                    <p id="test"></p>
                 </div>
             </div>
             <div class="row">
@@ -50,7 +61,7 @@
     </form>
 
     <script>
-        var ItemSelectizer = function () {
+        var FileLayoutSelectizer = function () {
             return {
                 loadOptions: function (query, callback) {
                     if (!query.length) return callback();
@@ -70,20 +81,34 @@
                     });
                 },
                 renderOptions: function (data, escape) {
-                    return '<div><span id="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + escape(data.alias) + '</span></div>';
+                    return '<div><span id="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + escape(data.layoutname) + '</span></div>';
                 }
             };
         }();
 
-        $('#select-user').selectize({
+        $('#select-file-layout').selectize({
             maxItems: 1,
             valueField: 'guid',
-            labelField: 'nameLabel',
-            searchField: ['fname', 'lname', 'alias'],
+            labelField: 'layoutname',
+            searchField: 'layoutname',
             create: false,
-            render: { option: UserSelectizer.renderOptions },
-            remoteUrl: '/rawdata/user',
-            load: UserSelectizer.loadOptions
+            render: { option: FileLayoutSelectizer.renderOptions },
+            remoteUrl: '/rawdata/filelayout',
+            load: FileLayoutSelectizer.loadOptions
+        });
+
+        $('#LoadLayout').click(function () {
+            var guid = $('input[name="Layout"]').val();
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/rawdata/filelayout/' + guid,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (layout) {
+                    return false;
+                }
+            });
         });
 
     </script>
