@@ -32,10 +32,34 @@
 @{Layout = "_layout.cshtml";}
 @section MainContent
 {
-
     <legend>Create file layout</legend>
     <form action="/filelayout" method="POST" enctype="multipart/form-data">
         <div class="grid">
+            <div class="row">
+                <div class="span6">
+                    <label id="ShowETC"><i class="icon-plus-2 on-left"></i>Load an existing configuration file</label>
+                    <input name="Name" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row" id="ETCList" style="display: none;">
+                <div class="span6">
+                    <ul style="list-style: none !important;">
+                        @foreach (Antd.DirItemModel el in Model.children2) {
+                            if (el.isFile == true) {
+                            <li>
+                                <p><i class="icon-file on-left"></i>@el.path</p>
+                            </li>
+                            }
+                            if (el.isFile == false) {
+                            <li>
+                                <a href="/dir/tree/@el.path"><i class="icon-folder on-left"></i>@el.path</a>
+                            </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <hr />
+            </div>
             <div class="row">
                 <div class="span6">
                     <label>layout name</label>
@@ -81,6 +105,10 @@
     </table>
 
     <script type="text/javascript">
+        $('#ShowETC').click(function () {
+            $('#ETCList').toggle();
+        });
+
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');

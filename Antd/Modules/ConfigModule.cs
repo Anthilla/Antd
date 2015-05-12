@@ -29,6 +29,8 @@
 
 using Nancy;
 using Nancy.Security;
+using System.Linq;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -39,6 +41,9 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/file"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.parents = new DirectoryLister("/etc", false).ParentList.Reverse();
+                vmod.children2 = new DirectoryLister("/etc", false).FullList2;
                 return View["page-config-file"];
             };
 

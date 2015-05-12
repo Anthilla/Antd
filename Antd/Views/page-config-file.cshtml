@@ -64,22 +64,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="span12">
-                    <textarea class="code">
-                        <pre><code>
-                            public class LogModel {
-                                [Key]
-                                public string _Id { get; set; }
-                                public string time { get; set; }
-                                public string mode { get; set; }
-                                public string file { get; set; }
-                                public string oldfile { get; set; }
-                            }
-                        </code></pre>
-                    </textarea>
-                </div>
-            </div>
-            <div class="row">
                 <div class="span10">
                     <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
                 </div>
@@ -88,13 +72,13 @@
     </form>
 
     <script>
-        hljs.initHighlightingOnLoad();
+        //hljs.initHighlightingOnLoad();
 
-        hljs.configure({ useBR: true });
+        //hljs.configure({ useBR: true });
 
-        $('textarea.code').each(function (i, block) {
-            hljs.highlightBlock(block);
-        });
+        //$('textarea.code').each(function (i, block) {
+        //    hljs.highlightBlock(block);
+        //});
 
         var FileLayoutSelectizer = function () {
             return {
@@ -148,6 +132,5 @@
                 }
             });
         });
-
     </script>
 }
