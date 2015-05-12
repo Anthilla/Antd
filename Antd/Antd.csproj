@@ -233,6 +233,9 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\Status.cs" />
+    <None Include="Views\page-file-layout.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\page-status-user.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

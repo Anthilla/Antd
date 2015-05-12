@@ -34,7 +34,7 @@
 @section MainContent {
     <legend>Existing systemd .networkd file(s)</legend>
     @foreach (string file in Model.UnitTexts) {
-        <textarea style="width: 50%; min-height: 300px; padding: 5px;" class="border-3-anthilla-green fg-white bg-anthilla-gray">@file</textarea>
+        <textarea style="width: 50%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray">@file</textarea>
     }
 
     <legend>Create a custom unit</legend>
@@ -48,7 +48,7 @@
             </div>
             <div class="row">
                 <div class="span10">
-                    <textarea name="Text" style="width: 50%; min-height: 300px; padding: 5px;" class="border-3-anthilla-green fg-white bg-anthilla-gray"></textarea>
+                    <textarea name="Text" style="width: 50%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
                 </div>
             </div>
             <div class="row">
