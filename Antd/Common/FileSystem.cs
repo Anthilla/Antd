@@ -9,6 +9,16 @@ namespace Antd.Common {
         /// <param name="directory">file location</param>
         /// <param name="filename"></param>
         /// <returns></returns>
+        public static string ReadFile(string path) {
+            if (File.Exists(path)) {
+                return File.ReadAllText(path);
+            }
+            else {
+                ConsoleLogger.Warn("Path '{0}' doesn't exist", path);
+                return String.Empty;
+            }
+        }
+        
         public static string ReadFile(string directory, string filename) {
             string path = Path.Combine(directory, filename);
             if (File.Exists(path)) {

@@ -27,9 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Antd.Reposotories;
 using Nancy;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Antd {
 
@@ -55,6 +58,23 @@ namespace Antd {
             Get["/dir/{path*}"] = x => {
                 var p = x.path;
                 var model = new DirectoryLister("/" + p, false).FullList2;
+                var json = JsonConvert.SerializeObject(model);
+                return json;
+            };
+
+            Get["/dir/filelist/{path*}"] = x => {
+                var p = x.path;
+                var list = new DirectoryLister("/" + p, false).FullList2;
+                List<string> model = (from d in list
+                                     where d.isFile == true
+                                     select d.path).ToList();
+                var json = JsonConvert.SerializeObject(model);
+                return json;
+            };
+
+            Get["/file/content/{path*}"] = x => {
+                var p = x.path;
+                var model = FileSystem.ReadFile(p);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
