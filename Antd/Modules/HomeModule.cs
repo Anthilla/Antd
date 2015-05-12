@@ -31,10 +31,8 @@ using Antd.Systemd;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -44,7 +42,18 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return Response.AsRedirect("/anthillasp");
+                dynamic vmod = new ExpandoObject();
+                vmod.hostname = Command.Launch("hostname", "").output;
+                vmod.os = Version.GetModel().value;
+                vmod.time = Command.Launch("date", "").output;
+                vmod.procinfo = "";
+                vmod.uptime = Command.Launch("uptime", "").output;
+                vmod.runprocs = Proc.All.ToArray().Length.ToString();
+                vmod.CPUload = "";
+                vmod.CPUusage = "";
+                vmod.rmem = "";
+                vmod.ldskspc = "";
+                return View["page-home", vmod];
             };
 
             Get["/info"] = x => {

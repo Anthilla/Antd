@@ -29,8 +29,6 @@
 
 using Nancy;
 using Nancy.Security;
-using System.Linq;
-using System.Dynamic;
 using Antd.Common;
 
 namespace Antd {
