@@ -48,4 +48,43 @@
             </div>
         </div>
     </form>
+
+    <script>
+        var ItemSelectizer = function () {
+            return {
+                loadOptions: function (query, callback) {
+                    if (!query.length) return callback();
+                    $.ajax({
+                        url: this.settings.remoteUrl,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            s: query
+                        },
+                        error: function (input) {
+                            callback();
+                        },
+                        success: function (data) {
+                            callback(data);
+                        }
+                    });
+                },
+                renderOptions: function (data, escape) {
+                    return '<div><span id="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + escape(data.alias) + '</span></div>';
+                }
+            };
+        }();
+
+        $('#select-user').selectize({
+            maxItems: 1,
+            valueField: 'guid',
+            labelField: 'nameLabel',
+            searchField: ['fname', 'lname', 'alias'],
+            create: false,
+            render: { option: UserSelectizer.renderOptions },
+            remoteUrl: '/rawdata/user',
+            load: UserSelectizer.loadOptions
+        });
+
+    </script>
 }
