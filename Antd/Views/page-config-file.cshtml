@@ -54,13 +54,29 @@
                 </div>
                 <div class="span5">
                     <p class="fg-anthilla-green" style="display: inline-block !important;">save in</p>
-                    <input type="text" name="ConfigFilePath" readonly="readonly" class="bg-anthilla-gray-m" style="border: 0 !important; height: 34px; width: auto; padding-left: 5px; padding-right: 5px;"/>
-                    <input type="text" name="ConfigFileName" style="height: 34px;"/>
+                    <input type="text" name="ConfigFilePath" readonly="readonly" class="bg-anthilla-gray-m" style="border: 0 !important; height: 34px; width: auto; padding-left: 5px; padding-right: 5px;" />
+                    <input type="text" name="ConfigFileName" style="height: 34px;" />
                 </div>
             </div>
             <div class="row">
                 <div class="span12">
                     <textarea name="FileContent" style="width: 100%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <textarea class="code">
+                        <pre><code>
+                            public class LogModel {
+                                [Key]
+                                public string _Id { get; set; }
+                                public string time { get; set; }
+                                public string mode { get; set; }
+                                public string file { get; set; }
+                                public string oldfile { get; set; }
+                            }
+                        </code></pre>
+                    </textarea>
                 </div>
             </div>
             <div class="row">
@@ -72,6 +88,14 @@
     </form>
 
     <script>
+        hljs.initHighlightingOnLoad();
+
+        hljs.configure({ useBR: true });
+
+        $('textarea.code').each(function (i, block) {
+            hljs.highlightBlock(block);
+        });
+
         var FileLayoutSelectizer = function () {
             return {
                 loadOptions: function (query, callback) {
