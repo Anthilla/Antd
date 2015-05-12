@@ -42,13 +42,14 @@ namespace Antd.Reposotories {
             return DeNSo.Session.New.Get<FileLayoutModel>(m => m.guid == guid).FirstOrDefault();
         }
 
-        public void Create(string name, string content, string path) {
+        public void Create(string name, string content, string path, string xt) {
             FileLayoutModel model = new FileLayoutModel();
             model._Id = Guid.NewGuid().ToString();
             model.guid = Guid.NewGuid().ToString();
             model.layoutname = name;
             model.content = content;
             model.path = path;
+            model.extension = xt;
             DeNSo.Session.New.Set(model);
         }
     }

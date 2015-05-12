@@ -53,7 +53,14 @@ namespace Antd.Modules {
                 string fileName = this.Request.Form.Name;
                 string content = this.Request.Form.Content;
                 string path = this.Request.Form.Path;
-                repo.Create(fileName, content, path);
+                string xt;
+                if (this.Request.Form.Extns == "" || this.Request.Form.Extns == null) {
+                    xt = "";
+                }
+                else {
+                    xt = this.Request.Form.Extns;
+                }
+                repo.Create(fileName, content, path, xt);
                 return Response.AsRedirect("/filelayout");
             };
         }
