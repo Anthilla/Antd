@@ -30,6 +30,7 @@
 using Nancy.Security;
 using Nancy;
 using Antd.Reposotories;
+using System.Linq;
 using System.Dynamic;
 
 namespace Antd.Modules {
@@ -43,6 +44,8 @@ namespace Antd.Modules {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = repo.GetAll();
+                vmod.parents = new DirectoryLister("/etc", false).ParentList.Reverse();
+                vmod.children2 = new DirectoryLister("/etc", false).FullList2;
                 return View["page-file-layout", vmod];
             };
 

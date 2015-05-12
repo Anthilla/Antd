@@ -51,6 +51,13 @@ namespace Antd {
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
+
+            Get["/dir/{path*}"] = x => {
+                var p = x.path;
+                var model = new DirectoryLister("/" + p, false).FullList2;
+                var json = JsonConvert.SerializeObject(model);
+                return json;
+            };
         }
     }
 }
