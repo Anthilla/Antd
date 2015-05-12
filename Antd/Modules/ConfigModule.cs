@@ -42,6 +42,9 @@ namespace Antd {
                 return View["page-config-file"];
             };
 
+            Post["/file"] = x => {
+                return Response.AsRedirect("/config/file");
+            };
         }
     }
 }
