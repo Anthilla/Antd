@@ -44,8 +44,7 @@ namespace Antd.Modules {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = repo.GetAll();
-                vmod.parents = new DirectoryLister("/etc", false).ParentList.Reverse();
-                vmod.children2 = new DirectoryLister("/etc", false).FullList2;
+                vmod.folders = new DirectoryLister("/etc", true).FullList2;
                 return View["page-file-layout", vmod];
             };
 
