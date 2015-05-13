@@ -53,7 +53,7 @@ namespace Antd.MachineStatus {
 
         private static void SetFile(string _filePath, string content) {
             string filePath = _filePath.RemoveDriveLetter();
-            string newPath = Path.Combine("/cfg", filePath);
+            string newPath = "/cfg" + filePath;
             Directory.CreateDirectory(Path.GetDirectoryName(newPath));
             FileSystem.WriteFile(newPath, content);
             Command.Launch("mount", newPath + " " + filePath);

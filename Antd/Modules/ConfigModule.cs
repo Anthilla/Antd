@@ -34,6 +34,7 @@ using System.Dynamic;
 using System.Linq;
 using Antd.MachineStatus;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Antd {
 
@@ -55,8 +56,9 @@ namespace Antd {
                     imod.etcPath = dir.path;
                     bool hasCfg;
                     string cfgPath;
+                    string simplefilename = Path.GetFileName(dir.path);
                     string c = (from i in cfgList
-                                where i.path.Contains(dir.path)
+                                where i.name == dir.name
                                 select i.path).FirstOrDefault();
                     if (c == null) {
                         hasCfg = false;

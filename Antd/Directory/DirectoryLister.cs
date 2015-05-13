@@ -86,7 +86,8 @@ namespace Antd {
                 foreach (FileInfo fi in files) {
                     _tree2.Add(new DirItemModel() {
                         isFile = true,
-                        path = fi.FullName
+                        path = fi.FullName,
+                        name = Path.GetFileName(fi.FullName)
                     });
                     _tree.Add(fi.FullName);
                 }
@@ -94,7 +95,8 @@ namespace Antd {
                 foreach (DirectoryInfo dirInfo in subDirs) {
                     _tree2.Add(new DirItemModel() {
                         isFile = false,
-                        path = dirInfo.FullName
+                        path = dirInfo.FullName,
+                        name = Path.GetDirectoryName(dirInfo.FullName)
                     });
                     _tree.Add(dirInfo.FullName);
                     if (getSubDir == true) {

@@ -52,8 +52,8 @@
             }
             @foreach (dynamic cfile in Model.ALL) {
                 <tr>
-                    <td style="width: 500px;"><i class="@DisplayIcon(cfile.isFile) on-left"></i>
-                        <p>@cfile.etcPath</p>
+                    <td style="width: 500px;">
+                        <p><i class="@DisplayIcon(cfile.isFile) on-left"></i> @cfile.etcPath</p>
                     </td>
                     <td style="width: 120px;">
                         @if (cfile.isFile == true) {
@@ -67,7 +67,7 @@
                     </td>
                     <td style="width: 120px;">
                         @if (cfile.hasCfg == true) {
-                            <p class="button bg-darkViolet"> <i class="icon-pencil on-left"> Edit File</p>
+                            <p class="button bg-darkViolet"><i class="icon-pencil on-left"></i> Edit File</p>
                         }
                     </td>
                 </tr>

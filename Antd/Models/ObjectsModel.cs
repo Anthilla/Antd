@@ -125,6 +125,8 @@ namespace Antd {
         public bool isFile { get; set; }
 
         public string path { get; set; }
+
+        public string name { get; set; }
     }
     #endregion Directory Model
 
