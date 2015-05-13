@@ -30,105 +30,138 @@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
-@section MainContent
+
+@section Dashboard
 {
-    <legend>Create file layout</legend>
-    <form action="/config/file" method="POST" enctype="multipart/form-data">
+@*    <form action="/filelayout" method="POST" enctype="multipart/form-data">
         <div class="grid">
             <div class="row">
                 <div class="span6">
-                    <label>layout name</label>
-                    <div class="input-control text" data-role="input-control">
-                        <input id="select-file-layout" name="Layout" type="text">
+                    <label id="ShowETC"><i class="icon-plus-2 on-left"></i>Load an existing configuration file</label>
+                </div>
+            </div>
+            <div class="row" id="ETCList" style="display: none; border-bottom: 2px solid white; padding-bottom: 5px; margin-bottom: 5px !important;">
+                <div class="span12" style="max-height: 350px; overflow: scroll !important; width: 100% !important;">
+                    <div style="width: 40%; border-right: 2px solid white; display: inline-block; float: left; margin-left: -2px;">
+                        <ul style="list-style: none !important;">
+                            <li class="directory-selector" data-path="/etc">
+                                <a href="/dir/tree/etc"><i class="icon-folder on-left"></i>/etc</a>
+                            </li>
+                            @foreach (Antd.DirItemModel el in Model.folders) {
+                                if (el.isFile == false) {
+                                <li  class="directory-selector" data-path="@el.path">
+                                    <a href="#"><i class="icon-folder on-left"></i>@el.path</a>
+                                </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div style="display: inline-block; float: left; border-left: 2px solid white;">
+                        <ul style="list-style: none !important;" id="FILES">
+                        </ul>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>layout name</label>
+                </div>
                 <div class="span6">
-                    <label>&nbsp</label>
-                    <p id="LoadLayout" class="button bg-anthilla-violet" style="width: 90%;">Load layout</p>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="span5">
-                    <label id="layoutName"></label>
-                </div>
-                <div class="span5">
-                    <p class="fg-anthilla-green" style="display: inline-block !important;">save in</p>
-                    <input type="text" name="ConfigFilePath" readonly="readonly" class="bg-anthilla-gray-m" style="border: 0 !important; height: 34px; width: auto; padding-left: 5px; padding-right: 5px;" />
-                    <input type="text" name="ConfigFileName" style="height: 34px;" />
+                    <input name="Name" type="text" style="width: 90%; height: 30px;" />
                 </div>
             </div>
             <div class="row">
-                <div class="span12">
-                    <textarea name="FileContent" style="width: 100%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
+                <div class="span3">
+                    <label>directory path</label>
+                </div>
+                <div class="span6">
+                    <input name="Path" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>file extension (*)</label>
+                </div>
+                <div class="span6">
+                    <input name="Extns" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>file content</label>
+                </div>
+                <div class="span10">
+                    <textarea name="Content" style="width: 90%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="span10">
-                    <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
+                    <input id="submit" class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 100%;">
                 </div>
             </div>
         </div>
-    </form>
+    </form>*@
+}
 
-    <script>
-        //hljs.initHighlightingOnLoad();
-
-        //hljs.configure({ useBR: true });
-
-        //$('textarea.code').each(function (i, block) {
-        //    hljs.highlightBlock(block);
-        //});
-
-        var FileLayoutSelectizer = function () {
-            return {
-                loadOptions: function (query, callback) {
-                    if (!query.length) return callback();
-                    $.ajax({
-                        url: this.settings.remoteUrl,
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {
-                            s: query
-                        },
-                        error: function (input) {
-                            callback();
-                        },
-                        success: function (data) {
-                            callback(data);
-                        }
-                    });
-                },
-                renderOptions: function (data, escape) {
-                    return '<div><span id="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + escape(data.layoutname) + '</span></div>';
+@section MainContent
+{
+    <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+    <table class="table searchable">
+        <thead>
+            <tr>
+                <th class="text-left">etc content</th>
+            </tr>
+        </thead>
+        <tbody>
+            @functions {
+                public string DisplayIcon(bool isfile) {
+                    if (isfile == true) {
+                        return "icon-file";
+                    }
+                    else return "icon-folder";
                 }
-            };
-        }();
+            }
+            @foreach (Antd.DirItemModel fl in Model.folders) {
+                <tr>
+                    <td><i class="@DisplayIcon(fl.isFile) on-left">@fl.path </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-        $('#select-file-layout').selectize({
-            maxItems: 1,
-            valueField: 'guid',
-            labelField: 'layoutname',
-            searchField: 'layoutname',
-            create: false,
-            render: { option: FileLayoutSelectizer.renderOptions },
-            remoteUrl: '/rawdata/filelayout',
-            load: FileLayoutSelectizer.loadOptions
-        });
+    @*<table class="table searchable">
+        <thead>
+            <tr>
+                <th class="text-left">name</th>
+                <th class="text-left">base path</th>
+                <th class="text-left">text layout</th>
+            </tr>
+        </thead>
+        <tbody id="SysctlBodyTable">
+            @foreach (Antd.FileLayoutModel fl in Model.ALL) {
+                <tr>
+                    <td style="text-align: center;">@fl.layoutname </td>
+                    <td style="text-align: center;">@fl.path </td>
+                    <td style="text-align: center;">@fl.content </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
 
-        $('#LoadLayout').click(function () {
-            var guid = $('input[name="Layout"]').val();
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/rawdata/filelayout/' + guid,
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json;charset=utf-8',
-                success: function (layout) {
-                    $('#layoutName').text(layout.layoutname);
-                    $('input[name="ConfigFilePath"]').val(layout.path);
-                    $('textarea[name="FileContent"]').val(layout.content);
-                    return false;
+    <script type="text/javascript">
+        $('.search-field').keyup(function () {
+            var queryString = $(this).val();
+            var table = $('.searchable');
+            var tableBody = table.children('tbody');
+            var row = tableBody.children('tr');
+            row.each(function (index) {
+                var thisRow = $(this);
+                var queriedText = $(this).text();
+                if (queriedText.indexOf(queryString) != -1) {
+                    thisRow.show();
+                }
+                if (queriedText.indexOf(queryString) < 0) {
+                    thisRow.hide();
                 }
             });
         });

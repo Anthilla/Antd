@@ -30,16 +30,23 @@
 using Nancy;
 using Nancy.Security;
 using Antd.Common;
+using System.Dynamic;
+using Antd.Reposotories;
 
 namespace Antd {
 
     public class ConfigModule : NancyModule {
+        private FileLayoutRepository repo = new FileLayoutRepository();
 
         public ConfigModule()
             : base("/config") {
             this.RequiresAuthentication();
 
             Get["/file"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.ALL = repo.GetAll();
+                vmod.folders = new DirectoryLister("/etc", true).FullList2;
+                vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-config-file"];
             };
 
@@ -49,6 +56,21 @@ namespace Antd {
                 string content = this.Request.Form.FileContent;
                 FileSystem.WriteFile(root, filename, content);
                 return Response.AsRedirect("/config/file");
+            };
+
+            Post["/"] = x => {
+                string fileName = this.Request.Form.Name;
+                string content = this.Request.Form.Content;
+                string path = this.Request.Form.Path;
+                string xt;
+                if (this.Request.Form.Extns == "" || this.Request.Form.Extns == null) {
+                    xt = "";
+                }
+                else {
+                    xt = this.Request.Form.Extns;
+                }
+                repo.Create(fileName, content, path, xt);
+                return Response.AsRedirect("/filelayout");
             };
         }
     }

@@ -162,7 +162,6 @@
     <Compile Include="Manage-System\Actions.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
-    <Compile Include="Modules\FileLayoutModule.cs" />
     <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Reposotories\FileLayoutRepository.cs" />
@@ -241,10 +240,10 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\Status.cs" />
-    <None Include="Views\page-config-file.cshtml">
+    <None Include="Views\page-config-file2.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-file-layout.cshtml">
+    <None Include="Views\page-config-file.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-status-user.cshtml">
