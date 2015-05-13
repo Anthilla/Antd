@@ -47,19 +47,27 @@ namespace Antd.MachineStatus {
         private static string GetFileText(string _filePath) {
             string filePath = _filePath.RemoveDriveLetter();
             string text = FileSystem.ReadFile(filePath);
-            SaveOriginalConf(filePath, text);
+            SaveConf(filePath, text);
             return text;
         }
 
         private static void SetFile(string _filePath, string content) {
             string filePath = _filePath.RemoveDriveLetter();
-            string newPath = "/cfg" + filePath;
-            Directory.CreateDirectory(Path.GetDirectoryName(newPath));
+            string root = "/cfg/etc/";
+            string newFileName = filePath.ConvertPathToFileName();
+            string newPath = root + newFileName;
+            Directory.CreateDirectory(root);
             FileSystem.WriteFile(newPath, content);
             Command.Launch("mount", newPath + " " + filePath);
         }
 
-        private static void SaveOriginalConf(string fileName, string content) {
+        public static void EditFile(string filePath, string content) {
+            FileSystem.WriteFile(filePath, content);
+            SaveConf(filePath, content);
+            Command.Launch("mount", filePath + " " + filePath.Replace("_", "/"));
+        }
+
+        private static void SaveConf(string fileName, string content) {
             ConfigFileModel model = new ConfigFileModel();
             model._Id = Guid.NewGuid().ToString();
             model.path = fileName;
@@ -69,7 +77,7 @@ namespace Antd.MachineStatus {
             DeNSo.Session.New.Set(model);
         }
 
-        private static string RemoveDriveLetter(this String fullPath) {
+        public static string RemoveDriveLetter(this String fullPath) {
             string p;
             string[] split = fullPath.Split('/');
             string drive = split[0];
@@ -81,6 +89,10 @@ namespace Antd.MachineStatus {
                 p = string.Join("/", split);
             }
             return "/" + p;
+        }
+
+        public static string ConvertPathToFileName(this String fullPath) {
+            return "FILE" + fullPath.Replace("/", "_");
         }
     }
 }

@@ -48,7 +48,6 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
                 HashSet<DirItemModel> cfgList = new DirectoryLister("/cfg/etc", true).FullList2;
-
                 List<dynamic> nl = new List<dynamic>() { };
                 foreach (DirItemModel dir in etcList) {
                     dynamic imod = new ExpandoObject();
@@ -56,9 +55,11 @@ namespace Antd {
                     imod.etcPath = dir.path;
                     bool hasCfg;
                     string cfgPath;
+                    //fix get file name
                     string simplefilename = Path.GetFileName(dir.path);
+                    string p = dir.name.RemoveDriveLetter().ConvertPathToFileName();
                     string c = (from i in cfgList
-                                where i.name == dir.name
+                                where i.name == p
                                 select i.path).FirstOrDefault();
                     if (c == null) {
                         hasCfg = false;
@@ -72,9 +73,7 @@ namespace Antd {
                     imod.cfgPath = cfgPath;
                     nl.Add(imod);
                 }
-
                 vmod.ALL = nl;
-                //vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-config-file", vmod];
             };
 
@@ -84,28 +83,18 @@ namespace Antd {
                 return Response.AsJson("done");
             };
 
-            //Post["/file"] = x => {
-            //    string filename = this.Request.Form.ConfigFileName;
-            //    string root = this.Request.Form.ConfigFilePath;
-            //    string content = this.Request.Form.FileContent;
-            //    FileSystem.WriteFile(root, filename, content);
-            //    return Response.AsRedirect("/config/file");
-            //};
+            Get["/read/file/{path*}"] = x => {
+                string path = x.path;
+                string text = FileSystem.ReadFile(path.RemoveDriveLetter());
+                return Response.AsJson(text);
+            };
 
-            //Post["/"] = x => {
-            //    string fileName = this.Request.Form.Name;
-            //    string content = this.Request.Form.Content;
-            //    string path = this.Request.Form.Path;
-            //    string xt;
-            //    if (this.Request.Form.Extns == "" || this.Request.Form.Extns == null) {
-            //        xt = "";
-            //    }
-            //    else {
-            //        xt = this.Request.Form.Extns;
-            //    }
-            //    repo.Create(fileName, content, path, xt);
-            //    return Response.AsRedirect("/filelayout");
-            //};
+            Post["/file"] = x => {
+                string path = this.Request.Form.FilePath;
+                string content = this.Request.Form.FileContent;
+                ConfigEtc.EditFile(path, content);
+                return Response.AsRedirect("/config/file");
+            };
         }
     }
 }

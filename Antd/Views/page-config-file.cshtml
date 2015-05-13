@@ -33,6 +33,28 @@
 
 @section MainContent
 {
+    <form id="FileConfigDashboard" action="/config/file" method="POST" enctype="multipart/form-data" style="display: none;">
+        <div class="grid">
+            <div class="row">
+                <div class="span6">
+                    <label id="title"></label>
+                    <input type="hidden" name="FilePath" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <textarea name="FileContent" style="width: 100%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span10">
+                    <input id="submit" class="bg-lightGreen fg-white" type="submit" value="Submit">
+                    <input id="clear" class="bg-violet fg-white" type="button" value="Clear">
+                    <input id="close" class="bg-amber fg-white" type="button" value="Close">
+                </div>
+            </div>
+        </div>
+    </form>
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
     <table class="table searchable">
         <thead>
@@ -53,11 +75,14 @@
             @foreach (dynamic cfile in Model.ALL) {
                 <tr>
                     <td style="width: 500px;">
-                        <p><i class="@DisplayIcon(cfile.isFile) on-left"></i> @cfile.etcPath</p>
+                        <p><i class="@DisplayIcon(cfile.isFile) on-left"></i>@cfile.etcPath</p>
                     </td>
                     <td style="width: 120px;">
-                        @if (cfile.isFile == true) {
+                        @if (cfile.isFile == true && cfile.hasCfg == false) {
                             <p class="button bg-cobalt export-conf" data-path="@cfile.etcPath">Export <i class="icon-arrow-right on-right"></i></p>
+                        }
+                        @if (cfile.isFile == true && cfile.hasCfg == true) {
+                            <p class="button bg-amber" data-path="@cfile.etcPath">Mounted</p>
                         }
                     </td>
                     <td>
@@ -67,7 +92,7 @@
                     </td>
                     <td style="width: 120px;">
                         @if (cfile.hasCfg == true) {
-                            <p class="button bg-darkViolet"><i class="icon-pencil on-left"></i> Edit File</p>
+                            <p class="button bg-darkViolet edit-conf" data-path="@cfile.cfgPath"><i class="icon-pencil on-left"></i>Edit File</p>
                         }
                     </td>
                 </tr>
@@ -76,6 +101,26 @@
     </table>
 
     <script type="text/javascript">
+        $('p.edit-conf').click(function () {
+            var path = $(this).attr('data-path');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/config/read/file/' + path,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (text) {
+                    var dashboard = $('#FileConfigDashboard');
+                    dashboard.find('#title').text('Editing: ' + path);
+                    dashboard.find('input[name="FilePath"]').val(path);
+                    dashboard.find('textarea[name="FileContent"]').text(text);
+                    dashboard.show();
+                    //todo scrollup to dashboard
+                    return false;
+                }
+            });
+        });
+
         $('p.export-conf').click(function () {
             var p = $(this).attr('data-path');
             jQuery.support.cors = true;
@@ -85,7 +130,7 @@
                 data: JSON.stringify(p),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
-                    alert(data);
+                    location.reload(true);
                     return false;
                 }
             });
@@ -106,6 +151,19 @@
                     thisRow.hide();
                 }
             });
+        });
+
+        $('input#close').click(function () {
+            var form = $('form');
+            form.find('input').val('');
+            form.find('textarea').text('');
+            form.hide();
+        });
+
+        $('input#clear').click(function () {
+            var form = $('form');
+            form.find('input').val('');
+            form.find('textarea').text('');
         });
     </script>
 }
