@@ -60,18 +60,20 @@ namespace Antd.MachineStatus {
             else {
                 p = string.Join("/", split);
             }
-            string path = Path.Combine("/cfg", p);
+            string newPath = Path.Combine("/cfg", p);
 
             FileAttributes attr = File.GetAttributes(filePath);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory) {
                 //is directory -> create directory
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(newPath);
+                Action.Mount("-o bind", newPath, filePath);
             }
             else {
                 //is file -> get directory, create directory
-                string d = Path.GetDirectoryName(path);
+                string d = Path.GetDirectoryName(newPath);
                 Directory.CreateDirectory(d);
-                FileSystem.WriteFile(path, content);
+                FileSystem.WriteFile(newPath, content);
+                Action.Mount("", newPath, filePath);
             }
         }
     }
