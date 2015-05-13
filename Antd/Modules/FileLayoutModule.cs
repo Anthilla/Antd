@@ -45,7 +45,7 @@ namespace Antd.Modules {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = repo.GetAll();
                 vmod.folders = new DirectoryLister("/etc", true).FullList2;
-                vmod.antdConfig = "";
+                vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-file-layout", vmod];
             };
 

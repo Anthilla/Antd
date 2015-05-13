@@ -33,33 +33,7 @@
 
 @section Dashboard
 {
-    <table class="table searchable">
-        <thead>
-            <tr>
-                <th class="text-left">etc content</th>
-            </tr>
-        </thead>
-        <tbody>
-            @functions {
-                public string DisplayIcon(bool isfile) {
-                    if (isfile == true) {
-                        return "icon-file";
-                    }
-                    else return "icon-folder";
-                }
-            }
-            @foreach (Antd.DirItemModel fl in Model.folders) {
-                <tr>
-                    <td><i class="@DisplayIcon(fl.isFile) on-left"> @fl.path </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <hr />
-    <hr />
-    <hr />
-    <hr />
-    <form action="/filelayout" method="POST" enctype="multipart/form-data">
+@*    <form action="/filelayout" method="POST" enctype="multipart/form-data">
         <div class="grid">
             <div class="row">
                 <div class="span6">
@@ -84,13 +58,6 @@
                     </div>
                     <div style="display: inline-block; float: left; border-left: 2px solid white;">
                         <ul style="list-style: none !important;" id="FILES">
-                            @*@foreach (Antd.DirItemModel el in Model.folders) {
-                                if (el.isFile == true) {
-                                <li class="file-to-load" data-path="@el.path">
-                                    <p><i class="icon-file on-left"></i>@el.path</p>
-                                </li>
-                                }
-                            }*@
                         </ul>
                     </div>
                 </div>
@@ -133,13 +100,36 @@
                 </div>
             </div>
         </div>
-    </form>
+    </form>*@
 }
 
 @section MainContent
 {
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
     <table class="table searchable">
+        <thead>
+            <tr>
+                <th class="text-left">etc content</th>
+            </tr>
+        </thead>
+        <tbody>
+            @functions {
+                public string DisplayIcon(bool isfile) {
+                    if (isfile == true) {
+                        return "icon-file";
+                    }
+                    else return "icon-folder";
+                }
+            }
+            @foreach (Antd.DirItemModel fl in Model.folders) {
+                <tr>
+                    <td><i class="@DisplayIcon(fl.isFile) on-left">@fl.path </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @*<table class="table searchable">
         <thead>
             <tr>
                 <th class="text-left">name</th>
@@ -156,7 +146,7 @@
                 </tr>
             }
         </tbody>
-    </table>
+    </table>*@
 
     <script type="text/javascript">
         $('.search-field').keyup(function () {
