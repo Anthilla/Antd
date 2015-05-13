@@ -29,12 +29,15 @@
 
 using Nancy;
 using System.Collections.Generic;
+using System.Management;
 using System.IO;
+using System;
 
 namespace Antd {
 
     public class TestModule : NancyModule {
-        public TestModule() : base("/test"){
+        public TestModule()
+            : base("/test") {
 
             Get["/"] = x => {
                 return Response.AsText("Hello World!");
@@ -43,6 +46,18 @@ namespace Antd {
             Get["/acl"] = x => {
                 var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
+            };
+
+            Get["/db"] = x => {
+                FileLayoutModel m = new FileLayoutModel();
+                m._Id = Guid.NewGuid().ToString();
+                m.content = "ciao";
+                m.extension = "ciao";
+                m.guid = "ciao";
+                m.layoutname = "ciao";
+                m.path = "ciao";
+                DeNSo.Session.New.Set(m);
+                return Response.AsJson(m);
             };
 
             //Get["/dir"] = x => {

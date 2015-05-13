@@ -35,6 +35,7 @@ using Microsoft.Owin.Hosting;
 using Nancy;
 using Owin;
 using System;
+using System.IO;
 using System.Threading;
 
 namespace Antd {
@@ -166,6 +167,9 @@ namespace Antd {
             string[] databases;
 
             string root = SelfConfig.GetAntdDb();
+            if (!Directory.Exists(root)) {
+                Directory.CreateDirectory(root);
+            }
             databases = new string[] { root };
 
             DeNSo.Configuration.BasePath = databases;

@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,13 @@ namespace Antd.Reposotories {
     public class FileLayoutRepository {
 
         public List<FileLayoutModel> GetAll() {
-            return DeNSo.Session.New.Get<FileLayoutModel>().ToList();
+            List<FileLayoutModel> list = new List<FileLayoutModel>() { };
+            try {
+                list = DeNSo.Session.New.Get<FileLayoutModel>().ToList();
+            }
+            catch (Exception e) {
+            }
+            return list;
         }
 
         public FileLayoutModel GetByGuid(string guid) {
