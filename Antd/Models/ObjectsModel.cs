@@ -112,58 +112,75 @@ namespace Antd {
     #endregion Command Model
 
     #region Directory Model
+
     public class _dirObject {
+
         public bool isDirectory { get; set; }
+
         public bool isFile { get; set; }
     }
 
     public class AntdirModel : _dirObject {
+
         public string name { get; set; }
     }
 
     public class DirItemModel {
+
         public bool isFile { get; set; }
 
         public string path { get; set; }
 
         public string name { get; set; }
     }
+
     #endregion Directory Model
 
     #region Unit Model
+
     public class UnitModel {
+
         public string name { get; set; }
 
         public string status { get; set; }
     }
+
     #endregion Unit Model
 
     #region Sysctl Model
+
     public class SysctlModel {
+
         public string param { get; set; }
 
         public string value { get; set; }
     }
+
     #endregion Sysctl Model
 
     #region Mount Model
+
     public class MountModel {
+
         public string device { get; set; }
 
         public string mountpoint { get; set; }
-        
+
         public string fstype { get; set; }
 
         public string rorw { get; set; }
-        
+
         public string dv1 { get; set; }
-     
+
         public string dv2 { get; set; }
     }
+
     #endregion Mount Model
 
     #region User Model
+
     public class UserModel {
+
         public string username { get; set; }
 
         public string password { get; set; }
@@ -180,10 +197,13 @@ namespace Antd {
 
         public string expire { get; set; }
     }
+
     #endregion User Model
 
     #region Networkd Model
+
     public class NetworkdModel {
+
         public string matchName { get; set; }
 
         public string matchHost { get; set; }
@@ -202,10 +222,13 @@ namespace Antd {
 
         public string routeGateway { get; set; }
     }
+
     #endregion Networkd Model
 
     #region ConfigFile Model
+
     public class ConfigFileModel {
+
         public string _Id { get; set; }
 
         public string timestamp { get; set; }
@@ -216,5 +239,6 @@ namespace Antd {
 
         public string path { get; set; }
     }
+
     #endregion ConfigFile Model
 }

@@ -33,8 +33,8 @@ using System.IO;
 using System.Security.AccessControl;
 
 namespace Antd {
-    public class DirectoryLister {
 
+    public class DirectoryLister {
         private DirectoryInfo root;
 
         public DirectoryLister(string _path, bool getSubDir) {
@@ -44,6 +44,7 @@ namespace Antd {
         }
 
         #region parents
+
         private HashSet<string> _parents = new HashSet<string>() { };
 
         private void UpwalkDirectoryTree(DirectoryInfo root) {
@@ -62,6 +63,7 @@ namespace Antd {
                 return _parents;
             }
         }
+
         #endregion parents
 
         #region tree
@@ -117,6 +119,7 @@ namespace Antd {
                 return _tree2;
             }
         }
+
         #endregion tree
 
         public DirectorySecurity GetFileACL() {

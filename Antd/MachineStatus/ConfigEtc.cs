@@ -29,14 +29,11 @@
 
 using Antd.Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Antd.MachineStatus {
+
     public static class ConfigEtc {
 
         public static void Export(string filePath) {
@@ -95,7 +92,6 @@ namespace Antd.MachineStatus {
             string o;
             if (fullPath.Contains("/")) {
                 o = "FILE" + fullPath.Replace("/", "_");
-
             }
             else if (fullPath.Contains(@"\\")) {
                 o = "FILE" + fullPath.Replace(@"\\", "_");
