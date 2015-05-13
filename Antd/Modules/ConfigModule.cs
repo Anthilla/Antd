@@ -55,22 +55,26 @@ namespace Antd {
                     imod.etcPath = dir.path;
                     bool hasCfg;
                     string cfgPath;
+                    string cfgName;
                     //fix get file name
-                    string simplefilename = Path.GetFileName(dir.path);
-                    string p = dir.name.RemoveDriveLetter().ConvertPathToFileName();
+                    //string simplefilename = Path.GetFileName(dir.path);
+                    string p = dir.path.ConvertPathToFileName().Replace("D:", "");
                     string c = (from i in cfgList
                                 where i.name == p
                                 select i.path).FirstOrDefault();
                     if (c == null) {
                         hasCfg = false;
                         cfgPath = "";
+                        cfgName = "";
                     }
                     else {
                         hasCfg = true;
                         cfgPath = c;
+                        cfgName = Path.GetFileName(c);
                     }
                     imod.hasCfg = hasCfg;
                     imod.cfgPath = cfgPath;
+                    imod.cfgName = cfgName;
                     nl.Add(imod);
                 }
                 vmod.ALL = nl;

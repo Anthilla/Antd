@@ -92,7 +92,21 @@ namespace Antd.MachineStatus {
         }
 
         public static string ConvertPathToFileName(this String fullPath) {
-            return "FILE" + fullPath.Replace("/", "_");
+            string o;
+            if (fullPath.Contains("/")) {
+                o = "FILE" + fullPath.Replace("/", "_");
+
+            }
+            else if (fullPath.Contains(@"\\")) {
+                o = "FILE" + fullPath.Replace(@"\\", "_");
+            }
+            else if (fullPath.Contains(@"\")) {
+                o = "FILE" + fullPath.Replace(@"\", "_");
+            }
+            else {
+                o = fullPath;
+            }
+            return o;
         }
     }
 }
