@@ -37,7 +37,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Antd.MachineStatus {
-    public class ConfigEtc {
+    public static class ConfigEtc {
 
         public static void Export(string filePath) { 
             string txt = GetFileText(filePath);
@@ -46,22 +46,12 @@ namespace Antd.MachineStatus {
         }
 
         private static string GetFileText(string filePath) {
-            return FileSystem.ReadFile(filePath);
+            return FileSystem.ReadFile(filePath.RemoveDriveLetter());
         }
 
-        private static void SetFile(string filePath, string content) {
-            string p;
-            string[] split = filePath.Split('/');
-            string drive = split[0];
-            if (drive.Contains(':')) {
-                string[] resplit = filePath.Split('/').Skip(1).ToArray();
-                p = string.Join("/", resplit);
-            }
-            else {
-                p = string.Join("/", split);
-            }
-            string newPath = Path.Combine("/cfg", p);
-
+        private static void SetFile(string _filePath, string content) {
+            string filePath = _filePath.RemoveDriveLetter();
+            string newPath = Path.Combine("/cfg", filePath);
             FileAttributes attr = File.GetAttributes(filePath);
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory) {
                 //is directory -> create directory
@@ -75,6 +65,20 @@ namespace Antd.MachineStatus {
                 FileSystem.WriteFile(newPath, content);
                 Action.Mount("", newPath, filePath);
             }
+        }
+
+        private static string RemoveDriveLetter(this String fullPath) {
+            string p;
+            string[] split = fullPath.Split('/');
+            string drive = split[0];
+            if (drive.Contains(':')) {
+                string[] resplit = fullPath.Split('/').Skip(1).ToArray();
+                p = string.Join("/", resplit);
+            }
+            else {
+                p = string.Join("/", split);
+            }
+            return "/" + p;
         }
     }
 }
