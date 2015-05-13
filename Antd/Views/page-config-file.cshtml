@@ -50,16 +50,26 @@
                     else return "icon-folder fg-yellow";
                 }
             }
-            @foreach (Antd.DirItemModel fl in Model.ALL) {
+            @foreach (dynamic cfile in Model.ALL) {
                 <tr>
-                    <td style="width: 500px;"><i class="@DisplayIcon(fl.isFile) on-left"></i>@fl.path </td>
+                    <td style="width: 500px;"><i class="@DisplayIcon(cfile.isFile) on-left"></i>
+                        <p>@cfile.etcPath</p>
+                    </td>
                     <td style="width: 120px;">
-                        @if (fl.isFile == true) {
-                            <p class="button bg-cobalt export-conf" data-path="@fl.path">Export <i class="icon-arrow-right on-right"></i></p>
+                        @if (cfile.isFile == true) {
+                            <p class="button bg-cobalt export-conf" data-path="@cfile.etcPath">Export <i class="icon-arrow-right on-right"></i></p>
                         }
                     </td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        @if (cfile.hasCfg == true) {
+                            <p>@cfile.cfgPath</p>
+                        }
+                    </td>
+                    <td style="width: 120px;">
+                        @if (cfile.hasCfg == true) {
+                            <p class="button bg-darkViolet"> <i class="icon-pencil on-left"> Edit File</p>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

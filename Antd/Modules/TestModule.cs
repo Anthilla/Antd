@@ -48,6 +48,17 @@ namespace Antd {
                 return Response.AsJson(c);
             };
 
+            Get["/contains"] = x => {
+                bool restul;
+                string a = "/cfg/etc/Data/Data01Vol01";
+                string b = "/etc/Data/Data01Vol01";
+                if (a.Contains(b)) {
+                    restul = true;
+                }
+                else restul = false;
+                return Response.AsJson(restul);
+            };
+
             //Get["/dir"] = x => {
             //    DirectoryInfo root = new DirectoryInfo("/cfg");
             //    DirectoryLister.WalkDirectoryTree(root);
