@@ -50,7 +50,7 @@
                     else return "icon-folder fg-yellow";
                 }
             }
-            @foreach (Antd.DirItemModel fl in Model.folders) {
+            @foreach (Antd.DirItemModel fl in Model.ALL) {
                 <tr>
                     <td style="width: 500px;"><i class="@DisplayIcon(fl.isFile) on-left"></i>@fl.path </td>
                     <td style="width: 120px;">

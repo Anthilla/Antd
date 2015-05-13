@@ -32,6 +32,7 @@ using Nancy.Security;
 using Antd.Common;
 using System.Dynamic;
 using Antd.MachineStatus;
+using System.Collections.Generic;
 
 namespace Antd {
 
@@ -43,8 +44,21 @@ namespace Antd {
 
             Get["/file"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.folders = new DirectoryLister("/etc", true).FullList2;
-                //vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
+                HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
+                HashSet<DirItemModel> cfgList = new DirectoryLister("/cfg/etc", true).FullList2;
+
+                List<dynamic> nl = new List<dynamic>() { };
+                foreach (DirItemModel dir in etcList) {
+                    dynamic imod = new ExpandoObject();
+                    imod.isFile = dir.isFile;
+                    imod.etcPath = dir.path; 
+
+                    nl.Add(imod);
+                }
+
+
+                vmod.ALL = new DirectoryLister("/etc", true).FullList2;
+                vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-config-file", vmod];
             };
 
