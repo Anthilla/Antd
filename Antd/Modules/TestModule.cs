@@ -28,17 +28,13 @@
 ///-------------------------------------------------------------------------------------
 
 using Nancy;
-using System.Collections.Generic;
-using System.Management;
-using System.IO;
-using System;
 
 namespace Antd {
 
     public class TestModule : NancyModule {
+
         public TestModule()
             : base("/test") {
-
             Get["/"] = x => {
                 return Response.AsText("Hello World!");
             };

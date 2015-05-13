@@ -28,12 +28,11 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Log;
-using System;
 using System.IO;
 
 namespace Antd {
-    public class DirectoryWatcher {
 
+    public class DirectoryWatcher {
         private string path;
 
         public DirectoryWatcher(string _path) {

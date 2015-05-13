@@ -30,8 +30,8 @@
 using Antd.Common;
 using Nancy;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Antd {
 
@@ -39,7 +39,6 @@ namespace Antd {
 
         public RawModule()
             : base("/rawdata") {
-
             Get["/dir/{path*}"] = x => {
                 var p = x.path;
                 var model = new DirectoryLister("/" + p, false).FullList2;
@@ -51,8 +50,8 @@ namespace Antd {
                 var p = x.path;
                 var list = new DirectoryLister("/" + p, false).FullList2;
                 List<string> model = (from d in list
-                                     where d.isFile == true
-                                     select d.path).ToList();
+                                      where d.isFile == true
+                                      select d.path).ToList();
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

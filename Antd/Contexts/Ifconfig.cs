@@ -38,7 +38,8 @@ namespace Antd {
             CommandModel find = Command.Launch("find", "./ -name address", dir);
             if (find.isError()) {
                 return find.error;
-            } else {
+            }
+            else {
                 string row = (from i in find.outputTable
                               where i.Contains("eth")
                               select i).FirstOrDefault();

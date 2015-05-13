@@ -36,6 +36,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Antd.Status {
+
     public class Sysctl {
 
         private static List<SysctlModel> GetAllSysctls() {

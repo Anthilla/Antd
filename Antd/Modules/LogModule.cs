@@ -34,7 +34,6 @@ using Nancy.Security;
 namespace Antd {
 
     public class LogModule : NancyModule {
-
         private LogRepo repo = new LogRepo();
 
         public LogModule()

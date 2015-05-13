@@ -30,17 +30,20 @@
 using Newtonsoft.Json;
 using Quartz;
 using System;
-using System.Linq;
 
 namespace Antd.Scheduler {
+
     public class AntdJob {
+
         public class HelloJob : IJob {
+
             public void Execute(IJobExecutionContext context) {
                 Console.WriteLine("Greetings from HelloJob!");
             }
         }
 
         public class CommandJob : IJob {
+
             public void Execute(IJobExecutionContext context) {
                 JobKey key = context.JobDetail.Key;
                 JobDataMap dataMap = context.JobDetail.JobDataMap;

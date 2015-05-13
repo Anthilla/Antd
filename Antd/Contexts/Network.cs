@@ -40,6 +40,7 @@ namespace Antd {
 
             return network;
         }
+
         public static NetworkModel GetModel(string hostname) {
             var network = new NetworkModel();
             network.hostname = hostname;

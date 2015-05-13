@@ -33,7 +33,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd.ViewHelpers {
+
     public class VHStatus {
+
         public static List<StatusSysctlViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
             HashSet<string> paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { };
             foreach (SysctlModel data in stockData) {
@@ -61,8 +63,8 @@ namespace Antd.ViewHelpers {
                 }
 
                 var runningValue = (from s in runningData
-                                  where s.param == par
-                                  select s.value).FirstOrDefault();
+                                    where s.param == par
+                                    select s.value).FirstOrDefault();
                 if (runningValue == null) {
                     model.runningValue = "";
                 }
@@ -71,8 +73,8 @@ namespace Antd.ViewHelpers {
                 }
 
                 var antdValue = (from s in antdData
-                                  where s.param == par
-                                  select s.value).FirstOrDefault();
+                                 where s.param == par
+                                 select s.value).FirstOrDefault();
                 if (antdValue == null) {
                     model.antdValue = "";
                 }
@@ -85,7 +87,7 @@ namespace Antd.ViewHelpers {
             //        where l != null
             //        orderby l.label ascending
             //        select l).ToList();
-			return list;
+            return list;
         }
     }
 }

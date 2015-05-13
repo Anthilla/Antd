@@ -32,7 +32,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Antd.Scheduler {
+
     public class JobModel {
+
         [Key]
         public string _Id { get; set; }
 

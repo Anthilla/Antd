@@ -28,7 +28,9 @@
 ///-------------------------------------------------------------------------------------
 
 namespace Antd.ViewModels {
+
     public class StatusSysctlViewModel {
+
         public string label { get; set; }
 
         public string stockValue { get; set; }

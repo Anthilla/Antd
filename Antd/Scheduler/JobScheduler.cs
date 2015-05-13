@@ -34,8 +34,8 @@ using System;
 using System.Collections.Generic;
 
 namespace Antd.Scheduler {
-    public class JobScheduler {
 
+    public class JobScheduler {
         private static IScheduler __scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
         public static void Start(bool _recoverTasks) {
@@ -82,9 +82,11 @@ namespace Antd.Scheduler {
                 case TriggerModel.TriggerPeriod.IsOneTimeOnly:
                     trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
                     break;
+
                 case TriggerModel.TriggerPeriod.IsCron:
                     trigger = DefineCronTrigger(_trigger, _identity);
                     break;
+
                 default:
                     trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
                     break;

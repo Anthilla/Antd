@@ -32,6 +32,7 @@ using System;
 namespace Antd {
 
     public class LinqFiles {
+
         public static string GetFileText(string name) {
             string fileContents = String.Empty;
             if (System.IO.File.Exists(name)) {
@@ -39,6 +40,7 @@ namespace Antd {
             }
             return fileContents;
         }
+
         public static void SetFileText(string name, string text) {
             string fileContents = String.Empty;
             if (System.IO.File.Exists(name)) {

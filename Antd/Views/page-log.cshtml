@@ -46,14 +46,20 @@
         <tbody>
             @foreach (Antd.Log.LogModel log in Model) {
                 <tr>
-                    <td class="right"><p>@log.time</p></td>
-                    <td class="right"><p>@log.mode</p></td>
-                    <td class="right"><p>@log.file</p></td>
                     <td class="right">
-                        @if(log.oldfile != ""){
+                        <p>@log.time</p>
+                    </td>
+                    <td class="right">
+                        <p>@log.mode</p>
+                    </td>
+                    <td class="right">
+                        <p>@log.file</p>
+                    </td>
+                    <td class="right">
+                        @if (log.oldfile != "") {
                             <p>@log.oldfile</p>
                         }
-                        else{
+                        else {
                             <p>&nbsp</p>
                         }
                     </td>

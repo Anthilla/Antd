@@ -76,7 +76,8 @@ namespace Antd {
             proc.TIME = procJsonCell[6];
             if (procJsonCell.Length > 8) {
                 proc.CMD = procJsonCell[7] + " " + procJsonCell[8];
-            } else if (procJsonCell.Length > 7) {
+            }
+            else if (procJsonCell.Length > 7) {
                 proc.CMD = procJsonCell[7];
             }
             return proc;

@@ -32,8 +32,8 @@
 @{Layout = "_layout.cshtml";}
 
 @section MainContent {
-    @functions{                
-        public string[] DaysOfTheWeek = new string[] { 
+    @functions{
+        public string[] DaysOfTheWeek = new string[] {
             "Monday",
 	        "Tuesday",
 	        "Wednesday",
@@ -43,7 +43,7 @@
 	        "Sunday"
         };
 
-        public string[] MonthsOfTheYear = new string[] { 
+        public string[] MonthsOfTheYear = new string[] {
             "January",
             "February",
             "March",
@@ -133,7 +133,7 @@
                 </div>
                 <div class="span10">
                     <input name="CronDays" id="CronDaysPeriodic" type="radio" checked />
-                    - 
+                    -
                 <p style="display: inline-block;">Every</p>
                     <input id="CronDays" type="text" value="1" />
                     <p style="display: inline-block;">day(s)</p>
@@ -145,9 +145,9 @@
                 </div>
                 <div class="span10" id="CronDotW">
                     <input name="CronDays" id="CronDaysDaysOfWeek" type="radio" />
-                    - 
+                    -
                 @foreach (string day in DaysOfTheWeek) {
-                    <input class="cronDayOfTheWeek" type="checkbox" checked="checked" value="@day.Substring(0, 3).ToUpper()"/>
+                    <input class="cronDayOfTheWeek" type="checkbox" checked="checked" value="@day.Substring(0, 3).ToUpper()" />
                     <p style="display: inline-block;">@day</p>
                 }
                 </div>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="span11" id="CronMotY">
                     @foreach (string month in MonthsOfTheYear) {
-                        <input class="cronMonthOfTheYear" type="checkbox" checked="checked" value="@GetMonthNumber(month)"/>
+                        <input class="cronMonthOfTheYear" type="checkbox" checked="checked" value="@GetMonthNumber(month)" />
                         <p style="display: inline-block;">@month</p>
                     }
                 </div>
@@ -208,7 +208,7 @@
         </thead>
         <tbody>
             @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
-                @functions{                
+                @functions{
                     public string SetData(string json) {
                         string[] data = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
                         string d = String.Join(", ", data);

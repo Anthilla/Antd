@@ -32,6 +32,7 @@ using Newtonsoft.Json;
 using System;
 
 namespace Antd {
+
     public class Action {
 
         public static void Schedule(string _alias, string _command, string _args) {
@@ -39,7 +40,7 @@ namespace Antd {
             int startM = DateTime.Now.Minute + 1;
             int endH = startH + 1;
             int endM = startM;
-            string[] data = new string[] { 
+            string[] data = new string[] {
                     _command,
                     _args
                 };

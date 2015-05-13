@@ -36,6 +36,7 @@ using System.Dynamic;
 namespace Antd {
 
     public class StatusModule : NancyModule {
+
         public StatusModule()
             : base("/status") {
             this.RequiresAuthentication();

@@ -2,7 +2,9 @@
 using System.IO;
 
 namespace Antd.Common {
+
     public static class FileSystem {
+
         /// <summary>
         /// If file exists return content else return empty string
         /// </summary>
@@ -18,12 +20,13 @@ namespace Antd.Common {
                 return String.Empty;
             }
         }
-        
+
         public static string ReadFile(string directory, string filename) {
             string path = Path.Combine(directory, filename);
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
-            } else {
+            }
+            else {
                 ConsoleLogger.Warn("File {0} doesn't exist in {1}", filename, directory);
                 return String.Empty;
             }

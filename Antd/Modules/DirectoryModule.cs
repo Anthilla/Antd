@@ -30,7 +30,6 @@
 using Antd.ViewModels;
 using Nancy;
 using Nancy.Security;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd {

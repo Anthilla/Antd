@@ -27,14 +27,10 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Antd.UnitFiles {
+
     public class CreateUnit {
+
         public static void ForAntd() {
             UnitFile.Write("antd.service");
         }

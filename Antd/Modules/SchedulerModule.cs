@@ -62,7 +62,7 @@ namespace Antd {
 
                 string _cron = (string)this.Request.Form.CronResult;
 
-                string[] data = new string[] { 
+                string[] data = new string[] {
                     _command,
                     _args
                 };

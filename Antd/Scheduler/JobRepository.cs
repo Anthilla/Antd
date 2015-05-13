@@ -33,7 +33,9 @@ using System.Dynamic;
 using System.Linq;
 
 namespace Antd.Scheduler {
+
     public class JobRepository {
+
         public static List<JobModel> GetAll() {
             var list = DeNSo.Session.New.Get<JobModel>().ToArray();
             if (list.Length == 0) {
