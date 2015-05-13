@@ -46,32 +46,49 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = repo.GetAll();
                 vmod.folders = new DirectoryLister("/etc", true).FullList2;
-                vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
+                //vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-config-file", vmod];
             };
 
-            Post["/file"] = x => {
-                string filename = this.Request.Form.ConfigFileName;
-                string root = this.Request.Form.ConfigFilePath;
-                string content = this.Request.Form.FileContent;
-                FileSystem.WriteFile(root, filename, content);
-                return Response.AsRedirect("/config/file");
+            Post["/export/file/{path*}"] = x => {
+                string path = x.path;
+                string[] arr = new string[] { };
+                if (path.Contains("/")) {
+                    arr = path.Split('/');
+                }
+                if (path.Contains(@"\")) {
+                    arr = path.Split('\\');
+                }
+                string fname = arr[arr.Length - 1];
+                //todo
+                //a = read file path
+                //b = create file /cfg/+fname+
+                //c = cpoy a.text in b
+                return Response.AsJson(fname);
             };
 
-            Post["/"] = x => {
-                string fileName = this.Request.Form.Name;
-                string content = this.Request.Form.Content;
-                string path = this.Request.Form.Path;
-                string xt;
-                if (this.Request.Form.Extns == "" || this.Request.Form.Extns == null) {
-                    xt = "";
-                }
-                else {
-                    xt = this.Request.Form.Extns;
-                }
-                repo.Create(fileName, content, path, xt);
-                return Response.AsRedirect("/filelayout");
-            };
+            //Post["/file"] = x => {
+            //    string filename = this.Request.Form.ConfigFileName;
+            //    string root = this.Request.Form.ConfigFilePath;
+            //    string content = this.Request.Form.FileContent;
+            //    FileSystem.WriteFile(root, filename, content);
+            //    return Response.AsRedirect("/config/file");
+            //};
+
+            //Post["/"] = x => {
+            //    string fileName = this.Request.Form.Name;
+            //    string content = this.Request.Form.Content;
+            //    string path = this.Request.Form.Path;
+            //    string xt;
+            //    if (this.Request.Form.Extns == "" || this.Request.Form.Extns == null) {
+            //        xt = "";
+            //    }
+            //    else {
+            //        xt = this.Request.Form.Extns;
+            //    }
+            //    repo.Create(fileName, content, path, xt);
+            //    return Response.AsRedirect("/filelayout");
+            //};
         }
     }
 }

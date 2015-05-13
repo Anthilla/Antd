@@ -156,6 +156,7 @@
     <Compile Include="Config\Anth_ParamWriter.cs" />
     <Compile Include="Config\SystemConfig.cs" />
     <Compile Include="Config\SelfConfig.cs" />
+    <Compile Include="MachineStatus\ConfigEtc.cs" />
     <Compile Include="MachineStatus\Networkd.cs" />
     <Compile Include="MachineStatus\User.cs" />
     <Compile Include="MachineStatus\Mount.cs" />
