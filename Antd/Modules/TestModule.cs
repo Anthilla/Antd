@@ -48,18 +48,6 @@ namespace Antd {
                 return Response.AsJson(c);
             };
 
-            Get["/db"] = x => {
-                FileLayoutModel m = new FileLayoutModel();
-                m._Id = Guid.NewGuid().ToString();
-                m.content = "ciao";
-                m.extension = "ciao";
-                m.guid = "ciao";
-                m.layoutname = "ciao";
-                m.path = "ciao";
-                DeNSo.Session.New.Set(m);
-                return Response.AsJson(m);
-            };
-
             //Get["/dir"] = x => {
             //    DirectoryInfo root = new DirectoryInfo("/cfg");
             //    DirectoryLister.WalkDirectoryTree(root);

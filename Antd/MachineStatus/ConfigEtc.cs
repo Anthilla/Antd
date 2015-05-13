@@ -39,32 +39,34 @@ using System.Threading.Tasks;
 namespace Antd.MachineStatus {
     public static class ConfigEtc {
 
-        public static void Export(string filePath) { 
+        public static void Export(string filePath) {
             string txt = GetFileText(filePath);
             SetFile(filePath, txt);
-            //todo mount dir or file...
         }
 
-        private static string GetFileText(string filePath) {
-            return FileSystem.ReadFile(filePath.RemoveDriveLetter());
+        private static string GetFileText(string _filePath) {
+            string filePath = _filePath.RemoveDriveLetter();
+            string text = FileSystem.ReadFile(filePath);
+            SaveOriginalConf(filePath, text);
+            return text;
         }
 
         private static void SetFile(string _filePath, string content) {
             string filePath = _filePath.RemoveDriveLetter();
             string newPath = Path.Combine("/cfg", filePath);
-            FileAttributes attr = File.GetAttributes(filePath);
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory) {
-                //is directory -> create directory
-                Directory.CreateDirectory(newPath);
-                Action.Mount("-o bind", newPath, filePath);
-            }
-            else {
-                //is file -> get directory, create directory
-                string d = Path.GetDirectoryName(newPath);
-                Directory.CreateDirectory(d);
-                FileSystem.WriteFile(newPath, content);
-                Action.Mount("", newPath, filePath);
-            }
+            Directory.CreateDirectory(Path.GetDirectoryName(newPath));
+            FileSystem.WriteFile(newPath, content);
+            Command.Launch("mount", newPath + " " + filePath);
+        }
+
+        private static void SaveOriginalConf(string fileName, string content) {
+            ConfigFileModel model = new ConfigFileModel();
+            model._Id = Guid.NewGuid().ToString();
+            model.path = fileName;
+            model.content = content;
+            model.version = 0;
+            model.timestamp = Timestamp.Now;
+            DeNSo.Session.New.Set(model);
         }
 
         private static string RemoveDriveLetter(this String fullPath) {

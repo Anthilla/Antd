@@ -202,19 +202,17 @@ namespace Antd {
     }
     #endregion Networkd Model
 
-    #region FileLayout Model
-    public class FileLayoutModel {
+    #region ConfigFile Model
+    public class ConfigFileModel {
         public string _Id { get; set; }
 
-        public string guid { get; set; }
+        public string timestamp { get; set; }
 
-        public string layoutname { get; set; }
+        public int version { get; set; }
 
         public string content { get; set; }
 
         public string path { get; set; }
-
-        public string extension { get; set; }
     }
-    #endregion FileLayout Model
+    #endregion ConfigFile Model
 }

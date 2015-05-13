@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
-using Antd.Reposotories;
 using Nancy;
 using Newtonsoft.Json;
 using System.Linq;
@@ -37,23 +36,9 @@ using System.Collections.Generic;
 namespace Antd {
 
     public class RawModule : NancyModule {
-        private FileLayoutRepository fileLayotRepo = new FileLayoutRepository();
 
         public RawModule()
             : base("/rawdata") {
-
-            Get["/filelayout"] = x => {
-                var model = fileLayotRepo.GetAll();
-                var json = JsonConvert.SerializeObject(model);
-                return json;
-            };
-
-            Get["/filelayout/{guid}"] = x => {
-                var guid = (string)x.guid;
-                var model = fileLayotRepo.GetByGuid(guid);
-                var json = JsonConvert.SerializeObject(model);
-                return json;
-            };
 
             Get["/dir/{path*}"] = x => {
                 var p = x.path;

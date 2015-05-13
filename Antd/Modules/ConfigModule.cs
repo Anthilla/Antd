@@ -31,13 +31,11 @@ using Nancy;
 using Nancy.Security;
 using Antd.Common;
 using System.Dynamic;
-using Antd.Reposotories;
 using Antd.MachineStatus;
 
 namespace Antd {
 
     public class ConfigModule : NancyModule {
-        private FileLayoutRepository repo = new FileLayoutRepository();
 
         public ConfigModule()
             : base("/config") {
@@ -45,7 +43,6 @@ namespace Antd {
 
             Get["/file"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = repo.GetAll();
                 vmod.folders = new DirectoryLister("/etc", true).FullList2;
                 //vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
                 return View["page-config-file", vmod];
