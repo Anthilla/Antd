@@ -29,6 +29,15 @@ namespace Antd.Common {
             }
         }
 
+        public static void WriteFile(string path, string content) {
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+            using (StreamWriter sw = File.CreateText(path)) {
+                sw.Write(content);
+            }
+        }
+
         public static void WriteFile(string directory, string filename, string content) {
             Directory.CreateDirectory(directory);
             string path = Path.Combine(directory, filename);

@@ -32,6 +32,7 @@ using Nancy.Security;
 using Antd.Common;
 using System.Dynamic;
 using Antd.Reposotories;
+using Antd.MachineStatus;
 
 namespace Antd {
 
@@ -52,19 +53,8 @@ namespace Antd {
 
             Post["/export/file/{path*}"] = x => {
                 string path = x.path;
-                string[] arr = new string[] { };
-                if (path.Contains("/")) {
-                    arr = path.Split('/');
-                }
-                if (path.Contains(@"\")) {
-                    arr = path.Split('\\');
-                }
-                string fname = arr[arr.Length - 1];
-                //todo
-                //a = read file path
-                //b = create file /cfg/+fname+
-                //c = cpoy a.text in b
-                return Response.AsJson(fname);
+                ConfigEtc.Export(path);
+                return Response.AsJson("done");
             };
 
             //Post["/file"] = x => {

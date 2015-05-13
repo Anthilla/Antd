@@ -53,7 +53,9 @@
             @foreach (Antd.DirItemModel fl in Model.folders) {
                 <tr>
                     <td style="width: 500px;"><i class="@DisplayIcon(fl.isFile) on-left"></i>@fl.path </td>
-                    <td style="width: 120px;"><p class="button bg-cobalt export-conf" data-path="@fl.path">Export <i class="icon-arrow-right on-right"></i></p></td>
+                    <td style="width: 120px;">
+                        <p class="button bg-cobalt export-conf" data-path="@fl.path">Export <i class="icon-arrow-right on-right"></i></p>
+                    </td>
                     <td> </td>
                     <td> </td>
                 </tr>

@@ -33,17 +33,46 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Antd.MachineStatus {
     public class ConfigEtc {
-        public static string GetFileText(string filePath) {
+
+        public static void Export(string filePath) { 
+            string txt = GetFileText(filePath);
+            SetFile(filePath, txt);
+            //todo mount dir or file...
+        }
+
+        private static string GetFileText(string filePath) {
             return FileSystem.ReadFile(filePath);
         }
 
-        public static void SetFile(string fname) {
-            string root = "/cfg/etc/";
-            Directory.CreateDirectory(root);
+        private static void SetFile(string filePath, string content) {
+            string p;
+            string[] split = filePath.Split('/');
+            string drive = split[0];
+            if (drive.Contains(':')) {
+                string[] resplit = filePath.Split('/').Skip(1).ToArray();
+                p = string.Join("/", resplit);
+            }
+            else {
+                p = string.Join("/", split);
+            }
+            string path = Path.Combine("/cfg", p);
+
+            FileAttributes attr = File.GetAttributes(filePath);
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory) {
+                //is directory -> create directory
+                Directory.CreateDirectory(path);
+            }
+            else {
+                //is file -> get directory, create directory
+                string d = Path.GetDirectoryName(path);
+                Directory.CreateDirectory(d);
+                FileSystem.WriteFile(path, content);
+            }
         }
     }
 }
