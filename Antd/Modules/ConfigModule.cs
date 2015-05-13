@@ -47,7 +47,7 @@ namespace Antd {
                 vmod.ALL = repo.GetAll();
                 vmod.folders = new DirectoryLister("/etc", true).FullList2;
                 vmod.antdConfig = new DirectoryLister("/cfg/etc", true).FullList2;
-                return View["page-config-file"];
+                return View["page-config-file", vmod];
             };
 
             Post["/file"] = x => {

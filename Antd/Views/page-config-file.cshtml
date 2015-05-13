@@ -33,7 +33,7 @@
 
 @section Dashboard
 {
-@*    <form action="/filelayout" method="POST" enctype="multipart/form-data">
+    @*    <form action="/filelayout" method="POST" enctype="multipart/form-data">
         <div class="grid">
             <div class="row">
                 <div class="span6">
@@ -118,7 +118,7 @@
                     if (isfile == true) {
                         return "icon-file";
                     }
-                    else return "icon-folder";
+                    else return "icon-folder fg-yellow";
                 }
             }
             @foreach (Antd.DirItemModel fl in Model.folders) {
