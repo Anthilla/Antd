@@ -101,10 +101,9 @@ namespace Antd {
     internal class Startup {
 
         public void Configuration(IAppBuilder app) {
-            //write defaults and stuff
             ConsoleLogger.Log("setting default configuration...");
             SelfConfig.WriteDefaults();
-            ConsoleLogger.Log("    set configuration for: antd...");
+            ConsoleLogger.Log("    antd configuration -> saved");
 
             //JobScheduler.Start(false);
             //ConsoleLogger.Log("     scheduler -> loaded");
@@ -124,12 +123,13 @@ namespace Antd {
             Networkd.CreateFirstUnit();
             ConsoleLogger.Log("    networkd -> unit created");
             Networkd.RestartNetworkdDir();
-            ConsoleLogger.Log("    networkd -> apply new configuration");
+            ConsoleLogger.Log("    networkd -> applied");
             ConsoleLogger.Log(Networkd.StatusNetworkdDir());
-
 
             Command.Launch("chmod", "777 *.xml");
             ConsoleLogger.Log("    check configuration...");
+            SystemSetupBoot.Start();
+            ConsoleLogger.Log("    save configuration...");
 
             ConsoleLogger.Log("loading service configuration");
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
@@ -155,6 +155,7 @@ namespace Antd {
                 Directory.CreateDirectory(root);
             }
             databases = new string[] { root };
+            ConsoleLogger.Log("        database path(s): {0}", String.Join(", ", databases));
 
             DeNSo.Configuration.BasePath = databases;
             DeNSo.Configuration.EnableJournaling = true;
