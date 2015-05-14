@@ -75,29 +75,6 @@ namespace Antd {
                 var elapsed = DateTime.Now - startTime;
                 ConsoleLogger.Log("loaded in: {0}", elapsed);
 
-                //ConsoleLogger.Log("doing more operations--------------------------");
-                //JobScheduler.Start(false);
-                //ConsoleLogger.Log("     scheduler -> loaded");
-
-                //Sysctl.WriteConfig();
-                //ConsoleLogger.Log("     sysctl.config -> created");
-                //Sysctl.LoadConfig();
-                //ConsoleLogger.Log("     sysctl.config -> loaded");
-
-                //Mount.WriteConfig();
-                //ConsoleLogger.Log("     mounts -> created");
-
-                //Networkd.EnableRequiredServices();
-                //ConsoleLogger.Log("     networkd -> enabled");
-                //Networkd.MountNetworkdDir();
-                //ConsoleLogger.Log("     networkd -> mounted");
-                //Networkd.CreateFirstUnit();
-                //ConsoleLogger.Log("     networkd -> unit created");
-                //Networkd.RestartNetworkdDir();
-                //ConsoleLogger.Log("     networkd -> apply new configuration");
-                //ConsoleLogger.Log(Networkd.StatusNetworkdDir());
-                //ConsoleLogger.Log("done-------------------------------------------");
-
                 //ConsoleLogger.Log("");
                 //ServiceUnitInfo.SetDefaultUnitInfo();
                 //ConsoleLogger.Log("misc -> default unit info saved to database");
