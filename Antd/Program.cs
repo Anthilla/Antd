@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
-using Antd.Scheduler;
 using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
