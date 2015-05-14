@@ -50,12 +50,6 @@ namespace Antd {
             SystemSetupBoot.Start();
             ConsoleLogger.Log("applying system configuration...");
 
-            //SystemConfig.FirstLaunchDefaults();
-            //ConsoleLogger.Log("setting core system configuration...");
-
-            //Cfg.FirstLaunchDefaults();
-            //ConsoleLogger.Log("setting core cfg configuration...");
-
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -81,9 +75,6 @@ namespace Antd {
 
                 //UnitFile.WriteForSelf();
                 //ConsoleLogger.Log("self -> unit file created");
-
-                //Systemctl.Enable("antd.service");
-                //ConsoleLogger.Log("self -> unit file enabled");
 
                 //Console.WriteLine("");
                 //string[] watchThese = new string[] {
@@ -111,9 +102,9 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             //write defaults and stuff
-            //ConsoleLogger.Log("setting default configuration...");
-            //SelfConfig.WriteDefaults();
-            //ConsoleLogger.Log("    set configuration for: antd...");
+            ConsoleLogger.Log("setting default configuration...");
+            SelfConfig.WriteDefaults();
+            ConsoleLogger.Log("    set configuration for: antd...");
 
             //JobScheduler.Start(false);
             //ConsoleLogger.Log("     scheduler -> loaded");
@@ -136,18 +127,9 @@ namespace Antd {
             ConsoleLogger.Log("    networkd -> apply new configuration");
             ConsoleLogger.Log(Networkd.StatusNetworkdDir());
 
-            //SystemConfig.WriteDefaults();
-            //ConsoleLogger.Log("    set configuration for: system...");
-            //Cfg.LaunchDefaults();
-            //ConsoleLogger.Log("    set configuration for: cfg...");
-            //Network.LaunchDefaults();
-            //ConsoleLogger.Log("    set configuration for: network...");
-            //SystemDataRepo.LaunchDefaults();
-            //ConsoleLogger.Log("    set configuration for: systemDataRepo...");
-            //ZfsMount.LaunchDefaults();
-            //ConsoleLogger.Log("    set configuration for: zfsMount...");
-            //Command.Launch("chmod", "777 *.xml");
-            //ConsoleLogger.Log("    check configuration...");
+
+            Command.Launch("chmod", "777 *.xml");
+            ConsoleLogger.Log("    check configuration...");
 
             ConsoleLogger.Log("loading service configuration");
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };

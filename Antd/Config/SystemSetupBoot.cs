@@ -56,6 +56,12 @@ namespace Antd {
                 "mount /mnt/cdrom/DIRS/DIR_var_db_pkg.squashfs.xz /var/db/pkg",
                 "mount /mnt/cdrom/DIRS/DIR_var_lib_portage /var/lib/portage",
                 "mount /mnt/cdrom/DIRS/DIR_var_log /var/log",
+                "zpool import Data01",
+                "zpool import Data02",
+                "zfs mount -a",
+                "rsync -aHAz --delete-during /tmp/ /Data/Data01Vol01/tmp/",
+                "rm -fR /tmp/* ",
+                "mount -o bind /Data/Data01Vol01/tmp /tmp"
 
                     //"mount -o bind /mnt/cdrom /System",
                     //"mount -o bind /mnt/cdrom /boot",
