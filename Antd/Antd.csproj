@@ -150,6 +150,7 @@
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Log.cs" />
+    <Compile Include="Config\SystemSetupBoot.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Proc.cs" />
