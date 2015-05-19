@@ -27,7 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Systemd;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -177,12 +176,6 @@ namespace Antd {
                 string pid = (string)this.Request.Form.data;
                 CommandModel command = Command.Launch("kill", pid);
                 return Response.AsRedirect("/procs");
-            };
-
-            Get["/units"] = x => {
-                List<UnitModel> units = Units.All;
-                //return JsonConvert.SerializeObject(u);
-                return View["page-units", units];
             };
         }
     }
