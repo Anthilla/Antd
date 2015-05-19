@@ -47,6 +47,9 @@
                     <td>@unit.status </td>
                     <td>
                         <a href="#" class="button bg-gray unit-start" data-unit="@unit.name">Start</a>
+                        <a href="#" class="button bg-gray unit-stop" data-unit="@unit.name">Stop</a>
+                        <a href="#" class="button bg-gray unit-enable" data-unit="@unit.name">Enable</a>
+                        <a href="#" class="button bg-gray unit-disable" data-unit="@unit.name">Disable</a>
                     </td>
                 </tr>
             }
@@ -54,6 +57,67 @@
     </table>
 
     <script type="text/javascript">
+        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+        $('a.unit-start').click(function () {
+            var p = $(this).attr('data-unit');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/units/mgmt/start/' + p,
+                type: 'POST',
+                data: JSON.stringify(p),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('a.unit-stop').click(function () {
+            var p = $(this).attr('data-unit');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/units/mgmt/stop/' + p,
+                type: 'POST',
+                data: JSON.stringify(p),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('a.unit-enable').click(function () {
+            var p = $(this).attr('data-unit');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/units/mgmt/enable/' + p,
+                type: 'POST',
+                data: JSON.stringify(p),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('a.unit-disable').click(function () {
+            var p = $(this).attr('data-unit');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/units/mgmt/disable/' + p,
+                type: 'POST',
+                data: JSON.stringify(p),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');
