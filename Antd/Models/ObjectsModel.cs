@@ -158,6 +158,21 @@ namespace Antd {
 
     #endregion Sysctl Model
 
+    #region Uptime Model
+
+    public class UptimeModel {
+
+        public string uptime { get; set; }
+
+        public string users { get; set; }
+
+        public string loadAverage { get; set; }
+
+        public string[] loadAverageValues { get; set; }
+    }
+
+    #endregion Sysctl Model
+
     #region Mount Model
 
     public class MountModel {

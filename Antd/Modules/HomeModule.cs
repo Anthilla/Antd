@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Status;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -46,9 +47,9 @@ namespace Antd {
                 vmod.os = Version.GetModel().value;
                 vmod.time = Command.Launch("date", "").output;
                 vmod.procinfo = "";
-                vmod.uptime = Command.Launch("uptime", "").output;
+                vmod.uptime = Uptime.UpTime;
                 vmod.runprocs = Proc.All.ToArray().Length.ToString();
-                vmod.CPUload = "";
+                vmod.CPUload = Uptime.LoadAverage;
                 vmod.CPUusage = "";
                 vmod.rmem = "";
                 vmod.ldskspc = "";
