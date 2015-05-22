@@ -27,22 +27,24 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System;
 using Antd.Boot;
 using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
-using System;
 
-namespace Antd {
-
-    internal static class Program {
-
-        private static void Main(string[] args) {
-            DateTime startTime = DateTime.Now;
+namespace Antd
+{
+    internal static class Program
+    {
+        private static void Main(string[] args)
+        {
+            var startTime = DateTime.Now;
             Console.Title = "ANTD";
-            string uri = SelfConfig.GetAntdUri();
+            var uri = SelfConfig.GetAntdUri();
             //try {
-            using (WebApp.Start<Startup>(uri)) {
+            using (WebApp.Start<Startup>(uri))
+            {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
                 ConsoleLogger.Success("antd is running");
@@ -58,9 +60,10 @@ namespace Antd {
         }
     }
 
-    internal class Startup {
-
-        public void Configuration(IAppBuilder app) {
+    internal class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
             ConsoleLogger.Log("loading service configuration");
             AntdBoot.CheckDirectories();
             AntdBoot.SetCoreParameters();

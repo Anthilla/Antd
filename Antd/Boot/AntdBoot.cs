@@ -27,26 +27,25 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.IO;
 using Antd.Common;
 using Antd.Scheduler;
 using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
-using System.IO;
 
 namespace Antd.Boot {
-
     public class AntdBoot {
-
-        public static string[] directories = new string[] {
+        private readonly static string[] Directories =
+        {
             "/framework/antd",
             "/framework/anthillasp",
             "/framework/anthillaas"
         };
 
         public static void CheckDirectories() {
-            foreach (string path in directories) {
+            foreach (var path in Directories) {
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
                 }
@@ -55,7 +54,7 @@ namespace Antd.Boot {
         }
 
         public static void CheckSysctl(bool isActive) {
-            if (isActive == true) {
+            if (isActive) {
                 Sysctl.WriteConfig();
                 Sysctl.LoadConfig();
                 ConsoleLogger.Success("    sysctl -> loaded");
@@ -71,11 +70,11 @@ namespace Antd.Boot {
         }
 
         public static void StartNetworkd() {
-            Antd.Status.Networkd.EnableRequiredServices();
-            Antd.Status.Networkd.MountNetworkdDir();
-            Antd.Status.Networkd.CreateFirstUnit();
-            Antd.Status.Networkd.RestartNetworkdDir();
-            ConsoleLogger.Info(Antd.Status.Networkd.StatusNetworkdDir());
+            Networkd.EnableRequiredServices();
+            Networkd.MountNetworkdDir();
+            Networkd.CreateFirstUnit();
+            Networkd.RestartNetworkdDir();
+            ConsoleLogger.Info(Networkd.StatusNetworkdDir());
             ConsoleLogger.Success("    networkd -> loaded");
         }
 
@@ -85,13 +84,14 @@ namespace Antd.Boot {
         }
 
         public static void StartDirectoryWatcher(bool isActive) {
-            if (isActive == true) {
-                string[] watchThese = new string[] {
-                        "/cfg",
-                        "/proc/sys",
-                        "/sys/class/net"
-                    };
-                foreach (string folder in watchThese) {
+            if (isActive) {
+                string[] watchThese =
+                {
+                    "/cfg",
+                    "/proc/sys",
+                    "/sys/class/net"
+                };
+                foreach (var folder in watchThese) {
                     new DirectoryWatcher(folder).Watch();
                 }
                 ConsoleLogger.Success("    directory watcher -> loaded");
@@ -103,17 +103,17 @@ namespace Antd.Boot {
 
         public static void StartDatabase() {
             string[] databases;
-            string root = SelfConfig.GetAntdDb();
+            var root = SelfConfig.GetAntdDb();
             if (!Directory.Exists(root)) {
                 Directory.CreateDirectory(root);
             }
-            databases = new string[] { root };
+            databases = new[] { root };
             DatabaseBoot.Start(databases);
             ConsoleLogger.Success("    database -> loaded");
         }
 
         public static void StartSignalR(IAppBuilder app, bool isActive) {
-            if (isActive == true) {
+            if (isActive) {
                 var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
                 app.MapSignalR(hubConfiguration);
                 ConsoleLogger.Success("    signalR -> loaded");
