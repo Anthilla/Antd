@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Boot;
 using Antd.Common;
 using Antd.Status;
 using Microsoft.AspNet.SignalR;
@@ -35,7 +36,6 @@ using Nancy;
 using Owin;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace Antd {
 
@@ -46,17 +46,9 @@ namespace Antd {
             Console.Title = "ANTD";
             ConsoleLogger.Log("loading application...");
 
-            SystemSetupBoot.Start();
-            ConsoleLogger.Log("applying system configuration...");
+            ConsoleLogger.Log("checking directories...");
+            AntdBoot.CheckDirectories();
 
-            var stop = new ManualResetEvent(false);
-            Console.CancelKeyPress +=
-                (sender, e) => {
-                    Console.WriteLine("^C");
-                    Database.ShutDown();
-                    stop.Set();
-                    e.Cancel = true;
-                };
             string uri = SelfConfig.GetAntdUri();
             ConsoleLogger.Log("initializing antd");
             //try {
@@ -67,13 +59,6 @@ namespace Antd {
                 ConsoleLogger.Log("service is now running");
                 var elapsed = DateTime.Now - startTime;
                 ConsoleLogger.Log("loaded in: {0}", elapsed);
-
-                //ConsoleLogger.Log("");
-                //ServiceUnitInfo.SetDefaultUnitInfo();
-                //ConsoleLogger.Log("misc -> default unit info saved to database");
-
-                //UnitFile.WriteForSelf();
-                //ConsoleLogger.Log("self -> unit file created");
 
                 //Console.WriteLine("");
                 //string[] watchThese = new string[] {
@@ -86,7 +71,7 @@ namespace Antd {
                 //    ConsoleLogger.Log("watcher enabled for {0}", folder);
                 //}
 
-                stop.WaitOne();
+                Console.ReadLine();
             }
             /*} catch (System.Reflection.TargetInvocationException ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -100,37 +85,21 @@ namespace Antd {
     internal class Startup {
 
         public void Configuration(IAppBuilder app) {
-            ConsoleLogger.Log("setting default configuration...");
-            SelfConfig.WriteDefaults();
-            ConsoleLogger.Log("    antd configuration -> saved");
+            ConsoleLogger.Log("loading service configuration");
+            AntdBoot.SetCoreParameters();
+            ConsoleLogger.Log("    antd core parameters -> loaded");
 
-            //JobScheduler.Start(false);
-            //ConsoleLogger.Log("     scheduler -> loaded");
+            AntdBoot.LoadScheduler(false);
+            ConsoleLogger.Log("    scheduler -> loaded");
 
             //Sysctl.WriteConfig();
             //ConsoleLogger.Log("     sysctl.config -> created");
             //Sysctl.LoadConfig();
             //ConsoleLogger.Log("     sysctl.config -> loaded");
 
-            //Mount.WriteConfig();
-            //ConsoleLogger.Log("     mounts -> created");
+            AntdBoot.Networkd();
+            ConsoleLogger.Log("    networkd -> loaded");
 
-            Networkd.EnableRequiredServices();
-            ConsoleLogger.Log("    networkd -> enabled");
-            Networkd.MountNetworkdDir();
-            ConsoleLogger.Log("    networkd -> mounted");
-            Networkd.CreateFirstUnit();
-            ConsoleLogger.Log("    networkd -> unit created");
-            Networkd.RestartNetworkdDir();
-            ConsoleLogger.Log("    networkd -> applied");
-            ConsoleLogger.Log(Networkd.StatusNetworkdDir());
-
-            Command.Launch("chmod", "777 *.xml");
-            ConsoleLogger.Log("    check configuration...");
-            SystemSetupBoot.Write();
-            ConsoleLogger.Log("    save configuration...");
-
-            ConsoleLogger.Log("loading service configuration");
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
             app.MapSignalR(hubConfiguration);
             ConsoleLogger.Log("    signalR -> loaded");

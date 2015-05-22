@@ -15,6 +15,26 @@ namespace Antd.Common {
                 , message);
         }
 
+        public static void Info(string message, params object[] args) {
+            if (args.Count() > 0) message = String.Format(message, args);
+            ConsoleColor currentColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("{0}{1}"
+                , ConsoleTime.GetTime(DateTime.Now)
+                , message);
+            Console.ForegroundColor = currentColor;
+        }
+
+        public static void Success(string message, params object[] args) {
+            if (args.Count() > 0) message = String.Format(message, args);
+            ConsoleColor currentColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("{0}{1}"
+                , ConsoleTime.GetTime(DateTime.Now)
+                , message);
+            Console.ForegroundColor = currentColor;
+        }
+
         public static void Warn(string message, params object[] args) {
             if (args.Count() > 0) message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
