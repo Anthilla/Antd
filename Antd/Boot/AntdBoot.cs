@@ -27,16 +27,18 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System.IO;
 using Antd.Common;
 using Antd.Scheduler;
 using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
+using System.IO;
 
 namespace Antd.Boot {
+
     public class AntdBoot {
+
         private readonly static string[] Directories =
         {
             "/framework/antd",
