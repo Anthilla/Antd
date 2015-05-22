@@ -27,14 +27,16 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
 using Antd.Boot;
 using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
+using System;
 
 namespace Antd {
+
     internal static class Program {
+
         private static void Main(string[] args) {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
@@ -57,6 +59,7 @@ namespace Antd {
     }
 
     internal class Startup {
+
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading service configuration");
             AntdBoot.CheckDirectories();

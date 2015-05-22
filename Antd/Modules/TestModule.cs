@@ -43,7 +43,6 @@ namespace Antd {
                 var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
             };
-
         }
     }
 }

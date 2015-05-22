@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
+
 namespace Antd {
 
     public class NetworkInfo {
