@@ -47,7 +47,7 @@ namespace Antd {
             Get["/file"] = x => {
                 dynamic vmod = new ExpandoObject();
                 HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
-                HashSet<DirItemModel> cfgList = new DirectoryLister("/cfg/etc", true).FullList2;
+                HashSet<DirItemModel> cfgList = new DirectoryLister("/antd/etc", true).FullList2;
                 List<dynamic> nl = new List<dynamic>() { };
                 foreach (DirItemModel dir in etcList) {
                     dynamic imod = new ExpandoObject();
@@ -56,8 +56,6 @@ namespace Antd {
                     bool hasCfg;
                     string cfgPath;
                     string cfgName;
-                    //fix get file name
-                    //string simplefilename = Path.GetFileName(dir.path);
                     string p = dir.path.ConvertPathToFileName().Replace("D:", "");
                     string c = (from i in cfgList
                                 where i.name == p

@@ -27,13 +27,14 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 namespace Antd {
 
     public class NetworkInfo {
 
         public static NetworkModel GetModel() {
             string hostnameContent = "";
-            hostnameContent = LinqFiles.GetFileText("/cfg/network/hostname");
+            hostnameContent = FileSystem.ReadFile("/antd/network/hostname");
 
             var network = new NetworkModel();
             network.hostname = hostnameContent;
@@ -44,7 +45,7 @@ namespace Antd {
         public static NetworkModel GetModel(string hostname) {
             var network = new NetworkModel();
             network.hostname = hostname;
-            LinqFiles.SetFileText("/cfg/network/hostname", network.hostname);
+            FileSystem.WriteFile("/antd/network/hostname", network.hostname);
             return network;
         }
     }

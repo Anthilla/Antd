@@ -41,6 +41,7 @@ namespace Antd.Boot {
 
         private readonly static string[] Directories =
         {
+            "/antd",
             "/framework/antd",
             "/framework/anthillasp",
             "/framework/anthillaas"
@@ -50,6 +51,7 @@ namespace Antd.Boot {
             foreach (var path in Directories) {
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
+                    ConsoleLogger.Info("    directories -> {0} created", path);
                 }
             }
             ConsoleLogger.Success("    directories -> checked");
@@ -67,7 +69,7 @@ namespace Antd.Boot {
         }
 
         public static void SetCoreParameters() {
-            SelfConfig.WriteDefaults();
+            CoreParametersConfig.WriteDefaults();
             ConsoleLogger.Success("    antd core parameters -> loaded");
         }
 
@@ -89,7 +91,7 @@ namespace Antd.Boot {
             if (isActive) {
                 string[] watchThese =
                 {
-                    "/cfg",
+                    "/antd",
                     "/proc/sys",
                     "/sys/class/net"
                 };
@@ -105,7 +107,7 @@ namespace Antd.Boot {
 
         public static void StartDatabase() {
             string[] databases;
-            var root = SelfConfig.GetAntdDb();
+            var root = CoreParametersConfig.GetAntdDb();
             if (!Directory.Exists(root)) {
                 Directory.CreateDirectory(root);
             }

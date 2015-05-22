@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.ManageApplications;
 using Antd.ServiceManagement;
 using Antd.UnitFiles;
 using Nancy;

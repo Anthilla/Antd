@@ -152,19 +152,17 @@
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Log.cs" />
     <Compile Include="Boot\AntdBoot.cs" />
-    <Compile Include="Config\SystemSetupBoot.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Proc.cs" />
-    <Compile Include="Config\Anth_ParamWriter.cs" />
-    <Compile Include="Config\SystemConfig.cs" />
-    <Compile Include="Config\SelfConfig.cs" />
-    <Compile Include="MachineStatus\ConfigEtc.cs" />
-    <Compile Include="MachineStatus\Uptime.cs" />
-    <Compile Include="MachineStatus\Networkd.cs" />
-    <Compile Include="MachineStatus\User.cs" />
-    <Compile Include="MachineStatus\Mount.cs" />
-    <Compile Include="Manage-System\Actions.cs" />
+    <Compile Include="Config\ParamWriter.cs" />
+    <Compile Include="Boot\CoreParametersConfig.cs" />
+    <Compile Include="Status\ConfigEtc.cs" />
+    <Compile Include="Status\Uptime.cs" />
+    <Compile Include="Status\Networkd.cs" />
+    <Compile Include="Status\User.cs" />
+    <Compile Include="Status\Mount.cs" />
+    <Compile Include="Command\ScheduleAction.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
@@ -175,25 +173,23 @@
     <Compile Include="Scheduler\JobModel.cs" />
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />
-    <Compile Include="MachineStatus\Sysctl.cs" />
+    <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Systemd\Units.cs" />
     <Compile Include="Directory\DirectoryWatcher.cs" />
     <Compile Include="Directory\DirectoryLister.cs" />
     <Compile Include="Log\LogRepository.cs" />
     <Compile Include="Log\LogModel.cs" />
-    <Compile Include="Manage-Service\AnthillaSP.cs" />
-    <Compile Include="Manage-Service\AnthillaAS.cs" />
-    <Compile Include="Manage-Service\ServiceActions.cs" />
+    <Compile Include="ManageApplications\AnthillaSP.cs" />
+    <Compile Include="ManageApplications\AnthillaAS.cs" />
+    <Compile Include="ManageApplications\ServiceActions.cs" />
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Program\Timestamp.cs" />
     <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
-    <Compile Include="Manage-System\04AnthillaAS.cs" />
     <Compile Include="Modules\AnthillaASModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
-    <Compile Include="Modules\SystemModule.cs" />
     <Compile Include="Modules\AnthillaSPModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -201,18 +197,11 @@
     <Compile Include="Contexts\Network.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Contexts\_TextToJson.cs" />
     <Compile Include="Contexts\Meminfo.cs" />
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Models\ObjectsModel.cs" />
-    <Compile Include="Contexts\_LinqFiles.cs" />
     <Compile Include="Contexts\Version.cs" />
     <Compile Include="Command\Command.cs" />
-    <Compile Include="Manage-System\01Cfg.cs" />
-    <Compile Include="Manage-System\02SystemDataRepo.cs" />
-    <Compile Include="Manage-System\03Network.cs" />
-    <Compile Include="Manage-System\04AnthillaSP.cs" />
-    <Compile Include="Manage-System\05ZfsMount.cs" />
     <Compile Include="UnitFiles\Systemctl.cs" />
     <Compile Include="UnitFiles\UnitRepo.cs" />
     <Compile Include="UnitFiles\UnitFile.cs" />
@@ -245,7 +234,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Compile Include="ViewHelpers\Status.cs" />
+    <Compile Include="ViewHelpers\StatusSysctl.cs" />
     <None Include="Views\page-config-file2.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -298,9 +287,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-info.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-m-system.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-procs.cshtml">

@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Newtonsoft.Json;
 
 namespace Antd {
@@ -35,18 +36,23 @@ namespace Antd {
 
         public static string GetText() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/version");
-
+            meminfoContent = FileSystem.ReadFile("/proc/version");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
             return meminfoJson;
         }
 
         public static VersionModel GetModel() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/version");
-
-            var meminfo = TextToJson.Version(meminfoContent);
+            meminfoContent = FileSystem.ReadFile("/proc/version");
+            var meminfo = ConvertVersion(meminfoContent);
             return meminfo;
+        }
+
+        private static VersionModel ConvertVersion(string versionText) {
+            VersionModel version = new VersionModel();
+            version.key = "";
+            version.value = versionText;
+            return version;
         }
     }
 }

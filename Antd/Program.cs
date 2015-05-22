@@ -38,7 +38,7 @@ namespace Antd {
         private static void Main(string[] args) {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
-            var uri = SelfConfig.GetAntdUri();
+            var uri = CoreParametersConfig.GetAntdUri();
             //try {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");

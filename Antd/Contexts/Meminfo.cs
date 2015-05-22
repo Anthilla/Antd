@@ -28,7 +28,10 @@
 ///-------------------------------------------------------------------------------------
 
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Collections.Generic;
+using Antd.Common;
 
 namespace Antd {
 
@@ -36,18 +39,33 @@ namespace Antd {
 
         public static string GetText() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/meminfo");
-
+            meminfoContent = FileSystem.ReadFile("/proc/meminfo");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
             return meminfoJson;
         }
 
         public static List<MeminfoModel> GetModel() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/meminfo");
-
-            var meminfo = TextToJson.Meminfo(meminfoContent);
+            meminfoContent = FileSystem.ReadFile("/proc/meminfo");
+            var meminfo = ConvertMeminfo(meminfoContent);
             return meminfo;
+        }
+
+        public static List<MeminfoModel> ConvertMeminfo(string meminfoText) {
+            List<MeminfoModel> meminfoList = new List<MeminfoModel>();
+            string[] rowDivider = new String[] { "\n" };
+            string[] cellDivider = new String[] { ": " };
+            string[] rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (string row in rowList) {
+                if (row != null && row != "") {
+                    string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
+                    MeminfoModel meminfo = new MeminfoModel();
+                    meminfo.key = cellList[0];
+                    meminfo.value = cellList[1];
+                    meminfoList.Add(meminfo);
+                }
+            }
+            return meminfoList;
         }
     }
 }

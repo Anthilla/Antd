@@ -28,7 +28,10 @@
 ///-------------------------------------------------------------------------------------
 
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 using System.Collections.Generic;
+using Antd.Common;
 
 namespace Antd {
 
@@ -36,18 +39,33 @@ namespace Antd {
 
         public static string GetText() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/cpuinfo");
-
+            meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
             return meminfoJson;
         }
 
         public static List<CpuinfoModel> GetModel() {
             string meminfoContent = "";
-            meminfoContent = LinqFiles.GetFileText("/proc/cpuinfo");
-
-            var meminfo = TextToJson.Cpuinfo(meminfoContent);
+            meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
+            var meminfo = ConvertCpuinfo(meminfoContent);
             return meminfo;
+        }
+
+        private static List<CpuinfoModel> ConvertCpuinfo(string cpuinfoText) {
+            List<CpuinfoModel> cpuinfoList = new List<CpuinfoModel>();
+            string[] rowDivider = new String[] { "\n" };
+            string[] cellDivider = new String[] { ": " };
+            string[] rowList = cpuinfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (string row in rowList) {
+                if (row != null && row != "") {
+                    string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
+                    CpuinfoModel cpuinfo = new CpuinfoModel();
+                    cpuinfo.key = cellList[0];
+                    cpuinfo.value = (cellList.Length > 1) ? cellList[1] : "";
+                    cpuinfoList.Add(cpuinfo);
+                }
+            }
+            return cpuinfoList;
         }
     }
 }
