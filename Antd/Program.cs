@@ -127,7 +127,7 @@ namespace Antd {
 
             Command.Launch("chmod", "777 *.xml");
             ConsoleLogger.Log("    check configuration...");
-            SystemSetupBoot.Start();
+            SystemSetupBoot.Write();
             ConsoleLogger.Log("    save configuration...");
 
             ConsoleLogger.Log("loading service configuration");
