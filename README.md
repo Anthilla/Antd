@@ -37,6 +37,7 @@ using, whenever possible, shell commands, kernel related userspace commands or d
 - [Cockipt Project](http://cockipt-project.org)
 - [CoreOS](https://coreos.com/using-coreos/) [fleet and etcd](https://github.com/coreos/fleet/blob/master)
 - [Salt Stack](http://saltstack.com/community/) and sub project [Salt Virt](http://docs.saltstack.com/en/latest/topics/virt/)
+- [Witsbits](http://witsbits.com/)
 - any kind of distributed configuration manager, and system synchronizer.
 
 ### References:
