@@ -46,30 +46,14 @@ namespace Antd {
             Console.Title = "ANTD";
             ConsoleLogger.Log("loading application...");
 
-            ConsoleLogger.Log("checking directories...");
-            AntdBoot.CheckDirectories();
-
             string uri = SelfConfig.GetAntdUri();
-            ConsoleLogger.Log("initializing antd");
             //try {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    service type -> server");
                 ConsoleLogger.Log("                 -> server url -> {0}", uri);
                 ConsoleLogger.Log("service is now running");
-                var elapsed = DateTime.Now - startTime;
-                ConsoleLogger.Log("loaded in: {0}", elapsed);
-
-                //Console.WriteLine("");
-                //string[] watchThese = new string[] {
-                //    "/cfg",
-                //    "/proc/sys",
-                //    "/sys/class/net"
-                //};
-                //foreach (string folder in watchThese) {
-                //    new DirectoryWatcher(folder).Watch();
-                //    ConsoleLogger.Log("watcher enabled for {0}", folder);
-                //}
+                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 
                 Console.ReadLine();
             }
@@ -86,26 +70,21 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading service configuration");
+            AntdBoot.CheckDirectories();
             AntdBoot.SetCoreParameters();
-            ConsoleLogger.Log("    antd core parameters -> loaded");
-
             AntdBoot.StartScheduler(false);
-            ConsoleLogger.Log("    scheduler -> loaded");
+            AntdBoot.StartNetworkd();
 
             //Sysctl.WriteConfig();
             //ConsoleLogger.Log("     sysctl.config -> created");
             //Sysctl.LoadConfig();
             //ConsoleLogger.Log("     sysctl.config -> loaded");
 
-            AntdBoot.StartNetworkd();
-            ConsoleLogger.Log("    networkd -> loaded");
-
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
             app.MapSignalR(hubConfiguration);
             ConsoleLogger.Log("    signalR -> loaded");
             StaticConfiguration.DisableErrorTraces = false;
             AntdBoot.StartDatabase();
-            ConsoleLogger.Log("    database -> loaded");
             app.UseNancy();
             ConsoleLogger.Log("    nancy -> loaded");
         }

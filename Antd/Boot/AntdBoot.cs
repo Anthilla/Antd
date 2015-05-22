@@ -47,10 +47,12 @@ namespace Antd.Boot {
                     Directory.CreateDirectory(path);
                 }
             }
+            ConsoleLogger.Success("    directories -> checked");
         }
 
         public static void SetCoreParameters() {
             SelfConfig.WriteDefaults();
+            ConsoleLogger.Success("    antd core parameters -> loaded");
         }
 
         public static void StartNetworkd() {
@@ -58,11 +60,30 @@ namespace Antd.Boot {
             Antd.Status.Networkd.MountNetworkdDir();
             Antd.Status.Networkd.CreateFirstUnit();
             Antd.Status.Networkd.RestartNetworkdDir();
-            ConsoleLogger.Log(Antd.Status.Networkd.StatusNetworkdDir());
+            ConsoleLogger.Info(Antd.Status.Networkd.StatusNetworkdDir());
+            ConsoleLogger.Success("    networkd -> loaded");
         }
 
         public static void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
+            ConsoleLogger.Success("    scheduler -> loaded");
+        }
+
+        public static void StartDirectoryWatcher(bool isActive) {
+            if (isActive == true) {
+                string[] watchThese = new string[] {
+                        "/cfg",
+                        "/proc/sys",
+                        "/sys/class/net"
+                    };
+                foreach (string folder in watchThese) {
+                    new DirectoryWatcher(folder).Watch();
+                }
+                ConsoleLogger.Success("    directory watcher -> loaded");
+            }
+            else {
+                ConsoleLogger.Info("    directory watcher -> skipped");
+            }
         }
 
         public static void StartDatabase() {
@@ -73,6 +94,7 @@ namespace Antd.Boot {
             }
             databases = new string[] { root };
             DatabaseBoot.Start(databases);
+            ConsoleLogger.Success("    database -> loaded");
         }
     }
 }
