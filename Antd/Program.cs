@@ -89,7 +89,7 @@ namespace Antd {
             AntdBoot.SetCoreParameters();
             ConsoleLogger.Log("    antd core parameters -> loaded");
 
-            AntdBoot.LoadScheduler(false);
+            AntdBoot.StartScheduler(false);
             ConsoleLogger.Log("    scheduler -> loaded");
 
             //Sysctl.WriteConfig();
@@ -97,46 +97,17 @@ namespace Antd {
             //Sysctl.LoadConfig();
             //ConsoleLogger.Log("     sysctl.config -> loaded");
 
-            AntdBoot.Networkd();
+            AntdBoot.StartNetworkd();
             ConsoleLogger.Log("    networkd -> loaded");
 
             var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
             app.MapSignalR(hubConfiguration);
             ConsoleLogger.Log("    signalR -> loaded");
-            bool errorTrace = false;
-            StaticConfiguration.DisableErrorTraces = errorTrace;
-            ConsoleLogger.Log("    disableerrortraces -> {0}", errorTrace);
-            Database.Start();
-            ConsoleLogger.Log("    denso-db -> loaded");
+            StaticConfiguration.DisableErrorTraces = false;
+            AntdBoot.StartDatabase();
+            ConsoleLogger.Log("    database -> loaded");
             app.UseNancy();
-            ConsoleLogger.Log("    nancy-fx -> loaded");
-        }
-    }
-
-    public class Database {
-
-        public static void Start() {
-            string[] databases;
-
-            string root = SelfConfig.GetAntdDb();
-            if (!Directory.Exists(root)) {
-                Directory.CreateDirectory(root);
-            }
-            databases = new string[] { root };
-            ConsoleLogger.Log("        database path(s): {0}", String.Join(", ", databases));
-
-            DeNSo.Configuration.BasePath = databases;
-            DeNSo.Configuration.EnableJournaling = true;
-            DeNSo.Configuration.DBCheckTimeSpan = new System.TimeSpan(0, 1, 0);
-            DeNSo.Configuration.ReindexCheck = new System.TimeSpan(0, 1, 0);
-            DeNSo.Configuration.EnableOperationsLog = false;
-            string db = "AntDB";
-            DeNSo.Session.DefaultDataBase = db;
-            DeNSo.Session.Start();
-        }
-
-        public static void ShutDown() {
-            DeNSo.Session.ShutDown();
+            ConsoleLogger.Log("    nancy -> loaded");
         }
     }
 }

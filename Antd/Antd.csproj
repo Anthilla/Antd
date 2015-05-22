@@ -148,9 +148,10 @@
     <Compile Include="Auth\MapSystemUser.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Log.cs" />
-    <Compile Include="Config\Boot.cs" />
+    <Compile Include="Boot\AntdBoot.cs" />
     <Compile Include="Config\SystemSetupBoot.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
