@@ -2,11 +2,11 @@
 using Nancy;
 
 namespace Antd.Modules {
+
     public class InfoModule : NancyModule {
 
         public InfoModule()
             : base("/info") {
-
             Get["/loadaverage"] = x => {
                 return Response.AsJson(Uptime.LoadAverage);
             };

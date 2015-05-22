@@ -29,13 +29,9 @@
 
 using Antd.Boot;
 using Antd.Common;
-using Antd.Status;
-using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
-using Nancy;
 using Owin;
 using System;
-using System.IO;
 
 namespace Antd {
 

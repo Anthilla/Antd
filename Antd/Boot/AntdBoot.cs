@@ -27,19 +27,19 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System.IO;
 using Antd.Common;
 using Antd.Scheduler;
-using Owin;
+using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Nancy;
-using Antd.Status;
+using Owin;
+using System.IO;
 
 namespace Antd.Boot {
 
     public class AntdBoot {
 
-        public static string[] directories = new string[] { 
+        public static string[] directories = new string[] {
             "/framework/antd",
             "/framework/anthillasp",
             "/framework/anthillaas"

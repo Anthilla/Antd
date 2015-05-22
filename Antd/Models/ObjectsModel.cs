@@ -171,7 +171,7 @@ namespace Antd {
         public string[] loadAverageValues { get; set; }
     }
 
-    #endregion Sysctl Model
+    #endregion Uptime Model
 
     #region Mount Model
 

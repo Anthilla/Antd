@@ -27,11 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Common;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -77,7 +74,7 @@ namespace Antd.Status {
                 model.uptime = uptimeJsonRow[0];
                 model.users = uptimeJsonRow[1];
                 model.loadAverage = uptimeJsonRow[2];
-                string[] values = new string[] {};
+                string[] values = new string[] { };
                 values = uptimeJsonRow[2].Split(new String[] { ", " }, StringSplitOptions.None).ToArray();
                 model.loadAverageValues = values;
             }

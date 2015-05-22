@@ -39,7 +39,6 @@ namespace Antd {
 
         public UnitsModule()
             : base("/units") {
-
             Get["/"] = x => {
                 List<UnitModel> units = Units.All;
                 return View["page-units", units];
