@@ -164,6 +164,7 @@
     <Compile Include="MachineStatus\Mount.cs" />
     <Compile Include="Manage-System\Actions.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
+    <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
     <Compile Include="Modules\StatusModule.cs" />
