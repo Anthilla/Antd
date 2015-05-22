@@ -121,7 +121,7 @@ namespace Antd.Status {
                 foreach (SysctlModel p in parameters) {
                     sw.WriteLine(p.param + " = " + p.value);
                 }
-                sw.WriteLine("vm.swappiness = 61");
+                //sw.WriteLine("vm.swappiness = 61");
                 sw.WriteLine("");
             }
         }

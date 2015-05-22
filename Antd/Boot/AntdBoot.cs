@@ -30,6 +30,10 @@
 using System.IO;
 using Antd.Common;
 using Antd.Scheduler;
+using Owin;
+using Microsoft.AspNet.SignalR;
+using Nancy;
+using Antd.Status;
 
 namespace Antd.Boot {
 
@@ -48,6 +52,17 @@ namespace Antd.Boot {
                 }
             }
             ConsoleLogger.Success("    directories -> checked");
+        }
+
+        public static void CheckSysctl(bool isActive) {
+            if (isActive == true) {
+                Sysctl.WriteConfig();
+                Sysctl.LoadConfig();
+                ConsoleLogger.Success("    sysctl -> loaded");
+            }
+            else {
+                ConsoleLogger.Info("    sysctl -> skipped");
+            }
         }
 
         public static void SetCoreParameters() {
@@ -95,6 +110,23 @@ namespace Antd.Boot {
             databases = new string[] { root };
             DatabaseBoot.Start(databases);
             ConsoleLogger.Success("    database -> loaded");
+        }
+
+        public static void StartSignalR(IAppBuilder app, bool isActive) {
+            if (isActive == true) {
+                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
+                app.MapSignalR(hubConfiguration);
+                ConsoleLogger.Success("    signalR -> loaded");
+            }
+            else {
+                ConsoleLogger.Info("    signalR -> skipped");
+            }
+        }
+
+        public static void StartNancy(IAppBuilder app) {
+            StaticConfiguration.DisableErrorTraces = false;
+            app.UseNancy();
+            ConsoleLogger.Success("    nancy -> loaded");
         }
     }
 }

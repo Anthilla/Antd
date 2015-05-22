@@ -44,17 +44,13 @@ namespace Antd {
         private static void Main(string[] args) {
             DateTime startTime = DateTime.Now;
             Console.Title = "ANTD";
-            ConsoleLogger.Log("loading application...");
-
             string uri = SelfConfig.GetAntdUri();
             //try {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log("    service type -> server");
-                ConsoleLogger.Log("                 -> server url -> {0}", uri);
-                ConsoleLogger.Log("service is now running");
-                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
-
+                ConsoleLogger.Log("    server url -> {0}", uri);
+                ConsoleLogger.Success("antd is running");
+                ConsoleLogger.Info("loaded in: {0}", DateTime.Now - startTime);
                 Console.ReadLine();
             }
             /*} catch (System.Reflection.TargetInvocationException ex) {
@@ -74,19 +70,10 @@ namespace Antd {
             AntdBoot.SetCoreParameters();
             AntdBoot.StartScheduler(false);
             AntdBoot.StartNetworkd();
-
-            //Sysctl.WriteConfig();
-            //ConsoleLogger.Log("     sysctl.config -> created");
-            //Sysctl.LoadConfig();
-            //ConsoleLogger.Log("     sysctl.config -> loaded");
-
-            var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
-            app.MapSignalR(hubConfiguration);
-            ConsoleLogger.Log("    signalR -> loaded");
-            StaticConfiguration.DisableErrorTraces = false;
+            AntdBoot.CheckSysctl(false);
+            AntdBoot.StartSignalR(app, true);
             AntdBoot.StartDatabase();
-            app.UseNancy();
-            ConsoleLogger.Log("    nancy -> loaded");
+            AntdBoot.StartNancy(app);
         }
     }
 }
