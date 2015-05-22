@@ -36,15 +36,17 @@ using, whenever possible, shell commands, kernel related userspace commands or d
 - [LuCI OpenWRT](http://wiki.openwrt.org/doc/howto/luci.essentials)
 - [Cockipt Project](http://cockipt-project.org)
 - [CoreOS](https://coreos.com/using-coreos/) [fleet and etcd](https://github.com/coreos/fleet/blob/master)
+- [Salt Stack](http://saltstack.com/community/) and sub project [Salt Virt](http://docs.saltstack.com/en/latest/topics/virt/)
+- any kind of distributed configuration manager, and system synchronizer.
 
 ### References:
 - [C5](https://github.com/sestoft/C5/)
-- [DensoDb](https://github.com/ppossanzini/DensoDB)
+- [DensoDb](https://github.com/ppossanzini/DensoDB) v3
 - [jQuery](https://github.com/jquery/jquery)
 - [Owin](https://github.com/owin/owin)
 - [Nancy](https://github.com/NancyFx/Nancy)
 - [Newtonsoft Json](https://github.com/JamesNK/Newtonsoft.Json)
-- [Metro UI](https://github.com/olton/Metro-UI-CSS)
+- [Metro UI](https://github.com/olton/Metro-UI-CSS) 
 
 Getting Started
 ---------------
