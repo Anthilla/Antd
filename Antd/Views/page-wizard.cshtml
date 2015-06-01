@@ -35,14 +35,6 @@
 {
     <h3>This is a Wizard! <i class="icon-scissors on-right"></i></h3>
 
-    @*    <div class="wizard" id="wizard">
-        <div class="steps">
-            <div class="step">Page 1</div>
-            <div class="step">Page 2</div>
-            <div class="step">Page 3</div>
-        </div>
-    </div>*@
-
     <legend>On this table you will set the general antd parameters</legend>
     <table class="table hovered">
         <thead>
@@ -350,41 +342,8 @@
 
 @section Scripts {
     <script type="text/javascript">
-
-        //$(function(){
-        //    $('#wizard').wizard({
-        //        stepper: true, // show stepper, see http://metroui.org.ua/stepper.html
-        //        stepperType: 'default', // stepper type, see http://metroui.org.ua/stepper.html
-        //        stepperClickable: false, // set to true if you can switch page over click on stepper
-        //        startPage: 'default', // if this value ne 'default' wizard started from this page
-        //        locale: $.Metro.currentLocale, //'en', 'ua', 'ru', ... more languages defined in metro-locale.js
-        //        finishStep: 'default', // 'default' - last page or int - number of page
-        //        buttons: { //show or hide buttons
-        //            cancel: false,
-        //            help: false,
-        //            prior: true,
-        //            next: true,
-        //            finish: true
-        //        },
-        //        // Buttons click methods, page change events
-        //        //onCancel: function(page, wiz){
-        //        //},
-        //        //onHelp: function(page, wiz){
-        //        //},
-        //        onPrior: function (page, wiz) {
-        //            console.log('prior');
-        //        },
-        //        onNext: function(page, wiz){
-        //            console.log('next');
-        //        },
-        //        onFinish: function(page, wiz){
-        //            console.log('finish');
-        //        },
-        //        //onPage: function(page, wiz){
-        //        //},
-        //        onStepClick: function (step) {
-        //        }
-        //    });
-        //});
+        $(document).ready(function () {
+            $('tr>td:first-child').css('width', '300px');
+        });
     </script>
 }
