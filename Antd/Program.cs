@@ -53,6 +53,19 @@ namespace Antd {
                 AntdBoot.CheckSysctl(false);
 
                 ConsoleLogger.Info("loaded in: {0}", DateTime.Now - startTime);
+
+                //ConsoleLogger.Log("Define p1");
+                //string p1 = Console.ReadLine();
+                //ConsoleLogger.Log("Define p2 now");
+                //string p2 = Console.ReadLine();
+                //ConsoleLogger.Log("Last one, define p3");
+                //string p3 = Console.ReadLine();
+
+                //ConsoleLogger.Info("Recap");
+                //ConsoleLogger.Info("p1: {0}", p1);
+                //ConsoleLogger.Info("p2: {0}", p2);
+                //ConsoleLogger.Info("p3: {0}", p3);
+
                 Console.ReadLine();
             }
             /*} catch (System.Reflection.TargetInvocationException ex) {
