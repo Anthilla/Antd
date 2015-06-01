@@ -39,22 +39,27 @@ namespace Antd.Boot {
 
     public class AntdBoot {
 
-        private readonly static string[] Directories =
-        {
-            "/antd",
-            "/framework/antd",
-            "/framework/anthillasp",
-            "/framework/anthillaas"
-        };
+        //private readonly static string[] Directories =
+        //{
+        //    "/antd",
+        //    "/framework/antd",
+        //    "/framework/anthillasp",
+        //    "/framework/anthillaas"
+        //};
 
-        public static void CheckDirectories() {
-            foreach (var path in Directories) {
-                if (!Directory.Exists(path)) {
-                    Directory.CreateDirectory(path);
-                    ConsoleLogger.Info("    directories -> {0} created", path);
-                }
-            }
-            ConsoleLogger.Success("    directories -> checked");
+        //public static void CheckDirectories() {
+        //    foreach (var path in Directories) {
+        //        if (!Directory.Exists(path)) {
+        //            Directory.CreateDirectory(path);
+        //            ConsoleLogger.Info("    directories -> {0} created", path);
+        //        }
+        //    }
+        //    ConsoleLogger.Success("    directories -> checked");
+        //}
+
+        public static void SetCoreParameters() {
+            CoreParametersConfig.WriteDefaults();
+            ConsoleLogger.Success("    antd core parameters -> loaded");
         }
 
         public static void CheckSysctl(bool isActive) {
@@ -68,18 +73,8 @@ namespace Antd.Boot {
             }
         }
 
-        public static void SetCoreParameters() {
-            CoreParametersConfig.WriteDefaults();
-            ConsoleLogger.Success("    antd core parameters -> loaded");
-        }
-
         public static void StartNetworkd() {
-            Networkd.EnableRequiredServices();
-            Networkd.MountNetworkdDir();
-            Networkd.CreateFirstUnit();
-            Networkd.RestartNetworkdDir();
-            ConsoleLogger.Info(Networkd.StatusNetworkdDir());
-            ConsoleLogger.Success("    networkd -> loaded");
+            Networkd.SetConfiguration();
         }
 
         public static void StartScheduler(bool loadFromDatabase) {

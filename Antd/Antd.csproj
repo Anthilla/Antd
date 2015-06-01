@@ -152,10 +152,10 @@
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Log.cs" />
     <Compile Include="Boot\AntdBoot.cs" />
+    <Compile Include="Common\XmlWriter.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Proc.cs" />
-    <Compile Include="Config\ParamWriter.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />

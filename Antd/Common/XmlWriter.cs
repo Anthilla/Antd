@@ -27,12 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Antd {
+namespace Antd.Common {
 
     public class param {
 
@@ -48,24 +49,32 @@ namespace Antd {
         public param param { get; set; }
     }
 
-    public class Anth_ParamWriter {
-        public static string root = "/antd";
+    public class XmlWriter {
+        public static string root;
         public string folder;
         public string[] path;
 
-        public Anth_ParamWriter(string[] fileNames, string newFolder) {
-            folder = Path.Combine(root, newFolder); ;
-            System.IO.Directory.CreateDirectory(folder);
+        public XmlWriter(string[] fileNames, string newFolder) {
+            root = AppDomain.CurrentDomain.BaseDirectory;
+            ConsoleLogger.Info("application root: {0}", root);
+            if (newFolder != null) {
+                folder = Path.Combine(root, newFolder); ;
+                System.IO.Directory.CreateDirectory(folder);
+                ConsoleLogger.Info("    application folder: {0}", folder);
+            }
+            else {
+                folder = root;
+            }
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
                 var p = Path.Combine(folder, fileName + ".xml");
-                tmplist.Add(p);
+                tmplist.Add(Path.Combine(folder, fileName + ".xml"));
             }
             path = tmplist.ToArray();
         }
 
         public void Write(string key, string value) {
-            string sectionName = "antd";
+            string sectionName = "antd.config";
             List<param> tList;
             param tItem;
             List<section> readList = ReadAll();

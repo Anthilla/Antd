@@ -46,6 +46,12 @@ namespace Antd {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
                 ConsoleLogger.Success("antd is running");
+
+                AntdBoot.SetCoreParameters();
+                AntdBoot.StartScheduler(false);
+                AntdBoot.StartNetworkd();
+                AntdBoot.CheckSysctl(false);
+
                 ConsoleLogger.Info("loaded in: {0}", DateTime.Now - startTime);
                 Console.ReadLine();
             }
@@ -61,14 +67,9 @@ namespace Antd {
     internal class Startup {
 
         public void Configuration(IAppBuilder app) {
-            ConsoleLogger.Log("loading service configuration");
-            AntdBoot.CheckDirectories();
-            AntdBoot.SetCoreParameters();
-            AntdBoot.StartScheduler(false);
-            AntdBoot.StartNetworkd();
-            AntdBoot.CheckSysctl(false);
-            AntdBoot.StartSignalR(app, true);
+            ConsoleLogger.Log("loading core service configuration");
             AntdBoot.StartDatabase();
+            AntdBoot.StartSignalR(app, true);
             AntdBoot.StartNancy(app);
         }
     }

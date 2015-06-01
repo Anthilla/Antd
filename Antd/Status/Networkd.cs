@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Antd.UnitFiles;
 using System.Collections.Generic;
 using System.IO;
@@ -35,38 +36,65 @@ namespace Antd.Status {
 
     public class Networkd {
 
-        public static void EnableRequiredServices() {
+        private static string coreFileName = "config.xml";
+
+        private static string[] _files = new string[] {
+                coreFileName + "Current",
+                coreFileName + "001",
+                coreFileName + "002"
+            };
+
+        private static XmlWriter xmlWriter = new XmlWriter(_files, "config");
+
+        public static void SetConfiguration() { 
+            var check = CheckConfiguration();
+            if (check == true) {
+                //il file esiste
+                //la configurazione esiste
+                // -> applica la configurazione
+                EnableRequiredServices();
+                MountNetworkdDir();
+                CreateFirstUnit();
+                RestartNetworkdDir();
+                ConsoleLogger.Info(StatusNetworkdDir());
+                ConsoleLogger.Success("    networkd -> loaded");
+            }
+            else {
+                //il file NON esiste
+                //la configurazione NON esiste
+                // -> NON applica la configurazione
+                ConsoleLogger.Warn("----------------------------------+");
+                ConsoleLogger.Warn("networkd -> not configured yet    |");
+                ConsoleLogger.Warn("----------------------------------+");
+            }
+        }
+
+        private static bool CheckConfiguration() {
+            return xmlWriter.CheckValue("networkd");
+        }
+
+        private static void EnableRequiredServices() {
             Systemctl.Start("systemd-networkd.service");
             Systemctl.Start("systemd-resolved.service");
             Systemctl.Enable("systemd-networkd.service");
             Systemctl.Enable("systemd-resolved.service");
         }
 
-        public static void MountNetworkdDir() {
+        private static void MountNetworkdDir() {
             Command.Launch("mount", "--bind /etc/systemd/network /antd/networkd");
         }
 
-        public static string RestartNetworkdDir() {
+        private static string RestartNetworkdDir() {
             var r = Systemctl.Restart("systemd-networkd");
             return r.output;
         }
 
-        public static string StatusNetworkdDir() {
+        private static string StatusNetworkdDir() {
             var r = Systemctl.Status("systemd-networkd");
             return r.output;
         }
-
-        //public string matchName { get; set; }
-        //public string matchHost { get; set; }
-        //public string matchVirtualization { get; set; }
-        //public string networkDHCP { get; set; }
-        //public string networkDNS { get; set; }
-        //public string networkBridge { get; set; }
-        //public string networkIPForward { get; set; }
-        //public string addressAddress { get; set; }
-        //public string routeGateway { get; set; }
-
-        public static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
+ 
+        private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
                                       string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
                                       string addressAddress, string routeGateway) {
             Directory.CreateDirectory("/antd/networkd");
@@ -95,7 +123,7 @@ namespace Antd.Status {
             }
         }
 
-        public static void CreateFirstUnit() {
+        private static void CreateFirstUnit() {
             CreateUnit("antd", "eth0", "", "", "", "192.168.56.1", "", "", "192.168.56.101/24", "192.168.56.1");
         }
 
