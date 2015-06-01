@@ -68,7 +68,7 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading core service configuration");
-            AntdBoot.StartDatabase();
+            //AntdBoot.StartDatabase();
             AntdBoot.StartSignalR(app, true);
             AntdBoot.StartNancy(app);
         }
