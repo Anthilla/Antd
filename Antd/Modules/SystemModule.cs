@@ -96,6 +96,7 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.TCPport = "";
                 vmod.MaxProcesses = "2";
+                vmod.AlternateHostnames = "";
                 return View["page-system-advanced", vmod];
             };
 
@@ -145,6 +146,36 @@ namespace Antd {
                 string dnsrebindcheck = x.dnsrebindcheck;
                 ConsoleLogger.Info("New DNS Rebind Check: {0}", dnsrebindcheck);
                 return Response.AsJson(dnsrebindcheck);
+            };
+
+            Post["/update/alternatehostnames/{alternatehostnames}"] = x => {
+                string alternatehostnames = x.alternatehostnames;
+                ConsoleLogger.Info("New Alternate Hostnames: {0}", alternatehostnames);
+                return Response.AsJson(alternatehostnames);
+            };
+
+            Post["/update/refererenforcement/{refererenforcement}"] = x => {
+                string refererenforcement = x.refererenforcement;
+                ConsoleLogger.Info("New Browser HTTP_REFERER enforcement: {0}", refererenforcement);
+                return Response.AsJson(refererenforcement);
+            };
+
+            Post["/update/tabtext/{tabtext}"] = x => {
+                string tabtext = x.tabtext;
+                ConsoleLogger.Info("New Browser tab text: {0}", tabtext);
+                return Response.AsJson(tabtext);
+            };
+
+            Post["/update/enablesecureshell/{enablesecureshell}"] = x => {
+                string enablesecureshell = x.enablesecureshell;
+                ConsoleLogger.Info("New Secure Shell Server: {0}", enablesecureshell);
+                return Response.AsJson(enablesecureshell);
+            };
+
+            Post["/update/authenticationmethod/{authenticationmethod}"] = x => {
+                string authenticationmethod = x.authenticationmethod;
+                ConsoleLogger.Info("New Authentication Method: {0}", authenticationmethod);
+                return Response.AsJson(authenticationmethod);
             };
 
             Get["/certmanager"] = x => {

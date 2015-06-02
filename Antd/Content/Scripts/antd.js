@@ -252,3 +252,85 @@ $('#UpdateDNSRebindCheck').click(function () {
         }
     });
 });
+
+$('#NewAlternateHostnames').keyup(function () {
+    var value = $('#NewAlternateHostnames').val();
+    if (value != "" || val != " ") {
+        $('#UpdateAlternateHostnames').show();
+    }
+});
+
+$('#UpdateAlternateHostnames').click(function () {
+    var newAlternateHostnames = $('#NewAlternateHostnames').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/alternatehostnames/' + newAlternateHostnames,
+        type: 'POST',
+        data: JSON.stringify(newDomainName),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateHTTP_REFERERenforcement').click(function () {
+    var newHTTP_REFERERenforcement = $('#NewHTTP_REFERERenforcement').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/refererenforcement/' + newHTTP_REFERERenforcement,
+        type: 'POST',
+        data: JSON.stringify(newHTTP_REFERERenforcement),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateTabText').click(function () {
+    var newTabText = $('#NewTabText').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/tabtext/' + newTabText,
+        type: 'POST',
+        data: JSON.stringify(newTabText),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateEnableSecureShell').click(function () {
+    var newEnableSecureShell = $('#NewEnableSecureShell').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/enablesecureshell/' + newEnableSecureShell,
+        type: 'POST',
+        data: JSON.stringify(newEnableSecureShell),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateAuthenticationMethod').click(function () {
+    var newAuthenticationMethod = $('#NewAuthenticationMethod').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/authenticationmethod/' + newAuthenticationMethod,
+        type: 'POST',
+        data: JSON.stringify(newAuthenticationMethod),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

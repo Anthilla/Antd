@@ -88,8 +88,7 @@
                             <td>
                                 <p id="UpdateProtocol" class="button bg-anthilla-green">Edit Protocol</p>
                             </td>
-                            <td>
-                            </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
@@ -219,9 +218,16 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Alternate Hostnames</label></td>
+                                <label>Alternate Hostnames</label>
+                            </td>
                             <td>
-                                <input type="text" />Alternate Hostnames for DNS Rebinding and HTTP_REFERER Checks    
+                                <p>Current Alternate Hostnames: @Model.AlternateHostnames</p>
+                            </td>
+                            <td>
+                                <input id="NewAlternateHostnames" type="text" />Alternate Hostnames for DNS Rebinding and HTTP_REFERER Checks    
+                                <p id="UpdateAlternateHostnames" class="button bg-anthilla-green" style="display: none;">Alternate Hostnames</p>
+                            </td>
+                            <td>
                                 <p>
                                     Here you can specify alternate hostnames by which the router may be queried, 
                                     to bypass the DNS Rebinding Attack checks. Separate hostnames with spaces. 
@@ -230,9 +236,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Browser HTTP_REFERER enforcement</label></td>
+                                <label>Browser HTTP_REFERER enforcement</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Disable HTTP_REFERER enforcement check    
+                                <input id="NewHTTP_REFERERenforcement" type="checkbox" />Disable HTTP_REFERER enforcement check    
+                                <p id="UpdateHTTP_REFERERenforcement" class="button bg-anthilla-green">Edit Browser HTTP_REFERER enforcement</p>
+                            </td>
+                            <td>
                                 <p>
                                     When this is unchecked, access to the webConfigurator is protected against HTTP_REFERER
                                     redirection attempts. Check this box to disable this protection if you find that it interferes
@@ -240,46 +250,60 @@
                                     with this system. More information on HTTP_REFERER is available from Wikipedia.   
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Browser tab text</label></td>
+                                <label>Browser tab text</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Display page name first in browser tab     
+                                <input id="NewTabText" type="checkbox" />Display page name first in browser tab     
+                                <p id="UpdateTabText" class="button bg-anthilla-green">Edit Browser tab text</p>
+                            </td>
+                            <td>
                                 <p>
                                     When this is unchecked, the browser tab shows the host name followed by 
                                     the current page. Check this box to display the current page followed by the host name.   
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
                 <table class="table hovered">
                     <thead>
                         <tr>
-                            <th colspan="2">
-                                <label>Secure Shell</label></th>
+                            <th colspan="4">
+                                <label>Secure Shell</label>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <label>Secure Shell Server</label></td>
-                            <td>
-                                <input type="checkbox" />
-                                Enable Secure Shell  
+                                <label>Secure Shell Server</label>
                             </td>
+                            <td>
+                                <input id="NewEnableSecureShell" type="checkbox" />Enable Secure Shell  
+                                <p id="UpdateEnableSecureShell" class="button bg-anthilla-green">Edit Secure Shell Server</p>
+                            </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Authentication Method</label></td>
+                                <label>Authentication Method</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
-                                Disable password login for Secure Shell (RSA/DSA key only)    
+                                <input id="NewAuthenticationMethod" type="checkbox" />Disable password login for Secure Shell (RSA/DSA key only)    
+                                <p id="UpdateAuthenticationMethod" class="button bg-anthilla-green">Edit Authentication Method</p>
+                            </td>
+                            <td>
                                 <p>
                                     When enabled, authorized keys need to be configured for each user that has been granted secure shell access.
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
