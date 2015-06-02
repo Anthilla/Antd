@@ -1,0 +1,300 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<AnthillaCore.Models.Anth_Dump>>
+@using System.Collections.Generic
+@{Layout = "_layout-fw.cshtml";}
+
+@section PageBar
+{
+    <nav class="navigation-bar page bg-white fg-anthilla-blue" style="padding-top: 10px; border-bottom: 4px solid #548ED4;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase bold no-overlay fg-black upcase" style="line-height: 0px; margin-left: 20px !important;">VPN </div>
+
+            <a href="#anchorGre" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-satellite on-left" style="line-height: 0px;"></i>VPN GRE/L2TP
+            </a>
+            <a href="#anchorOpenp" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-satellite on-left" style="line-height: 0px;"></i>VPN Openvpn
+            </a>
+            <a href="#anchorIspc" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-satellite on-left" style="line-height: 0px;"></i>VPN ipsec
+            </a>
+        </nav>
+    </nav>
+}
+
+@section Dashboard
+{
+
+}
+
+@section MainContent
+{
+    <legend id="anchorGre">VPN GRE/L2TP</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_users_">Manage Users</a></li>
+            <li><a href="#_vpn_">VPN Options</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_users_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>VNP Users List</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>No user yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Add User" />
+            </div>
+            <div class="frame" id="_vpn_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Set VPN Options</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Default Route</td>
+                            <td>
+                                <input type="text" placeholder="Remote Gateway" /></td>
+                        </tr>
+                        <tr>
+                            <td>Server-side IP Range</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Client-side IP Range</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Server DNS</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Server WINS</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Save" />
+            </div>
+        </div>
+    </div>
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save Options" />
+    <br />
+    <legend id="anchorOpenp">VPN OpenVPN</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_vpns_">Configured VPNs</a></li>
+            <li><a href="#_newvpn_">New VPN</a></li>
+            <li><a href="#_crtf_">Manage Certificate</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_vpns_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Purpose</th>
+                            <th>&nbsp</th>
+                            <th>Protocol</th>
+                            <th>Compression</th>
+                            <th>Users</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="frame" id="_newvpn_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Configure New VPN</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="New VPN" /></td>
+                            <td>Create a New Server-Server Configuration</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Import VPN" /></td>
+                            <td>
+                                <input type="file" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Save" />
+            </div>
+            <div class="frame" id="_crtf_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Generate Certificate</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Key Size</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Valid for</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Common Name</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Company Name</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Organizational Unit</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>City</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>State</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>"Provincia"</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp</td>
+                            <td>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Create" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply" />
+    <br />
+    <legend id="anchorIspc">VPN IPSEC</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_ipsecvpns_">Configured VPNs</a></li>
+            <li><a href="#_newipsecvpn_">VPN Options</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_ipsecvpns_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Remote IP</th>
+                            <th>Remote Network</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>&nbsp</td>
+                            <td>&nbsp</td>
+                            <td>&nbsp</td>
+                            <td>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add Connection" /></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply" />
+            </div>
+            <div class="frame" id="_newipsecvpn_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>Set VPN Options</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>"Abilita NAT Trasversale"</td>
+                            <td>
+                                <input type="radio" value="Yes" /><input type="radio" value="No" /></td>
+                        </tr>
+                        <tr>
+                            <td>"Abilita Debug"</td>
+                            <td>
+                                <input type="radio" value="Yes" /><input type="radio" value="No" /></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp</td>
+                            <td>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('a.anchor').click(function () {
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top
+            }, 500);
+            return false;
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                var i = $(window).scrollTop() - 145;
+                $('.navigation-bar.page').css('top', i);
+            }
+            if ($(window).scrollTop() < 150) {
+                $('.navigation-bar.page').css('top', 0);
+            }
+        });
+    </script>
+}

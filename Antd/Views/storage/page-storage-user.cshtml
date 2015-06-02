@@ -1,0 +1,269 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<AnthillaCore.Models.Anth_Dump>>
+@using System.Collections.Generic
+@{Layout = "_layout-st.cshtml";}
+
+@section PageBar
+{
+    <nav class="navigation-bar page bg-white fg-anthilla-blue" style="padding-top: 10px; border-bottom: 4px solid #548ED4;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase bold no-overlay fg-black upcase" style="line-height: 0px; margin-left: 20px !important;"> User & ACL </div>
+
+            <a href="#anchorMng" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-user-3 on-left" style="line-height: 0px;"></i>Manage
+            </a>
+            <a href="#anchorMlal" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-comments-2 on-left" style="line-height: 0px;"></i>Mail Alias
+            </a>
+            <a href="#anchorVius" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-screen on-left" style="line-height: 0px;"></i>Virtual User
+            </a>
+            <a href="#anchorMap" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-loop on-left" style="line-height: 0px;"></i>Map Addresses
+            </a>
+        </nav>
+    </nav>
+}
+
+@section MainContent
+{
+    <legend id="anchorMng">User Management</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_users_">Users</a></li>
+            <li><a href="#_acdir_">Active Directory</a></li>
+            <li><a href="#_wbauth_">Webmail Authentication</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_users_">
+                <form id="Users" action="~/" method="POST" enctype="multipart/form-data">
+                    <table class="table hovered">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Home Directory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>No user yet</td>
+                                <td>&nbsp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="New User" />
+                </form>
+            </div>
+
+            <div class="frame" id="_acdir_">
+                <form id="AcDir" action="~/" method="POST" enctype="multipart/form-data">
+                    <div class="tile double">information ()</div>
+                    <div class="tile double">success ()</div>
+                    <br />
+                    <table class="table hovered">
+                        <thead>
+                            <tr>
+                                <th>Active Directory</th>
+                                <th>&nbsp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Indirizzo IP PDC</td>
+                                <td>
+                                    <input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>Nome Utente ADS</td>
+                                <td>
+                                    <input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>Password ADS</td>
+                                <td>
+                                    <input type="text" /><a href="#" class="button fg-black">Disable</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Save" />
+                </form>
+            </div>
+
+            <div class="frame" id="_wbauth_">
+                <form id="WbDir" action="~/" method="POST" enctype="multipart/form-data">
+                    <table class="table hovered">
+                        <thead>
+                            <tr>
+                                <th>Webmail Authentication</th>
+                                <th>&nbsp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Default email domain</td>
+                                <td>
+                                    <input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>Authentication Type</td>
+                                <td>
+                                    <input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>Webmail Admin</td>
+                                <td>
+                                    <input type="text" /><a href="#" class="button fg-black">Disable</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Save" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <br />
+    <legend id="anchorMlal">Mail Alias</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>Settings</th>
+                <th>&nbsp</th>
+                <th>&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>If I write to </td>
+                <td>
+                    <input type="text" /></td>
+                <td>&nbsp</td>
+            </tr>
+            <tr>
+                <td>Send to </td>
+                <td>
+                    <input type="checkbox" />Nobody</td>
+                <td>&nbsp</td>
+            </tr>
+            <tr>
+                <td>&nbsp</td>
+                <td>
+                    <input type="checkbox" />Add email address</td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>&nbsp</td>
+                <td>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+                <td>&nbsp</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>Mail for</th>
+                <th>Send to</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+    <legend id="anchorVius">Virtual Users</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>Settings</th>
+                <th>&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mail for </td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>Select alias </td>
+                <td>
+                    <input type="checkbox" />Nobody</td>
+            </tr>
+            <tr>
+                <td>&nbsp</td>
+                <td>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>Mail for</th>
+                <th>Virtual User</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+    <legend id="anchorMap">Map Addresses</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>Add / Edit</th>
+                <th>&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>FROM or TO </td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>Set Sender or Receiver </td>
+                <td>
+                    <input type="checkbox" />Nobody</td>
+            </tr>
+            <tr>
+                <td>&nbsp</td>
+                <td>
+                    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th>FROM or TO</th>
+                <th>Set Sender or Receiver</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('a.anchor').click(function () {
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top
+            }, 500);
+            return false;
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                var i = $(window).scrollTop() - 145;
+                $('.navigation-bar.page').css('top', i);
+            }
+            if ($(window).scrollTop() < 150) {
+                $('.navigation-bar.page').css('top', 0);
+            }
+        });
+    </script>
+}

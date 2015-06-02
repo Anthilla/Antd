@@ -1,0 +1,45 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<AnthillaCore.Models.Anth_Dump>>
+@using System.Collections.Generic
+@{Layout = "_layout-st.cshtml";}
+
+@section PageBar
+{
+    <nav class="navigation-bar page bg-white fg-anthilla-blue" style="padding-top: 10px; border-bottom: 4px solid #548ED4;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase bold no-overlay fg-black upcase" style="line-height: 0px; margin-left: 20px !important;"> iSCSI </div>
+
+        </nav>
+    </nav>
+}
+
+@section Dashboard
+{
+
+}
+
+@section MainContent
+{
+
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('a.anchor').click(function () {
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top
+            }, 500);
+            return false;
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                var i = $(window).scrollTop() - 145;
+                $('.navigation-bar.page').css('top', i);
+            }
+            if ($(window).scrollTop() < 150) {
+                $('.navigation-bar.page').css('top', 0);
+            }
+        });
+    </script>
+}

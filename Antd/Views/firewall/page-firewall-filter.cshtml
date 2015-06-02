@@ -1,0 +1,244 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<AnthillaCore.Models.Anth_Dump>>
+@using System.Collections.Generic
+@{Layout = "_layout-fw.cshtml";}
+
+@section PageBar
+{
+    <nav class="navigation-bar page bg-white fg-anthilla-blue" style="padding-top: 10px; border-bottom: 4px solid #548ED4;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase bold no-overlay fg-black upcase" style="line-height: 0px; margin-left: 20px !important;"> Filter </div>
+
+            <a href="#anchorNavg" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-compass-3 on-left" style="line-height: 0px;"></i>Navigation Groups
+             </a>
+            <a href="#anchorGrpm" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-radio-unchecked on-left" style="line-height: 0px;"></i>Group Membership
+             </a>
+            <a href="#anchorTacl" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-list on-left" style="line-height: 0px;"></i>Temporal Access Lists
+             </a>
+            <a href="#anchorMss" class="element upcase no-overlay anchor" style="line-height: 0px;">
+                <i class="icon-key on-left" style="line-height: 0px;"></i>Authentication Management
+             </a> class="icon-stats-2 on-left" style="line-height: 0px;"></i> Mail Server Stats
+        </nav>
+    </nav>
+}
+
+@section MainContent
+{
+    <legend id="anchorNavg">Navigation Groups</legend>
+    <div class="tile fg-anthilla-blu">Group 1: Blacklist</div>
+    <div class="tile fg-anthilla-blu">Group 2: Contents</div>
+    <div class="tile fg-anthilla-blu">Group 3: Open</div>
+    <div class="tile fg-anthilla-blu" style="margin-bottom: 120px;">Apply Config</div>
+    <br />
+    <legend id="anchorGrpm">Group Membership</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_grpmmb_">Group Membership</a></li>
+            <li><a href="#_flip_">Filter-less IP</a></li>
+            <li><a href="#_flus_">Filter-less Users</a></li>
+            <li><a href="#_waip_">IP w/out Web Access</a></li>
+            <li><a href="#_waus_">Users w/out Web Access</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_grpmmb_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>IP Address / UserName</th>
+                            <th>Group</th>
+                            <th>Comment</th>
+                            <th>&nbsp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>&nbsp</th>
+                            <th>&nbsp</th>
+                            <th>&nbsp</th>
+                            <th>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="frame" id="_flip_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <input type="text" />
+                            </th>
+                            <th>
+                                <input type="text" />
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>&nbsp</th>
+                            <th>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="frame" id="_flus_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>UserName</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <input type="text" />
+                            </th>
+                            <th>
+                                <input type="text" />
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>&nbsp</th>
+                            <th>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="frame" id="_waip_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <input type="text" />
+                            </th>
+                            <th>
+                                <input type="text" />
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>&nbsp</th>
+                            <th>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="frame" id="_waus_">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>UserName</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <input type="text" />
+                            </th>
+                            <th>
+                                <input type="text" />
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>&nbsp</th>
+                            <th>
+                                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply Configuration" />
+    <br />
+    <legend id="anchorTacl">Temporal Access Lists</legend>
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#_rules_">Rules</a></li>
+            <li><a href="#_schdef_">Schedule Definition</a></li>
+            <li><a href="#_ipass_">IP Association</a></li>
+        </ul>
+
+        <div class="frames">
+            <div class="frame" id="_rules_"></div>
+            <div class="frame" id="_schdef_"></div>
+            <div class="frame" id="_ipass_"></div>
+        </div>
+    </div>
+    <br />
+    <legend id="anchorMss">Authentication Management</legend>
+    <h5>Autenticazione Forzata</h5>
+    <p>Enabled</p>
+    <input type="radio" value="Yes" /><input type="radio" value="No" />
+    <br />
+    <p>
+        Se abilitata il firewall richiederà nome utente e password per permettere la Navigazione.
+le login e le password saranno quelle create nel menu gestione utenti del firewall.
+configurazione consigliata per computer ad uso promiscuo.
+NOTA: è necessario impostare nel browser dei clients l'uso del proxy IP 10.21.254.254 porta 8080
+    </p>
+    <br />
+    <br />
+    <h5>Autenticazione con Client IDENT</h5>
+    <p>Enabled</p>
+    <input type="radio" value="Yes" /><input type="radio" value="No" />
+    <br />
+    <p>
+        Se abilitata il firewall contatterà tutti i computer che tenteranno di navigare.
+loggando il nome utente in uso su quel computer e applicando le eventuali regole presenti per lo specifico utente.
+configurazione consigliata per lan con dominio e computer in dotazione ad un solo utente .
+NOTA: richiede l'utilizzo di un client IDENT sul personal computer
+    </p>
+    <br />
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save Configuration" />
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply Configuration" />
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('a.anchor').click(function () {
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top
+            }, 500);
+            return false;
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                var i = $(window).scrollTop() - 145;
+                $('.navigation-bar.page').css('top', i);
+            }
+            if ($(window).scrollTop() < 150) {
+                $('.navigation-bar.page').css('top', 0);
+            }
+        });
+    </script>
+}
