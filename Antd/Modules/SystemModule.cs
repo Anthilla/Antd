@@ -47,13 +47,20 @@ namespace Antd {
             Get["/general"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Hostname = Command.Launch("hostname", "").output;
+                vmod.Domain = Command.Launch("domainname", "").output;
                 return View["page-system-general", vmod];
             };
 
             Post["/update/hostname/{hostname}"] = x => {
                 string hostname = x.hostname;
-                ConsoleLogger.Info(hostname);
-                return Response.AsJson(true);
+                ConsoleLogger.Info("New Hostname: {0}", hostname);
+                return Response.AsJson(hostname);
+            };
+
+            Post["/update/domainname/{domainname}"] = x => {
+                string domainname = x.domainname;
+                ConsoleLogger.Info("New Domainname: {0}", domainname);
+                return Response.AsJson(domainname);
             };
 
             Get["/advanced"] = x => {

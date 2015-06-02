@@ -72,96 +72,24 @@
                     <p>Current hostname: @Model.Hostname</p>
                     <input id="NewHostname" type="text" />
                     <p id="UpdateHostname" class="button bg-anthilla-green" style="display: none;">Edit Hostname</p>
+                    <p>
+                        Name of the firewall host, without domain part
+                        e.g. firewall
+                    </p>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label>Domain</label></td>
                 <td>
-                    <input type="text" /></td>
-            </tr>
-            <tr>
-                <td>
-                    <label>DNS servers</label></td>
-                <td>
-                    <table class="table hovered">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <label>DNS Server</label>
-                                </th>
-                                <th>
-                                    <label>Use gateway</label>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input type="text" /></td>
-                                <td>
-                                    <select>
-                                        <option selected="selected">none</option>
-                                        <option>WAN_DHCP - wan - dynamic</option>
-                                        <option>WAN_DHCP6 - wan - dynamic</option>
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" /></td>
-                                <td>
-                                    <select>
-                                        <option selected="selected">none</option>
-                                        <option>WAN_DHCP - wan - dynamic</option>
-                                        <option>WAN_DHCP6 - wan - dynamic</option>
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" /></td>
-                                <td>
-                                    <select>
-                                        <option selected="selected">none</option>
-                                        <option>WAN_DHCP - wan - dynamic</option>
-                                        <option>WAN_DHCP6 - wan - dynamic</option>
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" /></td>
-                                <td>
-                                    <select>
-                                        <option selected="selected">none</option>
-                                        <option>WAN_DHCP - wan - dynamic</option>
-                                        <option>WAN_DHCP6 - wan - dynamic</option>
-                                    </select></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" /></td>
-                                <td>
-                                    <select>
-                                        <option selected="selected">none</option>
-                                        <option>WAN_DHCP - wan - dynamic</option>
-                                        <option>WAN_DHCP6 - wan - dynamic</option>
-                                    </select></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <p>Current domainname: @Model.Domain</p>
+                    <input id="NewDomainname" type="text" />
+                    <p id="UpdateDomainname" class="button bg-anthilla-green" style="display: none;">Edit Domainname</p>
                     <p>
-                        Enter IP addresses to be used by the system for DNS resolution. 
-                        These are also used for the DHCP service, DNS forwarder and for PPTP VPN clients.
+                        Do not use 'local' as a domain name. It will cause local hosts running mDNS (avahi, bonjour, etc.) 
+                        to be unable to resolve local hosts not running mDNS.
+                        e.g. mycorp.com, home, office, private, etc.
                     </p>
-                    <p>
-                        In addition, optionally select the gateway for each DNS server. 
-                        When using multiple WAN connections there should be at least one unique DNS server per gateway.
-                    </p>
-                    <input type="checkbox" />
-                    Allow DNS server list to be overridden by DHCP/PPP on WAN 
-                    <br />
-                    <input type="checkbox" />
-                    Do not use the DNS Forwarder as a DNS server for the firewall  
-                </td>
             </tr>
             <tr>
                 <td>
@@ -175,23 +103,31 @@
                         <option>a</option>
                         <option>b</option>
                         <option>c</option>
-                    </select></td>
+                    </select>
+                    <p>
+                        Select the location closest to you
+                    </p>
+                </td>
             </tr>
             <tr>
                 <td>
                     <label>NTP time server</label></td>
                 <td>
-                    <input type="text" /></td>
+                    <input type="text" />
+                    <p>
+                        Use a ',' to separate multiple hosts (only one is required). 
+                        Remember to set up at least one DNS server if you enter a host name here! 
+                    </p>
+                </td>
+
             </tr>
             <tr>
                 <td>
                     <label>Language</label></td>
                 <td>
                     <select>
-                        <option>List of languages</option>
-                        <option>1</option>
-                        <option>b</option>
-                        <option>c</option>
+                        <option>English</option>
+                        <option disabled>Italian</option>
                     </select></td>
             </tr>
             <tr>
