@@ -33,7 +33,6 @@ $('#UpdateDomainname').click(function () {
     $.ajax({
         url: '/system/update/domainname/' + newDomainName,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -52,7 +51,6 @@ $('#UpdateTimezone').click(function () {
     $.ajax({
         url: '/system/update/timezone/' + newTimezone,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -74,7 +72,6 @@ $('#UpdateTimeserver').click(function () {
     $.ajax({
         url: '/system/update/timeserver/' + newTimeserver,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -93,7 +90,6 @@ $('#UpdateLanguage').click(function () {
     $.ajax({
         url: '/system/update/language/' + newLanguage,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -107,7 +103,6 @@ $('#SaveSystemGeneral').click(function () {
     $.ajax({
         url: '/system/update/systemgeneral/',
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -124,7 +119,6 @@ $('#UpdateProtocol').click(function () {
     $.ajax({
         url: '/system/update/protocol/' + newProtocol,
         type: 'POST',
-        data: JSON.stringify(newProtocol),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -146,7 +140,6 @@ $('#UpdateTCPport').click(function () {
     $.ajax({
         url: '/system/update/tcpport/' + newTCPport,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -168,7 +161,6 @@ $('#UpdateMaxProcesses').click(function () {
     $.ajax({
         url: '/system/update/maxprocs/' + newMaxProcesses,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -183,7 +175,6 @@ $('#UpdateWebGUIRedirects').click(function () {
     $.ajax({
         url: '/system/update/webguiredirects/' + newWebGUIRedirects,
         type: 'POST',
-        data: JSON.stringify(newWebGUIRedirects),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -198,7 +189,6 @@ $('#UpdateWebGUILoginAutocomplete').click(function () {
     $.ajax({
         url: '/system/update/webguiloginautocomplete/' + newWebGUILoginAutocomplete,
         type: 'POST',
-        data: JSON.stringify(newWebGUILoginAutocomplete),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -213,7 +203,6 @@ $('#UpdateWebGUIloginmessages').click(function () {
     $.ajax({
         url: '/system/update/webguiloginmessages/' + newWebGUIloginmessages,
         type: 'POST',
-        data: JSON.stringify(newWebGUIloginmessages),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -228,7 +217,6 @@ $('#UpdateAntiLockout').click(function () {
     $.ajax({
         url: '/system/update/antilockout/' + newAntiLockout,
         type: 'POST',
-        data: JSON.stringify(newAntiLockout),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -243,7 +231,6 @@ $('#UpdateDNSRebindCheck').click(function () {
     $.ajax({
         url: '/system/update/dnsrebindcheck/' + newDNSRebindCheck,
         type: 'POST',
-        data: JSON.stringify(newDNSRebindCheck),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -265,7 +252,6 @@ $('#UpdateAlternateHostnames').click(function () {
     $.ajax({
         url: '/system/update/alternatehostnames/' + newAlternateHostnames,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -280,7 +266,6 @@ $('#UpdateHTTP_REFERERenforcement').click(function () {
     $.ajax({
         url: '/system/update/refererenforcement/' + newHTTP_REFERERenforcement,
         type: 'POST',
-        data: JSON.stringify(newHTTP_REFERERenforcement),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -295,7 +280,6 @@ $('#UpdateTabText').click(function () {
     $.ajax({
         url: '/system/update/tabtext/' + newTabText,
         type: 'POST',
-        data: JSON.stringify(newTabText),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -310,7 +294,6 @@ $('#UpdateEnableSecureShell').click(function () {
     $.ajax({
         url: '/system/update/enablesecureshell/' + newEnableSecureShell,
         type: 'POST',
-        data: JSON.stringify(newEnableSecureShell),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -325,7 +308,6 @@ $('#UpdateAuthenticationMethod').click(function () {
     $.ajax({
         url: '/system/update/authenticationmethod/' + newAuthenticationMethod,
         type: 'POST',
-        data: JSON.stringify(newAuthenticationMethod),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -347,7 +329,6 @@ $('#UpdateSSHport').click(function () {
     $.ajax({
         url: '/system/update/sshport/' + newSSHport,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -362,7 +343,6 @@ $('#UpdateSerialTerminal').click(function () {
     $.ajax({
         url: '/system/update/serialterminal/' + newSerialTerminal,
         type: 'POST',
-        data: JSON.stringify(newSerialTerminal),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -381,7 +361,6 @@ $('#UpdateSerialSpeed').click(function () {
     $.ajax({
         url: '/system/update/serialspeed/' + newSerialSpeed,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -400,7 +379,6 @@ $('#UpdatePrimaryConsole').click(function () {
     $.ajax({
         url: '/system/update/primaryconsole/' + newPrimaryConsole,
         type: 'POST',
-        data: JSON.stringify(newDomainName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -415,7 +393,6 @@ $('#UpdateConsoleMenu').click(function () {
     $.ajax({
         url: '/system/update/consolemenu/' + newConsoleMenu,
         type: 'POST',
-        data: JSON.stringify(newConsoleMenu),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -430,7 +407,6 @@ $('#UpdateIPDo-Not-Fragment').click(function () {
     $.ajax({
         url: '/system/update/ipdontfragment/' + newIPDoNotFragment,
         type: 'POST',
-        data: JSON.stringify(newIPDoNotFragment),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -445,7 +421,6 @@ $('#UpdateIPRandomID').click(function () {
     $.ajax({
         url: '/system/update/iprandomid/' + newIPRandomID,
         type: 'POST',
-        data: JSON.stringify(newIPRandomID),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -464,7 +439,6 @@ $('#UpdateFirewallOptimizationOptions').click(function () {
     $.ajax({
         url: '/system/update/firewalloptimizationoptions/' + newFirewallOptimizationOptions,
         type: 'POST',
-        data: JSON.stringify(newFirewallOptimizationOptions),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -479,7 +453,6 @@ $('#UpdateDisableFirewallFilter').click(function () {
     $.ajax({
         url: '/system/update/disablefirewallfilter/' + newDisableFirewallFilter,
         type: 'POST',
-        data: JSON.stringify(newDisableFirewallFilter),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -494,7 +467,6 @@ $('#UpdateDisableFirewallScrub').click(function () {
     $.ajax({
         url: '/system/update/disablefirewallscrub/' + newDisableFirewallScrub,
         type: 'POST',
-        data: JSON.stringify(newDisableFirewallScrub),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
