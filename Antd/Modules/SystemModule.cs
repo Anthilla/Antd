@@ -27,8 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Status;
-using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

@@ -158,7 +158,6 @@
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Modules\SystemModule.cs" />
-    <Compile Include="Modules\WizardModule.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />
@@ -237,10 +236,25 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
-    <None Include="Views\page-system.cshtml">
+    <None Include="Views\page-system-usermanager.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-wizard.cshtml">
+    <None Include="Views\page-system-routing.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-firmware.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-general.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-certmanager.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-advanced.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-wizard.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-config-file2.cshtml">

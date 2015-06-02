@@ -32,7 +32,149 @@
 @{Layout = "_layout.cshtml";}
 
 @section MainContent {
+    <legend>System: general setup</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>System</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Hostname</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Domain</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>DNS servers</label></td>
+                <td>
+                    <table class="table hovered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label>DNS Server</label>
+                                </th>
+                                <th>
+                                    <label>Use gateway</label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="text" /></td>
+                                <td>
+                                    <select>
+                                        <option selected="selected">none</option>
+                                        <option>WAN_DHCP - wan - dynamic</option>
+                                        <option>WAN_DHCP6 - wan - dynamic</option>
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" /></td>
+                                <td>
+                                    <select>
+                                        <option selected="selected">none</option>
+                                        <option>WAN_DHCP - wan - dynamic</option>
+                                        <option>WAN_DHCP6 - wan - dynamic</option>
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" /></td>
+                                <td>
+                                    <select>
+                                        <option selected="selected">none</option>
+                                        <option>WAN_DHCP - wan - dynamic</option>
+                                        <option>WAN_DHCP6 - wan - dynamic</option>
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" /></td>
+                                <td>
+                                    <select>
+                                        <option selected="selected">none</option>
+                                        <option>WAN_DHCP - wan - dynamic</option>
+                                        <option>WAN_DHCP6 - wan - dynamic</option>
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" /></td>
+                                <td>
+                                    <select>
+                                        <option selected="selected">none</option>
+                                        <option>WAN_DHCP - wan - dynamic</option>
+                                        <option>WAN_DHCP6 - wan - dynamic</option>
+                                    </select></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
+                    <p>
+                        Enter IP addresses to be used by the system for DNS resolution. 
+                        These are also used for the DHCP service, DNS forwarder and for PPTP VPN clients.
+                    </p>
+                    <p>
+                        In addition, optionally select the gateway for each DNS server. 
+                        When using multiple WAN connections there should be at least one unique DNS server per gateway.
+                    </p>
+                    <input type="checkbox" />
+                    Allow DNS server list to be overridden by DHCP/PPP on WAN 
+                    <br />
+                    <input type="checkbox" />
+                    Do not use the DNS Forwarder as a DNS server for the firewall  
+                    <hr />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Time zone</label></td>
+                <td>
+                    <select>
+                        <option>Big list of options?</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>a</option>
+                        <option>b</option>
+                        <option>c</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>NTP time server</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Language</label></td>
+                <td>
+                    <select>
+                        <option>List of languages</option>
+                        <option>1</option>
+                        <option>b</option>
+                        <option>c</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="button bg-anthilla-green">Save</p></td>
+            </tr>
+        </tbody>
+    </table>
 }
 
 @section Scripts {
