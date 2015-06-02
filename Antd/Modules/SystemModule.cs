@@ -58,11 +58,6 @@ namespace Antd {
                 return View["page-system-certmanager", vmod];
             };
 
-            Get["/firmware"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-firmware", vmod];
-            };
-
             Get["/routing"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-routing", vmod];
