@@ -56,7 +56,285 @@
 }
 
 @section MainContent {
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs" id="GroupsTabs">
+            <li class="active"><a href="#AdminAccess">Admin Access</a></li>
+            <li><a href="#FirewallNAT">Firewall / NAT</a></li>
+            <li><a href="#Networking">Networking</a></li>
+            <li><a href="#Misc">Misc</a></li>
+            <li><a href="#SystemTunables">System Tunables</a></li>
+            <li><a href="#Notifications">Notifications</a></li>
+        </ul>
 
+        <div class="frames" id="GroupsFrames">
+            <div class="frame" id="AdminAccess">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Web Configurator</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Protocol</label></td>
+                            <td>
+                                <input type="radio" />HTTP
+                                <input type="radio" />HTTPS</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>TCP port</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Enter a custom port number for the webConfigurator above if you want to 
+                                    override the default (80 for HTTP, 443 for HTTPS).
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Max Processes</label></td>
+                            <td>
+                                <input type="text" value="2" />
+                                <p>
+                                    Enter the number of webConfigurator processes you want to run. 
+                                    This defaults to 2. Increasing this will allow more users/browsers to access the GUI concurrently.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>WebGUI redirect</label></td>
+                            <td>
+                                <input type="checkbox" />Disable webConfigurator redirect rule 
+                                <p>
+                                    When this is unchecked, access to the webConfigurator is always permitted even on port 80, 
+                                    regardless of the listening port configured. 
+                                    Check this box to disable this automatically added redirect rule. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>WebGUI Login Autocomplete</label></td>
+                            <td>
+                                <input type="checkbox" />Enable webConfigurator login autocomplete 
+                                <p>
+                                    When this is checked, login credentials for the webConfigurator may be saved by the browser. 
+                                    While convenient, some security standards require this to be disabled. 
+                                    Check this box to enable autocomplete on the login form so that browsers will prompt to save credentials 
+                                    (NOTE: Some browsers do not respect this option). 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>WebGUI login messages</label></td>
+                            <td>
+                                <input type="checkbox" />Disable logging of webConfigurator successful logins 
+                                <p>
+                                    When this is checked, successful logins to the webConfigurator will not be logged.  
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Anti-lockout</label></td>
+                            <td>
+                                <input type="checkbox" />Disable webConfigurator anti-lockout rule  
+                                <p>
+                                    When this is unchecked, access to the webConfigurator on the LAN interface is always permitted, 
+                                    regardless of the user-defined firewall rule set. Check this box to disable this automatically 
+                                    added rule, so access to the webConfigurator is controlled by the user-defined firewall rules 
+                                    (ensure you have a firewall rule in place that allows you in, or you will lock yourself out!) 
+                                    Hint: the "Set interface(s) IP address" option in the console menu resets this setting as well.  
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>DNS Rebind Check</label></td>
+                            <td>
+                                <input type="checkbox" />Disable DNS Rebinding Checks   
+                                <p>
+                                    When this is unchecked, your system is protected against DNS Rebinding attacks. 
+                                    This blocks private IP responses from your configured DNS servers. 
+                                    Check this box to disable this protection if it interferes with webConfigurator access 
+                                    or name resolution in your environment.   
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Alternate Hostnames</label></td>
+                            <td>
+                                <input type="text" />Alternate Hostnames for DNS Rebinding and HTTP_REFERER Checks    
+                                <p>
+                                    Here you can specify alternate hostnames by which the router may be queried, 
+                                    to bypass the DNS Rebinding Attack checks. Separate hostnames with spaces. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Browser HTTP_REFERER enforcement</label></td>
+                            <td>
+                                <input type="checkbox" />Disable HTTP_REFERER enforcement check    
+                                <p>
+                                    When this is unchecked, access to the webConfigurator is protected against HTTP_REFERER
+                                    redirection attempts. Check this box to disable this protection if you find that it interferes
+                                    with webConfigurator access in certain corner cases such as using external scripts to interact 
+                                    with this system. More information on HTTP_REFERER is available from Wikipedia.   
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Browser tab text</label></td>
+                            <td>
+                                <input type="checkbox" />Display page name first in browser tab     
+                                <p>
+                                    When this is unchecked, the browser tab shows the host name followed by 
+                                    the current page. Check this box to display the current page followed by the host name.   
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Secure Shell</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Secure Shell Server</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Enable Secure Shell  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Authentication Method</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Disable password login for Secure Shell (RSA/DSA key only)    
+                                <p>
+                                    When enabled, authorized keys need to be configured for each user that has been granted secure shell access.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>SSH port</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Note: Leave this blank for the default of 22.
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Serial Communications</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Serial Terminal</label></td>
+                            <td>
+                                <input type="checkbox" />Enables the first serial port with 115200/8/N/1 by default, or another speed selectable below.   
+                            </td>
+                            <p>
+                                Note: This will redirect the console output and messages to the serial port. 
+                                You can still access the console menu from the internal video card/keyboard. 
+                                A null modem serial cable or adapter is required to use the serial console.
+                            </p>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Serial Speed</label></td>
+                            <td>
+                                <select>
+                                    <option value="115200">115200</option>
+                                    <option value="57600">57600</option>
+                                    <option value="38400">38400</option>
+                                    <option value="19200">19200</option>
+                                    <option value="14400">14400</option>
+                                    <option value="9600">9600</option>
+                                </select>
+                                bps 
+                                <p>
+                                    Allows selection of different speeds for the serial console port. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Primary Console</label></td>
+                            <td>
+                                <select>
+                                    <option value="serial">Serial Console</option>
+                                    <option value="video">VGA Console</option>
+                                </select>
+                                <p>
+                                    Select the preferred console if multiple consoles are present. 
+                                    The preferred console will show pfSense boot script output. All consoles display OS boot messages, 
+                                    console messages, and the console menu
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Console Options</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Console menu</label></td>
+                            <td>
+                                <input type="checkbox" />	Password protect the console menu   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
+            </div>
+
+            <div class="frame" id="FirewallNAT">
+            </div>
+
+            <div class="frame" id="Networking">
+            </div>
+
+            <div class="frame" id="Misc">
+            </div>
+
+            <div class="frame" id="SystemTunables">
+            </div>
+
+            <div class="frame" id="Notifications">
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {
