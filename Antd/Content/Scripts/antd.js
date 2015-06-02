@@ -489,3 +489,59 @@ $('#UpdateFirewallAdaptiveTimeouts').click(function () {
         }
     });
 });
+
+$('#NewFirewallMaximumStates').keyup(function () {
+    var value = $('#NewFirewallMaximumStates').val();
+    if (value != "" || val != " ") {
+        $('#UpdateFirewallMaximumStates').show();
+    }
+});
+
+$('#UpdateFirewallMaximumStates').click(function () {
+    var newFirewallMaximumStates = $('#NewFirewallMaximumStates').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/firewallmaximumstates/' + newFirewallMaximumStates,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewFirewallMaximumTableEntries').keyup(function () {
+    var value = $('#NewFirewallMaximumTableEntries').val();
+    if (value != "" || val != " ") {
+        $('#UpdateFirewallMaximumTableEntries').show();
+    }
+});
+
+$('#UpdateFirewallMaximumTableEntries').click(function () {
+    var newFirewallMaximumTableEntries = $('#NewFirewallMaximumTableEntries').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/firewallmaximumtableentries/' + newFirewallMaximumTableEntries,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateStaticRouteFiltering').click(function () {
+    var newStaticRouteFiltering = $('#NewStaticRouteFiltering').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disablefirewallscrub/' + newStaticRouteFiltering,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

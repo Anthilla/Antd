@@ -98,6 +98,8 @@ namespace Antd {
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
+                vmod.FirewallMaximumStates = "9000";
+                vmod.FirewallMaximumTableEntries = "20000";
                 return View["page-system-advanced", vmod];
             };
 
@@ -244,6 +246,24 @@ namespace Antd {
                 string start = x.start;
                 ConsoleLogger.Info("New firewalladaptivetimeouts: {0} - {1}", end, start);
                 return Response.AsJson(end + " - " + start);
+            };
+
+            Post["/update/firewallmaximumstates/{firewallmaximumstates}"] = x => {
+                string firewallmaximumstates = x.firewallmaximumstates;
+                ConsoleLogger.Info("New firewallmaximumstates: {0}", firewallmaximumstates);
+                return Response.AsJson(firewallmaximumstates);
+            };
+
+            Post["/update/firewallmaximumtableentries/{firewallmaximumtableentries}"] = x => {
+                string firewallmaximumtableentries = x.firewallmaximumtableentries;
+                ConsoleLogger.Info("New firewallmaximumtableentries: {0}", firewallmaximumtableentries);
+                return Response.AsJson(firewallmaximumtableentries);
+            };
+
+            Post["/update/staticroutefiltering/{staticroutefiltering}"] = x => {
+                string staticroutefiltering = x.staticroutefiltering;
+                ConsoleLogger.Info("New staticroutefiltering: {0}", staticroutefiltering);
+                return Response.AsJson(staticroutefiltering);
             };
 
             Get["/certmanager"] = x => {

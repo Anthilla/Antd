@@ -543,24 +543,30 @@
                                 <label>Firewall Maximum States</label>
                             </td>
                             <td>
+                                <p>Current Firewall Maximum States: @Model.FirewallMaximumStates</p>
+                            </td>
+                            <td>
                                 <input id="NewFirewallMaximumStates" type="text" />
-                                <p id="UpdateFirewallMaximumStates" class="button bg-anthilla-green" style="display: none;">Edit Timeserver</p>
+                                <p id="UpdateFirewallMaximumStates" class="button bg-anthilla-green" style="display: none;">Edit Maximum States</p>
                             </td>
                             <td>
                                 <p>
                                     Maximum number of connections to hold in the firewall state table   
                                 </p>
-                                <p>
-                                    Note: Leave this blank for the default. On your system the default size is: 9000.   
-                                </p>
                             </td>
-                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Firewall Maximum Table Entries</label></td>
+                                <label>Firewall Maximum Table Entries</label>
+                            </td>
                             <td>
-                                <input type="text" />
+                                <p>Current Firewall Maximum States: @Model.FirewallMaximumTableEntries</p>
+                            </td>
+                            <td>
+                                <input id="NewFirewallMaximumTableEntries"  type="text" />
+                                <p id="UpdateFirewallMaximumTableEntries" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Maximum number of table entries for systems such as aliases, sshlockout, snort, etc, combined   
                                 </p>
@@ -571,9 +577,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Static route filtering</label></td>
+                                <label>Static route filtering</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Bypass firewall rules for traffic on the same interface 
+                                <input id="NewStaticRouteFiltering" type="checkbox" />Bypass firewall rules for traffic on the same interface 
+                                <p id="UpdateStaticRouteFiltering" class="button bg-anthilla-green">Edit Static route filtering</p>
+                            </td>
+                            <td>
                                 <p>
                                     This option only applies if you have defined one or more static routes.
                                     If it is enabled, traffic that enters and leaves through the same interface 
@@ -581,6 +591,7 @@
                                     subnets are connected to the same interface.   
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
