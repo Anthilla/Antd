@@ -536,7 +536,35 @@ $('#UpdateStaticRouteFiltering').click(function () {
     var newStaticRouteFiltering = $('#NewStaticRouteFiltering').prop('checked');
     jQuery.support.cors = true;
     $.ajax({
-        url: '/system/update/disablefirewallscrub/' + newStaticRouteFiltering,
+        url: '/system/update/staticroutefiltering/' + newStaticRouteFiltering,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateDisableAutoVPN').click(function () {
+    var newDisableAutoVPN = $('#NewDisableAutoVPN').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disableautovpn/' + newDisableAutoVPN,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateDisableReplyto').click(function () {
+    var newDisableReplyto = $('#NewDisableReplyto').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disablereplyto/' + newDisableReplyto,
         type: 'POST',
         contentType: "application/json;charset=utf-8",
         success: function (data) {

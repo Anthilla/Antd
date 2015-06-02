@@ -266,6 +266,18 @@ namespace Antd {
                 return Response.AsJson(staticroutefiltering);
             };
 
+            Post["/update/disableautovpn/{disableautovpn}"] = x => {
+                string disableautovpn = x.disableautovpn;
+                ConsoleLogger.Info("New disableautovpn: {0}", disableautovpn);
+                return Response.AsJson(disableautovpn);
+            };
+
+            Post["/update/disablereplyto/{disablereplyto}"] = x => {
+                string disablereplyto = x.disablereplyto;
+                ConsoleLogger.Info("New disablereplyto: {0}", disablereplyto);
+                return Response.AsJson(disablereplyto);
+            };
+
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];

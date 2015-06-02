@@ -563,7 +563,7 @@
                                 <p>Current Firewall Maximum States: @Model.FirewallMaximumTableEntries</p>
                             </td>
                             <td>
-                                <input id="NewFirewallMaximumTableEntries"  type="text" />
+                                <input id="NewFirewallMaximumTableEntries" type="text" />
                                 <p id="UpdateFirewallMaximumTableEntries" class="button bg-anthilla-green" style="display: none;">Edit</p>
                             </td>
                             <td>
@@ -595,26 +595,35 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Disable Auto-added VPN rules</label></td>
+                                <label>Disable Auto-added VPN rules</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Disable all auto-added VPN rules 
+                                <input id="NewDisableAutoVPN" type="checkbox" />Disable all auto-added VPN rules 
+                                <p id="UpdateDisableAutoVPN" class="button bg-anthilla-green">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Note: This disables automatically added rules for IPsec, PPTP.
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Disable reply-to</label></td>
+                                <label>Disable reply-to</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
-                                Disable reply-to on WAN rules  
+                                <input id="NewDisableReplyto" type="checkbox" />Disable reply-to on WAN rules  
+                                <p id="UpdateDisableReplyto" class="button bg-anthilla-green">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     With Multi-WAN you generally want to ensure traffic leaves the same interface it arrives on, 
                                     hence reply-to is added automatically by default. When using bridging, you must disable this 
                                     behavior if the WAN gateway IP is different from the gateway IP of the hosts behind the bridged interface. 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
@@ -654,6 +663,20 @@
                         </tr>
                     </tbody>
                 </table>
+
+                                                        @*
+                                         ______   _______  _______  _        _______  _______  _______  _       
+                                        (  ___ \ (  ___  )(  ___  )| \    /\(       )(  ___  )(  ____ )| \    /\
+                                        | (   ) )| (   ) || (   ) ||  \  / /| () () || (   ) || (    )||  \  / /
+                                        | (__/ / | |   | || |   | ||  (_/ / | || || || (___) || (____)||  (_/ / 
+                                        |  __ (  | |   | || |   | ||   _ (  | |(_)| ||  ___  ||     __)|   _ (  
+                                        | (  \ \ | |   | || |   | ||  ( \ \ | |   | || (   ) || (\ (   |  ( \ \ 
+                                        | )___) )| (___) || (___) ||  /  \ \| )   ( || )   ( || ) \ \__|  /  \ \
+                                        |/ \___/ (_______)(_______)|_/    \/|/     \||/     \||/   \__/|_/    \/
+                                                                        
+                                                        *@
+
+
                 <table class="table hovered">
                     <thead>
                         <tr>
