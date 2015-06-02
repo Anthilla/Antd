@@ -27,20 +27,57 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Status;
+using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
 
-namespace Antd.Modules {
-    public class WizardModule : NancyModule {
+namespace Antd {
 
-        public WizardModule()
-            : base("/wizard") {
+    public class SystemModule : NancyModule {
+
+        public SystemModule()
+            : base("/system") {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                dynamic model = new ExpandoObject();
-                return View["page-wizard", model];
+                return Response.AsRedirect("/system/general");
+            };
+
+            Get["/general"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-general", vmod];
+            };
+
+            Get["/advanced"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-advanced", vmod];
+            };
+
+            Get["/certmanager"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-certmanager", vmod];
+            };
+
+            Get["/firmware"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-firmware", vmod];
+            };
+
+            Get["/routing"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-routing", vmod];
+            };
+
+            Get["/wizard"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-wizard", vmod];
+            };
+
+            Get["/usermanager"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-usermanager", vmod];
             };
         }
     }
