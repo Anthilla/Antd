@@ -307,41 +307,52 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>SSH port</label></td>
-                            <td>
-                                <input type="text" />
-                                <p>
-                                    Note: Leave this blank for the default of 22.
-                                </p>
+                                <label>SSH port</label>
                             </td>
+                            <td>
+                                <p>Current SSH port: @Model.SSHPort</p>
+                            </td>
+                            <td>
+                                <input id="NewSSHport" type="text" />
+                                <p id="UpdateSSHport" class="button bg-anthilla-green" style="display: none;">Edit SSH port</p>
+                            </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
                 <table class="table hovered">
                     <thead>
                         <tr>
-                            <th colspan="2">
-                                <label>Serial Communications</label></th>
+                            <th colspan="4">
+                                <label>Serial Communications</label>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <label>Serial Terminal</label></td>
-                            <td>
-                                <input type="checkbox" />Enables the first serial port with 115200/8/N/1 by default, or another speed selectable below.   
+                                <label>Serial Terminal</label>
                             </td>
-                            <p>
-                                Note: This will redirect the console output and messages to the serial port. 
+                            <td>
+                                <input id="NewSerialTerminal" type="checkbox" />
+                                Enables the first serial port with 115200/8/N/1 by default, or another speed selectable below.   
+                                <p id="UpdateSerialTerminal" class="button bg-anthilla-green">Edit Serial Terminal</p>
+                            </td>
+                            <td>
+                                <p>
+                                    Note: This will redirect the console output and messages to the serial port. 
                                 You can still access the console menu from the internal video card/keyboard. 
                                 A null modem serial cable or adapter is required to use the serial console.
-                            </p>
+                                </p>
+                            </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Serial Speed</label></td>
+                                <label>Serial Speed</label>
+                            </td>
                             <td>
-                                <select>
+                                <select id="NewSerialSpeed" >
                                     <option value="115200">115200</option>
                                     <option value="57600">57600</option>
                                     <option value="38400">38400</option>
@@ -350,25 +361,34 @@
                                     <option value="9600">9600</option>
                                 </select>
                                 bps 
+                                <p id="UpdateSerialSpeed" class="button bg-anthilla-green" style="display: none;">Edit Serial Speed</p>
+                            </td>
+                            <td>
                                 <p>
                                     Allows selection of different speeds for the serial console port. 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Primary Console</label></td>
+                                <label>Primary Console</label>
+                            </td>
                             <td>
-                                <select>
+                                <select id="NewPrimaryConsole">
                                     <option value="serial">Serial Console</option>
                                     <option value="video">VGA Console</option>
                                 </select>
+                                <p id="UpdatePrimaryConsole" class="button bg-anthilla-green" style="display: none;">Edit Primary Console</p>
+                            </td>
+                            <td>
                                 <p>
                                     Select the preferred console if multiple consoles are present. 
                                     The preferred console will show pfSense boot script output. All consoles display OS boot messages, 
                                     console messages, and the console menu
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>

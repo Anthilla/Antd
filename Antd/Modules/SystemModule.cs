@@ -97,6 +97,7 @@ namespace Antd {
                 vmod.TCPport = "";
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
+                vmod.SSHPort = "22";
                 return View["page-system-advanced", vmod];
             };
 
@@ -176,6 +177,30 @@ namespace Antd {
                 string authenticationmethod = x.authenticationmethod;
                 ConsoleLogger.Info("New Authentication Method: {0}", authenticationmethod);
                 return Response.AsJson(authenticationmethod);
+            };
+
+            Post["/update/sshport/{sshport}"] = x => {
+                string sshport = x.sshport;
+                ConsoleLogger.Info("New SSh Port: {0}", sshport);
+                return Response.AsJson(sshport);
+            };
+
+            Post["/update/serialterminal/{serialterminal}"] = x => {
+                string serialterminal = x.serialterminal;
+                ConsoleLogger.Info("New SerialTerminal: {0}", serialterminal);
+                return Response.AsJson(serialterminal);
+            };
+
+            Post["/update/serialspeed/{serialspeed}"] = x => {
+                string serialspeed = x.serialspeed;
+                ConsoleLogger.Info("New SerialSpeed: {0}", serialspeed);
+                return Response.AsJson(serialspeed);
+            };
+
+            Post["/update/primaryconsole/{primaryconsole}"] = x => {
+                string primaryconsole = x.primaryconsole;
+                ConsoleLogger.Info("New PrimaryConsole: {0}", primaryconsole);
+                return Response.AsJson(primaryconsole);
             };
 
             Get["/certmanager"] = x => {

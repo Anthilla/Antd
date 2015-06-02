@@ -334,3 +334,78 @@ $('#UpdateAuthenticationMethod').click(function () {
         }
     });
 });
+
+$('#NewSSHport').keyup(function () {
+    var value = $('#NewSSHport').val();
+    if (value != "" || val != " ") {
+        $('#UpdateSSHport').show();
+    }
+});
+
+$('#UpdateSSHport').click(function () {
+    var newSSHport = $('#NewSSHport').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/sshport/' + newSSHport,
+        type: 'POST',
+        data: JSON.stringify(newDomainName),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateSerialTerminal').click(function () {
+    var newSerialTerminal = $('#NewSerialTerminal').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/serialterminal/' + newSerialTerminal,
+        type: 'POST',
+        data: JSON.stringify(newSerialTerminal),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewSerialSpeed').change(function () {
+    $('#UpdateSerialSpeed').show();
+});
+
+$('#UpdateSerialSpeed').click(function () {
+    jQuery.support.cors = true;
+    var newSerialSpeed = $('#NewSerialSpeed>option:selected').val();
+    $.ajax({
+        url: '/system/update/serialspeed/' + newSerialSpeed,
+        type: 'POST',
+        data: JSON.stringify(newDomainName),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewPrimaryConsole').change(function () {
+    $('#UpdatePrimaryConsole').show();
+});
+
+$('#UpdatePrimaryConsole').click(function () {
+    jQuery.support.cors = true;
+    var newPrimaryConsole = $('#NewPrimaryConsole>option:selected').val();
+    $.ajax({
+        url: '/system/update/primaryconsole/' + newPrimaryConsole,
+        type: 'POST',
+        data: JSON.stringify(newDomainName),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
