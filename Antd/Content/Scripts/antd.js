@@ -573,3 +573,52 @@ $('#UpdateDisableReplyto').click(function () {
         }
     });
 });
+
+$('#UpdateDisableNegateRules').click(function () {
+    var newDisableNegateRules = $('#NewDisableNegateRules').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disablenegaterules/' + newDisableNegateRules,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewAliasesHostnamesResolveInterval').keyup(function () {
+    var value = $('#NewAliasesHostnamesResolveInterval').val();
+    if (value != "" || val != " ") {
+        $('#UpdateAliasesHostnamesResolveInterval').show();
+    }
+});
+
+$('#UpdateAliasesHostnamesResolveInterval').click(function () {
+    var newAliasesHostnamesResolveInterval = $('#NewAliasesHostnamesResolveInterval').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/aliaseshostnamesresolveinterval/' + newAliasesHostnamesResolveInterval,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateCheckCertificateAliasUrl').click(function () {
+    var newCheckCertificateAliasUrl = $('#NewCheckCertificateAliasUrl').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/checkcertificatealiasurl/' + newCheckCertificateAliasUrl,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

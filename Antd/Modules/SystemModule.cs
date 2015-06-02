@@ -100,6 +100,7 @@ namespace Antd {
                 vmod.SSHPort = "22";
                 vmod.FirewallMaximumStates = "9000";
                 vmod.FirewallMaximumTableEntries = "20000";
+                vmod.AliasesHostnamesResolveInterval = "300";
                 return View["page-system-advanced", vmod];
             };
 
@@ -276,6 +277,24 @@ namespace Antd {
                 string disablereplyto = x.disablereplyto;
                 ConsoleLogger.Info("New disablereplyto: {0}", disablereplyto);
                 return Response.AsJson(disablereplyto);
+            };
+
+            Post["/update/disablenegaterules/{disablenegaterules}"] = x => {
+                string disablenegaterules = x.disablenegaterules;
+                ConsoleLogger.Info("New disablenegaterules: {0}", disablenegaterules);
+                return Response.AsJson(disablenegaterules);
+            };
+
+            Post["/update/aliaseshostnamesresolveinterval/{aliaseshostnamesresolveinterval}"] = x => {
+                string aliaseshostnamesresolveinterval = x.aliaseshostnamesresolveinterval;
+                ConsoleLogger.Info("New aliaseshostnamesresolveinterval: {0}", aliaseshostnamesresolveinterval);
+                return Response.AsJson(aliaseshostnamesresolveinterval);
+            };
+
+            Post["/update/checkcertificatealiasurl/{checkcertificatealiasurl}"] = x => {
+                string checkcertificatealiasurl = x.checkcertificatealiasurl;
+                ConsoleLogger.Info("New checkcertificatealiasurl: {0}", checkcertificatealiasurl);
+                return Response.AsJson(checkcertificatealiasurl);
             };
 
             Get["/certmanager"] = x => {

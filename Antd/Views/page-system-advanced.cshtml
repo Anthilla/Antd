@@ -627,44 +627,55 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Disable Negate rules</label></td>
+                                <label>Disable Negate rules</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
-                                Disable Negate rule on policy routing rules   
+                                <input id="NewDisableNegateRules" type="checkbox" />Disable Negate rule on policy routing rules   
+                                <p id="UpdateDisableNegateRules" class="button bg-anthilla-green">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     With Multi-WAN you generally want to ensure traffic reaches directly connected networks and VPN 
                                     networks when using policy routing. You can disable this for special purposes but it requires manually 
                                     creating rules for these networks 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Aliases Hostnames Resolve Interval</label></td>
-                            <td>
-                                <input type="text" />
-                                Interval, in seconds, that will be used to resolve hostnames configured on aliases   
-                                <p>
-                                    Note: Leave this blank for the default (300s).
-                                </p>
+                                <label>Aliases Hostnames Resolve Interval</label>
                             </td>
+                            <td>
+                                <p>Current time server: @Model.AliasesHostnamesResolveInterval</p>
+                            </td>
+                            <td>
+                                <input id="NewAliasesHostnamesResolveInterval" type="text" />
+                                Interval, in seconds, that will be used to resolve hostnames configured on aliases   
+                                <p id="UpdateAliasesHostnamesResolveInterval" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Check certificate of aliases URLs</label></td>
+                                <label>Check certificate of aliases URLs</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
-                                Verify HTTPS certificates when downloading alias URLs    
+                                <input id="NewCheckCertificateAliasUrl" type="checkbox" />Verify HTTPS certificates when downloading alias URLs    
+                                <p id="UpdateCheckCertificateAliasUrl" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Make sure the certificate is valid for all HTTPS addresses on aliases. 
                                     If it's not valid or is revoked, do not download it. 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
 
-                                                        @*
+                @*
                                          ______   _______  _______  _        _______  _______  _______  _       
                                         (  ___ \ (  ___  )(  ___  )| \    /\(       )(  ___  )(  ____ )| \    /\
                                         | (   ) )| (   ) || (   ) ||  \  / /| () () || (   ) || (    )||  \  / /
