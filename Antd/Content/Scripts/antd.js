@@ -12,7 +12,6 @@ $('#UpdateHostname').click(function () {
     $.ajax({
         url: '/system/update/hostname/' + newHostName,
         type: 'POST',
-        data: JSON.stringify(newHostName),
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);
@@ -417,6 +416,100 @@ $('#UpdateConsoleMenu').click(function () {
         url: '/system/update/consolemenu/' + newConsoleMenu,
         type: 'POST',
         data: JSON.stringify(newConsoleMenu),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateIPDo-Not-Fragment').click(function () {
+    var newIPDoNotFragment = $('#NewIPDo-Not-Fragment').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/ipdontfragment/' + newIPDoNotFragment,
+        type: 'POST',
+        data: JSON.stringify(newIPDoNotFragment),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateIPRandomID').click(function () {
+    var newIPRandomID = $('#NewIPRandomID').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/iprandomid/' + newIPRandomID,
+        type: 'POST',
+        data: JSON.stringify(newIPRandomID),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#FirewallOptimizationOptionsSelect').change(function () {
+    $('#UpdateFirewallOptimizationOptions').show();
+});
+
+$('#UpdateFirewallOptimizationOptions').click(function () {
+    jQuery.support.cors = true;
+    var newFirewallOptimizationOptions = $('#FirewallOptimizationOptionsSelect>option:selected').val();
+    $.ajax({
+        url: '/system/update/firewalloptimizationoptions/' + newFirewallOptimizationOptions,
+        type: 'POST',
+        data: JSON.stringify(newFirewallOptimizationOptions),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateDisableFirewallFilter').click(function () {
+    var newDisableFirewallFilter = $('#NewDisableFirewallFilter').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disablefirewallfilter/' + newDisableFirewallFilter,
+        type: 'POST',
+        data: JSON.stringify(newDisableFirewallFilter),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateDisableFirewallScrub').click(function () {
+    var newDisableFirewallScrub = $('#NewDisableFirewallScrub').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/disablefirewallscrub/' + newDisableFirewallScrub,
+        type: 'POST',
+        data: JSON.stringify(newDisableFirewallScrub),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateFirewallAdaptiveTimeouts').click(function () {
+    var newFirewallAdaptiveTimeoutsEnd = $('#NewFirewallAdaptiveTimeoutsEnd').val();
+    var newFirewallAdaptiveTimeoutsStart = $('#NewFirewallAdaptiveTimeoutsStart').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/firewalladaptivetimeouts/' + newFirewallAdaptiveTimeoutsEnd + '/' + newFirewallAdaptiveTimeoutsStart,
+        type: 'POST',
         contentType: "application/json;charset=utf-8",
         success: function (data) {
             console.log(data);

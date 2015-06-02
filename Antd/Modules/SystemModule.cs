@@ -209,6 +209,43 @@ namespace Antd {
                 return Response.AsJson(consolemenu);
             };
 
+            Post["/update/ipdontfragment/{ipdontfragment}"] = x => {
+                string ipdontfragment = x.ipdontfragment;
+                ConsoleLogger.Info("New ipdontfragment: {0}", ipdontfragment);
+                return Response.AsJson(ipdontfragment);
+            };
+
+            Post["/update/iprandomid/{iprandomid}"] = x => {
+                string iprandomid = x.iprandomid;
+                ConsoleLogger.Info("New iprandomid: {0}", iprandomid);
+                return Response.AsJson(iprandomid);
+            };
+
+            Post["/update/firewalloptimizationoptions/{firewalloptimizationoptions}"] = x => {
+                string firewalloptimizationoptions = x.firewalloptimizationoptions;
+                ConsoleLogger.Info("New firewalloptimizationoptions: {0}", firewalloptimizationoptions);
+                return Response.AsJson(firewalloptimizationoptions);
+            };
+
+            Post["/update/disablefirewallfilter/{disablefirewallfilter}"] = x => {
+                string disablefirewallfilter = x.disablefirewallfilter;
+                ConsoleLogger.Info("New disablefirewallfilter: {0}", disablefirewallfilter);
+                return Response.AsJson(disablefirewallfilter);
+            };
+
+            Post["/update/disablefirewallscrub/{disablefirewallscrub}"] = x => {
+                string disablefirewallscrub = x.disablefirewallscrub;
+                ConsoleLogger.Info("New disablefirewallscrub: {0}", disablefirewallscrub);
+                return Response.AsJson(disablefirewallscrub);
+            };
+
+            Post["/update/firewalladaptivetimeouts/{end}/{start}"] = x => {
+                string end = x.end;
+                string start = x.start;
+                ConsoleLogger.Info("New firewalladaptivetimeouts: {0} - {1}", end, start);
+                return Response.AsJson(end + " - " + start);
+            };
+
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];

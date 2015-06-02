@@ -407,7 +407,7 @@
                             </td>
                             <td>
                                 <input type="checkbox" />Password protect the console menu   
-                                <p id="UpdateConsoleMenu" class="button bg-anthilla-green" style="display: none;">Edit Console menu</p>
+                                <p id="UpdateConsoleMenu" class="button bg-anthilla-green">Edit Console menu</p>
                             </td>
                             <td></td>
                             <td></td>
@@ -430,31 +430,42 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label>IP Do-Not-Fragment compatibility</label></td>
+                                <label>IP Do-Not-Fragment compatibility</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Clear invalid DF bits instead of dropping the packets
+                                <input id="NewIPDo-Not-Fragment" type="checkbox" />Clear invalid DF bits instead of dropping the packets
+                                <p id="UpdateIPDo-Not-Fragment" class="button bg-anthilla-green">Edit IP Do-Not-Fragment compatibility</p>
+                            </td>
+                            <td>
                                 <p>
                                     This allows for communications with hosts that generate fragmented packets with the don't fragment (DF) bit set.
                                     Linux NFS is known to do this. This will cause the filter to not drop such packets but 
                                     instead clear the don't fragment bit.
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>IP Random id generation</label></td>
+                                <label>IP Random id generation</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Insert a stronger id into IP header of packets passing through the filter
+                                <input id="NewIPRandomID" type="checkbox" />Insert a stronger id into IP header of packets passing through the filter
+                                <p id="UpdateIPRandomID" class="button bg-anthilla-green">Edit IP Random id generation</p>
+                            </td>
+                            <td>
                                 <p>
                                     Replaces the IP identification field of packets with random values to compensate for 
                                     operating systems that use predictable values. This option only applies to packets that are not
                                     fragmented after the optional packet reassembly. 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Firewall Optimization Options</label></td>
+                                <label>Firewall Optimization Options</label>
+                            </td>
                             <td>
                                 <select id="FirewallOptimizationOptionsSelect">
                                     <option selected="selected" value="normal">normal</option>
@@ -462,42 +473,59 @@
                                     <option value="aggressive">aggressive</option>
                                     <option value="conservative">conservative</option>
                                 </select>
+                                <p id="UpdateFirewallOptimizationOptions" class="button bg-anthilla-green" style="display: none;">
+                                    Firewall Optimization Options
+                                </p>
+                            </td>
+                            <td>
                                 <p id="FirewallOptimizationOptionsDescription"></p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Disable Firewall</label></td>
+                                <label>Disable Firewall</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />Disable all packet filtering
+                                <input id="NewDisableFirewallFilter" type="checkbox" />Disable all packet filtering
+                                <p id="UpdateDisableFirewallFilter" class="button bg-anthilla-green">Edit Disable Firewall</p>
+                            </td>
+                            <td>
                                 <p>
                                     Note: This converts antd into a routing only platform! 
                                     Note: This will also turn off NAT!  
                                     If you only want to disable NAT, and not firewall rules, visit the Outbound NAT page.  
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Disable Firewall Scrub</label></td>
-                            <td>
-                                <input type="checkbox" />Disables the PF scrubbing option which can sometimes interfere with NFS and PPTP traffic. 
+                                <label>Disable Firewall Scrub</label>
                             </td>
+                            <td>
+                                <input id="NewDisableFirewallScrub" type="checkbox" />
+                                Disables the PF scrubbing option which can sometimes interfere with NFS and PPTP traffic. 
+                                <p id="UpdateDisableFirewallScrub" class="button bg-anthilla-green">Edit Disable Firewall Scrub</p>
+                            </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Firewall Adaptive Timeouts</label></td>
+                                <label>Firewall Adaptive Timeouts</label>
+                            </td>
                             <td>
                                 <p>
                                     Timeouts for states can be scaled adaptively as the number of state table entries grows.
                                 </p>
-                                <input type="text" />
+                                <input id="NewUpdateFirewallAdaptiveTimeoutsEnd" type="text" />
                                 <p>
                                     When the number of state entries exceeds this value, adaptive scaling begins. 
                                     All timeout values are scaled linearly with factor 
                                     (adaptive.end - number of states) / (adaptive.end - adaptive.start).   
                                 </p>
-                                <input type="text" />
+                                <input id="NewUpdateFirewallAdaptiveTimeoutsStart" type="text" />
                                 <p>
                                     When reaching this number of state entries, all timeout values become zero, effectively purging
                                     all state entries immediately. This value is used to define the scale factor, 
@@ -505,13 +533,20 @@
                                     Note: Leave this blank for the default, which auto-calculates these values from your maximum 
                                     state table size. Adaptive start is 60% and end is 120% of the state table size by default.   
                                 </p>
+                                <p id="UpdateFirewallAdaptiveTimeouts" class="button bg-anthilla-green">Edit Firewall Adaptive Timeouts</p>
                             </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Firewall Maximum States</label></td>
+                                <label>Firewall Maximum States</label>
+                            </td>
                             <td>
-                                <input type="text" />
+                                <input id="NewFirewallMaximumStates" type="text" />
+                                <p id="UpdateFirewallMaximumStates" class="button bg-anthilla-green" style="display: none;">Edit Timeserver</p>
+                            </td>
+                            <td>
                                 <p>
                                     Maximum number of connections to hold in the firewall state table   
                                 </p>
@@ -519,6 +554,7 @@
                                     Note: Leave this blank for the default. On your system the default size is: 9000.   
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
