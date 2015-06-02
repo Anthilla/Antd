@@ -409,3 +409,18 @@ $('#UpdatePrimaryConsole').click(function () {
         }
     });
 });
+
+$('#UpdateConsoleMenu').click(function () {
+    var newConsoleMenu = $('#NewConsoleMenu').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/consolemenu/' + newConsoleMenu,
+        type: 'POST',
+        data: JSON.stringify(newConsoleMenu),
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

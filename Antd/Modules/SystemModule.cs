@@ -203,6 +203,12 @@ namespace Antd {
                 return Response.AsJson(primaryconsole);
             };
 
+            Post["/update/consolemenu/{consolemenu}"] = x => {
+                string consolemenu = x.consolemenu;
+                ConsoleLogger.Info("New consolemenu: {0}", consolemenu);
+                return Response.AsJson(consolemenu);
+            };
+
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];
