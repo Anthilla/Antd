@@ -31,6 +31,7 @@ using Antd.Common;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
+using System.Linq;
 
 namespace Antd {
 
@@ -47,7 +48,12 @@ namespace Antd {
             Get["/general"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Hostname = Command.Launch("hostname", "").output;
-                vmod.Domain = Command.Launch("domainname", "").output;
+                vmod.Domainname = Command.Launch("hostname", "-f").output;
+                vmod.Timezone = Command.Launch("timedatectl", "").output;
+                //vmod.TimezonesList = Command.Launch("timedatectl", "list-timezones").output.Split(new char[]{'.'}).ToArray();
+                vmod.TimezonesList = new string[] { "uno", "due" };
+                vmod.Timeserver = "time.server.net";
+                vmod.Language = "English";
                 return View["page-system-general", vmod];
             };
 
@@ -61,6 +67,29 @@ namespace Antd {
                 string domainname = x.domainname;
                 ConsoleLogger.Info("New Domainname: {0}", domainname);
                 return Response.AsJson(domainname);
+            };
+
+            Post["/update/timezone/{timezone}"] = x => {
+                string timezone = x.timezone;
+                ConsoleLogger.Info("New Timezone: {0}", timezone);
+                return Response.AsJson(timezone);
+            };
+
+            Post["/update/timeserver/{timeserver}"] = x => {
+                string timeserver = x.timeserver;
+                ConsoleLogger.Info("New Timeserver: {0}", timeserver);
+                return Response.AsJson(timeserver);
+            };
+
+            Post["/update/language/{language}"] = x => {
+                string language = x.language;
+                ConsoleLogger.Info("New Language: {0}", language);
+                return Response.AsJson(language);
+            };
+
+            Post["/update/all/general"] = x => {
+                ConsoleLogger.Info("New All...");
+                return Response.AsJson(true);
             };
 
             Get["/advanced"] = x => {
