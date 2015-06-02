@@ -58,8 +58,106 @@
     </nav>
 }
 
-@section MainContent
-{
+@section MainContent {
+    <div class="tab-control" data-role="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#Users">Users</a></li>
+            <li><a href="#Groups">Groups</a></li>
+            <li><a href="#Settings">Settings</a></li>
+            <li><a href="#Servers">Servers</a></li>
+        </ul>
+
+        <div class="frames" id="GroupsFrames">
+            <div class="frame" id="Users">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>Username</label>
+                            </th>
+                            <th>
+                                <label>Full name</label>
+                            </th>
+                            <th>
+                                <label>Disabled</label>
+                            </th>
+                            <th>
+                                <label>Groups</label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <p class="button bg-anthilla-green">New User</p>
+            </div>
+
+            <div class="frame" id="Groups">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>Group name</label>
+                            </th>
+                            <th>
+                                <label>Description</label>
+                            </th>
+                            <th>
+                                <label>Member Count</label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <p class="button bg-anthilla-green">New Group</p>
+            </div>
+
+            <div class="frame" id="Settings">
+                <table class="table hovered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Session Timeout</label></td>
+                            <td>
+                                <input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Authentication Server</label></td>
+                            <td>
+                                <select>
+                                    <option selected="selected">Local Database</option>
+                                </select></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="button bg-anthilla-green">Save</p>
+                <p class="button bg-anthilla-green">Save and test</p>
+            </div>
+
+            <div class="frame" id="Servers">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>Server Name</label>
+                            </th>
+                            <th>
+                                <label>Type</label>
+                            </th>
+                            <th>
+                                <label>Host Name</label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <p class="button bg-anthilla-green">New</p>
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {
