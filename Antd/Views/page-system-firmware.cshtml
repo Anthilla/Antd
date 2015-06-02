@@ -31,6 +31,33 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
+@section PageBar {
+    <style type="text/css">
+        #System-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-transparent page-bar menu-bar">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>System: firmware</div>
+            <div class="element-divider"></div>
+            <a href="/system/general" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>general</a>
+            <div class="element-divider"></div>
+            <a href="/system/advanced" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>advanced</a>
+            <div class="element-divider"></div>
+            <a href="/system/certmanager" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>cert manager</a>
+            <div class="element-divider"></div>
+            <a href="/system/routing" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>routing</a>
+            <div class="element-divider"></div>
+            <a href="/system/usermanager" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>usermanager</a>
+            <div class="element-divider"></div>
+            <a href="/system/wizard" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>wizard</a>
+            <div class="element-divider"></div>
+        </nav>
+    </nav>
+}
+
 @section MainContent {
 
 }

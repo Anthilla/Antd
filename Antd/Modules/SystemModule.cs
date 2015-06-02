@@ -68,14 +68,14 @@ namespace Antd {
                 return View["page-system-routing", vmod];
             };
 
-            Get["/wizard"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-wizard", vmod];
-            };
-
             Get["/usermanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-usermanager", vmod];
+            };
+
+            Get["/wizard"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-wizard", vmod];
             };
         }
     }
