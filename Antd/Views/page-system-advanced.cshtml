@@ -677,6 +677,108 @@
             </div>
 
             <div class="frame" id="Networking">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>IPv6 Options</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Allow IPv6</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Allow IPv6
+                                <p>
+                                    All IPv6 traffic will be blocked by the firewall unless this box is checked.
+                                    NOTE: This does not disable any IPv6 features on the firewall, it only blocks traffic
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>IPv6 over IPv4 Tunneling</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Enable IPv4 NAT encapsulation of IPv6 packets
+                                <p>
+                                    This provides an RFC 2893 compatibility mechanism that can be used to tunneling 
+                                    IPv6 packets over IPv4 routing infrastructures. If enabled, don't forget to add a firewall 
+                                    rule to permit IPv6 packets
+                                </p>
+                                <br />
+                                IP Address:
+                                <input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Prefer IPv4 over IPv6</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Prefer to use IPv4 even if IPv6 is available
+                                <p>
+                                    By default, if a hostname resolves IPv6 and IPv4 addresses IPv6 will be used, 
+                                    if you check this option, IPv4 will be used instead of IPv6.
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Network Interfaces</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Device polling</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                	Enable device polling
+                                <p>
+                                    Device polling is a technique that lets the system periodically poll network devices for 
+                                    new data instead of relying on interrupts. This prevents your webConfigurator, SSH, etc. 
+                                    from being inaccessible due to interrupt floods when under extreme load. Generally this is 
+                                    not recommended. Not all NICs support polling; see the pfSense homepage for a list of supported cards. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>IPv6 over IPv4 Tunneling</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Enable IPv4 NAT encapsulation of IPv6 packets
+                                <p>
+                                    This provides an RFC 2893 compatibility mechanism that can be used to tunneling 
+                                    IPv6 packets over IPv4 routing infrastructures. If enabled, don't forget to add a firewall 
+                                    rule to permit IPv6 packets
+                                </p>
+                                <br />
+                                IP Address:
+                                <input type="text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Prefer IPv4 over IPv6</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Prefer to use IPv4 even if IPv6 is available
+                                <p>
+                                    By default, if a hostname resolves IPv6 and IPv4 addresses IPv6 will be used, 
+                                    if you check this option, IPv4 will be used instead of IPv6.
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <div class="frame" id="Misc">
