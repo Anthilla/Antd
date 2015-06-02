@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -45,7 +46,14 @@ namespace Antd {
 
             Get["/general"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.Hostname = Command.Launch("hostname", "").output;
                 return View["page-system-general", vmod];
+            };
+
+            Post["/update/hostname/{hostname}"] = x => {
+                string hostname = x.hostname;
+                ConsoleLogger.Info(hostname);
+                return Response.AsJson(true);
             };
 
             Get["/advanced"] = x => {
