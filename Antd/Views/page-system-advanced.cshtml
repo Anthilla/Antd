@@ -80,8 +80,8 @@
                             <td>
                                 <label>Protocol</label></td>
                             <td>
-                                <input type="radio" />HTTP
-                                <input type="radio" />HTTPS</td>
+                                <input type="radio" name="WebConfiguratorProtocol"/>HTTP
+                                <input type="radio" name="WebConfiguratorProtocol"/>HTTPS</td>
                         </tr>
                         <tr>
                             <td>
@@ -364,24 +364,6 @@
                                     <option value="conservative">conservative</option>
                                 </select>
                                 <p id="FirewallOptimizationOptionsDescription"></p>
-                                <script type="text/javascript">
-                                    $('#FirewallOptimizationOptionsSelect').change(function () {
-                                        var thisVal = $(this).find(':selected').val();
-                                        var r = $('#FirewallOptimizationOptionsDescription');
-                                        if (thisVal == 'normal') {
-                                            r.text('as the name says, it\'s the normal optimization algorithm');
-                                        }
-                                        if (thisVal == 'high-latency') {
-                                            r.text('used for high latency links, such as satellite links.  Expires idle connections later than default');
-                                        }
-                                        if (thisVal == 'aggressive') {
-                                            r.text('expires idle connections quicker. More efficient use of CPU and memory but can drop legitimate idle connections');
-                                        }
-                                        if (thisVal == 'conservative') {
-                                            r.text('tries to avoid dropping any legitimate idle connections at the expense of increased memory usage and CPU utilization.');
-                                        }
-                                    });
-                                </script>
                             </td>
                         </tr>
                         <tr>
@@ -674,6 +656,8 @@
                         </tr>
                     </tbody>
                 </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
             </div>
 
             <div class="frame" id="Networking">
@@ -740,7 +724,7 @@
                                 <label>Device polling</label></td>
                             <td>
                                 <input type="checkbox" />
-                                	Enable device polling
+                                Enable device polling
                                 <p>
                                     Device polling is a technique that lets the system periodically poll network devices for 
                                     new data instead of relying on interrupts. This prevents your webConfigurator, SSH, etc. 
@@ -751,48 +735,643 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>IPv6 over IPv4 Tunneling</label></td>
+                                <label>Hardware Checksum Offloading</label></td>
                             <td>
                                 <input type="checkbox" />
-                                Enable IPv4 NAT encapsulation of IPv6 packets
+                                Disable hardware checksum offload
                                 <p>
-                                    This provides an RFC 2893 compatibility mechanism that can be used to tunneling 
-                                    IPv6 packets over IPv4 routing infrastructures. If enabled, don't forget to add a firewall 
-                                    rule to permit IPv6 packets
+                                    Checking this option will disable hardware checksum offloading. Checksum offloading is
+                                     broken in some hardware, particularly some Realtek cards. Rarely, drivers may have problems
+                                     with checksum offloading and some specific NICs.
                                 </p>
-                                <br />
-                                IP Address:
-                                <input type="text" />
+                                <p>
+                                    Note: This will take effect after you reboot the machine or re-configure each interface.
+                                </p>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Prefer IPv4 over IPv6</label></td>
+                                <label>Hardware TCP Segmentation Offloading</label></td>
                             <td>
                                 <input type="checkbox" />
-                                Prefer to use IPv4 even if IPv6 is available
+                                Disable hardware TCP segmentation offload
                                 <p>
-                                    By default, if a hostname resolves IPv6 and IPv4 addresses IPv6 will be used, 
-                                    if you check this option, IPv4 will be used instead of IPv6.
+                                    Checking this option will disable hardware TCP segmentation offloading (TSO, TSO4, TSO6). 
+                                    This offloading is broken in some hardware drivers, and may impact performance with some specific NICs. 
+                                </p>
+                                <p>
+                                    Note: This will take effect after you reboot the machine or re-configure each interface.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Hardware Large Receive Offloading</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Disable hardware large receive offload
+                                <p>
+                                    Checking this option will disable hardware large receive offloading (LRO). 
+                                    This offloading is broken in some hardware drivers, and may impact performance with some specific NICs.  
+                                </p>
+                                <p>
+                                    Note: This will take effect after you reboot the machine or re-configure each interface.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>ARP Handling</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Suppress ARP messages
+                                <p>
+                                    This option will suppress ARP log messages when multiple interfaces reside on the same broadcast domain  
                                 </p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
             </div>
 
             <div class="frame" id="Misc">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Proxy support</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Proxy URL</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Hostname or IP address of proxy server this system will use for its outbound Internet access
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Proxy Port</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Port where proxy server is listening
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Proxy username</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Username for authentication to proxy server. Optional, leave blank to not use authentication
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Proxy password</label></td>
+                            <td>
+                                <input type="password" />
+                                <p>
+                                    Password for authentication to proxy server
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Load Balancing</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Load Balancing</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Use sticky connections
+                                <p>
+                                    Successive connections will be redirected to the servers in a round-robin manner with connections 
+                                    from the same source being sent to the same web server. This 'sticky connection' will exist as 
+                                    long as there are states that refer to this connection. Once the states expire, so will the sticky 
+                                    connection. Further connections from that host will be redirected to the next web server in the round robin. 
+                                    Changing this option will restart the Load Balancing service. 
+                                </p>
+                                <input type="text" />
+                                <p>
+                                    Set the source tracking timeout for sticky connections. By default this is 0, so source tracking 
+                                    is removed as soon as the state expires. Setting this timeout higher will cause the source/destination 
+                                    relationship to persist for longer periods of time.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Load Balancing</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Enable default gateway switching
+                                <p>
+                                    If the default gateway goes down, switch the default gateway to another available one. 
+                                    This is not enabled by default, as it's unnecessary in most all scenarios, which instead use gateway groups 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Power savings</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>PowerD</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Use PowerD
+                                <br />
+                                On AC Power Mode
+                                <select>
+                                    <option selected="selected" value="hadp">Hiadaptive</option>
+                                    <option value="adp">Adaptive</option>
+                                    <option value="min">Minimum</option>
+                                    <option value="max">Maximum</option>
+                                </select>
+                                <br />
+                                On Battery Power Mode
+                                <select>
+                                    <option selected="selected" value="hadp">Hiadaptive</option>
+                                    <option value="adp">Adaptive</option>
+                                    <option value="min">Minimum</option>
+                                    <option value="max">Maximum</option>
+                                </select>
+                                <br />
+                                On Unknown Power Mode
+                                <select>
+                                    <option selected="selected" value="hadp">Hiadaptive</option>
+                                    <option value="adp">Adaptive</option>
+                                    <option value="min">Minimum</option>
+                                    <option value="max">Maximum</option>
+                                </select>
+                                <br />
+                                <p>
+                                    The powerd utility monitors the system state and sets various power control options accordingly. 
+                                    It offers four modes (maximum, minimum, adaptive and hiadaptive) that can be individually selected while on 
+                                    AC power or batteries. The modes maximum, minimum, adaptive and hiadaptive may be abbreviated max, min, adp, hadp. 
+                                    Maximum mode chooses the highest performance values. Minimum mode selects the lowest performance values 
+                                    to get the most power savings. Adaptive mode attempts to strike a balance by degrading performance when 
+                                    the system appears idle and increasing it when the system is busy. 
+                                    It offers a good balance between a small performance loss for greatly increased power savings. 
+                                    Hiadaptive mode is alike adaptive mode, but tuned for systems where performance and interactivity are more 
+                                    important than power consumption. It raises frequency faster, drops slower and keeps twice lower CPU load. 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Cryptographic Hardware Acceleration</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Cryptographic Hardware</label></td>
+                            <td>
+                                <select>
+                                    <option value="">None</option>
+                                    <option value="glxsb">AMD Geode LX Security Block (glxsb)</option>
+                                    <option value="aesni">AES-NI CPU-based Acceleration (aesni)</option>
+                                </select>
+                                <p>
+                                    A cryptographic accelerator module will use hardware support to speed up some cryptographic 
+                                    functions on systems which have the chip. Do not enable this option if you have a Hifn 
+                                    cryptographic acceleration card, as this will take precedence and the Hifn card will not be used. 
+                                    Acceleration should be automatic for IPsec when using a cipher supported by your chip, such as AES-128. 
+                                    OpenVPN should be set for AES-128-CBC and have cryptodev enabled for hardware acceleration
+                                </p>
+                                <p>
+                                    If you do not have a crypto chip in your system, this option will have no effect. 
+                                    To unload the selected module, set this option to 'none' and then reboot
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Thermal Sensors</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Thermal Sensors</label></td>
+                            <td>
+                                <select>
+                                    <option value="">None/ACPI</option>
+                                    <option value="coretemp">Intel Core* CPU on-die thermal sensor (coretemp)</option>
+                                    <option value="amdtemp">AMD K8, K10 and K11 CPU on-die thermal sensor (amdtemp)</option>
+                                </select>
+                                <p>
+                                    If you have a supported CPU, selecting a themal sensor will load the appropriate driver to 
+                                    read its temperature. Setting this to 'None' will attempt to read the temperature from an 
+                                    ACPI-compliant motherboard sensor instead, if one is present.
+                                </p>
+                                <p>
+                                    If you do not have a supported thermal sensor chip in your system, this option will have no effect. 
+                                    To unload the selected module, set this option to 'none' and then reboot. 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Schedules</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Schedule States</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    By default, when a schedule expires, connections permitted by that schedule are killed. 
+                                    This option overrides that behavior by not clearing states for existing connections. 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Gateway Monitoring</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>State Killing on Gateway Failure</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    The monitoring process will flush states for a gateway that goes down if this box is not checked. 
+                                    Check this box to disable this behavior. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Skip rules when gateway is down</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    By default, when a rule has a gateway specified and this gateway is down, the rule is created 
+                                    omitting the gateway. This option overrides that behavior by omitting the entire rule instead. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Enable gateway monitoring debug logging</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    Enable this setting to log debug information from the gateway monitoring process to the system logs.  
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>RAM Disk Settings (Reboot to Apply Changes)</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Use RAM Disks</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                Use memory file system for /tmp and /var
+                                <p>
+                                    Set this if you wish to use /tmp and /var as RAM disks (memory file system disks) on a full 
+                                    install rather than use the hard disk. Setting this will cause the data in /tmp and /var to be 
+                                    lost at reboot, including log data. RRD and DHCP Leases will be retained.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>/tmp RAM Disk Size</label></td>
+                            <td>
+                                <input type="text" />
+                                MB
+                                <p>
+                                    Set the size, in MB, for the /tmp RAM disk. Leave blank for 40MB. Do not set lower than 40. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>/var RAM Disk Size</label></td>
+                            <td>
+                                <input type="text" />
+                                MB
+                                <p>
+                                    Set the size, in MB, for the /var RAM disk. Leave blank for 60MB. Do not set lower than 60. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Periodic RRD Backup</label></td>
+                            <td>Frequency
+                                <select disabled="disabled">
+                                    <option selected="selected" value="0">Disable</option>
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                </select>
+                                <p>
+                                    This will periodically backup the RRD data so it can be restored automatically on the next boot. 
+                                    Keep in mind that the more frequent the backup, the more writes will happen to your media. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Periodic DHCP Leases Backup</label></td>
+                            <td>Frequency
+                                <select disabled="disabled">
+                                    <option selected="selected" value="0">Disable</option>
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                </select>
+                                <p>
+                                    This will periodically backup the DHCP leases data so it can be restored automatically on the next boot. 
+                                    Keep in mind that the more frequent the backup, the more writes will happen to your media. 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
             </div>
 
             <div class="frame" id="SystemTunables">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>Tunable Name</label></th>
+                            <th>
+                                <label>Description</label></th>
+                            <th>
+                                <label>Value</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
             </div>
 
             <div class="frame" id="Notifications">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>Growl</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Disable Growl Notifications</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    Check this option to disable growl notifications but preserve the settings below
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Registration Name</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Enter the name to register with the Growl server (default: PHP-Growl)
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Notification Name</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Enter a name for the Growl notifications (default: pfSense growl alert)
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>IP Address</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    This is the IP address that you would like to send growl notifications to. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Password</label></td>
+                            <td>
+                                <input type="password" />
+                                <p>
+                                    Enter the password of the remote growl notification device. 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p class="button bg-anthilla-green">Test</p>
+                                <p>
+                                    NOTE: A test notification will be sent even if the service is marked as disabled
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <label>SMTP E-Mail</label></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Disable SMTP Notifications</label></td>
+                            <td>
+                                <input type="checkbox" />
+                                <p>
+                                    Check this option to disable SMTP notifications but preserve the settings below. 
+                                    Some other mechanisms, such as packages, may need these settings in place to function.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>E-Mail server</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    This is the FQDN or IP address of the SMTP E-Mail server to which notifications will be sent
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>SMTP Port of E-Mail server</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    This is the port of the SMTP E-Mail server, typically 25, 587 (submission) or 465 (smtps) 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Secure SMTP Connection</label></td>
+                            <td>
+                                <input type="checkbox" />Enable SMTP over SSL/TLS
+                                <br />
+                                <input type="checkbox" />Enable STARTTLS
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>From e-mail address</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    This is the e-mail address that will appear in the from field 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Notification E-Mail address</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Enter the e-mail address that you would like email notifications sent to 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Notification E-Mail auth username (optional)</label></td>
+                            <td>
+                                <input type="text" />
+                                <p>
+                                    Enter the e-mail address username for SMTP authentication 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Notification E-Mail auth password</label></td>
+                            <td>
+                                <input type="password" />
+                                <p>
+                                    Enter the e-mail address password for SMTP authentication 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Notification E-Mail auth mechanism</label></td>
+                            <td>
+                                <select>
+                                    <option selected="selected" value="PLAIN">PLAIN</option>
+                                    <option value="LOGIN">LOGIN</option>
+                                </select>
+                                <p>
+                                    Select the authentication mechanism used by the SMTP server. 
+                                    Most work with PLAIN, some servers like Exchange or Office365 might require LOGIN 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p class="button bg-anthilla-green">Test SMTP</p>
+                                <p>
+                                    NOTE: A test message will be sent even if the service is marked as disabled. 
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <p class="button bg-anthilla-green">Save</p>
             </div>
         </div>
     </div>
 }
 
 @section Scripts {
-
+    <script type="text/javascript">
+        $('#FirewallOptimizationOptionsSelect').change(function () {
+            var thisVal = $(this).find(':selected').val();
+            var r = $('#FirewallOptimizationOptionsDescription');
+            if (thisVal == 'normal') {
+                r.text('as the name says, it\'s the normal optimization algorithm');
+            }
+            if (thisVal == 'high-latency') {
+                r.text('used for high latency links, such as satellite links.  Expires idle connections later than default');
+            }
+            if (thisVal == 'aggressive') {
+                r.text('expires idle connections quicker. More efficient use of CPU and memory but can drop legitimate idle connections');
+            }
+            if (thisVal == 'conservative') {
+                r.text('tries to avoid dropping any legitimate idle connections at the expense of increased memory usage and CPU utilization.');
+            }
+        });
+    </script>
 }
