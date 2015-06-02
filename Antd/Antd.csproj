@@ -236,6 +236,12 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
+    <None Include="Views\page-system-highavailsync.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-system-firmware.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\page-system-usermanager.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

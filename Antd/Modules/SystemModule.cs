@@ -94,12 +94,72 @@ namespace Antd {
 
             Get["/advanced"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.TCPport = "";
+                vmod.MaxProcesses = "2";
                 return View["page-system-advanced", vmod];
+            };
+
+            Post["/update/protocol/{protocol}"] = x => {
+                string protocol = x.protocol;
+                ConsoleLogger.Info("New Protocol: {0}", protocol);
+                return Response.AsJson(protocol);
+            };
+
+            Post["/update/tcpport/{tcpport}"] = x => {
+                string tcpport = x.tcpport;
+                ConsoleLogger.Info("New TCP Port: {0}", tcpport);
+                return Response.AsJson(tcpport);
+            };
+
+            Post["/update/maxprocs/{maxprocs}"] = x => {
+                string maxprocs = x.maxprocs;
+                ConsoleLogger.Info("New Max Processes: {0}", maxprocs);
+                return Response.AsJson(maxprocs);
+            };
+
+            Post["/update/webguiredirects/{webguiredirects}"] = x => {
+                string webguiredirects = x.webguiredirects;
+                ConsoleLogger.Info("New WebGUI Redirect: {0}", webguiredirects);
+                return Response.AsJson(webguiredirects);
+            };
+
+            Post["/update/webguiloginautocomplete/{webguiloginautocomplete}"] = x => {
+                string webguiloginautocomplete = x.webguiloginautocomplete;
+                ConsoleLogger.Info("New WebGUI Login Autocomplete: {0}", webguiloginautocomplete);
+                return Response.AsJson(webguiloginautocomplete);
+            };
+
+            Post["/update/webguiloginmessages/{webguiloginmessages}"] = x => {
+                string webguiloginmessages = x.webguiloginmessages;
+                ConsoleLogger.Info("New WebGUI login messages: {0}", webguiloginmessages);
+                return Response.AsJson(webguiloginmessages);
+            };
+
+            Post["/update/antilockout/{antilockout}"] = x => {
+                string antilockout = x.antilockout;
+                ConsoleLogger.Info("New Anti-lockout: {0}", antilockout);
+                return Response.AsJson(antilockout);
+            };
+
+            Post["/update/dnsrebindcheck/{dnsrebindcheck}"] = x => {
+                string dnsrebindcheck = x.dnsrebindcheck;
+                ConsoleLogger.Info("New DNS Rebind Check: {0}", dnsrebindcheck);
+                return Response.AsJson(dnsrebindcheck);
             };
 
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];
+            };
+
+            Get["/firmware"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-firmware", vmod];
+            };
+
+            Get["/highavailsync"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-system-highavailsync", vmod];
             };
 
             Get["/routing"] = x => {
