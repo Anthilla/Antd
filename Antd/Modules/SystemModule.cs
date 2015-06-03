@@ -309,6 +309,30 @@ namespace Antd {
                 return Response.AsJson(natreflection);
             };
 
+            Post["/update/natreflectiontout/{natreflectiontout}"] = x => {
+                string natreflectiontout = x.natreflectiontout;
+                ConsoleLogger.Info("New natreflectiontout: {0}", natreflectiontout);
+                return Response.AsJson(natreflectiontout);
+            };
+
+            Post["/update/enablenatreflection1v1/{enablenatreflection1v1}"] = x => {
+                string enablenatreflection1v1 = x.enablenatreflection1v1;
+                ConsoleLogger.Info("New enablenatreflection1v1: {0}", enablenatreflection1v1);
+                return Response.AsJson(enablenatreflection1v1);
+            };
+
+            Post["/update/enablenatrautomaticoutbound/{enablenatrautomaticoutbound}"] = x => {
+                string enablenatrautomaticoutbound = x.enablenatrautomaticoutbound;
+                ConsoleLogger.Info("New enablenatrautomaticoutbound: {0}", enablenatrautomaticoutbound);
+                return Response.AsJson(enablenatrautomaticoutbound);
+            };
+
+            Post["/update/tftpproxy/{tftpproxy}"] = x => {
+                string tftpproxy = x.tftpproxy;
+                ConsoleLogger.Info("New tftpproxy: {0}", tftpproxy);
+                return Response.AsJson(tftpproxy);
+            };
+            
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];

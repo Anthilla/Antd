@@ -641,15 +641,82 @@ $('#UpdateUpdateFrequency').click(function () {
     });
 });
 
-$('#NewUpdateFrequency').change(function () {
-    $('#UpdateUpdateFrequency').show();
+$('#NewNATReflection').change(function () {
+    $('#UpdateNATReflection').show();
 });
 
-$('#UpdateUpdateFrequency').click(function () {
+$('#UpdateNATReflection').click(function () {
     jQuery.support.cors = true;
-    var newUpdateFrequency = $('#NewUpdateFrequency>option:selected').val();
+    var newNATReflection = $('#NewNATReflection>option:selected').val();
     $.ajax({
-        url: '/system/update/updatefrequency/' + newUpdateFrequency,
+        url: '/system/update/natreflection/' + newNATReflection,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewNATReflectionTout').keyup(function () {
+    var value = $('#NewNATReflectionTout').val();
+    if (value != "" || val != " ") {
+        $('#UpdateNATReflectionTout').show();
+    }
+});
+
+$('#UpdateNATReflectionTout').click(function () {
+    var newNATReflectionTout = $('#NewNATReflectionTout').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/natreflectiontout/' + newNATReflectionTout,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateEnableNATReflection1v1').click(function () {
+    var newEnableNATReflection1v1 = $('#NewEnableNATReflection1v1').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/enablenatreflection1v1/' + newEnableNATReflection1v1,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateEnableNATRautomaticOutbound').click(function () {
+    var newEnableNATRautomaticOutbound = $('#NewEnableNATRautomaticOutbound').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/enablenatrautomaticoutbound/' + newEnableNATRautomaticOutbound,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewTFTPProxy').change(function () {
+    $('#UpdateTFTPProxy').show();
+});
+
+$('#UpdateTFTPProxy').click(function () {
+    jQuery.support.cors = true;
+    var newTFTPProxy = $('#NewTFTPProxy>option:selected').val();
+    $.ajax({
+        url: '/system/update/tftpproxy/' + newTFTPProxy,
         type: 'POST',
         contentType: "application/json;charset=utf-8",
         success: function (data) {

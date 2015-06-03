@@ -670,19 +670,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                @*bookmark
-             ______   _______  _______  _        _______  _______  _______  _       
-            (  ___ \ (  ___  )(  ___  )| \    /\(       )(  ___  )(  ____ )| \    /\
-            | (   ) )| (   ) || (   ) ||  \  / /| () () || (   ) || (    )||  \  / /
-            | (__/ / | |   | || |   | ||  (_/ / | || || || (___) || (____)||  (_/ / 
-            |  __ (  | |   | || |   | ||   _ (  | |(_)| ||  ___  ||     __)|   _ (  
-            | (  \ \ | |   | || |   | ||  ( \ \ | |   | || (   ) || (\ (   |  ( \ \ 
-            | )___) )| (___) || (___) ||  /  \ \| )   ( || )   ( || ) \ \__|  /  \ \
-            |/ \___/ (_______)(_______)|_/    \/|/     \||/     \||/   \__/|_/    \/
-                                                                        	
-                            *@
-
                 <table class="table hovered">
                     <thead>
                         <tr>
@@ -758,22 +745,31 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>NAT Reflection Timeout</label></td>
+                                <label>NAT Reflection Timeout</label>
+                            </td>
                             <td>
-                                <input type="text" />
+                                <input id="NewNATReflectionTout" type="text" />
                                 Enter value for Reflection timeout in seconds
+                                <p id="UpdateNATReflectionTout" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Note: Only applies to Reflection on port forwards in NAT + proxy mode
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Enable NAT Reflection for 1:1 NAT</label></td>
+                                <label>Enable NAT Reflection for 1:1 NAT</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
+                                <input id="NewEnableNATReflection1v1" type="checkbox" />
                                 Enables the automatic creation of additional NAT redirect rules for access to 1:1 
                                 mappings of your external IP addresses from within your internal networks
+                                <p id="UpdateEnableNATReflection1v1" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Note: Reflection on 1:1 mappings is only for the inbound component of the 1:1 mappings. 
                                     This functions the same as the pure NAT mode for port forwards. For more details, 
@@ -783,14 +779,19 @@
                                     Individual rules may be configured to override this system setting on a per-rule basis
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Enable automatic outbound NAT for Reflection</label></td>
+                                <label>Enable automatic outbound NAT for Reflection</label>
+                            </td>
                             <td>
-                                <input type="checkbox" />
+                                <input id="NewEnableNATRautomaticOutbound" type="checkbox" />
                                 Automatically create outbound NAT rules which assist inbound NAT rules that direct 
                                 traffic back out to the same subnet it originated from. 
+                                <p id="UpdateEnableNATRautomaticOutbound" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     Required for full functionality of the pure NAT mode of NAT Reflection for port forwards or NAT Reflection for 1:1 NAT. 
                                 </p>
@@ -799,17 +800,23 @@
                                     the outbound NAT rules that direct the reply packets back through the router. 
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>TFTP Proxy</label></td>
+                                <label>TFTP Proxy</label>
+                            </td>
                             <td>
-                                <select multiple="multiple">
+                                <select id="NewTFTPProxy">
                                     <option value="wan">WAN</option>
                                     <option value="lan">LAN</option>
+                                    <option value="wan,lan">both</option>
                                 </select>
                                 Choose the interfaces where you want TFTP proxy helper to be enabled
+                                <p id="UpdateTFTPProxy" class="button bg-anthilla-green" style="display: none;">Edit</p>
                             </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -824,22 +831,34 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label>TCP Timeouts</label></td>
+                                <label>TCP Timeouts</label>
+                            </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>UDP Timeouts</label></td>
+                                <label>UDP Timeouts</label>
+                            </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>ICMP Timeouts</label></td>
+                                <label>ICMP Timeouts</label>
+                            </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Other Timeouts</label></td>
+                                <label>Other Timeouts</label>
+                            </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -997,6 +1016,18 @@
                 <hr />
                 <p class="button bg-anthilla-green">Save</p>
             </div>
+
+                @*bookmark
+             ______   _______  _______  _        _______  _______  _______  _       
+            (  ___ \ (  ___  )(  ___  )| \    /\(       )(  ___  )(  ____ )| \    /\
+            | (   ) )| (   ) || (   ) ||  \  / /| () () || (   ) || (    )||  \  / /
+            | (__/ / | |   | || |   | ||  (_/ / | || || || (___) || (____)||  (_/ / 
+            |  __ (  | |   | || |   | ||   _ (  | |(_)| ||  ___  ||     __)|   _ (  
+            | (  \ \ | |   | || |   | ||  ( \ \ | |   | || (   ) || (\ (   |  ( \ \ 
+            | )___) )| (___) || (___) ||  /  \ \| )   ( || )   ( || ) \ \__|  /  \ \
+            |/ \___/ (_______)(_______)|_/    \/|/     \||/     \||/   \__/|_/    \/
+                                                                        	
+                            *@
 
             <div class="frame" id="Misc">
                 <table class="table hovered">
