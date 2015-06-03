@@ -694,17 +694,22 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label>Update Frequency</label></td>
+                                <label>Update Frequency</label>
+                            </td>
                             <td>
-                                <select>
+                                <select id="NewUpdateFrequency">
                                     <option selected="selected" value="monthly">Monthly</option>
                                     <option value="weekly">Weekly</option>
                                     <option value="daily">Daily</option>
                                 </select>
+                                <p id="UpdateUpdateFrequency" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     The frequency of updating the lists of IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -719,14 +724,18 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label>NAT Reflection mode for port forwards</label></td>
+                                <label>NAT Reflection mode for port forwards</label>
+                            </td>
                             <td>
-                                <select>
+                                <select id="NewNATReflection">
                                     <option selected="selected" value="disable">Disable</option>
                                     <option value="proxy">Enable (NAT + Proxy)</option>
                                     <option value="purenat">Enable (Pure NAT)</option>
                                 </select>
                                 When enabled, this automatically creates additional NAT redirect rules for access to port forwards on your external IP addresses from within your internal networks. 
+                                <p id="UpdateNATReflection" class="button bg-anthilla-green" style="display: none;">Edit</p>
+                            </td>
+                            <td>
                                 <p>
                                     The NAT + proxy mode uses a helper program to send packets to the target of the port forward. 
                                     It is useful in setups where the interface and/or gateway IP used for communication with the target
@@ -745,6 +754,7 @@
                                     Individual rules may be configured to override this system setting on a per-rule basis.
                                 </p>
                             </td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>

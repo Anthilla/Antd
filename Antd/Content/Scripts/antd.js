@@ -622,3 +622,39 @@ $('#UpdateCheckCertificateAliasUrl').click(function () {
         }
     });
 });
+
+$('#NewUpdateFrequency').change(function () {
+    $('#UpdateUpdateFrequency').show();
+});
+
+$('#UpdateUpdateFrequency').click(function () {
+    jQuery.support.cors = true;
+    var newUpdateFrequency = $('#NewUpdateFrequency>option:selected').val();
+    $.ajax({
+        url: '/system/update/updatefrequency/' + newUpdateFrequency,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewUpdateFrequency').change(function () {
+    $('#UpdateUpdateFrequency').show();
+});
+
+$('#UpdateUpdateFrequency').click(function () {
+    jQuery.support.cors = true;
+    var newUpdateFrequency = $('#NewUpdateFrequency>option:selected').val();
+    $.ajax({
+        url: '/system/update/updatefrequency/' + newUpdateFrequency,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

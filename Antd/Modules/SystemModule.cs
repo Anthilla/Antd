@@ -297,6 +297,18 @@ namespace Antd {
                 return Response.AsJson(checkcertificatealiasurl);
             };
 
+            Post["/update/updatefrequency/{updatefrequency}"] = x => {
+                string updatefrequency = x.updatefrequency;
+                ConsoleLogger.Info("New updatefrequency: {0}", updatefrequency);
+                return Response.AsJson(updatefrequency);
+            };
+
+            Post["/update/natreflection/{natreflection}"] = x => {
+                string natreflection = x.natreflection;
+                ConsoleLogger.Info("New natreflection: {0}", natreflection);
+                return Response.AsJson(natreflection);
+            };
+
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];
