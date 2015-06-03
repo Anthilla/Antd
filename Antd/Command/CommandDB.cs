@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Antd.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,8 +38,8 @@ namespace Antd.CommandManagement {
             model._Id = Guid.NewGuid().ToString();
             model.Guid = model._Id;
             model.Date = DateTime.Now;
-            model.File = "";
-            model.Arguments = "";
+            model.File = command.GetFirstString();
+            model.Arguments = command.GetAllStringsButFirst();
             model.Notes = notes;
             DeNSo.Session.New.Set(model);
         }
