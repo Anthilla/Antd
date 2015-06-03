@@ -184,21 +184,6 @@
 @section Scripts
 {
     <script type="text/javascript">
-        $('a.anchor').click(function () {
-            $('html, body').animate({
-                scrollTop: $($(this).attr('href')).offset().top
-            }, 500);
-            return false;
-        });
 
-        $(window).scroll(function () {
-            if ($(window).scrollTop() > 150) {
-                var i = $(window).scrollTop() - 145;
-                $('.navigation-bar.page').css('top', i);
-            }
-            if ($(window).scrollTop() < 150) {
-                $('.navigation-bar.page').css('top', 0);
-            }
-        });
     </script>
 }
