@@ -1,9 +1,8 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<AnthillaCore.Models.Anth_Dump>>
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @using System.Collections.Generic
 @{Layout = "_layout-st.cshtml";}
 
-@section PageBar
-{
+@section PageBar {
     <nav class="navigation-bar page bg-white fg-anthilla-blue" style="padding-top: 10px; border-bottom: 4px solid #548ED4;">
         <nav class="navigation-bar-content">
             <div class="element upcase bold no-overlay fg-black upcase" style="line-height: 0px; margin-left: 20px !important;"> User & ACL </div>
@@ -24,8 +23,7 @@
     </nav>
 }
 
-@section MainContent
-{
+@section MainContent {
     <legend id="anchorMng">User Management</legend>
     <div class="tab-control" data-role="tab-control">
         <ul class="tabs">
