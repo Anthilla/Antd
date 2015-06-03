@@ -189,6 +189,7 @@
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Common\Timestamp.cs" />
+    <Compile Include="SystemConfig\General.cs" />
     <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
     <Compile Include="Modules\AnthillaASModule.cs" />

@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
+using Antd.SystemConfig;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -58,25 +59,25 @@ namespace Antd {
 
             Post["/update/hostname/{hostname}"] = x => {
                 string hostname = x.hostname;
-                ConsoleLogger.Info("New Hostname: {0}", hostname);
+                SystemSet.General.NewHostname(hostname);
                 return Response.AsJson(hostname);
             };
 
             Post["/update/domainname/{domainname}"] = x => {
                 string domainname = x.domainname;
-                ConsoleLogger.Info("New Domainname: {0}", domainname);
+                SystemSet.General.NewDomainname(domainname);
                 return Response.AsJson(domainname);
             };
 
             Post["/update/timezone/{timezone}"] = x => {
                 string timezone = x.timezone;
-                ConsoleLogger.Info("New Timezone: {0}", timezone);
+                SystemSet.General.NewTimezone(timezone);
                 return Response.AsJson(timezone);
             };
 
             Post["/update/timeserver/{timeserver}"] = x => {
                 string timeserver = x.timeserver;
-                ConsoleLogger.Info("New Timeserver: {0}", timeserver);
+                SystemSet.General.NewTimeserver(timeserver);
                 return Response.AsJson(timeserver);
             };
 
