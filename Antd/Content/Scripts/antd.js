@@ -725,3 +725,123 @@ $('#UpdateTFTPProxy').click(function () {
         }
     });
 });
+
+$('#UpdateAllowIPv6').click(function () {
+    var newAllowIPv6 = $('#NewAllowIPv6').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/allowipv6/' + newAllowIPv6,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#NewTextIPv6onIPv4').keyup(function () {
+    var value = $('#NewTextIPv6onIPv4').val();
+    if (value != "" || val != " ") {
+        $('#UpdateIPv6onIPv4').show();
+    }
+});
+
+$('#UpdateIPv6onIPv4').click(function () {
+    var NewCheckboxIPv6onIPv4 = $('#NewCheckboxIPv6onIPv4').val();
+    var NewTextIPv6onIPv4 = $('#NewTextIPv6onIPv4').val();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/ipv6onipv4/' + NewCheckboxIPv6onIPv4 + '/' + NewTextIPv6onIPv4,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdatePreferIPv4').click(function () {
+    var newPreferIPv4 = $('#NewPreferIPv4').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/preferipv4/' + newPreferIPv4,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateDevicePolling').click(function () {
+    var newDevicePolling = $('#NewDevicePolling').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/devicepolling/' + newDevicePolling,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateHardwareChecksumOffloading').click(function () {
+    var newHardwareChecksumOffloading = $('#NewHardwareChecksumOffloading').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/hardwarechecksumoffloading/' + newHardwareChecksumOffloading,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateHardwareTCPSegmentationOffloading').click(function () {
+    var newHardwareTCPSegmentationOffloading = $('#NewHardwareTCPSegmentationOffloading').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/hardwaretcpsegmentationoffloading/' + newHardwareTCPSegmentationOffloading,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateHardwareLargeReceiveOffloading').click(function () {
+    var newHardwareLargeReceiveOffloading = $('#NewHardwareLargeReceiveOffloading').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/hardwarelargereceiveoffloading/' + newHardwareLargeReceiveOffloading,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});
+
+$('#UpdateSuppressARP').click(function () {
+    var newSuppressARP = $('#NewSuppressARP').prop('checked');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/update/suppressarp/' + newSuppressARP,
+        type: 'POST',
+        contentType: "application/json;charset=utf-8",
+        success: function (data) {
+            console.log(data);
+            location.reload(true);
+        }
+    });
+});

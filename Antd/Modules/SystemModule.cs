@@ -332,7 +332,56 @@ namespace Antd {
                 ConsoleLogger.Info("New tftpproxy: {0}", tftpproxy);
                 return Response.AsJson(tftpproxy);
             };
-            
+
+            Post["/update/allowipv6/{allowipv6}"] = x => {
+                string allowipv6 = x.allowipv6;
+                ConsoleLogger.Info("New allowipv6: {0}", allowipv6);
+                return Response.AsJson(allowipv6);
+            };
+
+            Post["/update/ipv6onipv4/{isbool}/{value}"] = x => {
+                string isbool = x.isbool;
+                string value = x.value;
+                ConsoleLogger.Info("New ipv6onipv4: {0} - {1}", isbool, value);
+                return Response.AsJson(isbool + " - " + value);
+            };
+
+            Post["/update/preferipv4/{preferipv4}"] = x => {
+                string preferipv4 = x.preferipv4;
+                ConsoleLogger.Info("New preferipv4: {0}", preferipv4);
+                return Response.AsJson(preferipv4);
+            };
+
+            Post["/update/devicepolling/{devicepolling}"] = x => {
+                string devicepolling = x.devicepolling;
+                ConsoleLogger.Info("New devicepolling: {0}", devicepolling);
+                return Response.AsJson(devicepolling);
+            };
+
+            Post["/update/hardwarechecksumoffloading/{hardwarechecksumoffloading}"] = x => {
+                string hardwarechecksumoffloading = x.hardwarechecksumoffloading;
+                ConsoleLogger.Info("New hardwarechecksumoffloading: {0}", hardwarechecksumoffloading);
+                return Response.AsJson(hardwarechecksumoffloading);
+            };
+
+            Post["/update/hardwaretcpsegmentationoffloading/{hardwaretcpsegmentationoffloading}"] = x => {
+                string hardwaretcpsegmentationoffloading = x.hardwaretcpsegmentationoffloading;
+                ConsoleLogger.Info("New hardwaretcpsegmentationoffloading: {0}", hardwaretcpsegmentationoffloading);
+                return Response.AsJson(hardwaretcpsegmentationoffloading);
+            };
+
+            Post["/update/hardwarelargereceiveoffloading/{hardwarelargereceiveoffloading}"] = x => {
+                string hardwarelargereceiveoffloading = x.hardwarelargereceiveoffloading;
+                ConsoleLogger.Info("New hardwarelargereceiveoffloading: {0}", hardwarelargereceiveoffloading);
+                return Response.AsJson(hardwarelargereceiveoffloading);
+            };
+
+            Post["/update/suppressarp/{suppressarp}"] = x => {
+                string suppressarp = x.suppressarp;
+                ConsoleLogger.Info("New suppressarp: {0}", suppressarp);
+                return Response.AsJson(suppressarp);
+            };
+
             Get["/certmanager"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-system-certmanager", vmod];
