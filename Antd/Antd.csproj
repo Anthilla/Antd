@@ -160,6 +160,7 @@
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
+    <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\SystemModule.cs" />
@@ -243,6 +244,9 @@
     </None>
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
     <None Include="Content\Scripts\jquery-2.1.4.min.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-command-mgmt.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\firewall\page-firewall-filter.cshtml">
