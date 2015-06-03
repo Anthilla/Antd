@@ -188,7 +188,7 @@
     <Compile Include="ManageApplications\ServiceActions.cs" />
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
-    <Compile Include="Program\Timestamp.cs" />
+    <Compile Include="Common\Timestamp.cs" />
     <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
     <Compile Include="Modules\AnthillaASModule.cs" />
@@ -197,7 +197,7 @@
     <Compile Include="Modules\AnthillaSPModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Program\ConsoleTime.cs" />
+    <Compile Include="Common\ConsoleTime.cs" />
     <Compile Include="Contexts\Network.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -239,7 +239,9 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
-    <None Include="Scripts\jquery-2.1.4.min.map" />
+    <None Include="Content\Scripts\jquery-2.1.4.min.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\firewall\page-firewall-filter.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -454,6 +456,9 @@
     <Content Include="Content\fonts\metroSysIcons.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Scripts\anthilla.cake.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Scripts\anthilla.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -601,15 +606,6 @@
     <Content Include="Content\Scripts\jqClock.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery-2.1.3.intellisense.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Scripts\jquery-2.1.3.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Scripts\jquery-2.1.3.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Scripts\jquery-ui-1.11.4.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -715,9 +711,15 @@
     <Content Include="Content\Style\windowed.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\jquery-2.1.4.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.4.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Content\Scripts\jquery-2.1.4.intellisense.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Scripts\jquery-2.1.4.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Scripts\jquery-2.1.4.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Extensions\" />

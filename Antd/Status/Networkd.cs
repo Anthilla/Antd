@@ -35,7 +35,6 @@ using System.IO;
 namespace Antd.Status {
 
     public class Networkd {
-
         private static string coreFileName = "config.xml";
 
         private static string[] _files = new string[] {
@@ -46,7 +45,7 @@ namespace Antd.Status {
 
         private static XmlWriter xmlWriter = new XmlWriter(_files, "config");
 
-        public static void SetConfiguration() { 
+        public static void SetConfiguration() {
             var check = CheckConfiguration();
             if (check == true) {
                 //il file esiste
@@ -93,7 +92,7 @@ namespace Antd.Status {
             var r = Systemctl.Status("systemd-networkd");
             return r.output;
         }
- 
+
         private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
                                       string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
                                       string addressAddress, string routeGateway) {

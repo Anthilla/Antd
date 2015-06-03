@@ -41,7 +41,6 @@ $('.search-field-task').keyup(function () {
     });
 });
 
-
 //Table Management
 function CheckEdit(guid) {
     var mainRow = $('tr[id="' + guid + '"]');

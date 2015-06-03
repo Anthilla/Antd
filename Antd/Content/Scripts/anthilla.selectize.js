@@ -505,7 +505,6 @@ var $licenseSelectizer = $('#select-license').selectize({
     load: ItemSelectizer.loadOptions
 });
 
-
 function LoadLicense() {
     if ($('#select-license').size() > 0) {
         var licenseSelectizer = $licenseSelectizer[0].selectize;

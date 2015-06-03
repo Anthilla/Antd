@@ -38,7 +38,6 @@ using System.IO;
 namespace Antd.Boot {
 
     public class AntdBoot {
-
         //private readonly static string[] Directories =
         //{
         //    "/antd",
