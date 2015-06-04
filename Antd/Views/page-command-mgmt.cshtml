@@ -80,7 +80,9 @@
             @foreach (Antd.CommandManagement.CommandDB.CommandInputModel command in Model.list) {
                 if (command != null) {
 <tr>
-                        <td>@command.File @command.Arguments</td>
+                        <td>@command.File @command.Arguments 
+                            <i class="bg-anthilla-gray">@command.Layout</i>
+                        </td>
                         <td>
                             <p data-guid="@command.Guid" class="button bg-orange delete-this">Delete</p>
                             <p data-guid="@command.Guid" class="button bg-green launch-this">Launch</p>
