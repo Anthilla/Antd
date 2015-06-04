@@ -1290,7 +1290,7 @@ table select {
     color: white;
 }
 
-table input[type="text"], input[type="password"] {
+table input[type="text"], table input[type="password"] {
     min-width: 300px;
     height: 26px;
     border: 1px solid #A7BD39;

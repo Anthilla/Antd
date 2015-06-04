@@ -46,5 +46,70 @@
             <i class="icon-exit" style="line-height: 5px;"></i>
         </a>
         <div class="element-divider place-right"></div>
+        <a class="element place-right nav-button no-overlay" href="#" id="CmdMgmtButton">
+            <i class="icon-rocket" style="line-height: 5px;"></i>
+            Command Panel
+        </a>
+        <div class="element-divider place-right"></div>
     </nav>
 </nav>
+<style type="text/css">
+    #CommandManagementForm {
+        display: none;
+        padding: 5px;
+        margin: 7px 15px;
+        border: 0 solid #996BAF;
+        border-width: 7px 0px;
+    }
+</style>
+<form id="CommandManagementForm" action="~/command/mgmt" method="POST" enctype="multipart/form-data">
+    <div class="grid">
+        <div class="row">
+            <div class="span12">
+                <label>Command</label>
+                <input type="text" name="Command">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <label>Notes</label>
+                <input type="text" name="Notes">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" />
+                <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close">
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $('#CmdMgmtButton').click(function () {
+        $('#CommandManagementForm').toggle();
+
+    });
+
+    function CloseCommandMgmtPanel() {
+        $('#CommandManagementForm').hide();
+    }
+
+    //$('a.anchor').click(function () {
+    //    $('html, body').animate({
+    //        scrollTop: $($(this).attr('href')).offset().top
+    //    }, 500);
+    //    return false;
+    //});
+
+    //$(window).scroll(function () {
+    //    if ($(window).scrollTop() > 150) {
+    //        var i = $(window).scrollTop() - 145;
+    //        $('.navigation-bar.page').css('top', i);
+    //    }
+    //    if ($(window).scrollTop() < 150) {
+    //        $('.navigation-bar.page').css('top', 0);
+    //    }
+    //});
+
+</script>
