@@ -50,8 +50,9 @@ namespace Antd {
 
             Post["/"] = x => {
                 string command = this.Request.Form.Command;
+                string layout = this.Request.Form.CommandLayouy;
                 string notes = this.Request.Form.Notes;
-                CommandDB.Create(command, notes);
+                CommandDB.Create(command, layout, notes);
                 return Response.AsRedirect("/command/mgmt");
             };
 

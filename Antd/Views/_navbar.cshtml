@@ -46,7 +46,7 @@
             <i class="icon-exit" style="line-height: 5px;"></i>
         </a>
         <div class="element-divider place-right"></div>
-        <a class="element place-right nav-button no-overlay" href="#" id="CmdMgmtButton">
+        <a class="element place-right nav-button no-overlay bg-anthilla-violet fg-anthilla-gray" href="#" id="CmdMgmtButton">
             <i class="icon-rocket" style="line-height: 5px;"></i>
             Command Panel
         </a>
@@ -85,6 +85,9 @@
             <div class="span12">
                 <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" style="min-width: 250px !important;" />
                 <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close" style="min-width: 250px !important;">
+                <a href="/command/mgmt" target="_blank" class="button bg-anthilla-blu" style="min-width: 250px !important;">
+                    <i class="icon-list on-left"></i> Go to command list
+                </a>
             </div>
         </div>
     </div>
@@ -113,8 +116,6 @@
 
     function LoadDblClick() {
         $('input[type="text"]').dblclick(function () {
-            //todo -> put value in Command
-            //put {id} in CommandLayout
             var self = $(this);
             var inputCmd = $('input[name="Command"]');
             var inputCmdlay = $('input[name="CommandLayout"]');

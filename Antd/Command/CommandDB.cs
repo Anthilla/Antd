@@ -18,6 +18,8 @@ namespace Antd.CommandManagement {
 
             public string Arguments { get; set; }
 
+            public string Layout { get; set; }
+
             public string Notes { get; set; }
         }
 
@@ -33,13 +35,14 @@ namespace Antd.CommandManagement {
             return DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == g).FirstOrDefault();
         }
 
-        public static void Create(string command, string notes) {
+        public static void Create(string command, string layout, string notes) {
             var model = new CommandInputModel();
             model._Id = Guid.NewGuid().ToString();
             model.Guid = model._Id;
             model.Date = DateTime.Now;
             model.File = command.GetFirstString();
             model.Arguments = command.GetAllStringsButFirst();
+            model.Layout = layout;
             model.Notes = notes;
             DeNSo.Session.New.Set(model);
         }
