@@ -62,7 +62,7 @@
         border-width: 7px 0px;
     }
 </style>
-<form id="CommandManagementForm" action="~/command/mgmt" method="POST" enctype="multipart/form-data">
+<form id="CommandManagementForm" action="~/command/mgmt" method="POST" enctype="multipart/form-data" style="z-index: 99; width: 100%;" class="bg-anthilla-gray-m">
     <div class="grid">
         <div class="row">
             <div class="span12">
@@ -78,14 +78,13 @@
         <div class="row">
             <div class="span12">
                 <label>Notes</label>
-                <textarea type="text" name="Notes" style="width: 90%; min-height: 150px; padding: 5px;" class="bg-anthilla-gray-m border-anthilla-green fg-white" placeholder="Write a comment about the command">
-                </textarea>
+                <textarea type="text" name="Notes" style="width: 90%; min-height: 150px; padding: 5px;" class="bg-anthilla-gray-m border-anthilla-green fg-white" placeholder="Write a comment about the command"></textarea>
             </div>
         </div>
         <div class="row" style="margin-top: 15px !important;">
             <div class="span12">
-                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" />
-                <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close">
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" style="min-width: 250px !important;" />
+                <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close" style="min-width: 250px !important;">
             </div>
         </div>
     </div>
@@ -108,6 +107,24 @@
         $('#CommandManagementForm').hide();
     }
 
+    $(document).ready(function () {
+        LoadDblClick();
+    });
+
+    function LoadDblClick() {
+        $('input[type="text"]').dblclick(function () {
+            //todo -> put value in Command
+            //put {id} in CommandLayout
+            var self = $(this);
+            var inputCmd = $('input[name="Command"]');
+            var inputCmdlay = $('input[name="CommandLayout"]');
+            if (self.val() != '') {
+                inputCmd.val(inputCmd.val() + ' ' + self.val());
+                inputCmdlay.val(inputCmdlay.val() + ' {' + self.attr('id') + '}');
+            }
+        });
+    }
+
     //$('a.anchor').click(function () {
     //    $('html, body').animate({
     //        scrollTop: $($(this).attr('href')).offset().top
@@ -118,10 +135,12 @@
     //$(window).scroll(function () {
     //    if ($(window).scrollTop() > 150) {
     //        var i = $(window).scrollTop() - 145;
-    //        $('.navigation-bar.page').css('top', i);
+    //        $('#CommandManagementForm').css('position', 'fixed');
+    //        $('#CommandManagementForm').css('top', i);
     //    }
     //    if ($(window).scrollTop() < 150) {
-    //        $('.navigation-bar.page').css('top', 0);
+    //        $('#CommandManagementForm').css('position', '');
+    //        $('#CommandManagementForm').css('top', 0);
     //    }
     //});
 
