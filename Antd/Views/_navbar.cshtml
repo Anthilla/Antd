@@ -67,16 +67,22 @@
         <div class="row">
             <div class="span12">
                 <label>Command</label>
-                <input type="text" name="Command">
+                <input type="text" name="Command" style="width: 90%; height: 30px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <input type="text" name="CommandLayout" readonly="readonly" style="width: 90%; height: 30px; border-width: 0px 0px 1px 0px !important; border-color: #60A1E4 !important;" class="bg-anthilla-gray-m">
             </div>
         </div>
         <div class="row">
             <div class="span12">
                 <label>Notes</label>
-                <input type="text" name="Notes">
+                <textarea type="text" name="Notes" style="width: 90%; min-height: 150px; padding: 5px;" class="bg-anthilla-gray-m border-anthilla-green fg-white" placeholder="Write a comment about the command">
+                </textarea>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 15px !important;">
             <div class="span12">
                 <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" />
                 <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close">
@@ -86,6 +92,13 @@
 </form>
 
 <script type="text/javascript">
+    $('input[name="Command"]').keyup(function () {
+        var lay = $('input[name="CommandLayout"]');
+        lay.val('');
+        var thisVal = $(this).val();
+        lay.val(thisVal);
+    });
+
     $('#CmdMgmtButton').click(function () {
         $('#CommandManagementForm').toggle();
 
