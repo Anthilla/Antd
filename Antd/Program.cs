@@ -42,6 +42,7 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
             //mount -t tmpfs tmpfs /framework/antd/config/
+            ConsoleLogger.Warn("Your configuration file for Antd will be written in tmpfs!");
             Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
             var uri = CoreParametersConfig.GetAntdUri();
 
@@ -94,7 +95,7 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading core service configuration");
-            //AntdBoot.StartDatabase();
+            AntdBoot.StartDatabase();
             AntdBoot.StartSignalR(app, true);
             AntdBoot.StartNancy(app);
         }

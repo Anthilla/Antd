@@ -102,9 +102,12 @@ namespace Antd.Boot {
         public static void StartDatabase() {
             string[] databases;
             var root = CoreParametersConfig.GetAntdDb();
-            if (!Directory.Exists(root)) {
-                Directory.CreateDirectory(root);
-            }
+            Directory.CreateDirectory(root);
+
+            ConsoleLogger.Warn("Your Database will be written in tmpfs!");
+            Command.Launch("mkdir", root);
+            Command.Launch("mount", "-t tmpfs tmpfs " + root);
+
             databases = new[] { root };
             DatabaseBoot.Start(databases);
             ConsoleLogger.Success("    database -> loaded");
