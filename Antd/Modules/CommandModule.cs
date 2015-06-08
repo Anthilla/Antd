@@ -52,7 +52,9 @@ namespace Antd {
                 string command = this.Request.Form.Command;
                 string layout = this.Request.Form.CommandLayout;
                 string notes = this.Request.Form.Notes;
-                CommandDB.Create(command, layout, notes);
+                string inputid = this.Request.Form.InputID;
+                string inputlocation = this.Request.Url;
+                CommandDB.Create(inputid, command, layout, inputlocation, notes);
                 return Response.AsRedirect("/command/mgmt");
             };
 
@@ -66,6 +68,13 @@ namespace Antd {
                 string guid = x.guid;
                 CommandDB.Delete(guid);
                 return Response.AsJson(true);
+            };
+
+            Get["/ex/{inputid}/{value}"] = x => {
+                string inputid = x.inputid;
+                string value = x.value;
+                var r = CommandDB.LaunchAndGetOutputUsingNewValue(inputid, value);
+                return Response.AsJson(r);
             };
         }
     }

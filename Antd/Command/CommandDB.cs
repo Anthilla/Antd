@@ -20,6 +20,10 @@ namespace Antd.CommandManagement {
 
             public string Layout { get; set; }
 
+            public string InputID { get; set; }
+
+            public string InputLocation { get; set; }
+
             public string Notes { get; set; }
         }
 
@@ -41,14 +45,15 @@ namespace Antd.CommandManagement {
             return DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == g).FirstOrDefault();
         }
 
-        public static void Create(string command, string layout, string notes) {
+        public static void Create(string inputid, string command, string layout, string inputlocation, string notes) {
             var model = new CommandInputModel();
-            model._Id = Guid.NewGuid().ToString();
-            model.Guid = model._Id;
+            model._Id = inputid;
+            model.Guid = inputid;
             model.Date = DateTime.Now;
             model.File = command.GetFirstString();
             model.Arguments = command.GetAllStringsButFirst();
             model.Layout = layout;
+            model.InputLocation = inputlocation;
             model.Notes = notes;
             DeNSo.Session.New.Set(model);
         }
@@ -63,9 +68,19 @@ namespace Antd.CommandManagement {
             Command.Launch(command.File, command.Arguments);
         }
 
-        public static string LaunchAndGetOutput(string guid) {
-            var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == guid).FirstOrDefault();
+        public static string LaunchAndGetOutput(string inputid) {
+            var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
             return Command.Launch(command.File, command.Arguments).output;
+        }
+
+        public static string LaunchAndGetOutputUsingNewValue(string inputid, string newValue) {
+            var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
+            var layout = command.Layout;
+            var findReplace = "{" + inputid + "}";
+            var newCommand = layout.Replace(findReplace, newValue);
+            var newFile = newCommand.GetFirstString();
+            var newArguments = newCommand.GetAllStringsButFirst();
+            return Command.Launch(newFile, newArguments).output;
         }
     }
 }

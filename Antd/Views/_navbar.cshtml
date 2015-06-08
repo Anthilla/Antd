@@ -72,6 +72,7 @@
         </div>
         <div class="row">
             <div class="span12">
+                <input type="hidden" name="InputID"/>
                 <input type="text" name="CommandLayout" readonly="readonly" style="width: 90%; height: 30px; border-width: 0px 0px 1px 0px !important; border-color: #60A1E4 !important;" class="bg-anthilla-gray-m">
             </div>
         </div>
@@ -91,7 +92,7 @@
             <div class="span12">
                 <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" style="min-width: 250px !important;" />
                 <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close" style="min-width: 250px !important;">
-                <a href="/command/mgmt" target="_blank" class="button bg-anthilla-blu" style="min-width: 250px !important;">
+                <a href="/command/mgmt" target="_blank" class="button bg-anthilla-blu fg-anthilla-gray" style="min-width: 250px !important;">
                     <i class="icon-list on-left"></i>Go to command list
                 </a>
             </div>
@@ -150,6 +151,8 @@
             main.val(main.val() + value);
             mainVal = main.val();
             layoutVal = layout.val();
+            var hiddenInputId = $('input[name="InputID"]');
+            hiddenInputId.val(label);
             main.focus();
         });
     });

@@ -74,14 +74,19 @@
             <tr>
                 <th>Command</th>
                 <th>&nbsp</th>
+                <th>&nbsp</th>
             </tr>
         </thead>
         <tbody>
             @foreach (Antd.CommandManagement.CommandDB.CommandInputModel command in Model.list) {
                 if (command != null) {
 <tr>
-                        <td>@command.File @command.Arguments 
-                            { @command.Layout }
+                        <td>@command.File @command.Arguments
+                { @command.Layout }
+                        </td>
+                        <td style="padding: 15px;" class="bg-anthilla-gray-m">
+                            <i class="icon-book on-left"></i>
+                            <p  style="font-style: oblique;">@command.notes</p>
                         </td>
                         <td>
                             <p data-guid="@command.Guid" class="button bg-orange delete-this">Delete</p>
@@ -97,7 +102,7 @@
 @section Scripts {
 <script type="text/javascript">
 
-    $('.delete-this').click(function(){
+    $('.delete-this').click(function () {
         var guid = $(this).attr('data-guid');
         $.ajax({
             url: '/command/mgmt/delete/' + guid,
