@@ -40,7 +40,8 @@ namespace Antd {
         private static void Main(string[] args) {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
-            Command.Launch("chmod", "777 *.xml");
+            //mount -t tmpfs tmpfs /framework/antd/config/
+            Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
             var uri = CoreParametersConfig.GetAntdUri();
             //try {
             using (WebApp.Start<Startup>(uri)) {
