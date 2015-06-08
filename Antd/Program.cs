@@ -32,6 +32,7 @@ using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
+using System.Threading;
 
 namespace Antd {
 
@@ -43,6 +44,15 @@ namespace Antd {
             //mount -t tmpfs tmpfs /framework/antd/config/
             Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
             var uri = CoreParametersConfig.GetAntdUri();
+
+            var stop = new ManualResetEvent(false);
+            Console.CancelKeyPress +=
+                (sender, e) => {
+                    Console.WriteLine("^C");
+                    stop.Set();
+                    e.Cancel = true;
+                };
+
             //try {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");
@@ -68,7 +78,8 @@ namespace Antd {
                 //ConsoleLogger.Info("p2: {0}", p2);
                 //ConsoleLogger.Info("p3: {0}", p3);
 
-                Console.ReadLine();
+                //Console.ReadLine(); 
+                stop.WaitOne();
             }
             /*} catch (System.Reflection.TargetInvocationException ex) {
                 ConsoleLogger.Warn(ex.Message);
