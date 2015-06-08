@@ -92,7 +92,7 @@
                 <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" style="min-width: 250px !important;" />
                 <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close" style="min-width: 250px !important;">
                 <a href="/command/mgmt" target="_blank" class="button bg-anthilla-blu" style="min-width: 250px !important;">
-                    <i class="icon-list on-left"></i> Go to command list
+                    <i class="icon-list on-left"></i>Go to command list
                 </a>
             </div>
         </div>
@@ -100,13 +100,6 @@
 </form>
 
 <script type="text/javascript">
-    $('input[name="Command"]').keyup(function () {
-        var lay = $('input[name="CommandLayout"]');
-        lay.val('');
-        var thisVal = $(this).val();
-        lay.val(thisVal);
-    });
-
     $('#CmdMgmtButton').click(function () {
         $('#CommandManagementForm').toggle();
 
@@ -117,38 +110,39 @@
     }
 
     $(document).ready(function () {
-        LoadDblClick();
-    });
+        var mainVal = '',
+            layoutVal = '',
+            mainLength = '',
+            layoutLength = '',
+            tmpVal;
 
-    function LoadDblClick() {
-        $('input[type="text"]').dblclick(function () {
-            var self = $(this);
-            var inputCmd = $('input[name="Command"]');
-            var inputCmdlay = $('input[name="CommandLayout"]');
-            if (self.val() != '') {
-                inputCmd.val(inputCmd.val() + ' ' + self.val());
-                inputCmdlay.val(inputCmdlay.val() + ' {' + self.attr('id') + '}');
+        var main = $('input[name="Command"]');
+        var layout = $('input[name="CommandLayout"]');
+        main.keyup(function () {
+            layout.val('');
+            if (main.val().length === 0) { }
+            if (mainVal.length === 0 && layoutVal.length === 0) {
+                tmpVal = $('input[name="Command"]').val().replace(/_+/g, ' ');
+                layout.val(tmpVal);
+            } else {
+                mainLength = mainVal.length;
+                layoutLength = layoutVal.length;
+                var mainString = main.val().substring(mainLength, main.val().length);
+                var layoutString = layout.val().substring(layoutLength, layout.val().length);
+                tmpVal = (layoutVal + mainString).replace(/_+/g, ' ');
+                layout.val(tmpVal);
             }
         });
-    }
 
-    //$('a.anchor').click(function () {
-    //    $('html, body').animate({
-    //        scrollTop: $($(this).attr('href')).offset().top
-    //    }, 500);
-    //    return false;
-    //});
-
-    //$(window).scroll(function () {
-    //    if ($(window).scrollTop() > 150) {
-    //        var i = $(window).scrollTop() - 145;
-    //        $('#CommandManagementForm').css('position', 'fixed');
-    //        $('#CommandManagementForm').css('top', i);
-    //    }
-    //    if ($(window).scrollTop() < 150) {
-    //        $('#CommandManagementForm').css('position', '');
-    //        $('#CommandManagementForm').css('top', 0);
-    //    }
-    //});
-
+        $('input[type="text"]').not('input[name="Command"], input[name="CommandLayout"]').dblclick(function () {
+            var parameter = $(this);
+            var label = parameter.attr('id');
+            var value = parameter.val();
+            layout.val(layout.val() + '{' + label + '}');
+            main.val(main.val() + value);
+            mainVal = main.val();
+            layoutVal = layout.val();
+            main.focus();
+        });
+    });
 </script>

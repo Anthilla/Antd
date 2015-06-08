@@ -101,7 +101,8 @@ namespace Antd.Boot {
 
         public static void StartDatabase() {
             string[] databases;
-            var root = CoreParametersConfig.GetAntdDb();
+            //var root = CoreParametersConfig.GetAntdDb();
+            var root = "/Data/tmp/antd.database";
             Directory.CreateDirectory(root);
 
             ConsoleLogger.Warn("Your Database will be written in tmpfs!");
