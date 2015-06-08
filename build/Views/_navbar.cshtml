@@ -114,13 +114,21 @@
             layoutVal = '',
             mainLength = '',
             layoutLength = '',
-            tmpVal;
+            tmpVal = '';
 
         var main = $('input[name="Command"]');
         var layout = $('input[name="CommandLayout"]');
         main.keyup(function () {
             layout.val('');
-            if (main.val().length === 0) { }
+            if (main.val().length === 0) {
+                console.log('zero');
+                mainVal = '';
+                layoutVal = '';
+                mainLength = '';
+                layoutLength = '';
+                tmpVal = '';
+                layout.val('');
+            }
             if (mainVal.length === 0 && layoutVal.length === 0) {
                 tmpVal = $('input[name="Command"]').val().replace(/_+/g, ' ');
                 layout.val(tmpVal);
