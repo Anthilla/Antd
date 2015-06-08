@@ -24,7 +24,13 @@ namespace Antd.CommandManagement {
         }
 
         public static List<CommandInputModel> GetAll() {
-            return DeNSo.Session.New.Get<CommandInputModel>(m => m != null).ToList();
+            var list = DeNSo.Session.New.Get<CommandInputModel>(m => m != null).ToList();
+            if (list == null) {
+                return new List<CommandInputModel>() { };
+            }
+            else {
+                return list;
+            }
         }
 
         public static List<CommandInputModel> GetByString(string q) {
