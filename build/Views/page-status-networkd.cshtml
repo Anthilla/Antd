@@ -32,9 +32,13 @@
 @{Layout = "_layout.cshtml";}
 
 @section MainContent {
-    <legend>Existing systemd .networkd file(s)</legend>
-    @foreach (string file in Model.UnitTexts) {
+    @if (Model.UnitTexts != String.Empty) {
+        <legend>Existing systemd .networkd file(s)</legend>
+        @foreach (string file in Model.UnitTexts) {
+            if (file != null) {
         <textarea style="width: 50%; min-height: 300px; padding: 5px;" class="border-anthilla-green fg-white bg-anthilla-gray">@file</textarea>
+            }
+        }
     }
 
     <legend>Create a custom unit</legend>

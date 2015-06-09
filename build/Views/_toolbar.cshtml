@@ -30,13 +30,21 @@
 
 <nav id="Toolbar" class="navigation-bar bg-transparent">
     <nav class="navigation-bar-content">
-        <a id="Home-TB" href="/" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-home on-left"></i>
+        @*<a id="Home-TB" href="/" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-home on-left"></i>
             <p class="fg-anthilla-green">Home </p>
+        </a>
+        <span class="element-divider tool-divider"></span>*@
+
+        <a id="System-TB" href="/system" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-location on-left"></i>
+            <p class="fg-anthilla-green">System </p>
         </a>
         <span class="element-divider tool-divider"></span>
 
-        <a id="System-TB" href="/system" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-home on-left"></i>
-            <p class="fg-anthilla-green">System </p>
+        <a id="Firewall-TB" href="/firewall/home" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-fire on-left fg-red"></i>
+            <p class="fg-anthilla-green">Firewall </p>
+        </a>
+        <a id="Storage-TB" href="/storage/home" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-box on-left fg-blue"></i>
+            <p class="fg-anthilla-green">Storage </p>
         </a>
         <span class="element-divider tool-divider"></span>
 
@@ -65,10 +73,10 @@
         <span class="element-divider tool-divider"></span>
 
         <a id="TaskScheduler-TB" href="/jobs" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-clock on-left"></i>
-            <p class="fg-anthilla-green">Task Scheduler </p>
+            <p class="fg-anthilla-green">Scheduler </p>
         </a>
         <a id="Directory-TB" href="/dir/tree/antd" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-folder on-left"></i>
-            <p class="fg-anthilla-green">Directory List </p>
+            <p class="fg-anthilla-green">Directories </p>
         </a>
         <a id="Units-TB" href="/units" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-gift on-left"></i>
             <p class="fg-anthilla-green">Units </p>
@@ -83,10 +91,10 @@
         </a>
         <span class="element-divider tool-divider"></span>
 
-        <a id="Console-TB" href="/command/mgmt" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
+        <a id="Console-TB" href="/command" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
             <p class="fg-anthilla-green">Console </p>
         </a>
-      @*  <a id="Command-TB" href="/command" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
+        @*<a id="Command-TB" href="/command/mgmt" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
             <p class="fg-anthilla-green">Command Management </p>
         </a>*@
         <a id="Param-TB" href="/paramlist" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-list on-left"></i>
