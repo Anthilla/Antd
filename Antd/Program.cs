@@ -41,7 +41,6 @@ namespace Antd {
         private static void Main(string[] args) {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
-            //mount -t tmpfs tmpfs /framework/antd/config/
             ConsoleLogger.Warn("Your configuration file for Antd will be written in tmpfs!");
             Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
 
