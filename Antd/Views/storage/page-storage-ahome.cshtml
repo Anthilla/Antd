@@ -32,18 +32,10 @@
 @using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
-@section PageBar
-{
-    <nav class="navigation-bar bg-transparent page-bar menu-bar">
-        <nav class="navigation-bar-content">
-            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-                <i class="icon-box on-left" style="line-height: 5px;"></i>
-                Storage
-            </div>
-            <div class="element-divider"></div>
-        </nav>
-    </nav>
+@section PageBar {
+    @Html.Partial("_storage-pagebar")
 }
+
 
 @section Dashboard
 {
@@ -57,7 +49,5 @@
 
 @section Scripts
 {
-    <script type="text/javascript">
-   
-    </script>
+
 }

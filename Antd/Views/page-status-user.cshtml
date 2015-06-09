@@ -31,6 +31,27 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
+@section PageBar {
+    <style type="text/css">
+        #User-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-transparent page-bar menu-bar">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-user on-left" style="line-height: 5px;"></i>
+                User
+            </div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">Manage</div>
+            <div class="element-divider"></div>
+        </nav>
+    </nav>
+
+}
 @section MainContent {
     <legend>Create user</legend>
     <form action="/status/user" method="POST" enctype="multipart/form-data">

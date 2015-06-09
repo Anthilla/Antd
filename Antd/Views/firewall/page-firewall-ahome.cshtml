@@ -32,171 +32,19 @@
 @using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
-@section PageBar
-{
-    <style type="text/css">
-        #Firewall-TB {
-            border-bottom: 10px solid #A7BD39;
-            height: 80px !important;
-        }
-    </style>
-    <nav class="navigation-bar bg-transparent page-bar menu-bar">
-        <nav class="navigation-bar-content">
-            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-                <i class="icon-fire on-left" style="line-height: 5px;"></i>
-                Firewall
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Firewall Filter</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Navigation Groups</a></li>
-                    <li><a href="#">Group Membership</a></li>
-                    <li><a href="#">Temporal Access Lists</a></li>
-                    <li><a href="#">Authentication Management</a></li>
-                    <li><a href="#">Mail Server Stats</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Hot Spot</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">IMAP</a></li>
-                    <li><a href="#">Hot Spot</a></li>
-                    <li><a href="#">Active Connections</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Log</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">System Log</a></li>
-                    <li><a href="#">Navigation Log</a></li>
-                    <li><a href="#">Blacklist Log</a></li>
-                    <li><a href="#">Archived Log</a></li>
-                    <li><a href="#">Usage Notification</a></li>
-                    <li><a href="#">DB usage</a></li>
-                    <li><a href="#">Remote Reporting</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Mail</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">IMAP</a></li>
-                    <li><a href="#">POP3/IMAP</a></li>
-                    <li><a href="#">Web Mail</a></li>
-                    <li><a href="#">Mail Server Stats</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Management</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Firewall</a></li>
-                    <li><a href="#">U T M</a></li>
-                    <li><a href="#">Blackhole DNS</a></li>
-                    <li><a href="#">Tracking</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Domains</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Local Domains</a></li>
-                    <li><a href="#">Routing</a></li>
-                    <li><a href="#">Relay</a></li>
-                    <li><a href="#">Smart Host Authentication</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Network</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Network Interface</a></li>
-                    <li><a href="#">Inventory</a></li>
-                    <li><a href="#">Inspect Net Traffic</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Servers</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">dhcp</a></li>
-                    <li><a href="#">dns</a></li>
-                    <li><a href="#">Cluster</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Setup</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Passwords</a></li>
-                    <li><a href="#">Report</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Language</a></li>
-                    <li><a href="#">Authority Certification</a></li>
-                    <li><a href="#">Find Updates</a></li>
-                    <li><a href="#">Save Config</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">User & ACL</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Manage</a></li>
-                    <li><a href="#">Mail Alias</a></li>
-                    <li><a href="#">Virtual User</a></li>
-                    <li><a href="#">Map Addresses</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">Utility</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">Whois</a></li>
-                    <li><a href="#">Public IP</a></li>
-                    <li><a href="#">IP in use</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-            
-            <div class="element border-2-anthilla-green no-overlay fg-anthilla-green upcase" style="line-height: 0px;">
-                <a class="dropdown-toggle" href="#">VPN</a>
-                <ul class="dropdown-menu bg-anthilla-gray-m fg-white border-2-anthilla-green" data-role="dropdown">
-                    <li><a href="#">VPN GRE/L2TP</a></li>
-                    <li><a href="#">VPN Openvpn</a></li>
-                    <li><a href="#">VPN ipsec</a></li>
-                </ul>
-            </div>
-            <div class="element-divider"></div>
-        </nav>
-    </nav>
+@section PageBar {
+    @Html.Partial("_firewall-pagebar")
 }
 
-@section Dashboard
-{
+@section Dashboard {
 
 }
 
-@section MainContent
-{
+@section MainContent {
 
 }
 
-@section Scripts
-{
+@section Scripts {
     <script type="text/javascript">
 
     </script>

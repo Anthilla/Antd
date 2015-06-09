@@ -161,6 +161,9 @@
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Modules\CommandModule.cs" />
+    <Compile Include="Modules\SetupModule.cs" />
+    <Compile Include="Modules\DomainModule.cs" />
+    <Compile Include="Modules\MailModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\SystemModule.cs" />
@@ -244,6 +247,21 @@
     </None>
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
     <None Include="Content\Scripts\jquery-2.1.4.min.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\storage\_storage-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-setup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-domain.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-mail.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\firewall\_firewall-pagebar.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-command-mgmt.cshtml">
