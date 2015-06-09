@@ -42,9 +42,7 @@ namespace Antd {
 
         public void Watch() {
             FileSystemWatcher watcher = new FileSystemWatcher(path);
-            //watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-            //   | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.IncludeSubdirectories = true;
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
@@ -61,14 +59,14 @@ namespace Antd {
             //recupera IDseriale della macchina
             //<<<<<<<<<<OOOO>>>>>>>>>>>>
             LogRepo.Create(Timestamp.Now, e.ChangeType.ToString(), e.FullPath);
-            //Console.WriteLine(Timestamp.Now  + " File: " + e.FullPath + " " + e.ChangeType);
+            ConsoleLogger.Log("Directory Watcher >> File: {0} {1} ", e.FullPath, e.ChangeType);
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
             var o = e.OldName;
             var n = e.Name;
             LogRepo.Create(Timestamp.Now, e.ChangeType.ToString(), e.FullPath, e.OldName);
-            //Console.WriteLine(Timestamp.Now + " File: {0} renamed to {1}", o, n);
+            ConsoleLogger.Log(Timestamp.Now + " File: {0} renamed to {1}", o, n);
         }
     }
 }

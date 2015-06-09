@@ -81,18 +81,18 @@ namespace Antd.Boot {
             ConsoleLogger.Success("    scheduler -> loaded");
         }
 
-        public static void StartDirectoryWatcher(bool isActive) {
+        public static void StartDirectoryWatcher(bool isActive, string[] foldersToWatch) {
             if (isActive) {
-                string[] watchThese =
-                {
-                    "/antd",
-                    "/proc/sys",
-                    "/sys/class/net"
-                };
-                foreach (var folder in watchThese) {
-                    new DirectoryWatcher(folder).Watch();
+                ConsoleLogger.Success("    directory watcher -> enabled");
+                foreach (string folder in foldersToWatch) {
+                    if (Directory.Exists(folder)) {
+                        new DirectoryWatcher(folder).Watch();
+                        ConsoleLogger.Info("    directory watcher -> enabled for {0}", folder);
+                    }
+                    else {
+                        ConsoleLogger.Info("    directory watcher -> {0} does not exist", folder);
+                    }
                 }
-                ConsoleLogger.Success("    directory watcher -> loaded");
             }
             else {
                 ConsoleLogger.Info("    directory watcher -> skipped");

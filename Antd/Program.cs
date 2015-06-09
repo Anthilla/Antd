@@ -44,8 +44,8 @@ namespace Antd {
             //mount -t tmpfs tmpfs /framework/antd/config/
             ConsoleLogger.Warn("Your configuration file for Antd will be written in tmpfs!");
             Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
-            var uri = CoreParametersConfig.GetAntdUri();
 
+            var uri = CoreParametersConfig.GetAntdUri();
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -62,6 +62,7 @@ namespace Antd {
 
                 AntdBoot.SetCoreParameters();
                 AntdBoot.StartScheduler(false);
+                AntdBoot.StartDirectoryWatcher(true, new string[] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
 
