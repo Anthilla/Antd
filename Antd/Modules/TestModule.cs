@@ -27,7 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Nancy;
+using System;
 
 namespace Antd {
 
@@ -42,6 +44,11 @@ namespace Antd {
             Get["/acl"] = x => {
                 var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
+            };
+
+            Get["/error"] = x => {
+                var s = FileSystem.ReadFile(Guid.NewGuid().ToString());
+                return Response.AsJson(true);
             };
         }
     }
