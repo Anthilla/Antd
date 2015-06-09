@@ -31,6 +31,42 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
+@section PageBar {
+    <style type="text/css">
+        #Log-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-transparent page-bar menu-bar">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-home on-left" style="line-height: 5px;"></i>
+                Network
+            </div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">Network Interface</div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">Inventory</div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">Inspect Net Traffic</div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">VPN GRE/L2TP</div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">VPN Openvpn</div>
+            <div class="element-divider"></div>
+
+            <div class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">VPN ipsec</div>
+            <div class="element-divider"></div>
+        </nav>
+    </nav>
+}
+
 @section MainContent {
     @if (Model.UnitTexts != String.Empty) {
         <legend>Existing systemd .networkd file(s)</legend>
@@ -41,7 +77,7 @@
         }
     }
 
-    <legend>Create a custom unit</legend>
+    <legend>Create a custom networkd unit</legend>
     <form action="/status/networkd" method="POST" enctype="multipart/form-data">
         <div class="grid">
             <div class="row">
