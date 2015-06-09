@@ -27,6 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Newtonsoft.Json;
+using System;
+using System.Threading;
+using System.Linq;
+using Antd.Common;
+
 namespace Antd.Boot {
 
     public class DatabaseBoot {
@@ -44,5 +50,52 @@ namespace Antd.Boot {
         public static void ShutDown() {
             DeNSo.Session.ShutDown();
         }
+
+        public static void Test(bool isActive) {
+            if (isActive == true) {
+                ConsoleLogger.Log("Test DATABASE");
+                var guid = Guid.NewGuid().ToString();
+                ConsoleLogger.Log(">> write");
+                TestClass write = new TestClass();
+                write._Id = guid;
+                write.Date = DateTime.Now;
+                write.Foo = "foo";
+                write.Bar = write.Foo + write.Date.ToString() + write.Foo;
+                DeNSo.Session.New.Set(write);
+                ConsoleLogger.Success(">> write done");
+                Thread.Sleep(1000);
+                ConsoleLogger.Log(">> read");
+                var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
+                ConsoleLogger.Info(">> read done");
+                if (read != null) {
+                    ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(read));
+                }
+                else {
+                    ConsoleLogger.Warn(">> read failed");
+                }
+                Thread.Sleep(1000);
+                ConsoleLogger.Log(">> edit");
+                read.Date = DateTime.Now;
+                read.Foo = "foo_edit";
+                read.Bar = read.Foo + read.Date.ToString() + read.Foo;
+                DeNSo.Session.New.Set(read);
+                var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
+                ConsoleLogger.Info(">> read done");
+                Thread.Sleep(1000);
+                if (edited != null) {
+                    ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(edited));
+                }
+                else {
+                    ConsoleLogger.Warn(">> read failed");
+                }
+            }
+        }
+    }
+
+    public class TestClass {
+        public string _Id { get; set; }
+        public DateTime Date { get; set; }
+        public string Foo { get; set; }
+        public string Bar { get; set; }
     }
 }

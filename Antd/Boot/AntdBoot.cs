@@ -114,6 +114,10 @@ namespace Antd.Boot {
             ConsoleLogger.Success("    database -> loaded");
         }
 
+        public static void TestDatabase(bool isActive) {
+            DatabaseBoot.Test(isActive);
+        }
+
         public static void StartSignalR(IAppBuilder app, bool isActive) {
             if (isActive) {
                 var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
