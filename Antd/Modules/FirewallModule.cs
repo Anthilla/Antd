@@ -38,8 +38,8 @@ namespace Antd {
             : base("/firewall") {
             this.RequiresAuthentication();
 
-            Get["/home"] = x => {
-                return View["page-firewall-home"];
+            Get["/"] = x => {
+                return View["page-firewall-ahome"];
             };
 
             Get["/manage"] = x => {

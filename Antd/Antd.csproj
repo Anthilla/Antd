@@ -252,7 +252,7 @@
     <None Include="Views\firewall\page-firewall-filter.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-home.cshtml">
+    <None Include="Views\firewall\page-firewall-ahome.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\firewall\page-firewall-hspot.cshtml">
@@ -387,7 +387,7 @@
     <None Include="Views\storage\page-storage-disk.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\storage\page-storage-home.cshtml">
+    <None Include="Views\storage\page-storage-ahome.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\storage\page-storage-iscsi.cshtml">

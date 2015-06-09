@@ -38,8 +38,8 @@ namespace Antd {
             : base("/storage") {
             this.RequiresAuthentication();
 
-            Get["/home"] = x => {
-                return View["page-storage-home"];
+            Get["/"] = x => {
+                return View["page-storage-ahome"];
             };
 
             Get["/manage/disks"] = x => {
