@@ -29,6 +29,7 @@
 
 using Antd.Common;
 using Antd.UnitFiles;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -138,21 +139,27 @@ namespace Antd.Status {
             return text;
         }
 
-        public static List<string> ReadUnits() {
+        public static dynamic ReadUnits() {
             List<string> list = new List<string>() { };
-            string[] dirs = Directory.GetFiles("/antd/networkd");
-            foreach (string file in dirs) {
-                string path = Path.Combine("/antd/networkd", file);
-                string text;
-                if (!File.Exists(path)) {
-                    text = "Unit file does not exist!";
+            var dirContainer = "/antd/networkd";
+            if (Directory.Exists(dirContainer)) {
+                string[] dirs = Directory.GetFiles("/antd/networkd");
+                foreach (string file in dirs) {
+                    string path = Path.Combine("/antd/networkd", file);
+                    string text;
+                    if (!File.Exists(path)) {
+                        text = "Unit file does not exist!";
+                    }
+                    else {
+                        text = File.ReadAllText(path);
+                    }
+                    list.Add(text);
                 }
-                else {
-                    text = File.ReadAllText(path);
-                }
-                list.Add(text);
+                return list;
             }
-            return list;
+            else {
+                return String.Empty;
+            }
         }
 
         public static void CreateCustomUnit(string text, string fname) {
