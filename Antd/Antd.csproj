@@ -162,7 +162,7 @@
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\SetupModule.cs" />
-    <Compile Include="Modules\DomainModule.cs" />
+    <Compile Include="Modules\DomainsModule.cs" />
     <Compile Include="Modules\MailModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
