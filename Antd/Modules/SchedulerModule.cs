@@ -70,7 +70,7 @@ namespace Antd {
                 string dataJson = JsonConvert.SerializeObject(data);
                 JobModel task = JobRepository.Create(guid, _alias, dataJson);
                 JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startH, startM, endH, endM, _cron);
-                JobScheduler.LauchJob<AntdJob.CommandJob>(task);
+                JobScheduler.LauchJob<JobList.CommandJob>(guid);
                 dynamic model = new ExpandoObject();
                 model.Message = "Job created and executed.";
                 model.JobList = JobRepository.GetAll();

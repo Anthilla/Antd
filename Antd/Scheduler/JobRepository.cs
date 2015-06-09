@@ -61,6 +61,21 @@ namespace Antd.Scheduler {
             return task;
         }
 
+        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, int eh, int em) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            TriggerModel trigger = new TriggerModel();
+            trigger.TriggerSetting = period;
+            trigger.StartHour = sh;
+            trigger.StartMinute = sm;
+            trigger.EndHour = eh;
+            trigger.EndMinute = em;
+            trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
+            trigger.EndTime = new DateTime(2000, 1, 1, eh, em, 1, 1);
+            trigger.CronExpression = "";
+            task.Trigger = trigger;
+            DeNSo.Session.New.Set(task);
+        }
+
         public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, int eh, int em, string _cron) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             TriggerModel trigger = new TriggerModel();
@@ -71,12 +86,7 @@ namespace Antd.Scheduler {
             trigger.EndMinute = em;
             trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
             trigger.EndTime = new DateTime(2000, 1, 1, eh, em, 1, 1);
-            if (_cron != "") {
-                trigger.CronExpression = _cron;
-            }
-            else {
-                trigger.CronExpression = "";
-            }
+            trigger.CronExpression = _cron;
             task.Trigger = trigger;
             DeNSo.Session.New.Set(task);
         }

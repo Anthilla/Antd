@@ -169,14 +169,14 @@
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\User.cs" />
     <Compile Include="Status\Mount.cs" />
-    <Compile Include="Command\ScheduleAction.cs" />
+    <Compile Include="Scheduler\Job.cs" />
     <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
     <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
-    <Compile Include="Scheduler\AntdJob.cs" />
+    <Compile Include="Scheduler\JobList.cs" />
     <Compile Include="Scheduler\JobModel.cs" />
     <Compile Include="Scheduler\JobRepository.cs" />
     <Compile Include="Scheduler\JobScheduler.cs" />

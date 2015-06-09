@@ -49,7 +49,7 @@ namespace Antd.Scheduler {
                 if (taskList.ToArray().Length > 0) {
                     foreach (JobModel task in taskList) {
                         if (task != null) {
-                            LauchJob<AntdJob.CommandJob>(task);
+                            LauchJob<JobList.CommandJob>(task.Guid);
                         }
                     }
                 }
@@ -60,10 +60,10 @@ namespace Antd.Scheduler {
             __scheduler.Shutdown();
         }
 
-        public static void LauchJob<T>(JobModel _job) where T : IJob {
+        public static void LauchJob<T>(string guid) where T : IJob {
+            var _job = JobRepository.GetByGuid(guid);
             IJobDetail job = DefineJob<T>(_job);
             ITrigger trigger = DefineTrigger(_job.Trigger, _job.Alias);
-
             __scheduler.ScheduleJob(job, trigger);
         }
 
