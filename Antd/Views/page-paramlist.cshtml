@@ -38,27 +38,13 @@
             <tr>
                 <td class="right" style="width: 150px;">Application Port</td>
                 <td class="right">
-                    <p>@Antd.SelfConfig.GetAntdPort()</p>
+                    <p>@Antd.Boot.CoreParametersConfig.GetAntdPort()</p>
                 </td>
             </tr>
             <tr>
                 <td class="right">Database path</td>
                 <td class="right">
-                    <p>@Antd.SelfConfig.GetAntdDb()</p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <legend>System-config</legend>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td class="right" style="width: 150px;">Core startup script</td>
-                <td class="right">
-                    @foreach (string s in Antd.SystemConfig.baseScriptArgs) {
-                        <p>@s</p>
-                    }
+                    <p>@Antd.Boot.CoreParametersConfig.GetAntdDb()</p>
                 </td>
             </tr>
         </tbody>

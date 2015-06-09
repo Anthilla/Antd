@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<section section="antd.config">
-  <param key="antdport" value="7777" />
-  <param key="antddb" value="/Data/Data01Vol01/antdData" />
-  <param key="antdfr" value="/Data/Data01Vol01/antdData" />
-  <param key="sysd" value="/etc/systemd/system" />
-  <param key="root" value="/antd" />
-</section>
