@@ -59,6 +59,10 @@ namespace Antd.Apps {
                 ConsoleLogger.Warn("Your anthillasp units be written in tmpfs!");
                 Directory.CreateDirectory("/mnt/cdrom/Overlay/anthillasp/");
                 Command.Launch("mount", "-t tmpfs tmpfs /mnt/cdrom/Overlay/anthillasp/");
+                UnitPrepareAnthillasp();
+                UnitFrameworkMount();
+                UnitLaunchAnthillaSP();
+                UnitLaunchAnthillaServer();
             }
 
             private static void UnitPrepareAnthillasp() {
