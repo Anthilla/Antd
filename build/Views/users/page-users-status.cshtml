@@ -1,0 +1,47 @@
+﻿<legend id="UserStatus">Status</legend>
+<legend>Create user</legend>
+<form action="/status" method="POST" enctype="multipart/form-data">
+    <div class="grid">
+        <div class="row">
+            <div class="span10">
+                <label>User name</label>
+                <input name="Name" type="text" style="width: 90%; height: 30px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10">
+                <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
+            </div>
+        </div>
+    </div>
+</form>
+<input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+
+<table class="table searchable">
+    <thead>
+        <tr>
+            <th class="text-left">username</th>
+            <th class="text-left">password</th>
+            <th class="text-left">lastchanged</th>
+            <th class="text-left">max number of days</th>
+            <th class="text-left">min number of days</th>
+            <th class="text-left">warn</th>
+            <th class="text-left">inactive</th>
+            <th class="text-left">expire</th>
+        </tr>
+    </thead>
+    <tbody id="SysctlBodyTable">
+        @foreach (Antd.UserModel user in Model.ALL) {
+            <tr>
+                <td style="text-align: center;">@user.username </td>
+                <td style="text-align: center;">@user.password </td>
+                <td style="text-align: center;">@user.lastchanged </td>
+                <td style="text-align: center;">@user.minimumnumberofdays </td>
+                <td style="text-align: center;">@user.maximumnumberofdays </td>
+                <td style="text-align: center;">@user.warn </td>
+                <td style="text-align: center;">@user.inactive </td>
+                <td style="text-align: center;">@user.expire </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,130 @@
+﻿<legend id="SetupManagement">Management</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Config</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Enable</td>
+            <td>
+                <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Email Owner</td>
+            <td>
+                <input type="email" /></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp</td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<legend id="anchorSer">Services</legend>
+<br />
+<legend id="anchorLng">Language</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Available Languages</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <select>
+                    <option selected disabled>Select Language</option>
+                </select>
+            </td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+        </tr>
+        <tr>
+            <td>Upload a new file</td>
+            <td>
+                <input type="file" value="Create" /></td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<legend id="anchorAuCe">Authority Certification</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Certificate</th>
+            <th>Expires</th>
+            <th>Cryptography</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp</td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Renew Certificate" /></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<legend id="aaaaaaa">Admin Email</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Set Admin Emails</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Address</td>
+            <td>
+                <input type="text" /></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp</td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+<legend id="anchorSvcfg">Save Config</legend>
+<div class="tab-control" data-role="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#_save_">Save</a></li>
+        <li><a href="#_load_">Load</a></li>
+    </ul>
+
+    <div class="frames">
+        <div class="frame" id="_save_">
+            <label>Email Address</label>
+            <input type="text" />
+            <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Send Config" />
+        </div>
+        <div class="frame" id="_load_">
+            <label>File Path</label>
+            <input type="file" />
+            <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Load Config" />
+        </div>
+    </div>
+</div>
+<br />
+<legend id="anchorFup">Find Updates</legend>
+<br />
