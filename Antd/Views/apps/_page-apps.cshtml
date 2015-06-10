@@ -32,11 +32,11 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_system-pagebar")
+    @Html.Partial("_apps-pagebar")
 }
 
-@section Dashboard {
-    @Html.Partial("page-apps-anthillasp")
+@section MainContent {
+    @Html.Partial("page-apps-anthillasp", Model)
 }
 
 @section Scripts {
