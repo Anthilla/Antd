@@ -63,33 +63,32 @@ namespace Antd {
             };
 
             Get["/start/sp"] = x => {
-                Systemctl.Status("anthillasp.service");
-                var start = AnthillaSP.StartAnthillaSP();
+                var start = Systemctl.Start("anthillasp-launcher.service");
                 return Response.AsJson(start);
             };
 
             Get["/start/server"] = x => {
-                CommandModel start = AnthillaSP.StartAnthillaServer();
+                var start = Systemctl.Start("anthillaserver-launcher.service");
                 return Response.AsJson(start);
             };
 
             Get["/stop/sp"] = x => {
-                CommandModel stop = AnthillaSP.StopAnthillaSP();
+                var stop = Systemctl.Stop("anthillasp-launcher.service");
                 return Response.AsJson(stop);
             };
 
             Get["/stop/server"] = x => {
-                CommandModel stop = AnthillaSP.StopAnthillaServer();
+                var stop = Systemctl.Stop("anthillaserver-launcher.service");
                 return Response.AsJson(stop);
             };
 
             Get["/status/sp"] = x => {
-                CommandModel status = AnthillaSP.StatusAnthillaSP();
+                var status = Systemctl.Status("anthillasp-launcher.service");
                 return Response.AsJson(status);
             };
 
             Get["/status/server"] = x => {
-                CommandModel status = AnthillaSP.StatusAnthillaServer();
+                var status = Systemctl.Status("anthillaserver-launcher.service");
                 return Response.AsJson(status);
             };
         }

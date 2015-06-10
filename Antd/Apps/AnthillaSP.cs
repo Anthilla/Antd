@@ -146,30 +146,6 @@ namespace Antd.Apps {
             }
         }
 
-        public static CommandModel StartAnthillaServer() {
-            return Systemctl.Start("anthillaserver.service");
-        }
-
-        public static CommandModel StartAnthillaSP() {
-            return Systemctl.Start("anthillasp.service");
-        }
-
-        public static CommandModel StopAnthillaServer() {
-            return Systemctl.Stop("anthillaserver.service");
-        }
-
-        public static CommandModel StopAnthillaSP() {
-            return Systemctl.Stop("anthillasp.service");
-        }
-
-        public static CommandModel StatusAnthillaServer() {
-            return Systemctl.Status("anthillaserver.service");
-        }
-
-        public static CommandModel StatusAnthillaSP() {
-            return Systemctl.Status("anthillasp.service");
-        }
-
         public static string AnthillaServerPID { get { return Proc.GetPID("AnthillaServer.exe"); } }
 
         public static string AnthillaSPPID { get { return Proc.GetPID("AnthillaSP.exe"); } }
