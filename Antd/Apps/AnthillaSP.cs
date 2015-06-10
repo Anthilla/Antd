@@ -66,7 +66,7 @@ namespace Antd.Apps {
             }
 
             private static void UnitPrepareAnthillasp() {
-                var unitName = "antd-prepare.service";
+                var unitName = "anthillasp-prepare.service";
                 string folder = "/mnt/cdrom/Overlay/anthillasp";
                 string path = Path.Combine(folder, unitName);
                 if (!File.Exists(path)) {
@@ -87,7 +87,7 @@ namespace Antd.Apps {
             }
 
             private static void UnitFrameworkMount() {
-                var unitName = "framework.anthillasp.";
+                var unitName = "framework-anthillasp.mount";
                 string folder = "/mnt/cdrom/Overlay/anthillasp";
                 string path = Path.Combine(folder, unitName);
                 if (!File.Exists(path)) {
@@ -114,7 +114,7 @@ namespace Antd.Apps {
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
-                        sw.WriteLine("Description=External Volume Unit, Application: Antd Launcher Service");
+                        sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Launcher Service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
@@ -135,7 +135,7 @@ namespace Antd.Apps {
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
-                        sw.WriteLine("Description=External Volume Unit, Application: Antd Launcher Service");
+                        sw.WriteLine("Description=External Volume Unit, Application: AnthillaServer Launcher Service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");
