@@ -28,10 +28,15 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
-using Antd.SystemConfig;
+using Antd.MachineStatus;
+using Antd.Status;
+using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
+using System.Linq;
 
 namespace Antd {
 
@@ -42,374 +47,84 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return Response.AsRedirect("/system/general");
-            };
-
-            Get["/general"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Hostname = Command.Launch("hostname", "").output;
                 vmod.Domainname = Command.Launch("hostname", "-f").output;
                 vmod.Timezone = Command.Launch("timedatectl", "").output;
-                //vmod.TimezonesList = Command.Launch("timedatectl", "list-timezones").output.Split(new char[]{'.'}).ToArray();
                 vmod.TimezonesList = new string[] { "uno", "due" };
                 vmod.Timeserver = "time.server.net";
                 vmod.Language = "English";
-                return View["page-system-general", vmod];
-            };
-
-            Post["/update/hostname/{hostname}"] = x => {
-                string hostname = x.hostname;
-                SystemSet.General.NewHostname(hostname);
-                return Response.AsJson(hostname);
-            };
-
-            Post["/update/domainname/{domainname}"] = x => {
-                string domainname = x.domainname;
-                SystemSet.General.NewDomainname(domainname);
-                return Response.AsJson(domainname);
-            };
-
-            Post["/update/timezone/{timezone}"] = x => {
-                string timezone = x.timezone;
-                SystemSet.General.NewTimezone(timezone);
-                return Response.AsJson(timezone);
-            };
-
-            Post["/update/timeserver/{timeserver}"] = x => {
-                string timeserver = x.timeserver;
-                SystemSet.General.NewTimeserver(timeserver);
-                return Response.AsJson(timeserver);
-            };
-
-            Post["/update/language/{language}"] = x => {
-                string language = x.language;
-                ConsoleLogger.Info("New Language: {0}", language);
-                return Response.AsJson(language);
-            };
-
-            Post["/update/all/general"] = x => {
-                ConsoleLogger.Info("New All...");
-                return Response.AsJson(true);
-            };
-
-            Get["/advanced"] = x => {
-                dynamic vmod = new ExpandoObject();
                 vmod.TCPport = "";
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
-                vmod.FirewallMaximumStates = "9000";
-                vmod.FirewallMaximumTableEntries = "20000";
-                vmod.AliasesHostnamesResolveInterval = "300";
-                return View["page-system-advanced", vmod];
+                vmod.RUNNING = Mount.Running;
+                vmod.ANTD = Mount.Antd;
+                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+
+                HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
+                HashSet<DirItemModel> cfgList = new DirectoryLister("/antd/etc", true).FullList2;
+                List<dynamic> nl = new List<dynamic>() { };
+                foreach (DirItemModel dir in etcList) {
+                    dynamic imod = new ExpandoObject();
+                    imod.isFile = dir.isFile;
+                    imod.etcPath = dir.path;
+                    bool hasCfg;
+                    string cfgPath;
+                    string cfgName;
+                    string p = dir.path.ConvertPathToFileName().Replace("D:", "");
+                    string c = (from i in cfgList
+                                where i.name == p
+                                select i.path).FirstOrDefault();
+                    if (c == null) {
+                        hasCfg = false;
+                        cfgPath = "";
+                        cfgName = "";
+                    }
+                    else {
+                        hasCfg = true;
+                        cfgPath = c;
+                        cfgName = Path.GetFileName(c);
+                    }
+                    imod.hasCfg = hasCfg;
+                    imod.cfgPath = cfgPath;
+                    imod.cfgName = cfgName;
+                    nl.Add(imod);
+                }
+                vmod.CONFS = nl;
+
+                return View["_page-system", vmod];
             };
 
-            Post["/update/protocol/{protocol}"] = x => {
-                string protocol = x.protocol;
-                ConsoleLogger.Info("New Protocol: {0}", protocol);
-                return Response.AsJson(protocol);
+            Post["/export/file/{path*}"] = x => {
+                string path = x.path;
+                ConfigEtc.Export(path);
+                return Response.AsJson("done");
             };
 
-            Post["/update/tcpport/{tcpport}"] = x => {
-                string tcpport = x.tcpport;
-                ConsoleLogger.Info("New TCP Port: {0}", tcpport);
-                return Response.AsJson(tcpport);
+            Get["/read/file/{path*}"] = x => {
+                string path = x.path;
+                string text = FileSystem.ReadFile(path.RemoveDriveLetter());
+                return Response.AsJson(text);
             };
 
-            Post["/update/maxprocs/{maxprocs}"] = x => {
-                string maxprocs = x.maxprocs;
-                ConsoleLogger.Info("New Max Processes: {0}", maxprocs);
-                return Response.AsJson(maxprocs);
+            Post["/file"] = x => {
+                string path = this.Request.Form.FilePath;
+                string content = this.Request.Form.FileContent;
+                ConfigEtc.EditFile(path, content);
+                return Response.AsRedirect("/system");
             };
 
-            Post["/update/webguiredirects/{webguiredirects}"] = x => {
-                string webguiredirects = x.webguiredirects;
-                ConsoleLogger.Info("New WebGUI Redirect: {0}", webguiredirects);
-                return Response.AsJson(webguiredirects);
-            };
-
-            Post["/update/webguiloginautocomplete/{webguiloginautocomplete}"] = x => {
-                string webguiloginautocomplete = x.webguiloginautocomplete;
-                ConsoleLogger.Info("New WebGUI Login Autocomplete: {0}", webguiloginautocomplete);
-                return Response.AsJson(webguiloginautocomplete);
-            };
-
-            Post["/update/webguiloginmessages/{webguiloginmessages}"] = x => {
-                string webguiloginmessages = x.webguiloginmessages;
-                ConsoleLogger.Info("New WebGUI login messages: {0}", webguiloginmessages);
-                return Response.AsJson(webguiloginmessages);
-            };
-
-            Post["/update/antilockout/{antilockout}"] = x => {
-                string antilockout = x.antilockout;
-                ConsoleLogger.Info("New Anti-lockout: {0}", antilockout);
-                return Response.AsJson(antilockout);
-            };
-
-            Post["/update/dnsrebindcheck/{dnsrebindcheck}"] = x => {
-                string dnsrebindcheck = x.dnsrebindcheck;
-                ConsoleLogger.Info("New DNS Rebind Check: {0}", dnsrebindcheck);
-                return Response.AsJson(dnsrebindcheck);
-            };
-
-            Post["/update/alternatehostnames/{alternatehostnames}"] = x => {
-                string alternatehostnames = x.alternatehostnames;
-                ConsoleLogger.Info("New Alternate Hostnames: {0}", alternatehostnames);
-                return Response.AsJson(alternatehostnames);
-            };
-
-            Post["/update/refererenforcement/{refererenforcement}"] = x => {
-                string refererenforcement = x.refererenforcement;
-                ConsoleLogger.Info("New Browser HTTP_REFERER enforcement: {0}", refererenforcement);
-                return Response.AsJson(refererenforcement);
-            };
-
-            Post["/update/tabtext/{tabtext}"] = x => {
-                string tabtext = x.tabtext;
-                ConsoleLogger.Info("New Browser tab text: {0}", tabtext);
-                return Response.AsJson(tabtext);
-            };
-
-            Post["/update/enablesecureshell/{enablesecureshell}"] = x => {
-                string enablesecureshell = x.enablesecureshell;
-                ConsoleLogger.Info("New Secure Shell Server: {0}", enablesecureshell);
-                return Response.AsJson(enablesecureshell);
-            };
-
-            Post["/update/authenticationmethod/{authenticationmethod}"] = x => {
-                string authenticationmethod = x.authenticationmethod;
-                ConsoleLogger.Info("New Authentication Method: {0}", authenticationmethod);
-                return Response.AsJson(authenticationmethod);
-            };
-
-            Post["/update/sshport/{sshport}"] = x => {
-                string sshport = x.sshport;
-                ConsoleLogger.Info("New SSh Port: {0}", sshport);
-                return Response.AsJson(sshport);
-            };
-
-            Post["/update/serialterminal/{serialterminal}"] = x => {
-                string serialterminal = x.serialterminal;
-                ConsoleLogger.Info("New SerialTerminal: {0}", serialterminal);
-                return Response.AsJson(serialterminal);
-            };
-
-            Post["/update/serialspeed/{serialspeed}"] = x => {
-                string serialspeed = x.serialspeed;
-                ConsoleLogger.Info("New SerialSpeed: {0}", serialspeed);
-                return Response.AsJson(serialspeed);
-            };
-
-            Post["/update/primaryconsole/{primaryconsole}"] = x => {
-                string primaryconsole = x.primaryconsole;
-                ConsoleLogger.Info("New PrimaryConsole: {0}", primaryconsole);
-                return Response.AsJson(primaryconsole);
-            };
-
-            Post["/update/consolemenu/{consolemenu}"] = x => {
-                string consolemenu = x.consolemenu;
-                ConsoleLogger.Info("New consolemenu: {0}", consolemenu);
-                return Response.AsJson(consolemenu);
-            };
-
-            Post["/update/ipdontfragment/{ipdontfragment}"] = x => {
-                string ipdontfragment = x.ipdontfragment;
-                ConsoleLogger.Info("New ipdontfragment: {0}", ipdontfragment);
-                return Response.AsJson(ipdontfragment);
-            };
-
-            Post["/update/iprandomid/{iprandomid}"] = x => {
-                string iprandomid = x.iprandomid;
-                ConsoleLogger.Info("New iprandomid: {0}", iprandomid);
-                return Response.AsJson(iprandomid);
-            };
-
-            Post["/update/firewalloptimizationoptions/{firewalloptimizationoptions}"] = x => {
-                string firewalloptimizationoptions = x.firewalloptimizationoptions;
-                ConsoleLogger.Info("New firewalloptimizationoptions: {0}", firewalloptimizationoptions);
-                return Response.AsJson(firewalloptimizationoptions);
-            };
-
-            Post["/update/disablefirewallfilter/{disablefirewallfilter}"] = x => {
-                string disablefirewallfilter = x.disablefirewallfilter;
-                ConsoleLogger.Info("New disablefirewallfilter: {0}", disablefirewallfilter);
-                return Response.AsJson(disablefirewallfilter);
-            };
-
-            Post["/update/disablefirewallscrub/{disablefirewallscrub}"] = x => {
-                string disablefirewallscrub = x.disablefirewallscrub;
-                ConsoleLogger.Info("New disablefirewallscrub: {0}", disablefirewallscrub);
-                return Response.AsJson(disablefirewallscrub);
-            };
-
-            Post["/update/firewalladaptivetimeouts/{end}/{start}"] = x => {
-                string end = x.end;
-                string start = x.start;
-                ConsoleLogger.Info("New firewalladaptivetimeouts: {0} - {1}", end, start);
-                return Response.AsJson(end + " - " + start);
-            };
-
-            Post["/update/firewallmaximumstates/{firewallmaximumstates}"] = x => {
-                string firewallmaximumstates = x.firewallmaximumstates;
-                ConsoleLogger.Info("New firewallmaximumstates: {0}", firewallmaximumstates);
-                return Response.AsJson(firewallmaximumstates);
-            };
-
-            Post["/update/firewallmaximumtableentries/{firewallmaximumtableentries}"] = x => {
-                string firewallmaximumtableentries = x.firewallmaximumtableentries;
-                ConsoleLogger.Info("New firewallmaximumtableentries: {0}", firewallmaximumtableentries);
-                return Response.AsJson(firewallmaximumtableentries);
-            };
-
-            Post["/update/staticroutefiltering/{staticroutefiltering}"] = x => {
-                string staticroutefiltering = x.staticroutefiltering;
-                ConsoleLogger.Info("New staticroutefiltering: {0}", staticroutefiltering);
-                return Response.AsJson(staticroutefiltering);
-            };
-
-            Post["/update/disableautovpn/{disableautovpn}"] = x => {
-                string disableautovpn = x.disableautovpn;
-                ConsoleLogger.Info("New disableautovpn: {0}", disableautovpn);
-                return Response.AsJson(disableautovpn);
-            };
-
-            Post["/update/disablereplyto/{disablereplyto}"] = x => {
-                string disablereplyto = x.disablereplyto;
-                ConsoleLogger.Info("New disablereplyto: {0}", disablereplyto);
-                return Response.AsJson(disablereplyto);
-            };
-
-            Post["/update/disablenegaterules/{disablenegaterules}"] = x => {
-                string disablenegaterules = x.disablenegaterules;
-                ConsoleLogger.Info("New disablenegaterules: {0}", disablenegaterules);
-                return Response.AsJson(disablenegaterules);
-            };
-
-            Post["/update/aliaseshostnamesresolveinterval/{aliaseshostnamesresolveinterval}"] = x => {
-                string aliaseshostnamesresolveinterval = x.aliaseshostnamesresolveinterval;
-                ConsoleLogger.Info("New aliaseshostnamesresolveinterval: {0}", aliaseshostnamesresolveinterval);
-                return Response.AsJson(aliaseshostnamesresolveinterval);
-            };
-
-            Post["/update/checkcertificatealiasurl/{checkcertificatealiasurl}"] = x => {
-                string checkcertificatealiasurl = x.checkcertificatealiasurl;
-                ConsoleLogger.Info("New checkcertificatealiasurl: {0}", checkcertificatealiasurl);
-                return Response.AsJson(checkcertificatealiasurl);
-            };
-
-            Post["/update/updatefrequency/{updatefrequency}"] = x => {
-                string updatefrequency = x.updatefrequency;
-                ConsoleLogger.Info("New updatefrequency: {0}", updatefrequency);
-                return Response.AsJson(updatefrequency);
-            };
-
-            Post["/update/natreflection/{natreflection}"] = x => {
-                string natreflection = x.natreflection;
-                ConsoleLogger.Info("New natreflection: {0}", natreflection);
-                return Response.AsJson(natreflection);
-            };
-
-            Post["/update/natreflectiontout/{natreflectiontout}"] = x => {
-                string natreflectiontout = x.natreflectiontout;
-                ConsoleLogger.Info("New natreflectiontout: {0}", natreflectiontout);
-                return Response.AsJson(natreflectiontout);
-            };
-
-            Post["/update/enablenatreflection1v1/{enablenatreflection1v1}"] = x => {
-                string enablenatreflection1v1 = x.enablenatreflection1v1;
-                ConsoleLogger.Info("New enablenatreflection1v1: {0}", enablenatreflection1v1);
-                return Response.AsJson(enablenatreflection1v1);
-            };
-
-            Post["/update/enablenatrautomaticoutbound/{enablenatrautomaticoutbound}"] = x => {
-                string enablenatrautomaticoutbound = x.enablenatrautomaticoutbound;
-                ConsoleLogger.Info("New enablenatrautomaticoutbound: {0}", enablenatrautomaticoutbound);
-                return Response.AsJson(enablenatrautomaticoutbound);
-            };
-
-            Post["/update/tftpproxy/{tftpproxy}"] = x => {
-                string tftpproxy = x.tftpproxy;
-                ConsoleLogger.Info("New tftpproxy: {0}", tftpproxy);
-                return Response.AsJson(tftpproxy);
-            };
-
-            Post["/update/allowipv6/{allowipv6}"] = x => {
-                string allowipv6 = x.allowipv6;
-                ConsoleLogger.Info("New allowipv6: {0}", allowipv6);
-                return Response.AsJson(allowipv6);
-            };
-
-            Post["/update/ipv6onipv4/{isbool}/{value}"] = x => {
-                string isbool = x.isbool;
+            Post["/sysctl/{param}/{value}"] = x => {
+                string param = x.param;
                 string value = x.value;
-                ConsoleLogger.Info("New ipv6onipv4: {0} - {1}", isbool, value);
-                return Response.AsJson(isbool + " - " + value);
-            };
-
-            Post["/update/preferipv4/{preferipv4}"] = x => {
-                string preferipv4 = x.preferipv4;
-                ConsoleLogger.Info("New preferipv4: {0}", preferipv4);
-                return Response.AsJson(preferipv4);
-            };
-
-            Post["/update/devicepolling/{devicepolling}"] = x => {
-                string devicepolling = x.devicepolling;
-                ConsoleLogger.Info("New devicepolling: {0}", devicepolling);
-                return Response.AsJson(devicepolling);
-            };
-
-            Post["/update/hardwarechecksumoffloading/{hardwarechecksumoffloading}"] = x => {
-                string hardwarechecksumoffloading = x.hardwarechecksumoffloading;
-                ConsoleLogger.Info("New hardwarechecksumoffloading: {0}", hardwarechecksumoffloading);
-                return Response.AsJson(hardwarechecksumoffloading);
-            };
-
-            Post["/update/hardwaretcpsegmentationoffloading/{hardwaretcpsegmentationoffloading}"] = x => {
-                string hardwaretcpsegmentationoffloading = x.hardwaretcpsegmentationoffloading;
-                ConsoleLogger.Info("New hardwaretcpsegmentationoffloading: {0}", hardwaretcpsegmentationoffloading);
-                return Response.AsJson(hardwaretcpsegmentationoffloading);
-            };
-
-            Post["/update/hardwarelargereceiveoffloading/{hardwarelargereceiveoffloading}"] = x => {
-                string hardwarelargereceiveoffloading = x.hardwarelargereceiveoffloading;
-                ConsoleLogger.Info("New hardwarelargereceiveoffloading: {0}", hardwarelargereceiveoffloading);
-                return Response.AsJson(hardwarelargereceiveoffloading);
-            };
-
-            Post["/update/suppressarp/{suppressarp}"] = x => {
-                string suppressarp = x.suppressarp;
-                ConsoleLogger.Info("New suppressarp: {0}", suppressarp);
-                return Response.AsJson(suppressarp);
-            };
-
-            Get["/certmanager"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-certmanager", vmod];
-            };
-
-            Get["/firmware"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-firmware", vmod];
-            };
-
-            Get["/highavailsync"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-highavailsync", vmod];
-            };
-
-            Get["/routing"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-routing", vmod];
-            };
-
-            Get["/usermanager"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-system-usermanager", vmod];
+                var output = Sysctl.Config(param, value);
+                return Response.AsJson(output);
             };
 
             Get["/wizard"] = x => {
                 dynamic vmod = new ExpandoObject();
-                return View["page-system-wizard", vmod];
+                return View["page-wizard", vmod];
             };
         }
     }

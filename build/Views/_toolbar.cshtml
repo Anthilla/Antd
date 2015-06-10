@@ -30,16 +30,17 @@
 
 <nav id="Toolbar" class="navigation-bar bg-transparent">
     <nav class="navigation-bar-content">
-        @*<a id="Home-TB" href="/" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-home on-left"></i>
-            <p class="fg-anthilla-green">Home </p>
-        </a>
-        <span class="element-divider tool-divider"></span>*@
-
-        <a id="System-TB" href="/system" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-location on-left"></i>
-            <p class="fg-anthilla-green">System </p>
+        <a id="Info-TB" href="/info" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-eye on-left"></i>
+            <p class="fg-anthilla-green">Info </p>
         </a>
         <span class="element-divider tool-divider"></span>
 
+        <a id="System-TB" href="/system" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-screen on-left"></i>
+            <p class="fg-anthilla-green">System </p>
+        </a>
+        <a id="Network-TB" href="/network" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-broadcast on-left"></i>
+            <p class="fg-anthilla-green">Network </p>
+        </a>
         <a id="Firewall-TB" href="/firewall" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-fire on-left"></i>
             <p class="fg-anthilla-green">Firewall </p>
         </a>
@@ -48,68 +49,35 @@
         </a>
         <span class="element-divider tool-divider"></span>
 
-        <a id="Network-TB" href="/status/networkd" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">Network </p>
+        <a id="Setup-TB" href="/setup" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-wrench on-left"></i>
+            <p class="fg-anthilla-green">Setup </p>
         </a>
-        <a id="User-TB" href="/status/user" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">User </p>
+        <a id="Users-TB" href="/users" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-user-2 on-left"></i>
+            <p class="fg-anthilla-green">Users </p>
         </a>
         <a id="Mail-TB" href="/mail" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-mail on-left"></i>
             <p class="fg-anthilla-green">Mail </p>
         </a>
-        <a id="Domains-TB" href="/domains" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-mail on-left"></i>
-            <p class="fg-anthilla-green">Domains </p>
-        </a>
-        <a id="Setup-TB" href="/setup" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-mail on-left"></i>
-            <p class="fg-anthilla-green">Setup </p>
+        <span class="element-divider tool-divider"></span>
+
+        <a id="Apps-TB" href="/apps" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-grid-view on-left"></i>
+            <p class="fg-anthilla-green">Apps </p>
         </a>
         <span class="element-divider tool-divider"></span>
 
-        <a id="Sysctl-TB" href="/status/sysctl" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">Sysctl </p>
-        </a>
-        <a id="Mount-TB" href="/status/mount" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">Mount </p>
-        </a>
-        <span class="element-divider tool-divider"></span>
-
-        <a id="Config-TB" href="/config/file" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">file config</p>
-        </a>
-        <span class="element-divider tool-divider"></span>
-
-        <a id="ETC-TB" href="/dir/tree/etc" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-cabinet on-left"></i>
-            <p class="fg-anthilla-green">etc </p>
-        </a>
-        <span class="element-divider tool-divider"></span>
-
-        <a id="TaskScheduler-TB" href="/jobs" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-clock on-left"></i>
+        <a id="Scheduler-TB" href="/jobs" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-history on-left"></i>
             <p class="fg-anthilla-green">Scheduler </p>
         </a>
-        <a id="Directory-TB" href="/dir/tree/antd" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-folder on-left"></i>
+        <a id="Directories-TB" href="/dir/tree/framework" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-folder-2 on-left"></i>
             <p class="fg-anthilla-green">Directories </p>
         </a>
-        <a id="Units-TB" href="/units" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-gift on-left"></i>
+        <a id="Units-TB" href="/units" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-file on-left"></i>
             <p class="fg-anthilla-green">Units </p>
         </a>
         <span class="element-divider tool-divider"></span>
 
-        <a id="Info-TB" href="/info" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-info on-left"></i>
-            <p class="fg-anthilla-green">Info </p>
-        </a>
-        <a id="Log-TB" href="/log" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-eye on-left"></i>
-            <p class="fg-anthilla-green">Log </p>
-        </a>
-        <span class="element-divider tool-divider"></span>
-
-        <a id="Console-TB" href="/command" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
-            <p class="fg-anthilla-green">Console </p>
-        </a>
-        @*<a id="Command-TB" href="/command/mgmt" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-console on-left"></i>
-            <p class="fg-anthilla-green">Command Management </p>
-        </a>*@
-        <a id="Param-TB" href="/paramlist" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-list on-left"></i>
-            <p class="fg-anthilla-green">&nbsp </p>
+        <a id="Logs-TB" href="/log" class="tool element upcase bg-anthilla-gray fg-anthilla-green"><i class="icon-chart-alt on-left"></i>
+            <p class="fg-anthilla-green">Logs </p>
         </a>
         <span class="element-divider tool-divider"></span>
     </nav>

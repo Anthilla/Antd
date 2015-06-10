@@ -161,8 +161,11 @@
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Modules\CommandModule.cs" />
+    <Compile Include="Modules\AppsModule.cs" />
+    <Compile Include="Modules\ConsoleModule.cs" />
+    <Compile Include="Modules\UsersModule.cs" />
+    <Compile Include="Modules\NetworkModule.cs" />
     <Compile Include="Modules\SetupModule.cs" />
-    <Compile Include="Modules\DomainsModule.cs" />
     <Compile Include="Modules\MailModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
@@ -173,11 +176,9 @@
     <Compile Include="Status\User.cs" />
     <Compile Include="Status\Mount.cs" />
     <Compile Include="Scheduler\Job.cs" />
-    <Compile Include="Modules\ConfigModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
-    <Compile Include="Modules\StatusModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Scheduler\JobList.cs" />
     <Compile Include="Scheduler\JobModel.cs" />
@@ -198,10 +199,8 @@
     <Compile Include="SystemConfig\General.cs" />
     <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
-    <Compile Include="Modules\AnthillaASModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
-    <Compile Include="Modules\AnthillaSPModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Common\ConsoleTime.cs" />
@@ -249,19 +248,67 @@
     <None Include="Content\Scripts\jquery-2.1.4.min.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\_toolbarTMPOLD.cshtml">
+    <None Include="Views\apps\_page-apps.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\apps\_apps-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\firewall\page-firewall-nat.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\info\_info-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\info\_page-info.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\log\_log-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\log\_page-log.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\mail\_mail-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\mail\_page-mail.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\network\page-network-networking.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\network\_page-network.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\network\_network-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\setup\page-setup-cluster.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\setup\page-setup-misc.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\setup\page-setup-advanced.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\setup\_page-setup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\setup\_setup-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\system\page-system-general.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\system\_page-system.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\system\_system-pagebar.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\storage\_storage-pagebar.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-setup.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-domain.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-mail.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\firewall\_firewall-pagebar.cshtml">
@@ -270,88 +317,85 @@
     <None Include="Views\page-command-mgmt.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-filter.cshtml">
+    <None Include="Views\firewall\page-firewall-proxy.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-ahome.cshtml">
+    <None Include="Views\firewall\_page-firewall.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-hspot.cshtml">
+    <None Include="Views\firewall\page-firewall-hotspot.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-log.cshtml">
+    <None Include="Views\users\_users-pagebar.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-mail.cshtml">
+    <None Include="Views\users\_page-users.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-mgmt.cshtml">
+    <None Include="Views\log\page-log-advanced.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-mldmns.cshtml">
+    <None Include="Views\mail\page-mail-manage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-net.cshtml">
+    <None Include="Views\firewall\page-firewall-manage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-netsrv.cshtml">
+    <None Include="Views\mail\page-mail-domains.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-setup.cshtml">
+    <None Include="Views\network\page-network-interface.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-user.cshtml">
+    <None Include="Views\network\page-network-servers.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-util.cshtml">
+    <None Include="Views\setup\page-setup-manage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\firewall\page-firewall-vpn.cshtml">
+    <None Include="Views\users\page-users-manage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-highavailsync.cshtml">
+    <None Include="Views\firewall\page-firewall-utility.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-firmware.cshtml">
+    <None Include="Views\network\page-network-vpn.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-usermanager.cshtml">
+    <None Include="Views\system\page-system-highavailsync.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-routing.cshtml">
+    <None Include="Views\system\page-system-firmware.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-general.cshtml">
+    <None Include="Views\users\page-users-attributes.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-certmanager.cshtml">
+    <None Include="Views\network\page-network-routing.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-advanced.cshtml">
+    <None Include="Views\system\page-system-certmanager.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-system-wizard.cshtml">
+    <None Include="Views\system\page-system-advanced.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-config-file2.cshtml">
+    <None Include="Views\page-wizard.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-config-file.cshtml">
+    <None Include="Views\system\page-system-conf.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-status-user.cshtml">
+    <None Include="Views\users\page-users-status.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-status-networkd.cshtml">
+    <None Include="Views\network\page-network-d.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-status-mount.cshtml">
+    <None Include="Views\system\page-system-mount.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-status-sysctl.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-status.cshtml">
+    <None Include="Views\system\page-system-sysctl.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-units.cshtml">
@@ -360,7 +404,7 @@
     <None Include="Views\page-scheduler.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-log.cshtml">
+    <None Include="Views\log\page-log-main.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-dir-watch.cshtml">
@@ -369,73 +413,43 @@
     <None Include="Views\page-dir.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-m-service-as.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Views\login.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-paramlist.cshtml">
+    <None Include="Views\info\page-info-paramlist.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-ifconfig.cshtml">
+    <None Include="Views\info\page-info-ifconfig.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-dmidecode.cshtml">
+    <None Include="Views\info\page-info-dmidecode.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-info.cshtml">
+    <None Include="Views\info\page-info-procs.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-procs.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\page-m-service-sp.cshtml">
+    <None Include="Views\apps\page-apps-anthillasp.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-test.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-network.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-arch.cshtml">
+    <None Include="Views\storage\page-storage-archives.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\storage\page-storage-backup.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\storage\page-storage-disk.cshtml">
+    <None Include="Views\storage\page-storage-manage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\storage\page-storage-ahome.cshtml">
+    <None Include="Views\storage\_page-storage.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\storage\page-storage-iscsi.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\storage\page-storage-log.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-mail.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-mldmns.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-net.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-netsrv.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-setup.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Views\storage\page-storage-share.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\storage\page-storage-user.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\_layout.cshtml">
@@ -454,19 +468,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="web.config" />
-    <None Include="Views\page-meminfo.cshtml">
+    <None Include="Views\info\page-info-meminfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-home.cshtml">
+    <None Include="Views\info\page-info-recap.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-cpuinfo.cshtml">
+    <None Include="Views\info\page-info-cpuinfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-version.cshtml">
+    <None Include="Views\info\page-info-version.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\page-command.cshtml">
+    <None Include="Views\page-console.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

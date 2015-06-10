@@ -30,6 +30,7 @@
 using Antd.Log;
 using Nancy;
 using Nancy.Security;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -41,8 +42,9 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                LogModel[] logs = repo.GetAll();
-                return View["page-log", logs];
+                dynamic vmod = new ExpandoObject();
+                vmod.LOGS = repo.GetAll();
+                return View["page-log", vmod];
             };
         }
     }

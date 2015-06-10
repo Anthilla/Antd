@@ -29,6 +29,7 @@
 
 using Nancy;
 using Nancy.Security;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -39,51 +40,8 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["page-storage-ahome"];
-            };
-
-            Get["/manage/disks"] = x => {
-                return View["page-storage-disk"];
-            };
-
-            Get["/manage/iscsi"] = x => {
-                return View["page-storage-iscsi"];
-            };
-
-            Get["/sharing"] = x => {
-                return View["page-storage-share"];
-            };
-
-            Get["/user/acl"] = x => {
-                return View["page-storage-user"];
-            };
-
-            Get["/backup"] = x => {
-                return View["page-storage-backup"];
-            };
-
-            Get["/mail"] = x => {
-                return View["page-storage-mail"];
-            };
-
-            Get["/mail/domains"] = x => {
-                return View["page-storage-mldmns"];
-            };
-
-            Get["/log"] = x => {
-                return View["page-storage-log"];
-            };
-
-            Get["/network"] = x => {
-                return View["page-storage-net"];
-            };
-
-            Get["/network/server"] = x => {
-                return View["page-storage-netsrv"];
-            };
-
-            Get["/setup"] = x => {
-                return View["page-storage-setup"];
+                dynamic vmod = new ExpandoObject();
+                return View["_page-storage", vmod];
             };
         }
     }

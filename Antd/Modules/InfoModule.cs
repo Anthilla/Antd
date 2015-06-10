@@ -29,6 +29,7 @@
 
 using Antd.Status;
 using Nancy;
+using System.Dynamic;
 
 namespace Antd.Modules {
 
@@ -36,12 +37,40 @@ namespace Antd.Modules {
 
         public InfoModule()
             : base("/info") {
+
+            Get["/"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.hostname = Command.Launch("hostname", "").output;
+                vmod.os = Version.GetModel().value;
+                vmod.time = Command.Launch("date", "").output;
+                vmod.procinfo = "";
+                vmod.uptime = Uptime.UpTime;
+                vmod.runprocs = Proc.All.ToArray().Length.ToString();
+                vmod.CPUload = Uptime.LoadAverage;
+                vmod.CPUusage = "";
+                vmod.rmem = "";
+                vmod.ldskspc = "";
+                vmod.MEMINFO = Meminfo.GetModel();
+                vmod.CPUINFO = Cpuinfo.GetModel();
+                vmod.VERSION = Version.GetModel();
+                vmod.DMIDECODE = Command.Launch("dmidecode", "");
+                vmod.IFCONFIG = Command.Launch("ifconfig", "");
+                vmod.PROCS = Proc.All;
+                return View["_page-info", vmod];
+            };
+
             Get["/loadaverage"] = x => {
                 return Response.AsJson(Uptime.LoadAverage);
             };
 
             Get["/disk"] = x => {
                 return Response.AsJson(Uptime.LoadAverage);
+            };
+
+            Post["/killproc"] = x => {
+                string pid = (string)this.Request.Form.data;
+                CommandModel command = Command.Launch("kill", pid);
+                return Response.AsRedirect("/procs");
             };
         }
     }

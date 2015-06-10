@@ -27,9 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Log;
 using Nancy;
 using Nancy.Security;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -39,7 +39,8 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["page-setup"];
+                dynamic vmod = new ExpandoObject();
+                return View["_page-setup", vmod];
             };
         }
     }
