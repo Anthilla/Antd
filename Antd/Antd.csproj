@@ -190,9 +190,7 @@
     <Compile Include="Directory\DirectoryLister.cs" />
     <Compile Include="Log\LogRepository.cs" />
     <Compile Include="Log\LogModel.cs" />
-    <Compile Include="ManageApplications\AnthillaSP.cs" />
-    <Compile Include="ManageApplications\AnthillaAS.cs" />
-    <Compile Include="ManageApplications\ServiceActions.cs" />
+    <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Common\Timestamp.cs" />

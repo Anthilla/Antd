@@ -82,6 +82,19 @@ namespace Antd {
             }
             return proc;
         }
+
+        public static string GetPID(string service) {
+            List<ProcModel> procs = Proc.All;
+            var proc = (from p in procs
+                        where p.CMD.Contains(service)
+                        select p).FirstOrDefault();
+            if (proc != null) {
+                return proc.PID;
+            }
+            else {
+                return null;
+            }
+        }
     }
 
     public class ProcModel {
