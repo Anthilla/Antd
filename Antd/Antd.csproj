@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntdHub.cs" />
-    <Compile Include="Apps\Setting.cs" />
     <Compile Include="Auth\MapSystemUser.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />

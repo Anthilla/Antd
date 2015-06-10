@@ -27,11 +27,124 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Antd.UnitFiles;
+using System.Collections.Generic;
+using System.IO;
 
-namespace Antd.ManageApplications {
+namespace Antd.Apps {
 
     public class AnthillaSP {
+        public class Setting {
+            public static bool CheckSquash() {
+                var result = false;
+                var lookInto = "/mnt/cdrom/Apps";
+                string[] filePaths = Directory.GetFiles(lookInto);
+                for (int i = 0; i < filePaths.Length; i++) {
+                    if (filePaths[i].Contains("DIR_framework_anthillasp.squashfs.xz")) {
+                        result = true;
+                    }
+                }
+                return result;
+            }
+
+            public static void MountSquash() {
+                Directory.CreateDirectory("/framework/anthillasp");
+                Command.Launch("mount", "/mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
+            }
+
+            public static void CreateUnits() {
+                ConsoleLogger.Warn("Your attempt to write in Overlays will be lost! (tmpsf)");
+                Command.Launch("mount", "-t tmpfs tmpfs /mnt/cdrom/Overlay/");
+                ConsoleLogger.Warn("Your anthillasp units be written in tmpfs!");
+                Directory.CreateDirectory("/mnt/cdrom/Overlay/anthillasp/");
+                Command.Launch("mount", "-t tmpfs tmpfs /mnt/cdrom/Overlay/anthillasp/");
+            }
+
+            private static void UnitPrepareAnthillasp() {
+                var unitName = "antd-prepare.service";
+                string folder = "/mnt/cdrom/Overlay/anthillasp";
+                string path = Path.Combine(folder, unitName);
+                if (!File.Exists(path)) {
+                    using (StreamWriter sw = File.CreateText(path)) {
+                        sw.WriteLine("[Unit]");
+                        sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Prepare Service");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/bin/mkdir -p /framework/anthillasp");
+                        sw.WriteLine("Requires=local-fs.target sysinit.target");
+                        sw.WriteLine("Before=framework-anthillasp.mount System.mount");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Install]");
+                        sw.WriteLine("WantedBy=multi-user.target");
+                    }
+                }
+                Command.Launch("chmod", "777 " + path);
+            }
+
+            private static void UnitFrameworkMount() {
+                var unitName = "framework.anthillasp.";
+                string folder = "/mnt/cdrom/Overlay/anthillasp";
+                string path = Path.Combine(folder, unitName);
+                if (!File.Exists(path)) {
+                    using (StreamWriter sw = File.CreateText(path)) {
+                        sw.WriteLine("[Unit]");
+                        sw.WriteLine("Description=External Volume Unit, Application: DIR_framework_anthillasp Mount ");
+                        sw.WriteLine("ConditionPathExists=/framework/anthillasp");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Mount]");
+                        sw.WriteLine("What=/mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz");
+                        sw.WriteLine("Where=/framework/anthillasp/");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Install]");
+                        sw.WriteLine("WantedBy=multi-user.target");
+                    }
+                }
+                Command.Launch("chmod", "777 " + path);
+            }
+
+            private static void UnitLaunchAnthillaSP() {
+                var unitName = "anthillasp-launcher.service";
+                string folder = "/mnt/cdrom/Overlay/anthillasp";
+                string path = Path.Combine(folder, unitName);
+                if (!File.Exists(path)) {
+                    using (StreamWriter sw = File.CreateText(path)) {
+                        sw.WriteLine("[Unit]");
+                        sw.WriteLine("Description=External Volume Unit, Application: Antd Launcher Service");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
+                        sw.WriteLine("Requires=local-fs.target sysinit.target");
+                        sw.WriteLine("After=framework-anthillasp.mount");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Install]");
+                        sw.WriteLine("WantedBy=multi-user.target");
+                    }
+                }
+                Command.Launch("chmod", "777 " + path);
+            }
+
+            private static void UnitLaunchAnthillaServer() {
+                var unitName = "anthillaserver-launcher.service";
+                string folder = "/mnt/cdrom/Overlay/anthillasp";
+                string path = Path.Combine(folder, unitName);
+                if (!File.Exists(path)) {
+                    using (StreamWriter sw = File.CreateText(path)) {
+                        sw.WriteLine("[Unit]");
+                        sw.WriteLine("Description=External Volume Unit, Application: Antd Launcher Service");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");
+                        sw.WriteLine("Requires=local-fs.target sysinit.target");
+                        sw.WriteLine("After=framework-anthillasp.mount");
+                        sw.WriteLine("");
+                        sw.WriteLine("[Install]");
+                        sw.WriteLine("WantedBy=multi-user.target");
+                    }
+                }
+                Command.Launch("chmod", "777 " + path);
+            }
+        }
 
         public static CommandModel StartAnthillaServer() {
             return Systemctl.Start("anthillaserver.service");

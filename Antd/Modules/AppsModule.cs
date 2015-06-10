@@ -27,7 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.ManageApplications;
+using Antd.Apps;
+using Antd.Common;
 using Antd.UnitFiles;
 using Nancy;
 using Nancy.Security;
@@ -44,8 +45,26 @@ namespace Antd {
                 return View["_page-apps"];
             };
 
+            Get["/launch"] = x => {
+                ConsoleLogger.Log(">> App >> AnthillaSP");
+                ConsoleLogger.Log(">> Check squashfs");
+                var b = AnthillaSP.Setting.CheckSquash();
+                if (b == false) {
+                    ConsoleLogger.Warn(">> Squashfs does not exist!");
+                    return Response.AsJson(b);
+                }
+                else {
+                    ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
+                    AnthillaSP.Setting.MountSquash();
+                    ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
+                    AnthillaSP.Setting.CreateUnits();
+                    return Response.AsJson(true);
+                }
+            };
+
             Get["/start/sp"] = x => {
-                CommandModel start = AnthillaSP.StartAnthillaSP();
+                Systemctl.Status("anthillasp.service");
+                var start = AnthillaSP.StartAnthillaSP();
                 return Response.AsJson(start);
             };
 

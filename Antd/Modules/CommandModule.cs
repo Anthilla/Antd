@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.CommandManagement;
-using Antd.ManageApplications;
 using Antd.UnitFiles;
 using Nancy;
 using Nancy.Security;
