@@ -63,12 +63,12 @@ namespace Antd {
             };
 
             Get["/start/sp"] = x => {
-                var start = Command.Launch("mono", "/framework/anthillasp/anthillaserver/AnthillaServer.exe").output;
+                var start = Command.Launch("mono", "/framework/anthillasp/anthillasp/AnthillaSP.exe &").output;
                 return Response.AsJson(start);
             };
 
             Get["/start/server"] = x => {
-                var start = Command.Launch("mono", "/framework/anthillasp/anthillasp/AnthillaSP.exe").output;
+                var start = Command.Launch("mono", "/framework/anthillasp/anthillaserver/AnthillaServer.exe &").output;
                 return Response.AsJson(start);
             };
 
