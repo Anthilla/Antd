@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntdHub.cs" />
+    <Compile Include="Apps\Setting.cs" />
     <Compile Include="Auth\MapSystemUser.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
@@ -195,7 +196,6 @@
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="SystemConfig\General.cs" />
-    <Compile Include="UnitFiles\CreateUnit.cs" />
     <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />

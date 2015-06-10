@@ -38,7 +38,5 @@ namespace Antd.Common {
         }
 
         public static String Now { get { return Get("yyyyMMddHHmmssfff"); } }
-
-        //public static String ConsoleFormat { get { return Get("yyyyMMddHHmmssfff"); } }
     }
 }

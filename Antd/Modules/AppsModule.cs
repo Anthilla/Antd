@@ -1,5 +1,5 @@
 ﻿///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+///     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 ///     All rights reserved.
 ///
 ///     Redistribution and use in source and binary forms, with or without
@@ -44,50 +44,34 @@ namespace Antd {
                 return View["_page-apps"];
             };
 
-            Get["/set/anthillasp"] = x => {
-                CreateUnit.ForAnthillaSP();
-                return View["page-m-service-sp"];
-            };
-
-            Get["/set/anthillaserver"] = x => {
-                CreateUnit.ForAnthillaServer();
-                return View["page-m-service-sp"];
-            };
-
-            Get["/start/anthillasp"] = x => {
+            Get["/start/sp"] = x => {
                 CommandModel start = AnthillaSP.StartAnthillaSP();
-                return View["page-m-service-sp", start];
-                //return Response.AsJson(start);
+                return Response.AsJson(start);
             };
 
-            Get["/start/anthillaserver"] = x => {
+            Get["/start/server"] = x => {
                 CommandModel start = AnthillaSP.StartAnthillaServer();
-                return View["page-m-service-sp", start];
-                //return Response.AsJson(start);
+                return Response.AsJson(start);
             };
 
-            Get["/stop/anthillasp"] = x => {
+            Get["/stop/sp"] = x => {
                 CommandModel stop = AnthillaSP.StopAnthillaSP();
-                return View["page-m-service-sp", stop];
-                //return Response.AsJson(stop);
+                return Response.AsJson(stop);
             };
 
-            Get["/stop/anthillaserver"] = x => {
+            Get["/stop/server"] = x => {
                 CommandModel stop = AnthillaSP.StopAnthillaServer();
-                return View["page-m-service-sp", stop];
-                //return Response.AsJson(stop);
+                return Response.AsJson(stop);
             };
 
-            Get["/status/anthillasp"] = x => {
+            Get["/status/sp"] = x => {
                 CommandModel status = AnthillaSP.StatusAnthillaSP();
-                return View["page-m-service-sp", status];
-                //return Response.AsJson(status);
+                return Response.AsJson(status);
             };
 
-            Get["/status/anthillaserver"] = x => {
+            Get["/status/server"] = x => {
                 CommandModel status = AnthillaSP.StatusAnthillaServer();
-                return View["page-m-service-sp", status];
-                //return Response.AsJson(status);
+                return Response.AsJson(status);
             };
         }
     }
