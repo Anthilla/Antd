@@ -170,6 +170,7 @@
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\SystemModule.cs" />
+    <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />

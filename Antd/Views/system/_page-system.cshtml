@@ -40,15 +40,40 @@
     @Html.Partial("page-system-general", Model)
     @Html.Partial("page-system-advanced", Model)
     @Html.Partial("page-system-certmanager", Model)
+    @*//spostare queste tre view in pagine dedicate*@
     @Html.Partial("page-system-mount", Model)
     @Html.Partial("page-system-sysctl", Model)
     @Html.Partial("page-system-conf", Model)
+    @*///////*@
     @Html.Partial("page-system-firmware", Model)
     @Html.Partial("page-system-highavailsync", Model)
 }
 
 @section Scripts {
     <script type="text/javascript">
+        //page navigation
+        $('a.anchor').click(function (event) {
+            event.preventDefault();
+            var href = $(this).attr('data-scrollto');
+            var scroll = $(href).offset().top - 40;
+            $('html, body').animate({
+                'scrollTop': scroll
+            }, 500);
+            return false;
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 150) {
+                $('nav.navigation-bar.page-bar').css('position', 'fixed');
+                $('nav.navigation-bar.page-bar').css('z-index', '999');
+                $('nav.navigation-bar.page-bar').css('top', '0');
+            }
+            if ($(window).scrollTop() < 150) {
+                $('nav.navigation-bar.page-bar').css('position', 'relative');
+            }
+        });
+        //page navigation
+
         $(document).ready(function () {
             $('tr>td').not('tr>td:first-child').css('width', '25%');
             $('tr>td:first-child').css('width', '200px');

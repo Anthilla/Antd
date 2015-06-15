@@ -68,6 +68,10 @@ namespace Antd {
                 }
                 return Response.AsJson(true);
             };
+
+            Get["/tzctl"] = x => {
+                return Response.AsJson(Command.Launch("timedatectl", "list-timezones").output);
+            };
         }
     }
 }
