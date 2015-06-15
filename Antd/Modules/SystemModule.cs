@@ -105,7 +105,7 @@ namespace Antd {
                     nl.Add(imod);
                 }
                 vmod.Conf = nl;
-                return View["_page-system", vmod];
+                return View["_page-system-conf", vmod];
             };
 
             Post["/export/file/{path*}"] = x => {
