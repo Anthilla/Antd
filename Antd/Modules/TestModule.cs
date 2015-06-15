@@ -28,8 +28,11 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
+using Antd.Scheduler;
 using Nancy;
 using System;
+using System.IO;
+using System.Threading;
 
 namespace Antd {
 
@@ -48,6 +51,21 @@ namespace Antd {
 
             Get["/error"] = x => {
                 var s = FileSystem.ReadFile(Guid.NewGuid().ToString());
+                return Response.AsJson(true);
+            };
+
+            Get["/cmd"] = x => {
+                ConsoleLogger.Info(">>>>>> Testing command...");
+                Job.Schedule("mkdir", "/framework/test");
+                ConsoleLogger.Info(">>>>>> wait few seconds...");
+                Thread.Sleep(30000);
+                Console.Write(" ok");
+                if (Directory.Exists("/framework/test")) {
+                    ConsoleLogger.Success(">>>>>> ok");
+                }
+                else {
+                    ConsoleLogger.Error(">>>>>> Something Went Wrong");
+                }
                 return Response.AsJson(true);
             };
         }

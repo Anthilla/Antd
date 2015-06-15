@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Newtonsoft.Json;
 using System;
 
@@ -35,13 +36,16 @@ namespace Antd.Scheduler {
     public class Job {
 
         public static void Schedule(string file, string arguments) {
+            ConsoleLogger.Info(">>>>>> command: {0} {1}", file, arguments);
             //create job info into db
             var guid = Guid.NewGuid().ToString();
+            ConsoleLogger.Info(">>>>>> guid: {0}", guid);
             string[] data = new string[] {
                     file,
                     arguments
                 };
             string dataJson = JsonConvert.SerializeObject(data);
+            ConsoleLogger.Info(">>>>>> dataJson: {0}", dataJson);
             var job = JobRepository.Create(guid, file, dataJson);
             //assign trigger to this job -> trigger is ONETIMEONLY
             int startHour = DateTime.Now.Hour;
