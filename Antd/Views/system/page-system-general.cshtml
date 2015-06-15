@@ -49,7 +49,7 @@
             </td>
             <td>
                 <select id="NewTimezone">
-                    @foreach (string timezone in Model.TimezonesList) {
+                    @foreach (string timezone in Antd.SystemConfig.Timezone.List) {
                         <option value="@timezone">@timezone</option>
                     }
                 </select>

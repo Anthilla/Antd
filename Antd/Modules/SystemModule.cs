@@ -51,7 +51,6 @@ namespace Antd {
                 vmod.Hostname = Command.Launch("hostname", "").output;
                 vmod.Domainname = Command.Launch("hostname", "-f").output;
                 vmod.Timezone = Command.Launch("timedatectl", "").output;
-                vmod.TimezonesList = new string[] { "uno", "due" };
                 vmod.Timeserver = "time.server.net";
                 vmod.Language = "English";
                 vmod.TCPport = "";
