@@ -38,6 +38,15 @@ namespace Antd.Boot {
     public class DatabaseBoot {
 
         public static void Start(string[] dbPaths) {
+            //v3
+            //DeNSo.Configuration.BasePath = dbPaths;
+            //DeNSo.Configuration.EnableJournaling = true;
+            //DeNSo.Configuration.EnableDataCompression = false;
+            //DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
+            //DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
+            //DeNSo.Session.DefaultDataBase = "Antd_DB";
+            //DeNSo.Session.Start();
+
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.DBCheckTimeSpan = new System.TimeSpan(0, 1, 0);
