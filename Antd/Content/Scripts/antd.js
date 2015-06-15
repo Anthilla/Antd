@@ -41,3 +41,40 @@ $(window).scroll(function () {
         $('nav.navigation-bar.page-bar').css('padding-left', '0');
     }
 });
+
+$(document).ready(function () {
+    $('input:password').val('');
+    $('input:text').attr('autocomplete', 'off');
+    $('input:password').attr('autocomplete', 'off');
+});
+
+function Reset() {
+    $('.item').hide();
+    $('select').prop('selectedIndex', 0);
+    $('.project-selectable').removeClass('picked');
+    $('.group-selectable').removeClass('picked');
+    $('.js-files').hide();
+    $("input:text").each(function () {
+        $(this).val("");
+    });
+    $('.file').remove();
+    return false;
+}
+
+function SetCreate() {
+    var button = $('#create-button');
+    if (button != null) {
+        button.toggleClass('fg-anthilla-green');
+        button.toggleClass('no-overlay');
+        button.toggleClass('fg-anthilla-gray');
+        button.toggleClass('bg-anthilla-green');
+    }
+    $('#DashboardForm').toggle();
+    return false;
+}
+
+function Quit() {
+    Reset();
+    SetCreate();
+    return false;
+}

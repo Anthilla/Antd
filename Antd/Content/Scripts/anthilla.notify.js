@@ -8,10 +8,6 @@
 //});
 var globalNotificationTimeout = 20000;
 
-$(document).ready(function () {
-    console.log('anthilla.notify.js load');
-});
-
 function InitializeCheck() {
     $('.metro.notify-container').on('click', '.notify', function () {
         console.log('nyet');
