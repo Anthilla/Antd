@@ -43,6 +43,11 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-storage", vmod];
             };
+
+            Get["/hypervisor"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["_page-storage-hypervisor", vmod];
+            };
         }
     }
 }
