@@ -57,10 +57,24 @@ namespace Antd {
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
-                vmod.RUNNING = Mount.Running;
-                vmod.ANTD = Mount.Antd;
-                vmod.ALL = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                return View["_page-system", vmod];
+            };
 
+            Get["/mounts"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.Mount.Running = Mount.Running;
+                vmod.Mount.Antd = Mount.Antd;
+                return View["_page-system-mounts", vmod];
+            };
+
+            Get["/sysctl"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.Sysctl = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                return View["_page-system-sysctl", vmod];
+            };
+
+            Get["/conf"] = x => {
+                dynamic vmod = new ExpandoObject();
                 HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
                 HashSet<DirItemModel> cfgList = new DirectoryLister("/antd/etc", true).FullList2;
                 List<dynamic> nl = new List<dynamic>() { };
@@ -90,8 +104,7 @@ namespace Antd {
                     imod.cfgName = cfgName;
                     nl.Add(imod);
                 }
-                vmod.CONFS = nl;
-
+                vmod.Conf = nl;
                 return View["_page-system", vmod];
             };
 
