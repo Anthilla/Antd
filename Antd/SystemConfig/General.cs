@@ -37,13 +37,15 @@ namespace Antd.SystemConfig {
         private static List<string> GetTimezoneList() {
             var list = new List<string>() { };
             var output = Command.Launch("timedatectl", "list-timezones").output;
-            var outputString = Regex.Replace(output, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-            string[] rowDivider = new String[] { "\n" };
-            string[] outputArray = new string[] { };
-            outputArray = outputString.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string s in outputArray) {
-                if (s != null && s != "") {
-                    list.Add(s);
+            if (output != null && output != "") {
+                var outputString = Regex.Replace(output, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+                string[] rowDivider = new String[] { "\n" };
+                string[] outputArray = new string[] { };
+                outputArray = outputString.Split(rowDivider, StringSplitOptions.None).ToArray();
+                foreach (string s in outputArray) {
+                    if (s != null && s != "") {
+                        list.Add(s);
+                    }
                 }
             }
             return list;
