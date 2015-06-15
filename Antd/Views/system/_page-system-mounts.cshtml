@@ -50,7 +50,7 @@
     </nav>
 }
 
-@section Dashboard {
+@section MainContent {
     <legend id="Mount">Mount</legend>
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
 
@@ -61,7 +61,7 @@
             </tr>
         </thead>
         <tbody id="MountRunningTable">
-            @foreach (Antd.MountModel value in Model.Mount.Running) {
+            @foreach (Antd.MountModel value in Model.MountRunning) {
                 <tr>
                     <td style="text-align: right;">
                         @value.device @value.mountpoint @value.fstype @value.rorw @value.dv1 @value.dv2
@@ -78,7 +78,7 @@
             </tr>
         </thead>
         <tbody id="MountAntdTable">
-            @foreach (Antd.MountModel value in Model.Mount.Antd) {
+            @foreach (Antd.MountModel value in Model.MountAntd) {
                 <tr>
                     <td style="text-align: right;">
                         @value.device @value.mountpoint @value.fstype @value.rorw @value.dv1 @value.dv2

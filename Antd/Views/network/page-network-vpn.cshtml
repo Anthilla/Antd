@@ -1,70 +1,63 @@
 ﻿<legend id="VPN">VPN</legend>
-<legend id="anchorGre">VPN GRE/L2TP</legend>
-<div class="tab-control" data-role="tab-control">
-    <ul class="tabs">
-        <li class="active"><a href="#_users_">Manage Users</a></li>
-        <li><a href="#_vpn_">VPN Options</a></li>
-    </ul>
-
-    <div class="frames">
-        <div class="frame" id="_users_">
-            <table class="table hovered">
-                <thead>
-                    <tr>
-                        <th>VNP Users List</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>No user yet</td>
-                    </tr>
-                </tbody>
-            </table>
-            <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Add User" />
-        </div>
-        <div class="frame" id="_vpn_">
-            <table class="table hovered">
-                <thead>
-                    <tr>
-                        <th>Set VPN Options</th>
-                        <th>&nbsp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Default Route</td>
-                        <td>
-                            <input type="text" placeholder="Remote Gateway" /></td>
-                    </tr>
-                    <tr>
-                        <td>Server-side IP Range</td>
-                        <td>
-                            <input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td>Client-side IP Range</td>
-                        <td>
-                            <input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td>Server DNS</td>
-                        <td>
-                            <input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td>Server WINS</td>
-                        <td>
-                            <input type="text" /></td>
-                    </tr>
-                </tbody>
-            </table>
-            <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Save" />
-        </div>
-    </div>
-</div>
-<input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save Options" />
+<legend>VPN GRE/L2TP</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="2">
+                <label>Set VPN Options</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>Default Route</label>
+            </td>
+            <td>
+                <input id="NewVPNDefaultRoute" type="text" />
+                <p id="UpdateVPNDefaultRoute" class="button bg-anthilla-green" >Apply</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Server-side IP Range</label>
+            </td>
+            <td>
+                <input id="NewVPNServerSideIP" type="text" />
+                <p id="UpdateVPNServerSideIP" class="button bg-anthilla-green" >Apply</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Client-side IP Range</label>
+            </td>
+            <td>
+                <input id="NewVPNClientSideIP" type="text" />
+                <p id="UpdateVPNClientSideIP" class="button bg-anthilla-green" >Apply</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Server DNS</label>
+            </td>
+            <td>
+                <input id="NewVPNServerDNS" type="text" />
+                <p id="UpdateVPNServerDNS" class="button bg-anthilla-green" >Apply</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Server WINS</label>
+            </td>
+            <td>
+                <input id="NewVPNServerWINS" type="text" />
+                <p id="UpdateVPNServerWINS" class="button bg-anthilla-green" >Apply</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <br />
-<legend id="anchorOpenp">VPN OpenVPN</legend>
+@*<legend>VPN OpenVPN</legend>
 <div class="tab-control" data-role="tab-control">
     <ul class="tabs">
         <li class="active"><a href="#_vpns_">Configured VPNs</a></li>
@@ -181,7 +174,7 @@
 </div>
 <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply" />
 <br />
-<legend id="anchorIspc">VPN IPSEC</legend>
+<legend>VPN IPSEC</legend>
 <div class="tab-control" data-role="tab-control">
     <ul class="tabs">
         <li class="active"><a href="#_ipsecvpns_">Configured VPNs</a></li>
@@ -243,4 +236,4 @@
             </table>
         </div>
     </div>
-</div>
+</div>*@
