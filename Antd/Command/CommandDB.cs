@@ -31,12 +31,13 @@ using Antd.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.CommandManagement {
+
     public class CommandDB {
+
         public class CommandInputModel {
+
             public string _Id { get; set; }
 
             public string Guid { get; set; }

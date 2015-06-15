@@ -37,7 +37,6 @@ namespace Antd.Modules {
 
         public InfoModule()
             : base("/info") {
-
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.hostname = Command.Launch("hostname", "").output;

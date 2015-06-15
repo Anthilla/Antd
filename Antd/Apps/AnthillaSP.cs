@@ -28,14 +28,14 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
-using Antd.UnitFiles;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Antd.Apps {
 
     public class AnthillaSP {
+
         public class Setting {
+
             public static bool CheckSquash() {
                 var result = false;
                 var lookInto = "/mnt/cdrom/Apps";

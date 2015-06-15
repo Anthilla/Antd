@@ -34,6 +34,7 @@ using System.Dynamic;
 namespace Antd {
 
     public class SetupModule : NancyModule {
+
         public SetupModule()
             : base("/setup") {
             this.RequiresAuthentication();

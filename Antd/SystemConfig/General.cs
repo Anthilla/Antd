@@ -33,7 +33,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Antd.SystemConfig {
+
     public class Timezone {
+
         private static List<string> GetTimezoneList() {
             var list = new List<string>() { };
             var output = Command.Launch("timedatectl", "list-timezones").output;

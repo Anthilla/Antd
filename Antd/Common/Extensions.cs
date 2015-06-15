@@ -28,12 +28,10 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.Common {
+
     public static class Extensions {
 
         public static string GetFirstString(this String str) {
@@ -48,7 +46,7 @@ namespace Antd.Common {
 
         public static string GetFirstString(this String str, char div) {
             var arr = str.Split(div);
-            if(arr.Length > 0){
+            if (arr.Length > 0) {
                 return arr[0].ToString();
             }
             else {

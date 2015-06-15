@@ -27,11 +27,11 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using Newtonsoft.Json;
 using System;
-using System.Threading;
 using System.Linq;
-using Antd.Common;
+using System.Threading;
 
 namespace Antd.Boot {
 
@@ -93,9 +93,13 @@ namespace Antd.Boot {
     }
 
     public class TestClass {
+
         public string _Id { get; set; }
+
         public DateTime Date { get; set; }
+
         public string Foo { get; set; }
+
         public string Bar { get; set; }
     }
 }

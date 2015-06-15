@@ -34,6 +34,7 @@ using System.Dynamic;
 namespace Antd {
 
     public class MailModule : NancyModule {
+
         public MailModule()
             : base("/mail") {
             this.RequiresAuthentication();
