@@ -1,1 +1,280 @@
 ﻿<legend id="HAS">High Avail Sync</legend>
+
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="2">
+                <label>State Synchronization Settings</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>Synchronize States</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeStates" type="checkbox" />
+                <p id="UpdateSynchronizeStates" class="button bg-anthilla-green">Apply</p>
+                <br />
+                This setting should be enabled on all members of a failover group
+                <p>NOTE: Clicking save will force a configuration sync if it is enabled! </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Interface</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeInterface" type="checkbox" />
+                <p id="UpdateSynchronizeInterface" class="button bg-anthilla-green">Apply</p>
+                <br />
+                If Synchronize States is enabled, it will utilize this interface for communication
+                <p>NOTE: We recommend setting this to a interface other than LAN! A dedicated interface works the best </p>
+                <p>NOTE: You must define a IP on each machine participating in this failover group </p>
+                <p>NOTE: You must have an IP assigned to the interface on any participating sync nodes </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Peer IP</label>
+            </td>
+            <td>
+                <input id="NewSynchronizePeerIP" type="text" />
+                <p id="UpdateSynchronizePeerIP" class="button bg-anthilla-green">Apply</p>
+                <br />
+                Setting this option will force antd to synchronize its state table to this IP address. The default is directed multicast
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr />
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="2">
+                <label>Configuration Synchronization Settings </label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>Synchronize Config to IP</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeConfigToIP" type="text" />
+                <p id="UpdateSynchronizeConfigToIP" class="button bg-anthilla-green">Apply</p>
+                <br />
+                Enter the IP address of the firewall to which the selected configuration sections should be synchronized
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Users and Groups</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeUsersAndGroups" type="checkbox" />
+                <p id="UpdateSynchronizeUsersAndGroups" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the users and groups over to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Auth Servers</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeAuthServers" type="checkbox" />
+                <p id="UpdateSynchronizeAuthServers" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the authentication servers (e.g. LDAP, RADIUS) over to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Certificates</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeCertificates" type="checkbox" />
+                <p id="UpdateSynchronizeCertificates" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the Certificate Authorities, Certificates, and Certificate Revocation Lists over to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize rules</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeRules" type="checkbox" />
+                <p id="UpdateSynchronizeRules" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the firewall rules to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Firewall Schedules</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeFirewallScheduless" type="checkbox" />
+                <p id="UpdateSynchronizeFirewallSchedules" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the firewall schedules to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize aliases</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeAliases" type="checkbox" />
+                <p id="UpdateSynchronizeAliasess" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the aliases over to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize NAT</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeNAT" type="checkbox" />
+                <p id="UpdateSynchronizeNAT" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the NAT rules over to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize IPsec</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeIPsec" type="checkbox" />
+                <p id="UpdateSynchronizeIPsec" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the IPsec configuration to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize OpenVPN</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeOpenVPN" type="checkbox" />
+                <p id="UpdateSynchronizeOpenVPN" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the OpenVPN configuration to the other HA host when changes are made. Using this option implies "Synchronize Certificates" as they are required for OpenVPN
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize DHCPD</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeDHCPD" type="checkbox" />
+                <p id="UpdateSynchronizeDHCPD" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the DHCP Server settings over to the other HA host when changes are made. This only applies to DHCP for IPv4.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Wake on LAN</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeWakeLAN" type="checkbox" />
+                <p id="UpdateSynchronizeWakeLAN" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the WoL configuration to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Static Routes</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeStaticRoutes" type="checkbox" />
+                <p id="UpdateSynchronizeStaticRoutes" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the Static Route configuration to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Load Balancer</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeLoadBalancer" type="checkbox" />
+                <p id="UpdateSynchronizeLoadBalancer" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the Load Balancer configuration to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Virtual IPs</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeVirtualIPs" type="checkbox" />
+                <p id="UpdateSynchronizeVirtualIPs" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the CARP Virtual IPs to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize traffic shaper(limiter)</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeTrafficShaperLimiter" type="checkbox" />
+                <p id="UpdateSynchronizeTrafficShaperLimiter" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the traffic shaper configuration for limiters to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize traffic shaper(layer7)</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeTrafficShaperLayer7" type="checkbox" />
+                <p id="UpdateSynchronizeTrafficShaperLayer7" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the traffic shaper configuration for layer7 to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize DNS Forwarder / Resolver</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeDNSForwarderResolver" type="checkbox" />
+                <p id="UpdateSynchronizeDNSForwarderResolver" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the DNS Forwarder and DNS Resolver configuration to the other HA host when changes are made
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Synchronize Captive Portal</label>
+            </td>
+            <td>
+                <input id="NewSynchronizeCaptivePortal" type="checkbox" />
+                <p id="UpdateSynchronizeCaptivePortal" class="button bg-anthilla-green">Apply</p>
+                <br />
+                When this option is enabled, this system will automatically sync the Captive Portal configuration to the other HA host when changes are made. 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>&nbsp</label>
+            </td>
+            <td>
+                <p class="button bg-anthilla-green">Save</p>
+                <p class="button bg-anthilla-orange">Cancel</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
