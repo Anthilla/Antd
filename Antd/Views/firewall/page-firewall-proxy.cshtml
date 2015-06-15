@@ -1,10 +1,4 @@
 ﻿<legend id="Proxy">Proxy</legend>
-<legend>Navigation Groups</legend>
-<div class="tile fg-anthilla-blu">Group 1: Blacklist</div>
-<div class="tile fg-anthilla-blu">Group 2: Contents</div>
-<div class="tile fg-anthilla-blu">Group 3: Open</div>
-<div class="tile fg-anthilla-blu" style="margin-bottom: 120px;">Apply Config</div>
-<br />
 <legend>Group Membership</legend>
 <div class="tab-control" data-role="tab-control">
     <ul class="tabs">
@@ -167,28 +161,40 @@
 </div>
 <br />
 <legend>Authentication Management</legend>
-<h5>Autenticazione Forzata</h5>
-<p>Enabled</p>
-<input type="radio" value="Yes" /><input type="radio" value="No" />
-<br />
-<p>
-    Se abilitata il firewall richiederà nome utente e password per permettere la Navigazione.
-le login e le password saranno quelle create nel menu gestione utenti del firewall.
-configurazione consigliata per computer ad uso promiscuo.
-NOTA: è necessario impostare nel browser dei clients l'uso del proxy IP 10.21.254.254 porta 8080
-</p>
-<br />
-<br />
-<h5>Autenticazione con Client IDENT</h5>
-<p>Enabled</p>
-<input type="radio" value="Yes" /><input type="radio" value="No" />
-<br />
-<p>
-    Se abilitata il firewall contatterà tutti i computer che tenteranno di navigare.
-loggando il nome utente in uso su quel computer e applicando le eventuali regole presenti per lo specifico utente.
-configurazione consigliata per lan con dominio e computer in dotazione ad un solo utente .
-NOTA: richiede l'utilizzo di un client IDENT sul personal computer
-</p>
-<br />
-<input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save Configuration" />
-<input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Apply Configuration" />
+
+<table class="table hovered">
+    <tbody>
+        <tr>
+            <td>
+                <label>Enable Forced Authentication</label>
+            </td>
+            <td>
+                <input id="NewEnableForcedAuthentication" type="checkbox" />
+                <p id="UpdateEnableForcedAuthentication" class="button bg-anthilla-green">Apply</p>
+                <br />
+                <p>
+                    If enabled the firewall will require user name and password to allow navigation 
+the login and password will be created in the user management menu of the firewall
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Enable Authentication with Client IDENT</label>
+            </td>
+            <td>
+                <input id="NewEnableAuthenticationClientIDENT" type="checkbox" />
+                <p id="UpdateEnableAuthenticationClientIDENT" class="button bg-anthilla-green">Apply</p>
+                <br />
+                <p>
+                    If enabled the firewall will contact all the computers that attempt to navigate .
+logging the user name in use on that computer and applying any rules present for the specific user .
+recommended configuration for LAN with domain and computer supplied to a single user .
+                </p>
+                <p>
+                    NOTE : requires the use of a client IDENT on the personal computer
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>

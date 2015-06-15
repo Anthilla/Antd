@@ -1,10 +1,4 @@
-﻿<legend id="Manage">Management</legend>
-<legend>Firewall</legend>
-<div class="tile fg-anthilla-blu">Firewall Armed</div>
-<div class="tile fg-anthilla-blu">Apply Config</div>
-<div class="tile fg-anthilla-blu">Edit Manual</div>
-<div class="tile fg-anthilla-blu" style="margin-bottom: 120px;">Reset Config</div>
-
+﻿<legend id="Manage">Firewall</legend>
 <div class="tab-control" data-role="tab-control">
     <ul class="tabs">
         <li class="active"><a href="#_frwd_">Forward</a></li>
@@ -177,36 +171,28 @@
 <table class="table hovered">
     <thead>
         <tr>
-            <th>Supported Features List</th>
-            <th>&nbsp</th>
+            <th colspan="2">
+                <label>Features List</label>
+            </th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>"Abilita il filtro dei contenuti sulla navigazione WEB"</td>
             <td>
-                <select>
-                    <option>Enabled</option>
-                    <option>Disabled</option>
-                </select>
+                <label>Enable WEB content filtering</label>
+            </td>
+            <td>
+                <input id="NewEnableWEContentFiltering" type="checkbox" />
+                <p id="UpdateEnableWEContentFiltering" class="button bg-anthilla-green">Apply</p>
             </td>
         </tr>
         <tr>
-            <td>"Abilita il filtro Antivirus trasparente POP3"</td>
             <td>
-                <select>
-                    <option>Enabled</option>
-                    <option>Disabled</option>
-                </select>
+                <label>Enable Filter SMTP Output</label>
             </td>
-        </tr>
-        <tr>
-            <td>"Abilita Filtro SMTP in Uscita"</td>
             <td>
-                <select>
-                    <option>Enabled</option>
-                    <option>Disabled</option>
-                </select>
+                <input id="NewEnableFilterSMTPOutput" type="checkbox" />
+                <p id="UpdateEnableFilterSMTPOutput" class="button bg-anthilla-green">Apply</p>
             </td>
         </tr>
     </tbody>
@@ -214,7 +200,8 @@
         <tr>
             <th>&nbsp</th>
             <th>
-                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></th>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" />
+            </th>
         </tr>
     </tfoot>
 </table>
@@ -223,16 +210,17 @@
 <table class="table hovered">
     <thead>
         <tr>
-            <th>Domains Blacklisted</th>
-            <th>&nbsp</th>
+            <th>
+                <label>Domains Blacklisted</label>
+            </th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>
-                <input type="text" /></td>
-            <td>
-                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Add" /></td>
+                <input id="NewDomainsBlacklisted" type="text" />
+                <p id="UpdateDomainsBlacklisted" class="button bg-anthilla-green">Add</p>
+            </td>
         </tr>
     </tbody>
 </table>
@@ -252,4 +240,3 @@
     <tbody>
     </tbody>
 </table>
-<br />
