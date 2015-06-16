@@ -37,6 +37,7 @@
 }
 
 @section Dashboard {
+    @Html.Partial("page-hypervisor-hosts", Model)
     @Html.Partial("page-hypervisor-vms", Model)
     @Html.Partial("page-hypervisor-newvm", Model)
     @Html.Partial("page-hypervisor-datastore", Model)
