@@ -80,6 +80,7 @@ namespace Antd.Scheduler {
             trigger.StartHour = DateTime.Now.Hour;
             trigger.StartMinute = DateTime.Now.Minute + 1;
             trigger.StartTime = new DateTime(2000, 1, 1, trigger.StartHour, trigger.StartMinute, 1, 1);
+            trigger.CronExpression = "";
             task.Trigger = trigger;
             DeNSo.Session.New.Set(task);
         }
