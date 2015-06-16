@@ -44,7 +44,7 @@ namespace Antd.Scheduler {
             }
             else {
                 __scheduler.Start();
-                List<JobModel> taskList = JobRepository.GetAll();
+                List<JobModel> taskList = JobRepository.GetEnabled();
                 ConsoleLogger.Log("{0} job(s) scheduled", taskList.ToArray().Length);
                 if (taskList.ToArray().Length > 0) {
                     foreach (JobModel task in taskList) {
@@ -107,7 +107,6 @@ namespace Antd.Scheduler {
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .StartAt(setting.StartTime)
                 .WithCronSchedule(setting.CronExpression)
-                .EndAt(setting.EndTime)
                 .Build();
             return monthlyTrigger;
         }

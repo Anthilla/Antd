@@ -46,6 +46,16 @@ namespace Antd.Scheduler {
             }
         }
 
+        public static List<JobModel> GetEnabled() {
+            var list = DeNSo.Session.New.Get<JobModel>(j => j.isEnabled == true).ToArray();
+            if (list.Length == 0) {
+                return new List<JobModel>() { };
+            }
+            else {
+                return list.ToList();
+            }
+        }
+
         public static JobModel GetByGuid(string guid) {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
@@ -56,36 +66,30 @@ namespace Antd.Scheduler {
             task.Guid = guid;
             task.Alias = alias;
             task.Data = data;
+            task.isEnabled = true;
             task.Results = new ExpandoObject() as IDictionary<String, object>;
             DeNSo.Session.New.Set(task);
             return task;
         }
 
-        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, int eh, int em) {
+        public static void AssignTriggerNow(string guid) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             TriggerModel trigger = new TriggerModel();
-            trigger.TriggerSetting = period;
-            trigger.StartHour = sh;
-            trigger.StartMinute = sm;
-            trigger.EndHour = eh;
-            trigger.EndMinute = em;
-            trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
-            trigger.EndTime = new DateTime(2000, 1, 1, eh, em, 1, 1);
-            trigger.CronExpression = "";
+            trigger.TriggerSetting = TriggerModel.TriggerPeriod.IsOneTimeOnly;
+            trigger.StartHour = DateTime.Now.Hour;
+            trigger.StartMinute = DateTime.Now.Minute + 1;
+            trigger.StartTime = new DateTime(2000, 1, 1, trigger.StartHour, trigger.StartMinute, 1, 1);
             task.Trigger = trigger;
             DeNSo.Session.New.Set(task);
         }
 
-        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, int eh, int em, string _cron) {
+        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, string _cron) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             TriggerModel trigger = new TriggerModel();
             trigger.TriggerSetting = period;
             trigger.StartHour = sh;
             trigger.StartMinute = sm;
-            trigger.EndHour = eh;
-            trigger.EndMinute = em;
             trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
-            trigger.EndTime = new DateTime(2000, 1, 1, eh, em, 1, 1);
             trigger.CronExpression = _cron;
             task.Trigger = trigger;
             DeNSo.Session.New.Set(task);
@@ -96,6 +100,18 @@ namespace Antd.Scheduler {
             var p = task.Results as IDictionary<String, object>;
             p[DateTime.Now.ToString("yyyyMMddHHmmssfff")] = data;
             task.Results = p;
+            DeNSo.Session.New.Set(task);
+        }
+
+        public static void Enable(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            task.isEnabled = true;
+            DeNSo.Session.New.Set(task);
+        }
+
+        public static void Disable(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            task.isEnabled = false;
             DeNSo.Session.New.Set(task);
         }
 

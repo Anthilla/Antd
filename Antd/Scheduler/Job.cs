@@ -44,11 +44,7 @@ namespace Antd.Scheduler {
             string dataJson = JsonConvert.SerializeObject(data);
             var job = JobRepository.Create(guid, file, dataJson);
             //assign trigger to this job -> trigger is ONETIMEONLY
-            int startHour = DateTime.Now.Hour;
-            int startMinute = DateTime.Now.Minute + 1;
-            int endHour = startHour + 1;
-            int endMinute = startMinute;
-            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsOneTimeOnly, startHour, startMinute, endHour, endMinute);
+            JobRepository.AssignTriggerNow(guid);
             //launch job with above settings
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
@@ -65,9 +61,7 @@ namespace Antd.Scheduler {
             //assign trigger to this job -> trigger is CRONDEFINED
             int startHour = DateTime.Now.Hour;
             int startMinute = DateTime.Now.Minute + 1;
-            int endHour = startHour + 1;
-            int endMinute = startMinute;
-            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startHour, startMinute, endHour, endMinute, cron);
+            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startHour, startMinute, cron);
             //launch job with above settings
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }

@@ -85,24 +85,42 @@
             return (index + 1).ToString();
         }
     }
-    <form action="/pippo" method="POST" enctype="multipart/form-data">
-        <div class="grid" style="padding-left: 25px;">
+    <form action="/scheduler/now" method="POST" enctype="multipart/form-data">
+        <div class="grid">
             <div class="row">
                 <div class="span2">
-                    <label>Job Alias</label>
+                    <label>Name</label>
                 </div>
                 <div class="span10">
-                    <input type="text" name="Alias" style="width: 90%;">
+                    <input type="text" name="Alias" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span2">
+                    <label>Command</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Command" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>&nbsp</label>
+                    <input class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 100%; height: 34px;">
                 </div>
             </div>
         </div>
     </form>
-
-    <form action="/scheduler" method="POST" enctype="multipart/form-data">
+    <hr />
+    <hr />
+    <br />
+    <hr />
+    <hr />
+    <form action="/scheduler/cron" method="POST" enctype="multipart/form-data">
         <div class="grid" style="padding-left: 25px;">
             <div class="row">
                 <div class="span2">
-                    <label>Job Alias</label>
+                    <label>Name</label>
                 </div>
                 <div class="span10">
                     <input type="text" name="Alias" style="width: 90%;">
@@ -118,23 +136,15 @@
             </div>
             <div class="row">
                 <div class="span2">
-                    <label>Arguments</label>
-                </div>
-                <div class="span10">
-                    <input type="text" name="Arguments" style="width: 90%;">
-                </div>
-            </div>
-            <div class="row">
-                <div class="span2">
                     <label>Start Time</label>
                 </div>
                 <div class="span10">
-                    <select id="CronStartTimeHour" name="CronStartTimeHour">
+                    <select id="CronStartTimeHour" name="CronStartTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
-                    <select id="CronStartTimeMinute" name="CronStartTimeMinute">
+                    <select id="CronStartTimeMinute" name="CronStartTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
@@ -202,12 +212,12 @@
                     <label>End Time</label>
                 </div>
                 <div class="span10">
-                    <select id="CronEndTimeHour" name="CronEndTimeHour">
+                    <select id="CronEndTimeHour" name="CronEndTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
-                    <select id="CronEndTimeMinute" name="CronEndTimeMinute">
+                    <select id="CronEndTimeMinute" name="CronEndTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }

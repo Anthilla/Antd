@@ -46,6 +46,8 @@ namespace Antd.Scheduler {
 
         public int Interval { get; set; }
 
+        public bool isEnabled { get; set; }
+
         public TriggerModel Trigger { get; set; }
 
         public IDictionary<String, object> Results { get; set; }
@@ -55,25 +57,19 @@ namespace Antd.Scheduler {
 
         public enum TriggerPeriod : byte {
             IsOneTimeOnly = 0,
-            IsDaily = 1,
-            IsWeekly = 2,
-            IsMonthly = 3,
-            IsCron = 4
+            IsCron = 2,
+            //IsDaily = 100,
+            //IsWeekly = 101,
+            //IsMonthly = 102
         }
 
         public TriggerPeriod TriggerSetting { get; set; }
 
         public DateTime StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
-
         public int StartHour { get; set; }
 
         public int StartMinute { get; set; }
-
-        public int EndHour { get; set; }
-
-        public int EndMinute { get; set; }
 
         public string CronExpression { get; set; }
     }

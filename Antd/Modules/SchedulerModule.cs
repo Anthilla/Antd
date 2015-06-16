@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Scheduler;
+using Antd.Common;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -48,10 +49,18 @@ namespace Antd {
                 return View["page-scheduler", vmod];
             };
 
-            Post["/"] = x => {
+            Post["/now"] = x => {
                 string _alias = (string)this.Request.Form.Alias;
                 string _command = (string)this.Request.Form.Command;
-                string _args = (string)this.Request.Form.Arguments;
+                Job.Schedule(_command.GetFirstString(), _command.GetAllStringsButFirst());
+                dynamic model = new ExpandoObject();
+                model.JobList = JobRepository.GetAll();
+                return View["page-scheduler", model];
+            };
+
+            Post["/cron"] = x => {
+                string _alias = (string)this.Request.Form.Alias;
+                string _command = (string)this.Request.Form.Command;
 
                 int startH = (int)this.Request.Form.CronStartTimeHour.Value;
                 int startM = (int)this.Request.Form.CronStartTimeMinute.Value;
@@ -61,19 +70,22 @@ namespace Antd {
 
                 string _cron = (string)this.Request.Form.CronResult;
 
-                string[] data = new string[] {
-                    _command,
-                    _args
-                };
-                string guid = Guid.NewGuid().ToString();
-                string dataJson = JsonConvert.SerializeObject(data);
-                JobModel task = JobRepository.Create(guid, _alias, dataJson);
-                JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startH, startM, endH, endM, _cron);
-                JobScheduler.LauchJob<JobList.CommandJob>(guid);
+                Job.Schedule(_command.GetFirstString(), _command.GetAllStringsButFirst(), _cron);
                 dynamic model = new ExpandoObject();
-                model.Message = "Job created and executed.";
                 model.JobList = JobRepository.GetAll();
                 return View["page-scheduler", model];
+            };
+
+            Get["/enalbe/{guid}"] = x => {
+                string guid = x.guid;
+                JobRepository.Enable(guid);
+                return Response.AsJson(true);
+            };
+
+            Get["/disable/{guid}"] = x => {
+                string guid = x.guid;
+                JobRepository.Disable(guid);
+                return Response.AsJson(true);
             };
         }
     }
