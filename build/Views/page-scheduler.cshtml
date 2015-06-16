@@ -46,9 +46,12 @@
             </div>
             <div class="element-divider"></div>
 
-            @*<a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Disks" style="padding-top: 11px;">New
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#OneTimeOnly" style="padding-top: 11px;">New One time only
             </a>
-            <div class="element-divider"></div>*@
+            <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Cron" style="padding-top: 11px;">New with Cron
+            </a>
+            <div class="element-divider"></div>
         </nav>
     </nav>
 }
@@ -85,7 +88,7 @@
             return (index + 1).ToString();
         }
     }
-    <form action="/scheduler/now" method="POST" enctype="multipart/form-data">
+    <form id="OneTimeOnly" action="/scheduler/now" method="POST" enctype="multipart/form-data" style="display: none;">
         <div class="grid">
             <div class="row">
                 <div class="span2">
@@ -111,19 +114,14 @@
             </div>
         </div>
     </form>
-    <hr />
-    <hr />
-    <br />
-    <hr />
-    <hr />
-    <form action="/scheduler/cron" method="POST" enctype="multipart/form-data">
+    <form id="Cron" action="/scheduler/cron" method="POST" enctype="multipart/form-data" style="display: none;">
         <div class="grid" style="padding-left: 25px;">
             <div class="row">
                 <div class="span2">
                     <label>Name</label>
                 </div>
                 <div class="span10">
-                    <input type="text" name="Alias" style="width: 90%;">
+                    <input type="text" name="Alias" style="width: 90%; height: 25px;">
                 </div>
             </div>
             <div class="row">
@@ -131,7 +129,7 @@
                     <label>Command</label>
                 </div>
                 <div class="span10">
-                    <input type="text" name="Command" style="width: 90%;">
+                    <input type="text" name="Command" style="width: 90%; height: 25px;">
                 </div>
             </div>
             <div class="row">
@@ -272,7 +270,18 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('input[type="text"], select, option').click(function () {
+
+        $('a[data-scrollto="#OneTimeOnly"]').click(function () {
+            $('#Cron').hide();
+            $('#OneTimeOnly').toggle();
+        });
+
+        $('a[data-scrollto="#Cron"]').click(function () {
+            $('#OneTimeOnly').hide();
+            $('#Cron').toggle();
+        });
+
+        $('input[type="text"], input[type="checkbox"], input[type="radio"], select, option').click(function () {
             var $defaults = {
                 zero: '0',
                 all: '*',
