@@ -28,40 +28,42 @@
 ///-------------------------------------------------------------------------------------
 
 using Newtonsoft.Json;
+using Antd.Common;
 using System;
+using System.Threading;
 
 namespace Antd.Scheduler {
 
     public class Job {
 
-        public static void Schedule(string file, string arguments) {
+        public static void Schedule(string jobName, string command) {
             //create job info into db
             var guid = Guid.NewGuid().ToString();
             string[] data = new string[] {
-                    file,
-                    arguments
+                    command.GetFirstString(),
+                    command.GetAllStringsButFirst()
                 };
             string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.Create(guid, file, dataJson);
+            var job = JobRepository.Create(guid, jobName, dataJson);
+            Thread.Sleep(100);
             //assign trigger to this job -> trigger is ONETIMEONLY
             JobRepository.AssignTriggerNow(guid);
             //launch job with above settings
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
 
-        public static void Schedule(string file, string arguments, string cron) {
+        public static void Schedule(string jobName, string command, string cron) {
             //create job info into db
             var guid = Guid.NewGuid().ToString();
             string[] data = new string[] {
-                    file,
-                    arguments
+                    command.GetFirstString(),
+                    command.GetAllStringsButFirst()
                 };
             string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.Create(guid, file, dataJson);
+            var job = JobRepository.Create(guid, jobName, dataJson);
             //assign trigger to this job -> trigger is CRONDEFINED
-            int startHour = DateTime.Now.Hour;
-            int startMinute = DateTime.Now.Minute + 1;
-            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, startHour, startMinute, cron);
+            Thread.Sleep(100);
+            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, cron);
             //launch job with above settings
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }

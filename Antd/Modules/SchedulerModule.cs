@@ -52,7 +52,7 @@ namespace Antd {
             Post["/now"] = x => {
                 string _alias = (string)this.Request.Form.Alias;
                 string _command = (string)this.Request.Form.Command;
-                Job.Schedule(_command.GetFirstString(), _command.GetAllStringsButFirst());
+                Job.Schedule(_alias, _command);
                 dynamic model = new ExpandoObject();
                 return Response.AsRedirect("/scheduler");
             };

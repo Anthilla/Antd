@@ -50,7 +50,7 @@ namespace Antd.Overlayfs {
             }
             else {
                 ConsoleLogger.Log("Overlayfs -> mount");
-                Job.Schedule("mount", "-t overlay -o lowerdir=" + lower + ",upperdir=" + upper + ",workdir=" + work + " overlay " + merged);
+                Job.Schedule("mount Overlayfs", "mount -t overlay -o lowerdir=" + lower + ",upperdir=" + upper + ",workdir=" + work + " overlay " + merged);
             }
         }
 

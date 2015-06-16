@@ -67,8 +67,6 @@ namespace Antd {
 
                 ConsoleLogger.Info("loaded in: {0}", DateTime.Now - startTime);
 
-                AntdBoot.TestDatabase(true);
-
                 //ConsoleLogger.Log("Define p1");
                 //string p1 = Console.ReadLine();
                 //ConsoleLogger.Log("Define p2 now");

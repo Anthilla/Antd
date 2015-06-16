@@ -55,17 +55,7 @@ namespace Antd {
             };
 
             Get["/cmd"] = x => {
-                ConsoleLogger.Info(">>>>>> Testing command...");
-                Job.Schedule("mkdir", "/framework/test");
-                ConsoleLogger.Info(">>>>>> wait few seconds...");
-                Thread.Sleep(30000);
-                Console.Write(" ok");
-                if (Directory.Exists("/framework/test")) {
-                    ConsoleLogger.Success(">>>>>> ok");
-                }
-                else {
-                    ConsoleLogger.Error(">>>>>> Something Went Wrong");
-                }
+                Command.Launch("md", @"D:\test");
                 return Response.AsJson(true);
             };
 

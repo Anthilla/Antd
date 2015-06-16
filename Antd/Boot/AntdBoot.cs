@@ -110,12 +110,8 @@ namespace Antd.Boot {
             Command.Launch("mount", "-t tmpfs tmpfs " + root);
 
             databases = new[] { root };
-            DatabaseBoot.Start(databases);
+            DatabaseBoot.Start(databases, true);
             ConsoleLogger.Success("    database -> loaded");
-        }
-
-        public static void TestDatabase(bool isActive) {
-            DatabaseBoot.Test(isActive);
         }
 
         public static void StartSignalR(IAppBuilder app, bool isActive) {

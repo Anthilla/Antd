@@ -74,6 +74,7 @@ namespace Antd.Scheduler {
 
         public static void AssignTriggerNow(string guid) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            task.isEnabled = false;
             TriggerModel trigger = new TriggerModel();
             trigger.TriggerSetting = TriggerModel.TriggerPeriod.IsOneTimeOnly;
             trigger.StartHour = DateTime.Now.Hour;
@@ -83,13 +84,14 @@ namespace Antd.Scheduler {
             DeNSo.Session.New.Set(task);
         }
 
-        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, int sh, int sm, string _cron) {
+        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, string _cron) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            task.isEnabled = true;
             TriggerModel trigger = new TriggerModel();
             trigger.TriggerSetting = period;
-            trigger.StartHour = sh;
-            trigger.StartMinute = sm;
-            trigger.StartTime = new DateTime(2000, 1, 1, sh, sm, 1, 1);
+            trigger.StartHour = DateTime.Now.Hour;
+            trigger.StartMinute = DateTime.Now.Minute + 1;
+            trigger.StartTime = new DateTime(2000, 1, 1, trigger.StartHour, trigger.StartMinute, 1, 1);
             trigger.CronExpression = _cron;
             task.Trigger = trigger;
             DeNSo.Session.New.Set(task);

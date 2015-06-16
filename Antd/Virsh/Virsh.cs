@@ -33,7 +33,7 @@ namespace Antd.Virsh {
     public class Virsh {
 
         public static void Launch(string command, string options) {
-            Job.Schedule("virsh", command + " " + options);
+            Job.Schedule("virsh -> " + command, "virsh " + command + " " + options);
         }
     }
 }

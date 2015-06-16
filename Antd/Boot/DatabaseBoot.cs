@@ -30,6 +30,7 @@
 using Antd.Common;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -37,7 +38,7 @@ namespace Antd.Boot {
 
     public class DatabaseBoot {
 
-        public static void Start(string[] dbPaths) {
+        public static void Start(string[] dbPaths, bool doTest) {
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.EnableDataCompression = false;
@@ -45,49 +46,61 @@ namespace Antd.Boot {
             DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
             DeNSo.Session.DefaultDataBase = "Antd_DB";
             DeNSo.Session.Start();
+
+            if (doTest == true) {
+                Test();
+            }
         }
 
         public static void ShutDown() {
             DeNSo.Session.ShutDown();
         }
 
-        public static void Test(bool isActive) {
-            if (isActive == true) {
-                ConsoleLogger.Log("Test DATABASE");
-                var guid = Guid.NewGuid().ToString();
-                ConsoleLogger.Log(">> write");
-                TestClass write = new TestClass();
-                write._Id = guid;
-                write.Date = DateTime.Now;
-                write.Foo = "foo";
-                write.Bar = write.Foo + write.Date.ToString() + write.Foo;
-                DeNSo.Session.New.Set(write);
-                ConsoleLogger.Success(">> write done");
-                Thread.Sleep(1000);
-                ConsoleLogger.Log(">> read");
-                var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-                ConsoleLogger.Info(">> read done");
-                if (read != null) {
-                    ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(read));
+        private static void CheckPaths(string[] dbPaths) {
+            foreach (string path in dbPaths) {
+                if (!Directory.Exists(path)) {
+                    Directory.CreateDirectory(path);
+                    ConsoleLogger.Warn("You are trying to write your database in {0}, but this dir does'nt exist!", path);
+                    ConsoleLogger.Warn("Although john has created this folder, please check that you do not miss anything!");
                 }
-                else {
-                    ConsoleLogger.Warn(">> read failed");
-                }
-                Thread.Sleep(1000);
-                ConsoleLogger.Log(">> edit");
-                read.Date = DateTime.Now;
-                read.Foo = "foo_edit";
-                read.Bar = read.Foo + read.Date.ToString() + read.Foo;
-                DeNSo.Session.New.Set(read);
-                var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-                ConsoleLogger.Info(">> read done");
-                Thread.Sleep(1000);
-                if (edited != null) {
-                    ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(edited));
-                }
-                else {
-                    ConsoleLogger.Warn(">> read failed");
-                }
+            }
+        }
+
+        private static void Test() {
+            ConsoleLogger.Log("Test DATABASE");
+            var guid = Guid.NewGuid().ToString();
+            ConsoleLogger.Log(">> write");
+            TestClass write = new TestClass();
+            write._Id = guid;
+            write.Date = DateTime.Now;
+            write.Foo = "foo";
+            write.Bar = write.Foo + write.Date.ToString() + write.Foo;
+            DeNSo.Session.New.Set(write);
+            ConsoleLogger.Success(">> write done");
+            Thread.Sleep(1000);
+            ConsoleLogger.Log(">> read");
+            var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
+            ConsoleLogger.Info(">> read done");
+            if (read != null) {
+                ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(read));
+            }
+            else {
+                ConsoleLogger.Warn(">> read failed");
+            }
+            Thread.Sleep(1000);
+            ConsoleLogger.Log(">> edit");
+            read.Date = DateTime.Now;
+            read.Foo = "foo_edit";
+            read.Bar = read.Foo + read.Date.ToString() + read.Foo;
+            DeNSo.Session.New.Set(read);
+            var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
+            ConsoleLogger.Info(">> read done");
+            Thread.Sleep(1000);
+            if (edited != null) {
+                ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(edited));
+            }
+            else {
+                ConsoleLogger.Warn(">> read failed");
             }
         }
     }
