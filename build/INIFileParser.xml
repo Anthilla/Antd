@@ -183,7 +183,7 @@
             </returns></member>
         <member name="T:IniParser.Model.KeyDataCollection">
             <summary>
-            <para>Represents a collection of Keydata.</para>
+            Represents a collection of Keydata.
             </summary></member>
         <member name="M:IniParser.Model.KeyDataCollection.#ctor">
             <summary>
@@ -191,19 +191,24 @@
             </summary></member>
         <member name="M:IniParser.Model.KeyDataCollection.#ctor(System.Collections.Generic.IEqualityComparer{System.String})">
             <summary>
-            Initializes a new instance of the <see cref="T:IniParser.Model.KeyDataCollection" /> class.
-            </summary></member>
+            Initializes a new instance of the <see cref="T:IniParser.Model.KeyDataCollection" /> class with a given
+            search comparer
+            </summary>
+            <param name="searchComparer">
+            Search comparer used to find the key by name in the collection
+            </param></member>
         <member name="M:IniParser.Model.KeyDataCollection.#ctor(IniParser.Model.KeyDataCollection,System.Collections.Generic.IEqualityComparer{System.String})">
             <summary>
             Initializes a new instance of the <see cref="T:IniParser.Model.KeyDataCollection" /> class
             from a previous instance of <see cref="T:IniParser.Model.KeyDataCollection" />.
             </summary>
             <remarks>
-            Data is deeply copied
+            Data from the original KeyDataCollection instance is deeply copied
             </remarks>
             <param name="ori">
             The instance of the <see cref="T:IniParser.Model.KeyDataCollection" /> class
-            used to create the new instance.</param></member>
+            used to create the new instance.
+            </param></member>
         <member name="P:IniParser.Model.KeyDataCollection.Item(System.String)">
             <summary>
             Gets or sets the value of a concrete key.
@@ -212,57 +217,42 @@
             If we try to assign the value of a key which doesn't exists,
             a new key is added with the name and the value is assigned to it.
             </remarks>
-            <param name="keyName">Name of the key</param>
+            <param name="keyName">
+            Name of the key
+            </param>
             <returns>
-            The string with key's value or null
-            if the key was not found.
+            The string with key's value or null if the key was not found.
             </returns></member>
         <member name="P:IniParser.Model.KeyDataCollection.Count">
             <summary>
             Return the number of keys in the collection
-            </summary>
-            <value>An integer with the number of keys in the collection.</value></member>
-        <member name="M:IniParser.Model.KeyDataCollection.AddKey(System.String)">
+            </summary></member>
+        <!--FIXME: Invalid documentation markup was found for member M:IniParser.Model.KeyDataCollection.AddKey(System.String)-->
+        <member name="M:IniParser.Model.KeyDataCollection.AddKey(IniParser.Model.KeyData)">
             <summary>
-            Adds a new key with the specified name and empty value and comments
+            Adds a new key to the collection
             </summary>
-            <remarks>
-            A valid key name is a string with NO blank spaces.
-            </remarks>
-            <param name="keyName">New key to be added.</param>
+            <param name="keyData">
+            KeyData instance.
+            </param>
             <returns>
-            <c>true</c> if a new empty key was added
-            <c>false</c> otherwise.
-            </returns>
-            <exception cref="T:System.ArgumentException">If the key name is not valid.</exception></member>
-        <member name="M:IniParser.Model.KeyDataCollection.AddKey(System.String,IniParser.Model.KeyData)">
-            <summary>
-            Adds a new key with the specified name and value and comments
-            </summary>
-            <remarks>
-            A valid key name is a string with NO blank spaces.
-            </remarks>
-            <param name="keyName">New key to be added.</param>
-            <param name="keyData">KeyData instance.</param>
-            <returns>
-            <c>true</c> if a new empty key was added
-            <c>false</c> otherwise.
-            </returns>
-            <exception cref="T:System.ArgumentException">If the key name is not valid.</exception></member>
+            <c>true</c> if the key was added  <c>false</c> if a key with the same name already exist
+            in the collection
+            </returns></member>
         <member name="M:IniParser.Model.KeyDataCollection.AddKey(System.String,System.String)">
             <summary>
-            Adds a new key with the specified name and value and comments
+            Adds a new key with the specified name and value to the collection
             </summary>
-            <remarks>
-            A valid key name is a string with NO blank spaces.
-            </remarks>
-            <param name="keyName">New key to be added.</param>
-            <param name="keyValue">Value associated to the kyy.</param>
+            <param name="keyName">
+            Name of the new key to be added.
+            </param>
+            <param name="keyValue">
+            Value associated to the key.
+            </param>
             <returns>
-            <c>true</c> if a new empty key was added
-            <c>false</c> otherwise.
-            </returns>
-            <exception cref="T:System.ArgumentException">If the key name is not valid.</exception></member>
+            <c>true</c> if the key was added  <c>false</c> if a key with the same name already exist
+            in the collection.
+            </returns></member>
         <member name="M:IniParser.Model.KeyDataCollection.ClearComments">
             <summary>
             Clears all comments of this section
