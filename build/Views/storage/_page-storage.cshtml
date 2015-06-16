@@ -37,18 +37,14 @@
 }
 
 
-@section Dashboard
-{
-    @Html.Partial("page-storage-archives")
+@section Dashboard {
+    @Html.Partial("page-storage-disks")
+    @Html.Partial("page-storage-volumes")
     @Html.Partial("page-storage-backup")
-    @Html.Partial("page-storage-manage")
     @Html.Partial("page-storage-iscsi")
-    @Html.Partial("page-storage-share")
-
 }
 
-@section Scripts
-{
+@section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
             $('tr>td').not('tr>td:first-child').css('width', '25%');
