@@ -54,26 +54,16 @@ namespace Antd {
                 string _command = (string)this.Request.Form.Command;
                 Job.Schedule(_command.GetFirstString(), _command.GetAllStringsButFirst());
                 dynamic model = new ExpandoObject();
-                model.JobList = JobRepository.GetAll();
-                return View["page-scheduler", model];
+                return Response.AsRedirect("/scheduler");
             };
 
             Post["/cron"] = x => {
                 string _alias = (string)this.Request.Form.Alias;
                 string _command = (string)this.Request.Form.Command;
-
-                int startH = (int)this.Request.Form.CronStartTimeHour.Value;
-                int startM = (int)this.Request.Form.CronStartTimeMinute.Value;
-
-                int endH = (int)this.Request.Form.CronEndTimeHour.Value;
-                int endM = (int)this.Request.Form.CronEndTimeMinute.Value;
-
                 string _cron = (string)this.Request.Form.CronResult;
-
                 Job.Schedule(_command.GetFirstString(), _command.GetAllStringsButFirst(), _cron);
                 dynamic model = new ExpandoObject();
-                model.JobList = JobRepository.GetAll();
-                return View["page-scheduler", model];
+                return Response.AsRedirect("/scheduler");
             };
 
             Get["/enalbe/{guid}"] = x => {

@@ -31,7 +31,29 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
-@section MainContent {
+@section PageBar {
+    <style type="text/css">
+        #Scheduler-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-box on-left" style="line-height: 5px;"></i>
+                Scheduler
+            </div>
+            <div class="element-divider"></div>
+
+            @*<a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Disks" style="padding-top: 11px;">New
+            </a>
+            <div class="element-divider"></div>*@
+        </nav>
+    </nav>
+}
+
+@section Dashboard {
     @functions{
         public string[] DaysOfTheWeek = new string[] {
             "Monday",
@@ -63,12 +85,42 @@
             return (index + 1).ToString();
         }
     }
-
-    <form action="/jobs" method="POST" enctype="multipart/form-data">
+    <form action="/scheduler/now" method="POST" enctype="multipart/form-data">
+        <div class="grid">
+            <div class="row">
+                <div class="span2">
+                    <label>Name</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Alias" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span2">
+                    <label>Command</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Command" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>&nbsp</label>
+                    <input class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 100%; height: 34px;">
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr />
+    <hr />
+    <br />
+    <hr />
+    <hr />
+    <form action="/scheduler/cron" method="POST" enctype="multipart/form-data">
         <div class="grid" style="padding-left: 25px;">
             <div class="row">
                 <div class="span2">
-                    <label>Job Alias</label>
+                    <label>Name</label>
                 </div>
                 <div class="span10">
                     <input type="text" name="Alias" style="width: 90%;">
@@ -84,23 +136,15 @@
             </div>
             <div class="row">
                 <div class="span2">
-                    <label>Arguments</label>
-                </div>
-                <div class="span10">
-                    <input type="text" name="Arguments" style="width: 90%;">
-                </div>
-            </div>
-            <div class="row">
-                <div class="span2">
                     <label>Start Time</label>
                 </div>
                 <div class="span10">
-                    <select id="CronStartTimeHour" name="CronStartTimeHour">
+                    <select id="CronStartTimeHour" name="CronStartTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
-                    <select id="CronStartTimeMinute" name="CronStartTimeMinute">
+                    <select id="CronStartTimeMinute" name="CronStartTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
@@ -168,12 +212,12 @@
                     <label>End Time</label>
                 </div>
                 <div class="span10">
-                    <select id="CronEndTimeHour" name="CronEndTimeHour">
+                    <select id="CronEndTimeHour" name="CronEndTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
-                    <select id="CronEndTimeMinute" name="CronEndTimeMinute">
+                    <select id="CronEndTimeMinute" name="CronEndTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
@@ -182,10 +226,10 @@
             </div>
             <div class="row">
                 <div class="span2">
-                    <input id="ShowCronResult" class="bg-yellow fg-white" type="button" value="Cron Result" style="width: 90%; height: 34px;" />
+                    @*<input id="ShowCronResult" class="bg-yellow fg-white" type="button" value="Cron Result" style="width: 90%; height: 34px;" />*@
                 </div>
                 <div class="span10">
-                    <input name="CronResult" id="CronResult" type="text" style="width: 90%; border-width: 0 0 2px 0 !important; border-color: lightgray !important;" />
+                    <input name="CronResult" id="CronResult" type="text" style="width: 90%; height: 35px; border-width: 0 0 2px 0 !important; border-color: #A7BD39 !important;" class="bg-anthilla-gray-m" />
                 </div>
             </div>
             <div class="row">
@@ -196,9 +240,9 @@
             </div>
         </div>
     </form>
-    <br />
-    <hr />
-    <p>@Model.Message</p>
+}
+
+@section MainContent {
     <table id="Output" class="table">
         <thead>
             <tr>
@@ -228,7 +272,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('#ShowCronResult').click(function () {
+        $('input[type="text"], select, option').click(function () {
             var $defaults = {
                 zero: '0',
                 all: '*',
