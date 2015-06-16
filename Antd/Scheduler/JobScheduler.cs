@@ -86,6 +86,7 @@ namespace Antd.Scheduler {
                 ConsoleLogger.Warn("...and your task will be scheduled in a minute.");
                 trigger = DefineStaticTrigger(_identity);
                 ConsoleLogger.Warn("But this error should not happen!");
+                ConsoleLogger.Warn("----- Scheduler :-(");
                 return trigger;
             }
             switch (_trigger.TriggerSetting) {

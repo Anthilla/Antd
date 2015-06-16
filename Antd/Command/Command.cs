@@ -76,9 +76,9 @@ namespace Antd {
                 command.error = ex.Message;
                 command.errorTable = TextToList(ex.Message);
                 Console.WriteLine("");
-                ConsoleLogger.Error("Launched {0} {1}", file, args);
-                ConsoleLogger.Error("------------ Error output:");
-                ConsoleLogger.Error("{0}", command.error);
+                ConsoleLogger.Warn("Launched {0} {1}", file, args);
+                ConsoleLogger.Warn("------------ Error output:");
+                ConsoleLogger.Warn("{0}", command.error);
                 Console.WriteLine("");
                 return command;
             }
