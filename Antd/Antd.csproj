@@ -216,6 +216,7 @@
     <Compile Include="UnitFiles\UnitFile.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
+    <Compile Include="Virsh\Virsh.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
