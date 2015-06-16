@@ -79,13 +79,13 @@ namespace Antd.Scheduler {
         private static ITrigger DefineTrigger(TriggerModel _trigger, string _identity) {
             ITrigger trigger;
             if (_trigger == null) {
-                ConsoleLogger.Error("----- Scheduler :-(");
-                ConsoleLogger.Error("Found a null value while defining a trigger");
-                ConsoleLogger.Error("Trigger identity: {0}", _identity);
-                ConsoleLogger.Error("Anyway, Antd can define a temporary trigger setting...");
-                ConsoleLogger.Error("...and your task will be scheduled in a minute.");
+                ConsoleLogger.Warn("----- Scheduler :-(");
+                ConsoleLogger.Warn("Found a null value while defining a trigger");
+                ConsoleLogger.Warn("Trigger identity: {0}", _identity);
+                ConsoleLogger.Warn("Anyway, Antd can define a temporary trigger setting...");
+                ConsoleLogger.Warn("...and your task will be scheduled in a minute.");
                 trigger = DefineStaticTrigger(_identity);
-                ConsoleLogger.Error("But this error should not happen!");
+                ConsoleLogger.Warn("But this error should not happen!");
                 return trigger;
             }
             switch (_trigger.TriggerSetting) {
