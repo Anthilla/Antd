@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,12 +64,22 @@ namespace Antd {
                 command.outputTable = TextToList(output);
                 command.error = error;
                 command.errorTable = TextToList(error);
+                Console.WriteLine("");
+                ConsoleLogger.Success("Launched {0} {1}", file, args);
+                ConsoleLogger.Info("------------ Command output:");
+                ConsoleLogger.Info("{0}", command.output);
+                Console.WriteLine("");
                 return command;
             }
             catch (Exception ex) {
                 CommandModel command = new CommandModel();
                 command.error = ex.Message;
                 command.errorTable = TextToList(ex.Message);
+                Console.WriteLine("");
+                ConsoleLogger.Error("Launched {0} {1}", file, args);
+                ConsoleLogger.Error("------------ Error output:");
+                ConsoleLogger.Error("{0}", command.error);
+                Console.WriteLine("");
                 return command;
             }
         }
