@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,43 +25,24 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-@using System.Collections.Generic
-@{Layout = "_layout.cshtml";}
+using Nancy;
+using Nancy.Security;
+using System.Dynamic;
 
-@section PageBar {
-    @Html.Partial("_storage-pagebar")
-}
+namespace Antd {
 
+    public class HypervisorModule : NancyModule {
 
-@section Dashboard {
-    @Html.Partial("page-storage-disks")
-    @Html.Partial("page-storage-volumes")
-    @Html.Partial("page-storage-backup")
-    @Html.Partial("page-storage-iscsi")
-}
+        public HypervisorModule()
+            : base("/hypervisor") {
+            this.RequiresAuthentication();
 
-@section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('tr>td').not('tr>td:first-child').css('width', '25%');
-            $('tr>td:first-child').css('width', '200px');
-        });
-
-        $(".cake").cake({
-            data: {
-                total: '100',
-                used: '74'
-            }
-        });
-
-        $(".cake2").cake({
-            data: {
-                total: '100',
-                used: '23'
-            }
-        });
-    </script>
+            Get["/"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["_page-hypervisor", vmod];
+            };
+        }
+    }
 }

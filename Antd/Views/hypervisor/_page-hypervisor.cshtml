@@ -33,26 +33,14 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-<style type="text/css">
-    #Hypervisor-TB {
-        border-bottom: 10px solid #A7BD39;
-        height: 80px !important;
-    }
-</style>
-<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
-    <nav class="navigation-bar-content">
-        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-            <i class="icon-box on-left" style="line-height: 5px;"></i>
-            Hypervisor
-        </div>
-        <div class="element-divider"></div>
-
-    </nav>
-</nav>
+    @Html.Partial("_hypervisor-pagebar")
 }
 
-
 @section Dashboard {
+    @Html.Partial("page-hypervisor-vms", Model)
+    @Html.Partial("page-hypervisor-newvm", Model)
+    @Html.Partial("page-hypervisor-datastore", Model)
+    @Html.Partial("page-hypervisor-backup", Model)
 }
 
 @section Scripts {
