@@ -31,7 +31,29 @@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
-@section MainContent {
+@section PageBar {
+    <style type="text/css">
+        #Scheduler-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-box on-left" style="line-height: 5px;"></i>
+                Scheduler
+            </div>
+            <div class="element-divider"></div>
+
+            @*<a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Disks" style="padding-top: 11px;">New
+            </a>
+            <div class="element-divider"></div>*@
+        </nav>
+    </nav>
+}
+
+@section Dashboard {
     @functions{
         public string[] DaysOfTheWeek = new string[] {
             "Monday",
@@ -63,8 +85,20 @@
             return (index + 1).ToString();
         }
     }
+    <form action="/pippo" method="POST" enctype="multipart/form-data">
+        <div class="grid" style="padding-left: 25px;">
+            <div class="row">
+                <div class="span2">
+                    <label>Job Alias</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Alias" style="width: 90%;">
+                </div>
+            </div>
+        </div>
+    </form>
 
-    <form action="/jobs" method="POST" enctype="multipart/form-data">
+    <form action="/scheduler" method="POST" enctype="multipart/form-data">
         <div class="grid" style="padding-left: 25px;">
             <div class="row">
                 <div class="span2">
@@ -196,9 +230,10 @@
             </div>
         </div>
     </form>
-    <br />
-    <hr />
-    <p>@Model.Message</p>
+}
+
+@section MainContent {
+
     <table id="Output" class="table">
         <thead>
             <tr>

@@ -39,14 +39,13 @@ namespace Antd {
     public class SchedulerModule : NancyModule {
 
         public SchedulerModule()
-            : base("/jobs") {
+            : base("/scheduler") {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                dynamic model = new ExpandoObject();
-                model.Message = "";
-                model.JobList = JobRepository.GetAll();
-                return View["page-scheduler", model];
+                dynamic vmod = new ExpandoObject();
+                vmod.JobList = JobRepository.GetAll();
+                return View["page-scheduler", vmod];
             };
 
             Post["/"] = x => {
