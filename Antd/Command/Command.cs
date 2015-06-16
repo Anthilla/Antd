@@ -64,11 +64,11 @@ namespace Antd {
                 command.outputTable = TextToList(output);
                 command.error = error;
                 command.errorTable = TextToList(error);
-                Console.WriteLine("");
-                ConsoleLogger.Success("Launched {0} {1}", file, args);
-                ConsoleLogger.Info("------------ Command output:");
-                ConsoleLogger.Info("{0}", command.output);
-                Console.WriteLine("");
+                //Console.WriteLine("");
+                //ConsoleLogger.Success("Launched {0} {1}", file, args);
+                //ConsoleLogger.Info("------------ Command output:");
+                //ConsoleLogger.Info("{0}", command.output);
+                //Console.WriteLine("");
                 return command;
             }
             catch (Exception ex) {

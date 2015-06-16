@@ -78,6 +78,16 @@ namespace Antd.Scheduler {
 
         private static ITrigger DefineTrigger(TriggerModel _trigger, string _identity) {
             ITrigger trigger;
+            if (_trigger == null) {
+                ConsoleLogger.Error("----- Scheduler :-(");
+                ConsoleLogger.Error("Found a null value while defining a trigger");
+                ConsoleLogger.Error("Trigger identity: {0}", _identity);
+                ConsoleLogger.Error("Anyway, Antd can define a temporary trigger setting...");
+                ConsoleLogger.Error("...and your task will be scheduled in a minute.");
+                trigger = DefineStaticTrigger(_identity);
+                ConsoleLogger.Error("But this error should not happen!");
+                return trigger;
+            }
             switch (_trigger.TriggerSetting) {
                 case TriggerModel.TriggerPeriod.IsOneTimeOnly:
                     trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
@@ -92,6 +102,14 @@ namespace Antd.Scheduler {
                     break;
             }
             return trigger;
+        }
+
+        private static ITrigger DefineStaticTrigger(string _identity) {
+            ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(DateTime.Now.AddMinutes(1))
+                .Build();
+            return oneTimeOnlyTrigger;
         }
 
         private static ITrigger DefineOneTimeOnlyTrigger(TriggerModel setting, string _identity) {

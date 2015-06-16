@@ -130,7 +130,6 @@
                 </div>
                 <div class="span10">
                     <input type="text" name="Command" style="width: 90%; height: 25px;">
-                    <input type="text" name="Command" style="width: 90%;">
                 </div>
             </div>
             <div class="row">
@@ -282,13 +281,13 @@
                     </ul>
                     <hr />
                     @if (job.isEnabled == true) {
-                        <p class="button bg-yellow" data-action="disable">Status: Enabled</p>
+                        <p class="button bg-yellow" data-action="disable" style="color: black !important;">Status: Enabled</p>
                     }
                     @if (job.isEnabled == false) {
-                        <p class="button bg-yellow" data-action="enable">Status: Disabled</p>
+                        <p class="button bg-yellow" data-action="enable" style="color: black !important;">Status: Disabled</p>
                     }
-                    <p class="button bg-yellow" data-action="launch">Launch Now</p>
-                    <p class="button bg-yellow" data-action="delete">Delete</p>
+                    <p class="button bg-yellow" data-action="launch" style="color: black !important;">Launch Now</p>
+                    <p class="button bg-yellow" data-action="delete" style="color: black !important;">Delete</p>
                 </div>
             </div>
         }

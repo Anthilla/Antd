@@ -130,6 +130,7 @@
                 </div>
                 <div class="span10">
                     <input type="text" name="Command" style="width: 90%; height: 25px;">
+                    <input type="text" name="Command" style="width: 90%;">
                 </div>
             </div>
             <div class="row">
@@ -241,31 +242,58 @@
 }
 
 @section MainContent {
-    <table id="Output" class="table">
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th>Interval</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
-                @functions{
-                    public string SetData(string json) {
-                        string[] data = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
-                        string d = String.Join(", ", data);
-                        return d;
+    @functions{
+        public string SetCommandLine(string json) {
+            string[] data = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
+            string d = String.Join(" ", data);
+            return d;
+        }
+    }
+
+    @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
+        @if (job != null) {
+            <div data-role="panel" class="panel collapsed border-2-anthilla-gray" data-guid="@job.Guid" style="margin-bottom: 5px;">
+                <div class="panel-header bg-anthilla-gray fg-white">
+                    <p class="fg-white" style="display: inline-block;"><i class="icon-arrow-right-5 on-left"></i>@job.Alias</p>
+                    <p class="fg-white" style="display: inline-block;">@SetCommandLine(job.Data)</p>
+                </div>
+                <div class="panel-content" style="display: none;">
+                    <ul class="fg-white" style="list-style: none;">
+                        <li>
+                            <label>Name</label>
+                            <p>@job.Alias</p>
+                        </li>
+                        <li>
+                            <label>Command launched at this scheduled task</label>
+                            <p>@SetCommandLine(job.Data)</p>
+                        </li>
+                        <li>
+                            <label>Interval</label>
+                            <p>@job.Interval</p>
+                        </li>
+                        <li>
+                            <label>Start Time</label>
+                            <p>@job.Trigger.StartTime.ToString("HH:mm")</p>
+                        </li>
+                        <li>
+                            <label>Cron</label>
+                            <p>@job.Trigger.CronExpression</p>
+                        </li>
+                    </ul>
+                    <hr />
+                    @if (job.isEnabled == true) {
+                        <p class="button bg-yellow" data-action="disable" style="color: black !important;">Status: Enabled</p>
                     }
-                }
-                @if (job != null) {
-<tr>
-                        <td class="right">@SetData(job.Data)</td>
-                        <td class="right">@job.Interval</td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
+                    @if (job.isEnabled == false) {
+                        <p class="button bg-yellow" data-action="enable" style="color: black !important;">Status: Disabled</p>
+                    }
+                    <p class="button bg-yellow" data-action="launch" style="color: black !important;">Launch Now</p>
+                    <p class="button bg-yellow" data-action="delete" style="color: black !important;">Delete</p>
+                </div>
+            </div>
+        }
+    }
+
 }
 
 @section Scripts {
