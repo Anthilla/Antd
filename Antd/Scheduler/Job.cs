@@ -44,6 +44,7 @@ namespace Antd.Scheduler {
                 };
             string dataJson = JsonConvert.SerializeObject(data);
             var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, dataJson);
+            Thread.Sleep(20);
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
 
@@ -55,6 +56,7 @@ namespace Antd.Scheduler {
                 };
             string dataJson = JsonConvert.SerializeObject(data);
             var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
+            Thread.Sleep(20);
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
 

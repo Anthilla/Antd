@@ -132,7 +132,7 @@
                     <input type="text" name="Command" style="width: 90%; height: 25px;">
                 </div>
             </div>
-            @*            <div class="row">
+            <div class="row">
                 <div class="span2">
                     <label>Start Time</label>
                 </div>
@@ -148,7 +148,7 @@
                         }
                     </select>
                 </div>
-            </div>*@
+            </div>
             <div class="row">
                 <div class="span2">
                     <label>Minutes</label>
@@ -253,7 +253,15 @@
         @if (job != null) {
             <div data-role="panel" class="panel collapsed border-2-anthilla-gray" data-guid="@job.Guid" style="margin-bottom: 5px;">
                 <div class="panel-header bg-anthilla-gray fg-white">
-                    <p class="fg-white" style="display: inline-block;"><i class="icon-arrow-right-5 on-left"></i>@job.Alias</p>
+                    <p class="fg-white" style="display: inline-block;">
+                        @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                            <i class="icon-alarm-clock on-left"></i>
+                        }
+                        @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                            <i class="icon-history on-left"></i>
+                        }
+                        @job.Alias
+                    </p>
                     <p class="fg-white" style="display: inline-block;">@SetCommandLine(job.Data)</p>
                 </div>
                 <div class="panel-content" style="display: none;">
@@ -287,7 +295,7 @@
                     @if (job.isEnabled == false && job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
                         <p class="button bg-yellow" data-action="enable" data-guid="@job.Guid" style="color: black !important;">Status: Disabled</p>
                     }
-                    @if (job.Interval == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                    @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
                         <p class="button bg-yellow" data-action="launch" data-guid="@job.Guid" style="color: black !important;">Launch Now</p>
                     }
                     <p class="button bg-yellow" data-action="delete" data-guid="@job.Guid" style="color: black !important;">Delete</p>
@@ -375,7 +383,7 @@
             $('#Cron').toggle();
         });
 
-        $('input[type="text"], input[type="checkbox"], input[type="radio"], select, option').click(function () {
+        function SetCronExpression() {
             var $defaults = {
                 zero: '0',
                 all: '*',
@@ -442,6 +450,14 @@
 
             cronExpression = seconds + ' ' + minutes + ' ' + hours + ' ' + dayOfmonth + ' ' + month + ' ' + dayOfweek;
             $('#CronResult').val(cronExpression);
+        }
+
+        $('input[type="text"], input[type="checkbox"], input[type="radio"], select, option').click(function () {
+            SetCronExpression();
+        });
+
+        $('input[type="text"]').keyup(function () {
+            SetCronExpression();
         });
     </script>
 }
