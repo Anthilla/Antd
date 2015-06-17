@@ -1,0 +1,451 @@
+﻿<legend id="NAT">NAT</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: left;" class="bg-anthilla-gray-m upcase">
+                <legend>Firewall Advanced</legend>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>IP Do-Not-Fragment compatibility</label>
+            </td>
+            <td>
+                <input id="NewIPDo-Not-Fragment" type="checkbox" />Clear invalid DF bits instead of dropping the packets
+                                <p id="UpdateIPDo-Not-Fragment" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    This allows for communications with hosts that generate fragmented packets with the don't fragment (DF) bit set.
+                                    Linux NFS is known to do this. This will cause the filter to not drop such packets but 
+                                    instead clear the don't fragment bit.
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>IP Random id generation</label>
+            </td>
+            <td>
+                <input id="NewIPRandomID" type="checkbox" />Insert a stronger id into IP header of packets passing through the filter
+                                <p id="UpdateIPRandomID" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    Replaces the IP identification field of packets with random values to compensate for 
+                                    operating systems that use predictable values. This option only applies to packets that are not
+                                    fragmented after the optional packet reassembly. 
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Firewall Optimization Options</label>
+            </td>
+            <td>
+                <select id="FirewallOptimizationOptionsSelect">
+                    <option selected="selected" value="normal">normal</option>
+                    <option value="high-latency">high-latency</option>
+                    <option value="aggressive">aggressive</option>
+                    <option value="conservative">conservative</option>
+                </select>
+                <p id="UpdateFirewallOptimizationOptions" class="button bg-anthilla-green" style="display: none;">
+                    Firewall Optimization Options
+                </p>
+            </td>
+            <td>
+                <p id="FirewallOptimizationOptionsDescription"></p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disable Firewall</label>
+            </td>
+            <td>
+                <input id="NewDisableFirewallFilter" type="checkbox" />Disable all packet filtering
+                                <p id="UpdateDisableFirewallFilter" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    Note: This converts antd into a routing only platform! 
+                                    Note: This will also turn off NAT!  
+                                    If you only want to disable NAT, and not firewall rules, visit the Outbound NAT page.  
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disable Firewall Scrub</label>
+            </td>
+            <td>
+                <input id="NewDisableFirewallScrub" type="checkbox" />
+                Disables the PF scrubbing option which can sometimes interfere with NFS and PPTP traffic. 
+                                <p id="UpdateDisableFirewallScrub" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Firewall Adaptive Timeouts</label>
+            </td>
+            <td>
+                <p>
+                    Timeouts for states can be scaled adaptively as the number of state table entries grows.
+                </p>
+                <input id="NewUpdateFirewallAdaptiveTimeoutsEnd" type="text" />
+                <p>
+                    When the number of state entries exceeds this value, adaptive scaling begins. 
+                                    All timeout values are scaled linearly with factor 
+                                    (adaptive.end - number of states) / (adaptive.end - adaptive.start).   
+                </p>
+                <input id="NewUpdateFirewallAdaptiveTimeoutsStart" type="text" />
+                <p>
+                    When reaching this number of state entries, all timeout values become zero, effectively purging
+                                    all state entries immediately. This value is used to define the scale factor, 
+                                    it should not actually be reached (set a lower state limit, see below).
+                                    Note: Leave this blank for the default, which auto-calculates these values from your maximum 
+                                    state table size. Adaptive start is 60% and end is 120% of the state table size by default.   
+                </p>
+                <p id="UpdateFirewallAdaptiveTimeouts" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Firewall Maximum States</label>
+            </td>
+            <td>
+                <p>Current Firewall Maximum States: @Model.FirewallMaximumStates</p>
+            </td>
+            <td>
+                <input id="NewFirewallMaximumStates" type="text" />
+                <p id="UpdateFirewallMaximumStates" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Maximum number of connections to hold in the firewall state table   
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Firewall Maximum Table Entries</label>
+            </td>
+            <td>
+                <p>Current Firewall Maximum States: @Model.FirewallMaximumTableEntries</p>
+            </td>
+            <td>
+                <input id="NewFirewallMaximumTableEntries" type="text" />
+                <p id="UpdateFirewallMaximumTableEntries" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Maximum number of table entries for systems such as aliases, sshlockout, snort, etc, combined   
+                </p>
+                <p>
+                    Note: Leave this blank for the default. On your system the default size is: 200000 
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Static route filtering</label>
+            </td>
+            <td>
+                <input id="NewStaticRouteFiltering" type="checkbox" />Bypass firewall rules for traffic on the same interface 
+                                <p id="UpdateStaticRouteFiltering" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    This option only applies if you have defined one or more static routes.
+                                    If it is enabled, traffic that enters and leaves through the same interface 
+                                    will not be checked by the firewall. This may be desirable in some situations where multiple
+                                    subnets are connected to the same interface.   
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disable Auto-added VPN rules</label>
+            </td>
+            <td>
+                <input id="NewDisableAutoVPN" type="checkbox" />Disable all auto-added VPN rules 
+                                <p id="UpdateDisableAutoVPN" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    Note: This disables automatically added rules for IPsec, PPTP.
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disable reply-to</label>
+            </td>
+            <td>
+                <input id="NewDisableReplyto" type="checkbox" />Disable reply-to on WAN rules  
+                                <p id="UpdateDisableReplyto" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    With Multi-WAN you generally want to ensure traffic leaves the same interface it arrives on, 
+                                    hence reply-to is added automatically by default. When using bridging, you must disable this 
+                                    behavior if the WAN gateway IP is different from the gateway IP of the hosts behind the bridged interface. 
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disable Negate rules</label>
+            </td>
+            <td>
+                <input id="NewDisableNegateRules" type="checkbox" />Disable Negate rule on policy routing rules   
+                                <p id="UpdateDisableNegateRules" class="button bg-anthilla-green">Apply</p>
+            </td>
+            <td>
+                <p>
+                    With Multi-WAN you generally want to ensure traffic reaches directly connected networks and VPN 
+                                    networks when using policy routing. You can disable this for special purposes but it requires manually 
+                                    creating rules for these networks 
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Aliases Hostnames Resolve Interval</label>
+            </td>
+            <td>
+                <p>Current time server: @Model.AliasesHostnamesResolveInterval</p>
+            </td>
+            <td>
+                <input id="NewAliasesHostnamesResolveInterval" type="text" />
+                Interval, in seconds, that will be used to resolve hostnames configured on aliases   
+                                <p id="UpdateAliasesHostnamesResolveInterval" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Check certificate of aliases URLs</label>
+            </td>
+            <td>
+                <input id="NewCheckCertificateAliasUrl" type="checkbox" />Verify HTTPS certificates when downloading alias URLs    
+                                <p id="UpdateCheckCertificateAliasUrl" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Make sure the certificate is valid for all HTTPS addresses on aliases. 
+                                    If it's not valid or is revoked, do not download it. 
+                </p>
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: left;" class="bg-anthilla-gray-m upcase">
+                <legend>Bogon Networks</legend>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>Update Frequency</label>
+            </td>
+            <td>
+                <select id="NewUpdateFrequency">
+                    <option selected="selected" value="monthly">Monthly</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="daily">Daily</option>
+                </select>
+                <p id="UpdateUpdateFrequency" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    The frequency of updating the lists of IP addresses that are reserved (but not RFC 1918) or not yet assigned by IANA
+                </p>
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: left;" class="bg-anthilla-gray-m upcase">
+                <legend>Network Address Translation</legend>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>NAT Reflection mode for port forwards</label>
+            </td>
+            <td>
+                <select id="NewNATReflection">
+                    <option selected="selected" value="disable">Disable</option>
+                    <option value="proxy">Enable (NAT + Proxy)</option>
+                    <option value="purenat">Enable (Pure NAT)</option>
+                </select>
+                When enabled, this automatically creates additional NAT redirect rules for access to port forwards on your external IP addresses from within your internal networks. 
+                                <p id="UpdateNATReflection" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    The NAT + proxy mode uses a helper program to send packets to the target of the port forward. 
+                                    It is useful in setups where the interface and/or gateway IP used for communication with the target
+                                     cannot be accurately determined at the time the rules are loaded. Reflection rules are not created for 
+                                    ranges larger than 500 ports and will not be used for more than 1000 ports total between all port forwards. 
+                                    Only TCP and UDP protocols are supported.
+                </p>
+                <p>
+                    The pure NAT mode uses a set of NAT rules to direct packets to the target of the port forward. 
+                                    It has better scalability, but it must be possible to accurately determine the interface and gateway 
+                                    IP used for communication with the target at the time the rules are loaded. There are no inherent limits 
+                                    to the number of ports other than the limits of the protocols. All protocols available for port forwards 
+                                    are supported. 
+                </p>
+                <p>
+                    Individual rules may be configured to override this system setting on a per-rule basis.
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>NAT Reflection Timeout</label>
+            </td>
+            <td>
+                <input id="NewNATReflectionTout" type="text" />
+                Enter value for Reflection timeout in seconds
+                                <p id="UpdateNATReflectionTout" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Note: Only applies to Reflection on port forwards in NAT + proxy mode
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Enable NAT Reflection for 1:1 NAT</label>
+            </td>
+            <td>
+                <input id="NewEnableNATReflection1v1" type="checkbox" />
+                Enables the automatic creation of additional NAT redirect rules for access to 1:1 
+                                mappings of your external IP addresses from within your internal networks
+                                <p id="UpdateEnableNATReflection1v1" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Note: Reflection on 1:1 mappings is only for the inbound component of the 1:1 mappings. 
+                                    This functions the same as the pure NAT mode for port forwards. For more details, 
+                                    refer to the pure NAT mode description above. 
+                </p>
+                <p>
+                    Individual rules may be configured to override this system setting on a per-rule basis
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Enable automatic outbound NAT for Reflection</label>
+            </td>
+            <td>
+                <input id="NewEnableNATRautomaticOutbound" type="checkbox" />
+                Automatically create outbound NAT rules which assist inbound NAT rules that direct 
+                                traffic back out to the same subnet it originated from. 
+                                <p id="UpdateEnableNATRautomaticOutbound" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td>
+                <p>
+                    Required for full functionality of the pure NAT mode of NAT Reflection for port forwards or NAT Reflection for 1:1 NAT. 
+                </p>
+                <p>
+                    Note: This only works for assigned interfaces. Other interfaces require manually creating 
+                                    the outbound NAT rules that direct the reply packets back through the router. 
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>TFTP Proxy</label>
+            </td>
+            <td>
+                <select id="NewTFTPProxy">
+                    <option value="wan">WAN</option>
+                    <option value="lan">LAN</option>
+                    <option value="wan,lan">both</option>
+                </select>
+                Choose the interfaces where you want TFTP proxy helper to be enabled
+                                <p id="UpdateTFTPProxy" class="button bg-anthilla-green" >Apply</p>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="4" style="text-align: left;" class="bg-anthilla-gray-m upcase">
+                <legend>State Timeouts</legend>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>TCP Timeouts</label>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>UDP Timeouts</label>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>ICMP Timeouts</label>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Other Timeouts</label>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<hr />
+<p class="button bg-anthilla-green">Save</p>
