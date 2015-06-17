@@ -1,0 +1,79 @@
+﻿<legend id="MailManagement">Management</legend>
+<legend>IMAP Server</legend>
+<table class="table striped bordered hovered">
+    <thead>
+        <tr>
+            <th>Manage Mail Folders & Directories</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>New Directory </td>
+            <td>
+                <input type="text" /></td>
+        </tr>
+        <tr>
+            <td>Percentage </td>
+            <td>
+                <input type="checkbox" />Nobody</td>
+        </tr>
+        <tr>
+            <td>&nbsp</td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Create" /></td>
+        </tr>
+    </tbody>
+</table>
+<table class="table striped bordered hovered">
+    <thead>
+        <tr>
+            <th>Directories</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<br />
+<legend>POP3/IMAP Server</legend>
+<form id="" action="~/" method="POST" enctype="multipart/form-data">
+    <table class="table striped bordered hovered">
+        <thead>
+            <tr>
+                <th>"Enabled"</th>
+                <th>Name</th>
+                <th>Protocol</th>
+                <th>Local & Remote Users </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>No connector yet</td>
+                <td>&nbsp</td>
+                <td>&nbsp</td>
+                <td>&nbsp</td>
+            </tr>
+        </tbody>
+    </table>
+    <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Add Connector" />
+</form>
+<br />
+<legend>Web Mail</legend>
+<br />
+<legend>Mail Server Stats</legend>
+<div class="tab-control" data-role="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#_day_">Daily</a></li>
+        <li><a href="#_week_">Weekly</a></li>
+        <li><a href="#_month_">Monthly</a></li>
+        <li><a href="#_year_">Yearly</a></li>
+    </ul>
+
+    <div class="frames">
+        <div class="frame" id="_day_"></div>
+        <div class="frame" id="_week_"></div>
+        <div class="frame" id="_month_"></div>
+        <div class="frame" id="_year_"></div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿<legend id="AppsAnthilasp">Apps: Anthilla SP</legend>
+<div class="grid">
+    <div class="row">
+        <div class="span12">
+            <legend style="display: inline-block;">AnthillaServer</legend>
+
+            <a href="/anthillasp/set/anthillaserver" id="UnitSrv" class="tile bg-gray">
+                <div class="tile-content icon">
+                    <i class="icon-icon-clipboard-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Set Unit</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/status/anthillaserver" id="StatusSrv" class="tile bg-anth-blue">
+                <div class="tile-content icon">
+                    <i class="icon-pause-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Status</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/start/anthillaserver" id="StartSrv" class="tile bg-anth-green">
+                <div class="tile-content icon">
+                    <i class="icon-play-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Start</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/stop/anthillaserver" id="StopSrv" class="tile bg-anth-orange">
+                <div class="tile-content icon">
+                    <i class="icon-stop-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Stop</span>
+                </div>
+            </a>
+
+            <legend style="display: inline-block;">AnthillaSP</legend>
+
+            <a href="/anthillasp/set/anthillasp" id="UnitAsp" class="tile bg-gray">
+                <div class="tile-content icon">
+                    <i class="icon-icon-clipboard-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Set Unit</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/status/anthillasp" id="StatusAsp" class="tile bg-anth-blue">
+                <div class="tile-content icon">
+                    <i class="icon-pause-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Status</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/start/anthillasp" id="StartAsp" class="tile bg-anth-green">
+                <div class="tile-content icon">
+                    <i class="icon-play-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Start</span>
+                </div>
+            </a>
+
+            <a href="/anthillasp/stop/anthillasp" id="StopAsp" class="tile bg-anth-orange">
+                <div class="tile-content icon">
+                    <i class="icon-stop-2"></i>
+                </div>
+                <div class="tile-status">
+                    <span class="name">Stop</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+@*@if (Model != null) {
+    @if (Model.outputTable != null) {
+        <table id="Output" class="table">
+            <tbody>
+                @foreach (string str in Model.outputTable) {
+                    <tr>
+                        <td class="right">@str</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <br />
+@if (Model.errorTable != null) {
+    <table id="Error" class="table">
+        <tbody>
+            @foreach (string str in Model.errorTable) {
+                <tr>
+                    <td class="right">@str</td>
+                </tr>
+                }
+        </tbody>
+    </table>
+    }*@

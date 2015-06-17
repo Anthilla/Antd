@@ -1,0 +1,141 @@
+﻿<legend id="NewVM">Create VM</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th colspan="2">
+                <label>Set New Virtual Machine</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label>Name</label>
+            </td>
+            <td>
+                <input type="text" />
+                <select>
+                    <option value="persistent">persistent</option>
+                    <option value="volatile">volatile</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Autostart</label>
+            </td>
+            <td>
+                <select>
+                    <option value="enabled">enabled</option>
+                    <option value="disabled">disabled</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>vCPU</label>
+            </td>
+            <td>
+                <select>
+                    <option value="1">1 CPU</option>
+                    @for (int i = 2; i < 17; i++) {
+                        <option value="@i.ToString()">@i.ToString() CPUS</option>
+                    }
+                </select>
+                <br />
+                <br />
+                <input type="checkbox" value="APIC" />APIC
+                <input type="checkbox" value="ACPI" />ACPI
+                <input type="checkbox" value="PAE" />PAE
+                <input type="checkbox" value="NX" />NX
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>RAM</label>
+            </td>
+            <td>
+                @functions{                
+                    public List<string> Megas() {
+                        List<string> list = new List<string>() { };
+                        for (int i = 1; i < 497; i++) {
+                            int s = i * 128;
+                            list.Add(s.ToString());
+                        }
+                        return list;
+                    }
+                }
+                <select>
+                    @foreach (string s in Megas()) {
+                        <option value="@s">@s MB</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Time</label>
+            </td>
+            <td>
+                <select>
+                    <option value="localtime">localtime</option>
+                    <option value="UTC">UTC</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Video</label>
+            </td>
+            <td>
+                <select>
+                    <option value="sVGA">sVGA</option>
+                    <option value="VGACirrus">VGA Cirrus GD 5446</option>
+                    <option value="VGAVMware">VGA VMware Compatibile</option>
+                    <option value="VGAVDI">VGA VDI (QXL)</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Audio</label>
+            </td>
+            <td>
+                <input type="checkbox" />
+                Sound card
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Network</label>
+            </td>
+            <td>
+                <select>
+                    <option value="enabled">enabled</option>
+                    <option value="disabled">disabled</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Disks</label>
+            </td>
+            <td>
+                <select>
+                    <option value="new">Create Hard Disk</option>
+                    <option value="exists">Use Existing Hard Disk</option>
+                    <option value="disabled">disabled</option>
+                </select>
+                <input type="file" />
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td>
+                <p id="UpdateNewVM" class="button bg-anthilla-green">Create</p>
+            </td>
+        </tr>
+    </tfoot>
+</table>
