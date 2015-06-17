@@ -33,21 +33,15 @@ namespace Antd.Boot {
 
     public class CoreParametersConfig {
         private static string coreFileName = "antdConfig";
-        private static XmlWriter xmlWriter;
-
-        public CoreParametersConfig(string folder) {
-            xmlWriter = new XmlWriter(_files, folder);
-        }
-
         private static string[] _files = new string[] {
                 coreFileName + "Current",
                 coreFileName + "001",
                 coreFileName + "002"
             };
 
-        //private static XmlWriter xmlWriter = new XmlWriter(_files, _folder);
+        private static XmlWriter xmlWriter = new XmlWriter(_files);
 
-        public void WriteDefaults() {
+        public static void WriteDefaults() {
             string root;
             xmlWriter.Write("root", "/antd");
             root = xmlWriter.ReadValue("root");
@@ -69,23 +63,23 @@ namespace Antd.Boot {
             }
         }
 
-        public string GetAntdPort() {
+        public static string GetAntdPort() {
             return xmlWriter.ReadValue("antdport");
         }
 
-        public string GetAntdDb() {
+        public static string GetAntdDb() {
             return xmlWriter.ReadValue("antddb");
         }
 
-        public string GetAntdRepo() {
+        public static string GetAntdRepo() {
             return xmlWriter.ReadValue("antdfr");
         }
 
-        public string GetUnitDir() {
+        public static string GetUnitDir() {
             return xmlWriter.ReadValue("sysd");
         }
 
-        public string GetAntdUri() {
+        public static string GetAntdUri() {
             if (xmlWriter.CheckValue("antddb") == false) {
                 return "http://+:7777/";
             }

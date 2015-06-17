@@ -44,7 +44,7 @@ namespace Antd.Status {
                 coreFileName + "002"
             };
 
-        private static XmlWriter xmlWriter = new XmlWriter(_files, "config");
+        private static XmlWriter xmlWriter = new XmlWriter(_files);
 
         public static void SetConfiguration() {
             var check = CheckConfiguration();

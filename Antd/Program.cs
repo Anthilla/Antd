@@ -43,28 +43,7 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
-            string applicationRoot;
-            string applicationConfigFolder;
-            string applicationConfigPath;
-            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-            ConsoleLogger.Info("1. application root: {0}", applicationRoot);
-            ConsoleLogger.Info("1. tmpfs mounted under application root");
-            Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
-
-            applicationConfigFolder = "config";
-            ConsoleLogger.Info("2. application config folder: {0}", applicationConfigFolder);
-            applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
-            ConsoleLogger.Info("3. application config path: {0}", applicationConfigPath);
-            if (!Directory.Exists(applicationConfigPath)) {
-                ConsoleLogger.Info("3a. application config path does not exist");
-                Directory.CreateDirectory(applicationConfigPath);
-                ConsoleLogger.Info("3b. application config path created");
-                ConsoleLogger.Info("3c. tmpfs mounted under application config path");
-                Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
-                AntdBoot.SetCoreParameters(applicationConfigPath);
-            }
-
-            var uri = new CoreParametersConfig(applicationConfigPath).GetAntdUri();
+            var uri = CoreParametersConfig.GetAntdUri();
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -79,6 +58,7 @@ namespace Antd {
                 ConsoleLogger.Log("    server url -> {0}", uri);
                 ConsoleLogger.Success("antd is running");
 
+                AntdBoot.SetCoreParameters();
                 AntdBoot.StartScheduler(true);
                 AntdBoot.StartDirectoryWatcher(true, new string[] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();

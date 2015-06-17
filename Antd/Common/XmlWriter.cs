@@ -50,15 +50,33 @@ namespace Antd.Common {
     }
 
     public class XmlWriter {
-        public static string root;
-        public string folder;
         public string[] path;
 
-        public XmlWriter(string[] fileNames, string newFolder) {
+        public XmlWriter(string[] fileNames) {
+            string applicationRoot;
+            string applicationConfigFolder;
+            string applicationConfigPath;
+            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+            ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
+            ConsoleLogger.Info("root info -> tmpfs mounted under application root");
+            Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
+
+            applicationConfigFolder = "config";
+            ConsoleLogger.Info("root info -> application config folder: {0}", applicationConfigFolder);
+            applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
+            ConsoleLogger.Info("root info -> application config path: {0}", applicationConfigPath);
+            if (!Directory.Exists(applicationConfigPath)) {
+                ConsoleLogger.Info("root info -> application config path does not exist");
+                Directory.CreateDirectory(applicationConfigPath);
+                ConsoleLogger.Info("root info -> application config path created");
+                ConsoleLogger.Info("root info -> tmpfs mounted under application config path");
+                Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
+            }
+
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
-                var p = Path.Combine(newFolder, fileName + ".xml");
-                tmplist.Add(Path.Combine(newFolder, fileName + ".xml"));
+                var p = Path.Combine(applicationConfigPath, fileName + ".xml");
+                tmplist.Add(Path.Combine(applicationConfigPath, fileName + ".xml"));
             }
             path = tmplist.ToArray();
         }
