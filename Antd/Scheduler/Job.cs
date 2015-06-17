@@ -37,34 +37,24 @@ namespace Antd.Scheduler {
     public class Job {
 
         public static void Schedule(string jobName, string command) {
-            //create job info into db
             var guid = Guid.NewGuid().ToString();
             string[] data = new string[] {
                     command.GetFirstString(),
                     command.GetAllStringsButFirst()
                 };
             string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.Create(guid, jobName, dataJson);
-            Thread.Sleep(100);
-            //assign trigger to this job -> trigger is ONETIMEONLY
-            JobRepository.AssignTriggerNow(guid);
-            //launch job with above settings
+            var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, dataJson);
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
 
         public static void Schedule(string jobName, string command, string cron) {
-            //create job info into db
             var guid = Guid.NewGuid().ToString();
             string[] data = new string[] {
                     command.GetFirstString(),
                     command.GetAllStringsButFirst()
                 };
             string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.Create(guid, jobName, dataJson);
-            //assign trigger to this job -> trigger is CRONDEFINED
-            Thread.Sleep(100);
-            JobRepository.AssignTrigger(guid, TriggerModel.TriggerPeriod.IsCron, cron);
-            //launch job with above settings
+            var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
     }

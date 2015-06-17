@@ -60,7 +60,24 @@ namespace Antd.Scheduler {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
-        public static JobModel Create(string guid, string alias, string data) {
+        public static JobModel SetTaskOneTimeOnly(string guid, string alias, string data) {
+            JobModel task = new JobModel();
+            task._Id = Guid.NewGuid().ToString();
+            task.Guid = guid;
+            task.Alias = alias;
+            task.Data = data;
+            task.isEnabled = false;
+            task.Results = new ExpandoObject() as IDictionary<String, object>;
+            task.TriggerPeriod = TriggerPeriod.IsOneTimeOnly;
+            task.StartHour = DateTime.Now.Hour;
+            task.StartMinute = DateTime.Now.Minute + 1;
+            task.StartTime = new DateTime(2000, 1, 1, task.StartHour, task.StartMinute, 1, 1);
+            task.CronExpression = "";
+            DeNSo.Session.New.Set(task);
+            return task;
+        }
+
+        public static JobModel SetTaskCron(string guid, string alias, string data, string _cron) {
             JobModel task = new JobModel();
             task._Id = Guid.NewGuid().ToString();
             task.Guid = guid;
@@ -68,34 +85,13 @@ namespace Antd.Scheduler {
             task.Data = data;
             task.isEnabled = true;
             task.Results = new ExpandoObject() as IDictionary<String, object>;
+            task.TriggerPeriod = TriggerPeriod.IsCron;
+            task.StartHour = DateTime.Now.Hour;
+            task.StartMinute = DateTime.Now.Minute + 1;
+            task.StartTime = new DateTime(2000, 1, 1, task.StartHour, task.StartMinute, 1, 1);
+            task.CronExpression = _cron;
             DeNSo.Session.New.Set(task);
             return task;
-        }
-
-        public static void AssignTriggerNow(string guid) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            task.isEnabled = false;
-            TriggerModel trigger = new TriggerModel();
-            trigger.TriggerSetting = TriggerModel.TriggerPeriod.IsOneTimeOnly;
-            trigger.StartHour = DateTime.Now.Hour;
-            trigger.StartMinute = DateTime.Now.Minute + 1;
-            trigger.StartTime = new DateTime(2000, 1, 1, trigger.StartHour, trigger.StartMinute, 1, 1);
-            trigger.CronExpression = "";
-            task.Trigger = trigger;
-            DeNSo.Session.New.Set(task);
-        }
-
-        public static void AssignTrigger(string guid, TriggerModel.TriggerPeriod period, string _cron) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            task.isEnabled = true;
-            TriggerModel trigger = new TriggerModel();
-            trigger.TriggerSetting = period;
-            trigger.StartHour = DateTime.Now.Hour;
-            trigger.StartMinute = DateTime.Now.Minute + 1;
-            trigger.StartTime = new DateTime(2000, 1, 1, trigger.StartHour, trigger.StartMinute, 1, 1);
-            trigger.CronExpression = _cron;
-            task.Trigger = trigger;
-            DeNSo.Session.New.Set(task);
         }
 
         public static void AddResult(string guid, string data) {

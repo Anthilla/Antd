@@ -32,6 +32,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Antd.Scheduler {
+    public enum TriggerPeriod : byte {
+        IsOneTimeOnly = 0,
+        IsCron = 2,
+        //IsDaily = 100,
+        //IsWeekly = 101,
+        //IsMonthly = 102
+    }
 
     public class JobModel {
 
@@ -48,22 +55,9 @@ namespace Antd.Scheduler {
 
         public bool isEnabled { get; set; }
 
-        public TriggerModel Trigger { get; set; }
+        public TriggerPeriod TriggerPeriod { get; set; }
 
-        public IDictionary<String, object> Results { get; set; }
-    }
-
-    public class TriggerModel {
-
-        public enum TriggerPeriod : byte {
-            IsOneTimeOnly = 0,
-            IsCron = 2,
-            //IsDaily = 100,
-            //IsWeekly = 101,
-            //IsMonthly = 102
-        }
-
-        public TriggerPeriod TriggerSetting { get; set; }
+        public string CronExpression { get; set; }
 
         public DateTime StartTime { get; set; }
 
@@ -71,6 +65,19 @@ namespace Antd.Scheduler {
 
         public int StartMinute { get; set; }
 
-        public string CronExpression { get; set; }
+        public IDictionary<String, object> Results { get; set; }
     }
+
+    //public class TriggerModel {
+
+    //    public TriggerPeriod TriggerSetting { get; set; }
+
+    //    public DateTime StartTime { get; set; }
+
+    //    public int StartHour { get; set; }
+
+    //    public int StartMinute { get; set; }
+
+    //    public string CronExpression { get; set; }
+    //}
 }

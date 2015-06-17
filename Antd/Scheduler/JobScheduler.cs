@@ -61,48 +61,39 @@ namespace Antd.Scheduler {
         }
 
         public static void LauchJob<T>(string guid) where T : IJob {
-            var _job = JobRepository.GetByGuid(guid);
-            IJobDetail job = DefineJob<T>(_job);
-            ITrigger trigger = DefineTrigger(_job.Trigger, _job.Alias);
-            __scheduler.ScheduleJob(job, trigger);
-        }
-
-        private static IJobDetail DefineJob<T>(JobModel _job) where T : IJob {
-            IJobDetail job = JobBuilder.Create<T>()
-                .WithIdentity(_job.Alias, Guid.NewGuid().ToString())
-                .UsingJobData("data", _job.Data)
-                .UsingJobData("jobID", _job.Guid)
+            var _task = JobRepository.GetByGuid(guid);
+            IJobDetail task = JobBuilder.Create<T>()
+                .WithIdentity(_task.Alias, Guid.NewGuid().ToString())
+                .UsingJobData("data", _task.Data)
+                .UsingJobData("jobID", _task.Guid)
                 .Build();
-            return job;
-        }
 
-        private static ITrigger DefineTrigger(TriggerModel _trigger, string _identity) {
             ITrigger trigger;
-            if (_trigger == null) {
-                ConsoleLogger.Warn("----- Scheduler :-(");
-                ConsoleLogger.Warn("Found a null value while defining a trigger");
-                ConsoleLogger.Warn("Trigger identity: {0}", _identity);
-                ConsoleLogger.Warn("Anyway, Antd can define a temporary trigger setting...");
-                ConsoleLogger.Warn("...and your task will be scheduled in a minute.");
-                trigger = DefineStaticTrigger(_identity);
-                ConsoleLogger.Warn("But this error should not happen!");
-                ConsoleLogger.Warn("----- Scheduler :-(");
-                return trigger;
-            }
-            switch (_trigger.TriggerSetting) {
-                case TriggerModel.TriggerPeriod.IsOneTimeOnly:
-                    trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
+            //if (_task.TriggerPeriod == null) {
+            //    ConsoleLogger.Warn("----- Scheduler :-(");
+            //    ConsoleLogger.Warn("Found a null value while defining a trigger");
+            //    ConsoleLogger.Warn("Trigger identity: {0}", _identity);
+            //    ConsoleLogger.Warn("Anyway, Antd can define a temporary trigger setting...");
+            //    ConsoleLogger.Warn("...and your task will be scheduled in a minute.");
+            //    trigger = DefineStaticTrigger(_identity);
+            //    ConsoleLogger.Warn("But this error should not happen!");
+            //    ConsoleLogger.Warn("----- Scheduler :-(");
+            //    return trigger;
+            //}
+            switch (_task.TriggerPeriod) {
+                case TriggerPeriod.IsOneTimeOnly:
+                    trigger = DefineOneTimeOnlyTrigger(_task.Alias, _task.StartTime);
                     break;
 
-                case TriggerModel.TriggerPeriod.IsCron:
-                    trigger = DefineCronTrigger(_trigger, _identity);
+                case TriggerPeriod.IsCron:
+                    trigger = DefineCronTrigger(_task.Alias, _task.StartTime, _task.CronExpression);
                     break;
 
                 default:
-                    trigger = DefineOneTimeOnlyTrigger(_trigger, _identity);
+                    trigger = DefineStaticTrigger(_task.Alias);
                     break;
             }
-            return trigger;
+            __scheduler.ScheduleJob(task, trigger);
         }
 
         private static ITrigger DefineStaticTrigger(string _identity) {
@@ -113,19 +104,19 @@ namespace Antd.Scheduler {
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineOneTimeOnlyTrigger(TriggerModel setting, string _identity) {
+        private static ITrigger DefineOneTimeOnlyTrigger(string _identity, DateTime _startTime) {
             ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(setting.StartTime)
+                .StartAt(_startTime)
                 .Build();
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineCronTrigger(TriggerModel setting, string _identity) {
+        private static ITrigger DefineCronTrigger(string _identity, DateTime _startTime, string _cronEx) {
             ITrigger monthlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(setting.StartTime)
-                .WithCronSchedule(setting.CronExpression)
+                .StartAt(_startTime)
+                .WithCronSchedule(_cronEx)
                 .Build();
             return monthlyTrigger;
         }
