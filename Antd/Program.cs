@@ -32,7 +32,6 @@ using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
-using System.IO;
 using System.Threading;
 
 namespace Antd {
