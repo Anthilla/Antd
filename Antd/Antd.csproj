@@ -197,7 +197,6 @@
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="SystemConfig\General.cs" />
-    <Compile Include="UnitFiles\ServiceUnitInfo.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Program.cs" />

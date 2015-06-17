@@ -32,6 +32,7 @@ using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
+using System.IO;
 using System.Threading;
 
 namespace Antd {
@@ -41,8 +42,27 @@ namespace Antd {
         private static void Main(string[] args) {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
-            ConsoleLogger.Warn("Your configuration file for Antd will be written in tmpfs!");
-            Command.Launch("mount", "-t tmpfs tmpfs /framework/antd/config/");
+
+            string applicationRoot;
+            string applicationConfigFolder;
+            string applicationConfigPath;
+            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+            ConsoleLogger.Info("1. application root: {0}", applicationRoot);
+            ConsoleLogger.Info("1. tmpfs mounted under application root");
+            Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
+
+            applicationConfigFolder = "config";
+            ConsoleLogger.Info("2. application config folder: {0}", applicationConfigFolder);
+            applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
+            ConsoleLogger.Info("3. application config path: {0}", applicationConfigPath);
+            if (!Directory.Exists(applicationConfigPath)) {
+                ConsoleLogger.Info("3a. application config path does not exist");
+                Directory.CreateDirectory(applicationConfigPath);
+                ConsoleLogger.Info("3b. application config path created");
+                ConsoleLogger.Info("Your configuration file for Antd will be written in tmpfs!");
+                ConsoleLogger.Info("3c. tmpfs mounted under application config path");
+                Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
+            }
 
             var uri = CoreParametersConfig.GetAntdUri();
             var stop = new ManualResetEvent(false);

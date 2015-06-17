@@ -56,11 +56,9 @@ namespace Antd.Common {
 
         public XmlWriter(string[] fileNames, string newFolder) {
             root = AppDomain.CurrentDomain.BaseDirectory;
-            ConsoleLogger.Info("application root: {0}", root);
             if (newFolder != null) {
                 folder = Path.Combine(root, newFolder); ;
                 System.IO.Directory.CreateDirectory(folder);
-                ConsoleLogger.Info("    application folder: {0}", folder);
             }
             else {
                 folder = root;

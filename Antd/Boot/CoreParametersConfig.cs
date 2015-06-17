@@ -32,7 +32,7 @@ using Antd.Common;
 namespace Antd.Boot {
 
     public class CoreParametersConfig {
-        private static string coreFileName = "config.xml";
+        private static string coreFileName = "antdConfig";
 
         private static string[] _files = new string[] {
                 coreFileName + "Current",
