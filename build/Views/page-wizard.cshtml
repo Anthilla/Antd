@@ -1,0 +1,347 @@
+﻿@*
+///-------------------------------------------------------------------------------------
+///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+///     All rights reserved.
+///
+///     Redistribution and use in source and binary forms, with or without
+///     modification, are permitted provided that the following conditions are met:
+///         * Redistributions of source code must retain the above copyright
+///           notice, this list of conditions and the following disclaimer.
+///         * Redistributions in binary form must reproduce the above copyright
+///           notice, this list of conditions and the following disclaimer in the
+///           documentation and/or other materials provided with the distribution.
+///         * Neither the name of the Anthilla S.r.l. nor the
+///           names of its contributors may be used to endorse or promote products
+///           derived from this software without specific prior written permission.
+///
+///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+///
+///     20141110
+///-------------------------------------------------------------------------------------*@
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{Layout = "_layout.cshtml";}
+
+@section MainContent
+{
+    <legend>On this table you will set the general antd parameters</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>General Information</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Hostname</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Domain</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>The default behavior of the DNS Resolver will ignore manually configured DNS servers for client queries and query root DNS servers directly. To use the manually configured DNS servers below for client queries, visit Services > DNS Resolver and enable DNS Query Forwarding after completing the wizard.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Primary DNS Server</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Secondary DNS Server</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Override DNS</label></td>
+                <td>
+                    <input type="checkbox" />Allow DNS servers to be overridden by DHCP/PPP on WAN</td>
+            </tr>
+        </tbody>
+    </table>
+    <legend>Enter the time, date and time zone</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>Time Server Information</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Time server hostname</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Timezone</label></td>
+                <td>
+                    <select>
+                        <option>Big list of options?</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>a</option>
+                        <option>b</option>
+                        <option>c</option>
+                    </select></td>
+            </tr>
+        </tbody>
+    </table>
+    <legend>Configure the Wide Area Network information</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>Configure WAN Interface</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Select type</label></td>
+                <td>
+                    <select>
+                        <option>Static</option>
+                        <option selected="selected">DHCP</option>
+                        <option>PPPoE</option>
+                        <option>PPTP</option>
+                    </select></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>General configuration</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>MAC Address</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>MTU</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>MSS</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>Static IP Configuration</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>IP Address</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Upstream Gateway</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>DHCP client configuration</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>DHCP Hostname</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>PPPoE configuration</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>PPPoE Username</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPPoE Password</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPPoE Service name</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPPoE Dial on demand</label></td>
+                <td>
+                    <input type="checkbox" />This option causes the interface to operate in dial-on-demand mode, allowing you to have a virtual full time connection. The interface is configured, but the actual connection of the link is delayed until qualifying outgoing traffic is detected.Enable Dial-On-Demand mode</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPPoE Idle timeout</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>PPTP configuration</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>PPTP  Username</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPTP  Password</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPTP  Local IP Address</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPTP  Remote IP Address</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPTP  Dial on demand</label></td>
+                <td>
+                    <input type="checkbox" />This option causes the interface to operate in dial-on-demand mode, allowing you to have a virtual full time connection. The interface is configured, but the actual connection of the link is delayed until qualifying outgoing traffic is detected.Enable Dial-On-Demand mode</td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PPTP  Idle timeout</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <legend>Configure the Local Area Network information</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>Configure LAN Interface</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>LAN IP Address</label></td>
+                <td>
+                    <input type="text" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Subnet Mask</label></td>
+                <td>
+                    <select>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>...</option>
+                        <option>31</option>
+                    </select></td>
+            </tr>
+        </tbody>
+    </table>
+    <legend>set the admin password, which is used to access the WebGUI and also SSH services if you wish to enable them</legend>
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <label>Set Admin WebGUI Password</label></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Admin Password</label></td>
+                <td>
+                    <input type="password" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Admin Password AGAIN</label></td>
+                <td>
+                    <input type="password" /></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('tr>td:first-child').css('width', '300px');
+        });
+    </script>
+}

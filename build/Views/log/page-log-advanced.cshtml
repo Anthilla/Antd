@@ -1,0 +1,162 @@
+﻿<legend>System Log</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Messages</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<br />
+<legend>Navigation Log</legend>
+<div class="tab-control" data-role="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#_ips_">IP Client</a></li>
+        <li><a href="#_sts_">Sites</a></li>
+        <li><a href="#_users_">Users</a></li>
+        <li><a href="#_topdwd_">Top 20 Downloads</a></li>
+        <li><a href="#_rltm_">Realtime Log</a></li>
+    </ul>
+
+    <div class="frames">
+        <div class="frame" id="_ips_">
+            <table class="table hovered">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Traffic</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="frame" id="_sts_">
+            <table class="table hovered">
+                <thead>
+                    <tr>
+                        <th>Sites</th>
+                        <th>Objects</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="frame" id="_users_">
+            <table class="table hovered">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Traffic</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="frame" id="_topdwd_">
+            <table class="table hovered">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>MB</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="frame" id="_rltm_"></div>
+    </div>
+</div>
+<br />
+<legend>Blacklist Log</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>Url</th>
+            <th>IP</th>
+            <th>FQDN</th>
+            <th>Group</th>
+            <th>Data</th>
+            <th>Hour</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<br />
+<legend>Archived Log</legend>
+<table class="table hovered">
+    <thead>
+        <tr>
+            <th>File List</th>
+            <th>MB</th>
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<br />
+<legend>Usage Notification</legend>
+<h5>Enable</h5>
+<select>
+    <option>Yes</option>
+    <option>No</option>
+</select>
+<br />
+<legend>DB usage</legend>
+<br />
+<legend>Remote Reporting</legend>
+<h5>Enable</h5>
+
+<table class="table hovered">
+    <tbody>
+        <tr>
+            <td>Enable</td>
+            <td>
+                <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Url</td>
+            <td>http://<input type="text" /></td>
+        </tr>
+        <tr>
+            <td>Owner email</td>
+            <td>
+                <input type="text" /></td>
+        </tr>
+        <tr>
+            <td>Keep ALive</td>
+            <td>
+                <input type="number" />
+                hours</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>&nbsp</td>
+            <td>
+                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="button" value="Save" /></td>
+        </tr>
+    </tfoot>
+</table>
+<br />
+}
+@section Scripts
+{
+    <script type="text/javascript">
+        $('select').windowed();
+    </script>
+}
