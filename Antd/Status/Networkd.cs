@@ -36,7 +36,7 @@ using System.IO;
 namespace Antd.Status {
 
     public class Networkd {
-        private static string coreFileName = "config.xml";
+        private static string coreFileName = "antdConfig";
 
         private static string[] _files = new string[] {
                 coreFileName + "Current",

@@ -42,6 +42,8 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
+            AntdBoot.SetCoreParameters();
+
             var uri = CoreParametersConfig.GetAntdUri();
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
@@ -57,7 +59,6 @@ namespace Antd {
                 ConsoleLogger.Log("    server url -> {0}", uri);
                 ConsoleLogger.Success("antd is running");
 
-                AntdBoot.SetCoreParameters();
                 AntdBoot.StartScheduler(true);
                 AntdBoot.StartDirectoryWatcher(true, new string[] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
