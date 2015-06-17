@@ -33,12 +33,13 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_network-pagebar")
+    @Html.Partial("_users-pagebar")
 }
 
 @section Dashboard {
-    @Html.Partial("page-network-manage", Model)
-    @Html.Partial("page-network-status", Model)
+    @Html.Partial("page-users-attributes", Model)
+    @Html.Partial("page-users-manage", Model)
+    @Html.Partial("page-users-status", Model)
 }
 
 @section Scripts {

@@ -41,7 +41,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                return View["page-mail", vmod];
+                return View["_page-mail", vmod];
             };
         }
     }
