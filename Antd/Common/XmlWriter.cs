@@ -58,8 +58,8 @@ namespace Antd.Common {
             string applicationConfigPath;
             applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
             ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
-            ConsoleLogger.Info("root info -> tmpfs mounted under application root");
-            Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
+            //ConsoleLogger.Info("root info -> tmpfs mounted under application root");
+            //Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
 
             applicationConfigFolder = "config";
             ConsoleLogger.Info("root info -> application config folder: {0}", applicationConfigFolder);
@@ -69,8 +69,8 @@ namespace Antd.Common {
                 ConsoleLogger.Info("root info -> application config path does not exist");
                 Directory.CreateDirectory(applicationConfigPath);
                 ConsoleLogger.Info("root info -> application config path created");
-                ConsoleLogger.Info("root info -> tmpfs mounted under application config path");
-                Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
+                //ConsoleLogger.Info("root info -> tmpfs mounted under application config path");
+                //Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
             }
 
             List<string> tmplist = new List<string>() { };
