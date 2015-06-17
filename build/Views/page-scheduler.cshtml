@@ -132,7 +132,7 @@
                     <input type="text" name="Command" style="width: 90%; height: 25px;">
                 </div>
             </div>
-@*            <div class="row">
+            @*            <div class="row">
                 <div class="span2">
                     <label>Start Time</label>
                 </div>
@@ -205,7 +205,7 @@
                     }
                 </div>
             </div>
-@*            <div class="row">
+            @*            <div class="row">
                 <div class="span2">
                     <label>End Time</label>
                 </div>
@@ -267,27 +267,30 @@
                             <p>@SetCommandLine(job.Data)</p>
                         </li>
                         <li>
-                            <label>Interval</label>
-                            <p>@job.Interval</p>
+                            <label>Period</label>
+                            @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                                <p>One-time-only</p>
+                            }
+                            @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                                <p>With Cron Expression: @job.CronExpression</p>
+                            }
                         </li>
                         <li>
                             <label>Start Time</label>
-                            <p>@job.Trigger.StartTime.ToString("HH:mm")</p>
-                        </li>
-                        <li>
-                            <label>Cron</label>
-                            <p>@job.Trigger.CronExpression</p>
+                            <p>@job.StartTime.ToString("HH:mm")</p>
                         </li>
                     </ul>
                     <hr />
-                    @if (job.isEnabled == true) {
-                        <p class="button bg-yellow" data-action="disable" style="color: black !important;">Status: Enabled</p>
+                    @if (job.isEnabled == true && job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                        <p class="button bg-yellow" data-action="disable" data-guid="@job.Guid" style="color: black !important;">Status: Enabled</p>
                     }
-                    @if (job.isEnabled == false) {
-                        <p class="button bg-yellow" data-action="enable" style="color: black !important;">Status: Disabled</p>
+                    @if (job.isEnabled == false && job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                        <p class="button bg-yellow" data-action="enable" data-guid="@job.Guid" style="color: black !important;">Status: Disabled</p>
                     }
-                    <p class="button bg-yellow" data-action="launch" style="color: black !important;">Launch Now</p>
-                    <p class="button bg-yellow" data-action="delete" style="color: black !important;">Delete</p>
+                    @if (job.Interval == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                        <p class="button bg-yellow" data-action="launch" data-guid="@job.Guid" style="color: black !important;">Launch Now</p>
+                    }
+                    <p class="button bg-yellow" data-action="delete" data-guid="@job.Guid" style="color: black !important;">Delete</p>
                 </div>
             </div>
         }
@@ -297,6 +300,70 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        $('p[data-action="disable"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/scheduler/disable/' + guid,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('p[data-action="enable"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/scheduler/enable/' + guid,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('p[data-action="launch"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/scheduler/launch/' + guid,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
+
+        $('p[data-action="delete"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/scheduler/delete/' + guid,
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    location.reload(true);
+                    return false;
+                }
+            });
+        });
 
         $('a[data-scrollto="#OneTimeOnly"]').click(function () {
             $('#Cron').hide();
