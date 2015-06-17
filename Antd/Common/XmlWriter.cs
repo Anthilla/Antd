@@ -55,18 +55,10 @@ namespace Antd.Common {
         public string[] path;
 
         public XmlWriter(string[] fileNames, string newFolder) {
-            root = AppDomain.CurrentDomain.BaseDirectory;
-            if (newFolder != null) {
-                folder = Path.Combine(root, newFolder); ;
-                System.IO.Directory.CreateDirectory(folder);
-            }
-            else {
-                folder = root;
-            }
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
-                var p = Path.Combine(folder, fileName + ".xml");
-                tmplist.Add(Path.Combine(folder, fileName + ".xml"));
+                var p = Path.Combine(newFolder, fileName + ".xml");
+                tmplist.Add(Path.Combine(newFolder, fileName + ".xml"));
             }
             path = tmplist.ToArray();
         }

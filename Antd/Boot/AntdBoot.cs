@@ -56,8 +56,8 @@ namespace Antd.Boot {
         //    ConsoleLogger.Success("    directories -> checked");
         //}
 
-        public static void SetCoreParameters() {
-            CoreParametersConfig.WriteDefaults();
+        public static void SetCoreParameters(string folder) {
+            new CoreParametersConfig(folder).WriteDefaults();
             ConsoleLogger.Success("    antd core parameters -> loaded");
         }
 

@@ -62,9 +62,10 @@ namespace Antd {
                 ConsoleLogger.Info("Your configuration file for Antd will be written in tmpfs!");
                 ConsoleLogger.Info("3c. tmpfs mounted under application config path");
                 Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
+                AntdBoot.SetCoreParameters(applicationConfigPath);
             }
 
-            var uri = CoreParametersConfig.GetAntdUri();
+            var uri = new CoreParametersConfig(applicationConfigPath).GetAntdUri();
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -79,7 +80,6 @@ namespace Antd {
                 ConsoleLogger.Log("    server url -> {0}", uri);
                 ConsoleLogger.Success("antd is running");
 
-                AntdBoot.SetCoreParameters();
                 AntdBoot.StartScheduler(true);
                 AntdBoot.StartDirectoryWatcher(true, new string[] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
