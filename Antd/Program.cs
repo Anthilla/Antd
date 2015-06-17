@@ -59,7 +59,6 @@ namespace Antd {
                 ConsoleLogger.Info("3a. application config path does not exist");
                 Directory.CreateDirectory(applicationConfigPath);
                 ConsoleLogger.Info("3b. application config path created");
-                ConsoleLogger.Info("Your configuration file for Antd will be written in tmpfs!");
                 ConsoleLogger.Info("3c. tmpfs mounted under application config path");
                 Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
                 AntdBoot.SetCoreParameters(applicationConfigPath);
