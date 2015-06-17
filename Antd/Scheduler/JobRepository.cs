@@ -94,39 +94,33 @@ namespace Antd.Scheduler {
             return task;
         }
 
+        public static void Enable(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            if (task.TriggerPeriod == TriggerPeriod.IsCron) {
+                task.isEnabled = true;
+                DeNSo.Session.New.Set(task);
+            }
+        }
+
+        public static void Disable(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            if (task.TriggerPeriod == TriggerPeriod.IsCron) {
+                task.isEnabled = false;
+                DeNSo.Session.New.Set(task);
+            }
+        }
+
+        public static void Delete(string guid) {
+            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
+            DeNSo.Session.New.Delete(task);
+        }
+
         public static void AddResult(string guid, string data) {
             JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             var p = task.Results as IDictionary<String, object>;
             p[DateTime.Now.ToString("yyyyMMddHHmmssfff")] = data;
             task.Results = p;
             DeNSo.Session.New.Set(task);
-        }
-
-        public static void Enable(string guid) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            task.isEnabled = true;
-            DeNSo.Session.New.Set(task);
-        }
-
-        public static void Disable(string guid) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            task.isEnabled = false;
-            DeNSo.Session.New.Set(task);
-        }
-
-        public static void Edit(string guid, string alias, string data, int interval) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            task._Id = Guid.NewGuid().ToString();
-            task.Guid = guid;
-            task.Alias = alias;
-            task.Data = data;
-            task.Interval = interval;
-            DeNSo.Session.New.Set(task);
-        }
-
-        public static void Delete(string guid) {
-            JobModel task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            DeNSo.Session.New.Delete(task);
         }
     }
 }

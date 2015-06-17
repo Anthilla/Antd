@@ -64,7 +64,7 @@ namespace Antd {
                 return Response.AsRedirect("/scheduler");
             };
 
-            Get["/enalbe/{guid}"] = x => {
+            Get["/enable/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Enable(guid);
                 return Response.AsJson(true);
@@ -73,6 +73,18 @@ namespace Antd {
             Get["/disable/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Disable(guid);
+                return Response.AsJson(true);
+            };
+
+            Get["/launch/{guid}"] = x => {
+                string guid = x.guid;
+                Job.ReSchedule(guid);
+                return Response.AsJson(true);
+            };
+
+            Get["/delete/{guid}"] = x => {
+                string guid = x.guid;
+                JobRepository.Delete(guid);
                 return Response.AsJson(true);
             };
         }

@@ -57,5 +57,11 @@ namespace Antd.Scheduler {
             var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
             JobScheduler.LauchJob<JobList.CommandJob>(guid);
         }
+
+        public static void ReSchedule(string guid) {
+            var task = JobRepository.GetByGuid(guid);
+            var job = JobRepository.SetTaskOneTimeOnly(guid, task.Alias, task.Data);
+            JobScheduler.LauchJob<JobList.CommandJob>(guid);
+        }
     }
 }

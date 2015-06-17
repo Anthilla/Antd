@@ -34,10 +34,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Antd.Scheduler {
     public enum TriggerPeriod : byte {
         IsOneTimeOnly = 0,
-        IsCron = 2,
-        //IsDaily = 100,
-        //IsWeekly = 101,
-        //IsMonthly = 102
+        IsCron = 1
     }
 
     public class JobModel {
@@ -50,8 +47,6 @@ namespace Antd.Scheduler {
         public string Alias { get; set; }
 
         public string Data { get; set; }
-
-        public int Interval { get; set; }
 
         public bool isEnabled { get; set; }
 
@@ -67,17 +62,4 @@ namespace Antd.Scheduler {
 
         public IDictionary<String, object> Results { get; set; }
     }
-
-    //public class TriggerModel {
-
-    //    public TriggerPeriod TriggerSetting { get; set; }
-
-    //    public DateTime StartTime { get; set; }
-
-    //    public int StartHour { get; set; }
-
-    //    public int StartMinute { get; set; }
-
-    //    public string CronExpression { get; set; }
-    //}
 }
