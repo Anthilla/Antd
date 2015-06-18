@@ -37,16 +37,12 @@
 }
 
 @section Dashboard {
-    @Html.Partial("page-setup-manage")
     @Html.Partial("page-setup-advanced")
     @Html.Partial("page-setup-misc")
-    @Html.Partial("page-setup-cluster")
 }
 
 @section Scripts {
     <script type="text/javascript">
-        $('select').windowed();
-
         $(document).ready(function () {
             $('tr>td').not('tr>td:first-child').css('width', '25%');
             $('tr>td:first-child').css('width', '200px');
