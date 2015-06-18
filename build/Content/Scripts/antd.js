@@ -1,3 +1,74 @@
+////////////////cookiecookiecookie///////////////////////////////////
+$('#LockInput').click(function () {
+    var value = cookie.get('_input');
+    if (value == 'disabled') {
+        EnableInputs();
+        var d = cookie.get('_input');
+        ChangeLockIcon(d);
+    }
+    else {
+        DisableInputs();
+        var e = cookie.get('_input');
+        ChangeLockIcon(e);
+    }
+    return false;
+});
+
+var cookie = Cookies.noConflict();
+
+$(document).ready(function () {
+    var value = cookie.get('_input');
+    if (value == undefined) {
+        cookie.set('_input', 'enabled', { expires: 7 });
+    }
+
+    if (value == 'disabled') {
+        ChangeLockIcon(value);
+        DisableInputs();
+    }
+    else {
+        ChangeLockIcon(value);
+        EnableInputs();
+    }
+});
+
+function ChangeLockIcon(value) {
+    var icon = $('#LockInput').find('i');
+    if (value == 'disabled') {
+        icon.removeClass('icon-unlocked');
+        icon.addClass('icon-locked');
+    }
+    else {
+        icon.removeClass('icon-locked');
+        icon.addClass('icon-unlocked');
+    }
+}
+
+function EnableInputs() {
+    $('input').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).prop('disabled', false);
+    });
+    $('.button').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).removeClass('disabled');
+    });
+    cookie.set('_input', 'enabled', { expires: 7 });
+}
+
+function DisableInputs() {
+    $('input').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).prop('disabled', true);
+    });
+    $('.button').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).addClass('disabled');
+    });
+    cookie.set('_input', 'disabled', { expires: 7 });
+}
+///////////////////////////////////////////////////////////////////
+
 $('p[id^=Update]').click(function () {
     var self = $(this);
     var id = self.attr('id');
