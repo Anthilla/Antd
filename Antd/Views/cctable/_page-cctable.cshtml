@@ -101,14 +101,6 @@
                 </div>
                 <div class="row">
                     <div class="span2">
-                        <label>Input Label</label>
-                    </div>
-                    <div class="span7">
-                        <input type="text" name="InputLabel" style="width: 90%; height: 25px;" value="" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span2">
                         <label>Notes</label>
                     </div>
                     <div class="span7">
@@ -133,6 +125,20 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        $('input[data-create-input-layout]').click(function () {
+            var type = $(this).attr('data-create-input-layout');
+            var input = $('#InputLayoutText');
+            var a = input.val();
+            input.val('');
+            if (a == '') {
+                input.val(type);
+            }
+            else {
+                input.val(a + ', ' + type);
+            }
+        });
+
         $('input[data-cctable-role="add-row"]').click(function () {
             var guid = $(this).attr('data-table-guid');
             $('form[data-table-form="' + guid + '"]').toggle();
