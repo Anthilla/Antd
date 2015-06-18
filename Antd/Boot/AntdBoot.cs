@@ -33,6 +33,7 @@ using Antd.Status;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
+using System;
 using System.IO;
 
 namespace Antd.Boot {
@@ -101,15 +102,24 @@ namespace Antd.Boot {
 
         public static void StartDatabase() {
             string[] databases;
-            //var root = CoreParametersConfig.GetAntdDb();
-            var root = "/Data/tmp/antd.database";
-            Directory.CreateDirectory(root);
 
-            ConsoleLogger.Warn("Your Database will be written in tmpfs!");
-            Command.Launch("mkdir", root);
-            Command.Launch("mount", "-t tmpfs tmpfs " + root);
+            string applicationRoot;
+            string applicationDatabaseFolder;
+            string applicationDatabasePath;
+            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+            ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
 
-            databases = new[] { root };
+            applicationDatabaseFolder = "database";
+            ConsoleLogger.Info("root info -> application config folder: {0}", applicationDatabaseFolder);
+            applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder);
+            ConsoleLogger.Info("root info -> application config path: {0}", applicationDatabasePath);
+            if (!Directory.Exists(applicationDatabasePath)) {
+                ConsoleLogger.Info("root info -> application config path does not exist");
+                Directory.CreateDirectory(applicationDatabasePath);
+                ConsoleLogger.Info("root info -> application config path created");
+            }
+
+            databases = new[] { applicationDatabasePath };
             DatabaseBoot.Start(databases, true);
             ConsoleLogger.Success("    database -> loaded");
         }
