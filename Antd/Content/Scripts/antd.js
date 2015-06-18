@@ -46,14 +46,24 @@ function ChangeLockIcon(value) {
 
 function EnableInputs() {
     $('input').each(function () {
-        $(this).prop('disabled', false);
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).prop('disabled', false);
+    });
+    $('.button').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).removeClass('disabled');
     });
     cookie.set('_input', 'enabled', { expires: 7 });
 }
 
 function DisableInputs() {
     $('input').each(function () {
-        $(this).prop('disabled', true);
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).prop('disabled', true);
+    });
+    $('.button').each(function () {
+        $(this).fadeOut(300).fadeIn(150);
+        $(this).delay(455).addClass('disabled');
     });
     cookie.set('_input', 'disabled', { expires: 7 });
 }

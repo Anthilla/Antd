@@ -1312,7 +1312,8 @@ table input[type="text"], table input[type="password"] {
 }
 
 /*disable stuff*/
-input:disabled {
+input:disabled,
+.button.disabled {
     background-color: #eaeaea !important;
     color: #bebebe !important;
     cursor: not-allowed !important;
