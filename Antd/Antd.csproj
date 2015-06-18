@@ -150,6 +150,8 @@
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
+    <Compile Include="CCTable\CCTableModel.cs" />
+    <Compile Include="CCTable\CCTableRepository.cs" />
     <Compile Include="Command\CommandDB.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
