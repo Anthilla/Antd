@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd.Common {
@@ -74,6 +75,35 @@ namespace Antd.Common {
             else {
                 return String.Empty;
             }
+        }
+
+        public static string UppercaseAllFirstLetters(this String str) {
+            var arr = str.Split(' ');
+            var newList = new List<string>() { };
+            foreach (var a in arr) {
+                newList.Add(a.UppercaseFirstLetter());
+            }
+            return string.Join(" ", newList.ToArray());
+        }
+
+        public static string UppercaseAllFirstLetters(this String str, char div) {
+            var arr = str.Split(' ');
+            var newList = new List<string>() { };
+            foreach (var a in arr) {
+                newList.Add(a.UppercaseFirstLetter());
+            }
+            return string.Join(div.ToString(), newList.ToArray());
+        }
+
+        public static string UppercaseFirstLetter(this String str) {
+            if (string.IsNullOrEmpty(str)) {
+                return string.Empty;
+            }
+            return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        public static string RemoveWhiteSpace(this String str) {
+            return str.Replace(" ", "");
         }
     }
 }

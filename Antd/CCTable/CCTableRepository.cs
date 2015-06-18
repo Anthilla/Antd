@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using Antd.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,8 +74,8 @@ namespace Antd.CCTable {
             model.InputType = inputType;
             model.InputLabel = inputLabel;
             model.Notes = notes;
-            model.HtmlInputID = "New";
-            model.HtmlSumbitID = "Update";
+            model.HtmlInputID = "New" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 
