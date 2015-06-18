@@ -44,6 +44,10 @@ namespace Antd {
                 return Response.AsText("Hello World!");
             };
 
+            Get["/page"] = x => {
+                return View["page-test"];
+            };
+            
             Get["/acl"] = x => {
                 var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
