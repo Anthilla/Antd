@@ -31,8 +31,6 @@ using System;
 using Antd.Common;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.CCTable {
     public class CCTableRepository {
@@ -42,7 +40,6 @@ namespace Antd.CCTable {
             foreach (var item in list) {
                 item.Content = GetRows(item.Guid);
             }
-            //todo map content, getrowbyguid -> to  list
             return list;
         }
 
@@ -57,18 +54,18 @@ namespace Antd.CCTable {
             return list;
         }
 
-        public static void CreateTable(string guid, string alias) {
+        public static void CreateTable(string alias) {
             var model = new CCTableModel();
             model._Id = Guid.NewGuid().ToString();
-            model.Guid = guid;
-            model.Alias = alias;
+            model.Guid = Guid.NewGuid().ToString();
+            model.Alias = alias.UppercaseAllFirstLetters();
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRow(string guid, string tableGuid, string label, string inputType, string inputLabel, string notes) {
+        public static void CreateRow(string tableGuid, string label, string inputType, string inputLabel, string notes) {
             var model = new CCTableRowModel();
             model._Id = Guid.NewGuid().ToString();
-            model.Guid = guid;
+            model.Guid = Guid.NewGuid().ToString();
             model.TableGuid = tableGuid;
             model.Label = label;
             model.InputType = inputType;

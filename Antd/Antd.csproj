@@ -165,6 +165,7 @@
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
+    <Compile Include="Modules\CCTableModule.cs" />
     <Compile Include="Modules\HypervisorModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\NetworkModule.cs" />
@@ -253,6 +254,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\apps\_apps-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\cctable\_cctable-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\cctable\_page-cctable.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\firewall\page-firewall-nat.cshtml">
