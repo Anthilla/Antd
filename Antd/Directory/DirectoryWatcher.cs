@@ -41,9 +41,12 @@ namespace Antd {
         }
 
         public void Watch() {
-            FileSystemWatcher watcher = new FileSystemWatcher(path);
-            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-            watcher.IncludeSubdirectories = true;
+            FileSystemWatcher watcher = new FileSystemWatcher(path) {
+                NotifyFilter =
+                    NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName |
+                    NotifyFilters.DirectoryName,
+                IncludeSubdirectories = true
+            };
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Deleted += new FileSystemEventHandler(OnChanged);

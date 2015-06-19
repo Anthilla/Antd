@@ -57,11 +57,12 @@ namespace Antd {
             string[] cellDivider = new String[] { ": " };
             string[] rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
             foreach (string row in rowList) {
-                if (row != null && row != "") {
+                if (!string.IsNullOrEmpty(row)) {
                     string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    MeminfoModel meminfo = new MeminfoModel();
-                    meminfo.key = cellList[0];
-                    meminfo.value = cellList[1];
+                    MeminfoModel meminfo = new MeminfoModel {
+                        key = cellList[0],
+                        value = cellList[1]
+                    };
                     meminfoList.Add(meminfo);
                 }
             }

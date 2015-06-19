@@ -43,9 +43,12 @@ namespace Antd {
                 string row = (from i in find.outputTable
                               where i.Contains("eth")
                               select i).FirstOrDefault();
-                CommandModel cat = Command.Launch("cat", row.Replace("\"", ""), dir);
-                return cat.outputTable.FirstOrDefault();
+                if (row != null) {
+                    CommandModel cat = Command.Launch("cat", row.Replace("\"", ""), dir);
+                    return cat.outputTable.FirstOrDefault();
+                }
             }
+            return null;
         }
     }
 }

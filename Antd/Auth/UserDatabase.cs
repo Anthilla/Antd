@@ -45,7 +45,7 @@ namespace Antd.Auth {
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
             var Users = USERS();
-            var UserRecord = Users.Where(u => u.Item3 == identifier).FirstOrDefault();
+            var UserRecord = Users.FirstOrDefault(u => u.Item3 == identifier);
             return UserRecord == null
                        ? null
                        : new UserIdentity { UserName = UserRecord.Item1 };
@@ -53,7 +53,7 @@ namespace Antd.Auth {
 
         public static Guid? ValidateUser(string username, string password) {
             var Users = USERS();
-            var UserRecord = Users.Where(u => u.Item1 == username && u.Item2 == password).FirstOrDefault();
+            var UserRecord = Users.FirstOrDefault(u => u.Item1 == username && u.Item2 == password);
             if (UserRecord == null) {
                 return null;
             }

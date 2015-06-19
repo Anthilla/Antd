@@ -37,15 +37,13 @@ namespace Antd {
             string hostnameContent = "";
             hostnameContent = FileSystem.ReadFile("/antd/network/hostname");
 
-            var network = new NetworkModel();
-            network.hostname = hostnameContent;
+            var network = new NetworkModel {hostname = hostnameContent};
 
             return network;
         }
 
         public static NetworkModel GetModel(string hostname) {
-            var network = new NetworkModel();
-            network.hostname = hostname;
+            var network = new NetworkModel {hostname = hostname};
             FileSystem.WriteFile("/antd/network/hostname", network.hostname);
             return network;
         }

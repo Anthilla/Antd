@@ -55,22 +55,24 @@ namespace Antd.CCTable {
         }
 
         public static void CreateTable(string alias) {
-            var model = new CCTableModel();
-            model._Id = Guid.NewGuid().ToString();
-            model.Guid = Guid.NewGuid().ToString();
-            model.Alias = alias.UppercaseAllFirstLetters();
+            var model = new CCTableModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Alias = alias.UppercaseAllFirstLetters()
+            };
             DeNSo.Session.New.Set(model);
         }
 
         public static void CreateRow(string tableGuid, string label, string inputType, string inputLabel, string notes) {
-            var model = new CCTableRowModel();
-            model._Id = Guid.NewGuid().ToString();
-            model.Guid = Guid.NewGuid().ToString();
-            model.TableGuid = tableGuid;
-            model.Label = label;
-            model.InputType = inputType;
-            model.InputLabel = inputLabel;
-            model.Notes = notes;
+            var model = new CCTableRowModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                TableGuid = tableGuid,
+                Label = label,
+                InputType = inputType,
+                InputLabel = inputLabel,
+                Notes = notes
+            };
             model.HtmlInputID = "New" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);

@@ -37,22 +37,12 @@ namespace Antd.Common {
 
         public static string GetFirstString(this String str) {
             var arr = str.Split(' ');
-            if (arr.Length > 0) {
-                return arr[0].ToString();
-            }
-            else {
-                return String.Empty;
-            }
+            return arr.Length > 0 ? arr[0] : String.Empty;
         }
 
         public static string GetFirstString(this String str, char div) {
             var arr = str.Split(div);
-            if (arr.Length > 0) {
-                return arr[0].ToString();
-            }
-            else {
-                return String.Empty;
-            }
+            return arr.Length > 0 ? arr[0] : String.Empty;
         }
 
         public static string GetAllStringsButFirst(this String str) {
@@ -80,18 +70,14 @@ namespace Antd.Common {
         public static string UppercaseAllFirstLetters(this String str) {
             var arr = str.Split(' ');
             var newList = new List<string>() { };
-            foreach (var a in arr) {
-                newList.Add(a.UppercaseFirstLetter());
-            }
+            newList.AddRange(arr.Select(a => a.UppercaseFirstLetter()));
             return string.Join(" ", newList.ToArray());
         }
 
         public static string UppercaseAllFirstLetters(this String str, char div) {
             var arr = str.Split(' ');
             var newList = new List<string>() { };
-            foreach (var a in arr) {
-                newList.Add(a.UppercaseFirstLetter());
-            }
+            newList.AddRange(arr.Select(a => a.UppercaseFirstLetter()));
             return string.Join(div.ToString(), newList.ToArray());
         }
 

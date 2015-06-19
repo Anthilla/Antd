@@ -101,17 +101,13 @@ namespace Antd.Boot {
         }
 
         public static void StartDatabase() {
-            string[] databases;
-
-            string applicationRoot;
-            string applicationDatabaseFolder;
-            string applicationDatabasePath;
-            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+            var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
             ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
 
-            applicationDatabaseFolder = "database";
+            var applicationDatabaseFolder = "database";
             ConsoleLogger.Info("root info -> application config folder: {0}", applicationDatabaseFolder);
-            applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder);
+
+            var applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder);
             ConsoleLogger.Info("root info -> application config path: {0}", applicationDatabasePath);
             if (!Directory.Exists(applicationDatabasePath)) {
                 ConsoleLogger.Info("root info -> application config path does not exist");
@@ -119,7 +115,7 @@ namespace Antd.Boot {
                 ConsoleLogger.Info("root info -> application config path created");
             }
 
-            databases = new[] { applicationDatabasePath };
+            var databases = new[] { applicationDatabasePath };
             DatabaseBoot.Start(databases, true);
             ConsoleLogger.Success("    database -> loaded");
         }

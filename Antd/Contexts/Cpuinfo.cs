@@ -57,7 +57,7 @@ namespace Antd {
             string[] cellDivider = new String[] { ": " };
             string[] rowList = cpuinfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
             foreach (string row in rowList) {
-                if (row != null && row != "") {
+                if (!string.IsNullOrEmpty(row)) {
                     string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
                     CpuinfoModel cpuinfo = new CpuinfoModel();
                     cpuinfo.key = cellList[0];

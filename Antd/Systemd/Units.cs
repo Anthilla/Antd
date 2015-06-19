@@ -39,10 +39,13 @@ namespace Antd.Systemd {
         private static List<UnitModel> GetAllUnits() {
             CommandModel command = Command.Launch("systemctl", "--no-pager list-unit-files");
             var output = JsonConvert.SerializeObject(command.output);
-            List<UnitModel> units = MapUnitJson(output);
-            units.RemoveAt(units.ToArray().Length - 1);
-            units.RemoveAt(0);
-            return units;
+            if (output != null) {
+                List<UnitModel> units = MapUnitJson(output);
+                units.RemoveAt(units.ToArray().Length - 1);
+                if (units.Any()) units.RemoveAt(0);
+                return units;
+            }
+            return null;
         }
 
         public static List<UnitModel> All { get { return GetAllUnits(); } }
@@ -55,7 +58,7 @@ namespace Antd.Systemd {
             unitJsonRow = unitJson.Split(rowDivider, StringSplitOptions.None).ToArray();
             List<UnitModel> units = new List<UnitModel>() { };
             foreach (string rowJson in unitJsonRow) {
-                if (rowJson != null && rowJson != "") {
+                if (!string.IsNullOrEmpty(rowJson)) {
                     string[] unitJsonCell = new string[] { };
                     string[] cellDivider = new String[] { " " };
                     unitJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
@@ -70,7 +73,7 @@ namespace Antd.Systemd {
             string[] unitJsonCell = _unitJsonCell;
             UnitModel unit = new UnitModel();
             unit.name = unitJsonCell[0];
-            if (unitJsonCell[1] != null) {
+            if (unitJsonCell.Length > 1 && unitJsonCell[1] != null) {
                 unit.status = unitJsonCell[1];
             }
             return unit;
