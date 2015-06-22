@@ -65,7 +65,7 @@
                                 <label>@row.Label</label>
                             </td>
                             <td style="width: 450px !important">
-                                <input id="@row.HtmlInputID" type="@row.InputType" style="width: 100% !important" />
+                                <input id="@row.HtmlInputID" type="@row.InputType" value="@row.InputCommand" style="width: 100% !important" />
                                 <p>@row.InputLabel</p>
                             </td>
                             <td style="width: 250px !important">
@@ -108,18 +108,27 @@
                         <textarea name="Notes" style="width: 90%; min-height: 125px;" class="bg-anthilla-gray border-anthilla-green fg-white"></textarea>
                     </div>
                 </div>
-                <div id="CommandForm" style="display: none;">
-                    <hr class="bg-anthilla-gray" style="height: 1px !important;">
-                    <div class="row">
-                        <div class="span2">
-                            <label>Command</label>
-                        </div>
-                        <div class="span7">
-                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
-                        </div>
-                        <div class="span2">
-                            <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
-                        </div>
+                <hr class="bg-anthilla-gray" style="height: 1px !important;">
+                <div class="row">
+                    <div class="span2">
+                        <label>Command -> output</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                    </div>
+                    <div class="span2">
+                        <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span2">
+                        <label>Command -> input</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
+                    </div>
+                    <div class="span2">
+                        <p>Write the command to get the value</p>
                     </div>
                 </div>
                 <hr class="bg-anthilla-gray" style="height: 1px !important;">
@@ -129,8 +138,6 @@
                     </div>
                     <div class="span7">
                         <input class="bg-anthilla-green" type="submit" value="Create Row">
-                        <input class="bg-green" id="ShowCommandForm" type="button" value="Add Command">
-                        <input class="bg-orange" id="HideCommandForm" type="button" value="Remove Command" style="display: none !important;">
                     </div>
                 </div>
             </form>
@@ -163,21 +170,6 @@
             return str;
         }
 
-        $(document).ready(function () {
-            $('#HideCommandForm').hide();
-        });
-
-        $('#ShowCommandForm').click(function () {
-            $('#CommandForm').show();
-            $('#ShowCommandForm').hide();
-            $('#HideCommandForm').show();
-        });
-
-        $('#HideCommandForm').click(function () {
-            $('#CommandForm').hide();
-            $('#HideCommandForm').hide();
-            $('#ShowCommandForm').show();
-        });
 
         $('input[data-create-input-layout]').click(function () {
             var type = $(this).attr('data-create-input-layout');

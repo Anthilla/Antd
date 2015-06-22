@@ -53,6 +53,10 @@ namespace Antd.CCTable {
 
         public string InputLabel { get; set; }
 
+        public string InputCommand { get; set; }
+
+        public string ValueResult { get; set; }
+
         public string Notes { get; set; }
 
         public string HtmlInputID { get; set; }

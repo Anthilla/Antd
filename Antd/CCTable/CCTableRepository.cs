@@ -51,6 +51,13 @@ namespace Antd.CCTable {
 
         public static List<CCTableRowModel> GetRows(string guid) {
             var list = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.TableGuid == guid).ToList();
+            foreach (var i in list) {
+                var f = i.InputCommand.GetFirstString();
+                var a = i.InputCommand.GetAllStringsButFirst();
+                var b = "";
+                var c = a != null || a != "" ? a : b;
+                i.ValueResult = Command.Launch(f, c).output;
+            }
             return list;
         }
 
@@ -63,7 +70,7 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRow(string tableGuid, string label, string inputType, string inputLabel, string notes) {
+        public static void CreateRow(string tableGuid, string label, string inputType, string inputLabel, string inputCommand, string notes) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -71,6 +78,7 @@ namespace Antd.CCTable {
                 Label = label,
                 InputType = inputType,
                 InputLabel = inputLabel,
+                InputCommand = inputCommand,
                 Notes = notes
             };
             model.HtmlInputID = "New" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();

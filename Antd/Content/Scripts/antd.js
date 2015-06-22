@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     $('input[type="text"]').not('input[name="Command"], input[name="CommandLayout"]').dblclick(function () {
-        AddInputIDReference($(this));
+        AddInputIDReference($(this), main, layout);
     });
 });
 
@@ -49,7 +49,7 @@ function CopyInputLayout(main, layout) {
     }
 }
 
-function AddInputIDReference(self) {
+function AddInputIDReference(self, main, layout) {
     var parameter = self;
     var label = parameter.attr('id');
     var value = parameter.val();
