@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.CCTable;
+using Antd.CommandManagement;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -61,6 +62,12 @@ namespace Antd {
                 string inputValue = (string)this.Request.Form.InputLabel;
                 string notes = (string)this.Request.Form.Notes;
                 CCTableRepository.CreateRow(table, label, inputType, inputValue, notes);
+
+                string command = this.Request.Form.CCTableCommand;
+                string inputid = "Update" + label;
+                string inputlocation = "CCTable" + this.Request.Form.TableName;
+                CommandDB.Create(inputid, command, command, inputlocation, notes);
+
                 return Response.AsRedirect("/cctable");
             };
 

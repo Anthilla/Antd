@@ -85,6 +85,7 @@
                     </div>
                     <div class="span7">
                         <input type="hidden" name="TableGuid" value="@table.Guid">
+                        <input type="hidden" name="TableName" value="@table.Alias">
                         <input type="text" name="Label" style="width: 90%; height: 25px;">
                     </div>
                 </div>
@@ -108,23 +109,28 @@
                     </div>
                 </div>
                 <div id="CommandForm" style="display: none;">
+                    <hr class="bg-anthilla-gray" style="height: 1px !important;">
                     <div class="row">
                         <div class="span2">
                             <label>Command</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="Command" style="width: 90%; height: 25px;">
+                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                        </div>
+                        <div class="span2">
+                            <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
                         </div>
                     </div>
                 </div>
+                <hr class="bg-anthilla-gray" style="height: 1px !important;">
                 <div class="row">
                     <div class="span2">
                         <label>&nbsp</label>
                     </div>
                     <div class="span7">
                         <input class="bg-anthilla-green" type="submit" value="Create Row">
-                        <input class="bg-anthilla-green" id="ShowCommandForm" type="button" value="Add Command">
-                        <input class="bg-yellow" id="HideCommandForm" type="button" value="Remove Command" style="display: none !important;">
+                        <input class="bg-green" id="ShowCommandForm" type="button" value="Add Command">
+                        <input class="bg-orange" id="HideCommandForm" type="button" value="Remove Command" style="display: none !important;">
                     </div>
                 </div>
             </form>
@@ -138,16 +144,39 @@
 @section Scripts {
     <script type="text/javascript">
 
+        $('#AddInputReference').click(function () {
+            var val = $('input[name="Label"]').val();
+            val = UppercaseAllFirstLetters(val);
+            val = val.replace(/ /g, '');
+            if (val.length > 0) {
+                var input = $('input[name="CCTableCommand"]');
+                var tmpVal = input.val();
+                input.val('');
+                input.val(tmpVal + ' {New' + val + '}');
+            }
+        });
+
+        function UppercaseAllFirstLetters(str) {
+            str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+                return letter.toUpperCase();
+            });
+            return str;
+        }
+
+        $(document).ready(function () {
+            $('#HideCommandForm').hide();
+        });
+
         $('#ShowCommandForm').click(function () {
+            $('#CommandForm').show();
             $('#ShowCommandForm').hide();
             $('#HideCommandForm').show();
-            $('#CommandForm').show();
         });
 
         $('#HideCommandForm').click(function () {
+            $('#CommandForm').hide();
             $('#HideCommandForm').hide();
             $('#ShowCommandForm').show();
-            $('#CommandForm').hide();
         });
 
         $('input[data-create-input-layout]').click(function () {
