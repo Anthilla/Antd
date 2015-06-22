@@ -65,7 +65,7 @@
                                 <label>@row.Label</label>
                             </td>
                             <td style="width: 450px !important">
-                                <input id="@row.HtmlInputID" type="@row.InputType" value="@row.InputCommand" style="width: 100% !important" />
+                                <input id="@row.HtmlInputID" type="@row.InputType" value="@row.ValueResult" style="width: 100% !important" />
                                 <p>@row.InputLabel</p>
                             </td>
                             <td style="width: 250px !important">
@@ -111,7 +111,7 @@
                 <hr class="bg-anthilla-gray" style="height: 1px !important;">
                 <div class="row">
                     <div class="span2">
-                        <label>Command -> output</label>
+                        <label>Command -> input</label>
                     </div>
                     <div class="span7">
                         <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
@@ -122,7 +122,7 @@
                 </div>
                 <div class="row">
                     <div class="span2">
-                        <label>Command -> input</label>
+                        <label>Command -> return</label>
                     </div>
                     <div class="span7">
                         <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
