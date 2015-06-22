@@ -64,6 +64,15 @@ namespace Antd {
                 return Response.AsRedirect("/scheduler");
             };
 
+            //Post["/other"] = x => {
+            //    string _alias = (string)this.Request.Form.Alias;
+            //    string _command = (string)this.Request.Form.Command;
+            //    string _cron = (string)this.Request.Form.CronResult;
+            //    Job.Schedule(_alias, _command, _cron);
+            //    dynamic model = new ExpandoObject();
+            //    return Response.AsRedirect("/scheduler");
+            //};
+
             Get["/enable/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Enable(guid);

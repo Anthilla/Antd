@@ -84,151 +84,25 @@ namespace Antd.Scheduler {
                 .UsingJobData("data", _task.Data)
                 .UsingJobData("jobID", _task.Guid)
                 .Build();
-
             ITrigger trigger;
-            //if (_task.TriggerPeriod == null) {
-            //    ConsoleLogger.Warn("----- Scheduler :-(");
-            //    ConsoleLogger.Warn("Found a null value while defining a trigger");
-            //    ConsoleLogger.Warn("Trigger identity: {0}", _identity);
-            //    ConsoleLogger.Warn("Anyway, Antd can define a temporary trigger setting...");
-            //    ConsoleLogger.Warn("...and your task will be scheduled in a minute.");
-            //    trigger = DefineStaticTrigger(_identity);
-            //    ConsoleLogger.Warn("But this error should not happen!");
-            //    ConsoleLogger.Warn("----- Scheduler :-(");
-            //    return trigger;
-            //}
             switch (_task.TriggerPeriod) {
                 case TriggerPeriod.IsOneTimeOnly:
                     trigger = DefineOneTimeOnlyTrigger(_task.Alias, _task.StartTime);
                     break;
-
                 case TriggerPeriod.IsCron:
                     trigger = DefineCronTrigger(_task.Alias, _task.StartTime, _task.CronExpression);
                     break;
-
+                case TriggerPeriod.WithInterval:
+                    trigger = DefineIntervalTrigger(_task.Alias, _task.StartTime, _task.IntervalType, _task.IntervalSpan, _task.Count);
+                    break;
                 default:
-                    trigger = DefineStaticTrigger(_task.Alias);
+                    trigger = DefineDefaultTrigger(_task.Alias);
                     break;
             }
             __scheduler.ScheduleJob(task, trigger);
         }
 
-        //public enum Cose : byte {
-        //    a = DailyTimeIntervalScheduleBuilder.AllDaysOfTheWeek,
-        //    b = DailyTimeIntervalScheduleBuilder.MondayThroughFriday,
-        //    c = DailyTimeIntervalScheduleBuilder.SaturdayAndSunday,
-        //}
-
-        private static ITrigger DefineTrigger(string _identity) {
-            var cron = "";
-            ITrigger trigger;
-
-            var _trigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString());
-            ////
-            //Define the start
-            int a = 2;
-            switch (a) {
-                case 0:
-                    //Start now
-                    _trigger.StartNow();
-                    break;
-                case 1:
-                    //Start with a delay (minutes)
-                    _trigger.StartAt(DateTime.Now.AddMinutes(5));
-                    break;
-                default:
-                    _trigger.StartNow();
-                    break;
-            }
-
-            //Define the priority
-            _trigger.WithPriority(3);
-
-            //Define the interval (simple)
-            int b = 2;
-            switch (b) {
-                case 0:
-                    //Repeat hourly
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForever(1));
-                    break;
-                case 1:
-                    //Repeat hourly, with a count
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForTotalCount(5, 1));
-                    break;
-                case 2:
-                    //Repeat minutely
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForever(1));
-                    break;
-                case 3:
-                    //Repeat minutely, with a count
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForTotalCount(5, 1));
-                    break;
-                case 4:
-                    //Repeat secondly, with a count
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever(1));
-                    break;
-                case 5:
-                    //Repeat secondly, with a count
-                    _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForTotalCount(5, 1));
-                    break;
-                case 6:
-                    //Repeat with a time span (minutes)
-                    _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(1)));
-                    break;
-                case 7:
-                    //Repeat with a time span (minutes)
-                    _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromHours(1)));
-                    break;
-                case 8:
-                    //Repeat with a time span (minutes)
-                    _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(1)));
-                    break;
-                default:
-                    break;
-            }
-
-            //Define a count
-            _trigger.WithSimpleSchedule(x => x.WithRepeatCount(5));
-
-            //Define the interval (cron)
-            int c = 2;
-            switch (c) {
-                case 0:
-                    //Repeat with a cron expression
-                    _trigger.WithSchedule(CronScheduleBuilder.CronSchedule(cron));
-                    break;
-                case 1:
-                    //Repeat at hour+minute on given days
-                    _trigger.WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(12, 59, new DayOfWeek[] { DayOfWeek.Monday }));
-                    break;
-                case 2:
-                    //Repeat at hour+minute every day
-                    _trigger.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(12, 59));
-                    break;
-                case 3:
-                    //Repeat at hour+minute on a given day-of-the-month
-                    _trigger.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(31, 12, 59));
-                    break;
-                case 4:
-                    //Repeat at hour+minute on a given day-of-the-week
-                    _trigger.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 12, 59));
-                    break;
-                default:
-                    _trigger.StartNow();
-                    break;
-            }
-
-            //Define the end
-            _trigger.EndAt(DateTime.Now.AddYears(2));
-
-            ////
-            trigger = _trigger.Build();
-
-            return trigger;
-        }
-
-        private static ITrigger DefineStaticTrigger(string _identity) {
+        private static ITrigger DefineDefaultTrigger(string _identity) {
             ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .StartAt(DateTime.Now.AddMinutes(1))
@@ -251,6 +125,46 @@ namespace Antd.Scheduler {
                 .WithSchedule(CronScheduleBuilder.CronSchedule(_cronEx))
                 .Build();
             return monthlyTrigger;
+        }
+
+        private static ITrigger DefineIntervalTrigger(string _identity, DateTime _startTime, IntervalType _intervalType, int span, int count) {
+            ITrigger trigger;
+            var _trigger = TriggerBuilder.Create()
+                .WithIdentity(_identity, Guid.NewGuid().ToString());
+            _trigger.StartAt(_startTime);
+            switch (_intervalType) {
+                case IntervalType.Hourly:
+                    if (count == 0) {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForever(span));
+                    }
+                    else {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForTotalCount(count, span));
+
+                    }
+                    break;
+                case IntervalType.Minutely:
+                    if (count == 0) {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForever(span));
+                    }
+                    else {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForTotalCount(count, span));
+
+                    }
+                    break;
+                case IntervalType.Secondly:
+                    if (count == 0) {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever(span));
+                    }
+                    else {
+                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForTotalCount(count, span));
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+            trigger = _trigger.Build();
+            return trigger;
         }
 
         //private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {

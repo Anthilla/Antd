@@ -52,9 +52,9 @@
             <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Cron" style="padding-top: 11px;">New with Cron
             </a>
             <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Other" style="padding-top: 11px;">Other
+            @*<a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Other" style="padding-top: 11px;">Other
             </a>
-            <div class="element-divider"></div>
+            <div class="element-divider"></div>*@
         </nav>
     </nav>
 }
@@ -141,11 +141,13 @@
                 </div>
                 <div class="span10">
                     <select id="CronStartTimeHour" name="CronStartTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
+                        <option value="--" selected>--</option>
                         @for (int i = 0; i < 24; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
                     </select>
                     <select id="CronStartTimeMinute" name="CronStartTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
+                        <option value="--" selected>--</option>
                         @for (int i = 0; i < 60; i++) {
                             <option value="@i.ToString()" >@i.ToString() </option>
                         }
@@ -180,7 +182,7 @@
                     <input name="CronDays" id="CronDaysPeriodic" type="radio" checked />
                     -
                 <p style="display: inline-block;">Every</p>
-                    <input id="CronDays" type="text" value="1" />
+                    <input id="CronDays" type="text" />
                     <p style="display: inline-block;">day(s)</p>
                 </div>
             </div>
@@ -199,6 +201,16 @@
             </div>
             <div class="row">
                 <div class="span2">
+                    <label>&nbsp</label>
+                </div>
+                <div class="span10">
+                    <input name="CronDays" id="CronDaysLastDay" type="radio" />
+                    - 
+                    <p style="display: inline-block;">Last day of the month</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span2">
                     <label>Select Month</label>
                 </div>
                 <div class="span11" id="CronMotY">
@@ -208,29 +220,61 @@
                     }
                 </div>
             </div>
-            @*            <div class="row">
-                <div class="span2">
-                    <label>End Time</label>
-                </div>
-                <div class="span10">
-                    <select id="CronEndTimeHour" name="CronEndTimeHour" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
-                        @for (int i = 0; i < 24; i++) {
-                            <option value="@i.ToString()" >@i.ToString() </option>
-                        }
-                    </select>
-                    <select id="CronEndTimeMinute" name="CronEndTimeMinute" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 75px; text-align: right; padding-right: 10px;">
-                        @for (int i = 0; i < 60; i++) {
-                            <option value="@i.ToString()" >@i.ToString() </option>
-                        }
-                    </select>
-                </div>
-            </div>*@
+            <hr class="bg-anthilla-green" />
             <div class="row">
                 <div class="span2">
-                    @*<input id="ShowCronResult" class="bg-yellow fg-white" type="button" value="Cron Result" style="width: 90%; height: 34px;" />*@
+                    <label>Cron Expression</label>
                 </div>
                 <div class="span10">
                     <input name="CronResult" id="CronResult" type="text" style="width: 90%; height: 35px; border-width: 0 0 2px 0 !important; border-color: #A7BD39 !important;" class="bg-anthilla-gray-m" />
+                </div>
+                <div class="span2">
+                    @*<i class="icon-info-2 fg-anthilla-green" id="ShowCronInfo"></i>*@
+                    <div id="CronInfo" style="min-width: 100px; min-height: 100px; display: none; position: absolute; z-index: 123; right: 50px; top: 300px;">
+                        <table class="table">
+                            <tbody>
+                                <style type="text/css">
+                                    .rotate290 {
+                                        -ms-transform: rotate(290deg); /* IE 9 */
+                                        -webkit-transform: rotate(290deg); /* Chrome, Safari, Opera */
+                                        transform: rotate(290deg);
+                                    }
+                                </style>
+                                <tr class="bg-anthilla-gray-m">
+                                    <td class="rotate290 bg-anthilla-gray-m">Seconds</td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Minutes</td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Hours </td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Day of month</td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Month</td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Day of week</td>
+                                    <td class="rotate290 bg-anthilla-gray-m">Year</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p>0-59</p>
+                                    </td>
+                                    <td>
+                                        <p>0-59</p>
+                                    </td>
+                                    <td>
+                                        <p>0-23</p>
+                                    </td>
+                                    <td>
+                                        <p>1-31</p>
+                                    </td>
+                                    <td>
+                                        <p>1-12 or JAN-DEC</p>
+                                    </td>
+                                    <td>
+                                        <p>1-7 or SUN-SAT</p>
+                                    </td>
+                                    <td>
+                                        <p>empty or 1</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -241,7 +285,7 @@
             </div>
         </div>
     </form>
-    <form id="Other" action="/scheduler/other" method="POST" enctype="multipart/form-data" style="display: none;">
+    @*    <form id="Other" action="/scheduler/other" method="POST" enctype="multipart/form-data" style="display: none;">
         <div class="grid">
             <div class="row">
                 <div class="span2">
@@ -260,24 +304,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="span2">
-                    <label>Select option</label>
-                </div>
-                <div class="span10">
-                    <input type="radio" name="Option" value="FirstOfWeek">First day of the week
-                    <input type="radio" name="Option" value="LastOfWeek">Last day of the week
-                    <input type="radio" name="Option" value="FirstOfMonth">First day of the month
-                    <input type="radio" name="Option" value="LastOfMonth">Last day of the month
-                </div>
-            </div>
-            <div class="row">
                 <div class="span12">
                     <label>&nbsp</label>
                     <input class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 100%; height: 34px;">
                 </div>
             </div>
         </div>
-    </form>
+    </form>*@
 }
 
 @section MainContent {
@@ -348,6 +381,9 @@
 
 @section Scripts {
     <script type="text/javascript">
+        $('#ShowCronInfo').click(function () {
+            $('#CronInfo').toggle();
+        });
 
         $('p[data-action="disable"]').click(function () {
             var guid = $(this).attr('data-guid');
@@ -414,15 +450,15 @@
         });
 
         $('a[data-scrollto="#OneTimeOnly"]').click(function () {
-            $('#OneTimeOnly').toggle();
-            $('#Cron').hide();
             $('#Other').hide();
+            $('#Cron').hide();
+            $('#OneTimeOnly').toggle();
         });
 
         $('a[data-scrollto="#Cron"]').click(function () {
             $('#OneTimeOnly').hide();
-            $('#Cron').toggle();
             $('#Other').hide();
+            $('#Cron').toggle();
         });
 
         $('a[data-scrollto="#Other"]').click(function () {
@@ -435,7 +471,7 @@
             var $defaults = {
                 zero: '0',
                 all: '*',
-                what: '?'
+                undefined: '?'
             };
             var cronExpression;
             var seconds = $defaults.zero,
@@ -458,7 +494,12 @@
             //controlla se c'è una periodicità nelle ore
             var periodHours = $('#CronHours').val();
             if (periodHours == '') {
-                hours = $('#CronStartTimeHour').val();
+                if ($('#CronStartTimeHour').val() == '--') {
+                    hours = $defaults.all;
+                }
+                else {
+                    hours = $('#CronStartTimeHour').val();
+                }
             }
             else {
                 hours = '0/' + periodHours;
@@ -466,23 +507,27 @@
 
             //prima check il tipo di periodicità nei giorni
             if ($('#CronDaysPeriodic').prop('checked')) {
-                dayOfweek = $defaults.what;
+                dayOfweek = $defaults.undefined;
                 //controlla se c'è una periodicità nei giorni
                 var periodDays = $('#CronDays').val();
                 if (periodDays == '') {
-                    dayOfmonth = $defaults.what;
+                    dayOfmonth = $defaults.all;
                 }
                 else {
                     dayOfmonth = '1/' + periodDays;
                 }
             }
             if ($('#CronDaysDaysOfWeek').prop('checked')) {
-                dayOfmonth = $defaults.what;
+                dayOfmonth = $defaults.undefined;
                 var dayz = [];
                 $('#CronDotW').find('.cronDayOfTheWeek:checked').each(function (index) {
                     dayz.push($(this).val());
                 });
                 dayOfweek = dayz.join(',');
+            }
+            if ($('#CronDaysLastDay').prop('checked')) {
+                dayOfmonth = "L";
+                dayOfweek = $defaults.all;
             }
 
             var monthz = [];

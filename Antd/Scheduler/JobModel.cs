@@ -34,7 +34,16 @@ using System.ComponentModel.DataAnnotations;
 namespace Antd.Scheduler {
     public enum TriggerPeriod : byte {
         IsOneTimeOnly = 0,
-        IsCron = 1
+        IsCron = 1,
+        WithInterval = 2,
+        Other = 3
+    }
+
+    public enum IntervalType : byte {
+        None = 0,
+        Secondly = 1,
+        Minutely = 2,
+        Hourly = 3
     }
 
     public class JobModel {
@@ -51,6 +60,12 @@ namespace Antd.Scheduler {
         public bool isEnabled { get; set; }
 
         public TriggerPeriod TriggerPeriod { get; set; }
+
+        public IntervalType IntervalType { get; set; }
+
+        public int IntervalSpan { get; set; }
+
+        public int Count { get; set; }
 
         public string CronExpression { get; set; }
 
