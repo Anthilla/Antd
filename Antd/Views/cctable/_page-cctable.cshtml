@@ -107,15 +107,7 @@
                         <textarea name="Notes" style="width: 90%; min-height: 125px;" class="bg-anthilla-gray border-anthilla-green fg-white"></textarea>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="span2">
-                        <label>&nbsp</label>
-                    </div>
-                    <div class="span7">
-                        <input class="bg-anthilla-green" type="button" id="ShowCommandForm" value="Assign Command">
-                    </div>
-                </div>
-                <div id="CommandForm">
+                <div id="CommandForm" style="display: none;">
                     <div class="row">
                         <div class="span2">
                             <label>Command</label>
@@ -131,6 +123,8 @@
                     </div>
                     <div class="span7">
                         <input class="bg-anthilla-green" type="submit" value="Create Row">
+                        <input class="bg-anthilla-green" id="ShowCommandForm" type="button" value="Add Command">
+                        <input class="bg-yellow" id="HideCommandForm" type="button" value="Remove Command" style="display: none !important;">
                     </div>
                 </div>
             </form>
@@ -145,8 +139,15 @@
     <script type="text/javascript">
 
         $('#ShowCommandForm').click(function () {
-            $(this).parents('row').hide(); //rollin', rollin', rollin'
+            $('#ShowCommandForm').hide();
+            $('#HideCommandForm').show();
             $('#CommandForm').show();
+        });
+
+        $('#HideCommandForm').click(function () {
+            $('#HideCommandForm').hide();
+            $('#ShowCommandForm').show();
+            $('#CommandForm').hide();
         });
 
         $('input[data-create-input-layout]').click(function () {
