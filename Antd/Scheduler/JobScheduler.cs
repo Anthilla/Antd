@@ -66,17 +66,15 @@ namespace Antd.Scheduler {
                 .WithIdentity("test", Guid.NewGuid().ToString())
                 .UsingJobData("jobID", "yo")
                 .Build();
+
             var trigger = TriggerBuilder.Create()
                 .WithIdentity("ciao", Guid.NewGuid().ToString())
                 .StartAt(DateTime.Now.AddMinutes(1));
-                //.WithSchedule(CronScheduleBuilder.CronSchedule(cron))
-                //.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever())
-                //.WithCronSchedule(cron)
-                //.Build();
 
             var i = trigger.WithSchedule(CronScheduleBuilder.CronSchedule(cron)).Build();
 
             __scheduler.ScheduleJob(task, i);
+            Start(false);
         }
 
         public static void LaunchJob<T>(string guid) where T : IJob {
@@ -115,13 +113,45 @@ namespace Antd.Scheduler {
             __scheduler.ScheduleJob(task, trigger);
         }
 
+        //public enum Cose : byte {
+        //    a = DailyTimeIntervalScheduleBuilder.AllDaysOfTheWeek,
+        //    b = DailyTimeIntervalScheduleBuilder.MondayThroughFriday,
+        //    c = DailyTimeIntervalScheduleBuilder.SaturdayAndSunday,
+        //}
+
         private static ITrigger DefineTrigger(string _identity) {
             var cron = "";
-            ITrigger trigger = TriggerBuilder.Create()
+            ITrigger trigger;
+
+            var _trigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(DateTime.Now.AddMinutes(1))
-                .WithSchedule(CronScheduleBuilder.CronSchedule(cron))
-                .Build();
+                .StartAt(DateTime.Now.AddSeconds(5));
+            ////
+
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForever(1));
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForTotalCount(5, 1));
+
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForever(1));
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForTotalCount(5, 1));
+
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever(1));
+            _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForTotalCount(5, 1));
+
+            _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromMinutes(1)));
+            _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromHours(1)));
+            _trigger.WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(1)));
+
+            _trigger.WithSimpleSchedule(x => x.WithRepeatCount(5));
+
+            _trigger.WithSchedule(CronScheduleBuilder.CronSchedule(cron));
+            _trigger.WithSchedule(CronScheduleBuilder.AtHourAndMinuteOnGivenDaysOfWeek(12, 59, new DayOfWeek[] { DayOfWeek.Monday }));
+            _trigger.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(12, 59));
+            _trigger.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(31, 12, 59));
+            _trigger.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 12, 59));
+
+            ////
+            trigger = _trigger.Build();
+
             return trigger;
         }
 

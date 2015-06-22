@@ -30,11 +30,7 @@
 using Antd.Common;
 using Antd.Scheduler;
 using Nancy;
-using Quartz;
-using Quartz.Impl;
 using System;
-using System.IO;
-using System.Threading;
 
 namespace Antd {
 
@@ -71,7 +67,6 @@ namespace Antd {
 
             Get["/cron"] = x => {
                 Console.WriteLine("cron");
-                JobScheduler.Start(false);
                 //Job.Schedule("ipip", "echo charlie", "0/20 * * * * ?");
                 JobScheduler.Test();
                 return Response.AsJson(true);
