@@ -48,16 +48,15 @@ namespace Antd {
         public static List<ProcModel> MapProcJson(string _procJson) {
             string procJson = _procJson;
             procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
-            string[] rowDivider = new String[] { "\\n" };
+            string[] rowDivider = new[] { "\\n" };
             string[] procJsonRow = new string[] { };
             procJsonRow = procJson.Split(rowDivider, StringSplitOptions.None).ToArray();
             List<ProcModel> procs = new List<ProcModel>() { };
             foreach (string rowJson in procJsonRow) {
-                if (rowJson != null && rowJson != "") {
-                    string[] procJsonCell = new string[] { };
-                    string[] cellDivider = new String[] { " " };
-                    procJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    ProcModel proc = MapProc(procJsonCell);
+                if (!string.IsNullOrEmpty(rowJson)) {
+                    var cellDivider = new [] { " " };
+                    var procJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
+                    var proc = MapProc(procJsonCell);
                     procs.Add(proc);
                 }
             }
@@ -73,7 +72,9 @@ namespace Antd {
             proc.C = procJsonCell[3];
             proc.STIME = procJsonCell[4];
             proc.TTY = procJsonCell[5];
-            proc.TIME = procJsonCell[6];
+            if (procJsonCell.Length > 6) {
+                proc.TIME = procJsonCell[6];
+            }
             if (procJsonCell.Length > 8) {
                 proc.CMD = procJsonCell[7] + " " + procJsonCell[8];
             }
@@ -88,12 +89,7 @@ namespace Antd {
             var proc = (from p in procs
                         where p.CMD.Contains(service)
                         select p).FirstOrDefault();
-            if (proc != null) {
-                return proc.PID;
-            }
-            else {
-                return null;
-            }
+            return proc != null ? proc.PID : null;
         }
     }
 

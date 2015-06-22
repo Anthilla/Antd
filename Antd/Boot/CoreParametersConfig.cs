@@ -42,9 +42,8 @@ namespace Antd.Boot {
         private static XmlWriter xmlWriter = new XmlWriter(_files);
 
         public static void WriteDefaults() {
-            string root;
             xmlWriter.Write("root", "/antd");
-            root = xmlWriter.ReadValue("root");
+            xmlWriter.ReadValue("root");
 
             if (xmlWriter.CheckValue("antdport") == false) {
                 xmlWriter.Write("antdport", "7777");

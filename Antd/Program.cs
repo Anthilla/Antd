@@ -60,7 +60,7 @@ namespace Antd {
                 ConsoleLogger.Success("antd is running");
 
                 AntdBoot.StartScheduler(true);
-                AntdBoot.StartDirectoryWatcher(true, new string[] { "/cfg", "/test" });
+                AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
 

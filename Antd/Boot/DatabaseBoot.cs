@@ -70,10 +70,11 @@ namespace Antd.Boot {
             ConsoleLogger.Log("Test DATABASE");
             var guid = Guid.NewGuid().ToString();
             ConsoleLogger.Log(">> write");
-            TestClass write = new TestClass();
-            write._Id = guid;
-            write.Date = DateTime.Now;
-            write.Foo = "foo";
+            TestClass write = new TestClass {
+                _Id = guid,
+                Date = DateTime.Now,
+                Foo = "foo"
+            };
             write.Bar = write.Foo + write.Date.ToString() + write.Foo;
             DeNSo.Session.New.Set(write);
             ConsoleLogger.Success(">> write done");

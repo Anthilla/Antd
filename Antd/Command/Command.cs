@@ -41,12 +41,15 @@ namespace Antd {
         public static CommandModel Launch(string file, string args) {
             string output = string.Empty;
             string error = string.Empty;
-            Process process = new Process();
-            process.StartInfo.FileName = file;
-            process.StartInfo.Arguments = args;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.UseShellExecute = false;
+            Process process = new Process {
+                StartInfo = {
+                    FileName = file,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
             try {
                 process.Start();
                 using (StreamReader streamReader = process.StandardOutput) {
@@ -57,22 +60,24 @@ namespace Antd {
                     error = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
-                CommandModel command = new CommandModel();
-                command.input = new Tuple<string, string>(file, args);
-                command.date = DateTime.Now;
-                command.output = output;
-                command.outputTable = TextToList(output);
-                command.error = error;
-                command.errorTable = TextToList(error);
+                CommandModel command = new CommandModel {
+                    input = new Tuple<string, string>(file, args),
+                    date = DateTime.Now,
+                    output = output,
+                    outputTable = TextToList(output),
+                    error = error,
+                    errorTable = TextToList(error)
+                };
                 ConsoleLogger.Info("Launched {0} {1}", file, args);
                 ConsoleLogger.Info("------------ Command output:");
                 ConsoleLogger.Info("{0}", command.output);
                 return command;
             }
             catch (Exception ex) {
-                CommandModel command = new CommandModel();
-                command.error = ex.Message;
-                command.errorTable = TextToList(ex.Message);
+                CommandModel command = new CommandModel {
+                    error = ex.Message,
+                    errorTable = TextToList(ex.Message)
+                };
                 Console.WriteLine("");
                 ConsoleLogger.Warn("Launched {0} {1}", file, args);
                 ConsoleLogger.Warn("------------ Error output:");
@@ -85,13 +90,16 @@ namespace Antd {
         public static CommandModel Launch(string file, string args, string dir) {
             string output = string.Empty;
             string error = string.Empty;
-            Process process = new Process();
-            process.StartInfo.FileName = file;
-            process.StartInfo.Arguments = args;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = dir.ToString();
+            Process process = new Process {
+                StartInfo = {
+                    FileName = file,
+                    Arguments = args,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = dir.ToString()
+                }
+            };
             try {
                 process.Start();
 
@@ -103,19 +111,21 @@ namespace Antd {
                     error = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
-                CommandModel command = new CommandModel();
-                command.input = new Tuple<string, string>(file, args);
-                command.date = DateTime.Now;
-                command.output = output;
-                command.outputTable = TextToList(output);
-                command.error = error;
-                command.errorTable = TextToList(error);
+                CommandModel command = new CommandModel {
+                    input = new Tuple<string, string>(file, args),
+                    date = DateTime.Now,
+                    output = output,
+                    outputTable = TextToList(output),
+                    error = error,
+                    errorTable = TextToList(error)
+                };
                 return command;
             }
             catch (Exception ex) {
-                CommandModel command = new CommandModel();
-                command.error = ex.Message;
-                command.errorTable = TextToList(ex.Message);
+                CommandModel command = new CommandModel {
+                    error = ex.Message,
+                    errorTable = TextToList(ex.Message)
+                };
                 return command;
             }
         }
@@ -125,7 +135,7 @@ namespace Antd {
             string[] rowDivider = new String[] { "\n" };
             string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
             foreach (string row in rowList) {
-                if (row != null && row != "") {
+                if (!string.IsNullOrEmpty(row)) {
                     stringList.Add(row);
                 }
             }

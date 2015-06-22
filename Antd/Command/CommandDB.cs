@@ -58,13 +58,7 @@ namespace Antd.CommandManagement {
         }
 
         public static List<CommandInputModel> GetAll() {
-            var list = DeNSo.Session.New.Get<CommandInputModel>(m => m != null).ToList();
-            if (list == null) {
-                return new List<CommandInputModel>() { };
-            }
-            else {
-                return list;
-            }
+            return DeNSo.Session.New.Get<CommandInputModel>(m => m != null).ToList();
         }
 
         public static List<CommandInputModel> GetByString(string q) {
@@ -76,15 +70,16 @@ namespace Antd.CommandManagement {
         }
 
         public static void Create(string inputid, string command, string layout, string inputlocation, string notes) {
-            var model = new CommandInputModel();
-            model._Id = inputid;
-            model.Guid = inputid;
-            model.Date = DateTime.Now;
-            model.File = command.GetFirstString();
-            model.Arguments = command.GetAllStringsButFirst();
-            model.Layout = layout;
-            model.InputLocation = inputlocation;
-            model.Notes = notes;
+            var model = new CommandInputModel {
+                _Id = inputid,
+                Guid = inputid,
+                Date = DateTime.Now,
+                File = command.GetFirstString(),
+                Arguments = command.GetAllStringsButFirst(),
+                Layout = layout,
+                InputLocation = inputlocation,
+                Notes = notes
+            };
             DeNSo.Session.New.Set(model);
         }
 
@@ -95,22 +90,26 @@ namespace Antd.CommandManagement {
 
         public static void Launch(string guid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == guid).FirstOrDefault();
-            Command.Launch(command.File, command.Arguments);
+            if (command != null) Command.Launch(command.File, command.Arguments);
         }
 
         public static string LaunchAndGetOutput(string inputid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
-            return Command.Launch(command.File, command.Arguments).output;
+            if (command != null) return Command.Launch(command.File, command.Arguments).output;
+            return null;
         }
 
         public static string LaunchAndGetOutputUsingNewValue(string inputid, string newValue) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
-            var layout = command.Layout;
-            var findReplace = "{" + inputid + "}";
-            var newCommand = layout.Replace(findReplace, newValue);
-            var newFile = newCommand.GetFirstString();
-            var newArguments = newCommand.GetAllStringsButFirst();
-            return Command.Launch(newFile, newArguments).output;
+            if (command != null) {
+                var layout = command.Layout;
+                var findReplace = "{" + inputid + "}";
+                var newCommand = layout.Replace(findReplace, newValue);
+                var newFile = newCommand.GetFirstString();
+                var newArguments = newCommand.GetAllStringsButFirst();
+                return Command.Launch(newFile, newArguments).output;
+            }
+            return null;
         }
     }
 }

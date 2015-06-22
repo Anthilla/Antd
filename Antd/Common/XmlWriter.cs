@@ -53,18 +53,17 @@ namespace Antd.Common {
         public string[] path;
 
         public XmlWriter(string[] fileNames) {
-            string applicationRoot;
-            string applicationConfigFolder;
-            string applicationConfigPath;
-            applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+            var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
             ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
             //ConsoleLogger.Info("root info -> tmpfs mounted under application root");
             //Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
 
-            applicationConfigFolder = "config";
+            var applicationConfigFolder = "config";
             ConsoleLogger.Info("root info -> application config folder: {0}", applicationConfigFolder);
-            applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
+
+            var applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
             ConsoleLogger.Info("root info -> application config path: {0}", applicationConfigPath);
+
             if (!Directory.Exists(applicationConfigPath)) {
                 ConsoleLogger.Info("root info -> application config path does not exist");
                 Directory.CreateDirectory(applicationConfigPath);
@@ -88,29 +87,27 @@ namespace Antd.Common {
             List<section> readList = ReadAll();
             List<param> paramList = new List<param>();
             if (readList != null) {
-                foreach (var sect in readList) {
-                    if (sect.param != null) {
-                        paramList.Add(sect.param);
-                    }
-                }
+                paramList.AddRange(from sect in readList 
+                                   where sect.param != null 
+                                   select sect.param);
             }
 
             var oldItem = (from i in paramList
                            where i.key == key
                            select i).FirstOrDefault();
             if (oldItem == null) {
-                param item = new param();
-                item.key = key;
-                item.value = value;
+                param item = new param {
+                    key = key,
+                    value = value
+                };
                 tItem = item;
             }
             else {
                 tItem = oldItem;
                 tItem.value = value;
             }
-            if (paramList == null || paramList.ToArray().Length < 1) {
-                List<param> list = new List<param>() { };
-                list.Add(tItem);
+            if (paramList.ToArray().Length < 1) {
+                List<param> list = new List<param> {tItem};
                 tList = list;
             }
             else {
@@ -143,7 +140,8 @@ namespace Antd.Common {
                 (from elem in parameters
                  select new section {
                      sectionName = xelement.Attribute("section").Value.ToString(),
-                     param = new param { key = elem.Attribute("key").Value.ToString(), value = elem.Attribute("value").Value.ToString() },
+                     param = new param { key = elem.Attribute("key").Value.ToString()
+                                       , value = elem.Attribute("value").Value.ToString() },
                  }
                 ).ToList();
 
@@ -155,28 +153,21 @@ namespace Antd.Common {
             if (list == null) {
                 return null;
             }
-            List<param> parList = new List<param>();
-            foreach (var p in list) {
-                if (p.param != null) {
-                    parList.Add(p.param);
-                }
-            }
+            List<param> parList = (from p in list 
+                                   where p.param != null 
+                                   select p.param).ToList();
             param param = (from v in parList
                            where v.key == key
                            select v).FirstOrDefault();
             if (param == null) {
                 return null;
             }
-            string value = param.value;
-            return value;
+            return param.value;
         }
 
         public bool CheckValue(string key) {
             string getValue = ReadValue(key);
-            if (getValue == null) {
-                return false;
-            }
-            return true;
+            return getValue != null;
         }
     }
 }

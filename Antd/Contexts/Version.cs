@@ -49,9 +49,10 @@ namespace Antd {
         }
 
         private static VersionModel ConvertVersion(string versionText) {
-            VersionModel version = new VersionModel();
-            version.key = "";
-            version.value = versionText;
+            VersionModel version = new VersionModel {
+                key = "",
+                value = versionText
+            };
             return version;
         }
     }

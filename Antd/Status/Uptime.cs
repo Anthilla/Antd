@@ -70,7 +70,7 @@ namespace Antd.Status {
             string[] uptimeJsonRow = new string[] { };
             uptimeJsonRow = uptimeJson.Split(rowDivider, StringSplitOptions.None).ToArray();
             UptimeModel model = new UptimeModel();
-            if (uptimeJsonRow.Length < 3) {
+            if (uptimeJsonRow.Length == 3) {
                 model.uptime = uptimeJsonRow[0];
                 model.users = uptimeJsonRow[1];
                 model.loadAverage = uptimeJsonRow[2];

@@ -55,32 +55,17 @@ namespace Antd.ViewHelpers {
                 var stockValue = (from s in stockData
                                   where s.param == par
                                   select s.value).FirstOrDefault();
-                if (stockValue == null) {
-                    model.stockValue = "";
-                }
-                else {
-                    model.stockValue = stockValue;
-                }
+                model.stockValue = stockValue ?? "";
 
                 var runningValue = (from s in runningData
                                     where s.param == par
                                     select s.value).FirstOrDefault();
-                if (runningValue == null) {
-                    model.runningValue = "";
-                }
-                else {
-                    model.runningValue = runningValue;
-                }
+                model.runningValue = runningValue ?? "";
 
                 var antdValue = (from s in antdData
                                  where s.param == par
                                  select s.value).FirstOrDefault();
-                if (antdValue == null) {
-                    model.antdValue = "";
-                }
-                else {
-                    model.antdValue = antdValue;
-                }
+                model.antdValue = antdValue ?? "";
                 list.Add(model);
             }
             //list = (from l in list

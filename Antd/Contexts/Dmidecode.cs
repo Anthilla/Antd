@@ -38,9 +38,12 @@ namespace Antd {
             string row = (from i in inputTable
                           where i.Contains("UUID:")
                           select i).FirstOrDefault();
-            var array = row.Split(new[] { ' ' }, 2);
-            string uuid = array[1];
-            return uuid;
+            if (row != null) {
+                var array = row.Split(new[] { ' ' }, 2);
+                string uuid = array[1];
+                return uuid;
+            }
+            return null;
         }
     }
 }
