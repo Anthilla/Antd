@@ -69,7 +69,8 @@ function DisableInputs() {
 }
 ///////////////////////////////////////////////////////////////////
 
-$('p[id^=Update]').click(function () {
+$('[id^=Update]').click(function () {
+    //$('p[id^=Update]').click(function () {
     var self = $(this);
     var id = self.attr('id');
     var inputID = id.replace('Update', 'New');
