@@ -66,6 +66,11 @@ namespace Antd {
             Get["/tzctl"] = x => {
                 return Response.AsJson(Command.Launch("timedatectl", "list-timezones").output);
             };
+
+            Get["/cron"] = x => {
+                Job.Schedule("new", "echo ciao", "0 0/2 0 1/1 * ?");
+                return Response.AsJson(true);
+            };
         }
     }
 }

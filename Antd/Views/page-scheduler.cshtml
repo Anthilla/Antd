@@ -52,6 +52,9 @@
             <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Cron" style="padding-top: 11px;">New with Cron
             </a>
             <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Other" style="padding-top: 11px;">Other
+            </a>
+            <div class="element-divider"></div>
         </nav>
     </nav>
 }
@@ -238,6 +241,32 @@
             </div>
         </div>
     </form>
+    <form id="Other" action="/scheduler/other" method="POST" enctype="multipart/form-data" style="display: none;">
+        <div class="grid">
+            <div class="row">
+                <div class="span2">
+                    <label>Name</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Alias" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span2">
+                    <label>Command</label>
+                </div>
+                <div class="span10">
+                    <input type="text" name="Command" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>&nbsp</label>
+                    <input class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 100%; height: 34px;">
+                </div>
+            </div>
+        </div>
+    </form>
 }
 
 @section MainContent {
@@ -374,13 +403,21 @@
         });
 
         $('a[data-scrollto="#OneTimeOnly"]').click(function () {
-            $('#Cron').hide();
             $('#OneTimeOnly').toggle();
+            $('#Cron').hide();
+            $('#Other').hide();
         });
 
         $('a[data-scrollto="#Cron"]').click(function () {
             $('#OneTimeOnly').hide();
             $('#Cron').toggle();
+            $('#Other').hide();
+        });
+
+        $('a[data-scrollto="#Other"]').click(function () {
+            $('#OneTimeOnly').hide();
+            $('#Cron').hide();
+            $('#Other').toggle();
         });
 
         function SetCronExpression() {
