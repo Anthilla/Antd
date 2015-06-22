@@ -77,13 +77,13 @@ namespace Antd.Boot {
             };
             write.Bar = write.Foo + write.Date.ToString() + write.Foo;
             DeNSo.Session.New.Set(write);
-            ConsoleLogger.Success(">> write done");
+            ConsoleLogger.Log(">> write done");
             Thread.Sleep(1000);
             ConsoleLogger.Log(">> read");
             var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            ConsoleLogger.Info(">> read done");
+            ConsoleLogger.Log(">> read done");
             if (read != null) {
-                ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(read));
+                ConsoleLogger.Log(">> result: " + JsonConvert.SerializeObject(read));
             }
             else {
                 ConsoleLogger.Warn(">> read failed");
@@ -95,10 +95,10 @@ namespace Antd.Boot {
             read.Bar = read.Foo + read.Date.ToString() + read.Foo;
             DeNSo.Session.New.Set(read);
             var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            ConsoleLogger.Info(">> read done");
+            ConsoleLogger.Log(">> read done");
             Thread.Sleep(1000);
             if (edited != null) {
-                ConsoleLogger.Success(">> result: " + JsonConvert.SerializeObject(edited));
+                ConsoleLogger.Log(">> result: " + JsonConvert.SerializeObject(edited));
             }
             else {
                 ConsoleLogger.Warn(">> read failed");

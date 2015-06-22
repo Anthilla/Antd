@@ -51,25 +51,25 @@ namespace Antd.Boot {
         //    foreach (var path in Directories) {
         //        if (!Directory.Exists(path)) {
         //            Directory.CreateDirectory(path);
-        //            ConsoleLogger.Info("    directories -> {0} created", path);
+        //            ConsoleLogger.Log("    directories -> {0} created", path);
         //        }
         //    }
-        //    ConsoleLogger.Success("    directories -> checked");
+        //    ConsoleLogger.Log("    directories -> checked");
         //}
 
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
-            ConsoleLogger.Success("    antd core parameters -> loaded");
+            ConsoleLogger.Log("    antd core parameters -> loaded");
         }
 
         public static void CheckSysctl(bool isActive) {
             if (isActive) {
                 Sysctl.WriteConfig();
                 Sysctl.LoadConfig();
-                ConsoleLogger.Success("    sysctl -> loaded");
+                ConsoleLogger.Log("    sysctl -> loaded");
             }
             else {
-                ConsoleLogger.Info("    sysctl -> skipped");
+                ConsoleLogger.Log("    sysctl -> skipped");
             }
         }
 
@@ -79,62 +79,62 @@ namespace Antd.Boot {
 
         public static void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
-            ConsoleLogger.Success("    scheduler -> loaded");
+            ConsoleLogger.Log("    scheduler -> loaded");
         }
 
         public static void StartDirectoryWatcher(bool isActive, string[] foldersToWatch) {
             if (isActive) {
-                ConsoleLogger.Success("    directory watcher -> enabled");
+                ConsoleLogger.Log("    directory watcher -> enabled");
                 foreach (string folder in foldersToWatch) {
                     if (Directory.Exists(folder)) {
                         new DirectoryWatcher(folder).Watch();
-                        ConsoleLogger.Info("    directory watcher -> enabled for {0}", folder);
+                        ConsoleLogger.Log("    directory watcher -> enabled for {0}", folder);
                     }
                     else {
-                        ConsoleLogger.Info("    directory watcher -> {0} does not exist", folder);
+                        ConsoleLogger.Log("    directory watcher -> {0} does not exist", folder);
                     }
                 }
             }
             else {
-                ConsoleLogger.Info("    directory watcher -> skipped");
+                ConsoleLogger.Log("    directory watcher -> skipped");
             }
         }
 
         public static void StartDatabase() {
             var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-            ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
+            ConsoleLogger.Log("root info -> application root: {0}", applicationRoot);
 
             var applicationDatabaseFolder = "database";
-            ConsoleLogger.Info("root info -> application config folder: {0}", applicationDatabaseFolder);
+            ConsoleLogger.Log("root info -> application config folder: {0}", applicationDatabaseFolder);
 
             var applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder);
-            ConsoleLogger.Info("root info -> application config path: {0}", applicationDatabasePath);
+            ConsoleLogger.Log("root info -> application config path: {0}", applicationDatabasePath);
             if (!Directory.Exists(applicationDatabasePath)) {
-                ConsoleLogger.Info("root info -> application config path does not exist");
+                ConsoleLogger.Log("root info -> application config path does not exist");
                 Directory.CreateDirectory(applicationDatabasePath);
-                ConsoleLogger.Info("root info -> application config path created");
+                ConsoleLogger.Log("root info -> application config path created");
             }
 
             var databases = new[] { applicationDatabasePath };
             DatabaseBoot.Start(databases, true);
-            ConsoleLogger.Success("    database -> loaded");
+            ConsoleLogger.Log("    database -> loaded");
         }
 
         public static void StartSignalR(IAppBuilder app, bool isActive) {
             if (isActive) {
                 var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
                 app.MapSignalR(hubConfiguration);
-                ConsoleLogger.Success("    signalR -> loaded");
+                ConsoleLogger.Log("    signalR -> loaded");
             }
             else {
-                ConsoleLogger.Info("    signalR -> skipped");
+                ConsoleLogger.Log("    signalR -> skipped");
             }
         }
 
         public static void StartNancy(IAppBuilder app) {
             StaticConfiguration.DisableErrorTraces = false;
             app.UseNancy();
-            ConsoleLogger.Success("    nancy -> loaded");
+            ConsoleLogger.Log("    nancy -> loaded");
         }
     }
 }

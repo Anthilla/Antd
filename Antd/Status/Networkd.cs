@@ -56,8 +56,8 @@ namespace Antd.Status {
                 MountNetworkdDir();
                 CreateFirstUnit();
                 RestartNetworkdDir();
-                ConsoleLogger.Info(StatusNetworkdDir());
-                ConsoleLogger.Success("    networkd -> loaded");
+                ConsoleLogger.Log(StatusNetworkdDir());
+                ConsoleLogger.Log("    networkd -> loaded");
             }
             else {
                 //il file NON esiste

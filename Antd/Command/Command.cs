@@ -68,9 +68,9 @@ namespace Antd {
                     error = error,
                     errorTable = TextToList(error)
                 };
-                ConsoleLogger.Info("Launched {0} {1}", file, args);
-                ConsoleLogger.Info("------------ Command output:");
-                ConsoleLogger.Info("{0}", command.output);
+                ConsoleLogger.Log("Launched {0} {1}", file, args);
+                ConsoleLogger.Log("------------ Command output:");
+                ConsoleLogger.Log("{0}", command.output);
                 return command;
             }
             catch (Exception ex) {

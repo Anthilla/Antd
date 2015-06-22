@@ -54,21 +54,21 @@ namespace Antd.Common {
 
         public XmlWriter(string[] fileNames) {
             var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-            ConsoleLogger.Info("root info -> application root: {0}", applicationRoot);
-            //ConsoleLogger.Info("root info -> tmpfs mounted under application root");
+            ConsoleLogger.Log("root info -> application root: {0}", applicationRoot);
+            //ConsoleLogger.Log("root info -> tmpfs mounted under application root");
             //Command.Launch("mount", "-t tmpfs tmpfs " + applicationRoot);
 
             var applicationConfigFolder = "config";
-            ConsoleLogger.Info("root info -> application config folder: {0}", applicationConfigFolder);
+            ConsoleLogger.Log("root info -> application config folder: {0}", applicationConfigFolder);
 
             var applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
-            ConsoleLogger.Info("root info -> application config path: {0}", applicationConfigPath);
+            ConsoleLogger.Log("root info -> application config path: {0}", applicationConfigPath);
 
             if (!Directory.Exists(applicationConfigPath)) {
-                ConsoleLogger.Info("root info -> application config path does not exist");
+                ConsoleLogger.Log("root info -> application config path does not exist");
                 Directory.CreateDirectory(applicationConfigPath);
-                ConsoleLogger.Info("root info -> application config path created");
-                //ConsoleLogger.Info("root info -> tmpfs mounted under application config path");
+                ConsoleLogger.Log("root info -> application config path created");
+                //ConsoleLogger.Log("root info -> tmpfs mounted under application config path");
                 //Command.Launch("mount", "-t tmpfs tmpfs " + applicationConfigPath);
             }
 

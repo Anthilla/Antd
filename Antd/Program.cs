@@ -57,14 +57,14 @@ namespace Antd {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
-                ConsoleLogger.Success("antd is running");
+                ConsoleLogger.Log("antd is running");
 
                 AntdBoot.StartScheduler(true);
                 AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
 
-                ConsoleLogger.Info("loaded in: {0}", DateTime.Now - startTime);
+                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 
                 //ConsoleLogger.Log("Define p1");
                 //string p1 = Console.ReadLine();
@@ -73,10 +73,10 @@ namespace Antd {
                 //ConsoleLogger.Log("Last one, define p3");
                 //string p3 = Console.ReadLine();
 
-                //ConsoleLogger.Info("Recap");
-                //ConsoleLogger.Info("p1: {0}", p1);
-                //ConsoleLogger.Info("p2: {0}", p2);
-                //ConsoleLogger.Info("p3: {0}", p3);
+                //ConsoleLogger.Log("Recap");
+                //ConsoleLogger.Log("p1: {0}", p1);
+                //ConsoleLogger.Log("p2: {0}", p2);
+                //ConsoleLogger.Log("p3: {0}", p3);
 
                 //Console.ReadLine(); 
                 stop.WaitOne();
