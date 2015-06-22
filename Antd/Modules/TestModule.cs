@@ -80,7 +80,8 @@ namespace Antd {
 
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("ciao", Guid.NewGuid().ToString())
-                    .StartAt(DateTime.Now.AddSeconds(10))
+                    .StartAt(DateTime.Now.AddMinutes(1))
+                    .WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever())
                     .WithCronSchedule(cron)
                     .Build();
 
