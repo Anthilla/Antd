@@ -30,6 +30,8 @@
 using Antd.Common;
 using Antd.Scheduler;
 using Nancy;
+using Quartz;
+using Quartz.Impl;
 using System;
 using System.IO;
 using System.Threading;
@@ -47,7 +49,7 @@ namespace Antd {
             Get["/page"] = x => {
                 return View["page-test"];
             };
-            
+
             Get["/acl"] = x => {
                 var c = new DirectoryLister("/sys", false).GetFileACL();
                 return Response.AsJson(c);
@@ -68,7 +70,22 @@ namespace Antd {
             };
 
             Get["/cron"] = x => {
-                Job.Schedule("new", "echo ciao", "0 0/2 0 1/1 * ?");
+                var cron = "0 0/1 0 1/1 * ?";
+
+                IScheduler __scheduler = StdSchedulerFactory.GetDefaultScheduler();
+
+                IJobDetail task = JobBuilder.Create<JobList.HelloJob>()
+                    .WithIdentity("ciao", Guid.NewGuid().ToString())
+                    .Build();
+
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("ciao", Guid.NewGuid().ToString())
+                    .StartAt(DateTime.Now.AddSeconds(10))
+                    .WithCronSchedule(cron)
+                    .Build();
+
+                __scheduler.ScheduleJob(task, trigger);
+
                 return Response.AsJson(true);
             };
         }

@@ -31,6 +31,7 @@ using Newtonsoft.Json;
 using Antd.Common;
 using System;
 using System.Threading;
+using Quartz;
 
 namespace Antd.Scheduler {
 
@@ -45,7 +46,7 @@ namespace Antd.Scheduler {
             string dataJson = JsonConvert.SerializeObject(data);
             var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, dataJson);
             Thread.Sleep(20);
-            JobScheduler.LauchJob<JobList.CommandJob>(guid);
+            JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
 
         public static void Schedule(string jobName, string command, string cron) {
@@ -57,13 +58,37 @@ namespace Antd.Scheduler {
             string dataJson = JsonConvert.SerializeObject(data);
             var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
             Thread.Sleep(20);
-            JobScheduler.LauchJob<JobList.CommandJob>(guid);
+            JobScheduler.LaunchJob<JobList.CommandJob>(guid);
+        }
+
+        public static void Schedule2<T>(string jobName, string command) where T : IJob {
+            var guid = Guid.NewGuid().ToString();
+            string[] data = new string[] {
+                    command.GetFirstString(),
+                    command.GetAllStringsButFirst()
+                };
+            string dataJson = JsonConvert.SerializeObject(data);
+            var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, dataJson);
+            Thread.Sleep(20);
+            JobScheduler.LaunchJob<T>(guid);
+        }
+
+        public static void Schedule2<T>(string jobName, string command, string cron) where T : IJob {
+            var guid = Guid.NewGuid().ToString();
+            string[] data = new string[] {
+                    command.GetFirstString(),
+                    command.GetAllStringsButFirst()
+                };
+            string dataJson = JsonConvert.SerializeObject(data);
+            var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
+            Thread.Sleep(20);
+            JobScheduler.LaunchJob<T>(guid);
         }
 
         public static void ReSchedule(string guid) {
             var task = JobRepository.GetByGuid(guid);
             var job = JobRepository.SetTaskOneTimeOnly(guid, task.Alias, task.Data);
-            JobScheduler.LauchJob<JobList.CommandJob>(guid);
+            JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
     }
 }
