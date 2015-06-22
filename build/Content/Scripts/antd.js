@@ -1,3 +1,69 @@
+///command management
+$('#CmdMgmtButton').click(function () {
+    $('#CommandManagementForm').toggle();
+
+});
+
+function CloseCommandMgmtPanel() {
+    $('#CommandManagementForm').hide();
+}
+
+$(document).ready(function () {
+    var main = $('input[name="Command"]');
+    var layout = $('input[name="CommandLayout"]');
+    main.keyup(function () {
+        CopyInputLayout(main, layout);
+    });
+
+    $('input[type="text"]').not('input[name="Command"], input[name="CommandLayout"]').dblclick(function () {
+        AddInputIDReference($(this));
+    });
+});
+
+function CopyInputLayout(main, layout) {
+    var mainVal = '',
+    layoutVal = '',
+    mainLength = '',
+    layoutLength = '',
+    tmpVal = '';
+
+    layout.val('');
+    if (main.val().length === 0) {
+        mainVal = '';
+        layoutVal = '';
+        mainLength = '';
+        layoutLength = '';
+        tmpVal = '';
+        layout.val('');
+    }
+    if (mainVal.length === 0 && layoutVal.length === 0) {
+        tmpVal = $('input[name="Command"]').val().replace(/_+/g, ' ');
+        layout.val(tmpVal);
+    } else {
+        mainLength = mainVal.length;
+        layoutLength = layoutVal.length;
+        var mainString = main.val().substring(mainLength, main.val().length);
+        var layoutString = layout.val().substring(layoutLength, layout.val().length);
+        tmpVal = (layoutVal + mainString).replace(/_+/g, ' ');
+        layout.val(tmpVal);
+    }
+}
+
+function AddInputIDReference(self) {
+    var parameter = self;
+    var label = parameter.attr('id');
+    var value = parameter.val();
+    layout.val(layout.val() + '{' + label + '}');
+    main.val(main.val() + value);
+    mainVal = main.val();
+    layoutVal = layout.val();
+    var hiddenInputId = $('input[name="InputID"]');
+    hiddenInputId.val(label);
+    main.focus();
+}
+
+/////////////////////
+
 ////////////////cookiecookiecookie///////////////////////////////////
 $('#LockInput').click(function () {
     var value = cookie.get('_input');
@@ -83,7 +149,9 @@ $('[id^=Update]').click(function () {
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
             success: function (data) {
-                console.log(data);
+                console.log(inputID + ': ' + data);
+                alert('Value changed -> ' + inputID + ': ' + data);
+                location.reload(true);
                 return false;
             }
         });
