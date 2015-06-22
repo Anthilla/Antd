@@ -39,6 +39,11 @@ namespace Antd {
     public class Command {
 
         public static CommandModel Launch(string file, string args) {
+#if WINDOWS
+            Console.WriteLine("Windows.");
+#else
+            Console.WriteLine("Not Windows.");
+#endif
             string output = string.Empty;
             string error = string.Empty;
             Process process = new Process {

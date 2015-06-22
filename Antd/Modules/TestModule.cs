@@ -58,7 +58,7 @@ namespace Antd {
 
             Get["/cmd"] = x => {
                 Command.Launch("md", @"D:\test");
-                return Response.AsJson(true);
+                return Response.AsJson(System.Environment.OSVersion);
             };
 
             Get["/tzctl"] = x => {
