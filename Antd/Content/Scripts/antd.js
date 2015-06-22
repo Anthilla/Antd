@@ -83,7 +83,9 @@ $('[id^=Update]').click(function () {
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
             success: function (data) {
-                console.log(data);
+                console.log(inputID + ': ' + data);
+                alert('Value changed -> '+  inputID + ': ' + data);
+                location.reload(true);
                 return false;
             }
         });
