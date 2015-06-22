@@ -112,6 +112,24 @@
                         <label>&nbsp</label>
                     </div>
                     <div class="span7">
+                        <input class="bg-anthilla-green" type="button" id="ShowCommandForm" value="Assign Command">
+                    </div>
+                </div>
+                <div id="CommandForm">
+                    <div class="row">
+                        <div class="span2">
+                            <label>Command</label>
+                        </div>
+                        <div class="span7">
+                            <input type="text" name="Command" style="width: 90%; height: 25px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span2">
+                        <label>&nbsp</label>
+                    </div>
+                    <div class="span7">
                         <input class="bg-anthilla-green" type="submit" value="Create Row">
                     </div>
                 </div>
@@ -125,6 +143,11 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        $('#ShowCommandForm').click(function () {
+            $(this).parents('row').hide(); //rollin', rollin', rollin'
+            $('#CommandForm').show();
+        });
 
         $('input[data-create-input-layout]').click(function () {
             var type = $(this).attr('data-create-input-layout');
