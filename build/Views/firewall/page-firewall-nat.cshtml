@@ -14,7 +14,7 @@
             </td>
             <td>
                 <input id="NewIPDo-Not-Fragment" type="checkbox" />Clear invalid DF bits instead of dropping the packets
-                                <p id="UpdateIPDo-Not-Fragment" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateIPDo-Not-Fragment" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -31,7 +31,7 @@
             </td>
             <td>
                 <input id="NewIPRandomID" type="checkbox" />Insert a stronger id into IP header of packets passing through the filter
-                                <p id="UpdateIPRandomID" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateIPRandomID" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -53,7 +53,8 @@
                     <option value="aggressive">aggressive</option>
                     <option value="conservative">conservative</option>
                 </select>
-                <p id="UpdateFirewallOptimizationOptions" class="button bg-anthilla-green" style="display: none;">
+                <input type="button" id="UpdateFirewallOptimizationOptions" class="button bg-anthilla-green" style="display: none;">
+                <p>
                     Firewall Optimization Options
                 </p>
             </td>
@@ -68,7 +69,7 @@
             </td>
             <td>
                 <input id="NewDisableFirewallFilter" type="checkbox" />Disable all packet filtering
-                                <p id="UpdateDisableFirewallFilter" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateDisableFirewallFilter" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -86,7 +87,7 @@
             <td>
                 <input id="NewDisableFirewallScrub" type="checkbox" />
                 Disables the PF scrubbing option which can sometimes interfere with NFS and PPTP traffic. 
-                                <p id="UpdateDisableFirewallScrub" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateDisableFirewallScrub" class="bg-anthilla-green" value="Apply" />
             </td>
             <td></td>
             <td></td>
@@ -113,7 +114,7 @@
                                     Note: Leave this blank for the default, which auto-calculates these values from your maximum 
                                     state table size. Adaptive start is 60% and end is 120% of the state table size by default.   
                 </p>
-                <p id="UpdateFirewallAdaptiveTimeouts" class="button bg-anthilla-green">Apply</p>
+                <input type="button" id="UpdateFirewallAdaptiveTimeouts" class="bg-anthilla-green" value="Apply" />
             </td>
             <td></td>
             <td></td>
@@ -127,7 +128,7 @@
             </td>
             <td>
                 <input id="NewFirewallMaximumStates" type="text" />
-                <p id="UpdateFirewallMaximumStates" class="button bg-anthilla-green" >Apply</p>
+                <input type="button" id="UpdateFirewallMaximumStates" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -144,7 +145,7 @@
             </td>
             <td>
                 <input id="NewFirewallMaximumTableEntries" type="text" />
-                <p id="UpdateFirewallMaximumTableEntries" class="button bg-anthilla-green" >Apply</p>
+                <input type="button" id="UpdateFirewallMaximumTableEntries" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -161,7 +162,7 @@
             </td>
             <td>
                 <input id="NewStaticRouteFiltering" type="checkbox" />Bypass firewall rules for traffic on the same interface 
-                                <p id="UpdateStaticRouteFiltering" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateStaticRouteFiltering" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -179,7 +180,7 @@
             </td>
             <td>
                 <input id="NewDisableAutoVPN" type="checkbox" />Disable all auto-added VPN rules 
-                                <p id="UpdateDisableAutoVPN" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateDisableAutoVPN" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -194,7 +195,7 @@
             </td>
             <td>
                 <input id="NewDisableReplyto" type="checkbox" />Disable reply-to on WAN rules  
-                                <p id="UpdateDisableReplyto" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateDisableReplyto" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -211,7 +212,7 @@
             </td>
             <td>
                 <input id="NewDisableNegateRules" type="checkbox" />Disable Negate rule on policy routing rules   
-                                <p id="UpdateDisableNegateRules" class="button bg-anthilla-green">Apply</p>
+                                <input type="button" id="UpdateDisableNegateRules" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -232,7 +233,7 @@
             <td>
                 <input id="NewAliasesHostnamesResolveInterval" type="text" />
                 Interval, in seconds, that will be used to resolve hostnames configured on aliases   
-                                <p id="UpdateAliasesHostnamesResolveInterval" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateAliasesHostnamesResolveInterval" class="bg-anthilla-green" value="Apply" />
             </td>
             <td></td>
         </tr>
@@ -242,7 +243,7 @@
             </td>
             <td>
                 <input id="NewCheckCertificateAliasUrl" type="checkbox" />Verify HTTPS certificates when downloading alias URLs    
-                                <p id="UpdateCheckCertificateAliasUrl" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateCheckCertificateAliasUrl" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -273,7 +274,7 @@
                     <option value="weekly">Weekly</option>
                     <option value="daily">Daily</option>
                 </select>
-                <p id="UpdateUpdateFrequency" class="button bg-anthilla-green" >Apply</p>
+                <input type="button" id="UpdateUpdateFrequency" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -304,7 +305,7 @@
                     <option value="purenat">Enable (Pure NAT)</option>
                 </select>
                 When enabled, this automatically creates additional NAT redirect rules for access to port forwards on your external IP addresses from within your internal networks. 
-                                <p id="UpdateNATReflection" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateNATReflection" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -334,7 +335,7 @@
             <td>
                 <input id="NewNATReflectionTout" type="text" />
                 Enter value for Reflection timeout in seconds
-                                <p id="UpdateNATReflectionTout" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateNATReflectionTout" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -351,7 +352,7 @@
                 <input id="NewEnableNATReflection1v1" type="checkbox" />
                 Enables the automatic creation of additional NAT redirect rules for access to 1:1 
                                 mappings of your external IP addresses from within your internal networks
-                                <p id="UpdateEnableNATReflection1v1" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateEnableNATReflection1v1" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -373,7 +374,7 @@
                 <input id="NewEnableNATRautomaticOutbound" type="checkbox" />
                 Automatically create outbound NAT rules which assist inbound NAT rules that direct 
                                 traffic back out to the same subnet it originated from. 
-                                <p id="UpdateEnableNATRautomaticOutbound" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateEnableNATRautomaticOutbound" class="bg-anthilla-green" value="Apply" />
             </td>
             <td>
                 <p>
@@ -397,7 +398,7 @@
                     <option value="wan,lan">both</option>
                 </select>
                 Choose the interfaces where you want TFTP proxy helper to be enabled
-                                <p id="UpdateTFTPProxy" class="button bg-anthilla-green" >Apply</p>
+                                <input type="button" id="UpdateTFTPProxy" class="bg-anthilla-green" value="Apply" />
             </td>
             <td></td>
             <td></td>
