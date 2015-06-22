@@ -60,6 +60,25 @@ namespace Antd.Scheduler {
             __scheduler.Shutdown();
         }
 
+        public static void Test() {
+            var cron = "0/20 * * * * ?";
+            IJobDetail task = JobBuilder.Create<JobList.HelloJob>()
+                .WithIdentity("test", Guid.NewGuid().ToString())
+                .UsingJobData("jobID", "yo")
+                .Build();
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity("ciao", Guid.NewGuid().ToString())
+                .StartAt(DateTime.Now.AddMinutes(1));
+                //.WithSchedule(CronScheduleBuilder.CronSchedule(cron))
+                //.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever())
+                //.WithCronSchedule(cron)
+                //.Build();
+
+            var i = trigger.WithSchedule(CronScheduleBuilder.CronSchedule(cron)).Build();
+
+            __scheduler.ScheduleJob(task, i);
+        }
+
         public static void LaunchJob<T>(string guid) where T : IJob {
             var _task = JobRepository.GetByGuid(guid);
             IJobDetail task = JobBuilder.Create<T>()
@@ -96,6 +115,16 @@ namespace Antd.Scheduler {
             __scheduler.ScheduleJob(task, trigger);
         }
 
+        private static ITrigger DefineTrigger(string _identity) {
+            var cron = "";
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity(_identity, Guid.NewGuid().ToString())
+                .StartAt(DateTime.Now.AddMinutes(1))
+                .WithSchedule(CronScheduleBuilder.CronSchedule(cron))
+                .Build();
+            return trigger;
+        }
+
         private static ITrigger DefineStaticTrigger(string _identity) {
             ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
@@ -116,7 +145,7 @@ namespace Antd.Scheduler {
             ITrigger monthlyTrigger = TriggerBuilder.Create()
                 .WithIdentity(_identity, Guid.NewGuid().ToString())
                 .StartAt(_startTime)
-                .WithCronSchedule(_cronEx)
+                .WithSchedule(CronScheduleBuilder.CronSchedule(_cronEx))
                 .Build();
             return monthlyTrigger;
         }

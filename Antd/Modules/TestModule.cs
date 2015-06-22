@@ -70,23 +70,10 @@ namespace Antd {
             };
 
             Get["/cron"] = x => {
-                var cron = "0 0/1 0 1/1 * ?";
-
-                IScheduler __scheduler = StdSchedulerFactory.GetDefaultScheduler();
-
-                IJobDetail task = JobBuilder.Create<JobList.HelloJob>()
-                    .WithIdentity("ciao", Guid.NewGuid().ToString())
-                    .Build();
-
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("ciao", Guid.NewGuid().ToString())
-                    .StartAt(DateTime.Now.AddMinutes(1))
-                    .WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever())
-                    .WithCronSchedule(cron)
-                    .Build();
-
-                __scheduler.ScheduleJob(task, trigger);
-
+                Console.WriteLine("cron");
+                JobScheduler.Start(false);
+                //Job.Schedule("ipip", "echo charlie", "0/20 * * * * ?");
+                JobScheduler.Test();
                 return Response.AsJson(true);
             };
         }
