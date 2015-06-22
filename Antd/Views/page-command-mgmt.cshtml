@@ -33,46 +33,25 @@
 
 @section PageBar {
     <style type="text/css">
-        #Command-TB {
+        #System-TB {
             border-bottom: 10px solid #A7BD39;
             height: 80px !important;
         }
     </style>
-<nav class="navigation-bar bg-transparent page-bar menu-bar">
+    <nav class="navigation-bar bg-transparent page-bar menu-bar">
         <nav class="navigation-bar-content">
             <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;"><i class="icon-home on-left" style="line-height: 5px;"></i>Command Management</div>
             <div class="element-divider"></div>
+        </nav>
     </nav>
 }
 
-@section MainContent
-{
-    <form action="/command/mgmt" method="POST" enctype="multipart/form-data">
-        <div class="grid">
-            <div class="row">
-                <div class="span12">
-                    <label>Command</label>
-                    <input type="text" name="Command">
-                </div>
-            </div>
-            <div class="row">
-                <div class="span12">
-                    <label>Notes</label>
-                    <input type="text" name="Notes">
-                </div>
-            </div>
-            <div class="row">
-                <div class="span12">
-                    <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
-                </div>
-            </div>
-        </div>
-    </form>
-
+@section MainContent {
     <table class="table hovered">
         <thead>
             <tr>
                 <th>Command</th>
+                <th>Layout</th>
                 <th>&nbsp</th>
                 <th>&nbsp</th>
             </tr>
@@ -80,53 +59,56 @@
         <tbody>
             @foreach (Antd.CommandManagement.CommandDB.CommandInputModel command in Model.list) {
                 if (command != null) {
-<tr>
-                        <td>@command.File @command.Arguments
-                { @command.Layout }
-                        </td>
-                        <td style="padding: 15px;" class="bg-anthilla-gray-m">
-                            <i class="icon-book on-left"></i>
-                            <p  style="font-style: oblique;">@command.Notes</p>
-                        </td>
-                        <td>
-                            <p data-guid="@command.Guid" class="button bg-orange delete-this">Delete</p>
-                            <p data-guid="@command.Guid" class="button bg-green launch-this">Launch</p>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <p>@command.File @command.Arguments</p>
+                    </td>
+                    <td>
+                        <p>{ @command.Layout }</p>
+                    </td>
+                    <td style="padding: 15px;" class="bg-anthilla-gray-m">
+                        <i class="icon-book on-left"></i>
+                        <p style="font-style: oblique;">@command.Notes</p>
+                    </td>
+                    <td>
+                        <p data-guid="@command.Guid" class="button bg-orange delete-this">Delete</p>
+                        <p data-guid="@command.Guid" class="button bg-green launch-this">Launch</p>
+                    </td>
+                </tr>
                 }
             }
-</tbody>
+        </tbody>
     </table>
 }
 
 @section Scripts {
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $('.delete-this').click(function () {
-        var guid = $(this).attr('data-guid');
-        $.ajax({
-            url: '/command/mgmt/delete/' + guid,
-            type: 'POST',
-            contentType: "application/json;charset=utf-8",
-            success: function (data) {
-                console.info(data);
-                return false;
-            }
+        $('.delete-this').click(function () {
+            var guid = $(this).attr('data-guid');
+            $.ajax({
+                url: '/command/mgmt/delete/' + guid,
+                type: 'POST',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    console.info(data);
+                    return false;
+                }
+            });
         });
-    });
 
-    $('.launch-this').click(function () {
-        var guid = $(this).attr('data-guid');
-        $.ajax({
-            url: '/command/mgmt/launch/' + guid,
-            type: 'POST',
-            contentType: "application/json;charset=utf-8",
-            success: function (data) {
-                console.info(data);
-                return false;
-            }
+        $('.launch-this').click(function () {
+            var guid = $(this).attr('data-guid');
+            $.ajax({
+                url: '/command/mgmt/launch/' + guid,
+                type: 'POST',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    console.info(data);
+                    return false;
+                }
+            });
         });
-    });
 
     </script>
 }
