@@ -70,7 +70,7 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRow(string tableGuid, string label, string inputType, string inputLabel, string inputCommand, string notes) {
+        public static void CreateRow(string tableGuid, string tableName, string label, string inputType, string inputLabel, string inputCommand, string notes) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -81,8 +81,8 @@ namespace Antd.CCTable {
                 InputCommand = inputCommand,
                 Notes = notes
             };
-            model.HtmlInputID = "New" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 

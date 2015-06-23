@@ -58,12 +58,13 @@ namespace Antd {
 
             Post["/row"] = x => {
                 string table = (string)this.Request.Form.TableGuid;
+                string tableName = (string)this.Request.Form.TableName;
                 string label = (string)this.Request.Form.Label;
                 string inputType = (string)this.Request.Form.InputType.Value;
                 string inputValue = (string)this.Request.Form.InputLabel;
                 string inputCommand = (string)this.Request.Form.InputCommand;
                 string notes = (string)this.Request.Form.Notes;
-                CCTableRepository.CreateRow(table, label, inputType, inputValue, inputCommand, notes);
+                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, notes);
 
                 string command = this.Request.Form.CCTableCommand;
                 string inputid = "New" + label.UppercaseAllFirstLetters();
