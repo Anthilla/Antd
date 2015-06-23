@@ -27,8 +27,10 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
+using System;
 using System.Dynamic;
 
 namespace Antd {
@@ -41,6 +43,8 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.DatabaseVersion = DatabaseInfo.GetVersion();
+                vmod.DatabaseJnlFile = DatabaseInfo.GetJnlFilePath();
                 return View["_page-storage", vmod];
             };
         }

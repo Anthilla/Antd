@@ -31,6 +31,7 @@ using Antd.Common;
 using Antd.Scheduler;
 using Nancy;
 using System;
+using System.IO;
 
 namespace Antd {
 
@@ -69,6 +70,16 @@ namespace Antd {
                 Console.WriteLine("cron");
                 //Job.Schedule("ipip", "echo charlie", "0/20 * * * * ?");
                 JobScheduler.Test();
+                return Response.AsJson(true);
+            };
+
+            Get["/db"] = x => {
+                Console.WriteLine("Check database");
+                var i = DeNSo.Configuration.Version;
+                Console.WriteLine("Version: " + i);
+                var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
+                var files = Directory.GetFiles(applicationRoot, "*.jnl", SearchOption.AllDirectories);
+                Console.WriteLine("files: " + string.Join(", ", files));
                 return Response.AsJson(true);
             };
         }

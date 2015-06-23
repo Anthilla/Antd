@@ -162,6 +162,7 @@
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
+    <Compile Include="Database\DatabaseInfo.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
@@ -320,6 +321,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\setup\_setup-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\storage\page-storage-database.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\storage\page-storage-volumes.cshtml">
