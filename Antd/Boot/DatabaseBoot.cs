@@ -44,7 +44,7 @@ namespace Antd.Boot {
             DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
             DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
-            DeNSo.Session.DefaultDataBase = "Antd_DB";
+            DeNSo.Session.DefaultDataBase = "antd_db_0";
             DeNSo.Session.Start();
 
             if (doTest == true) {

@@ -27,28 +27,68 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Database;
-using Nancy;
-using Nancy.Security;
-using System.Dynamic;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.AccessControl;
 
 namespace Antd {
 
-    public class StorageModule : NancyModule {
+    public class DirectoryFinder {
+        private HashSet<string> result = new HashSet<string>() { };
 
-        public StorageModule()
-            : base("/storage") {
-            this.RequiresAuthentication();
+        public DirectoryFinder(string _path, string _pattern) {
+            Find(_path, _pattern, true);
+        }
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.DatabaseVersion = DatabaseInfo.Version;
-                vmod.DatabaseName = DatabaseInfo.Name;
-                vmod.DatabasePath = DatabaseInfo.Path;
-                vmod.DatabaseJnlPath = DatabaseInfo.JournalPath;
-                vmod.DatabaseRaidPaths = DatabaseInfo.RaidPaths;
-                return View["_page-storage", vmod];
-            };
+        private void Find(string _path, string _pattern, bool getSubDir) {
+            string[] files = null;
+            string[] subDirs = null;
+            string[] foundDirs = null;
+
+            try {
+                files = Directory.GetFiles(_path, _pattern);
+            }
+            catch (UnauthorizedAccessException e) {
+                Console.WriteLine(e.Message);
+            }
+            catch (DirectoryNotFoundException e) {
+                Console.WriteLine(e.Message);
+            }
+            if (files != null) {
+                foreach (string f in files) {
+                    result.Add(Path.GetFullPath(f));
+                }
+            }
+
+            try {
+                subDirs = Directory.GetDirectories(_path);
+                foundDirs = Directory.GetDirectories(_path, _pattern);
+            }
+            catch (UnauthorizedAccessException e) {
+                Console.WriteLine(e.Message);
+            }
+            catch (DirectoryNotFoundException e) {
+                Console.WriteLine(e.Message);
+            }
+            if (foundDirs != null) {
+                foreach (string fd in foundDirs) {
+                    result.Add(Path.GetFullPath(fd));
+                }
+            }
+            if (subDirs != null) {
+                foreach (string d in subDirs) {
+                    if (getSubDir == true) {
+                        Find(d, _pattern, true);
+                    }
+                }
+            }
+        }
+
+        public HashSet<string> List {
+            get {
+                return result;
+            }
         }
     }
 }

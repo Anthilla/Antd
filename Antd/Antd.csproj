@@ -163,6 +163,7 @@
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Database\DatabaseInfo.cs" />
+    <Compile Include="Directory\DirectoryFinder.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />

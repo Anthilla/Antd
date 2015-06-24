@@ -50,11 +50,11 @@ namespace Antd.Boot {
             }
 
             if (xmlWriter.CheckValue("antddb") == false) {
-                xmlWriter.Write("antddb", "/Data/Data01Vol01/antdData");
+                xmlWriter.Write("antddb", "antd_database");
             }
 
             if (xmlWriter.CheckValue("antdfr") == false) {
-                xmlWriter.Write("antdfr", "/Data/Data01Vol01/antdData");
+                xmlWriter.Write("antdfr", "antd_filerepo");
             }
 
             if (xmlWriter.CheckValue("sysd") == false) {
