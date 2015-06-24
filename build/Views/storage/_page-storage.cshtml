@@ -47,6 +47,23 @@
 
 @section Scripts {
     <script type="text/javascript">
+        $('#AddRaidPath').click(function () {
+            var p = $('#DatabaseRaid').val();
+            if (p.length > 0) {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/storage/database/raid/' + p,
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (data) {
+                        location.reload(true);
+                        return false;
+                    }
+                });
+            }
+        });
+
         $(".cake").cake({
             data: {
                 total: '100',

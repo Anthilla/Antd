@@ -49,6 +49,12 @@ namespace Antd {
                 vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
                 return View["_page-storage", vmod];
             };
+
+            Get["/database/raid/{path}"] = x => {
+                string path = x.path;
+                AntdDatabase.AddRaidPath(path);
+                return Response.AsJson(true);
+            };
         }
     }
 }

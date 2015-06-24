@@ -1,5 +1,4 @@
-﻿@*
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,56 +25,50 @@
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------*@
+///-------------------------------------------------------------------------------------
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-@using System.Collections.Generic
-@{Layout = "_layout.cshtml";}
+using Antd.Common;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
-@section PageBar {
-    @Html.Partial("_storage-pagebar")
-}
+namespace Antd.Boot {
 
+    public class ParametersConfig : CoreParametersConfig {
 
-@section Dashboard {
-    @Html.Partial("page-storage-database", Model)
-    @Html.Partial("page-storage-disks")
-    @Html.Partial("page-storage-volumes")
-    @Html.Partial("page-storage-backup")
-    @Html.Partial("page-storage-iscsi")
-}
-
-@section Scripts {
-    <script type="text/javascript">
-        $('#AddRaidPath').click(function () {
-            var p = $('#DatabaseRaid').val();
-            if (p.length > 0) {
-                jQuery.support.cors = true;
-                $.ajax({
-                    url: '/storage/database/raid/' + p,
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    success: function (data) {
-                        location.reload(true);
-                        return false;
-                    }
-                });
+        public static void Write(string key, string value) {
+            var readValue = xmlWriter.ReadValue(key);
+            if (readValue == null) {
+                var arr = new string[] { value };
+                xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
             }
-        });
-
-        $(".cake").cake({
-            data: {
-                total: '100',
-                used: '74'
+            else {
+                AddValue(key, value);
             }
-        });
+        }
 
-        $(".cake2").cake({
-            data: {
-                total: '100',
-                used: '23'
+        private static void AddValue(string key, string value) {
+            var readValue = xmlWriter.ReadValue(key);
+            string[] arr = JsonConvert.DeserializeObject<string[]>(readValue);
+            var list = new List<string>();
+            foreach (string s in arr) {
+                list.Add(s);
             }
-        });
-    </script>
+            list.Add(value);
+            xmlWriter.Write(key, JsonConvert.SerializeObject(list.ToArray()));
+        }
+
+        public static string Read(string key) {
+            return xmlWriter.ReadValue(key);
+        }
+
+        public static void Edit(string key, string value) {
+            var arr = new string[] { value };
+            xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
+        }
+
+        public static void Remove(string key) {
+            //var arr = new string[] { value };
+            //xmlWriter.
+        }
+    }
 }
