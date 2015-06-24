@@ -67,7 +67,7 @@ namespace Antd {
                 CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, notes);
 
                 string command = this.Request.Form.CCTableCommand;
-                string inputid = "New" + label.UppercaseAllFirstLetters();
+                string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
                 string inputlocation = "CCTable" + this.Request.Form.TableName;
                 CommandDB.Create(inputid, command, command, inputlocation, notes);
 
