@@ -39,7 +39,7 @@
     <form id="DashboardForm" action="/cctable" method="POST" enctype="multipart/form-data" style="display: none;">
         <div class="grid">
             <div class="row">
-                <div class="span2">
+                <div class="span3">
                     <label>Table Name</label>
                 </div>
                 <div class="span7">
@@ -80,7 +80,7 @@
             </table>
             <form action="/cctable/row" method="POST" enctype="multipart/form-data" data-table-form="@table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
                 <div class="row">
-                    <div class="span2">
+                    <div class="span3">
                         <label>Label</label>
                     </div>
                     <div class="span7">
@@ -89,30 +89,20 @@
                         <input type="text" name="Label" style="width: 90%; height: 25px;">
                     </div>
                 </div>
-                @*<div class="row">
-                    <div class="span2">
-                        <label>Input Type</label>
-                    </div>
-                    <div class="span7">
-                        <select name="InputType" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
-                            <option value="text">Text</option>
-                            <option value="checkbox">Checkbox</option>
-                        </select>
-                    </div>
-                </div>*@
                 <div class="row">
-                    <div class="span2">
+                    <div class="span3">
                         <label>Input Type</label>
                     </div>
                     <div class="span7">
                         <select name="InputType" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
-                            <option value="text" selected>Text</option>
+                            <option value="none" selected>None</option>
+                            <option value="text">Text</option>
                             <option value="checkbox">Boolean</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span2">
+                    <div class="span3">
                         <label>Notes</label>
                     </div>
                     <div class="span7">
@@ -120,66 +110,78 @@
                     </div>
                 </div>
                 <hr class="bg-anthilla-gray" style="height: 1px !important;">
-                <div id="TextCommand">
+                <div id="NoneCommand">
                     <div class="row">
-                        <div class="span2">
+                        <div class="span3">
                             <label>Command -> input</label>
                         </div>
                         <div class="span7">
                             <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
                         </div>
-                        <div class="span2">
+                        <div class="span3">
+                        </div>
+                    </div>
+                </div>
+                <div id="TextCommand">
+                    <div class="row">
+                        <div class="span3">
+                            <label>Command -> input</label>
+                        </div>
+                        <div class="span7">
+                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                        </div>
+                        <div class="span3">
                             <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="span2">
+                        <div class="span3">
                             <label>Command -> return</label>
                         </div>
                         <div class="span7">
                             <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
                         </div>
-                        <div class="span2">
+                        <div class="span3">
                             <p>Write the command to get the value</p>
                         </div>
                     </div>
                 </div>
-                @*<div id="BooleanCommand" style="display: none;">
+                <div id="BooleanCommand" style="display: none;">
                     <div class="row">
-                        <div class="span2">
+                        <div class="span3">
                             <label>Command -> input, for "true"</label>
                         </div>
                         <div class="span7">
                             <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
                         </div>
-                        <div class="span2">
+                        <div class="span3">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="span2">
-                            <label>Command -> input, for "false"</label>
+                        <div class="span3">
+                            <label>Command -> input, for false stance</label>
                         </div>
                         <div class="span7">
                             <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
                         </div>
-                        <div class="span2">
+                        <div class="span3">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="span2">
+                        <div class="span3">
                             <label>Command -> return</label>
                         </div>
                         <div class="span7">
                             <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
                         </div>
-                        <div class="span2">
+                        <div class="span3">
                             <p>Write the command to get the value</p>
                         </div>
                     </div>
-                </div>*@
+                </div>
                 <hr class="bg-anthilla-gray" style="height: 1px !important;">
                 <div class="row">
-                    <div class="span2">
+                    <div class="span3">
                         <label>&nbsp</label>
                     </div>
                     <div class="span7">
@@ -199,11 +201,20 @@
         $('select[name="InputType"]').windowed({
             change: function (event, selected) {
                 var selected = $(selected);
+                if (selected.val() == 'none') {
+                    $('#NoneCommand').show();
+                    $('#TextCommand').hide();
+                    $('#BooleanCommand').hide();
+                }
                 if (selected.val() == 'text') {
-                    //alert('tt');
+                    $('#TextCommand').show();
+                    $('#NoneCommand').hide();
+                    $('#BooleanCommand').hide();
                 }
                 if (selected.val() == 'checkbox') {
-                    //alert('bk');
+                    $('#BooleanCommand').show();
+                    $('#NoneCommand').hide();
+                    $('#TextCommand').hide();
                 }
             }
         });
