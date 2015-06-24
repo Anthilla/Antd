@@ -149,6 +149,7 @@
     <Compile Include="Auth\MapSystemUser.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="Boot\ParametersConfig.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />

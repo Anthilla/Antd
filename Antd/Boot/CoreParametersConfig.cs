@@ -28,6 +28,8 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Common;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Antd.Boot {
 
@@ -39,7 +41,7 @@ namespace Antd.Boot {
                 coreFileName + "002"
             };
 
-        private static XmlWriter xmlWriter = new XmlWriter(_files);
+        public static XmlWriter xmlWriter = new XmlWriter(_files);
 
         public static void WriteDefaults() {
             xmlWriter.Write("root", "/antd");

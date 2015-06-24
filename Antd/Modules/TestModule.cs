@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Boot;
 using Antd.Common;
 using Antd.Scheduler;
 using Nancy;
@@ -47,39 +48,14 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Get["/acl"] = x => {
-                var c = new DirectoryLister("/sys", false).GetFileACL();
-                return Response.AsJson(c);
-            };
-
-            Get["/error"] = x => {
-                var s = FileSystem.ReadFile(Guid.NewGuid().ToString());
-                return Response.AsJson(true);
-            };
-
-            Get["/cmd"] = x => {
-                Command.Launch("md", @"D:\test");
-                return Response.AsJson(System.Environment.OSVersion);
-            };
-
-            Get["/tzctl"] = x => {
-                return Response.AsJson(Command.Launch("timedatectl", "list-timezones").output);
-            };
-
-            Get["/cron"] = x => {
-                Console.WriteLine("cron");
-                //Job.Schedule("ipip", "echo charlie", "0/20 * * * * ?");
-                JobScheduler.Test();
-                return Response.AsJson(true);
-            };
-
-            Get["/db"] = x => {
-                Console.WriteLine("Check database");
-                var i = DeNSo.Configuration.Version;
-                Console.WriteLine("Version: " + i);
-                var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-                var files = Directory.GetFiles(applicationRoot, "*.jnl", SearchOption.AllDirectories);
-                Console.WriteLine("files: " + string.Join(", ", files));
+            Get["/raid"] = x => {
+                string v = "antdbdas";
+                ParametersConfig.Write(v, "uno");
+                Console.WriteLine(ParametersConfig.Read(v));
+                ParametersConfig.Write(v, "due");
+                Console.WriteLine(ParametersConfig.Read(v));
+                ParametersConfig.Write(v, "tre");
+                Console.WriteLine(ParametersConfig.Read(v));
                 return Response.AsJson(true);
             };
         }
