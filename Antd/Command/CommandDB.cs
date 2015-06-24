@@ -99,6 +99,17 @@ namespace Antd.CommandManagement {
             return null;
         }
 
+        public static string LaunchAndGetOutputUsingNewValue(string inputid) {
+            var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
+            if (command != null) {
+                var layout = command.Layout;
+                var newFile = layout.GetFirstString();
+                var newArguments = layout.GetAllStringsButFirst();
+                return Command.Launch(newFile, newArguments).output;
+            }
+            return null;
+        }
+
         public static string LaunchAndGetOutputUsingNewValue(string inputid, string newValue) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
             if (command != null) {

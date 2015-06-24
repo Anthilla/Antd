@@ -68,6 +68,12 @@ namespace Antd {
                 return Response.AsJson(true);
             };
 
+            Get["/ex/{inputid}"] = x => {
+                string inputid = x.inputid;
+                var r = CommandDB.LaunchAndGetOutputUsingNewValue(inputid);
+                return Response.AsJson(r);
+            };
+
             Get["/ex/{inputid}/{value}"] = x => {
                 string inputid = x.inputid;
                 string value = x.value;

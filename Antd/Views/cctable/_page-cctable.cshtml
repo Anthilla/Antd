@@ -65,7 +65,12 @@
                                 <label>@row.Label</label>
                             </td>
                             <td style="width: 450px !important">
-                                <input id="@row.HtmlInputID" type="@row.InputType" value="@row.ValueResult" style="width: 100% !important" />
+                                @if (row.InputType == "hidden") {
+                                    <input id="@row.HtmlInputID" type="hidden" value="0" style="width: 100% !important" />
+                                }
+                                else {
+                                    <input id="@row.HtmlInputID" type="@row.InputType" value="@row.ValueResult" style="width: 100% !important" />
+                                }
                                 <p>@row.InputLabel</p>
                             </td>
                             <td style="width: 250px !important">
@@ -95,7 +100,7 @@
                     </div>
                     <div class="span7">
                         <select name="InputType" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
-                            <option value="none" selected>None</option>
+                            <option value="hidden" selected>None</option>
                             <option value="text">Text</option>
                             <option value="checkbox">Boolean</option>
                         </select>
@@ -122,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="TextCommand">
+                <div id="TextCommand" style="display: none;">
                     <div class="row">
                         <div class="span3">
                             <label>Command -> input</label>
