@@ -8,11 +8,12 @@ About
  
 Antd aims to be an application/configuration init and a configuration daemon. Antd can be invoked by the base init system just after entering a known minimum runlevel during boot. Antd will then execute base and applicative processes, settings, and then check the configuration. Antd can work both locally and in distributed environments. Antd uses noSQL for complex data management to start, control, and mmonitor parts of the system and application stack. Antd can also work with systemd or other init systems.
 
-- Antd is written in C#
-- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy) frameworks
-- Antd is implemented as web service with REST API service and rendered web interface
-- Antd is released under the BSD 3 license
-- Antd is self hosted, no external webserver is needed
+Antd is:
+- written in C#
+- based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy) frameworks
+- implemented as web service with REST API service and rendered web interface
+- released under the BSD 3 license
+- self hosted, no external webserver is needed
 
 Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, and dbus.
 
