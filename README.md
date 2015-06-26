@@ -5,42 +5,38 @@ Antd
 
 About
 -----
-
-Antd aims to be an application & configuration init and a configuration daemon.
-Thinking about a Linux/Unix system as "applicative appliance system", Antd can be invoked by the base init system just after the base boot of the system into a known minimal runlevel
-and execute base and applicative processes, settings, and check the configuration. It can work both locally and in distributed environments and uses and internal nosql database for complex data management and 
-to start, control, check, monitor of the system and application stack.
  
-Antd can work with systemd or other init systems.
+Antd aims to be an application/configuration init and a configuration daemon. Antd can be invoked by the base init system just after entering a known minimum runlevel during boot. Antd will then execute base and applicative processes, settings, and then check the configuration. Antd can work both locally and in distributed environments. Antd uses noSQL for complex data management to start, control, and mmonitor parts of the system and application stack. Antd can also work with systemd or other init systems.
 
-- Antd is written in C#
-- Antd is based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy) frameworks
-- Antd is implemented as web service with REST API service and rendered web interface
-- Antd is released under the BSD 3 clause license
-- Antd is self hosted, no external webserver is needed
+Antd is:
+- written in C#
+- based on [Mono](http://www.mono-project.com/) and [Nancy](https://github.com/NancyFx/Nancy) frameworks
+- implemented as web service with REST API service and rendered web interface
+- released under the BSD 3 license
+- self hosted, no external webserver is needed
 
-Antd would be a single daemon to maintain the linux/unix appliance system (processes, clustering, configuration, configuration store, configuration dispatching, monitoring)
-using, whenever possible, shell commands, kernel related userspace commands or direct access to pseudo filesystems (linux) like /proc /sys and dbus.
+Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, and dbus.
 
-### Target Achievements
-- total administration, easy to use for inspecting journals and starting and stopping services.
-- swiss knife for administration, configuration and monitoring
-- single machine to big clustered enviroments or distributed installations scalability
-- de-structured clustering (orchestrated executions and management of processes and application on distributed enviroments
-- capable of full machine control and check
-- unique interface, from low level to highest application level
-- system independent / system architecture independent
+### Project Goals
+- Complete administration capabilities
+- Easy to use for inspecting logs and managing services
+- Swiss Knife all-in-one for administration, configuration and monitoring
+- Scales from one machine to big cluster environments.
+- Orchestrated execution and management of processes and applications in distributed environments
+- Full machine administration and monitoring
+- Unique interface throughout the application
+- Hardware/OS/architecture independent
 
 ### Antd is inspired by:
 - [Webmin](http://www.webmin.com/)
 - [LuCI OpenWRT](http://wiki.openwrt.org/doc/howto/luci.essentials)
 - [Cockipt Project](http://cockipt-project.org)
 - [CoreOS](https://coreos.com/using-coreos/) [fleet and etcd](https://github.com/coreos/fleet/blob/master)
-- [Salt Stack](http://saltstack.com/community/) and sub project [Salt Virt](http://docs.saltstack.com/en/latest/topics/virt/)
+- [Salt Stack](http://saltstack.com/community/) and its sub project [Salt Virt](http://docs.saltstack.com/en/latest/topics/virt/)
 - [Witsbits](http://witsbits.com/)
-- any kind of distributed configuration manager, and system synchronizer.
+- Any other kind of distributed configuration manager and system synchronizer out there
 
-### References:
+### Dependencies:
 - [C5](https://github.com/sestoft/C5/)
 - [DensoDb](https://github.com/ppossanzini/DensoDB) v3
 - [jQuery](https://github.com/jquery/jquery)
@@ -54,53 +50,61 @@ Getting Started
 
 <b>Windows</b>
 
-1. download the source files
-2. import nuget packages necessary to build with "Restore nuget packages" available both in Mono Develop + nuget and Visual Studio.
-3. run it!
+1. Download the source files from GitHub, or use `git clone https://github.com/Anthilla/Antd.git`
+
+2. Import nuget packages necessary to build with "Restore nuget packages" available both in Mono Develop + nuget and Visual Studio.
+3. Run it!
  
 <b>Gentoo Linux</b>
 
-1. add dotnet repository (`layman -a dotnet`)
+1. Add the dotnet repository (`layman -a dotnet`)
 2. `emerge antd`
-3. run it! (`antd` or `sudo antd` for root permissions)
+3. Run it! (`antd` or `sudo antd` for root permissions)
 
-<b>Any Linux</b>
+<b>Other Linux</b>
 
-1. install mono (3.2.1 or higher)
-2. build it with xbuild or from the IDE
-3. run it!
+1. Install mono (3.2.1 or higher)
+2. Build it with xbuild or from an IDE
+3. Run it!
  
-The Antd API uses JSON over HTTP
+The Antd API uses JSON over HTTP.
 
 How to Contribute
 -----------------
 
-The project is in a very early stage.
-Help us sharing ideas and ways to organize and improve the project!
+This project is still in its early stages of development. Please help us by sharing ideas to help organize and improve the project!
 
 ### Communicate by Email
 
 Email: osdev@anthilla.com
 
+### IM
+
+Freenode IRC channel: #anthilla
+
+Gitter: [![Join the chat at https://gitter.im/Anthilla/Antd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Anthilla/Antd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### Getting Started
 
-Fork the repository on GitHub
-Play with the project, submit bugs, submit patches, submit extensions, submit ideas (!!!),
+Fork the repository on GitHub using `git clone https://github.com/Anthilla/Antd.git`. 
+Play with the code, submit patches, and file bugs when you come across them. Don't forget to send your ideas and feature requests too!
 
 ### Contribution Flow
 
-This is a rough outline of what a contributor's workflow looks like:
+This is an outline of what a contributor's workflow should look like:
 
-Create a topic branch from where you want to base your work (usually master).
-Make commits of logical units.
-Make sure your commit messages are in the proper format (see below).
-Push your changes to a topic branch in your fork of the repository.
-Make sure the tests pass, and add any new tests as appropriate.
-Submit a pull request to the original repository.
+- Create a new branch or fork the repository from where you want to start your work (usually Anthilla/Antd:master)
+- Edit the code, testing your changes as you go
+- Create a commit, making sure that your commit messages follow **OUR** standards (see below)
+- Push your changes to your own branch/forked repository
+- Ensure your code is stable and free of any application-breaking bugs
+- Submit a pull request
 
-Thanks for your contributions!
+Please be patient as it may take some time for us to review your code. If we have any questions, we will notify you through the active pull request.
 
-Antd is released under the BSD 3 clause license. See the LICENSE file for details.
+Thank you for your contributions!
+
+Antd is released under the BSD 3 clause license. See the LICENSE file for details (included with the application).
 
 Specific components of Antd use code derivative from software distributed under other licenses; in those cases the appropriate licenses are stipulated alongside the code.
 
