@@ -27,7 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Common;
 using Antd.MachineStatus;
 using Antd.Status;
 using Antd.ViewHelpers;

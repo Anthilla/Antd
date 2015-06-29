@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Antd.Common {
+namespace Antd {
 
     public static class Extensions {
 

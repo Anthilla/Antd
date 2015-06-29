@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Boot;
-using Antd.Common;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
@@ -63,6 +62,8 @@ namespace Antd {
                 AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
+
+                AntdBoot.TestWebDav("http://localhost:7788/", "/test");
 
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 

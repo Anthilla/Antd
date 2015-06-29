@@ -306,6 +306,7 @@
     </xs:restriction>
   </xs:simpleType>
 
+
   <xs:simpleType name="simple-trigger-misfire-instructionType">
     <xs:annotation>
       <xs:documentation>Simple Trigger Misfire Instructions</xs:documentation>
@@ -356,4 +357,5 @@
       <xs:pattern value="Year" />
     </xs:restriction>
   </xs:simpleType>
+
 </xs:schema>

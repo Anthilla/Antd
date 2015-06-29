@@ -30,7 +30,7 @@
 using System;
 using System.IO;
 
-namespace Antd.Common {
+namespace Antd {
 
     public static class FileSystem {
 

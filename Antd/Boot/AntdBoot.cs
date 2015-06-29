@@ -27,14 +27,18 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Common;
 using Antd.Scheduler;
 using Antd.Status;
+using Common.Logging;
+using Common.Logging.Simple;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
 using System;
+using System.Collections.Specialized;
 using System.IO;
+using WebDAVSharp.Server;
+using WebDAVSharp.Server.Stores.DiskStore;
 
 namespace Antd.Boot {
 
@@ -132,6 +136,15 @@ namespace Antd.Boot {
             StaticConfiguration.DisableErrorTraces = false;
             app.UseNancy();
             ConsoleLogger.Log("    nancy -> loaded");
+        }
+
+        public static void TestWebDav(string uri, string path) {
+            NameValueCollection properties = new NameValueCollection();
+            properties["showDateTime"] = "true";
+            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
+            WebDavServer server = new WebDavServer(new WebDavDiskStore(path));
+            server.Listener.Prefixes.Add(uri);
+            server.Start();
         }
     }
 }

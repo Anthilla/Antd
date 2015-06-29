@@ -29,7 +29,7 @@
 
 using System;
 
-namespace Antd.Common {
+namespace Antd {
 
     public class Timestamp {
 

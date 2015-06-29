@@ -33,7 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Antd.Common {
+namespace Antd {
 
     public class param {
 

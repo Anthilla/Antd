@@ -27,7 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Common;
 using Quartz;
 using Quartz.Impl;
 using System;
