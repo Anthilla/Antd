@@ -198,6 +198,7 @@
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\SystemModule.cs" />
+    <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Security\Cryptography.cs" />
