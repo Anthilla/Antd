@@ -80,7 +80,7 @@ namespace Antd.Status {
         }
 
         private static void MountNetworkdDir() {
-            Command.Launch("mount", "--bind /etc/systemd/network /antd/networkd");
+            Command.Launch("mount", "--bind /etc/systemd/network " + Folder.Networkd);
         }
 
         private static string RestartNetworkdDir() {
@@ -96,8 +96,7 @@ namespace Antd.Status {
         private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
                                       string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
                                       string addressAddress, string routeGateway) {
-            Directory.CreateDirectory("/antd/networkd");
-            string path = Path.Combine("/antd/networkd", filename + ".network");
+            string path = Path.Combine(Folder.Networkd, filename + ".network");
             //if (File.Exists(path)) {
             //    File.Delete(path);
             //}
@@ -127,7 +126,7 @@ namespace Antd.Status {
         }
 
         public static string ReadAntdUnit() {
-            string path = Path.Combine("/antd/networkd", "antd.network");
+            string path = Path.Combine(Folder.Networkd, "antd.network");
             string text;
             if (!File.Exists(path)) {
                 text = "Unit file doesn't exist!";
@@ -140,11 +139,11 @@ namespace Antd.Status {
 
         public static dynamic ReadUnits() {
             List<string> list = new List<string>() { };
-            var dirContainer = "/antd/networkd";
+            var dirContainer = Folder.Networkd;
             if (Directory.Exists(dirContainer)) {
-                string[] dirs = Directory.GetFiles("/antd/networkd");
+                string[] dirs = Directory.GetFiles(Folder.Networkd);
                 foreach (string file in dirs) {
-                    string path = Path.Combine("/antd/networkd", file);
+                    string path = Path.Combine(Folder.Networkd, file);
                     string text;
                     if (!File.Exists(path)) {
                         text = "Unit file does not exist!";
@@ -162,8 +161,7 @@ namespace Antd.Status {
         }
 
         public static void CreateCustomUnit(string text, string fname) {
-            Directory.CreateDirectory("/antd/networkd");
-            string path = Path.Combine("/antd/networkd", fname + ".network");
+            string path = Path.Combine(Folder.Networkd, fname + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }

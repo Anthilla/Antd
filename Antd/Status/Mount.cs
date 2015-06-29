@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Boot;
 using Antd.Models;
 using Newtonsoft.Json;
 using System;
@@ -49,7 +50,7 @@ namespace Antd.Status {
         public static List<MountModel> Running { get { return GetAllMounts(); } }
 
         private static List<MountModel> ReadMountCustomFile() {
-            string text = FileSystem.ReadFile("/antd/mounts", "antd.mounts");
+            string text = FileSystem.ReadFile(Folder.Config, "antd.mounts");
             var output = JsonConvert.SerializeObject(text);
             List<MountModel> mounts = MapMountJson(output);
             return mounts;
@@ -97,8 +98,7 @@ namespace Antd.Status {
 
         public static void WriteConfig() {
             var parameters = Running;
-            Directory.CreateDirectory("/antd/mounts");
-            string path = Path.Combine("/antd/mounts", "antd.mounts");
+            string path = Path.Combine(Folder.Config, "antd.mounts");
             if (File.Exists(path)) {
                 File.Delete(path);
             }

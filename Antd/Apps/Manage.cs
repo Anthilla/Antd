@@ -36,20 +36,25 @@ using System.Threading.Tasks;
 
 namespace Antd.Apps {
     public class Management {
-        public static dynamic Detect() {
-            var root = "/mnt/cdrom/Apps";
-            var folders = Directory.GetDirectories(root).ToArray();
-            var squashes = Directory.GetFiles(root, ".squashfs").ToArray();
+        private static string appsFolder = "/mnt/cdrom/Apps";
 
-            var newArray = new string[folders.Length + squashes.Length];
-            Array.Copy(folders, newArray, 0);
-            Array.Copy(squashes, 0, newArray, folders.Length, squashes.Length);
+        public static dynamic Detect() {
+            var folders = Directory.GetDirectories(appsFolder).ToArray();
+            var squashes = Directory.GetFiles(appsFolder, ".squashfs").ToArray();
+            var newArray = folders.Concat(squashes).ToArray();
             if (newArray.Length > 0) {
                 return newArray;
             }
             else {
                 return false;
             }
+        }
+
+        public static void SetUnitFile() {
+            //foreach app in /mnt/cdrom/Apps
+            //da ApplicativeUnit.Set1
+            //da ApplicativeUnit.Set2
+            //da ApplicativeUnit.Set3 ... etc
         }
     }
 }

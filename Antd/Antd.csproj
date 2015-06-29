@@ -216,6 +216,7 @@
     <Compile Include="Modules\SystemModule.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
+    <Compile Include="Parameter.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Security\Cryptography.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
@@ -254,9 +255,9 @@
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Version.cs" />
     <Compile Include="Command\Command.cs" />
+    <Compile Include="UnitFiles\ApplicativeUnit.cs" />
     <Compile Include="UnitFiles\Systemctl.cs" />
     <Compile Include="UnitFiles\UnitRepo.cs" />
-    <Compile Include="UnitFiles\UnitFile.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />

@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Boot;
 using Antd.MachineStatus;
 using Antd.Models;
 using Antd.Status;
@@ -76,7 +77,7 @@ namespace Antd {
             Get["/conf"] = x => {
                 dynamic vmod = new ExpandoObject();
                 HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
-                HashSet<DirItemModel> cfgList = new DirectoryLister("/antd/etc", true).FullList2;
+                HashSet<DirItemModel> cfgList = new DirectoryLister(Folder.Config, true).FullList2;
                 List<dynamic> nl = new List<dynamic>() { };
                 foreach (DirItemModel dir in etcList) {
                     dynamic imod = new ExpandoObject();

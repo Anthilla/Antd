@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Boot;
 using Antd.Models;
 using System;
 using System.IO;
@@ -50,7 +51,7 @@ namespace Antd.MachineStatus {
 
         private static void SetFile(string _filePath, string content) {
             string filePath = _filePath.RemoveDriveLetter();
-            string root = "/antd/etc/";
+            string root = Folder.Config;
             string newFileName = filePath.ConvertPathToFileName();
             string newPath = root + newFileName;
             Directory.CreateDirectory(root);

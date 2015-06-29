@@ -56,7 +56,7 @@ namespace Antd {
                     ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
                     AnthillaSP.Setting.MountSquash();
                     ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                    AnthillaSP.Setting.CreateUnits();
+                    AnthillaSP.SetAndRun();
                     return Response.AsJson(true);
                 }
             };

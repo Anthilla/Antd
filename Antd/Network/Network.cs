@@ -37,20 +37,6 @@ namespace Antd.Network.Management {
 
     public class NetworkInfo {
 
-        public static NetworkInfoModel GetModel() {
-            string hostnameContent = "";
-            hostnameContent = FileSystem.ReadFile("/antd/network/hostname");
-
-            var network = new NetworkInfoModel { hostname = hostnameContent };
-
-            return network;
-        }
-
-        public static NetworkInfoModel GetModel(string hostname) {
-            var network = new NetworkInfoModel { hostname = hostname };
-            FileSystem.WriteFile("/antd/network/hostname", network.hostname);
-            return network;
-        }
     }
 
     public class NetworkInterface {

@@ -33,6 +33,15 @@ namespace Antd.Apps {
 
     public class AnthillaSP {
 
+        private static string applicativeUnitsFolder = "/mnt/cdrom/Units/applicative.target.wants";
+
+        public static void SetAndRun() {
+            Units.SetAnthillaSP();
+            Units.MountFramework();
+            Units.LaunchAnthillaSP();
+            Units.LaunchAnthillaServer();
+        }
+
         public class Setting {
 
             public static bool CheckSquash() {
@@ -51,23 +60,13 @@ namespace Antd.Apps {
                 Directory.CreateDirectory("/framework/anthillasp");
                 Command.Launch("mount", "/mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
             }
+        }
 
-            public static void CreateUnits() {
-                ConsoleLogger.Warn("Your attempt to write in Overlays will be lost! (tmpsf)");
-                Command.Launch("mount", "-t tmpfs tmpfs /mnt/cdrom/Overlay/");
-                ConsoleLogger.Warn("Your anthillasp units be written in tmpfs!");
-                Directory.CreateDirectory("/mnt/cdrom/Overlay/anthillasp/");
-                Command.Launch("mount", "-t tmpfs tmpfs /mnt/cdrom/Overlay/anthillasp/");
-                UnitPrepareAnthillasp();
-                UnitFrameworkMount();
-                UnitLaunchAnthillaSP();
-                UnitLaunchAnthillaServer();
-            }
+        public class Units {
 
-            private static void UnitPrepareAnthillasp() {
+            public static void SetAnthillaSP() {
                 var unitName = "anthillasp-prepare.service";
-                var folder = "/mnt/cdrom/Overlay/anthillasp";
-                var path = Path.Combine(folder, unitName);
+                var path = Path.Combine(applicativeUnitsFolder, unitName);
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -85,10 +84,9 @@ namespace Antd.Apps {
                 Command.Launch("chmod", "777 " + path);
             }
 
-            private static void UnitFrameworkMount() {
+            public static void MountFramework() {
                 var unitName = "framework-anthillasp.mount";
-                var folder = "/mnt/cdrom/Overlay/anthillasp";
-                var path = Path.Combine(folder, unitName);
+                var path = Path.Combine(applicativeUnitsFolder, unitName);
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -106,10 +104,9 @@ namespace Antd.Apps {
                 Command.Launch("chmod", "777 " + path);
             }
 
-            private static void UnitLaunchAnthillaSP() {
+            public static void LaunchAnthillaSP() {
                 var unitName = "anthillasp-launcher.service";
-                var folder = "/mnt/cdrom/Overlay/anthillasp";
-                var path = Path.Combine(folder, unitName);
+                var path = Path.Combine(applicativeUnitsFolder, unitName);
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -127,10 +124,9 @@ namespace Antd.Apps {
                 Command.Launch("chmod", "777 " + path);
             }
 
-            private static void UnitLaunchAnthillaServer() {
+            public static void LaunchAnthillaServer() {
                 var unitName = "anthillaserver-launcher.service";
-                var folder = "/mnt/cdrom/Overlay/anthillasp";
-                var path = Path.Combine(folder, unitName);
+                var path = Path.Combine(applicativeUnitsFolder, unitName);
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");

@@ -49,7 +49,7 @@ namespace Antd.Status {
         public static List<SysctlModel> Running { get { return GetAllSysctls(); } }
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
-            string text = FileSystem.ReadFile("/antd", "antd.sysctl.conf");
+            string text = FileSystem.ReadFile(Folder.Config, "antd.sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;
@@ -110,8 +110,8 @@ namespace Antd.Status {
 
         public static void WriteConfig() {
             var parameters = Stock;
-            Directory.CreateDirectory("/antd");
-            string path = Path.Combine("/antd", "antd.sysctl.conf");
+            Directory.CreateDirectory(Folder.Config);
+            string path = Path.Combine(Folder.Config, "antd.sysctl.conf");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
@@ -127,7 +127,7 @@ namespace Antd.Status {
         }
 
         public static void LoadConfig() {
-            string path = Path.Combine("/antd", "antd.sysctl.conf");
+            string path = Path.Combine(Folder.Config, "antd.sysctl.conf");
             Command.Launch("sysctl", "-p " + path);
         }
     }
