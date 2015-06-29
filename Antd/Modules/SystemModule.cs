@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.MachineStatus;
+using Antd.Models;
 using Antd.Status;
 using Antd.ViewHelpers;
 using Nancy;

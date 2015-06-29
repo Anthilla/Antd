@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Models;
 namespace Antd.UnitFiles {
 
     public class Systemctl {

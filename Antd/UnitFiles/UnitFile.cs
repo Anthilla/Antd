@@ -34,7 +34,7 @@ namespace Antd.UnitFiles {
     public class UnitFile {
 
         public static void Write(string name) {
-            UnitModel unitModel = UnitRepo.GetInfo(name);
+            var unitModel = UnitRepo.GetInfo(name);
             string folder = "/antd/anthilla.units.d/";
             System.IO.Directory.CreateDirectory(folder);
             string file = unitModel.description;

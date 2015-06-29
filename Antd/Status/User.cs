@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,16 +38,16 @@ namespace Antd.Status {
 
     public class User {
 
-        private static List<UserModel> GetAllUsers() {
+        private static List<SystemUserModel> GetAllUsers() {
             string text = FileSystem.ReadFile("/etc", "shadow");
             var output = JsonConvert.SerializeObject(text);
-            List<UserModel> mounts = MapUserJson(output);
+            List<SystemUserModel> mounts = MapUserJson(output);
             return mounts;
         }
 
-        public static List<UserModel> Running { get { return GetAllUsers(); } }
+        public static List<SystemUserModel> Running { get { return GetAllUsers(); } }
 
-        private static List<UserModel> MapUserJson(string _mountJson) {
+        private static List<SystemUserModel> MapUserJson(string _mountJson) {
             string mountJson2 = _mountJson;
             mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
             string mountJson = mountJson2;
@@ -54,7 +55,7 @@ namespace Antd.Status {
             string[] rowDivider = new String[] { "\n" };
             string[] mountJsonRow = new string[] { };
             mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<UserModel> mounts = new List<UserModel>() { };
+            List<SystemUserModel> mounts = new List<SystemUserModel>() { };
             foreach (string rowJson in mountJsonRow) {
                 if (rowJson != null && rowJson != "") {
                     var fCh = rowJson.ToArray()[0];
@@ -62,7 +63,7 @@ namespace Antd.Status {
                         string[] mountJsonCell = new string[] { };
                         string[] cellDivider = new String[] { ":" };
                         mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                        UserModel mount = MapUser(mountJsonCell);
+                        SystemUserModel mount = MapUser(mountJsonCell);
                         mounts.Add(mount);
                     }
                 }
@@ -70,9 +71,9 @@ namespace Antd.Status {
             return mounts;
         }
 
-        private static UserModel MapUser(string[] _mountJsonCell) {
+        private static SystemUserModel MapUser(string[] _mountJsonCell) {
             string[] mountJsonCell = _mountJsonCell;
-            UserModel mount = new UserModel();
+            SystemUserModel mount = new SystemUserModel();
             if (mountJsonCell.Length > 1) {
                 mount.username = mountJsonCell[0];
                 mount.password = mountJsonCell[1];

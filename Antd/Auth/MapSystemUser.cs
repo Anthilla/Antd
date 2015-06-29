@@ -42,7 +42,7 @@ namespace Antd.Auth {
         }
 
         public static string GetRootPwd(string username) {
-            CommandModel command = Command.Launch("cat", "/etc/shadow");
+            var command = Command.Launch("cat", "/etc/shadow");
             List<string> sysUserList = command.outputTable;
             var s = (from r in sysUserList
                      where r.Contains(username)

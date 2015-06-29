@@ -27,22 +27,23 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Models;
 
 namespace Antd {
 
     public class NetworkInfo {
 
-        public static NetworkModel GetModel() {
+        public static NetworkInfoModel GetModel() {
             string hostnameContent = "";
             hostnameContent = FileSystem.ReadFile("/antd/network/hostname");
 
-            var network = new NetworkModel {hostname = hostnameContent};
+            var network = new NetworkInfoModel { hostname = hostnameContent };
 
             return network;
         }
 
-        public static NetworkModel GetModel(string hostname) {
-            var network = new NetworkModel {hostname = hostname};
+        public static NetworkInfoModel GetModel(string hostname) {
+            var network = new NetworkInfoModel { hostname = hostname };
             FileSystem.WriteFile("/antd/network/hostname", network.hostname);
             return network;
         }

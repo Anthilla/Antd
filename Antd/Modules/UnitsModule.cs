@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Models;
 using Antd.Systemd;
 using Antd.UnitFiles;
 using Nancy;

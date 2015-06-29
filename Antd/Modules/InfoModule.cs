@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Models;
 using Antd.Status;
 using Nancy;
 using System.Dynamic;
