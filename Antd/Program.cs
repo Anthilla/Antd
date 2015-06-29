@@ -63,7 +63,7 @@ namespace Antd {
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
 
-                AntdBoot.TestWebDav("http://localhost:7788/", "/test");
+                //AntdBoot.TestWebDav("http://localhost:7788/", "/test");
 
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 

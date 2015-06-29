@@ -65,9 +65,7 @@ namespace Antd.Boot {
             xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
         }
 
-        public static void Remove(string key) {
-            //var arr = new string[] { value };
-            //xmlWriter.
-        }
+        //public static void Remove(string key) {
+        //}
     }
 }
