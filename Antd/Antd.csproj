@@ -184,7 +184,8 @@
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Database\AntdDatabase.cs" />
     <Compile Include="Directory\DirectoryFinder.cs" />
-    <Compile Include="Mail\MailTest.cs" />
+    <Compile Include="Mail\IMAP.cs" />
+    <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
