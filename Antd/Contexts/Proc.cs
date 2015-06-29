@@ -36,10 +36,25 @@ namespace Antd {
 
     public class Proc {
 
-        private static List<ProcModel> GetAllProc() {
+        private static List<ProcModel> GetAllAllProc() {
             CommandModel command = Command.Launch("ps", "-aef");
             var output = JsonConvert.SerializeObject(command.output);
             List<ProcModel> procs = MapProcJson(output);
+            return procs;
+        }
+
+        public static List<ProcModel> AllAll { get { return GetAllAllProc(); } }
+
+        private static List<ProcModel> GetAllProc() {
+            CommandModel command = Command.Launch("ps", "-aef");
+            var output = JsonConvert.SerializeObject(command.output);
+            var list = MapProcJson(output);
+            var procs = new List<ProcModel>() { };
+            foreach(var p in list){
+                if (!p.CMD.Contains('[')) {
+                    procs.Add(p);
+                }
+            }
             return procs;
         }
 
