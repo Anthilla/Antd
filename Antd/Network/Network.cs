@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Models;
+using System.IO;
 
 namespace Antd.Network.Management {
 
@@ -55,7 +56,8 @@ namespace Antd.Network.Management {
         }
 
         public static string GetSysClassNet() {
-            return FileSystem.ReadFile("/sys/class/net");
+            var file = Directory.GetFiles("/sys/class/net");
+            return file.AsJson();
         }
     }
 }

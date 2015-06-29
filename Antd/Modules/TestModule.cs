@@ -27,11 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Boot;
-using Antd.Scheduler;
 using Nancy;
-using System;
-using System.IO;
 
 namespace Antd {
 
@@ -45,17 +41,6 @@ namespace Antd {
 
             Get["/page"] = x => {
                 return View["page-test"];
-            };
-
-            Get["/raid"] = x => {
-                string v = "antdbdas";
-                ParametersConfig.Write(v, "uno");
-                Console.WriteLine(ParametersConfig.Read(v));
-                ParametersConfig.Write(v, "due");
-                Console.WriteLine(ParametersConfig.Read(v));
-                ParametersConfig.Write(v, "tre");
-                Console.WriteLine(ParametersConfig.Read(v));
-                return Response.AsJson(true);
             };
         }
     }

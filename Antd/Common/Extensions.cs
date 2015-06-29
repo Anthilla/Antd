@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +91,10 @@ namespace Antd {
 
         public static string RemoveWhiteSpace(this String str) {
             return str.Replace(" ", "");
+        }
+
+        public static string AsJson(this Object str) {
+            return JsonConvert.SerializeObject(str);
         }
     }
 }
