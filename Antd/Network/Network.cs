@@ -27,22 +27,35 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Antd.Models;
 
-namespace Antd.Network {
-    public class Network {
-        public class Interface {
-            public static string GetIpAddr() {
-                return Command.Launch("ip", "addr").output;
-            }
+namespace Antd.Network.Management {
 
-            public static string GetSysClassNet() {
-                return FileSystem.ReadFile("/sys/class/net");
-            }
+    public class NetworkInfo {
+
+        public static NetworkInfoModel GetModel() {
+            string hostnameContent = "";
+            hostnameContent = FileSystem.ReadFile("/antd/network/hostname");
+
+            var network = new NetworkInfoModel { hostname = hostnameContent };
+
+            return network;
+        }
+
+        public static NetworkInfoModel GetModel(string hostname) {
+            var network = new NetworkInfoModel { hostname = hostname };
+            FileSystem.WriteFile("/antd/network/hostname", network.hostname);
+            return network;
+        }
+    }
+
+    public class NetworkInterface {
+        public static string GetIpAddr() {
+            return Command.Launch("ip", "addr").output;
+        }
+
+        public static string GetSysClassNet() {
+            return FileSystem.ReadFile("/sys/class/net");
         }
     }
 }

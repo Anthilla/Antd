@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Network.Management;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -50,6 +51,16 @@ namespace Antd {
                 string txt = this.Request.Form.Text;
                 Antd.Status.Networkd.CreateCustomUnit(txt, fname);
                 return Response.AsRedirect("/status/networkd");
+            };
+
+            Get["/interface/ipaddr"] = x => {
+                var r = NetworkInterface.GetIpAddr();
+                return Response.AsText(r);
+            };
+
+            Get["/interface/cat"] = x => {
+                var r = NetworkInterface.GetSysClassNet();
+                return Response.AsText(r);
             };
         }
     }
