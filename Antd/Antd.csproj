@@ -199,12 +199,8 @@
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\SystemModule.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
-    <Compile Include="Security\_AnthillaRsa.cs" />
-    <Compile Include="Security\_AnthillaRsaCore.cs" />
     <Compile Include="Security\Token.cs" />
-    <Compile Include="Security\_AsymmetricSecurity.cs" />
     <Compile Include="Security\Cryptography.cs" />
-    <Compile Include="Security\_KeyIdentity.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />
