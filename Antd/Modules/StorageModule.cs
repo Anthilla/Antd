@@ -42,11 +42,11 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.DatabaseVersion = AntdDatabase.Version;
-                vmod.DatabaseName = AntdDatabase.Name;
-                vmod.DatabasePath = AntdDatabase.Path;
-                vmod.DatabaseJnlPath = AntdDatabase.JournalPath;
-                vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
+                //vmod.DatabaseVersion = AntdDatabase.Version;
+                //vmod.DatabaseName = AntdDatabase.Name;
+                //vmod.DatabasePath = AntdDatabase.Path;
+                //vmod.DatabaseJnlPath = AntdDatabase.JournalPath;
+                //vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
                 return View["_page-storage", vmod];
             };
 

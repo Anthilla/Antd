@@ -1,33 +1,75 @@
 ﻿<legend id="Interface">Interface</legend>
-<table class="table hovered">
+<table class="table hovered" style="width: 200px ! important; float: left;">
     <tbody>
         <tr>
-            <td style="background-color: #D8EC9C;"><label class="fg-black">Application Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #D8EC9C;">
+                <label class="fg-black">Application Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #D8EC9C;"><label class="fg-black">Presentation Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #D8EC9C;">
+                <label class="fg-black">Presentation Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #D8EC9C;"><label class="fg-black">Session Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #D8EC9C;">
+                <label class="fg-black">Session Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #E7ED9C;"><label class="fg-black">Transport Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #E7ED9C;">
+                <label class="fg-black">Transport Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #EDDC9C;"><label class="fg-black">Network Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #EDDC9C;">
+                <label class="fg-black">Network Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #E9C189;"><label class="fg-black">Data link Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #E9C189;">
+                <label class="fg-black">Data link Layer</label></td>
         </tr>
         <tr>
-            <td style="background-color: #E9988A;"><label class="fg-black">Physical Layer</label></td>
-            <td>&nbsp</td>
+            <td style="background-color: #E9988A;">
+                <label class="fg-black">Physical Layer</label></td>
         </tr>
     </tbody>
 </table>
+
+@foreach (Antd.Models.NetworkInterfaceModel netInt in Model.Interfaces) {
+    <table class="table hovered" style="width: 350px; float: left;">
+        <tbody>
+            <tr>
+                <td>
+                    <p>&nbsp</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&nbsp</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>@netInt.Network</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>@netInt.Datalink</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>@netInt.Physical</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
