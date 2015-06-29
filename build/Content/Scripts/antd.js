@@ -161,11 +161,19 @@ $('[id^=Update]').click(function () {
 $('a.anchor').click(function (event) {
     event.preventDefault();
     var href = $(this).attr('data-scrollto');
-    var scroll = $(href).offset().top - 40;
-    $('html, body').animate({
-        'scrollTop': scroll
-    }, 500);
-    return false;
+    if (href == 'top') {
+        $('html, body').animate({
+            'scrollTop': 0
+        }, 500);
+        return false;
+    }
+    else {
+        var scroll = $(href).offset().top - 40;
+        $('html, body').animate({
+            'scrollTop': scroll
+        }, 500);
+        return false;
+    }
 });
 
 $(window).scroll(function () {
