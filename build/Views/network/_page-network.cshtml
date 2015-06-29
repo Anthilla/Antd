@@ -49,6 +49,19 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('tr>td:first-child').css('width', '200px');
+            var table = $('.interfacetable');
+            for (var i = 1; i < 8; i++) {
+                var heights = [0];
+                table.find('tr:nth-child(' + i + ')').each(function (index) {
+                    $(this).height('auto')
+                    heights.push($(this).height());
+                });
+                var biggest = Math.max.apply(null, heights);
+                table.find('tr:nth-child(' + i + ')').each(function (index) {
+                    $(this).height(biggest)
+                });
+                var array = [];
+            }
         });
     </script>
 }

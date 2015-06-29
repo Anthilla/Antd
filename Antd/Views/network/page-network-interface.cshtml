@@ -1,6 +1,6 @@
 ﻿<legend id="Interface">Interface</legend>
 <table class="table hovered" style="width: 200px ! important; float: left;">
-    <tbody>
+    <tbody class="interfacetable">
         <tr>
             <td style="background-color: #D8EC9C;">
                 <label class="fg-black">Application Layer</label></td>
@@ -31,45 +31,48 @@
         </tr>
     </tbody>
 </table>
-
-@foreach (Antd.Models.NetworkInterfaceModel netInt in Model.Interfaces) {
-    <table class="table hovered" style="width: 350px; float: left;">
-        <tbody>
-            <tr>
-                <td>
-                    <p>&nbsp</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>&nbsp</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>&nbsp</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>&nbsp</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>@netInt.Network</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>@netInt.Datalink</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p>@netInt.Physical</p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-}
+<div style="overflow: scroll; width: 85%; height: 465px; float: left; margin-bottom">
+    <div style="width: 7000px; height: auto;">
+        @foreach (Antd.Models.NetworkInterfaceModel netInt in Model.Interfaces) {
+            <table class="table hovered" style="width: 350px; float: left;">
+                <tbody class="interfacetable">
+                    <tr>
+                        <td>
+                            <p>&nbsp</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>&nbsp</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>&nbsp</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>&nbsp</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>@netInt.Network</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>@netInt.Datalink</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>@netInt.Physical</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
