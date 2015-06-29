@@ -28,6 +28,9 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Models;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Antd.Network.Management {
@@ -51,13 +54,42 @@ namespace Antd.Network.Management {
     }
 
     public class NetworkInterface {
-        public static string GetIpAddr() {
-            return Command.Launch("ip", "addr").output;
+
+        private static List<string> GetInterfaceList() {
+            var dirs = Directory.GetDirectories("/sys/class/net");
+            var list = new List<string>() { };
+            foreach (var dir in dirs) {
+                list.Add(Path.GetFileName(dir));
+            }
+            return list;
         }
 
-        public static string GetSysClassNet() {
-            var file = Directory.GetFiles("/sys/class/net");
-            return file.AsJson();
+        private static List<NetworkInterfaceModel> MapInterface() {
+            var list = new List<NetworkInterfaceModel>() { };
+            foreach (var name in GetInterfaceList()) {
+                var str = Command.Launch("ip", "addr show " + name).output;
+                var rows = str.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var model = new NetworkInterfaceModel()/* { Data = str }*/;
+                model.Number = Convert.ToInt32(rows[0].Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]);
+                if (rows.Length == 4) {
+                    model.Physical = rows[0];
+                    model.Datalink = rows[1];
+                    model.Network = rows[2] + " " + rows[3];
+                }
+                else if (rows.Length == 3) {
+                    model.Physical = rows[0];
+                    model.Datalink = rows[1];
+                    model.Network = rows[2];
+                }
+                else if (rows.Length == 2) {
+                    model.Physical = rows[0];
+                    model.Datalink = rows[1];
+                }
+                list.Add(model);
+            }
+            return list.OrderBy(m => m.Number).ToList();
         }
+
+        public static List<NetworkInterfaceModel> All { get { return MapInterface(); } }
     }
 }

@@ -188,6 +188,7 @@
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\ConfigFileModel.cs" />
+    <Compile Include="Models\NetworkInterfaceModel.cs" />
     <Compile Include="Models\CpuinfoModel.cs" />
     <Compile Include="Models\DirItemModel.cs" />
     <Compile Include="Models\MeminfoModel.cs" />
@@ -340,6 +341,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\mail\_page-mail.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\network\page-network-interfaceOLD.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\network\page-network-networking.cshtml">

@@ -38,11 +38,12 @@ namespace Antd {
 
         public NetworkModule()
             : base("/network") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.units = Antd.Status.Networkd.ReadUnits();
+                vmod.Interfaces = NetworkInterface.All;
                 return View["_page-network", vmod];
             };
 
@@ -54,13 +55,8 @@ namespace Antd {
             };
 
             Get["/interface/ipaddr"] = x => {
-                var r = NetworkInterface.GetIpAddr();
-                return Response.AsText(r);
-            };
-
-            Get["/interface/cat"] = x => {
-                var r = NetworkInterface.GetSysClassNet();
-                return Response.AsText(r);
+                var r = NetworkInterface.All;
+                return Response.AsXml(r);
             };
         }
     }
