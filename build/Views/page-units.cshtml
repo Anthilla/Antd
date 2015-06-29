@@ -32,6 +32,8 @@
 @{Layout = "_layout.cshtml";}
 @section MainContent
 {
+    <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+
     <table id="units" class="table searchable">
         <thead>
             <tr>
@@ -46,10 +48,10 @@
                     <td>@unit.name </td>
                     <td>@unit.status </td>
                     <td>
-                        <a href="#" class="button bg-gray unit-start" data-unit="@unit.name">Start</a>
-                        <a href="#" class="button bg-gray unit-stop" data-unit="@unit.name">Stop</a>
-                        <a href="#" class="button bg-gray unit-enable" data-unit="@unit.name">Enable</a>
-                        <a href="#" class="button bg-gray unit-disable" data-unit="@unit.name">Disable</a>
+                        <input type="button" class="bg-yellow unit-start" data-unit="@unit.name" value="Start" />
+                        <input type="button" class="bg-yellow unit-stop" data-unit="@unit.name" value="Stop" />
+                        <input type="button" class="bg-yellow unit-enable" data-unit="@unit.name" value="Enable" />
+                        <input type="button" class="bg-yellow unit-disable" data-unit="@unit.name" value="Disable" />
                     </td>
                 </tr>
             }
@@ -58,7 +60,7 @@
 
     <script type="text/javascript">
         //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-        $('a.unit-start').click(function () {
+        $('input.unit-start').click(function () {
             var p = $(this).attr('data-unit');
             jQuery.support.cors = true;
             $.ajax({
@@ -73,7 +75,7 @@
             });
         });
 
-        $('a.unit-stop').click(function () {
+        $('input.unit-stop').click(function () {
             var p = $(this).attr('data-unit');
             jQuery.support.cors = true;
             $.ajax({
@@ -88,7 +90,7 @@
             });
         });
 
-        $('a.unit-enable').click(function () {
+        $('input.unit-enable').click(function () {
             var p = $(this).attr('data-unit');
             jQuery.support.cors = true;
             $.ajax({
@@ -103,7 +105,7 @@
             });
         });
 
-        $('a.unit-disable').click(function () {
+        $('input.unit-disable').click(function () {
             var p = $(this).attr('data-unit');
             jQuery.support.cors = true;
             $.ajax({
