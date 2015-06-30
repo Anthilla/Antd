@@ -231,7 +231,7 @@
             if (val.length > 0) {
                 var input = $('input[name="CCTableCommand"]');
                 var tmpVal = input.val();
-                input.val('');
+                //input.val('');
                 input.val(tmpVal + ' {New' + val + '}');
             }
         });
@@ -242,7 +242,6 @@
             });
             return str;
         }
-
 
         $('input[data-create-input-layout]').click(function () {
             var type = $(this).attr('data-create-input-layout');

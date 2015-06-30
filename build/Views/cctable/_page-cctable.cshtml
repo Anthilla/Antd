@@ -206,7 +206,7 @@
         $('select[name="InputType"]').windowed({
             change: function (event, selected) {
                 var selected = $(selected);
-                if (selected.val() == 'none') {
+                if (selected.val() == 'hidden') {
                     $('#NoneCommand').show();
                     $('#TextCommand').hide();
                     $('#BooleanCommand').hide();
