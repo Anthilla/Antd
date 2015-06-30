@@ -1,0 +1,179 @@
+﻿@foreach (Antd.CCTable.CCTableModel table in Model) {
+    <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@table.Guid">
+        <legend>@table.Alias</legend>
+        <table class="table hovered" data-table-content="@table.Guid">
+            <tbody>
+                @foreach (Antd.CCTable.CCTableRowModel row in table.Content) {
+                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" style="width: 250px !important;">
+                        <td class="right">
+                            <label>@row.Label</label>
+                        </td>
+                        <td style="width: 450px !important">
+                            @if (row.InputType == "hidden") {
+                                <input id="@row.HtmlInputID" type="hidden" value="0" style="width: 100% !important" />
+                            }
+                            else {
+                                <input id="@row.HtmlInputID" type="@row.InputType" value="@row.ValueResult" style="width: 100% !important" />
+                            }
+                            <p>@row.InputLabel</p>
+                        </td>
+                        <td style="width: 250px !important">
+                            <input id="@row.HtmlSumbitID" type="button" value="Apply" class="bg-anthilla-green" style="width: 100% !important"/>
+                        </td>
+                        <td>
+                            <p>@row.Notes</p>
+                        </td>
+                        <td>
+                            <p>@row.FlagOsi</p>
+                        </td>
+                        <td>
+                            <p>@row.FlagCommandFunction</p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <form action="/cctable/row" method="POST" enctype="multipart/form-data" data-table-form="@table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+            <div class="row">
+                <div class="span3">
+                    <label>Label</label>
+                </div>
+                <div class="span7">
+                    <input type="hidden" name="TableGuid" value="@table.Guid">
+                    <input type="hidden" name="TableName" value="@table.Alias">
+                    <input type="text" name="Label" style="width: 90%; height: 25px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>Input Type</label>
+                </div>
+                <div class="span7">
+                    <select name="InputType" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                        <option value="hidden" selected>None</option>
+                        <option value="text">Text</option>
+                        <option value="checkbox">Boolean</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>Notes</label>
+                </div>
+                <div class="span7">
+                    <textarea name="Notes" style="width: 90%; min-height: 125px;" class="bg-anthilla-gray border-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <hr class="bg-anthilla-gray" style="height: 1px !important;">
+            <div id="NoneCommand">
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> input</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                    </div>
+                </div>
+            </div>
+            <div id="TextCommand" style="display: none;">
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> input</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="CCTableCommand" class="add-to-this" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                        <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> return</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                        <p>Write the command to get the value</p>
+                    </div>
+                </div>
+            </div>
+            <div id="BooleanCommand" style="display: none;">
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> input, for "true"</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> input, for "false"</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Command -> return</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
+                    </div>
+                    <div class="span3">
+                        <p>Write the command to get the value</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-anthilla-gray" style="height: 1px !important;">
+            <div class="row">
+                <div class="span3">
+                    <label>Flag OSI</label>
+                </div>
+                <div class="span7">
+                    <select name="FlagOSI" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>Flag Command Function</label>
+                </div>
+                <div class="span7">
+                    <select name="FlagFunction" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                        <option value="0" selected>Stable</option>
+                        <option value="1">Testing</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <label>&nbsp</label>
+                </div>
+                <div class="span7">
+                    <input class="bg-anthilla-green" type="submit" value="Create Row">
+                </div>
+            </div>
+        </form>
+        <hr class="bg-anthilla-gray" />
+        <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@table.Guid" value="New Row"/>
+        <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@table.Guid" value="Delete"/>
+    </div>
+}
+<hr class="bg-anthilla-gray" style="height: 1px !important;">
