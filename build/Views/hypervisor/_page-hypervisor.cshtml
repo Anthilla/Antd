@@ -37,6 +37,13 @@
 }
 
 @section Dashboard {
+    @Html.Partial("_cctable-dashboard", Model.CurrentContext)
+}
+
+@section MainContent {
+    @if (Model.Count > 0) {
+        @Html.Partial("_cctable-main", Model.CCTable)
+    }
     @Html.Partial("page-hypervisor-hosts", Model)
     @Html.Partial("page-hypervisor-vms", Model)
     @Html.Partial("page-hypervisor-newvm", Model)

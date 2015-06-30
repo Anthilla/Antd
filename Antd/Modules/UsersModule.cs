@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.CCTable;
 using Antd.Status;
 using Nancy;
 using Nancy.Security;
@@ -43,6 +44,9 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ALL = User.Running;
+                vmod.CurrentContext = this.Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-users", vmod];
             };
 

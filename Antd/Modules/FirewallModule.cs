@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.CCTable;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -44,6 +45,9 @@ namespace Antd {
                 vmod.FirewallMaximumStates = "9000";
                 vmod.FirewallMaximumTableEntries = "20000";
                 vmod.AliasesHostnamesResolveInterval = "300";
+                vmod.CurrentContext = this.Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-firewall", vmod];
             };
         }

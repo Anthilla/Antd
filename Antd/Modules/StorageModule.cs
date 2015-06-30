@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.CCTable;
 using Antd.Database;
 using Nancy;
 using Nancy.Security;
@@ -47,6 +48,9 @@ namespace Antd {
                 //vmod.DatabasePath = AntdDatabase.Path;
                 //vmod.DatabaseJnlPath = AntdDatabase.JournalPath;
                 //vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
+                vmod.CurrentContext = this.Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-storage", vmod];
             };
 

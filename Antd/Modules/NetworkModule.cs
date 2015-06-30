@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.CCTable;
 using Antd.Network.Management;
 using Nancy;
 using Nancy.Security;
@@ -44,6 +45,9 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.units = Antd.Status.Networkd.ReadUnits();
                 vmod.Interfaces = NetworkInterface.All;
+                vmod.CurrentContext = this.Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-network", vmod];
             };
 

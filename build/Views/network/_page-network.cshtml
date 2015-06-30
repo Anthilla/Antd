@@ -37,6 +37,13 @@
 }
 
 @section Dashboard {
+    @Html.Partial("_cctable-dashboard", Model.CurrentContext)
+}
+
+@section MainContent {
+    @if (Model.Count > 0) {
+        @Html.Partial("_cctable-main", Model.CCTable)
+    }
     @Html.Partial("page-network-networking", Model)
     @Html.Partial("page-network-interface", Model)
     @Html.Partial("page-network-vpn", Model)

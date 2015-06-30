@@ -27,7 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Boot;
 using Antd.CCTable;
 using Antd.MachineStatus;
 using Antd.Models;
@@ -61,6 +60,7 @@ namespace Antd {
                 vmod.SSHPort = "22";
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-system", vmod];
             };
 
