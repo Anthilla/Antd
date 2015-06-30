@@ -28,6 +28,8 @@
 ///-------------------------------------------------------------------------------------
 
 using Nancy;
+using System;
+using System.Net.NetworkInformation;
 
 namespace Antd {
 
@@ -41,6 +43,20 @@ namespace Antd {
 
             Get["/page"] = x => {
                 return View["page-test"];
+            };
+
+            Get["/net"] = x => {
+                foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces()) {
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet) {
+                        Console.WriteLine(ni.Name);
+                        foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses) {
+                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
+                                Console.WriteLine(ip.Address.ToString());
+                            }
+                        }
+                    }
+                }
+                return Response.AsText("gg");
             };
         }
     }
