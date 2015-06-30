@@ -8,5 +8,6 @@ namespace Antd {
         public static string Config { get { return Path.Combine(Folder.Root, "config"); } }
         public static string Database { get { return Path.Combine(Folder.Root, "database"); } }
         public static string Networkd { get { return Path.Combine(Folder.Root, "networkd"); } }
+        public static string Apps { get { return "/mnt/cdrom/Apps"; } }
     }
 }

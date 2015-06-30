@@ -31,6 +31,7 @@ using Antd.Apps;
 using Antd.UnitFiles;
 using Nancy;
 using Nancy.Security;
+using System.Dynamic;
 
 namespace Antd {
 
@@ -41,7 +42,19 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["_page-apps"];
+                dynamic vmod = new ExpandoObject();
+                if (AppsManagement.Detect() == false) {
+                    ViewBag.Message = "No app detected in " + Folder.Apps;
+                    vmod.AppExists = false;
+                }
+                else if (AnthillaSP.Setting.CheckSquash() == false) {
+                    ViewBag.Message = "No squashfs detected in " + Folder.Apps;
+                    vmod.AppExists = false;
+                }
+                else {
+                    vmod.AppExists = true;
+                }
+                return View["_page-apps", vmod];
             };
 
             Get["/launch"] = x => {

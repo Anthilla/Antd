@@ -35,12 +35,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Antd.Apps {
-    public class Management {
-        private static string appsFolder = "/mnt/cdrom/Apps";
+    public class AppsManagement {
 
         public static dynamic Detect() {
-            var folders = Directory.GetDirectories(appsFolder).ToArray();
-            var squashes = Directory.GetFiles(appsFolder, ".squashfs").ToArray();
+            if (!Directory.Exists(Folder.Apps)) {
+                return false;
+            }
+            var folders = Directory.GetDirectories(Folder.Apps).ToArray();
+            var squashes = Directory.GetFiles(Folder.Apps, ".squashfs").ToArray();
             var newArray = folders.Concat(squashes).ToArray();
             if (newArray.Length > 0) {
                 return newArray;

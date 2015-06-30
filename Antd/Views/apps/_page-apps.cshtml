@@ -32,11 +32,17 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_apps-pagebar")
+    @Html.Partial("_apps-pagebar", Model)
+}
+
+@section Dashboard {
+    <p>@ViewBag.Message</p>
 }
 
 @section MainContent {
-    @Html.Partial("page-apps-anthillasp", Model)
+    @if (Model.AppExists == true) {
+        @Html.Partial("page-apps-anthillasp", Model)
+    }
 }
 
 @section Scripts {
