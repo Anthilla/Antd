@@ -1,39 +1,55 @@
-﻿<legend id="Anthilasp">Apps: Anthilla SP</legend>
-<div class="tile bg-anthilla-gray-m border-3-anthilla-green" id="SetAnthillaSP">
-    <p>Launch</p>
-</div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<div class="tile bg-anthilla-gray-m border-3-anthilla-green" id="StartAnthillaSP">
-    <p>StartAnthillaSP</p>
-</div>
-<div class="tile bg-anthilla-gray-m border-3-anthilla-green" id="StartAnthillaServer">
-    <p>StartAnthillaServer</p>
-</div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<a href="http://localhost:8085/" class="tile bg-anthilla-gray-m border-3-anthilla-green" id="StartAnthillaSP">
-    <p>go to AnthillaSP</p>
-</a>
-<a href="http://localhost:9999/" class="tile bg-anthilla-gray-m border-3-anthilla-green" id="StartAnthillaServer">
-    <p>go to AnthillaServer</p>
-</a>
-
+﻿<legend id="Anthilasp">Anthilla SP</legend>
+<table class="table hovered">
+    <tbody>
+        <tr>
+            <td style="width: 250px;">
+                <label>1</label>
+            </td>
+            <td>
+                <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 250px;">
+                <label>2</label>
+            </td>
+            <td>
+                <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 250px;">
+                <label>2</label>
+            </td>
+            <td>
+                <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 250px;">
+                <label>2</label>
+            </td>
+            <td>
+                <a href="http://localhost:8085/" class="button bg-indigo">Go to AnthillaSP</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 250px;">
+                <label>2</label>
+            </td>
+            <td>
+                <a href="http://localhost:9999/" class="button bg-indigo">Go to AnthillaServer</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr />
 <script type="text/javascript">
-    $('#SetAnthillaSP').click(function () {
+    $('#SetUnits').click(function (e) {
         jQuery.support.cors = true;
         $.ajax({
-            url: '/apps/launch/',
+            url: '/apps/set/anthillasp/',
+            //url: '/apps/launch/',
             type: 'GET',
             contentType: "application/json;charset=utf-8",
             success: function (data) {
@@ -43,7 +59,7 @@
         });
     });
 
-    $('#StartAnthillaSP').click(function () {
+    $('#StartAnthillaSP').click(function (e) {
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/start/sp/',
@@ -56,7 +72,7 @@
         });
     });
 
-    $('#StartAnthillaServer').click(function () {
+    $('#StartAnthillaServer').click(function (e) {
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/start/server/',

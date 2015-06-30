@@ -37,12 +37,12 @@ using System.Threading.Tasks;
 namespace Antd.Apps {
     public class AppsManagement {
 
-        public static dynamic Detect() {
+        public static dynamic Detect(string searchPattern) {
             if (!Directory.Exists(Folder.Apps)) {
                 return false;
             }
             var folders = Directory.GetDirectories(Folder.Apps).ToArray();
-            var squashes = Directory.GetFiles(Folder.Apps, ".squashfs").ToArray();
+            var squashes = Directory.GetFiles(Folder.Apps, searchPattern).ToArray();
             var newArray = folders.Concat(squashes).ToArray();
             if (newArray.Length > 0) {
                 return newArray;

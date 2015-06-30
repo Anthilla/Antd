@@ -43,7 +43,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                if (AppsManagement.Detect() == false) {
+                if (AppsManagement.Detect(".squashfs") == false) {
                     ViewBag.Message = "No app detected in " + Folder.Apps;
                     vmod.AppExists = false;
                 }
@@ -55,6 +55,34 @@ namespace Antd {
                     vmod.AppExists = true;
                 }
                 return View["_page-apps", vmod];
+            };
+
+
+            Get["/set/anthillasp"] = x => {
+                //1 check lo squash, se esiste lo monta, se no lo crea
+                if (AnthillaSP.Setting.CheckSquash() == false) {
+                    //1-b check la cartella, se esiste crea lo squash e lo monta, altrimenti ritorna errore
+                    if (AppsManagement.Detect(".squashfs") != false) {
+                        //crea lo squash
+                        //mksquashfs /framework/Anthilla/Antd /mnt/cdrom/DIR_antd_2015.squash.xz  -comp xz -Xbcj x86 -Xdict-size 75%  
+                        AnthillaSP.Setting.CreateSquash();
+                        //monta lo squash
+                        AnthillaSP.Setting.MountSquash();
+                        //crea le units
+                        AnthillaSP.SetAndRun();
+                        return Response.AsJson(true);
+                    }
+                    else {
+                        return Response.AsJson("Error!");
+                    }
+                }
+                else {
+                    //monta lo squash
+                    AnthillaSP.Setting.MountSquash();
+                    //crea le units
+                    AnthillaSP.SetAndRun();
+                    return Response.AsJson(true);
+                }
             };
 
             Get["/launch"] = x => {
@@ -83,16 +111,6 @@ namespace Antd {
                 var start = Command.Launch("mono", "/framework/anthillasp/anthillaserver/AnthillaServer.exe &").output;
                 return Response.AsJson(start);
             };
-
-            //Get["/start/sp"] = x => {
-            //    var start = Systemctl.Start("anthillasp-launcher.service");
-            //    return Response.AsJson(start);
-            //};
-
-            //Get["/start/server"] = x => {
-            //    var start = Systemctl.Start("anthillaserver-launcher.service");
-            //    return Response.AsJson(start);
-            //};
 
             Get["/stop/sp"] = x => {
                 var stop = Systemctl.Stop("anthillasp-launcher.service");
