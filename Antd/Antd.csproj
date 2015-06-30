@@ -255,7 +255,6 @@
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Version.cs" />
     <Compile Include="Command\Command.cs" />
-    <Compile Include="UnitFiles\ApplicativeUnit.cs" />
     <Compile Include="UnitFiles\Systemctl.cs" />
     <Compile Include="UnitFiles\UnitRepo.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />

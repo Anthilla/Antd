@@ -51,12 +51,5 @@ namespace Antd.Apps {
                 return false;
             }
         }
-
-        public static void SetUnitFile() {
-            //foreach app in /mnt/cdrom/Apps
-            //da ApplicativeUnit.Set1
-            //da ApplicativeUnit.Set2
-            //da ApplicativeUnit.Set3 ... etc
-        }
     }
 }

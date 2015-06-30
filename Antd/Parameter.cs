@@ -9,5 +9,6 @@ namespace Antd {
         public static string Database { get { return Path.Combine(Folder.Root, "database"); } }
         public static string Networkd { get { return Path.Combine(Folder.Root, "networkd"); } }
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
+        public static string AppsUnits { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
     }
 }

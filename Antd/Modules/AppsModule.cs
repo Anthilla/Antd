@@ -69,7 +69,8 @@ namespace Antd {
                         //monta lo squash
                         AnthillaSP.Setting.MountSquash();
                         //crea le units
-                        AnthillaSP.SetAndRun();
+                        AnthillaSP.CreateUnits();
+                        //run
                         return Response.AsJson(true);
                     }
                     else {
@@ -80,7 +81,8 @@ namespace Antd {
                     //monta lo squash
                     AnthillaSP.Setting.MountSquash();
                     //crea le units
-                    AnthillaSP.SetAndRun();
+                    AnthillaSP.CreateUnits();
+                    //run
                     return Response.AsJson(true);
                 }
             };
@@ -97,7 +99,8 @@ namespace Antd {
                     ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
                     AnthillaSP.Setting.MountSquash();
                     ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                    AnthillaSP.SetAndRun();
+                    AnthillaSP.CreateUnits();
+                    AnthillaSP.Start();
                     return Response.AsJson(true);
                 }
             };

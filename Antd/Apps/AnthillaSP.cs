@@ -27,19 +27,25 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.UnitFiles;
 using System.IO;
 
 namespace Antd.Apps {
 
     public class AnthillaSP {
 
-        private static string applicativeUnitsFolder = "/mnt/cdrom/Units/applicative.target.wants";
-
-        public static void SetAndRun() {
+        public static void CreateUnits() {
             Units.SetAnthillaSP();
             Units.MountFramework();
             Units.LaunchAnthillaSP();
             Units.LaunchAnthillaServer();
+        }
+
+        public static void Start() {
+            Systemctl.Start(Units.Name.Prepare);
+            Systemctl.Start(Units.Name.Mount);
+            Systemctl.Start(Units.Name.LaunchSP);
+            Systemctl.Start(Units.Name.LaunchServer);
         }
 
         public class Setting {
@@ -68,9 +74,15 @@ namespace Antd.Apps {
 
         public class Units {
 
+            public class Name {
+                public static string Prepare { get { return Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service"); } }
+                public static string Mount { get { return Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount"); } }
+                public static string LaunchSP { get { return Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service"); } }
+                public static string LaunchServer { get { return Path.Combine(Folder.AppsUnits, "anthillaserver-launcher.service"); } }
+            }
+
             public static void SetAnthillaSP() {
-                var unitName = "anthillasp-prepare.service";
-                var path = Path.Combine(applicativeUnitsFolder, unitName);
+                var path = Name.Prepare;
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -89,8 +101,7 @@ namespace Antd.Apps {
             }
 
             public static void MountFramework() {
-                var unitName = "framework-anthillasp.mount";
-                var path = Path.Combine(applicativeUnitsFolder, unitName);
+                var path = Name.Mount;
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -109,8 +120,7 @@ namespace Antd.Apps {
             }
 
             public static void LaunchAnthillaSP() {
-                var unitName = "anthillasp-launcher.service";
-                var path = Path.Combine(applicativeUnitsFolder, unitName);
+                var path = Name.LaunchSP;
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
@@ -129,8 +139,7 @@ namespace Antd.Apps {
             }
 
             public static void LaunchAnthillaServer() {
-                var unitName = "anthillaserver-launcher.service";
-                var path = Path.Combine(applicativeUnitsFolder, unitName);
+                var path = Name.LaunchServer;
                 if (!File.Exists(path)) {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
