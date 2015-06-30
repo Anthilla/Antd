@@ -37,6 +37,11 @@
 }
 
 @section Dashboard {
+    @Html.Partial("_cctable-dashboard", Model.CurrentContext)
+}
+
+@section MainContent {
+    @Html.Partial("cctable-main", Model.CCTable)
     @Html.Partial("page-system-general", Model)
     @Html.Partial("page-system-advanced", Model)
     @Html.Partial("page-system-certmanager", Model)
@@ -47,7 +52,6 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            //$('tr>td').not('tr>td:first-child').css('width', '25%');
             $('tr>td:first-child').css('width', '200px');
         });
 

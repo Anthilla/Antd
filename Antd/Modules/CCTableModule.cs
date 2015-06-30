@@ -49,8 +49,9 @@ namespace Antd {
 
             Post["/"] = x => {
                 string tbl = (string)this.Request.Form.Alias;
+                string context = (string)this.Request.Form.Context;
                 if (tbl != "") {
-                    CCTableRepository.CreateTable(tbl);
+                    CCTableRepository.CreateTable(tbl, context);
                 }
                 return Response.AsRedirect("/cctable");
             };

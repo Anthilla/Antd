@@ -57,6 +57,8 @@ namespace Antd.CCTable {
 
         public string Alias { get; set; }
 
+        public string Context { get; set; }
+
         public List<CCTableRowModel> Content { get; set; }
     }
 

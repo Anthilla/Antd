@@ -42,6 +42,14 @@ namespace Antd.CCTable {
             return list;
         }
 
+        public static List<CCTableModel> GetAllByContext(string context) {
+            var list = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Context == context).ToList();
+            foreach (var item in list) {
+                item.Content = GetRows(item.Guid);
+            }
+            return list;
+        }
+
         public static CCTableModel GetByGuid(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             cc.Content = GetRows(cc.Guid);
@@ -60,11 +68,12 @@ namespace Antd.CCTable {
             return list;
         }
 
-        public static void CreateTable(string alias) {
+        public static void CreateTable(string alias, string context) {
             var model = new CCTableModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
-                Alias = alias.UppercaseAllFirstLetters()
+                Alias = alias.UppercaseAllFirstLetters(),
+                Context = context
             };
             DeNSo.Session.New.Set(model);
         }

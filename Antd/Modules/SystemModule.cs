@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Boot;
+using Antd.CCTable;
 using Antd.MachineStatus;
 using Antd.Models;
 using Antd.Status;
@@ -58,6 +59,8 @@ namespace Antd {
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
+                vmod.CurrentContext = this.Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 return View["_page-system", vmod];
             };
 
