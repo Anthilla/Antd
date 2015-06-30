@@ -30,6 +30,26 @@
 using System.Collections.Generic;
 
 namespace Antd.CCTable {
+
+    public class CCTableFlags {
+        public enum OsiLevel {
+            Physical = 1,
+            DataLink = 2,
+            Network = 3,
+            Transport = 4,
+            Session = 5,
+            Presentation = 6,
+            Application = 7,
+            None = 99
+        }
+
+        public enum CommandFunction {
+            Stable = 0,
+            Testing = 1,
+            None = 99
+        }
+    }
+
     public class CCTableModel {
         public string _Id { get; set; }
 
@@ -65,6 +85,8 @@ namespace Antd.CCTable {
 
         public string HtmlSumbitID { get; set; }
 
-        //public string 
+        public CCTableFlags.OsiLevel FlagOsi { get; set; }
+
+        public CCTableFlags.CommandFunction FlagCommandFunction { get; set; }
     }
 }

@@ -60,7 +60,7 @@
             <table class="table hovered" data-table-content="@table.Guid">
                 <tbody>
                     @foreach (Antd.CCTable.CCTableRowModel row in table.Content) {
-                        <tr data-row-guid="@row.Guid" style="width: 250px !important;">
+                        <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" style="width: 250px !important;">
                             <td class="right">
                                 <label>@row.Label</label>
                             </td>
@@ -78,6 +78,12 @@
                             </td>
                             <td>
                                 <p>@row.Notes</p>
+                            </td>
+                            <td>
+                                <p>@row.FlagOsi</p>
+                            </td>
+                            <td>
+                                <p>@row.FlagCommandFunction</p>
                             </td>
                         </tr>
                     }
@@ -185,6 +191,33 @@
                     </div>
                 </div>
                 <hr class="bg-anthilla-gray" style="height: 1px !important;">
+                <div class="row">
+                    <div class="span3">
+                        <label>Flag OSI</label>
+                    </div>
+                    <div class="span7">
+                        <select name="FlagOSI" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Flag Command Function</label>
+                    </div>
+                    <div class="span7">
+                        <select name="FlagFunction" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                            <option value="0" selected>Stable</option>
+                            <option value="1">Testing</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="span3">
                         <label>&nbsp</label>

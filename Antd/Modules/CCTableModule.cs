@@ -63,7 +63,10 @@ namespace Antd {
                 string inputValue = (string)this.Request.Form.InputLabel;
                 string inputCommand = (string)this.Request.Form.InputCommand;
                 string notes = (string)this.Request.Form.Notes;
-                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, notes);
+                string osi = (string)this.Request.Form.FlagOSI.Value;
+                string func = (string)this.Request.Form.FlagFunction.Value;
+                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, 
+                    notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
                 string command = this.Request.Form.CCTableCommand;
                 string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();

@@ -69,7 +69,9 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRow(string tableGuid, string tableName, string label, string inputType, string inputLabel, string inputCommand, string notes) {
+        public static void CreateRow(string tableGuid, string tableName, string label, string inputType, 
+            string inputLabel, string inputCommand, string notes,
+            CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -79,7 +81,9 @@ namespace Antd.CCTable {
                 InputType = inputType,
                 InputLabel = inputLabel,
                 InputCommand = inputCommand,
-                Notes = notes
+                Notes = notes,
+                FlagOsi = flagOsi,
+                FlagCommandFunction = flagFunction
             };
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
@@ -94,6 +98,49 @@ namespace Antd.CCTable {
         public static void DeleteTableRow(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);
+        }
+
+        public static CCTableFlags.CommandFunction GetCommandFunction(string src) {
+            int n = Convert.ToInt32(src);
+            switch (n) {
+                case 0:
+                    return CCTableFlags.CommandFunction.Stable;
+                    break;
+                case 1:
+                    return CCTableFlags.CommandFunction.Testing;
+                    break;
+                default:
+                    return CCTableFlags.CommandFunction.None;
+            }
+        }
+
+        public static CCTableFlags.OsiLevel GetOsiLevel(string src) {
+            int n = Convert.ToInt32(src);
+            switch (n) {
+                case 1:
+                    return CCTableFlags.OsiLevel.Physical;
+                    break;
+                case 2:
+                    return CCTableFlags.OsiLevel.DataLink;
+                    break;
+                case 3:
+                    return CCTableFlags.OsiLevel.Network;
+                    break;
+                case 4:
+                    return CCTableFlags.OsiLevel.Transport;
+                    break;
+                case 5:
+                    return CCTableFlags.OsiLevel.Session;
+                    break;
+                case 6:
+                    return CCTableFlags.OsiLevel.Presentation;
+                    break;
+                case 7:
+                    return CCTableFlags.OsiLevel.Application;
+                    break;
+                default:
+                    return CCTableFlags.OsiLevel.None;
+            }
         }
     }
 }
