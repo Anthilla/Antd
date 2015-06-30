@@ -121,7 +121,7 @@
                             <label>Command -> input</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                         </div>
@@ -133,7 +133,7 @@
                             <label>Command -> input</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="CCTableCommand" class="add-to-this" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                             <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
@@ -144,7 +144,7 @@
                             <label>Command -> return</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                             <p>Write the command to get the value</p>
@@ -157,17 +157,17 @@
                             <label>Command -> input, for "true"</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                         </div>
                     </div>
                     <div class="row">
                         <div class="span3">
-                            <label>Command -> input, for false stance</label>
+                            <label>Command -> input, for "false"</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                         </div>
@@ -177,7 +177,7 @@
                             <label>Command -> return</label>
                         </div>
                         <div class="span7">
-                            <input type="text" name="InputCommand" style="width: 90%; height: 25px;" />
+                            <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
                         </div>
                         <div class="span3">
                             <p>Write the command to get the value</p>
@@ -205,6 +205,7 @@
     <script type="text/javascript">
         $('select[name="InputType"]').windowed({
             change: function (event, selected) {
+                $('input[name="CCTableCommand"]').val('');
                 var selected = $(selected);
                 if (selected.val() == 'hidden') {
                     $('#NoneCommand').show();
@@ -225,14 +226,12 @@
         });
 
         $('#AddInputReference').click(function () {
-            var val = $('input[name="Label"]').val();
-            val = UppercaseAllFirstLetters(val);
-            val = val.replace(/ /g, '');
-            if (val.length > 0) {
-                var input = $('input[name="CCTableCommand"]');
-                var tmpVal = input.val();
-                input.val('');
-                input.val(tmpVal + ' {New' + val + '}');
+            var label = UppercaseAllFirstLetters($('input[name="Label"]').val());
+            label = label.replace(/ /g, '');
+            if (label.length > 0) {
+                var labelReference = '{New' + label + '}';
+                var input = $('.add-to-this');
+                input.val(input.val() + labelReference);
             }
         });
 
@@ -242,7 +241,6 @@
             });
             return str;
         }
-
 
         $('input[data-create-input-layout]').click(function () {
             var type = $(this).attr('data-create-input-layout');

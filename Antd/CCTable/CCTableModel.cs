@@ -47,6 +47,8 @@ namespace Antd.CCTable {
 
         public string TableGuid { get; set; }
 
+        public string NUid { get; set; }
+
         public string Label { get; set; }
 
         public string InputType { get; set; }
@@ -62,5 +64,7 @@ namespace Antd.CCTable {
         public string HtmlInputID { get; set; }
 
         public string HtmlSumbitID { get; set; }
+
+        //public string 
     }
 }

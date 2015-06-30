@@ -11,4 +11,9 @@ namespace Antd {
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string AppsUnits { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
     }
+
+    public class UID {
+        public static string Guid { get { return System.Guid.NewGuid().ToString(); } }
+        public static string ShortGuid { get { return System.Guid.NewGuid().ToString().Substring(0,8); } }
+    }
 }

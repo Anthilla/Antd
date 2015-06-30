@@ -73,6 +73,7 @@ namespace Antd.CCTable {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
+                NUid = UID.ShortGuid,
                 TableGuid = tableGuid,
                 Label = label,
                 InputType = inputType,
