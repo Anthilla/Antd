@@ -53,10 +53,10 @@ namespace Antd {
                 string directory = this.Request.Form.Directory;
                 string result;
                 if (Directory.Exists(directory)) {
-                    result = "true";
+                    result = directory + " > ";
                 }
                 else {
-                    result = "false";
+                    result = "0";
                 }
                 return Response.AsJson(result);
             };

@@ -31,15 +31,15 @@
                         </td>
                     </tr>
                     <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="@row.Guid" style="display: none;">
-                        <td colspan="4">
+                        <td colspan="4" data-row-commands="list">
                             <label style="display: inline-block;">Associated Command</label>
-                            <p style="display: inline-block;">@Antd.CommandManagement.CommandDB.GetCommandByGuid(row.HtmlInputID)</p>
+                            <p data-command="set" style="display: inline-block;">@Antd.CommandManagement.CommandDB.GetCommandByGuid(row.HtmlInputID)</p>
                             <br />
                             <label style="display: inline-block;">Input Command</label>
-                            <p style="display: inline-block;">@row.InputCommand</p>
+                            <p data-command="get" style="display: inline-block;">@row.InputCommand</p>
                         </td>
                         <td>
-                            <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>
+                            <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet set-edit-command" style="width: 100% !important"/>
                         </td>
                         <td>
                             <input data-cmd-guid="@row.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important"/>
