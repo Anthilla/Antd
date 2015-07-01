@@ -32,6 +32,7 @@ using Antd.CommandManagement;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
+using System.Linq;
 
 namespace Antd {
 
@@ -70,6 +71,8 @@ namespace Antd {
                     notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
                 string command = this.Request.Form.CCTableCommand;
+                var arr = command.Split(',').ToArray();
+                ConsoleLogger.Info(arr.Length.ToString());
                 string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
                 string inputlocation = "CCTable" + this.Request.Form.TableName;
                 CommandDB.Create(inputid, command, command, inputlocation, notes);
@@ -81,6 +84,12 @@ namespace Antd {
                 string guid = x.guid;
                 CCTableRepository.DeleteTable(guid);
                 return Response.AsJson("CCTable deleted");
+            };
+
+            Get["/delete/row/{guid}"] = x => {
+                string guid = x.guid;
+                CCTableRepository.DeleteTableRow(guid);
+                return Response.AsJson("CCTable Row deleted");
             };
         }
     }

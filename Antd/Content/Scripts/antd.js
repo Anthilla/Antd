@@ -2,35 +2,34 @@
 $('#OpenTerminal').click(function () {
     $('#Terminal').toggle();
 });
-
+//TerminalContent
 jQuery(function ($) {
-    var directory = '/ > ';
+    var directory = '';
     $('#TerminalContent').terminal(function (command, term) {
         var self = $(this);
         if (command == 'help') {
             term.echo("just type something...");
         }
         else if (command.substring(0, 3) == 'cd ') {
-            term.echo(command + ' Not yet impemented');
+            //term.echo(command + ' Not yet impemented');
             //directory = command.substring(3, command.length) + ' > ';
-            //jQuery.support.cors = true;
-            //$.ajax({
-            //    url: '/terminal/directory',
-            //    type: 'POST',
-            //    data: {
-            //        Directory: directory
-            //    },
-            //    success: function (data) {
-            //        if (data == 'true') {
-            //            term.push(term, {
-            //                prompt: directory
-            //            });
-            //        }
-            //        else {
-            //            term.echo(command + ' No such file or directory');
-            //        }
-            //    }
-            //});
+            directory = command.substring(3, command.length);
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/terminal/directory',
+                type: 'POST',
+                data: {
+                    Directory: directory
+                },
+                success: function (data) {
+                    if (data == '0') {
+                        term.echo(command + ' No such file or directory');
+                    }
+                    else {
+                        term.set_prompt(data);
+                    }
+                }
+            });
         }
         else if (command == 'cd ..') {
             term.echo(command + ' Not yet impemented');
@@ -135,6 +134,25 @@ $('input[data-cctable-role="delete-table"]').click(function () {
 function ShowDashboard() {
     $('#CCTableDashboard').toggle();
 }
+
+$('tr[data-row-role="main"]').click(function () {
+    var guid = $(this).attr('data-row-guid');
+    $('tr[data-row-role="' + guid + '"]').toggle();
+});
+
+$('input.delete-command').click(function () {
+    var guid = $(this).attr('data-cmd-guid');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/cctable/delete/row/' + guid,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            location.reload(true);
+        }
+    });
+});
 
 ///command management
 $('#CmdMgmtButton').click(function () {

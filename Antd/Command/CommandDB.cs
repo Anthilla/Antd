@@ -68,6 +68,11 @@ namespace Antd.CommandManagement {
             return DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == g).FirstOrDefault();
         }
 
+        public static string GetCommandByGuid(string g) {
+            var m = GetByGuid(g);
+            return m.File + " " + m.Arguments;
+        }
+
         public static void Create(string inputid, string command, string layout, string inputlocation, string notes) {
             var model = new CommandInputModel {
                 _Id = inputid,

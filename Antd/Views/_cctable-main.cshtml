@@ -1,11 +1,11 @@
 ﻿@foreach (Antd.CCTable.CCTableModel table in Model) {
     <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@table.Guid">
         <legend>@table.Alias</legend>
-        <table class="table hovered" data-table-content="@table.Guid">
+        <table class="table" data-table-content="@table.Guid">
             <tbody>
                 @foreach (Antd.CCTable.CCTableRowModel row in table.Content) {
-                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" style="width: 250px !important;">
-                        <td class="right">
+                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="main">
+                        <td style="width: 200px;">
                             <label>@row.Label</label>
                         </td>
                         <td style="width: 300px !important">
@@ -23,14 +23,23 @@
                         <td>
                             <p>@row.Notes</p>
                         </td>
-                        <td style="width: 200px">
+                        <td style="width: 175px">
                             <p>Osi level: @row.FlagOsi</p>
                         </td>
-                        <td style="width: 200px">
+                        <td style="width: 175px">
                             <p>Type: @row.FlagCommandFunction</p>
                         </td>
-                        <td style="width: 100px">
-                            <input data-cmd-guid="@row.Guid" type="button" value="Edit" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>
+                    </tr>
+                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="@row.Guid" style="display: none;">
+                        <td colspan="4">
+                            <label style="display: inline-block;">Associated Command</label>
+                            <p style="display: inline-block;">@Antd.CommandManagement.CommandDB.GetCommandByGuid(row.HtmlInputID)</p>
+                        </td>
+                        <td>
+                            <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>
+                        </td>
+                        <td>
+                            <input data-cmd-guid="@row.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important"/>
                         </td>
                     </tr>
                 }
