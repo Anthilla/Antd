@@ -1,7 +1,6 @@
 //terminal
 $('#OpenTerminal').click(function () {
     $('#Terminal').toggle();
-    //$('#TerminalContent').toggle();
 });
 
 jQuery(function ($) {
