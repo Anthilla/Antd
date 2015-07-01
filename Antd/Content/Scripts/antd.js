@@ -2,6 +2,7 @@
 $('#OpenTerminal').click(function () {
     $('#Terminal').toggle();
 });
+
 //TerminalContent
 jQuery(function ($) {
     var directory = '';
@@ -10,7 +11,7 @@ jQuery(function ($) {
         if (command == 'help') {
             term.echo("just type something...");
         }
-        else if (command.substring(0, 3) == 'cd ') {
+        else if (command.substring(0, 3) == 'cd ' && command != 'cd ..') {
             directory = command.substring(3, command.length);
             jQuery.support.cors = true;
             $.ajax({
@@ -30,7 +31,22 @@ jQuery(function ($) {
             });
         }
         else if (command == 'cd ..') {
-            term.echo(command + ' Not yet impemented');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/terminal/directory/parent',
+                type: 'POST',
+                data: {
+                    Directory: directory
+                },
+                success: function (data) {
+                    if (data == '0') {
+                        term.echo(command + ' No such file or directory');
+                    }
+                    else {
+                        term.set_prompt(data);
+                    }
+                }
+            });
         }
         else {
             jQuery.support.cors = true;

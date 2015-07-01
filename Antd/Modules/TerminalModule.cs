@@ -42,10 +42,14 @@ namespace Antd {
             : base("/terminal") {
             this.RequiresAuthentication();
 
+            Get["/"] = x => {
+                return View["terminal"];
+            };
+
             Post["/"] = x => {
                 string cmd = this.Request.Form.Command;
-                string dir = this.Request.Form.Directory;
-                string result = Command.Launch(cmd.GetFirstString(), cmd.GetAllStringsButFirst(), dir).output;
+                string directory = this.Request.Form.Directory;
+                string result = Terminal.Execute(cmd, directory);
                 return Response.AsJson(result);
             };
 
@@ -54,6 +58,24 @@ namespace Antd {
                 string result;
                 if (Directory.Exists(directory)) {
                     result = directory + " > ";
+                }
+                else {
+                    result = "0";
+                }
+                return Response.AsJson(result);
+            };
+
+            Post["/directory/parent"] = x => {
+                string directory = this.Request.Form.Directory;
+                string result;
+                if (Directory.Exists(directory)) {
+                    var parent = Directory.GetParent(directory);
+                    if (Directory.Exists(parent.FullName)) {
+                        result = parent.FullName + " > ";
+                    }
+                    else {
+                        result = "0";
+                    }
                 }
                 else {
                     result = "0";
