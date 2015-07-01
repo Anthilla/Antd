@@ -54,9 +54,8 @@ namespace Antd {
                 if (tbl != "") {
                     CCTableRepository.CreateTable(tbl, context);
                 }
-                var redirect = this.Request.Url;
-                ConsoleLogger.Info(redirect);
-                return Response.AsRedirect("/cctable");
+                var redirect = this.Request.Path;
+                return Response.AsRedirect(context);
             };
 
             Post["/row"] = x => {
