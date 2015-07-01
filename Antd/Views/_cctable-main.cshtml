@@ -8,7 +8,7 @@
                         <td class="right">
                             <label>@row.Label</label>
                         </td>
-                        <td style="width: 450px !important">
+                        <td style="width: 300px !important">
                             @if (row.InputType == "hidden") {
                                 <input id="@row.HtmlInputID" type="hidden" value="0" style="width: 100% !important" />
                             }
@@ -17,17 +17,20 @@
                             }
                             <p>@row.InputLabel</p>
                         </td>
-                        <td style="width: 250px !important">
+                        <td style="width: 175px !important">
                             <input id="@row.HtmlSumbitID" type="button" value="Apply" class="bg-anthilla-green" style="width: 100% !important"/>
                         </td>
                         <td>
                             <p>@row.Notes</p>
                         </td>
-                        <td>
-                            <p>@row.FlagOsi</p>
+                        <td style="width: 200px">
+                            <p>Osi level: @row.FlagOsi</p>
                         </td>
-                        <td>
-                            <p>@row.FlagCommandFunction</p>
+                        <td style="width: 200px">
+                            <p>Type: @row.FlagCommandFunction</p>
+                        </td>
+                        <td style="width: 100px">
+                            <input data-cmd-guid="@row.Guid" type="button" value="Edit" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>
                         </td>
                     </tr>
                 }
