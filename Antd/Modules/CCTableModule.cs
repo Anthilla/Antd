@@ -70,15 +70,25 @@ namespace Antd {
                 CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, 
                     notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
-                string commandNone = this.Request.Form.CCTableCommandNone;
-                string commandText = this.Request.Form.CCTableCommandText;
-                string commandBoolean = this.Request.Form.CCTableCommandBoolean;
+                string command;
+                switch(inputType) {
+                    case "hidden":
+                        command = this.Request.Form.CCTableCommandNone;
+                        break;
+                    case "text":
+                        command = this.Request.Form.CCTableCommandText;
+                        break;
+                    case "checkbox":
+                        command = this.Request.Form.CCTableCommandBoolean;
+                        break;
+                    default:
+                        command = "echo error during command assignment";
+                        break;
+                }
 
-
-
-                //string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-                //string inputlocation = "CCTable" + this.Request.Form.TableName;
-                //CommandDB.Create(inputid, command, command, inputlocation, notes);
+                string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                string inputlocation = "CCTable" + this.Request.Form.TableName;
+                CommandDB.Create(inputid, command, command, inputlocation, notes);
 
                 return Response.AsRedirect("/cctable");
             };
