@@ -1,18 +1,19 @@
 //terminal
 $('#OpenTerminal').click(function () {
     $('#Terminal').toggle();
-    $('#TerminalContent').toggle();
+    //$('#TerminalContent').toggle();
 });
 
 jQuery(function ($) {
+    var directory = '/ > ';
     $('#TerminalContent').terminal(function (command, term) {
-        var directory = "/";
+        var self = $(this);
         if (command == 'help') {
             term.echo("just type something...");
         }
         else if (command.substring(0, 3) == 'cd ') {
             term.echo(command + ' Not yet impemented');
-            //directory = command.substring(3, command.length);
+            //directory = command.substring(3, command.length) + ' > ';
             //jQuery.support.cors = true;
             //$.ajax({
             //    url: '/terminal/directory',
@@ -22,9 +23,9 @@ jQuery(function ($) {
             //    },
             //    success: function (data) {
             //        if (data == 'true') {
-            //            term.push(function (command, term) { },
-            //                { name: directory + ' > ' }
-            //            );
+            //            term.push(term, {
+            //                prompt: directory
+            //            });
             //        }
             //        else {
             //            term.echo(command + ' No such file or directory');
