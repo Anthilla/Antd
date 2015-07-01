@@ -34,6 +34,9 @@
                         <td colspan="4">
                             <label style="display: inline-block;">Associated Command</label>
                             <p style="display: inline-block;">@Antd.CommandManagement.CommandDB.GetCommandByGuid(row.HtmlInputID)</p>
+                            <br />
+                            <label style="display: inline-block;">Input Command</label>
+                            <p style="display: inline-block;">@row.InputCommand</p>
                         </td>
                         <td>
                             <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>
@@ -80,10 +83,10 @@
             <div id="NoneCommand">
                 <div class="row">
                     <div class="span3">
-                        <label>Command -> input</label>
+                        <label>Command -> set</label>
                     </div>
                     <div class="span7">
-                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                        <input type="text" name="CCTableCommandNone" style="width: 90%; height: 25px;" value="" />
                     </div>
                     <div class="span3">
                     </div>
@@ -92,10 +95,10 @@
             <div id="TextCommand" style="display: none;">
                 <div class="row">
                     <div class="span3">
-                        <label>Command -> input</label>
+                        <label>Command -> set</label>
                     </div>
                     <div class="span7">
-                        <input type="text" name="CCTableCommand" class="add-to-this" style="width: 90%; height: 25px;" value="" />
+                        <input type="text" name="CCTableCommandText" class="add-to-this" style="width: 90%; height: 25px;" value="" />
                     </div>
                     <div class="span3">
                         <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
@@ -103,7 +106,7 @@
                 </div>
                 <div class="row">
                     <div class="span3">
-                        <label>Command -> return</label>
+                        <label>Command -> get</label>
                     </div>
                     <div class="span7">
                         <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
@@ -116,33 +119,22 @@
             <div id="BooleanCommand" style="display: none;">
                 <div class="row">
                     <div class="span3">
-                        <label>Command -> input, for "true"</label>
+                        <label>Command -> set for "true"</label>
                     </div>
                     <div class="span7">
-                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                        <input type="text" name="CCTableCommandBoolean" style="width: 90%; height: 25px;" value="" />
                     </div>
                     <div class="span3">
                     </div>
                 </div>
                 <div class="row">
                     <div class="span3">
-                        <label>Command -> input, for "false"</label>
+                        <label>Command -> set for "false"</label>
                     </div>
                     <div class="span7">
-                        <input type="text" name="CCTableCommand" style="width: 90%; height: 25px;" value="" />
+                        <input type="text" name="CCTableCommandBoolean" style="width: 90%; height: 25px;" value="" />
                     </div>
                     <div class="span3">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span3">
-                        <label>Command -> return</label>
-                    </div>
-                    <div class="span7">
-                        <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
-                    </div>
-                    <div class="span3">
-                        <p>Write the command to get the value</p>
                     </div>
                 </div>
             </div>

@@ -70,12 +70,15 @@ namespace Antd {
                 CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, 
                     notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
-                string command = this.Request.Form.CCTableCommand;
-                var arr = command.Split(',').ToArray();
-                ConsoleLogger.Info(arr.Length.ToString());
-                string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-                string inputlocation = "CCTable" + this.Request.Form.TableName;
-                CommandDB.Create(inputid, command, command, inputlocation, notes);
+                string commandNone = this.Request.Form.CCTableCommandNone;
+                string commandText = this.Request.Form.CCTableCommandText;
+                string commandBoolean = this.Request.Form.CCTableCommandBoolean;
+
+
+
+                //string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                //string inputlocation = "CCTable" + this.Request.Form.TableName;
+                //CommandDB.Create(inputid, command, command, inputlocation, notes);
 
                 return Response.AsRedirect("/cctable");
             };
