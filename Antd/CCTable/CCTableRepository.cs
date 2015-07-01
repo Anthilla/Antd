@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.CommandManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,12 @@ namespace Antd.CCTable {
         public static void DeleteTableRow(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);
+        }
+
+        public static void EditTableRow(string guid, string command) {
+            var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
+            var i = row.HtmlInputID;
+            CommandDB.Edit(i, command);
         }
 
         public static CCTableFlags.CommandFunction GetCommandFunction(string src) {

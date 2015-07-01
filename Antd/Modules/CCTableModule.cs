@@ -108,7 +108,7 @@ namespace Antd {
             Get["/edit/row/{guid}/{cmd*}"] = x => {
                 string guid = x.guid;
                 string cmd = x.cmd;
-                ConsoleLogger.Log(guid + cmd);
+                CCTableRepository.EditTableRow(guid, cmd);
                 return Response.AsJson("CCTable Row deleted");
             };
         }

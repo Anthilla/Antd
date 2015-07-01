@@ -5,14 +5,12 @@ $('#OpenTerminal').click(function () {
 //TerminalContent
 jQuery(function ($) {
     var directory = '';
-    $('#TerminalContent').terminal(function (command, term) {
+    $('#Terminal').terminal(function (command, term) {
         var self = $(this);
         if (command == 'help') {
             term.echo("just type something...");
         }
         else if (command.substring(0, 3) == 'cd ') {
-            //term.echo(command + ' Not yet impemented');
-            //directory = command.substring(3, command.length) + ' > ';
             directory = command.substring(3, command.length);
             jQuery.support.cors = true;
             $.ajax({
@@ -153,6 +151,43 @@ $('input.delete-command').click(function () {
         }
     });
 });
+
+$('input.set-edit-command').click(function () {
+    var guid = $(this).attr('data-cmd-guid');
+    var container = $('td[data-row-commands="list"]');
+    var html = container.html();
+    var set = container.find('p[data-command="set"]').text();
+    var get = container.find('p[data-command="get"]').text();
+    //container.html('');
+    var cont = '<label style="display: inline-block;">Associated Command</label>' +
+                '<input data-guid-set="' + guid + '" data-command="set" type="text" value="' + set + '"/>' +
+                '<br />' +
+                '<label style="display: inline-block;">Input Command</label>' +
+                '<input data-guid-get="' + guid + '" data-command="get" type="text" value="' + get + '"/>';
+    container.html(cont);
+
+    var parent = $(this).parent('td');
+    var newButton = '<input data-cmd-guid="' + guid + '" type="button" value="Update" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>';
+    parent.html(newButton);
+    ConfirmEdit();
+});
+
+function ConfirmEdit() {
+    $('input.edit-command').click(function () {
+        var guid = $(this).attr('data-cmd-guid');
+        var cmd = $('input[data-guid-set="' + guid + '"]').val();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/cctable/edit/row/' + guid + '/' + cmd,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+}
 
 ///command management
 $('#CmdMgmtButton').click(function () {

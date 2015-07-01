@@ -87,6 +87,13 @@ namespace Antd.CommandManagement {
             DeNSo.Session.New.Set(model);
         }
 
+        public static void Edit(string inputid, string command) {
+            var model = GetByGuid(inputid);
+            model.File = command.GetFirstString();
+            model.Arguments = command.GetAllStringsButFirst();
+            DeNSo.Session.New.Set(model);
+        }
+
         public static void Delete(string g) {
             var model = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == g).FirstOrDefault();
             DeNSo.Session.New.Delete(model);
