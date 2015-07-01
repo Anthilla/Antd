@@ -5,77 +5,53 @@ $('#OpenTerminal').click(function () {
 });
 
 jQuery(function ($) {
-    $('#TerminalContent').terminal(function (cmd, term) {
-        if (cmd == 'help') {
-            term.echo("available commands are mysql, js, test");
-        } else if (cmd == 'test') {
-            term.push(function (cmd, term) {
-                if (command == 'help') {
-                    term.echo('type "ping" it will display "pong"');
-                } else if (cmd == 'ping') {
-                    term.echo('pong');
-                } else {
-                    term.echo('unknown command "' + cmd + '"');
+    $('#TerminalContent').terminal(function (command, term) {
+        var directory = "/";
+        if (command == 'help') {
+            term.echo("just type something...");
+        }
+        else if (command.substring(0, 3) == 'cd ') {
+            term.echo(command + ' Not yet impemented');
+            //directory = command.substring(3, command.length);
+            //jQuery.support.cors = true;
+            //$.ajax({
+            //    url: '/terminal/directory',
+            //    type: 'POST',
+            //    data: {
+            //        Directory: directory
+            //    },
+            //    success: function (data) {
+            //        if (data == 'true') {
+            //            term.push(function (command, term) { },
+            //                { name: directory + ' > ' }
+            //            );
+            //        }
+            //        else {
+            //            term.echo(command + ' No such file or directory');
+            //        }
+            //    }
+            //});
+        }
+        else if (command == 'cd ..') {
+            term.echo(command + ' Not yet impemented');
+        }
+        else {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/terminal/',
+                type: 'POST',
+                data: {
+                    Command: command,
+                    Directory: directory
+                },
+                success: function (data) {
+                    term.echo(data);
+                    return false;
                 }
-            }, {
-                prompt: 'test> ',
-                name: 'test'
             });
-        } else if (command == "js") {
-            term.push(function (command, term) {
-                var result = window.eval(command);
-                if (result != undefined) {
-                    term.echo(String(result));
-                }
-            }, {
-                name: 'js',
-                prompt: 'js> '
-            });
-        } else if (command == 'mysql') {
-            term.push(function (command, term) {
-                term.pause();
-                //$.jrpc is helper function which
-                //creates json-rpc request
-                $.jrpc("mysql-rpc-demo.php",
-                  "query",
-                  [command],
-                  function (data) {
-                      term.resume();
-                      if (data.error) {
-                          term.error(data.error.message);
-                      } else {
-                          if (typeof data.result == 'boolean') {
-                              term.echo(data.result ?
-                                        'success' :
-                                        'fail');
-                          } else {
-                              var len = data.result.length;
-                              for (var i = 0; i < len; ++i) {
-                                  term.echo(data.result[i].join(' | '));
-                              }
-                          }
-                      }
-                  },
-                  function (xhr, status, error) {
-                      term.error('[AJAX] ' + status +
-                                 ' - Server reponse is: \n' +
-                                 xhr.responseText);
-                      term.resume();
-                  }); // rpc call
-            }, {
-                greetings: "This is example of using mysql" +
-                  " from terminal\n you are allowed to exe" +
-                  "cute: select, insert, update and delete" +
-                  " from/to table:\n   table test(integer_" +
-                  "value integer, varchar_value varchar(255))",
-                prompt: "mysql> "
-            });
-        } else {
-            term.echo("unknow command " + command);
         }
     }, {
-        greetings: "multiply terminals demo use help" +
-              " to see available commands"
+        greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
     });
 });
 

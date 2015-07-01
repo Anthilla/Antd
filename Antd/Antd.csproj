@@ -206,6 +206,7 @@
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
+    <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\HypervisorModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\NetworkModule.cs" />

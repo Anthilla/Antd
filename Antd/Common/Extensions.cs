@@ -48,7 +48,6 @@ namespace Antd {
 
         public static string GetAllStringsButFirst(this String str) {
             var arr = str.Split(' ');
-            //arr.Skip(1).ToArray();
             if (arr.Length > 1) {
                 return string.Join(" ", arr.Skip(1).ToArray());
             }
@@ -59,7 +58,6 @@ namespace Antd {
 
         public static string GetAllStringsButFirst(this String str, char div) {
             var arr = str.Split(div).Skip(1).ToArray();
-            //arr.Skip(1).ToArray();
             if (arr.Length > 1) {
                 return string.Join(" ", arr);
             }
