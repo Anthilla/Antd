@@ -8,10 +8,10 @@
                         <label>@row.Label</label>
                     </td>
                     <td>
-                        <p>@row.InputCommand</p>
+                        <textarea readonly="" style="width: 100%; height: auto; padding: 2px;" class="bg-anthilla-gray-m border-anthilla-gray fg-white">@row.ValueResult</textarea>
                     </td>
-                    <td style="width: 700px;">
-                        <p>@row.ValueResult</p>
+                    <td style="width: 400px;">
+                        <p>@row.InputCommand</p>
                     </td>
                 </tr>
             }
@@ -55,10 +55,12 @@
             <div class="span7">
                 <input class="bg-anthilla-green" type="submit" value="Create" style="width: 90%;">
             </div>
+            <div class="span3">
+                @*<input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>*@
+            </div>
         </div>
     </form>
     <hr class="bg-anthilla-gray" />
-    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row"/>
-    @*<input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>*@
+    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Data"/>
     <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete"/>
 </div>
