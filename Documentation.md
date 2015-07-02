@@ -193,3 +193,7 @@ ip -6 route del <ipv6network>/<prefixlength> via <ipv6address>
 ``` 
 ip -6 route del <ipv6network>/<prefixlength> dev <device>
 ``` 
+- Show ipv6 tunnels
+```
+ip -6 tunnel show [<device>]
+```
