@@ -32,6 +32,12 @@ using System.Collections.Generic;
 namespace Antd.CCTable {
 
     public class CCTableFlags {
+        public enum TableType {
+            Settings = 1,
+            DataView = 2,
+            None = 99
+        }
+
         public enum OsiLevel {
             Physical = 1,
             DataLink = 2,
@@ -58,6 +64,8 @@ namespace Antd.CCTable {
         public string Alias { get; set; }
 
         public string Context { get; set; }
+
+        public CCTableFlags.TableType Type { get; set; }
 
         public List<CCTableRowModel> Content { get; set; }
     }

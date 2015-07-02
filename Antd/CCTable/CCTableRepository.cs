@@ -69,17 +69,18 @@ namespace Antd.CCTable {
             return list;
         }
 
-        public static void CreateTable(string alias, string context) {
+        public static void CreateTable(string alias, string type, string context) {
             var model = new CCTableModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 Alias = alias.UppercaseAllFirstLetters(),
                 Context = context
             };
+            model.Type = GetTableType(type);
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRow(string tableGuid, string tableName, string label, string inputType, 
+        public static void CreateRow(string tableGuid, string tableName, string label, string inputType,
             string inputLabel, string inputCommand, string notes,
             CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction) {
             var model = new CCTableRowModel {
@@ -121,10 +122,8 @@ namespace Antd.CCTable {
             switch (n) {
                 case 0:
                     return CCTableFlags.CommandFunction.Stable;
-                    break;
                 case 1:
                     return CCTableFlags.CommandFunction.Testing;
-                    break;
                 default:
                     return CCTableFlags.CommandFunction.None;
             }
@@ -135,27 +134,32 @@ namespace Antd.CCTable {
             switch (n) {
                 case 1:
                     return CCTableFlags.OsiLevel.Physical;
-                    break;
                 case 2:
                     return CCTableFlags.OsiLevel.DataLink;
-                    break;
                 case 3:
                     return CCTableFlags.OsiLevel.Network;
-                    break;
                 case 4:
                     return CCTableFlags.OsiLevel.Transport;
-                    break;
                 case 5:
                     return CCTableFlags.OsiLevel.Session;
-                    break;
                 case 6:
                     return CCTableFlags.OsiLevel.Presentation;
-                    break;
                 case 7:
                     return CCTableFlags.OsiLevel.Application;
-                    break;
                 default:
                     return CCTableFlags.OsiLevel.None;
+            }
+        }
+
+        public static CCTableFlags.TableType GetTableType(string src) {
+            int n = Convert.ToInt32(src);
+            switch (n) {
+                case 1:
+                    return CCTableFlags.TableType.Settings;
+                case 2:
+                    return CCTableFlags.TableType.DataView;
+                default:
+                    return CCTableFlags.TableType.None;
             }
         }
     }
