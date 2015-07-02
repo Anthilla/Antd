@@ -2,6 +2,19 @@
     <legend><i class="icon-bars on-left"></i>@Model.Alias</legend>
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
+            @foreach (Antd.CCTable.CCTableRowModel row in Model.Content) {
+                <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
+                    <td style="width: 200px;">
+                        <label>@row.Label</label>
+                    </td>
+                    <td>
+                        <p>@row.Label</p>
+                    </td>
+                    <td style="width: 700px;">
+                        <p>@row.InputCommand</p>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
     <form action="/cctable/row/dataview" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
@@ -19,13 +32,16 @@
         <hr class="bg-anthilla-gray" style="height: 1px !important;">
         <div class="row">
             <div class="span3">
-                <label>Command </label>
+                <label>Command | Result</label>
             </div>
-            <div class="span7">
+            <div class="span5">
                 <input type="text" name="Command" style="width: 90%; height: 25px;">
             </div>
-            <div class="span3">
-                <p>The return of this command will be shown in a cell </p>
+            <div class="span5">
+                <input type="text" name="Result" style="width: 90%; height: 25px;">
+            </div>
+            <div class="span2">
+                <input class="bg-darkTeal" data-role="import-data" type="button" value="ImportData">
             </div>
         </div>
         <div class="further-commands" data-table="@Model.Guid">

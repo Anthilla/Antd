@@ -77,27 +77,34 @@ $('input[data-cctable-role="add-column"]').click(function () {
                      '<div class="span3">' +
                          '<label>Command </label>' +
                      '</div>' +
-                     '<div class="span7">' +
+                     '<div class="span5">' +
                          '<input type="text" name="Command" style="width: 90%; height: 25px;">' +
                      '</div>' +
-                     '<div class="span3">' +
+                     '<div class="span5">' +
+                         '<input type="text" name="Result" style="width: 90%; height: 25px;">' +
+                     '</div>' +
+                     '<div class="span2">' +
+                         '<input class="bg-darkTeal" data-role="import-data" type="button" value="ImportData">' +
+                     '</div>' +
+                     '<div class="span1">' +
                         '<input class="bg-anthilla-orange" data-table="' + guid + '" type="button" data-role="RemoveThisRow" value="x">' +
                      '</div>' +
                  '</div>';
     container.append(content);
-    CopyCommandFromClipboard();
     RemoveCommandRow();
+    ImportDataFromClipboard();
 });
 
-function CopyCommandFromClipboard() {
-    $('input[name="Command"]').dblclick(function () {
-        $(this).val($('input#Clipboard').val());
+function ImportDataFromClipboard() {
+    $('input[data-role="import-data"]').dblclick(function () {
+        var self = $(this);
+        self.parents('div.row').find('input[name="Command"]').val($('input#Clipboard0').val());
+        self.parents('div.row').find('input[name="Result"]').val($('input#Clipboard1').val());
     });
 }
 
 function RemoveCommandRow() {
     $('input[data-role="RemoveThisRow"]').click(function () {
-        console.log('rmmmmmmmmmmmmmmmmmm');
         var guid = $(this).attr('data-table');
         $(this).parents('.row[data-table="' + guid + '"]').remove();
     });

@@ -103,6 +103,7 @@ namespace Antd {
                 string label = (string)this.Request.Form.Label;
 
                 string commandString = (string)this.Request.Form.Command;
+                string resultString = (string)this.Request.Form.Result;
                 //ottengo x comandi, uno per ogni riga che ho aggiunto
                 //posso splittare commandString -> ,
                 //oppure mandare la stringa intera al repo.Create()
