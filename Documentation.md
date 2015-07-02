@@ -143,7 +143,7 @@ ip route add default via yyy.yyy.yyy.yyy dev br0
 - Conversion from standard interface to a Bond one at runtime without loosing connections
 - Conversion from standard interface to a Team one at runtime without loosing connections
 
-### IPV6 Related
+### IPV6 Related:
 - Show specific an ipv6 address per interface:
 ``` 
 ip -6 addr show dev ethx
