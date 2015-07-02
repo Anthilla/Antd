@@ -92,7 +92,26 @@ namespace Antd {
                 string inputlocation = "CCTable" + this.Request.Form.TableName;
                 CommandDB.Create(inputid, command, command, inputlocation, notes);
 
-                return Response.AsRedirect("/cctable");
+                string context = (string)this.Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
+            };
+
+            Post["/row/dataview"] = x => {
+                string table = (string)this.Request.Form.TableGuid;
+                string tableName = (string)this.Request.Form.TableName;
+                string label = (string)this.Request.Form.Label;
+
+                string commandString = (string)this.Request.Form.Command;
+                //ottengo x comandi, uno per ogni riga che ho aggiunto
+                //posso splittare commandString -> ,
+                //oppure mandare la stringa intera al repo.Create()
+                //comunque, per ogni stringa ricavata creo il comando
+                //salvo sia il comando che il risultato del comando stesso (-> Tuple<string, string>(comando, comando.risultato)
+
+                string context = (string)this.Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
             };
 
             Get["/delete/table/{guid}"] = x => {
