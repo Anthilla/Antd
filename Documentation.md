@@ -143,12 +143,12 @@ ip route add default via yyy.yyy.yyy.yyy dev br0
 - Conversion from standard interface to a Bond one at runtime without loosing connections
 - Conversion from standard interface to a Team one at runtime without loosing connections
 
-### Added later....
+### IPV6 Related
 - Show specific an ipv6 address per interface:
 ``` 
 ip -6 addr show dev ethx
 ``` 
-- Add/Delete an ipv6 address:
+- Create/Add and Delete an ipv6 address:
 ``` 
 ip -6 addr add <ipv6address>/<prefixlength> dev <interface> 
 ip -6 addr del <ipv6address>/<prefixlength> dev <interface>
@@ -159,7 +159,7 @@ ip -6 route show ethx
 ``` 
 - Displaying neighbors:
 ``` 
-ip -6 neigh show \[dev \<device\>\]
+ip -6 neigh show [dev <device>]
 ``` 
 - Manipulating neighbors table:
 ``` 
