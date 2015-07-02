@@ -25,7 +25,7 @@
 <tr>
                     <td colspan="4">
                         <ul>
-                        @foreach (Antd.CCTable.CCTableModel.CCTableRowMapped mapped in Antd.CCTable.CCTableRepository.MapData(row.ValueResult, row.MapRules)) {
+                        @foreach (Antd.CCTable.CCTableRowMapped mapped in Antd.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
                             <li>@mapped.Key : @mapped.Value</li>
                         }
                 </ul>

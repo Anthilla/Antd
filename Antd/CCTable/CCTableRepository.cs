@@ -149,8 +149,9 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(r);
         }
 
-        public static List<CCTableRowMapped> MapData(string result, List<CCTableRowMap> mapList) {
-            var resultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+        public static List<CCTableRowMapped> MapData(string[] result, List<CCTableRowMap> mapList) {
+            //var resultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var resultArray = result;
             var x = new List<CCTableRowMapped>() { };
             foreach (var map in mapList) {
                 string z = "";
