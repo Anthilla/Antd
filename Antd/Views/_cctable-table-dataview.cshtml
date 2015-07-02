@@ -8,7 +8,6 @@
                         <label>@row.Label</label>
                     </td>
                     <td data-role="result-container" data-row-guid="@row.Guid">
-                        @*<textarea readonly="" style="width: 100%; height: auto; padding: 2px; resize: none;" class="bg-anthilla-gray-m border-anthilla-gray fg-white">@row.ValueResult</textarea>*@
                         @for (int i = 0; i < row.ValueResultArray.Length; i++) { 
                             <p style="display: inline-block; padding: 3px; margin: 3px;" class="fg-white border-anthilla-gray result-part-item" data-part="@row.ValueResultArray[i]" data-position="@i.ToString()">
                                 @row.ValueResultArray[i]
@@ -22,6 +21,17 @@
                         <input type="button" class="bg-mauve" data-role="map-result" data-row-guid="@row.Guid" value="Map Data"/>
                     </td>
                 </tr>
+                @if (row.HasMap == true) { 
+<tr>
+                    <td colspan="4">
+                        <ul>
+                        @foreach (Antd.CCTable.CCTableModel.CCTableRowMapped mapped in Antd.CCTable.CCTableRepository.MapData(row.ValueResult, row.MapRules)) {
+                            <li>@mapped.Key : @mapped.Value</li>
+                        }
+                </ul>
+                    </td>
+                </tr>
+                }
                 <tr style="display: none;" data-row-map-guid="@row.Guid">
                     <td></td>
                     <td colspan="2">
@@ -34,8 +44,9 @@
                                     <div class="span4">
                                         <input type="text" name="MapLabel" style="width: 90%; height: 25px;">
                                     </div>
-                                    <div class="span4">
-                                        <input type="text" name="MapLabelIndex" style="width: 90%; height: 25px;">
+                                    <div class="span4 droppable">
+                                        <input type="text" name="MapLabelIndexText" style="width: 90%; height: 25px;">
+                                        <input type="hidden" name="MapLabelIndex">
                                     </div>
                                 </div>
                                 <div class="further-result-map">

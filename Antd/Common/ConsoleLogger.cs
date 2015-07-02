@@ -37,14 +37,14 @@ namespace Antd {
     /// </summary>
     public static class ConsoleLogger {
 
-        public static void Log(string message, params object[] args) {
+        public static void Log(dynamic message, params object[] args) {
             if (args.Any()) message = String.Format(message, args);
             Console.WriteLine("{0}{1}"
                 , ConsoleTime.GetTime(DateTime.Now)
                 , message);
         }
 
-        public static void Info(string message, params object[] args) {
+        public static void Info(dynamic message, params object[] args) {
             if (args.Any()) message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -54,7 +54,7 @@ namespace Antd {
             Console.ForegroundColor = currentColor;
         }
 
-        public static void Success(string message, params object[] args) {
+        public static void Success(dynamic message, params object[] args) {
             if (args.Any()) message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -64,7 +64,7 @@ namespace Antd {
             Console.ForegroundColor = currentColor;
         }
 
-        public static void Warn(string message, params object[] args) {
+        public static void Warn(dynamic message, params object[] args) {
             if (args.Any()) message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -74,7 +74,7 @@ namespace Antd {
             Console.ForegroundColor = currentColor;
         }
 
-        public static void Error(string message, params object[] args) {
+        public static void Error(dynamic message, params object[] args) {
             if (args.Any()) message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkRed;

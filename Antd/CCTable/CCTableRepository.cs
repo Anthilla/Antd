@@ -109,7 +109,9 @@ namespace Antd.CCTable {
                 TableGuid = tableGuid,
                 Label = label,
                 InputCommand = inputCommand,
-                ValueResult = result
+                ValueResult = result,
+                MapRules = new List<CCTableRowMap>() { },
+                HasMap = false
             };
             model.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
@@ -131,6 +133,36 @@ namespace Antd.CCTable {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             var i = row.HtmlInputID;
             CommandDB.Edit(i, command);
+        }
+
+        public static void SaveMapData(string rowGuid, string labelArray, string indexArray) {
+            var r = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == rowGuid).FirstOrDefault();
+            var labelArraySplit = labelArray.Split(new String[] { "," }, StringSplitOptions.None).ToArray();
+            var indexArraySplit = indexArray.Split(new String[] { "," }, StringSplitOptions.None).ToArray();
+            for (int i = 0; i < labelArraySplit.Length; i++) {
+                var map = new CCTableRowMap();
+                map.MapLabel = labelArraySplit[i];
+                map.MapIndex = indexArraySplit[i].Split(new String[] { ";" }, StringSplitOptions.None).ToArray().ToIntArray();
+                r.MapRules.Add(map);
+            }
+            r.HasMap = true;
+            DeNSo.Session.New.Set(r);
+        }
+
+        public static List<CCTableRowMapped> MapData(string result, List<CCTableRowMap> mapList) {
+            var resultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var x = new List<CCTableRowMapped>() { };
+            foreach (var map in mapList) {
+                string z = "";
+                foreach (var i in map.MapIndex) {
+                    z += resultArray[i] + " ";
+                }
+                var y = new CCTableRowMapped();
+                y.Key = map.MapLabel;
+                y.Value = z;
+                x.Add(y);
+            }
+            return x;
         }
 
         public static CCTableFlags.CommandFunction GetCommandFunction(string src) {

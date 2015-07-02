@@ -202,8 +202,9 @@ $('input[data-role="add-mapping-row"]').click(function () {
                 '<div class="span4">' +
                     '<input type="text" name="MapLabel" style="width: 90%; height: 25px;">' +
                 '</div>' +
-                '<div class="span4">' +
-                    '<input type="text" name="MapLabelIndex" style="width: 90%; height: 25px;">' +
+                '<div class="span4 droppable">' +
+                    '<input type="text" name="MapLabelIndexText" style="width: 90%; height: 25px;">' +
+                    '<input type="hidden" name="MapLabelIndex">' +
                 '</div>' +
                 '<div class="span1">' +
                     '<input class="bg-darkOrange" data-role="remove-mapping-row" type="button" value="x" style="width: 90%;">' +
@@ -211,12 +212,58 @@ $('input[data-role="add-mapping-row"]').click(function () {
             '</div>';
     self.parents('div.grid').find('.further-result-map').append(row);
     RemoveMappingRow();
+    InitializeDragAndDrop();
 });
 
 function RemoveMappingRow() {
     $('input[data-role="remove-mapping-row"]').click(function () {
         $(this).parents('div.row').remove();
     });
+}
+
+//dnd per mappatura
+$(document).ready(function () {
+    InitializeDragAndDrop();
+});
+
+function InitializeDragAndDrop() {
+    $(function () {
+        $('.result-part-item').draggable({
+            helper: 'clone'
+        });
+
+        $('.droppable').droppable({
+            accept: '.result-part-item',
+            drop: function (event, ui) {
+                var data = ui.draggable.attr('data-part');
+                var dataIndex = ui.draggable.attr('data-position');
+                AddData($(this), data);
+                AddDataIndex($(this), dataIndex);
+            }
+        });
+    });
+
+    function AddData(droppable, value) {
+        var input = droppable.find('input[name="MapLabelIndexText"]');
+        var exValue = input.val();
+        if (exValue == undefined || exValue.length == 0) {
+            input.val(value);
+        }
+        else {
+            input.val(exValue + ' ' + value);
+        }
+    }
+
+    function AddDataIndex(droppable, value) {
+        var input = droppable.find('input[name="MapLabelIndex"]');
+        var exValue = input.val();
+        if (exValue == undefined || exValue.length == 0) {
+            input.val(value);
+        }
+        else {
+            input.val(exValue + ';' + value);
+        }
+    }
 }
 
 ///command management

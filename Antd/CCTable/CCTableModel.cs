@@ -102,5 +102,21 @@ namespace Antd.CCTable {
         public CCTableFlags.OsiLevel FlagOsi { get; set; }
 
         public CCTableFlags.CommandFunction FlagCommandFunction { get; set; }
+
+        public List<CCTableRowMap> MapRules { get; set; }
+
+        public bool HasMap { get; set; }
+    }
+
+    public class CCTableRowMap {
+        public string MapLabel { get; set; }
+
+        public int[] MapIndex { get; set; }
+    }
+
+    public class CCTableRowMapped {
+        public string Key { get; set; }
+
+        public string Value { get; set; }
     }
 }

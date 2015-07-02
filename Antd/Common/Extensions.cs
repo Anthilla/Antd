@@ -94,5 +94,13 @@ namespace Antd {
         public static string AsJson(this Object str) {
             return JsonConvert.SerializeObject(str);
         }
+
+        public static int[] ToIntArray(this String[] arr) {
+            var ilist = new List<int>() { };
+            foreach (var s in arr) {
+                ilist.Add(Convert.ToInt32(s));
+            }
+            return ilist.ToArray();
+        }
     }
 }

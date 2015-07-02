@@ -115,6 +115,10 @@ namespace Antd {
                 string rowGuid = (string)this.Request.Form.ItemGuid;
                 string result = (string)this.Request.Form.ItemResult;
 
+                string labelArray = (string)this.Request.Form.MapLabel;
+                string indexArray = (string)this.Request.Form.MapLabelIndex;
+                CCTableRepository.SaveMapData(rowGuid, labelArray, indexArray);
+
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
