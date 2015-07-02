@@ -189,11 +189,35 @@ function ConfirmEdit() {
 }
 
 $('input[data-role="map-result"]').click(function () {
-    console.log('dlasda');
     var self = $(this);
     var guid = self.attr('data-row-guid');
     $('tr[data-row-map-guid="' + guid + '"]').toggle();
 });
+
+$('input[data-role="add-mapping-row"]').click(function () {
+    var self = $(this);
+    var guid = self.attr('data-row-guid');
+
+    var row = '<div class="row">' +
+                '<div class="span4">' +
+                    '<input type="text" name="MapLabel" style="width: 90%; height: 25px;">' +
+                '</div>' +
+                '<div class="span4">' +
+                    '<input type="text" name="MapLabelIndex" style="width: 90%; height: 25px;">' +
+                '</div>' +
+                '<div class="span1">' +
+                    '<input class="bg-darkOrange" data-role="remove-mapping-row" type="button" value="x" style="width: 90%;">' +
+                '</div>' +
+            '</div>';
+    self.parents('div.grid').find('.further-result-map').append(row);
+    RemoveMappingRow();
+});
+
+function RemoveMappingRow() {
+    $('input[data-role="remove-mapping-row"]').click(function () {
+        $(this).parents('div.row').remove();
+    });
+}
 
 ///command management
 $('#CmdMgmtButton').click(function () {

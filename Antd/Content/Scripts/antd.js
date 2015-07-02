@@ -209,8 +209,15 @@ $('input[data-role="add-mapping-row"]').click(function () {
                     '<input class="bg-darkOrange" data-role="remove-mapping-row" type="button" value="x" style="width: 90%;">' +
                 '</div>' +
             '</div>';
-    $('tr[data-row-map-guid="' + guid + '"]').toggle();
+    self.parents('div.grid').find('.further-result-map').append(row);
+    RemoveMappingRow();
 });
+
+function RemoveMappingRow() {
+    $('input[data-role="remove-mapping-row"]').click(function () {
+        $(this).parents('div.row').remove();
+    });
+}
 
 ///command management
 $('#CmdMgmtButton').click(function () {
