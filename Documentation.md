@@ -1,6 +1,6 @@
 
 ### Important Notes:
-- for each command mind to sign all (S)CRUD operations. Thanks. (https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+- for each command mind to sign all *(S)CRUD* operations. Thanks. (https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 - maintain uptime, flushes and restart/reloads, at 95% take it down.
 - with iproute2, virtual interfaces eth0:X are not necessary.
 - with iproute2, you can add/remove many ip set from interfaces.
@@ -140,7 +140,6 @@ ip addr del xxx.xxx.xxx.xxx/XX dev eth0
 ip route del default via yyy.yyy.yyy.yyy dev eth0
 ip route add default via yyy.yyy.yyy.yyy dev br0
 ``` 
-
 - Conversion from standard interface to a Bond one at runtime without loosing connections
 - Conversion from standard interface to a Team one at runtime without loosing connections
 
@@ -151,8 +150,8 @@ ip -6 addr show dev ethx
 ``` 
 - Add/Delete an ipv6 address:
 ``` 
-ip -6 addr add \<ipv6address\>\/\<prefixlength\> dev \<interface\> 
-ip -6 addr del \<ipv6address\>\/\<prefixlength\> dev \<interface\>
+ip -6 addr add <ipv6address>/<prefixlength> dev <interface> 
+ip -6 addr del <ipv6address>/<prefixlength> dev <interface>
 ``` 
 - Displaying existing ipv6 routes:
 ``` 
@@ -164,15 +163,15 @@ ip -6 neigh show \[dev \<device\>\]
 ``` 
 - Manipulating neighbors table:
 ``` 
-ip -6 neigh add \<IPv6 address\> lladdr \<link-layer address\> dev \<device\>
-ip -6 neigh del \<IPv6 address\> lladdr \<link-layer address\> dev \<device\>
+ip -6 neigh add <IPv6 address> lladdr <link-layer address> dev <device>
+ip -6 neigh del <IPv6 address> lladdr <link-layer address> dev <device>
 ``` 
 - Add/Delete an ipv6 route through a gateway:
 ``` 
-ip -6 route add \<ipv6network\>\/\<prefixlength\> via \<ipv6address\>
-ip -6 route del \<ipv6network\>\/\<prefixlength\> via \<ipv6address\>
+ip -6 route add <ipv6network>/<prefixlength> via <ipv6address>
+ip -6 route del <ipv6network>/<prefixlength> via <ipv6address>
 ``` 
 - Add/Delete an ipv6 route through an interface:
 ``` 
-ip -6 route del \<ipv6network\>\/\<prefixlength\> dev \<device\>
+ip -6 route del <ipv6network>/<prefixlength> dev <device>
 ``` 
