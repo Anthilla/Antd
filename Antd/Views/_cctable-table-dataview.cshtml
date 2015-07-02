@@ -8,10 +8,10 @@
                         <label>@row.Label</label>
                     </td>
                     <td>
-                        <p>@row.Label</p>
+                        <p>@row.InputCommand</p>
                     </td>
                     <td style="width: 700px;">
-                        <p>@row.InputCommand</p>
+                        <p>@row.ValueResult</p>
                     </td>
                 </tr>
             }
@@ -58,6 +58,6 @@
     </form>
     <hr class="bg-anthilla-gray" />
     <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row"/>
-    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>
+    @*<input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>*@
     <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete"/>
 </div>

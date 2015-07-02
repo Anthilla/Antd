@@ -101,7 +101,7 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRowDataView(string tableGuid, string tableName, string label, string inputCommand) {
+        public static void CreateRowDataView(string tableGuid, string tableName, string label, string inputCommand, string result) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -109,6 +109,7 @@ namespace Antd.CCTable {
                 TableGuid = tableGuid,
                 Label = label,
                 InputCommand = inputCommand,
+                ValueResult = result
             };
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();

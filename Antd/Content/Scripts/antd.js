@@ -188,6 +188,8 @@ function ConfirmEdit() {
     });
 }
 
+
+
 ///command management
 $('#CmdMgmtButton').click(function () {
     $('#CommandManagementForm').toggle();

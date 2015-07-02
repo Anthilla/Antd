@@ -95,6 +95,10 @@ $('input[data-cctable-role="add-column"]').click(function () {
     ImportDataFromClipboard();
 });
 
+$(document).ready(function () {
+    ImportDataFromClipboard();
+});
+
 function ImportDataFromClipboard() {
     $('input[data-role="import-data"]').click(function () {
         var self = $(this);
