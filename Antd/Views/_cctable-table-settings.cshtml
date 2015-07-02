@@ -1,8 +1,8 @@
 ﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
-    <legend>@Model.Alias</legend>
+    <legend><i class="icon-dashboard on-left"></i> @Model.Alias</legend>
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
-            @foreach (Antd.CCTable.CCTableRowModel row in table.Content) {
+            @foreach (Antd.CCTable.CCTableRowModel row in Model.Content) {
                 <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="main">
                     <td style="width: 200px;">
                         <label>@row.Label</label>

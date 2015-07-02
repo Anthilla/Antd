@@ -52,11 +52,11 @@ namespace Antd {
                 string tbl = (string)this.Request.Form.Alias;
                 string context = (string)this.Request.Form.Context;
                 string tblType = (string)this.Request.Form.TableType;
-                if (tbl != "") {
+                if (tbl.RemoveWhiteSpace().Length > 0) {
                     CCTableRepository.CreateTable(tbl, tblType, context);
                 }
-                var redirect = this.Request.Path;
-                return Response.AsRedirect(context);
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
             };
 
             Post["/row"] = x => {
