@@ -72,7 +72,6 @@ $('input[data-cctable-role="add-row"]').click(function () {
 
 $('input[data-cctable-role="add-column"]').click(function () {
     var guid = $(this).attr('data-table-guid');
-    console.log('you are trying to add a column');
     var container = $('.further-commands[data-table="' + guid + '"]');
     var content = '<div class="row" data-table="' + guid + '">' +
                      '<div class="span3">' +
@@ -82,13 +81,10 @@ $('input[data-cctable-role="add-column"]').click(function () {
                          '<input type="text" name="Command" style="width: 90%; height: 25px;">' +
                      '</div>' +
                      '<div class="span3">' +
-                         '<p>The return of this command will be shown in the cell </p>' +
-                     '</div>' +
-                     '<div class="span1">' +
-                        '<input class="bg-anthilla-orange" data-table="' + guid + '" type="button" class="remove-row" value="x">' +
+                        '<input class="bg-anthilla-orange" data-table="' + guid + '" type="button" data-role="RemoveThisRow" value="x">' +
                      '</div>' +
                  '</div>';
-    container.html(content);
+    container.append(content);
     CopyCommandFromClipboard();
     RemoveCommandRow();
 });
@@ -100,7 +96,8 @@ function CopyCommandFromClipboard() {
 }
 
 function RemoveCommandRow() {
-    $('input[name="Command"]').dblclick(function () {
+    $('input[data-role="RemoveThisRow"]').click(function () {
+        console.log('rmmmmmmmmmmmmmmmmmm');
         var guid = $(this).attr('data-table');
         $(this).parents('.row[data-table="' + guid + '"]').remove();
     });

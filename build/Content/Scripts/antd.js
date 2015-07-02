@@ -3,6 +3,10 @@ $('#OpenTerminal').click(function () {
     $('#TerminalContainer').toggle();
 });
 
+$('#TerminalClose').click(function () {
+    $('#TerminalContainer').hide();
+});
+
 //cctable
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {
@@ -64,14 +68,40 @@ $('input[data-cctable-role="add-row"]').click(function () {
     var guid = $(this).attr('data-table-guid');
     var form = $('form[data-table-form="' + guid + '"]');
     form.toggle();
-    form.find('.command-result').attr('data-is-active', 'true');
-    form.find('.command-input').attr('data-is-active', 'true');
 });
 
 $('input[data-cctable-role="add-column"]').click(function () {
     var guid = $(this).attr('data-table-guid');
-    console.log('you are trying to add a column');
+    var container = $('.further-commands[data-table="' + guid + '"]');
+    var content = '<div class="row" data-table="' + guid + '">' +
+                     '<div class="span3">' +
+                         '<label>Command </label>' +
+                     '</div>' +
+                     '<div class="span7">' +
+                         '<input type="text" name="Command" style="width: 90%; height: 25px;">' +
+                     '</div>' +
+                     '<div class="span3">' +
+                        '<input class="bg-anthilla-orange" data-table="' + guid + '" type="button" data-role="RemoveThisRow" value="x">' +
+                     '</div>' +
+                 '</div>';
+    container.append(content);
+    CopyCommandFromClipboard();
+    RemoveCommandRow();
 });
+
+function CopyCommandFromClipboard() {
+    $('input[name="Command"]').dblclick(function () {
+        $(this).val($('input#Clipboard').val());
+    });
+}
+
+function RemoveCommandRow() {
+    $('input[data-role="RemoveThisRow"]').click(function () {
+        console.log('rmmmmmmmmmmmmmmmmmm');
+        var guid = $(this).attr('data-table');
+        $(this).parents('.row[data-table="' + guid + '"]').remove();
+    });
+}
 
 $('input[data-cctable-role="delete-table"]').click(function () {
 
@@ -117,7 +147,6 @@ $('input.set-edit-command').click(function () {
     var html = container.html();
     var set = container.find('p[data-command="set"]').text();
     var get = container.find('p[data-command="get"]').text();
-    //container.html('');
     var cont = '<label style="display: inline-block;">Associated Command</label>' +
                 '<input data-guid-set="' + guid + '" data-command="set" type="text" value="' + set + '"/>' +
                 '<br />' +

@@ -68,6 +68,8 @@ namespace Antd.CCTable {
         public CCTableFlags.TableType Type { get; set; }
 
         public List<CCTableRowModel> Content { get; set; }
+
+        public List<CCTableRowModel> DataViewContent { get; set; }
     }
 
     public class CCTableRowModel {
