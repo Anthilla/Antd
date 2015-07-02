@@ -43,7 +43,7 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["terminal"];
+                return View["page-terminal"];
             };
 
             Post["/"] = x => {
