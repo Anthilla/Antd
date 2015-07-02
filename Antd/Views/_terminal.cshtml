@@ -6,74 +6,89 @@
         font-weight: 300 !important;
     }
 </style>
-<div id="Terminal" class="terminal" data-table="@Model" style="text-align: left !important;"></div>
+<div id="Terminal" style="text-align: left !important;"></div>
 <script type="text/javascript">
-    $('.terminal').each(function () {
-        var newTerminal = $(this);
-        jQuery(function ($) {
-            var directory = '';
-            newTerminal.terminal(function (command, term) {
-                var self = $(this);
-                if (command == 'help') {
-                    term.echo("just type something...");
-                }
-                else if (command == '' || command == ' ') {
-                }
-                else if (command.substring(0, 3) == 'cd ' && command != 'cd ..') {
-                    directory = command.substring(3, command.length);
-                    jQuery.support.cors = true;
-                    $.ajax({
-                        url: '/terminal/directory',
-                        type: 'POST',
-                        data: {
-                            Directory: directory
-                        },
-                        success: function (data) {
-                            if (data == '0') {
-                                term.echo(command + ' No such file or directory');
-                            }
-                            else {
-                                term.set_prompt(data);
-                            }
+    jQuery(function ($) {
+        var directory = '';
+        $('#Terminal').terminal(function (command, term) {
+            var self = $(this);
+            if (command == 'help') {
+                term.echo("just type something...");
+            }
+            else if (command == '' || command == ' ') {
+            }
+            else if (command.substring(0, 3) == 'cd ' && command != 'cd ..') {
+                directory = command.substring(3, command.length);
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/directory',
+                    type: 'POST',
+                    data: {
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        if (data == '0') {
+                            term.echo(command + ' No such file or directory');
                         }
-                    });
-                }
-                else if (command == 'cd ..') {
-                    jQuery.support.cors = true;
-                    $.ajax({
-                        url: '/terminal/directory/parent',
-                        type: 'POST',
-                        data: {
-                            Directory: directory
-                        },
-                        success: function (data) {
-                            if (data == '0') {
-                                term.echo(command + ' No such file or directory');
-                            }
-                            else {
-                                term.set_prompt(data);
-                            }
+                        else {
+                            term.set_prompt(data);
                         }
-                    });
-                }
-                else {
-                    jQuery.support.cors = true;
-                    $.ajax({
-                        url: '/terminal/',
-                        type: 'POST',
-                        data: {
-                            Command: command,
-                            Directory: directory
-                        },
-                        success: function (data) {
-                            term.echo(data);
-                            return false;
+                    }
+                });
+            }
+            else if (command == 'cd ..') {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/directory/parent',
+                    type: 'POST',
+                    data: {
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        if (data == '0') {
+                            term.echo(command + ' No such file or directory');
                         }
-                    });
-                }
-            }, {
-                greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
-            });
+                        else {
+                            term.set_prompt(data);
+                        }
+                    }
+                });
+            }
+            else if ((command.slice(-2) == '>>')) {
+                var c = command.substring(0, member.length - 2);
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/',
+                    type: 'POST',
+                    data: {
+                        Command: c,
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        $('input[data-is-active="true"]').val(c);
+                        $('tetarea[data-is-active="true"]').val(data);
+                        term.echo(data);
+                        return false;
+                    }
+                });
+            }
+            else {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/',
+                    type: 'POST',
+                    data: {
+                        Command: command,
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        term.echo(data);
+                        return false;
+                    }
+                });
+            }
+        }, {
+            greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
         });
     });
 </script>
