@@ -65,8 +65,7 @@
                         Directory: directory
                     },
                     success: function (data) {
-                        $('input[data-is-active="true"]').val(c);
-                        $('tetarea[data-is-active="true"]').val(data);
+                        $('input#Clipboard').val(c);
                         term.echo(data);
                         return false;
                     }

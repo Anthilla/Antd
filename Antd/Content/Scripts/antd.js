@@ -64,13 +64,15 @@ $('input[data-cctable-role="add-row"]').click(function () {
     var guid = $(this).attr('data-table-guid');
     var form = $('form[data-table-form="' + guid + '"]');
     form.toggle();
-    form.find('.command-result').attr('data-is-active', 'true');
-    form.find('.command-input').attr('data-is-active', 'true');
 });
 
 $('input[data-cctable-role="add-column"]').click(function () {
     var guid = $(this).attr('data-table-guid');
     console.log('you are trying to add a column');
+});
+
+$('input[name="Command"]').dblclick(function () {
+    $(this).val($('input#Clipboard').val());
 });
 
 $('input[data-cctable-role="delete-table"]').click(function () {

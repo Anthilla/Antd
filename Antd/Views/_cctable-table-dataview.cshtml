@@ -21,22 +21,10 @@
                 <label>Command </label>
             </div>
             <div class="span7">
-                <input type="text" name="Command" class="command-input" data-is-active="false" style="width: 90%; height: 25px;">
+                <input type="text" name="Command" style="width: 90%; height: 25px;">
             </div>
             <div class="span3">
                 <p>The return of this command will be shown in the cell </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span3">
-                <label>Command Result </label>
-            </div>
-            <div class="span7">
-                <textarea class="command-result bg-black fg-white" data-table="@Model.Guid" data-is-active="false" style="width: 90%; height: 175px; margin-bottom: 10px; overflow: scroll !important; font-family: monospace !important; font-weight: 300 !important;" readonly > </textarea>
-            </div>
-            <div class="span3">
-                <input id="#OpenTerminal" class="bg-anthilla-violet" type="button" value="Show Terminal">
-                <p>Append '>>' to your command to save the result for this row </p>
             </div>
         </div>
         @*<div class="row">
