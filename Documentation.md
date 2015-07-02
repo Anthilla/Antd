@@ -5,6 +5,10 @@ S1: Network:
 - maintain uptime, flushes and restart/reloads, at 95% take it down.
 - with iproute2, virtual interfaces eth0:X are not necessary.
 - with iproute2, you can add/remove many ip set from interfaces.
+- Refer *Always* to OSI Stack level (!!!)
+- in iproute2 in general interface are L1, and ip link refer to L2, ip addr refer to L3
+- Netfilter diagram (https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Netfilter-packet-flow.svg/600px-Netfilter-packet-flow.svg.png) 
+- OSI stack diagram (http://www.windowsnetworking.com/img/upl/image0011210155736818.jpg)
 
 ### IPROUTE2:
 - Add new address (ipv4):
@@ -13,8 +17,9 @@ ip addr add xx.xx.xx.xx/xx broadcast xx.xx.xx.xx dev ethx
 ``` 
 - Add new address (ipv6):
 ``` 
-ip -6 addr add ipv6/64 dev ethx (should be possible change the netmask for obvious reasons)
+ip -6 addr add ipv6/64 dev ethx 
 ``` 
+*(should be possible change the netmask for obvious reasons)*
 - Add ipv6 gateway:
 ``` 
 ip -6 route add default via ipv6_gateway dev ethx
@@ -36,11 +41,23 @@ ip -4 addr flush label "eth*"
 ``` 
 ip -6 addr flush dynamic
 ``` 
-- Show interfaces:
+- Show interfaces L1,L2,L3:
 ``` 
-ip addr show ethx
+ip addr show
 ``` 
-- Show network card statistics:
+- Show a interface L1,L2,L3:
+``` 
+ip addr show ethX
+``` 
+- Show interfaces L1,L2:
+``` 
+ip link show
+``` 
+- Show a interface L1,L2:
+``` 
+ip link show ethX
+``` 
+- Show network card statistics L1,L2:
 ``` 
 ip -s link ls ethx
 ``` 
@@ -103,7 +120,6 @@ brctl showstp name
 brctl setpathcost name <port> <cost> set path cost
 brctl setportprio name <port> <prio> set port priority
 ``` 
-
 ### TEAMCTL:
 - sample configuration with active/backup mode using teamnl and ip:
 ``` 
