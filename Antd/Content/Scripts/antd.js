@@ -95,8 +95,12 @@ $('input[data-cctable-role="add-column"]').click(function () {
     ImportDataFromClipboard();
 });
 
+$(document).ready(function () {
+    ImportDataFromClipboard();
+});
+
 function ImportDataFromClipboard() {
-    $('input[data-role="import-data"]').dblclick(function () {
+    $('input[data-role="import-data"]').click(function () {
         var self = $(this);
         self.parents('div.row').find('input[name="Command"]').val($('input#Clipboard0').val());
         self.parents('div.row').find('input[name="Result"]').val($('input#Clipboard1').val());
