@@ -188,10 +188,16 @@ function ConfirmEdit() {
     });
 }
 
+$('input[data-role="map-result"]').click(function () {
+    console.log('dlasda');
+    var self = $(this);
+    var guid = self.attr('data-row-guid');
+    $('tr[data-row-map-guid="' + guid + '"]').toggle();
+});
+
 ///command management
 $('#CmdMgmtButton').click(function () {
     $('#CommandManagementForm').toggle();
-
 });
 
 function CloseCommandMgmtPanel() {

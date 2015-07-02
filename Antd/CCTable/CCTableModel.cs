@@ -91,6 +91,8 @@ namespace Antd.CCTable {
 
         public string ValueResult { get; set; }
 
+        public string[] ValueResultArray { get; set; }
+
         public string Notes { get; set; }
 
         public string HtmlInputID { get; set; }

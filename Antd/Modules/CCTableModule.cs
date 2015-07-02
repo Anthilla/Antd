@@ -104,12 +104,16 @@ namespace Antd {
 
                 string commandString = (string)this.Request.Form.Command;
                 string resultString = (string)this.Request.Form.Result;
-                //ottengo x comandi, uno per ogni riga che ho aggiunto
-                //posso splittare commandString -> ,
-                //oppure mandare la stringa intera al repo.Create()
-                //comunque, per ogni stringa ricavata creo il comando
-                //salvo sia il comando che il risultato del comando stesso (-> Tuple<string, string>(comando, comando.risultato)
                 CCTableRepository.CreateRowDataView(table, tableName, label, commandString, resultString);
+
+                string context = (string)this.Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
+            };
+
+            Post["/row/mapdata"] = x => {
+                string rowGuid = (string)this.Request.Form.ItemGuid;
+                string result = (string)this.Request.Form.ItemResult;
 
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
