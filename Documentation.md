@@ -2,9 +2,8 @@
 ### Important Notes:
 - for each command mind to sign all (S)CRUD operations. Thanks. (https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 - maintain uptime, flushes and restart/reloads, at 95% take it down.
-an important difference of iproute2 is:
-- virtual interfaces eth0:X are not necessary.
-- you can add/remove many ip set from interfaces.
+- with iproute2, virtual interfaces eth0:X are not necessary.
+- with iproute2, you can add/remove many ip set from interfaces.
 
 ### IPROUTE2:
 - Add new address (ipv4):
