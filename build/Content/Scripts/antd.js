@@ -188,6 +188,17 @@ function ConfirmEdit() {
     });
 }
 
+$('input.selectize').selectize({
+    delimiter: ' ',
+    persist: false,
+    create: function (input) {
+        return {
+            value: input,
+            text: input
+        }
+    }
+});
+
 ///command management
 $('#CmdMgmtButton').click(function () {
     $('#CommandManagementForm').toggle();
