@@ -32,7 +32,7 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_apps-pagebar", Model)
+    @Html.Partial("_apps-pagebar", Model.AppExists)
 }
 
 @section Dashboard {
