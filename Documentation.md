@@ -197,3 +197,77 @@ ip -6 route del <ipv6network>/<prefixlength> dev <device>
 ```
 ip -6 tunnel show [<device>]
 ```
+
+- Point-to-Point tunneling
+```
+ip tunnel add <device> mode sit ttl <ttldefault> remote <ipv4addressofforeigntunnel> local <ipv4addresslocal>
+```
+
+example:
+
+```
+ip tunnel add sit1 mode sit ttl <ttldefault> remote <ipv4addressofforeigntunnel1> local <ipv4addresslocal>
+ip link set dev sit1 up
+ip -6 route add <prefixtoroute1> dev sit1 metric 1
+```
+- Removing poin-to-point tunnels
+```
+ip tunnel del <device>
+```
+
+example:
+```
+ip -6 route del <prefixtoroute1> dev sit1
+ip link set sit1 down
+ip tunnel del sit1
+```
+
+- 6to4 tunnels
+```
+ip tunnel add tun6to4 mode sit ttl <ttldefault> remote any local <localipv4address> 
+ip link set dev tun6to4 up 
+ip -6 addr add <local6to4address>/16 dev tun6to4 
+ip -6 route add 2000::/3 via ::192.88.99.1 dev tun6to4 metric 1
+```
+
+- Remove a 6to4 tunnels
+```
+ip -6 route flush dev tun6to4
+ip link set dev tun6to4 down
+ip tunnel del tun6to4 
+```
+
+- IPv4-in-IPv6 tunnels
+```
+ip tunnel add <device> mode ip4ip6 remote <ipv6addressofforeigntunnel> local <ipv6addresslocal>
+```
+
+example:
+```
+ip -6 tunnel add ip6tnl1 mode ip4ip6 remote <ipv6addressofforeigntunnel1> local <ipv6addresslocal>
+ip link set dev ip6tnl1 up 
+ip -6 route add <prefixtoroute1> dev ip6tnl1 metric 1
+```
+
+### VLAN
+
+- Configure basic vlan for its interface
+```
+ip link add link eth0 name eth0.100 type vlan id 100
+```
+- Configure trunk
+```
+ip link add link eth0 name eth0.10 type vlan id 10
+ip link add link eth0 name eth0.20 type vlan id 20
+ip link add link eth0 name eth0.30 type vlan id 30
+```
+
+there is no conventional name for the ethernet/gigabit device
+we can also use eth0_100 or something else
+after that it is necessary set up an ip address for the eth0 interface (in this case)
+
+- View the vlan-id
+```
+ip -d link show eth0.10 
+```
+it is depends of the name assigned for each interface (eth0.10, eth0.20 and so on)
