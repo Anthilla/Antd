@@ -3,6 +3,10 @@ $('#OpenTerminal').click(function () {
     $('#TerminalContainer').toggle();
 });
 
+$('#TerminalClose').click(function () {
+    $('#TerminalContainer').hide();
+});
+
 //cctable
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {
