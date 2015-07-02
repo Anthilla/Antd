@@ -1,14 +1,72 @@
 ﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
-    <legend><i class="icon-bars on-left"></i> @Model.Alias</legend>
+    <legend><i class="icon-bars on-left"></i>@Model.Alias</legend>
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
-
         </tbody>
     </table>
     <form action="/cctable/row" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
-
+        <div class="row">
+            <div class="span3">
+                <label>Label</label>
+            </div>
+            <div class="span7">
+                <input type="hidden" name="TableGuid" value="@Model.Guid">
+                <input type="hidden" name="TableName" value="@Model.Alias">
+                <input type="text" name="Label" style="width: 90%; height: 25px;">
+            </div>
+        </div>
+        <hr class="bg-anthilla-gray" style="height: 1px !important;">
+        <div class="row">
+            <div class="span3">
+                <label>Command </label>
+            </div>
+            <div class="span7">
+                <input type="text" name="Command" style="width: 90%; height: 25px;">
+            </div>
+            <div class="span3">
+                <p>The return of this command will be shown in the cell </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span3">
+                <label>Terminal </label>
+            </div>
+            <div class="span7">
+                <div style="width: 90%; height: 175px; margin-bottom: 10px; overflow: scroll !important;" class="bg-black">
+                    @Html.Partial("_terminal", Model.Guid)
+                </div>
+            </div>
+            <div class="span3">
+                <p>You can test here commands </p>
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="span3">
+                <label>Flag OSI</label>
+            </div>
+            <div class="span7">
+                <select name="FlagOSI" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 90%; height: 25px;">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="span3">
+                <label>&nbsp</label>
+            </div>
+            <div class="span7">
+                <input class="bg-anthilla-green" type="submit" value="Create">
+            </div>
+        </div>
     </form>
     <hr class="bg-anthilla-gray" />
     <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row"/>
+    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>
     <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete"/>
 </div>

@@ -65,6 +65,11 @@ $('input[data-cctable-role="add-row"]').click(function () {
     $('form[data-table-form="' + guid + '"]').toggle();
 });
 
+$('input[data-cctable-role="add-column"]').click(function () {
+    var guid = $(this).attr('data-table-guid');
+    console.log('you are trying to add a column');
+});
+
 $('input[data-cctable-role="delete-table"]').click(function () {
 
     var guid = $(this).attr('data-table-guid');
