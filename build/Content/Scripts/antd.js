@@ -62,7 +62,10 @@ $('input[data-create-input-layout]').click(function () {
 
 $('input[data-cctable-role="add-row"]').click(function () {
     var guid = $(this).attr('data-table-guid');
-    $('form[data-table-form="' + guid + '"]').toggle();
+    var form = $('form[data-table-form="' + guid + '"]');
+    form.toggle();
+    form.find('.command-result').attr('data-is-active', 'true');
+    form.find('.command-input').attr('data-is-active', 'true');
 });
 
 $('input[data-cctable-role="add-column"]').click(function () {
