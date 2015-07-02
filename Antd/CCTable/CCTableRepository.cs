@@ -101,6 +101,20 @@ namespace Antd.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
+        public static void CreateRowDataView(string tableGuid, string tableName, string label, string inputCommand) {
+            var model = new CCTableRowModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                NUid = UID.ShortGuid,
+                TableGuid = tableGuid,
+                Label = label,
+                InputCommand = inputCommand,
+            };
+            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            DeNSo.Session.New.Set(model);
+        }
+
         public static void DeleteTable(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);

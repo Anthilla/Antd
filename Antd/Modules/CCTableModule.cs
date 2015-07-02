@@ -69,11 +69,11 @@ namespace Antd {
                 string notes = (string)this.Request.Form.Notes;
                 string osi = (string)this.Request.Form.FlagOSI.Value;
                 string func = (string)this.Request.Form.FlagFunction.Value;
-                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand, 
+                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand,
                     notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
                 string command;
-                switch(inputType) {
+                switch (inputType) {
                     case "hidden":
                         command = this.Request.Form.CCTableCommandNone;
                         break;
@@ -108,6 +108,7 @@ namespace Antd {
                 //oppure mandare la stringa intera al repo.Create()
                 //comunque, per ogni stringa ricavata creo il comando
                 //salvo sia il comando che il risultato del comando stesso (-> Tuple<string, string>(comando, comando.risultato)
+                CCTableRepository.CreateRowDataView(table, tableName, label, commandString);
 
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
