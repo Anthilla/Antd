@@ -42,7 +42,7 @@
         <a class="element place-right nav-button no-overlay" href="~/logout" id="LogOut">
             <i class="icon-exit" style="line-height: 5px;"></i>
         </a>
-@*        <div class="element-divider place-right"></div>
+        @*        <div class="element-divider place-right"></div>
         <a class="element place-right nav-button no-overlay" href="/console">
             <i class="icon-console" style="line-height: 5px;"></i>
         </a>*@
@@ -112,5 +112,19 @@
         </div>
     </div>
 </form>
-@Html.Partial("_terminal")
-
+<style type="text/css">
+    #TerminalContainer {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        width: 100%;
+        height: 300px;
+        overflow: scroll !important;
+        bottom: 0;
+        border-top: 5px solid #A7BD39;
+        padding: 15px;
+    }
+</style>
+<div id="TerminalContainer" style="" class="bg-black">
+    @Html.Partial("_terminal")
+</div>

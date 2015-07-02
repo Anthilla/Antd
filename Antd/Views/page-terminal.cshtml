@@ -28,10 +28,19 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------*@
 
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<List<string>>
-@{Layout = "_layout.cshtml";}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ANTD</title>
 
-@section MainContent
-{
-    <div id="TerminalContent"></div>
-}
+    <link href="/Content/Style/jquery.terminal.css" rel="stylesheet">
+    <script src="/Content/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="/Content/Scripts/jquery.terminal.min.js"></script>
+
+</head>
+<body class="metro" style="background-color: black;">
+        @Html.Partial("_terminal")
+</body>
+</html>

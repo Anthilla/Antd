@@ -1,20 +1,76 @@
 <style type="text/css">
-    #Terminal {
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        display: none;
-        z-index: 9999;
-        width: 100%;
-        height: 250px;
-        border: 2px solid white;
-    }
-
-    #TerminalContent {
-        width: 100%;
-        height: 100%;
+    #Terminal * {
+        background-color: black !important;
+        color: white !important;
+        font-family: monospace !important;
+        font-weight: 300 !important;
     }
 </style>
-<div id="Terminal" class="bg-black">
-    <div id="TerminalContent" class="bg-transparent"></div>
-</div>
+<div id="Terminal" style="text-align: left !important;"></div>
+<script type="text/javascript">
+    jQuery(function ($) {
+        var directory = '';
+        $('#Terminal').terminal(function (command, term) {
+            var self = $(this);
+            if (command == 'help') {
+                term.echo("just type something...");
+            }
+            else if (command == '' || command == ' ') {
+            }
+            else if (command.substring(0, 3) == 'cd ' && command != 'cd ..') {
+                directory = command.substring(3, command.length);
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/directory',
+                    type: 'POST',
+                    data: {
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        if (data == '0') {
+                            term.echo(command + ' No such file or directory');
+                        }
+                        else {
+                            term.set_prompt(data);
+                        }
+                    }
+                });
+            }
+            else if (command == 'cd ..') {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/directory/parent',
+                    type: 'POST',
+                    data: {
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        if (data == '0') {
+                            term.echo(command + ' No such file or directory');
+                        }
+                        else {
+                            term.set_prompt(data);
+                        }
+                    }
+                });
+            }
+            else {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/terminal/',
+                    type: 'POST',
+                    data: {
+                        Command: command,
+                        Directory: directory
+                    },
+                    success: function (data) {
+                        term.echo(data);
+                        return false;
+                    }
+                });
+            }
+        }, {
+            greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
+        });
+    });
+</script>
