@@ -64,8 +64,9 @@ ip -s link ls ethx
 - Create/Add route:
 ``` 
 ip route add default via xx.xx.xx.xx
-ip route add xx.xx.xx.xx/24 via xx.xx.xx.xx *(possible many netmasks)*
+ip route add xx.xx.xx.xx/24 via xx.xx.xx.xx
 ``` 
+*(possible many netmasks)*
 - Create/Add default multipath route splitting load between ppp0 and ppp1 *(or other networks)*
 ``` 
 ip route add default scope global nexthop dev ppp0 nexthop dev ppp1
