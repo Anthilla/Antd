@@ -55,7 +55,7 @@
                 });
             }
             else if ((command.slice(-2) == '>>')) {
-                var c = command.substring(0, member.length - 2);
+                var c = command.substring(0, command.length - 2);
                 jQuery.support.cors = true;
                 $.ajax({
                     url: '/terminal/',
