@@ -118,7 +118,7 @@ namespace Antd.Boot {
                 ConsoleLogger.Log("root info -> application database path created");
             }
             var databases = new[] { applicationDatabasePath };
-            DatabaseBoot.Start(databases, true);
+            DatabaseBoot.Start(databases, false);
             ConsoleLogger.Log("    database -> loaded");
         }
 

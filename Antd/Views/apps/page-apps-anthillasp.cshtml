@@ -3,7 +3,6 @@
     <tbody>
         <tr>
             <td style="width: 250px;">
-                <label>1</label>
             </td>
             <td>
                 <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
@@ -11,7 +10,6 @@
         </tr>
         <tr>
             <td style="width: 250px;">
-                <label>2</label>
             </td>
             <td>
                 <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
@@ -19,7 +17,6 @@
         </tr>
         <tr>
             <td style="width: 250px;">
-                <label>2</label>
             </td>
             <td>
                 <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
@@ -27,7 +24,6 @@
         </tr>
         <tr>
             <td style="width: 250px;">
-                <label>2</label>
             </td>
             <td>
                 <a href="http://localhost:8085/" class="button bg-indigo">Go to AnthillaSP</a>
@@ -35,7 +31,6 @@
         </tr>
         <tr>
             <td style="width: 250px;">
-                <label>2</label>
             </td>
             <td>
                 <a href="http://localhost:9999/" class="button bg-indigo">Go to AnthillaServer</a>
@@ -49,7 +44,6 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/set/anthillasp/',
-            //url: '/apps/launch/',
             type: 'GET',
             contentType: "application/json;charset=utf-8",
             success: function (data) {

@@ -37,7 +37,7 @@ using System.Threading.Tasks;
 namespace Antd.Apps {
     public class AppsManagement {
 
-        public static dynamic Detect(string searchPattern) {
+        public static bool Detect(string searchPattern) {
             if (!Directory.Exists(Folder.Apps)) {
                 return false;
             }
@@ -45,7 +45,7 @@ namespace Antd.Apps {
             var squashes = Directory.GetFiles(Folder.Apps, searchPattern).ToArray();
             var newArray = folders.Concat(squashes).ToArray();
             if (newArray.Length > 0) {
-                return newArray;
+                return true;
             }
             else {
                 return false;

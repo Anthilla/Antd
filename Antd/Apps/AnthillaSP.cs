@@ -97,7 +97,6 @@ namespace Antd.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Command.Launch("chmod", "777 " + path);
             }
 
             public static void MountFramework() {
@@ -116,7 +115,6 @@ namespace Antd.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Command.Launch("chmod", "777 " + path);
             }
 
             public static void LaunchAnthillaSP() {
@@ -135,7 +133,6 @@ namespace Antd.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Command.Launch("chmod", "777 " + path);
             }
 
             public static void LaunchAnthillaServer() {
@@ -154,7 +151,6 @@ namespace Antd.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Command.Launch("chmod", "777 " + path);
             }
         }
 
