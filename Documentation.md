@@ -273,6 +273,74 @@ ip -d link show eth0.10
 ```
 it is depends of the name assigned for each interface (eth0.10, eth0.20 and so on)
 
+
+### S2: Firewall:
+
+this is a sample iptables configuration (netfilter framework).
+it is possible include these rules into a file and charge it. otherwise it is necessary add iptables line to add the ruleset. for instance:
+
+```
+iptables -A Always -m state --state ESTABLISHED,RELATED -j ACCEPT
+```
+
+look below:
+
+
+```
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:Always - [0:0]
+:Allow - [0:0]
+:Bogus - [0:0]
+:Enemies - [0:0]
+
+-A INPUT -j Bogus
+-A INPUT -j Always
+-A INPUT -j Enemies
+-A INPUT -j Allow
+
+-A FORWARD -j Bogus
+-A FORWARD -j Always
+-A FORWARD -j Enemies
+-A FORWARD -j Allow
+
+-A Bogus -s 169.254.0.0/16 -j DROP
+-A Bogus -s 172.16.0.0/12 -j DROP
+-A Bogus -s 192.0.2.0/24 -j DROP
+-A Bogus -s 192.168.0.0/16 -j DROP
+-A Bogus -s 10.0.0.0/8 -j ACCEPT
+
+
+-A Always -p udp --dport 123 -j ACCEPT
+-A Always -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A Always -i lo -j ACCEPT
+
+-A Friends -s 123.123.123.123 -j ACCEPT
+-A Friends -s 111.111.111.0/24 -j ACCEPT
+-A Friends -j DROP
+
+-A Enemies  -m recent --name psc --update --seconds 60 -j DROP
+-A Enemies -i ! lo -m tcp -p tcp --dport 1433  -m recent --name psc --set -j DROP
+-A Enemies -i ! lo -m tcp -p tcp --dport 3306  -m recent --name psc --set -j DROP
+-A Enemies -i ! lo -m tcp -p tcp --dport 8086  -m recent --name psc --set -j DROP
+-A Enemies -i ! lo -m tcp -p tcp --dport 10000 -m recent --name psc --set -j DROP
+-A Enemies -s 99.99.99.99 -j DROP
+
+-A Allow -p icmp --icmp-type echo-request -j Friends
+-A Allow -p icmp --icmp-type any -m limit --limit 1/second -j ACCEPT
+-A Allow -p icmp --icmp-type any -j DROP
+-A Allow -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+-A Allow -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+-A Allow -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
+-A Allow -j DROP
+
+COMMIT
+```
+we can also customize a lot of scenarios but it depends of the situation
+
+
 ### S2: Failover:
 
 a virtual IP with 2 ethernet interfaces in 2 different hosts
