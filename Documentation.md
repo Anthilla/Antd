@@ -242,6 +242,7 @@ ip tunnel del tun6to4
 ip tunnel add <device> mode ip4ip6 remote <ipv6addressofforeigntunnel> local <ipv6addresslocal>
 ```
 
+
 example:
 ```
 ip -6 tunnel add ip6tnl1 mode ip4ip6 remote <ipv6addressofforeigntunnel1> local <ipv6addresslocal>
@@ -262,8 +263,8 @@ ip link add link eth0 name eth0.20 type vlan id 20
 ip link add link eth0 name eth0.30 type vlan id 30
 ```
 
-there is no conventional name for the ethernet/gigabit device
-we can also use eth0_100 or something else
+there is no conventional name for the ethernet/gigabit device. 
+we can also use eth0_100 or something else. 
 after that it is necessary set up an ip address for the eth0 interface (in this case)
 
 - View the vlan-id
@@ -271,3 +272,15 @@ after that it is necessary set up an ip address for the eth0 interface (in this 
 ip -d link show eth0.10 
 ```
 it is depends of the name assigned for each interface (eth0.10, eth0.20 and so on)
+
+### S2: Failover:
+
+a virtual IP with 2 ethernet interfaces in 2 different hosts
+the interfaces will have a password and will be identified.
+
+example:
+ip addr add 10.1.1.252/24 dev ethX
+ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.1 &
+ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.2 &
+
+in this case the identified is 42 and the password is anthilla
