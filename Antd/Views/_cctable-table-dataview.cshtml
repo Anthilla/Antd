@@ -21,17 +21,20 @@
                         <input type="button" class="bg-mauve" data-role="map-result" data-row-guid="@row.Guid" value="Map Data"/>
                     </td>
                 </tr>
-                @if (row.HasMap == true) { 
-<tr>
-                    <td colspan="4">
-                        <ul>
-                        @foreach (Antd.CCTable.CCTableRowMapped mapped in Antd.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
-<li>@mapped.Key : @mapped.Value</li>
-                        }
-                </ul>
+                        if (row.HasMap == true) {
+                            foreach (Antd.CCTable.CCTableRowMapped mp in Antd.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
+                <tr>
+                    <td></td>
+                    <td>
+                        <label>@mp.Key</label>
                     </td>
-                </tr>
-                }
+                    <td>
+                        <p>@mp.Value</p>
+                    </td>
+                    <td></td>
+                </tr> 
+                            }
+                        }
                 <tr style="display: none;" data-row-map-guid="@row.Guid">
                     <td></td>
                     <td colspan="2">
