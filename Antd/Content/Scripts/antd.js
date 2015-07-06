@@ -204,11 +204,11 @@ $('input[data-role="add-mapping-row"]').click(function () {
     var guid = self.attr('data-row-guid');
 
     var row = '<div class="row">' +
-                '<div class="span4">' +
-                    '<input type="text" name="MapLabel" style="width: 90%; height: 25px;">' +
+                '<div class="span5">' +
+                    '<input type="text" name="MapLabel" style="width: 90%; height: 25px;" placeholder="Map Label">' +
                 '</div>' +
-                '<div class="span4 droppable">' +
-                    '<input type="text" name="MapLabelIndexText" style="width: 90%; height: 25px;">' +
+                '<div class="span5 droppable">' +
+                    '<input type="text" name="MapLabelIndexText" style="width: 90%; height: 25px;" placeholder="Map Data">' +
                     '<input type="hidden" name="MapLabelIndex">' +
                 '</div>' +
                 '<div class="span1">' +

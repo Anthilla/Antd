@@ -99,31 +99,25 @@ $('input[data-role="notify-howto-map"]').click(function (event) {
     event.preventDefault();
     $.Notify({
         caption: 'Map the result: 1',
-        content: 'Open the console-terminal',
+        content: 'You can map and filter the result',
         timeout: globalNotificationTimeout,
         style: { background: '#4390DF', color: 'white' }
     });
     $.Notify({
         caption: 'Map the result: 2',
-        content: 'You can launch and test any command you want',
+        content: "In the 'Map Label' input you can write a label",
         timeout: globalNotificationTimeout,
         style: { background: '#4390DF', color: 'white' }
     });
     $.Notify({
         caption: 'Map the result: 3',
-        content: "As soon as you've found the right command you can export it by appending '>>' at the end of the line",
+        content: "Then in the 'Map Data' input in can Drag and Drop the word(s) from the result",
         timeout: globalNotificationTimeout,
         style: { background: '#4390DF', color: 'white' }
     });
     $.Notify({
         caption: 'Map the result: 4',
-        content: "Then you can import both the command and its result in this form by pressing 'Import Data'",
-        timeout: globalNotificationTimeout,
-        style: { background: '#4390DF', color: 'white' }
-    });
-    $.Notify({
-        caption: 'Map the result: 5',
-        content: "Done! Later you will be able to manipulate the result and map it as you want",
+        content: "You can add any number of label you need in order to map better the result ",
         timeout: globalNotificationTimeout,
         style: { background: '#4390DF', color: 'white' }
     });
