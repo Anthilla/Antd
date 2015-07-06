@@ -8,20 +8,24 @@
                 </td>
             </tr>
         }
-@*        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == true) {
+        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == true) {
             <tr>
                 <td colspan="2">
                     <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
                 </td>
             </tr>
-        }*@
+        }
         <tr>
             <td>
                 <label>Anthilla SP</label>
             </td>
             <td>
-                <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
-                <input type="button" id="StopAnthillaSP" class="bg-darkIndigo" value="Stop AnthillaSP" />
+                @if (Antd.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) { 
+                    <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
+                }
+                else {
+                    <input type="button" id="StopAnthillaSP" class="bg-darkIndigo" value="Stop AnthillaSP" />
+                }
             </td>
         </tr>
         <tr>
@@ -34,8 +38,12 @@
                 <label>Anthilla Server</label>
             </td>
             <td>
-                <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
-                <input type="button" id="StopAnthillaServer" class="bg-darkIndigo" value="Stop AnthillaServer" />
+                @if (Antd.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) { 
+                    <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
+                }
+                else {
+                    <input type="button" id="StopAnthillaServer" class="bg-darkIndigo" value="Stop AnthillaServer" />
+                }
             </td>
         </tr>
         <tr>
