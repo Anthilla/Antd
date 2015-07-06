@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A079F4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antd.Specs", "Antd.Specs\Antd.Specs.csproj", "{0733E590-700E-47EA-8122-33E658E9D11E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antd2", "Antd2\Antd2.csproj", "{0B94F2AB-BC60-458D-B7EC-221E2FBC96D2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +26,6 @@ Global
 		{0733E590-700E-47EA-8122-33E658E9D11E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0733E590-700E-47EA-8122-33E658E9D11E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0733E590-700E-47EA-8122-33E658E9D11E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B94F2AB-BC60-458D-B7EC-221E2FBC96D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B94F2AB-BC60-458D-B7EC-221E2FBC96D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B94F2AB-BC60-458D-B7EC-221E2FBC96D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B94F2AB-BC60-458D-B7EC-221E2FBC96D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
