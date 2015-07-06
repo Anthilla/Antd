@@ -279,8 +279,9 @@ a virtual IP with 2 ethernet interfaces in 2 different hosts
 the interfaces will have a password and will be identified.
 
 example:
+```
 ip addr add 10.1.1.252/24 dev ethX
 ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.1 &
 ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.2 &
-
+```
 in this case the identified is 42 and the password is anthilla
