@@ -3,6 +3,11 @@ $('#OpenTerminal').click(function () {
     $('#TerminalContainer').toggle();
 });
 
+$('input[data-role="open-console"]').click(function (event) {
+    event.preventDefault();
+    $('#TerminalContainer').toggle();
+});
+
 $('#TerminalClose').click(function () {
     $('#TerminalContainer').hide();
 });
@@ -220,6 +225,12 @@ function RemoveMappingRow() {
         $(this).parents('div.row').remove();
     });
 }
+
+$('input[data-role="how-to"]').click(function (event) {
+    event.preventDefault();
+    var g = $(this).attr('data-howto');
+    $('ol[data-howto="' + g + '"]').toggle();
+});
 
 //dnd per mappatura
 $(document).ready(function () {
