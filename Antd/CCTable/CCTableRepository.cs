@@ -135,6 +135,15 @@ namespace Antd.CCTable {
             CommandDB.Edit(i, command);
         }
 
+        public static void Refresh(string guid) {
+            var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
+            var command = row.InputCommand;
+            var result = Terminal.Execute(command); 
+            row.ValueResult = result;
+            row.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            DeNSo.Session.New.Set(row);
+        }
+
         public static void SaveMapData(string rowGuid, string labelArray, string indexArray) {
             var r = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == rowGuid).FirstOrDefault();
             var labelArraySplit = labelArray.Split(new String[] { "," }, StringSplitOptions.None).ToArray();

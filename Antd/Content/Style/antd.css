@@ -1318,3 +1318,11 @@ input:disabled,
     color: #bebebe !important;
     cursor: not-allowed !important;
 }
+
+.metro.notify-container .notify .caption {
+    background-color: transparent !important;
+}
+
+.metro.notify-container .notify .content {
+    background-color: transparent !important;
+}

@@ -128,6 +128,12 @@ namespace Antd {
                 return Response.AsRedirect(redirect);
             };
 
+            Post["/row/refresh"] = x => {
+                string guid = (string)this.Request.Form.Guid;
+                CCTableRepository.Refresh(guid);
+                return Response.AsJson(true);
+            };
+
             Get["/delete/table/{guid}"] = x => {
                 string guid = x.guid;
                 CCTableRepository.DeleteTable(guid);

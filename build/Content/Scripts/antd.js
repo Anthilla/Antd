@@ -232,6 +232,22 @@ $('input[data-role="how-to"]').click(function (event) {
     $('ol[data-howto="' + g + '"]').toggle();
 });
 
+$('input[data-role="refresh-result"]').click(function (event) {
+    event.preventDefault();
+    var g = $(this).attr('data-row-guid');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/cctable/row/refresh',
+        type: 'POST',
+        data: {
+            Guid: g
+        },
+        success: function (data) {
+            location.reload(true);
+        }
+    });
+});
+
 //dnd per mappatura
 $(document).ready(function () {
     InitializeDragAndDrop();

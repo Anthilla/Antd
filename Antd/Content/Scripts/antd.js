@@ -226,10 +226,20 @@ function RemoveMappingRow() {
     });
 }
 
-$('input[data-role="how-to"]').click(function (event) {
+$('input[data-role="refresh-result"]').click(function (event) {
     event.preventDefault();
-    var g = $(this).attr('data-howto');
-    $('ol[data-howto="' + g + '"]').toggle();
+    var g = $(this).attr('data-row-guid');
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/cctable/row/refresh',
+        type: 'POST',
+        data: {
+            Guid: g
+        },
+        success: function (data) {
+            location.reload(true);
+        }
+    });
 });
 
 //dnd per mappatura
