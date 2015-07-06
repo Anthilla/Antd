@@ -38,20 +38,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle, Version=1.8.5653.35064, Culture=neutral, PublicKeyToken=eec3120e64a3fcba, processorArchitecture=MSIL">
-      <HintPath>..\packages\MimeKit.1.2.6.0\lib\net45\BouncyCastle.dll</HintPath>
+    <Reference Include="BouncyCastle, Version=1.8.5664.32102, Culture=neutral, PublicKeyToken=eec3120e64a3fcba, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.1.2.7.0\lib\net45\BouncyCastle.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="C5, Version=2.3.5280.26713, Culture=neutral, PublicKeyToken=282361b99ded7e8e, processorArchitecture=MSIL">
       <HintPath>..\packages\C5.2.3.0.1\lib\net40\C5.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.2.0\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    <Reference Include="Common.Logging.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DeNSo.v3.Client.InProcess, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
@@ -71,7 +71,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
-      <HintPath>..\packages\MailKit.1.2.6.0\lib\net45\MailKit.dll</HintPath>
+      <HintPath>..\packages\MailKit.1.2.7.0\lib\net45\MailKit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client">
@@ -104,7 +104,7 @@
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="MimeKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
-      <HintPath>..\packages\MimeKit.1.2.6.0\lib\net45\MimeKit.dll</HintPath>
+      <HintPath>..\packages\MimeKit.1.2.7.0\lib\net45\MimeKit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -256,8 +256,8 @@
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Version.cs" />
     <Compile Include="Command\Command.cs" />
-    <Compile Include="UnitFiles\Systemctl.cs" />
-    <Compile Include="UnitFiles\UnitRepo.cs" />
+    <Compile Include="Systemd\Systemctl.cs" />
+    <Compile Include="Systemd\UnitRepo.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />

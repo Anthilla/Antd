@@ -1,46 +1,60 @@
 ﻿<legend id="Anthilasp">Anthilla SP</legend>
 <table class="table hovered">
     <tbody>
+        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == false) {
+            <tr>
+                <td colspan="2">
+                    <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
+                </td>
+            </tr>
+        }
+@*        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == true) {
+            <tr>
+                <td colspan="2">
+                    <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
+                </td>
+            </tr>
+        }*@
         <tr>
-            <td style="width: 250px;">
-                <label>1</label>
-            </td>
             <td>
-                <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 250px;">
-                <label>2</label>
+                <label>Anthilla SP</label>
             </td>
             <td>
                 <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
+                <input type="button" id="StopAnthillaSP" class="bg-darkIndigo" value="Stop AnthillaSP" />
             </td>
         </tr>
         <tr>
-            <td style="width: 250px;">
-                <label>2</label>
+            <td colspan="2">
+                @Antd.Apps.AnthillaSP.Status.AnthillaSP();
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Anthilla Server</label>
             </td>
             <td>
                 <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
+                <input type="button" id="StopAnthillaServer" class="bg-darkIndigo" value="Stop AnthillaServer" />
             </td>
         </tr>
         <tr>
-            <td style="width: 250px;">
-                <label>2</label>
+            <td colspan="2">
+                @Antd.Apps.AnthillaSP.Status.AnthillaServer();
             </td>
-            <td>
+        </tr>
+        @*        <tr>
+            <td style="width: 250px;"></td>
+            <td colspan="2">
                 <a href="http://localhost:8085/" class="button bg-indigo">Go to AnthillaSP</a>
             </td>
         </tr>
         <tr>
-            <td style="width: 250px;">
-                <label>2</label>
-            </td>
-            <td>
+            <td style="width: 250px;"></td>
+            <td colspan="2">
                 <a href="http://localhost:9999/" class="button bg-indigo">Go to AnthillaServer</a>
             </td>
-        </tr>
+        </tr>*@
     </tbody>
 </table>
 <hr />
@@ -49,11 +63,23 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/set/anthillasp/',
-            //url: '/apps/launch/',
             type: 'GET',
             contentType: "application/json;charset=utf-8",
             success: function (data) {
-                alert(data);
+                location.reload(true);
+                return false;
+            }
+        });
+    });
+
+    $('#ApplyUnits').click(function (e) {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/apps/apply/anthillasp/',
+            type: 'GET',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                location.reload(true);
                 return false;
             }
         });
@@ -67,6 +93,7 @@
             contentType: "application/json;charset=utf-8",
             success: function (data) {
                 alert(data);
+                location.reload(true);
                 return false;
             }
         });
@@ -80,6 +107,35 @@
             contentType: "application/json;charset=utf-8",
             success: function (data) {
                 alert(data);
+                location.reload(true);
+                return false;
+            }
+        });
+    });
+
+    $('#StopAnthillaSP').click(function (e) {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/apps/stop/sp/',
+            type: 'GET',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                alert(data);
+                location.reload(true);
+                return false;
+            }
+        });
+    });
+
+    $('#StopAnthillaServer').click(function (e) {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/apps/stop/server/',
+            type: 'GET',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                alert(data);
+                location.reload(true);
                 return false;
             }
         });

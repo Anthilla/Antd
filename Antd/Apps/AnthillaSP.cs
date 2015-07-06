@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.UnitFiles;
+using Antd.Systemd;
 using System.IO;
 
 namespace Antd.Apps {
@@ -35,17 +35,58 @@ namespace Antd.Apps {
     public class AnthillaSP {
 
         public static void CreateUnits() {
-            Units.SetAnthillaSP();
-            Units.MountFramework();
-            Units.LaunchAnthillaSP();
-            Units.LaunchAnthillaServer();
+            if (AnthillaSP.Units.CheckFiles() == false) {
+                Units.SetAnthillaSP();
+                Units.MountFramework();
+                Units.LaunchAnthillaSP();
+                Units.LaunchAnthillaServer();
+            }
+            Systemctl.DaemonReload();
         }
 
         public static void Start() {
-            Systemctl.Start(Units.Name.Prepare);
-            Systemctl.Start(Units.Name.Mount);
-            Systemctl.Start(Units.Name.LaunchSP);
-            Systemctl.Start(Units.Name.LaunchServer);
+            Systemctl.Start(Units.Name.FileName.Prepare);
+            Systemctl.Start(Units.Name.FileName.Mount);
+            Systemctl.Start(Units.Name.FileName.LaunchSP);
+            Systemctl.Start(Units.Name.FileName.LaunchServer);
+        }
+
+        public static void Start(string app) {
+            Systemctl.Start(app);
+        }
+
+        public static void StartSP() {
+            Systemctl.Start(Units.Name.FileName.LaunchSP);
+        }
+
+        public static void StartServer() {
+            Systemctl.Start(Units.Name.FileName.LaunchServer);
+        }
+
+        public static void StopSP() {
+            Systemctl.Stop(Units.Name.FileName.LaunchSP);
+        }
+
+        public static void StopServer() {
+            Systemctl.Stop(Units.Name.FileName.LaunchServer);
+        }
+
+        public class Status {
+            public static string AnthillaSP() {
+                return Systemctl.Status(Units.Name.FileName.LaunchSP).output;
+            }
+
+            public static string AnthillaServer() {
+                return Systemctl.Status(Units.Name.FileName.LaunchServer).output;
+            }
+
+            public static bool IsActiveAnthillaSP() {
+                return (Systemctl.Status(Units.Name.FileName.LaunchSP).output.Contains("Active: active")) ? true : false;
+            }
+
+            public static bool IsActiveAnthillaServer() {
+                return (Systemctl.Status(Units.Name.FileName.LaunchServer).output.Contains("Active: active")) ? true : false;
+            }
         }
 
         public class Setting {
@@ -75,10 +116,22 @@ namespace Antd.Apps {
         public class Units {
 
             public class Name {
+
+                public class FileName {
+                    public static string Prepare { get { return "anthillasp-prepare.service"; } }
+                    public static string Mount { get { return "framework-anthillasp.mount"; } }
+                    public static string LaunchSP { get { return "anthillasp-launcher.service"; } }
+                    public static string LaunchServer { get { return "anthillaserver-launcher.service"; } }
+                }
+
                 public static string Prepare { get { return Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service"); } }
                 public static string Mount { get { return Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount"); } }
                 public static string LaunchSP { get { return Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service"); } }
                 public static string LaunchServer { get { return Path.Combine(Folder.AppsUnits, "anthillaserver-launcher.service"); } }
+            }
+
+            public static bool CheckFiles() {
+                return (File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSP) && File.Exists(Name.LaunchServer)) ? true : false;
             }
 
             public static void SetAnthillaSP() {
