@@ -26,7 +26,7 @@
                     <td colspan="4">
                         <ul>
                         @foreach (Antd.CCTable.CCTableRowMapped mapped in Antd.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
-                            <li>@mapped.Key : @mapped.Value</li>
+<li>@mapped.Key : @mapped.Value</li>
                         }
                 </ul>
                     </td>
@@ -99,9 +99,20 @@
             <div class="span5">
                 <input type="text" name="Result" style="width: 90%; height: 25px;">
             </div>
-            <div class="span2">
-                <input class="bg-darkTeal" data-role="import-data" type="button" value="Import Data">
-                <input class="bg-darkTeal" data-role="import-data" type="button" value="ImportData">
+            <div class="span5">
+                <input class="bg-darkTeal" data-role="import-data" type="button" value="Import Data" style="width: 130px;">
+                <br />
+                <input class="bg-teal" data-role="open-console" type="button" value="Open Console" style="width: 130px;">
+                <br />
+                <input class="bg-steel" data-howto="@Model.Guid" data-role="how-to" type="button" value="How to" style="width: 130px;">
+                <br />
+                <ol data-howto="@Model.Guid" style="display: none;">
+                    <li class="fg-white">Open the console-terminal</li>
+                    <li class="fg-white">You can launch and test any command you want</li>
+                    <li class="fg-white">As soon as you've found the right command you can export it by appending '>>' at the end of the line</li>
+                    <li class="fg-white">Then you can import both the command and its result in this form by pressing 'Import Data'</li>
+                    <li class="fg-white">Done! Later you wil be able to manipulate the result and map it as you want</li>
+                </ol>
             </div>
         </div>
         <div class="further-commands" data-table="@Model.Guid">

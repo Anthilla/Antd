@@ -151,6 +151,39 @@ namespace Antd {
 
     public class Terminal {
 
+        public static string Execute(string command) {
+            string output = string.Empty;
+            string error = string.Empty;
+            Process process = new Process {
+                StartInfo = {
+                    FileName = "bash",
+                    Arguments = "-c \"" + command + "\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            try {
+                process.Start();
+                using (StreamReader streamReader = process.StandardOutput) {
+                    output = streamReader.ReadToEnd();
+                }
+                using (StreamReader streamReader = process.StandardError) {
+                    error = streamReader.ReadToEnd();
+                }
+                process.WaitForExit();
+                return output;
+            }
+            catch (Exception ex) {
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine("Error message:");
+                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine("-----------------------------------");
+                return error;
+            }
+        }
+
         public static string Execute(string command, string dir) {
             string output = string.Empty;
             string error = string.Empty;

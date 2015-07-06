@@ -104,7 +104,11 @@ namespace Antd {
 
                 string commandString = (string)this.Request.Form.Command;
                 string resultString = (string)this.Request.Form.Result;
-                CCTableRepository.CreateRowDataView(table, tableName, label, commandString, resultString);
+                ConsoleLogger.Log(commandString);
+                if (commandString != "") {
+                    string thisResult = (resultString == "") ? Terminal.Execute(commandString) : resultString;
+                    CCTableRepository.CreateRowDataView(table, tableName, label, commandString, thisResult);
+                }
 
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
