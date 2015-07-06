@@ -53,16 +53,11 @@ namespace Antd {
         public string[] path;
 
         public XmlWriter(string[] fileNames) {
-            var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-            var applicationConfigFolder = "config";
-            var applicationConfigPath = Path.Combine(applicationRoot, applicationConfigFolder);
-            if (!Directory.Exists(applicationConfigPath)) {
-                Directory.CreateDirectory(applicationConfigPath);
-            }
+            var applicationRoot = Folder.Config;
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
-                var p = Path.Combine(applicationConfigPath, fileName + ".xml");
-                tmplist.Add(Path.Combine(applicationConfigPath, fileName + ".xml"));
+                var p = Path.Combine(applicationRoot, fileName + ".xml");
+                tmplist.Add(Path.Combine(applicationRoot, fileName + ".xml"));
             }
             path = tmplist.ToArray();
         }
