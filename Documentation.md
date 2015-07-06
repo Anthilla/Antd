@@ -353,6 +353,25 @@ iptables -P FORWARD ACCEPT
 iptables -P OUTPUT ACCEPT
 ```
 
+- Remove rule:
+```
+iptables -D INPUT -i eth0 -p tcp --dport 443 -j ACCEPT
+```
+or
+```
+iptables -D Allow -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
+```
+or again
+```
+iptables -t nat -nvL --line-numbers
+iptables -nvL --line-numbers
+
+iptables -D OUTPUT 1 -t nat 
+iptables -D INPUT 10
+```
+in this mode we can see the line numbers by iptables and remove it 
+it depends of iptables customization
+
 ### S2: Failover:
 
 a virtual IP with 2 ethernet interfaces in 2 different hosts
