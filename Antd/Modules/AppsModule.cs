@@ -43,7 +43,7 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 bool b;
-                if (AppsManagement.Detect(".squashfs") == false) {
+                if (Management.Detect(".squashfs") == false) {
                     ViewBag.Message = "No app detected in " + Folder.Apps;
                     b = false;
                 }

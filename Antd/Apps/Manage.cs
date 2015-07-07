@@ -35,8 +35,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Antd.Apps {
-    public class AppsManagement {
+    public class Management {
 
+        private static string AppsDir = "/mnt/cdrom/Apps";
         public static bool Detect(string searchPattern) {
             if (!Directory.Exists(Folder.Apps)) {
                 return false;
@@ -50,6 +51,32 @@ namespace Antd.Apps {
             else {
                 return false;
             }
+        }
+
+        public static string[] Find() {
+            var apps = new List<string>() { };
+            var files = Directory.GetFiles(AppsDir);
+            var dirs = Directory.GetDirectories(AppsDir);
+            if (files.Length < 0) {
+                ConsoleLogger.Log("There's no file in {0}", AppsDir);
+            }
+            else { 
+                var squashfs = files.Where(i => i.Contains(".squashfs")).ToArray();
+                foreach (var s in squashfs) {
+                    apps.Add(s);
+                }
+            }
+            if (dirs.Length < 0) {
+                ConsoleLogger.Log("There's no directory in {0}", AppsDir);
+            }
+            else {
+                foreach (var d in dirs) {
+                    apps.Add(d);
+                }
+            }
+
+
+            return apps.ToArray();
         }
     }
 }
