@@ -44,23 +44,23 @@ namespace Antd.Boot {
 
     public class AntdBoot {
 
-        //private readonly static string[] Directories =
-        //{
-        //    "/antd",
-        //    "/framework/antd",
-        //    "/framework/anthillasp",
-        //    "/framework/anthillaas"
-        //};
+        private readonly static string[] Directories =
+        {
+            Folder.Config,
+            Folder.Database,
+            Folder.FileRepository,
+            Folder.Networkd
+        };
 
-        //public static void CheckDirectories() {
-        //    foreach (var path in Directories) {
-        //        if (!Directory.Exists(path)) {
-        //            Directory.CreateDirectory(path);
-        //            ConsoleLogger.Log("    directories -> {0} created", path);
-        //        }
-        //    }
-        //    ConsoleLogger.Log("    directories -> checked");
-        //}
+        public static void CheckDirectories() {
+            foreach (var path in Directories) {
+                if (!Directory.Exists(path)) {
+                    Directory.CreateDirectory(path);
+                    ConsoleLogger.Log("    directory -> {0} created", path);
+                }
+            }
+            ConsoleLogger.Log("    directories -> checked");
+        }
 
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
