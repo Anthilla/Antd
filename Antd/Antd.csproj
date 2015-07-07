@@ -123,10 +123,6 @@
       <HintPath>..\packages\Nancy.Owin.1.2.0\lib\net40\Nancy.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Nancy.SimpleAuthentication, Version=0.3.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.SimpleAuthentication.0.3.14\lib\net40\Nancy.SimpleAuthentication.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Nancy.ViewEngines.Razor, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Viewengines.Razor.1.2.0\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
       <Private>True</Private>
@@ -140,14 +136,6 @@
     </Reference>
     <Reference Include="Quartz, Version=2.3.2.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <HintPath>..\packages\Quartz.2.3.2\lib\net40\Quartz.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RestSharp, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SimpleAuthentication.Core, Version=0.3.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleAuthentication.Core.0.3.14\lib\net40\SimpleAuthentication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

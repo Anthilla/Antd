@@ -70,7 +70,12 @@
             <td>
                 <ul class="fg-white">
                     @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed(appDetected)) {
+                        if (arr[0] != "path") { 
                         <li>@arr[0] -> @arr[1]</li>
+                        }
+                        else {
+                        <li>@arr[0] -> @arr[1] <i class="icon-loop fg-mauve" data-role="show-mount"></i></li>
+                        }
                     }
                 </ul>
             </td>
