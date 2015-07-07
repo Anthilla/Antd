@@ -57,7 +57,7 @@ namespace Antd {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
 
-                AntdBoot.StartScheduler(true);
+                AntdBoot.StartScheduler(false);
                 AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
