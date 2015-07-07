@@ -352,6 +352,32 @@ function AddInputIDReference(self, main, layout) {
 
 /////////////////////
 
+$('i[data-role="show-mount"]').click(function () {
+    var self = $(this);
+    var i = '<input type="text" data-role="value-mount" data-folder="' + self.attr('data-folder') + '"/>' +
+        '<i class="icon-plus fg-green" data-role="submit-mount" data-folder="' + self.attr('data-folder') + '"></i>';
+    self.after(i);
+    InitSubmitMount();
+});
+
+function InitSubmitMount() {
+    $('i[data-role="submit-mount"]').click(function () {
+        var g = $(this).attr('data-folder');
+        var m = $('input[data-folder="' + g + '"]').val();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/cctable/row/refresh',
+            type: 'POST',
+            data: {
+                Folder: g,
+                Mount: m
+            },
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+}
 ////////////////cookiecookiecookie///////////////////////////////////
 $('#LockInput').click(function () {
     var value = cookie.get('_input');

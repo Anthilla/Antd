@@ -21,10 +21,18 @@
                 <td colspan="2">
                     <ul class="fg-white">
                         @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed(appDetected)) {
+                            if (arr[0].Contains("path")) { 
+                            <li>@arr[0] -> @arr[1] <i class="icon-link fg-amber" data-role="show-mount" ="@arr[1]"></i></li>
+                            }
+                            else {
                             <li>@arr[0] -> @arr[1]</li>
+                            }
                         }
                     </ul>
                 </td>
+            </tr>
+            <tr>
+
             </tr>
         }
     </tbody>
