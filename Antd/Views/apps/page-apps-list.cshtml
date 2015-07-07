@@ -1,0 +1,12 @@
+﻿<legend id="List">List</legend>
+<table class="table">
+    <tbody>
+        @foreach(string appDetected in Antd.Apps.Management.Find()){
+           <tr>
+               <td colspan="3">
+                   <p>@appDetected</p>
+               </td>
+           </tr>
+        }
+    </tbody>
+</table>

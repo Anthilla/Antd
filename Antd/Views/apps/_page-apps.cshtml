@@ -32,7 +32,8 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_apps-pagebar", Model.AppExists)
+    @Html.Partial("_apps-pagebar")
+    @*@Html.Partial("_apps-pagebar", Model.AppExists)*@
 }
 
 @section Dashboard {
@@ -40,6 +41,8 @@
 }
 
 @section MainContent {
+    @Html.Partial("page-apps-list", Model)
+
     @if (Model.AppExists == true) {
         @Html.Partial("page-apps-anthillasp", Model)
     }

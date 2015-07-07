@@ -74,8 +74,6 @@ namespace Antd.Apps {
                     apps.Add(d);
                 }
             }
-
-
             return apps.ToArray();
         }
     }
