@@ -364,9 +364,11 @@ function InitSubmitMount() {
     $('i[data-role="submit-mount"]').click(function () {
         var g = $(this).attr('data-folder');
         var m = $('input[data-folder="' + g + '"]').val();
+        alert(g);
+        alert(m);
         jQuery.support.cors = true;
         $.ajax({
-            url: '/cctable/row/refresh',
+            url: '/apps/mount',
             type: 'POST',
             data: {
                 Folder: g,
