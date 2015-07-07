@@ -53,25 +53,33 @@ namespace Antd.Apps {
             }
         }
 
-        public static string[] Find() {
+        public static string[] FindFiles() {
             var apps = new List<string>() { };
             var files = Directory.GetFiles(AppsDir);
-            var dirs = Directory.GetDirectories(AppsDir);
             if (files.Length < 0) {
                 ConsoleLogger.Log("There's no file in {0}", AppsDir);
             }
             else { 
                 var squashfs = files.Where(i => i.Contains(".squashfs")).ToArray();
                 foreach (var s in squashfs) {
-                    apps.Add(s);
+                    var f = Directory.GetFiles(Path.Combine(AppsDir, s), ".appinfo");
+                    if (f.Length < 0) {
+                        apps.Add(s.Replace(@"\", "/"));
+                    }
                 }
             }
+            return apps.ToArray();
+        }
+
+        public static string[] FindDirectories() {
+            var apps = new List<string>() { };
+            var dirs = Directory.GetDirectories(AppsDir);
             if (dirs.Length < 0) {
                 ConsoleLogger.Log("There's no directory in {0}", AppsDir);
             }
             else {
                 foreach (var d in dirs) {
-                    apps.Add(d);
+                    apps.Add(d.Replace(@"\", "/"));
                 }
             }
             return apps.ToArray();

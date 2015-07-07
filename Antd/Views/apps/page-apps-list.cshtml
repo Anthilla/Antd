@@ -1,10 +1,17 @@
 ﻿<legend id="List">List</legend>
 <table class="table">
     <tbody>
-        @foreach(string appDetected in Antd.Apps.Management.Find()){
+        @foreach(string appDetected in Antd.Apps.Management.FindFiles()){
            <tr>
                <td colspan="3">
-                   <p>@appDetected</p>
+                   <p><i class="icon-file on-left"></i> @appDetected</p>
+               </td>
+           </tr>
+        }
+        @foreach (string appDetected in Antd.Apps.Management.FindDirectories()) {
+           <tr>
+               <td colspan="3">
+                   <p><i class="icon-folder on-left"></i> @appDetected</p>
                </td>
            </tr>
         }
