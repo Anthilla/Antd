@@ -41,6 +41,7 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
+            AntdBoot.CheckDirectories();
             AntdBoot.SetCoreParameters();
 
             var uri = CoreParametersConfig.GetAntdUri();
@@ -52,42 +53,21 @@ namespace Antd {
                     e.Cancel = true;
                 };
 
-            //try {
             using (WebApp.Start<Startup>(uri)) {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
-                ConsoleLogger.Log("antd is running");
 
                 AntdBoot.StartScheduler(true);
                 AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
-
                 //AntdBoot.TestWebDav("http://localhost:7788/", "/test");
 
+                ConsoleLogger.Log("antd is running");
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 
-                //ConsoleLogger.Log("Define p1");
-                //string p1 = Console.ReadLine();
-                //ConsoleLogger.Log("Define p2 now");
-                //string p2 = Console.ReadLine();
-                //ConsoleLogger.Log("Last one, define p3");
-                //string p3 = Console.ReadLine();
-
-                //ConsoleLogger.Log("Recap");
-                //ConsoleLogger.Log("p1: {0}", p1);
-                //ConsoleLogger.Log("p2: {0}", p2);
-                //ConsoleLogger.Log("p3: {0}", p3);
-
-                //Console.ReadLine(); 
                 stop.WaitOne();
             }
-            /*} catch (System.Reflection.TargetInvocationException ex) {
-                ConsoleLogger.Warn(ex.Message);
-                ConsoleLogger.Warn("Register +: urlacl");
-                ConsoleLogger.Warn("on windows:");
-                ConsoleLogger.Warn("netsh http add urlacl url=http://+:7777/ user=UserName");
-            }*/
         }
     }
 

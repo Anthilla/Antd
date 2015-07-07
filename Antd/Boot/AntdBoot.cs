@@ -106,20 +106,17 @@ namespace Antd.Boot {
         }
 
         public static void StartDatabase() {
-            //todo se il nome del percorso non c'è allora scrivi temporaneamente in tmpfs nella cartella di default del db -> applicationRoot
-            var applicationRoot = AppDomain.CurrentDomain.BaseDirectory;
-            var applicationDatabaseFolder = CoreParametersConfig.GetAntdDb(); //questa è la cartella di default, al momento la combiniamo in una dir -tmpfs
-            //var applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder.Replace("/", @"\"));
-            var applicationDatabasePath = Path.Combine(applicationRoot, applicationDatabaseFolder);
+            var applicationDatabasePath = CoreParametersConfig.GetAntdDb();
             ConsoleLogger.Log("root info -> application database path: {0}", applicationDatabasePath);
-            if (!Directory.Exists(applicationDatabasePath)) {
-                ConsoleLogger.Log("root info -> application database path does not exist");
-                Directory.CreateDirectory(applicationDatabasePath);
-                ConsoleLogger.Log("root info -> application database path created");
+            if (Directory.Exists(applicationDatabasePath)) {
+                var databases = new[] { applicationDatabasePath };
+                DatabaseBoot.Start(databases, true);
+                ConsoleLogger.Log("    database -> loaded");
             }
-            var databases = new[] { applicationDatabasePath };
-            DatabaseBoot.Start(databases, true);
-            ConsoleLogger.Log("    database -> loaded");
+            else {
+                ConsoleLogger.Warn("    database -> failed to load");
+                ConsoleLogger.Warn("                directory does not exist");
+            }
         }
 
         public static void StartSignalR(IAppBuilder app, bool isActive) {
