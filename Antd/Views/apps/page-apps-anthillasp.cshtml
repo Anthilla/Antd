@@ -63,6 +63,18 @@
                 <a href="http://localhost:9999/" class="button bg-indigo">Go to AnthillaServer</a>
             </td>
         </tr>*@
+        <tr>
+            <td>
+                <label>Application Info</label>
+            </td>
+            <td>
+                <ul class="fg-white">
+                    @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed(appDetected)) {
+                        <li>@arr[0] -> @arr[1]</li>
+                    }
+                </ul>
+            </td>
+        </tr>
     </tbody>
 </table>
 <hr />

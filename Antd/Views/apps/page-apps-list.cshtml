@@ -1,19 +1,31 @@
 ﻿<legend id="List">List</legend>
 <table class="table">
     <tbody>
-        @foreach(string appDetected in Antd.Apps.Management.FindFiles()){
-           <tr>
-               <td colspan="3">
-                   <p><i class="icon-file on-left"></i> @appDetected</p>
-               </td>
-           </tr>
+        @foreach (string appDetected in Antd.Apps.Management.FindFiles()) {
+            <tr>
+                <td colspan="3">
+                    <p><i class="icon-file on-left"></i>@appDetected</p>
+                </td>
+            </tr>
         }
         @foreach (string appDetected in Antd.Apps.Management.FindDirectories()) {
-           <tr>
-               <td colspan="3">
-                   <p><i class="icon-folder on-left"></i> @appDetected</p>
-               </td>
-           </tr>
+            <tr>
+                <td colspan="3">
+                    <p><i class="icon-folder on-left"></i>@appDetected</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Application Info</label>
+                </td>
+                <td colspan="2">
+                    <ul class="fg-white">
+                        @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed(appDetected)) {
+                            <li>@arr[0] -> @arr[1]</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

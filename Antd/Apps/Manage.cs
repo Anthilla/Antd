@@ -31,8 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.Apps {
     public class Management {
@@ -59,13 +57,10 @@ namespace Antd.Apps {
             if (files.Length < 0) {
                 ConsoleLogger.Log("There's no file in {0}", AppsDir);
             }
-            else { 
+            else {
                 var squashfs = files.Where(i => i.Contains(".squashfs")).ToArray();
                 foreach (var s in squashfs) {
-                    var f = Directory.GetFiles(Path.Combine(AppsDir, s), ".appinfo");
-                    if (f.Length < 0) {
-                        apps.Add(s.Replace(@"\", "/"));
-                    }
+                    apps.Add(s.Replace(@"\", "/"));
                 }
             }
             return apps.ToArray();
@@ -79,10 +74,31 @@ namespace Antd.Apps {
             }
             else {
                 foreach (var d in dirs) {
-                    apps.Add(d.Replace(@"\", "/"));
+                    var f = Directory.GetFiles(Path.GetFullPath(d), "*.appinfo");
+                    if (f.Length > 0) {
+                        apps.Add(d.Replace(@"\", "/"));
+                    }
                 }
             }
             return apps.ToArray();
+        }
+
+        public static string ReadInfo(string appPath) {
+            var f = Directory.GetFiles(Path.GetFullPath(appPath), "*.appinfo").FirstOrDefault();
+            return FileSystem.ReadFile(f);
+        }
+
+        public static List<string[]> ReadInfoListed(string appPath) {
+            var list = new List<string[]>() { };
+            var f = Directory.GetFiles(Path.GetFullPath(appPath), "*.appinfo").FirstOrDefault();
+            var arr = FileSystem.ReadFile(f).Split(new String[] { @"," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var a in arr) {
+                var kv = a.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                if (kv.Length == 2) {
+                    list.Add(kv);
+                }
+            }
+            return list;
         }
     }
 }
