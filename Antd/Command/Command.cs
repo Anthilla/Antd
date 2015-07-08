@@ -36,20 +36,14 @@ using System.Linq;
 
 namespace Antd {
 
-    public class Command {
+    public class Terminal {
 
-        public static CommandModel Launch(string file, string args) {
-//#if WINDOWS
-//            Console.WriteLine("Windows.");
-//#else
-//            Console.WriteLine("Not Windows.");
-//#endif
+        public static string Execute(string command) {
             string output = string.Empty;
-            string error = string.Empty;
             Process process = new Process {
                 StartInfo = {
-                    FileName = file,
-                    Arguments = args,
+                    FileName = "bash",
+                    Arguments = "-c \"" + command + "\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false
@@ -60,45 +54,28 @@ namespace Antd {
                 using (StreamReader streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
                 }
-
                 using (StreamReader streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
+                    output = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
-                CommandModel command = new CommandModel {
-                    input = new Tuple<string, string>(file, args),
-                    date = DateTime.Now,
-                    output = output,
-                    outputTable = TextToList(output),
-                    error = error,
-                    errorTable = TextToList(error)
-                };
-                ConsoleLogger.Log("Launched {0} {1}", file, args);
-                ConsoleLogger.Log("------------ Command output:");
-                ConsoleLogger.Log("{0}", command.output);
-                return command;
+                return output;
             }
             catch (Exception ex) {
-                CommandModel command = new CommandModel {
-                    error = ex.Message,
-                    errorTable = TextToList(ex.Message)
-                };
-                Console.WriteLine("");
-                ConsoleLogger.Warn("Launched {0} {1}", file, args);
-                ConsoleLogger.Warn("------------ Error output:");
-                ConsoleLogger.Warn("{0}", command.error);
-                Console.WriteLine("");
-                return command;
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine("Error message:");
+                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine("-----------------------------------");
+                return output;
             }
         }
 
-        public static CommandModel Launch(string file, string args, string dir) {
+        public static string Execute(string command, string dir) {
             string output = string.Empty;
-            string error = string.Empty;
             Process process = new Process {
                 StartInfo = {
-                    FileName = file,
-                    Arguments = args,
+                    FileName = "bash",
+                    Arguments = "-c \"" + command + "\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -107,32 +84,37 @@ namespace Antd {
             };
             try {
                 process.Start();
-
                 using (StreamReader streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
                 }
-
                 using (StreamReader streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
+                    output = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
-                CommandModel command = new CommandModel {
-                    input = new Tuple<string, string>(file, args),
-                    date = DateTime.Now,
-                    output = output,
-                    outputTable = TextToList(output),
-                    error = error,
-                    errorTable = TextToList(error)
-                };
-                return command;
+                return output;
             }
             catch (Exception ex) {
-                CommandModel command = new CommandModel {
-                    error = ex.Message,
-                    errorTable = TextToList(ex.Message)
-                };
-                return command;
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine("Error message:");
+                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine("-----------------------------------");
+                return output;
             }
+        }
+    }
+
+    public static class TerminalExtension {
+
+        public static CommandModel ConvertToModel(this String commandOutput) {
+            CommandModel command = new CommandModel {
+                date = DateTime.Now,
+                output = commandOutput,
+                outputTable = TextToList(commandOutput),
+                error = commandOutput,
+                errorTable = TextToList(commandOutput)
+            };
+            return command;
         }
 
         public static List<string> TextToList(string text) {
@@ -146,76 +128,6 @@ namespace Antd {
             }
 
             return stringList;
-        }
-    }
-
-    public class Terminal {
-
-        public static string Execute(string command) {
-            string output = string.Empty;
-            string error = string.Empty;
-            Process process = new Process {
-                StartInfo = {
-                    FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                }
-            };
-            try {
-                process.Start();
-                using (StreamReader streamReader = process.StandardOutput) {
-                    output = streamReader.ReadToEnd();
-                }
-                using (StreamReader streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
-                }
-                process.WaitForExit();
-                return output;
-            }
-            catch (Exception ex) {
-                Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
-                Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
-                Console.WriteLine("-----------------------------------");
-                return error;
-            }
-        }
-
-        public static string Execute(string command, string dir) {
-            string output = string.Empty;
-            string error = string.Empty;
-            Process process = new Process {
-                StartInfo = {
-                    FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = dir.ToString()
-                }
-            };
-            try {
-                process.Start();
-                using (StreamReader streamReader = process.StandardOutput) {
-                    output = streamReader.ReadToEnd();
-                }
-                using (StreamReader streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
-                }
-                process.WaitForExit();
-                return output;
-            }
-            catch (Exception ex) {
-                Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
-                Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
-                Console.WriteLine("-----------------------------------");
-                return error;
-            }
         }
     }
 }

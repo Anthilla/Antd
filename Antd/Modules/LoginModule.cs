@@ -38,13 +38,6 @@ using System.Dynamic;
 
 namespace Antd {
 
-    public static class Extension {
-
-        public static Guid ToGuid(this Guid? source) {
-            return source ?? Guid.Empty;
-        }
-    }
-
     public class LoginModule : NancyModule {
 
         public LoginModule() {
@@ -79,12 +72,6 @@ namespace Antd {
                 var cookies = request.Cookies;
                 cookies.Clear();
                 return this.LogoutAndRedirect("~/");
-            };
-
-            Get["/get/user/{usr}"] = x => {
-                var u = (string)x.usr;
-                var i = MapSystemUser.GetRootPwd(u);
-                return JsonConvert.SerializeObject(i);
             };
         }
     }

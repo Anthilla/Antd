@@ -27,10 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Auth;
 using Antd.CCTable;
 using Antd.Status;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
 using System.Dynamic;
 
 namespace Antd {
@@ -54,6 +56,12 @@ namespace Antd {
                 string fname = this.Request.Form.Name;
                 Antd.Status.User.CreateUser(fname);
                 return Response.AsRedirect("/users");
+            };
+
+            Get["/get/{usr}"] = x => {
+                var u = (string)x.usr;
+                var i = MapSystemUser.GetRootPwd(u);
+                return JsonConvert.SerializeObject(i);
             };
         }
     }

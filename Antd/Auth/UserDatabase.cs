@@ -36,6 +36,13 @@ using System.Linq;
 
 namespace Antd.Auth {
 
+    public class UserIdentity : IUserIdentity {
+
+        public string UserName { get; set; }
+
+        public IEnumerable<string> Claims { get; set; }
+    }
+
     public class UserDatabase : IUserMapper {
 
         public static List<Tuple<string, string, Guid>> USERS() {

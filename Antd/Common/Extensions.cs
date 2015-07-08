@@ -36,6 +36,10 @@ namespace Antd {
 
     public static class Extensions {
 
+        public static Guid ToGuid(this Guid? source) {
+            return source ?? Guid.Empty;
+        }
+
         public static string GetFirstString(this String str) {
             var arr = str.Split(' ');
             return arr.Length > 0 ? arr[0] : String.Empty;

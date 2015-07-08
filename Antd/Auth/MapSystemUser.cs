@@ -41,6 +41,14 @@ namespace Antd.Auth {
             return userList;
         }
 
+        public static Tuple<string, string, Guid> Map(string user) {
+            string username = user;
+            string password = user;
+            Guid guid = Guid.Parse(user);
+            Tuple<string, string, Guid> tuple = new Tuple<string, string, Guid>(username, password, guid);
+            return tuple;
+        }
+
         public static string GetRootPwd(string username) {
             var command = Command.Launch("cat", "/etc/shadow");
             List<string> sysUserList = command.outputTable;
