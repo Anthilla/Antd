@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Auth;
+using Antd.Auth.T2FA;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;
@@ -35,6 +36,8 @@ using Nancy.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Dynamic;
+using System.Net;
+using System.Text;
 
 namespace Antd {
 
@@ -43,13 +46,11 @@ namespace Antd {
         public LoginModule() {
             Get["/login"] = x => {
                 dynamic model = new ExpandoObject();
-                model.Errored = this.Request.Query.error.HasValue;
-                return View["login", model];
-            };
-
-            Get["/login/auth"] = x => {
-                dynamic model = new ExpandoObject();
-                model.Errored = this.Request.Query.error.HasValue;
+                model.WantsEmail = false;
+                model.HasToken = false;
+                model.Username = "";
+                model.Password = "";
+                model.Email = "";
                 return View["login", model];
             };
 
@@ -57,21 +58,32 @@ namespace Antd {
                 var username = (string)this.Request.Form.Username;
                 var password = (string)this.Request.Form.Password;
 
-                DateTime? expiry = DateTime.Now.AddHours(12);
-                if (this.Request.Form.RememberMe.HasValue) {
-                    expiry = DateTime.Now.AddDays(3);
-                }
-
                 Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
                 if (validationGuid == null) {
                     return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
                 }
                 else {
+                    string email;
                     var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
-                    var email = (string)this.Request.Form.Email;
+                    var requestEmail = (string)this.Request.Form.Email;
+                    if (validationEmail == null && requestEmail == "") {
+                        email = null;
+                        return Response.AsRedirect("/login/auth/" + username + "/" + password);
+                    }
+                    else if (validationEmail != null) {
+                        email = validationEmail;
+                    }
+                    else {
+                        email = requestEmail;
+                    }
+                    if (email != null) {
+                        Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
+                    }
+
                     NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
-                    return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
+                    //return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
+                    return this.Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
                 }
             };
 
@@ -80,6 +92,42 @@ namespace Antd {
                 var cookies = request.Cookies;
                 cookies.Clear();
                 return this.LogoutAndRedirect("~/");
+            };
+
+            Get["/login/auth/{username}/{password}"] = x => {
+                dynamic model = new ExpandoObject();
+                model.WantsEmail = true;
+                model.HasToken = false;
+                model.Username = x.username;
+                model.Password = x.password;
+                model.Email = "";
+                return View["login", model];
+            };
+
+            Get["/login/token/{session}"] = x => {
+                dynamic model = new ExpandoObject();
+                model.Session = x.session;
+                return View["login-token", model];
+            };
+
+            Post["/token"] = x => {
+                var token = (string)this.Request.Form.Token;
+                var session = (string)this.Request.Form.Session;
+
+                var validation = Authentication.Confirm(session, token);
+
+                DateTime? expiry = DateTime.Now.AddHours(1);
+                if (this.Request.Form.RememberMe.HasValue) {
+                    expiry = DateTime.Now.AddHours(8);
+                }
+
+                if (validation == false) {
+                    return this.Context.GetRedirect("~/login");
+                }
+                else {
+                    NancyCookie cookie = new NancyCookie("session", session);
+                    return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
+                }
             };
         }
     }

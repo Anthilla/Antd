@@ -41,19 +41,29 @@
     <div id="login-form" class="grid ">
         <div class="row">
             <div class="span4">
-                <form method="POST">
+                <form action="/login" method="POST" enctype="multipart/form-data">
                     <img alt="anthilla" id="anthilla-logo" src="/Content/Style/anthilla_logo_300x50_verde.png" />
 
-                    <label>Username</label>
-                    <div class="input-control text state-anthilla-gray" data-role="input-control">
-                        <input name="Username" type="text">
-                    </div>
+                    @if (Model.WantsEmail == false) {
+                        <label>Username</label>
+                        <div class="input-control text state-anthilla-gray" data-role="input-control">
+                            <input name="Email" type="hidden" value="">
+                            <input name="Username" type="text">
+                        </div>
 
-                    <label>Password</label>
-                    <div class="input-control text state-anthilla-gray" data-role="input-control">
-                        <input name="Password" type="password">
-                    </div>
-
+                        <label>Password</label>
+                        <div class="input-control text state-anthilla-gray" data-role="input-control">
+                            <input name="Password" type="password">
+                        </div>
+                    }
+                    else {
+                        <label>Email</label>
+                        <div class="input-control text state-anthilla-gray" data-role="input-control">
+                            <input name="Username" type="hidden" value="@Model.Username">
+                            <input name="Password" type="hidden" value="@Model.Password">
+                            <input name="Email" type="text">
+                        </div>
+                    }
                     <input id="login-button" type="submit" value="Login" class="bg-anthilla-green upcase fg-anthilla-gray" />
 
                     @*<label>Remember Me</label>

@@ -59,11 +59,6 @@ namespace Antd {
                 }
                 return Response.AsText("gg");
             };
-
-            Get["/token"] = x => {
-                Notification.Send(Guid.NewGuid().ToString(), "Gino", "damianozanardi@yahoo.it");
-                return Response.AsText("done");
-            };
         }
     }
 }
