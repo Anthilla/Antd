@@ -56,13 +56,13 @@ namespace Antd.MachineStatus {
             string newPath = root + newFileName;
             Directory.CreateDirectory(root);
             FileSystem.WriteFile(newPath, content);
-            Command.Launch("mount", newPath + " " + filePath);
+            Terminal.Execute("mount " + newPath + " " + filePath);
         }
 
         public static void EditFile(string filePath, string content) {
             FileSystem.WriteFile(filePath, content);
             SaveConf(filePath, content);
-            Command.Launch("mount", filePath + " " + filePath.Replace("_", "/"));
+            Terminal.Execute("mount " + filePath + " " + filePath.Replace("_", "/"));
         }
 
         private static void SaveConf(string fileName, string content) {

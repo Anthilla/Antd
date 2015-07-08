@@ -53,7 +53,7 @@ namespace Antd.Network.Management {
         private static List<NetworkInterfaceModel> MapInterface() {
             var list = new List<NetworkInterfaceModel>() { };
             foreach (var name in GetInterfaceList()) {
-                var str = Command.Launch("ip", "addr show " + name).output;
+                var str = Terminal.Execute("ip addr show " + name);
                 var rows = str.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var model = new NetworkInterfaceModel()/* { Data = str }*/;
                 model.Number = Convert.ToInt32(rows[0].Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]);

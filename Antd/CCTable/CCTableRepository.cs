@@ -64,7 +64,7 @@ namespace Antd.CCTable {
                 var a = i.InputCommand.GetAllStringsButFirst();
                 var b = "";
                 var c = a != null || a != "" ? a : b;
-                i.ValueResult = Command.Launch(f, c).output;
+                i.ValueResult = Terminal.Execute(f + " " + c);
             }
             return list;
         }
@@ -132,7 +132,7 @@ namespace Antd.CCTable {
         public static void EditTableRow(string guid, string command) {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             var i = row.HtmlInputID;
-            CommandDB.Edit(i, command);
+            CommandRepository.Edit(i, command);
         }
 
         public static void Refresh(string guid) {

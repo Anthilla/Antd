@@ -38,7 +38,7 @@ namespace Antd.Status {
     public class Uptime {
 
         private static string GetUptime() {
-            CommandModel command = Command.Launch("uptime", "");
+            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
             return uptimes.uptime;
@@ -47,7 +47,7 @@ namespace Antd.Status {
         public static string UpTime { get { return GetUptime(); } }
 
         private static string GetLoadAverage() {
-            CommandModel command = Command.Launch("uptime", "");
+            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
             return uptimes.loadAverage;
@@ -56,7 +56,7 @@ namespace Antd.Status {
         public static string LoadAverage { get { return GetLoadAverage(); } }
 
         private static string[] GetLoadAverageValues() {
-            CommandModel command = Command.Launch("uptime", "");
+            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
             return uptimes.loadAverageValues;

@@ -53,7 +53,7 @@ namespace Antd.Scheduler {
                 string command = data[0];
                 string arguments = data[1];
                 string jobId = dataMap.GetString("jobID");
-                CommandModel cmd = Command.Launch(command, arguments);
+                CommandModel cmd = Terminal.Execute(command + " " + arguments).ConvertCommandToModel();
                 string output = cmd.output;
                 JobRepository.AddResult(jobId, output);
             }

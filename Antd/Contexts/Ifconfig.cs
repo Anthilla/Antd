@@ -36,7 +36,7 @@ namespace Antd {
 
         public static string GetEther() {
             string dir = "/sys/devices";
-            CommandModel find = Command.Launch("find", "./ -name address", dir);
+            CommandModel find = Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
             if (find.isError()) {
                 return find.error;
             }
@@ -45,7 +45,7 @@ namespace Antd {
                               where i.Contains("eth")
                               select i).FirstOrDefault();
                 if (row != null) {
-                    CommandModel cat = Command.Launch("cat", row.Replace("\"", ""), dir);
+                    CommandModel cat = Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
                     return cat.outputTable.FirstOrDefault();
                 }
             }

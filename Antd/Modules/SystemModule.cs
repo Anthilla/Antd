@@ -49,9 +49,9 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Hostname = Command.Launch("hostname", "").output;
-                vmod.Domainname = Command.Launch("hostname", "-f").output;
-                vmod.Timezone = Command.Launch("timedatectl", "").output;
+                vmod.Hostname = Terminal.Execute("hostname");
+                vmod.Domainname = Terminal.Execute("hostname -f");
+                vmod.Timezone = Terminal.Execute("timedatectl");
                 vmod.Timeserver = "time.server.net";
                 vmod.Language = "English";
                 vmod.TCPport = "";

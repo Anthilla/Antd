@@ -104,12 +104,12 @@ namespace Antd.Apps {
             }
 
             public static void CreateSquash() {
-                Command.Launch("mksquashfs", "/mnt/cdrom/Apps/anthillasp /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Execute("mksquashfs /mnt/cdrom/Apps/anthillasp /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash() {
                 Directory.CreateDirectory("/framework/anthillasp");
-                Command.Launch("mount", "/mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
+                Terminal.Execute("mount /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
             }
         }
 

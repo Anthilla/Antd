@@ -47,7 +47,7 @@ namespace Antd {
                 string file = (string)this.Request.Form.File;
                 string args = (string)this.Request.Form.Arguments;
 
-                CommandModel command = Command.Launch(file, args);
+                CommandModel command = Terminal.Execute(file + " "+ args).ConvertCommandToModel();
                 return View["page-console", command];
             };
         }

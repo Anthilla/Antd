@@ -40,9 +40,9 @@ namespace Antd.Modules {
             : base("/info") {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.hostname = Command.Launch("hostname", "").output;
+                vmod.hostname = Terminal.Execute("hostname");
                 vmod.os = Version.GetModel().value;
-                vmod.time = Command.Launch("date", "").output;
+                vmod.time = Terminal.Execute("date");
                 vmod.procinfo = "";
                 vmod.uptime = Uptime.UpTime;
                 vmod.runprocs = Proc.All.ToArray().Length.ToString();
@@ -53,8 +53,8 @@ namespace Antd.Modules {
                 vmod.MEMINFO = Meminfo.GetModel();
                 vmod.CPUINFO = Cpuinfo.GetModel();
                 vmod.VERSION = Version.GetModel();
-                vmod.DMIDECODE = Command.Launch("dmidecode", "");
-                vmod.IFCONFIG = Command.Launch("ifconfig", "");
+                vmod.DMIDECODE = Terminal.Execute("dmidecode", "");
+                vmod.IFCONFIG = Terminal.Execute("ifconfig", "");
                 vmod.PROCS = Proc.All;
                 return View["_page-info", vmod];
             };
@@ -69,7 +69,7 @@ namespace Antd.Modules {
 
             Post["/killproc"] = x => {
                 string pid = (string)this.Request.Form.data;
-                CommandModel command = Command.Launch("kill", pid);
+                CommandModel command = Terminal.Execute("kill " + pid).ConvertCommandToModel();
                 return Response.AsRedirect("/procs");
             };
         }

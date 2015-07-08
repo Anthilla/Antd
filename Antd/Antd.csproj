@@ -207,7 +207,7 @@
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
-    <Compile Include="Command\CommandDB.cs" />
+    <Compile Include="Terminal\CommandRepository.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\ConsoleLogger.cs" />
@@ -289,7 +289,7 @@
     <Compile Include="Contexts\Meminfo.cs" />
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Version.cs" />
-    <Compile Include="Command\Command.cs" />
+    <Compile Include="Terminal\Terminal.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\UnitRepo.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />

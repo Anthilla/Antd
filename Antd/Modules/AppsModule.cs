@@ -120,7 +120,7 @@ namespace Antd {
             Post["/mount"] = x => {
                 var f = (string)this.Request.Form.Folder;
                 var m = (string)this.Request.Form.Mount;
-                Command.Launch("mount", " " + f + " " + m);
+                Terminal.Execute("mount "+ f + " " + m);
                 return Response.AsJson(AnthillaSP.Status.AnthillaServer());
             };
         }

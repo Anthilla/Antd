@@ -33,39 +33,39 @@ namespace Antd.Systemd {
     public class Systemctl {
 
         public static CommandModel DaemonReload() {
-            return Command.Launch("systemctl", "daemon-reload");
+            return Terminal.Execute("systemctl daemon-reload").ConvertCommandToModel();
         }
 
         public static CommandModel Start(string unit) {
-            return Command.Launch("systemctl", "start " + unit);
+            return Terminal.Execute("systemctl start " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Stop(string unit) {
-            return Command.Launch("systemctl", "stop " + unit);
+            return Terminal.Execute("systemctl stop " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Restart(string unit) {
-            return Command.Launch("systemctl", "restart " + unit);
+            return Terminal.Execute("systemctl restart " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Reload(string unit) {
-            return Command.Launch("systemctl", "reload " + unit);
+            return Terminal.Execute("systemctl reload " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Status(string unit) {
-            return Command.Launch("systemctl", "status " + unit);
+            return Terminal.Execute("systemctl status " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel IsEnabled(string unit) {
-            return Command.Launch("systemctl", "is-enabled " + unit);
+            return Terminal.Execute("systemctl is-enabled " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Enable(string unit) {
-            return Command.Launch("systemctl", "enable " + unit);
+            return Terminal.Execute("systemctl enable " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Disable(string unit) {
-            return Command.Launch("systemctl", "disable " + unit);
+            return Terminal.Execute("systemctl disable " + unit).ConvertCommandToModel();
         }
     }
 }

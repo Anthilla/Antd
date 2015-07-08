@@ -80,7 +80,7 @@ namespace Antd.Status {
         }
 
         private static void MountNetworkdDir() {
-            Command.Launch("mount", "--bind /etc/systemd/network " + Folder.Networkd);
+            Terminal.Execute("mount --bind /etc/systemd/network " + Folder.Networkd);
         }
 
         private static string RestartNetworkdDir() {

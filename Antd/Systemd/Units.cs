@@ -38,7 +38,7 @@ namespace Antd.Systemd {
     public class Units {
 
         private static List<UnitModel> GetAllUnits() {
-            CommandModel command = Command.Launch("systemctl", "--no-pager list-unit-files");
+            CommandModel command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             if (output != null) {
                 List<UnitModel> units = MapUnitJson(output);

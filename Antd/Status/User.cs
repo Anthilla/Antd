@@ -88,7 +88,7 @@ namespace Antd.Status {
         }
 
         public static void CreateUser(string user) {
-            Command.Launch("useradd", user);
+            Terminal.Execute("useradd " + user);
         }
     }
 }

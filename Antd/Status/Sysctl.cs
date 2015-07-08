@@ -40,7 +40,7 @@ namespace Antd.Status {
     public class Sysctl {
 
         private static List<SysctlModel> GetAllSysctls() {
-            CommandModel command = Command.Launch("sysctl", "--all");
+            CommandModel command = Terminal.Execute("sysctl --all").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;
@@ -101,7 +101,7 @@ namespace Antd.Status {
         }
 
         public static string Config(string param, string value) {
-            CommandModel command = Command.Launch("sysctl", "-w " + param + "=\"" + value + "\"");
+            CommandModel command = Terminal.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             WriteConfig();
             LoadConfig();
@@ -128,7 +128,7 @@ namespace Antd.Status {
 
         public static void LoadConfig() {
             string path = Path.Combine(Folder.Config, "antd.sysctl.conf");
-            Command.Launch("sysctl", "-p " + path);
+            Terminal.Execute("sysctl -p " + path);
         }
     }
 }

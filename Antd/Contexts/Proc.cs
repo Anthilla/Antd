@@ -38,7 +38,7 @@ namespace Antd {
     public class Proc {
 
         private static List<ProcModel> GetAllAllProc() {
-            CommandModel command = Command.Launch("ps", "-aef");
+            CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             List<ProcModel> procs = MapProcJson(output);
             return procs;
@@ -47,7 +47,7 @@ namespace Antd {
         public static List<ProcModel> AllAll { get { return GetAllAllProc(); } }
 
         private static List<ProcModel> GetAllProc() {
-            CommandModel command = Command.Launch("ps", "-aef");
+            CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             var list = MapProcJson(output);
             var procs = new List<ProcModel>() { };

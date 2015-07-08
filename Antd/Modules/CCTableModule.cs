@@ -90,7 +90,7 @@ namespace Antd {
 
                 string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
                 string inputlocation = "CCTable" + this.Request.Form.TableName;
-                CommandDB.Create(inputid, command, command, inputlocation, notes);
+                CommandRepository.Create(inputid, command, command, inputlocation, notes);
 
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";

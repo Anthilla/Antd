@@ -42,7 +42,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.list = CommandDB.GetAll();
+                vmod.list = CommandRepository.GetAll();
                 return View["page-command-mgmt", vmod];
             };
 
@@ -52,32 +52,32 @@ namespace Antd {
                 string notes = this.Request.Form.Notes;
                 string inputid = this.Request.Form.InputID;
                 string inputlocation = this.Request.Url;
-                CommandDB.Create(inputid, command, layout, inputlocation, notes);
+                CommandRepository.Create(inputid, command, layout, inputlocation, notes);
                 return Response.AsRedirect("/command/mgmt");
             };
 
             Post["/launch/{guid}"] = x => {
                 string guid = x.guid;
-                string result = CommandDB.LaunchAndGetOutput(guid);
+                string result = CommandRepository.LaunchAndGetOutput(guid);
                 return Response.AsJson(result);
             };
 
             Post["/delete/{guid}"] = x => {
                 string guid = x.guid;
-                CommandDB.Delete(guid);
+                CommandRepository.Delete(guid);
                 return Response.AsJson(true);
             };
 
             Get["/ex/{inputid}"] = x => {
                 string inputid = x.inputid;
-                var r = CommandDB.LaunchAndGetOutputUsingNewValue(inputid);
+                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid);
                 return Response.AsJson(r);
             };
 
             Get["/ex/{inputid}/{value}"] = x => {
                 string inputid = x.inputid;
                 string value = x.value;
-                var r = CommandDB.LaunchAndGetOutputUsingNewValue(inputid, value);
+                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
                 return Response.AsJson(r);
             };
         }
