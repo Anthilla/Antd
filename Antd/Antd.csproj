@@ -254,6 +254,7 @@
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />
+    <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Status\Mount.cs" />
     <Compile Include="Scheduler\Job.cs" />

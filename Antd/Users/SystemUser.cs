@@ -39,56 +39,45 @@ namespace Antd.Users {
 
     public class SystemUser {
 
-        public static string[] GetAll() {
-            var usersString = Terminal.Execute("cat /etc/shadow").Split(new String[] { "\\n" }, StringSplitOptions.None).ToArray();
-            return usersString;
+        public static List<UserModel> GetAll() {
+            var usersString = FileSystem.ReadFile("/etc/shadow");
+            var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+            var list = new List<UserModel>() { };
+            foreach (var user in users) {
+                var mu = MapUser(user);
+                list.Add(mu);
+            }
+            return list;
         }
 
-        //public static List<UserModel> GetAll() {
-        //    var usersString = Terminal.Execute("cat /etc/shadow").Split(new String[] {"\\n"}, StringSplitOptions.None).ToArray();
-        //    //List<UserModel> mounts = MapUserJson(usersString);
-        //    return mounts;
-        //}
+        private static UserModel MapUser(string userString) {
+            var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            UserModel user = new UserModel() { };
+            if (userInfo.Length > 0) {
+                user.Guid = Guid.NewGuid().ToString();
+                user.Alias = userInfo[0];
+                user.SystemPassword = MapPassword(userInfo[1]);
+                user.LastChanged = userInfo[2];
+                user.MinimumNumberOfDays = userInfo[3];
+                user.MaximumNumberOfDays = userInfo[4];
+                user.Warn = userInfo[5];
+                user.Inactive = userInfo[6];
+                user.Expire = userInfo[7];
+                user.UserType = UserType.IsSystemUser;
+            }
+            return user;
+        }
 
-        //private static List<UserModel> MapUserJson(string _mountJson) {
-        //    string mountJson2 = _mountJson;
-        //    mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-        //    string mountJson = mountJson2;
-        //    mountJson = Regex.Replace(mountJson2, @"\\t", " ");
-        //    string[] rowDivider = new String[] { "\n" };
-        //    string[] mountJsonRow = new string[] { };
-        //    mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-        //    List<UserModel> mounts = new List<UserModel>() { };
-        //    foreach (string rowJson in mountJsonRow) {
-        //        if (rowJson != null && rowJson != "") {
-        //            var fCh = rowJson.ToArray()[0];
-        //            if (fCh != '#') {
-        //                string[] mountJsonCell = new string[] { };
-        //                string[] cellDivider = new String[] { ":" };
-        //                mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-        //                UserModel mount = MapUser(mountJsonCell);
-        //                mounts.Add(mount);
-        //            }
-        //        }
-        //    }
-        //    return mounts;
-        //}
-
-        //private static UserModel MapUser(string[] _mountJsonCell) {
-        //    string[] mountJsonCell = _mountJsonCell;
-        //    UserModel mount = new UserModel();
-        //    if (mountJsonCell.Length > 1) {
-        //        mount.Alias = mountJsonCell[0];
-        //        mount.Password = mountJsonCell[1];
-        //        mount.LastChanged = mountJsonCell[2];
-        //        mount.MinimumNumberOfDays = mountJsonCell[3];
-        //        mount.MaximumNumberOfDays = mountJsonCell[4];
-        //        mount.Warn = mountJsonCell[5];
-        //        mount.Inactive = mountJsonCell[6];
-        //        mount.Expire = mountJsonCell[7];
-        //    }
-        //    return mount;
-        //}
+        private static SystemUserPassword MapPassword(string passwdString) {
+            var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray(); ;
+            SystemUserPassword passwd = new SystemUserPassword() { };
+            if (passwdInfo.Length > 0) {
+                passwd.Type = passwdInfo[0];
+                passwd.Salt = passwdInfo[1];
+                passwd.Result = passwdInfo[2];
+            }
+            return passwd;
+        }
 
         public static void CreateUser(string user) {
             Terminal.Execute("useradd " + user);

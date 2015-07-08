@@ -64,10 +64,6 @@ namespace Antd {
                 var i = MapSystemUser.GetUserShadow(u);
                 return JsonConvert.SerializeObject(i);
             };
-
-            Get["/test"] = x => {
-                return Response.AsJson(SystemUser.GetAll());
-            };
         }
     }
 }

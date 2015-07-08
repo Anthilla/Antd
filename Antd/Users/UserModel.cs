@@ -26,7 +26,9 @@ namespace Antd.Users {
 
         public string Alias { get; set; }
 
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
+
+        public SystemUserPassword SystemPassword { get; set; }
 
         public string LastChanged { get; set; }
 
@@ -41,5 +43,14 @@ namespace Antd.Users {
         public string Expire { get; set; }
 
         public UserType UserType { get; set; }
+    }
+
+    public class SystemUserPassword {
+        public string Type { get; set; }
+
+        public string Salt { get; set; }
+
+        public string Result { get; set; }
+
     }
 }
