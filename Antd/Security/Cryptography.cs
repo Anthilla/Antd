@@ -47,12 +47,12 @@ namespace Antd.Security {
 
         //Core Key&Vector
         public static byte[] CoreKey() {
-            byte[] hashCore = Hash256ToBytes(LocalKey());
+            byte[] hashCore = Hash256(LocalKey());
             return hashCore;
         }
 
         public static byte[] CoreVector() {
-            byte[] hashCore = Hash256ToBytes(LocalVector());
+            byte[] hashCore = Hash256(LocalVector());
             byte[] coreVector = new byte[16];
             Array.Copy((Array)hashCore, 0, (Array)coreVector, 0, coreVector.Length);
             return coreVector;
@@ -63,7 +63,7 @@ namespace Antd.Security {
         public static byte[] CreateRandomKey() {
             string key = Guid.NewGuid().ToString();
             byte[] kkk = encryptBytes(key, CoreKey(), CoreVector());
-            byte[] hashCore = Hash256ToBytes(GetString(kkk));
+            byte[] hashCore = Hash256(kkk.GetString());
             return hashCore;
         }
 
@@ -71,7 +71,7 @@ namespace Antd.Security {
 
         public static byte[] CreateRandomVector() {
             string vector = Guid.NewGuid().ToString();
-            byte[] hashCore = Hash256ToBytes(vector);
+            byte[] hashCore = Hash256(vector);
             byte[] coreVector = new byte[16];
             Array.Copy((Array)hashCore, 0, (Array)coreVector, 0, coreVector.Length);
             return coreVector;
@@ -82,14 +82,14 @@ namespace Antd.Security {
         #endregion Random
 
         public static byte[] GenerateKey(string key) {
-            byte[] hashCore = Hash256ToBytes(key);
+            byte[] hashCore = Hash256(key);
             byte[] newArray = new byte[32];
             Array.Copy(hashCore, newArray, newArray.Length);
             return newArray;
         }
 
         public static byte[] GenerateVector(string vector) {
-            byte[] hashCore = Hash256ToBytes(vector);
+            byte[] hashCore = Hash256(vector);
             byte[] newArray = new byte[16];
             Array.Copy(hashCore, newArray, newArray.Length);
             return newArray;
@@ -99,7 +99,7 @@ namespace Antd.Security {
             if (textValue != null || textValue != "") {
                 RijndaelManaged crypt = new RijndaelManaged();
                 ICryptoTransform encryptor = crypt.CreateEncryptor(key, vector);
-                byte[] dataValueBytes = GetBytes(textValue);
+                byte[] dataValueBytes = textValue.GetBytes();
                 MemoryStream memoryStream = new MemoryStream();
                 CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
                 cryptoStream.Write(dataValueBytes, 0, dataValueBytes.Length);
@@ -127,7 +127,7 @@ namespace Antd.Security {
                 memoryStream.Read(transformedBytes, 0, transformedBytes.Length);
                 cryptoStream.Close();
                 memoryStream.Close();
-                string arr = GetString(transformedBytes);
+                string arr = transformedBytes.GetString();
                 return arr;
             }
             else return String.Empty;
@@ -143,51 +143,13 @@ namespace Antd.Security {
             return dataToDecrypt;
         }
 
-        public static byte[] Hash256ToBytes(string inputString) {
+        public static byte[] Hash256(string inputString) {
             HashAlgorithm algorithm = SHA256.Create();
             return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         }
 
-        public static string Hash256ToString(string inputString) {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in Hash256ToBytes(inputString))
-                sb.Append(b.ToString("X2"));
-            return sb.ToString();
+        public static string Hash256Terminal(string inputString, string salt) {
+            return Terminal.Execute("mkpasswd -m sha-512 " + inputString + " -s \"" + salt + "\"");
         }
-
-        #region Could be extensions
-        private static string ToHex(string value) {
-            char[] chars = value.ToCharArray();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in chars) {
-                stringBuilder.Append(((Int16)c).ToString(""));
-            }
-            string hexed = stringBuilder.ToString();
-            return hexed;
-        }
-
-        public static string ToHex(byte[] bytes) {
-            string value = GetString(bytes);
-            char[] chars = value.ToCharArray();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in chars) {
-                stringBuilder.Append(((Int16)c).ToString(""));
-            }
-            string hexed = stringBuilder.ToString();
-            return hexed;
-        }
-
-        private static byte[] GetBytes(string str) {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-
-        private static string GetString(byte[] bytes) {
-            char[] chars = new char[bytes.Length / sizeof(char)];
-            Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
-        }
-        #endregion Could be extensions
     }
 }

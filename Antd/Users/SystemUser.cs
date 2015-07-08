@@ -39,7 +39,7 @@ namespace Antd.Users {
 
     public class SystemUser {
 
-        public static List<UserModel> GetAll() {
+        public static IEnumerable<UserModel> GetAll() {
             var usersString = FileSystem.ReadFile("/etc/shadow");
             var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
             var list = new List<UserModel>() { };
@@ -56,7 +56,7 @@ namespace Antd.Users {
             if (userInfo.Length > 0) {
                 user.Guid = Guid.NewGuid().ToString();
                 user.Alias = userInfo[0];
-                user.SystemPassword = MapPassword(userInfo[1]);
+                user.Password = MapPassword(userInfo[1]);
                 user.LastChanged = userInfo[2];
                 user.MinimumNumberOfDays = userInfo[3];
                 user.MaximumNumberOfDays = userInfo[4];

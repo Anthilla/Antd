@@ -27,6 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Security;
+using Antd.Users;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
@@ -40,31 +42,104 @@ namespace Antd.Auth {
 
         public string UserName { get; set; }
 
+        public UserType UserType { get; set; }
+
         public IEnumerable<string> Claims { get; set; }
     }
 
     public class UserDatabase : IUserMapper {
 
-        public static List<Tuple<string, string, Guid>> USERS() {
-            List<Tuple<string, string, Guid>> userList = MapSystemUser.SystemuUsers();
+        //public static HashSet<Tuple<string, string, Guid>> USERS() {
+        //    HashSet<Tuple<string, string, Guid>> userList = new HashSet<Tuple<string, string, Guid>>() { };
+        //    userList.Add(new Tuple<string, string, Guid>("master", "master", new Guid("00000000-0000-0000-0000-000000000500")));
+        //    return userList;
+        //}
+
+        private static HashSet<AuthUser> USERS() {
+            HashSet<AuthUser> userList = new HashSet<AuthUser>() { };
+            userList.Add(new AuthUser() {
+                Name = "master",
+                Password = "master",
+                UserType = UserType.Master,
+                Guid = new Guid("00000000-0000-0000-0000-000000000500")
+            });
+            var sysUsers = SystemUser.GetAll();
+            var appUsers = ApplicationUser.GetAll();
+            userList.UnionWith(Map(sysUsers));
+            userList.UnionWith(Map(appUsers));
             return userList;
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
             var Users = USERS();
-            var UserRecord = Users.FirstOrDefault(u => u.Item3 == identifier);
+            var UserRecord = Users.FirstOrDefault(u => u.Guid == identifier);
             return UserRecord == null
                        ? null
-                       : new UserIdentity { UserName = UserRecord.Item1 };
+                       : new UserIdentity { UserName = UserRecord.Name };
         }
 
         public static Guid? ValidateUser(string username, string password) {
-            var Users = USERS();
-            var UserRecord = Users.FirstOrDefault(u => u.Item1 == username && u.Item2 == password);
-            if (UserRecord == null) {
+            //ho l'utente, in base al nome
+            var user = USERS().FirstOrDefault(u => u.Name == username);
+            //se non esiste mi tolgo subito il problema
+            if (user == null) {
                 return null;
             }
-            return UserRecord.Item3;
+            //invece, recupero UserType
+            var type = user.UserType;
+            //iin base al Type cambio il check della password
+            switch (type) {
+                case UserType.Master:
+                    if (CheckMasterPassword(password) == true) {
+                        return user.Guid;
+                    }
+                    else {
+                        return null;
+                    }
+                case UserType.IsApplicationUser:
+                    if (CheckApplicationPassword(password, user.Password) == true) {
+                        return user.Guid;
+                    }
+                    else {
+                        return null;
+                    }
+                case UserType.IsSystemUser:
+                    if (CheckSystemPassword(password, user.Password, user.Salt) == true) {
+                        return user.Guid;
+                    }
+                    else {
+                        return null;
+                    }
+                default:
+                    return null;
+            }
+        }
+
+        private static HashSet<AuthUser> Map(IEnumerable<UserModel> users) {
+            HashSet<AuthUser> list = new HashSet<AuthUser>() { };
+            foreach (UserModel user in users) {
+                var au = new AuthUser() {
+                    Name = user.Alias,
+                    Password = user.Password.Result,
+                    Salt = user.Password.Salt,
+                    UserType = user.UserType
+                };
+                au.Guid = Guid.Parse(user.Guid);
+                list.Add(au);
+            }
+            return list;
+        }
+
+        private static bool CheckMasterPassword(string input) {
+            return (input == "master") ? true : false;
+        }
+
+        private static bool CheckApplicationPassword(string input, string passwd) {
+            return (Cryptography.Hash256(input).ToHex() == passwd) ? true : false;
+        }
+
+        private static bool CheckSystemPassword(string input, string passwd, string salt) {
+            return (Cryptography.Hash256Terminal(input, salt) == passwd) ? true : false;
         }
     }
 }

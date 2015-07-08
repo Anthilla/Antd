@@ -36,12 +36,17 @@ using System.Threading.Tasks;
 
 namespace Antd.Users {
     public class ApplicationUser {
-        public static List<UserModel> GetAll() {
+        public static IEnumerable<UserModel> GetAll() {
+            //return new HashSet<UserModel>(DeNSo.Session.New.Get<UserModel>(u => u != null).ToList());
             return DeNSo.Session.New.Get<UserModel>(u => u != null).ToList();
         }
 
+        public static UserModel GetByAlias(string alias) {
+            return DeNSo.Session.New.Get<UserModel>(u => u != null && u.Alias == alias).FirstOrDefault();
+        }
+
         public static void Create(string fname, string lname, string passwd, string email) {
-            var user = new UserModel() { 
+            var user = new UserModel() {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 FirstName = fname,
@@ -50,12 +55,38 @@ namespace Antd.Users {
                 UserType = UserType.IsApplicationUser
             };
             user.Alias = SetUserAlias(fname, lname);
-            user.Password = Cryptography.Hash256ToBytes(passwd);
+            user.Password = SetPassword(passwd);
             DeNSo.Session.New.Set(user);
         }
 
-        private static string SetUserAlias(string fname, string lname) {
-            return "";
+        private static string SetUserAlias(string firstName, string lastName) {
+            string first = firstName.Replace(" ", "").Substring(0, 3);
+            string last = lastName.Replace(" ", "").Substring(0, 3);
+            string stringAlias = last + first;
+            string tryAlias = stringAlias + "01";
+            UserModel isUser = GetByAlias(tryAlias);
+            if (isUser == null) {
+                return tryAlias;
+            }
+            else {
+                var table = GetAll();
+                string[] existingAlias = (from c in table
+                                          where c.Alias.Contains(stringAlias)
+                                          orderby c.Alias ascending
+                                          select c.Alias).ToArray();
+                string lastAlias = existingAlias[existingAlias.Length - 1];
+                string newNumber = (Convert.ToInt32(lastAlias.Substring(6, 2)) + 1).ToString("D2");
+                return stringAlias + newNumber;
+            }
+        }
+
+        private static SystemUserPassword SetPassword(string passwdString) {
+            SystemUserPassword passwd = new SystemUserPassword() {
+                Type = "",
+                Salt = ""
+            };
+            passwd.Result = Cryptography.Hash256(passwdString).ToHex();
+            return passwd;
         }
     }
 }

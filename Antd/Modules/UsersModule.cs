@@ -47,6 +47,7 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 //vmod.ALL = Antd.Users.SystemUser.Running;
+
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
@@ -57,12 +58,6 @@ namespace Antd {
                 string fname = this.Request.Form.Name;
                 SystemUser.CreateUser(fname);
                 return Response.AsRedirect("/users");
-            };
-
-            Get["/get/{usr}"] = x => {
-                var u = (string)x.usr;
-                var i = MapSystemUser.GetUserShadow(u);
-                return JsonConvert.SerializeObject(i);
             };
         }
     }

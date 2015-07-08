@@ -31,6 +31,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Antd {
 
@@ -105,6 +106,39 @@ namespace Antd {
                 ilist.Add(Convert.ToInt32(s));
             }
             return ilist.ToArray();
+        }
+
+        private static string ToHex(this String value) {
+            char[] chars = value.ToCharArray();
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (char c in chars) {
+                stringBuilder.Append(((Int16)c).ToString(""));
+            }
+            string hexed = stringBuilder.ToString();
+            return hexed;
+        }
+
+        public static string ToHex(this Byte[] bytes) {
+            string value = GetString(bytes);
+            char[] chars = value.ToCharArray();
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (char c in chars) {
+                stringBuilder.Append(((Int16)c).ToString(""));
+            }
+            string hexed = stringBuilder.ToString();
+            return hexed;
+        }
+
+        public static byte[] GetBytes(this String str) {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        public static string GetString(this Byte[] bytes) {
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
         }
     }
 }

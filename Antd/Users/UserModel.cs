@@ -9,7 +9,7 @@ namespace Antd.Users {
     public enum UserType : byte {
         IsSystemUser = 0,
         IsApplicationUser = 1,
-        Other = 3
+        Master = 99
     }
 
     public class UserModel {
@@ -26,9 +26,7 @@ namespace Antd.Users {
 
         public string Alias { get; set; }
 
-        public byte[] Password { get; set; }
-
-        public SystemUserPassword SystemPassword { get; set; }
+        public SystemUserPassword Password { get; set; }
 
         public string LastChanged { get; set; }
 
@@ -52,5 +50,17 @@ namespace Antd.Users {
 
         public string Result { get; set; }
 
+    }
+
+    public class AuthUser {
+        public string Name { get; set; }
+
+        public Guid Guid { get; set; }
+        
+        public string Password { get; set; }
+
+        public string Salt { get; set; }
+        
+        public UserType UserType { get; set; }
     }
 }
