@@ -231,7 +231,7 @@
     <Compile Include="Models\NetworkdModel.cs" />
     <Compile Include="Models\NetworkInfoModel.cs" />
     <Compile Include="Models\SysctlModel.cs" />
-    <Compile Include="Models\SystemUserModel.cs" />
+    <Compile Include="Users\SystemUserModel.cs" />
     <Compile Include="Models\UnitFileModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
@@ -292,6 +292,7 @@
     <Compile Include="Terminal\Terminal.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\UnitRepo.cs" />
+    <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewModels\DirectoryModel.cs" />
     <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />

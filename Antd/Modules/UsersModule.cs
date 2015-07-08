@@ -60,7 +60,7 @@ namespace Antd {
 
             Get["/get/{usr}"] = x => {
                 var u = (string)x.usr;
-                var i = MapSystemUser.GetRootPwd(u);
+                var i = MapSystemUser.GetUserShadow(u);
                 return JsonConvert.SerializeObject(i);
             };
         }

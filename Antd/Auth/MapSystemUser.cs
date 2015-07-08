@@ -49,12 +49,11 @@ namespace Antd.Auth {
             return tuple;
         }
 
-        public static string GetRootPwd(string username) {
-            List<string> sysUserList = Terminal.Execute("cat /etc/shadow").ConvertCommandToModel().outputTable;
-            var s = (from r in sysUserList
-                     where r.Contains(username)
-                     select r).FirstOrDefault();
-            return s;
+        public static string GetUserShadow(string username) {
+            return Terminal.Execute("cat /etc/shadow | grep " + username);
         }
+
+        //public static string MapUserShadow() { 
+        //}
     }
 }
