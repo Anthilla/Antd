@@ -39,54 +39,56 @@ namespace Antd.Users {
 
     public class SystemUser {
 
-        private static List<UserModel> GetAllUsers() {
-            string text = FileSystem.ReadFile("/etc", "shadow");
-            var output = JsonConvert.SerializeObject(text);
-            List<UserModel> mounts = MapUserJson(output);
-            return mounts;
+        public static string[] GetAll() {
+            var usersString = Terminal.Execute("cat /etc/shadow").Split(new String[] { "\\n" }, StringSplitOptions.None).ToArray();
+            return usersString;
         }
 
-        public static List<UserModel> Running { get { return GetAllUsers(); } }
+        //public static List<UserModel> GetAll() {
+        //    var usersString = Terminal.Execute("cat /etc/shadow").Split(new String[] {"\\n"}, StringSplitOptions.None).ToArray();
+        //    //List<UserModel> mounts = MapUserJson(usersString);
+        //    return mounts;
+        //}
 
-        private static List<UserModel> MapUserJson(string _mountJson) {
-            string mountJson2 = _mountJson;
-            mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-            string mountJson = mountJson2;
-            mountJson = Regex.Replace(mountJson2, @"\\t", " ");
-            string[] rowDivider = new String[] { "\n" };
-            string[] mountJsonRow = new string[] { };
-            mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<UserModel> mounts = new List<UserModel>() { };
-            foreach (string rowJson in mountJsonRow) {
-                if (rowJson != null && rowJson != "") {
-                    var fCh = rowJson.ToArray()[0];
-                    if (fCh != '#') {
-                        string[] mountJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { ":" };
-                        mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                        UserModel mount = MapUser(mountJsonCell);
-                        mounts.Add(mount);
-                    }
-                }
-            }
-            return mounts;
-        }
+        //private static List<UserModel> MapUserJson(string _mountJson) {
+        //    string mountJson2 = _mountJson;
+        //    mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+        //    string mountJson = mountJson2;
+        //    mountJson = Regex.Replace(mountJson2, @"\\t", " ");
+        //    string[] rowDivider = new String[] { "\n" };
+        //    string[] mountJsonRow = new string[] { };
+        //    mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
+        //    List<UserModel> mounts = new List<UserModel>() { };
+        //    foreach (string rowJson in mountJsonRow) {
+        //        if (rowJson != null && rowJson != "") {
+        //            var fCh = rowJson.ToArray()[0];
+        //            if (fCh != '#') {
+        //                string[] mountJsonCell = new string[] { };
+        //                string[] cellDivider = new String[] { ":" };
+        //                mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
+        //                UserModel mount = MapUser(mountJsonCell);
+        //                mounts.Add(mount);
+        //            }
+        //        }
+        //    }
+        //    return mounts;
+        //}
 
-        private static UserModel MapUser(string[] _mountJsonCell) {
-            string[] mountJsonCell = _mountJsonCell;
-            UserModel mount = new UserModel();
-            if (mountJsonCell.Length > 1) {
-                mount.Alias = mountJsonCell[0];
-                mount.Password = mountJsonCell[1];
-                mount.LastChanged = mountJsonCell[2];
-                mount.MinimumNumberOfDays = mountJsonCell[3];
-                mount.MaximumNumberOfDays = mountJsonCell[4];
-                mount.Warn = mountJsonCell[5];
-                mount.Inactive = mountJsonCell[6];
-                mount.Expire = mountJsonCell[7];
-            }
-            return mount;
-        }
+        //private static UserModel MapUser(string[] _mountJsonCell) {
+        //    string[] mountJsonCell = _mountJsonCell;
+        //    UserModel mount = new UserModel();
+        //    if (mountJsonCell.Length > 1) {
+        //        mount.Alias = mountJsonCell[0];
+        //        mount.Password = mountJsonCell[1];
+        //        mount.LastChanged = mountJsonCell[2];
+        //        mount.MinimumNumberOfDays = mountJsonCell[3];
+        //        mount.MaximumNumberOfDays = mountJsonCell[4];
+        //        mount.Warn = mountJsonCell[5];
+        //        mount.Inactive = mountJsonCell[6];
+        //        mount.Expire = mountJsonCell[7];
+        //    }
+        //    return mount;
+        //}
 
         public static void CreateUser(string user) {
             Terminal.Execute("useradd " + user);
