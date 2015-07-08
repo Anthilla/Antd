@@ -231,7 +231,6 @@
     <Compile Include="Models\NetworkdModel.cs" />
     <Compile Include="Models\NetworkInfoModel.cs" />
     <Compile Include="Models\SysctlModel.cs" />
-    <Compile Include="Users\SystemUserModel.cs" />
     <Compile Include="Models\UnitFileModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
@@ -257,7 +256,7 @@
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />
-    <Compile Include="Status\User.cs" />
+    <Compile Include="Users\User.cs" />
     <Compile Include="Status\Mount.cs" />
     <Compile Include="Scheduler\Job.cs" />
     <Compile Include="Modules\InfoModule.cs" />

@@ -37,7 +37,7 @@ namespace Antd.Auth {
 
         public static List<Tuple<string, string, Guid>> SystemuUsers() {
             List<Tuple<string, string, Guid>> userList = new List<Tuple<string, string, Guid>>() { };
-            userList.Add(new Tuple<string, string, Guid>("root", "root", new Guid("00000000-0000-0000-0000-000000000500")));
+            userList.Add(new Tuple<string, string, Guid>("master", "master", new Guid("00000000-0000-0000-0000-000000000500")));
             return userList;
         }
 
