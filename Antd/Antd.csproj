@@ -199,6 +199,7 @@
   <ItemGroup>
     <Compile Include="AntdHub.cs" />
     <Compile Include="Apps\Manage.cs" />
+    <Compile Include="Auth\T2FA\Notification.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
@@ -838,7 +839,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Auth\T2FA\" />
     <Folder Include="bin\Debug\Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

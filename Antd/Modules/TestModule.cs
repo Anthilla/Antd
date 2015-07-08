@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using Antd.Auth.T2FA;
 using Nancy;
 using System;
 using System.Net.NetworkInformation;
@@ -57,6 +58,11 @@ namespace Antd {
                     }
                 }
                 return Response.AsText("gg");
+            };
+
+            Get["/token"] = x => {
+                Notification.Send(Guid.NewGuid().ToString(), "Gino", "damianozanardi@yahoo.it");
+                return Response.AsText("done");
             };
         }
     }

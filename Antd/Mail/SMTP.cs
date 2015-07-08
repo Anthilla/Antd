@@ -36,7 +36,7 @@ namespace Antd.Mail {
 
         public class Settings {
             public static void Write(string key, string value) {
-                ParametersConfig.Write("", "");
+                ParametersConfig.Write(key, value);
             }
         }
 

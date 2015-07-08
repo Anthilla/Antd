@@ -49,12 +49,6 @@ namespace Antd.Auth {
 
     public class UserDatabase : IUserMapper {
 
-        //public static HashSet<Tuple<string, string, Guid>> USERS() {
-        //    HashSet<Tuple<string, string, Guid>> userList = new HashSet<Tuple<string, string, Guid>>() { };
-        //    userList.Add(new Tuple<string, string, Guid>("master", "master", new Guid("00000000-0000-0000-0000-000000000500")));
-        //    return userList;
-        //}
-
         private static HashSet<AuthUser> USERS() {
             HashSet<AuthUser> userList = new HashSet<AuthUser>() { };
             userList.Add(new AuthUser() {
@@ -71,23 +65,23 @@ namespace Antd.Auth {
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
-            var Users = USERS();
-            var UserRecord = Users.FirstOrDefault(u => u.Guid == identifier);
+            var UserRecord = USERS().FirstOrDefault(u => u.Guid == identifier);
             return UserRecord == null
                        ? null
                        : new UserIdentity { UserName = UserRecord.Name };
         }
 
+        public static string GetUserEmail(Guid identifier) {
+            var user = USERS().FirstOrDefault(u => u.Guid == identifier);
+            return (user == null) ? null : user.Email;
+        }
+
         public static Guid? ValidateUser(string username, string password) {
-            //ho l'utente, in base al nome
             var user = USERS().FirstOrDefault(u => u.Name == username);
-            //se non esiste mi tolgo subito il problema
             if (user == null) {
                 return null;
             }
-            //invece, recupero UserType
             var type = user.UserType;
-            //iin base al Type cambio il check della password
             switch (type) {
                 case UserType.Master:
                     if (CheckMasterPassword(password) == true) {

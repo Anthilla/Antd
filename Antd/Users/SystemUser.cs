@@ -27,25 +27,24 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Models;
-using Antd.Users;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Antd.Users {
 
     public class SystemUser {
 
         public static IEnumerable<UserModel> GetAll() {
-            var usersString = FileSystem.ReadFile("/etc/shadow");
-            var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
             var list = new List<UserModel>() { };
-            foreach (var user in users) {
-                var mu = MapUser(user);
-                list.Add(mu);
+            if (File.Exists("/etc/shadow")) {
+                var usersString = FileSystem.ReadFile("/etc/shadow");
+                var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+                foreach (var user in users) {
+                    var mu = MapUser(user);
+                    list.Add(mu);
+                }
             }
             return list;
         }
@@ -53,9 +52,10 @@ namespace Antd.Users {
         private static UserModel MapUser(string userString) {
             var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
             UserModel user = new UserModel() { };
-            if (userInfo.Length > 0) {
+            if (userInfo.Length > 1) {
                 user.Guid = Guid.NewGuid().ToString();
                 user.Alias = userInfo[0];
+                user.Email = null;
                 user.Password = MapPassword(userInfo[1]);
                 user.LastChanged = userInfo[2];
                 user.MinimumNumberOfDays = userInfo[3];

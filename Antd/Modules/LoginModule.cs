@@ -47,9 +47,15 @@ namespace Antd {
                 return View["login", model];
             };
 
+            Get["/login/auth"] = x => {
+                dynamic model = new ExpandoObject();
+                model.Errored = this.Request.Query.error.HasValue;
+                return View["login", model];
+            };
+
             Post["/login"] = x => {
-                string username = (string)this.Request.Form.Username;
-                string password = (string)this.Request.Form.Password;
+                var username = (string)this.Request.Form.Username;
+                var password = (string)this.Request.Form.Password;
 
                 DateTime? expiry = DateTime.Now.AddHours(12);
                 if (this.Request.Form.RememberMe.HasValue) {
@@ -62,6 +68,8 @@ namespace Antd {
                     return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
                 }
                 else {
+                    var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
+                    var email = (string)this.Request.Form.Email;
                     NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
                     return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
                 }
