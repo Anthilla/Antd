@@ -45,7 +45,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = User.Running;
+                vmod.ALL = Antd.Users.SystemUser.Running;
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
@@ -54,7 +54,7 @@ namespace Antd {
 
             Post["/status"] = x => {
                 string fname = this.Request.Form.Name;
-                Antd.Status.User.CreateUser(fname);
+                Antd.Users.SystemUser.CreateUser(fname);
                 return Response.AsRedirect("/users");
             };
 

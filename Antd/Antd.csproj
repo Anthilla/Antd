@@ -199,8 +199,6 @@
   <ItemGroup>
     <Compile Include="AntdHub.cs" />
     <Compile Include="Apps\Manage.cs" />
-    <Compile Include="Auth\T2FA\MapSystemUser.cs" />
-    <Compile Include="Auth\T2FA\UserDatabase.cs" />
     <Compile Include="Auth\MapSystemUser.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
@@ -256,7 +254,7 @@
     <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Status\Networkd.cs" />
-    <Compile Include="Users\User.cs" />
+    <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Status\Mount.cs" />
     <Compile Include="Scheduler\Job.cs" />
     <Compile Include="Modules\InfoModule.cs" />
@@ -840,6 +838,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Auth\T2FA\" />
     <Folder Include="bin\Debug\Extensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
