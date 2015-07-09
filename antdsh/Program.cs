@@ -21,9 +21,10 @@ namespace antdsh {
 
         static void Command(string command) {
             Console.WriteLine("> " + command);
-            if (command == "check-update") {
-                shell.CheckUpdate();
-            }
+            if (command == "update-check") { shell.UpdateCheck(); }
+            else if (command == "update-launch") { shell.UpdateLaunch(); }
+            else if (command == "update-force") { shell.UpdateForce(); }
+            else if (command == "info") { shell.Info(); }
         }
     }
 }
