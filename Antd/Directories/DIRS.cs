@@ -54,7 +54,7 @@ namespace Antd {
         }
 
         private static string SetDirFullPath(string dir) {
-            return "/mnt/cdrom/DIRS/DIR" + dir.Replace("/", "_");
+            return "/mnt/cdrom/DIRS/DIR" + dir.Replace("/", "_").Replace(@"\", "_");
         }
 
         public static void MountOBind(string source, string destination) {

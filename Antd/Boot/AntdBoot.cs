@@ -60,10 +60,8 @@ namespace Antd.Boot {
 
         public static void SetWorkDirectories() {
             foreach (var path in WorkDirectories) {
-                if (!Directory.Exists(path)) {
-                    DIRS.SetDirectory(path);
-                    ConsoleLogger.Log("    directory -> {0} created", path);
-                }
+                DIRS.SetDirectory(path);
+                ConsoleLogger.Log("    directory -> {0} set", path);
             }
             ConsoleLogger.Log("    directories -> checked");
         }

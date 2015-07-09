@@ -55,13 +55,13 @@ namespace Antd {
                 using (StreamReader streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
                 }
+                using (StreamReader streamReader = process.StandardError) {
+                    error = streamReader.ReadToEnd();
+                }
                 process.WaitForExit();
                 return output;
             }
             catch (Exception ex) {
-                using (StreamReader streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
-                }
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine("{0} has failed", command);
                 Console.WriteLine("Error message:");
