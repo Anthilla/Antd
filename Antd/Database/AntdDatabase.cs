@@ -10,13 +10,13 @@ namespace Antd.Database {
         public static string Version { get { return GetVersion(); } }
 
         private static string GetName() {
-            return CoreParametersConfig.GetAntdDb();
+            return CoreParametersConfig.GetDb();
         }
 
         public static string Name { get { return GetName(); } }
 
         private static string GetPath() {
-            var dbName = CoreParametersConfig.GetAntdDb();
+            var dbName = CoreParametersConfig.GetDb();
             var directories = new DirectoryFinder("/", dbName).List;
             return string.Join(", ", directories).ToString();
         }

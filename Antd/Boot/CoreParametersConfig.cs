@@ -43,48 +43,40 @@ namespace Antd.Boot {
         public static XmlWriter xmlWriter = new XmlWriter(_files);
 
         public static void WriteDefaults() {
-            xmlWriter.Write("root", "/framework/antd");
-            xmlWriter.ReadValue("root");
+            xmlWriter.Write(Label.Root, Folder.Root);
+            xmlWriter.ReadValue(Label.Root);
 
-            if (xmlWriter.CheckValue("antdport") == false) {
-                xmlWriter.Write("antdport", "7777");
+            if (xmlWriter.CheckValue(Label.Port) == false) {
+                xmlWriter.Write(Label.Port, Port.Antd);
             }
 
-            if (xmlWriter.CheckValue("antddb") == false) {
-                xmlWriter.Write("antddb", Folder.Database);
+            if (xmlWriter.CheckValue(Label.Database) == false) {
+                xmlWriter.Write(Label.Database, Folder.Database);
             }
 
-            if (xmlWriter.CheckValue("antdfr") == false) {
-                xmlWriter.Write("antdfr", Folder.FileRepository);
-            }
-
-            if (xmlWriter.CheckValue("sysd") == false) {
-                xmlWriter.Write("sysd", "/etc/systemd/system");
+            if (xmlWriter.CheckValue(Label.Files) == false) {
+                xmlWriter.Write(Label.Files, Folder.FileRepository);
             }
         }
 
-        public static string GetAntdPort() {
-            return xmlWriter.ReadValue("antdport");
+        public static string GetPort() {
+            return (xmlWriter.CheckValue(Label.Port) == true) ? xmlWriter.ReadValue(Label.Port) : Port.Antd;
         }
 
-        public static string GetAntdDb() {
-            return xmlWriter.ReadValue("antddb");
+        public static string GetDb() {
+            return (xmlWriter.CheckValue(Label.Database) == true) ? xmlWriter.ReadValue(Label.Database) : Folder.Database;
         }
 
-        public static string GetAntdRepo() {
-            return xmlWriter.ReadValue("antdfr");
+        public static string GetFileRepo() {
+            return (xmlWriter.CheckValue(Label.Files) == true) ? xmlWriter.ReadValue(Label.Files) : Folder.FileRepository;
         }
 
-        public static string GetUnitDir() {
-            return xmlWriter.ReadValue("sysd");
-        }
-
-        public static string GetAntdUri() {
-            if (xmlWriter.CheckValue("antddb") == false) {
-                return "http://+:7777/";
+        public static string GetHostUri() {
+            if (xmlWriter.CheckValue(Label.Port) == false) {
+                return Uri.Antd;
             }
             else {
-                var port = xmlWriter.ReadValue("antdport");
+                var port = xmlWriter.ReadValue(Label.Port);
                 return "http://+:" + port + "/";
             }
         }

@@ -41,10 +41,10 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
-            AntdBoot.CheckDirectories();
+            AntdBoot.SetWorkDirectories();
             AntdBoot.SetCoreParameters();
 
-            var uri = CoreParametersConfig.GetAntdUri();
+            var uri = CoreParametersConfig.GetHostUri();
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -58,7 +58,7 @@ namespace Antd {
                 ConsoleLogger.Log("    server url -> {0}", uri);
 
                 AntdBoot.StartScheduler(false);
-                AntdBoot.StartDirectoryWatcher(true, new [] { "/cfg", "/test" });
+                AntdBoot.StartDirectoryWatcher(true);
                 AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
                 //AntdBoot.TestWebDav("http://localhost:7788/", "/test");

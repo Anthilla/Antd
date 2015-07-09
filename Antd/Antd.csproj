@@ -205,6 +205,7 @@
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
+    <Compile Include="Directories\DIRS.cs" />
     <Compile Include="Terminal\CommandRepository.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
@@ -216,7 +217,7 @@
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Database\AntdDatabase.cs" />
-    <Compile Include="Directory\DirectoryFinder.cs" />
+    <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />
@@ -248,7 +249,7 @@
     <Compile Include="Modules\SystemModule.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
-    <Compile Include="Parameter.cs" />
+    <Compile Include="Const.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Security\Cryptography.cs" />
     <Compile Include="Status\ConfigEtc.cs" />
@@ -268,8 +269,8 @@
     <Compile Include="Scheduler\JobScheduler.cs" />
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Systemd\Units.cs" />
-    <Compile Include="Directory\DirectoryWatcher.cs" />
-    <Compile Include="Directory\DirectoryLister.cs" />
+    <Compile Include="Directories\DirectoryWatcher.cs" />
+    <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Log\LogRepository.cs" />
     <Compile Include="Log\LogModel.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />

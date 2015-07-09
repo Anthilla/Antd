@@ -44,18 +44,24 @@ namespace Antd.Boot {
 
     public class AntdBoot {
 
-        private readonly static string[] Directories =
+        private readonly static string[] WorkDirectories =
         {
+            Folder.Root,
             Folder.Config,
             Folder.Database,
             Folder.FileRepository,
             Folder.Networkd
         };
 
-        public static void CheckDirectories() {
-            foreach (var path in Directories) {
+        private readonly static string[] WatchDirectories =
+        {
+            Folder.Root
+        };
+
+        public static void SetWorkDirectories() {
+            foreach (var path in WorkDirectories) {
                 if (!Directory.Exists(path)) {
-                    Directory.CreateDirectory(path);
+                    DIRS.SetDirectory(path);
                     ConsoleLogger.Log("    directory -> {0} created", path);
                 }
             }
@@ -87,10 +93,10 @@ namespace Antd.Boot {
             ConsoleLogger.Log("    scheduler -> loaded");
         }
 
-        public static void StartDirectoryWatcher(bool isActive, string[] foldersToWatch) {
+        public static void StartDirectoryWatcher(bool isActive) {
             if (isActive) {
                 ConsoleLogger.Log("    directory watcher -> enabled");
-                foreach (string folder in foldersToWatch) {
+                foreach (string folder in WatchDirectories) {
                     if (Directory.Exists(folder)) {
                         new DirectoryWatcher(folder).Watch();
                         ConsoleLogger.Log("    directory watcher -> enabled for {0}", folder);
@@ -106,7 +112,7 @@ namespace Antd.Boot {
         }
 
         public static void StartDatabase() {
-            var applicationDatabasePath = CoreParametersConfig.GetAntdDb();
+            var applicationDatabasePath = CoreParametersConfig.GetDb();
             ConsoleLogger.Log("root info -> application database path: {0}", applicationDatabasePath);
             if (Directory.Exists(applicationDatabasePath)) {
                 var databases = new[] { applicationDatabasePath };
