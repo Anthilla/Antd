@@ -40,6 +40,7 @@ namespace Antd {
 
         public static string Execute(string command) {
             string output = string.Empty;
+            string error = string.Empty;
             Process process = new Process {
                 StartInfo = {
                     FileName = "bash",
@@ -54,19 +55,19 @@ namespace Antd {
                 using (StreamReader streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
                 }
-                using (StreamReader streamReader = process.StandardError) {
-                    output = streamReader.ReadToEnd();
-                }
                 process.WaitForExit();
                 return output;
             }
             catch (Exception ex) {
+                using (StreamReader streamReader = process.StandardError) {
+                    error = streamReader.ReadToEnd();
+                }
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine("{0} has failed", command);
                 Console.WriteLine("Error message:");
                 Console.WriteLine("{0}", ex.Message);
                 Console.WriteLine("-----------------------------------");
-                return output;
+                return error;
             }
         }
 
