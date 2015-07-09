@@ -1,4 +1,4 @@
-﻿@if (Model.units != String.Empty) {
+﻿@if (Model.units != null) {
     <legend>Existing systemd .networkd file(s)</legend>
     @foreach (string file in Model.units) {
         if (file != null) {

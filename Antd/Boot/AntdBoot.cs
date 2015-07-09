@@ -55,7 +55,7 @@ namespace Antd.Boot {
 
         private readonly static string[] WatchDirectories =
         {
-            Folder.Root
+            Folder.Config
         };
 
         public static void SetWorkDirectories() {

@@ -137,7 +137,7 @@ namespace Antd.Status {
             return text;
         }
 
-        public static dynamic ReadUnits() {
+        public static List<string> ReadUnits() {
             List<string> list = new List<string>() { };
             var dirContainer = Folder.Networkd;
             if (Directory.Exists(dirContainer)) {
@@ -156,7 +156,7 @@ namespace Antd.Status {
                 return list;
             }
             else {
-                return String.Empty;
+                return list;
             }
         }
 
