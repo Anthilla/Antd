@@ -46,7 +46,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.ALL = Antd.Users.SystemUser.Running;
+                vmod.ALL = Antd.Users.SystemUser.GetAll();
 
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
