@@ -118,33 +118,19 @@ namespace antdsh {
         }
 
         /// <summary>
-        /// 
+        /// ok
         /// </summary>
         public static void UpdateFromUrl() {
             var squashName = global.versionsDir + "/" + global.squashStartsWith + DateTime.Now.ToString("yyyyMMdd") + global.squashEndsWith;
-            //monta ram in tmp
             ex.MountTmpRam();
-            //scarica file in tmp
             ex.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
-            //estrai file scaricato
             ex.ExtractDownloadedFile();
-            Console.WriteLine(">>>> ExtractDownloadedFile");
-            //cancella downloaded file
             ex.RemoveDownloadedFile();
-            Console.WriteLine(">>>> RemoveDownloadedFile");
-            //mv l'altro zip da qui dentroa a tmp
-            ex.MoveDownloadedZip(); //non trova la cartella perchè l'unzip lo crea nella cartella dove lanci il comando
-            Console.WriteLine(">>>> MoveDownloadedZip");
-            //da qui estrai zip e monta e lancia, ecc
+            ex.MoveDownloadedZip(); 
             ex.ExtractDownloadedZip();
-            Console.WriteLine(">>>> ExtractDownloadedZip");
             ex.RemoveTmpZips();
-            Console.WriteLine(">>>> RemoveTmpZips");
             ex.CreateSquash(squashName);
-            Console.WriteLine(">>>> CreateSquash");
-            //pulisci tmp
             ex.CleanTmp();
-            //smonta ram
             ex.UmountTmpRam();
             ex.RemoveLink();
             ex.LinkVersionToRunning(squashName);
@@ -195,12 +181,6 @@ namespace antdsh {
                 }
                 return;
             }
-        }
-
-        public static void SetDirectoryDownload() {
-            Console.WriteLine("> Write a path to download-directory:");
-            var path = Console.ReadLine();
-            config.downloadDirectory.Set(path);
         }
     }
 }

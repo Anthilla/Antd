@@ -78,7 +78,7 @@ namespace antdsh {
                 Console.WriteLine("> There's no running version of antd.");
                 return null;
             }
-            Console.WriteLine(Terminal.Execute("file " + RunningPath));
+            Console.WriteLine("> " + Terminal.Execute("file " + RunningPath));
             var version = Terminal.Execute("file " + RunningPath).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
             Console.WriteLine("> Running version detected: {0}", version);
             return version;
@@ -122,11 +122,7 @@ namespace antdsh {
         /// </summary>
         /// <param name="file"></param>
         public static void ExtractZipTmp(string file) {
-            using (ZipArchive archive = ZipFile.OpenRead(file.Replace(global.versionsDir, global.tmpDir))) {
-                foreach (ZipArchiveEntry entry in archive.Entries) {
-                    entry.ExtractToFile(global.tmpDir + "/" + entry.Name);
-                }
-            }
+            ZipFile.ExtractToDirectory(file.Replace(global.versionsDir, global.tmpDir), file.Replace(global.versionsDir, global.tmpDir).Replace(global.zipEndsWith, ""));
             //Terminal.Execute("7z x " + file.Replace(global.versionsDir, global.tmpDir));
         }
 
@@ -252,9 +248,6 @@ namespace antdsh {
             var to = global.tmpDir + "/" + global.downloadName;
             Console.WriteLine("> Download file to: {0}", to);
             Terminal.Execute("wget " + url + " -O " + to);
-            //using (var client = new WebClient()) {
-            //    client.DownloadFile("https://github.com/Anthilla/Antd/archive/master.zip", to);
-            //}
             Console.WriteLine("> Download complete");
         }
 
@@ -267,12 +260,9 @@ namespace antdsh {
                 Console.WriteLine("> This file {0} does not exist!", downloadedFile);
                 return;
             }
-            using (ZipArchive archive = ZipFile.OpenRead(downloadedFile)) {
-                foreach (ZipArchiveEntry entry in archive.Entries) {
-                    entry.ExtractToFile(global.tmpDir + "/" + global.downloadNameDir);
-                }
-            }
-            Terminal.Execute("7z x " + downloadedFile);
+            var destination = global.tmpDir + "/" + global.downloadFirstDir;
+            Console.WriteLine("> Extract from {0} to {1}", downloadedFile, destination);
+            ZipFile.ExtractToDirectory(downloadedFile, destination);
         }
 
         /// <summary>
@@ -283,11 +273,15 @@ namespace antdsh {
         }
 
         /// <summary>
-        /// 
+        /// ok
         /// </summary>
         public static void MoveDownloadedZip() {
             var mainDownloadedDir = Directory.GetDirectories(global.tmpDir).FirstOrDefault();
-            var zip = Directory.GetFiles(mainDownloadedDir, global.zipEndsWith).FirstOrDefault();
+            if (mainDownloadedDir == null) {
+                Console.WriteLine("> There's no directory...");
+                return;
+            }
+            var zip = Directory.EnumerateFiles(Path.GetFullPath(mainDownloadedDir), "*.7z", SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(global.zipStartsWith));
             Terminal.Execute("mv " + Path.GetFullPath(zip) + " ../");
         }
 

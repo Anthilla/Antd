@@ -11,6 +11,8 @@ namespace antdsh {
             Directory.CreateDirectory(global.configDir);
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
+            ex.CleanTmp();
+            ex.UmountTmpRam();
             Console.WriteLine("> antdsh");
             if (args.Length == 0) {
                 var input = Console.ReadLine();
@@ -30,19 +32,25 @@ namespace antdsh {
             else if (command == "update-url") { shell.UpdateFromUrl(); }
             else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "info") { shell.Info(); }
-            else if (command == "set-directory-download") { shell.SetDirectoryDownload(); }
+            else { Console.WriteLine("> Command not found :)"); return; }
         }
 
         static void Help() {
-            Console.WriteLine("> Try with these commands:");
+            Console.WriteLine("> Command List:");
+            Console.WriteLine(">     help:");
+            Console.WriteLine(">         show the command list;");
+            Console.WriteLine(">     start");
+            Console.WriteLine(">         initialize a running version of antd;");
             Console.WriteLine(">     update-check");
+            Console.WriteLine(">         check for the newest version of antd;");
             Console.WriteLine(">     update-launch");
-            Console.WriteLine(">     update-force");
-            Console.WriteLine(">     update-git");
-            Console.WriteLine(">     update-selectversion");
+            Console.WriteLine(">         update antd to its newest version;");
+            Console.WriteLine(">     update-url");
+            Console.WriteLine(">         update antd from an url,");
+            Console.WriteLine(">         at the moment antd is downloaded from its Github repository;");
+            Console.WriteLine(">     update-select");
+            Console.WriteLine(">         select a running version from the ones listed;");
             Console.WriteLine(">     info");
-            Console.WriteLine(">     set-directory-download");
-            Console.WriteLine(">     help");
         }
     }
 }

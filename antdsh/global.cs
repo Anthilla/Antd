@@ -13,7 +13,7 @@ namespace antdsh {
         public const string configFile = "antdsh.config";
         public const string antdRunning = "running";
         public const string downloadName = "antdDownload.zip";
-        public const string downloadNameDir = "antdDownload";
+        public const string downloadFirstDir = "antdDownloadFirst";
 
         public const string zipStartsWith = "antd";
         public const string zipEndsWith = ".7z";
