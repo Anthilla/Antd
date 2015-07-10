@@ -125,9 +125,11 @@ namespace antdsh {
             ex.MountTmpRam();
             ex.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
             ex.ExtractDownloadedFile();
+            ex.RemoveTmpZips();
+            ex.PickAndMoveZipFileInDownloadedDirectory();
             ex.RemoveDownloadedFile();
-            ex.MoveDownloadedZip(); 
-            ex.ExtractDownloadedZip();
+            ex.ExtractPickedZip();
+            return;
             ex.RemoveTmpZips();
             ex.CreateSquash(squashName);
             ex.CleanTmp();

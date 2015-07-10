@@ -17,11 +17,12 @@ namespace antdsh {
             if (args.Length == 0) {
                 var input = Console.ReadLine();
                 Command(input);
+                return;
             }
             else {
                 Command(args[0]);
+                return;
             }
-            Console.ReadLine();
         }
 
         static void Command(string command) {

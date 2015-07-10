@@ -160,8 +160,9 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void RemoveTmpZips() {
-            var files = Directory.EnumerateFiles(global.tmpDir, global.zipEndsWith);
+            var files = Directory.EnumerateFiles(global.tmpDir, "*.*").Where(f=> f.EndsWith(".7z") || f.EndsWith(".zip"));
             foreach (var file in files) {
+                Console.WriteLine("> Deleting {0}", file);
                 File.Delete(file);
             }
         }
@@ -257,7 +258,7 @@ namespace antdsh {
         public static void ExtractDownloadedFile() {
             var downloadedFile = global.tmpDir + "/" + global.downloadName;
             if (!File.Exists(downloadedFile)) {
-                Console.WriteLine("> This file {0} does not exist!", downloadedFile);
+                Console.WriteLine("> A file does not exist!");
                 return;
             }
             var destination = global.tmpDir + "/" + global.downloadFirstDir;
@@ -269,31 +270,40 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void RemoveDownloadedFile() {
-            Terminal.Execute("rm -fR " + global.tmpDir + "/" + global.downloadName);
+            var dir = global.tmpDir + "/" + global.downloadFirstDir;
+            Directory.Delete(dir, true);
+            //Terminal.Execute("rm -fR " + global.tmpDir + "/" + global.downloadName);
         }
 
         /// <summary>
         /// ok
         /// </summary>
-        public static void MoveDownloadedZip() {
-            var mainDownloadedDir = Directory.GetDirectories(global.tmpDir).FirstOrDefault();
-            if (mainDownloadedDir == null) {
-                Console.WriteLine("> There's no directory...");
+        public static void PickAndMoveZipFileInDownloadedDirectory() {
+            var mainDownloadedDir = global.tmpDir + "/" + global.downloadFirstDir;
+            if (!Directory.Exists(mainDownloadedDir)) {
+                Console.WriteLine("> This {0} directory does not exist.", mainDownloadedDir);
                 return;
             }
-            var zip = Directory.EnumerateFiles(Path.GetFullPath(mainDownloadedDir), "*.7z", SearchOption.AllDirectories).FirstOrDefault(f => f.Contains(global.zipStartsWith));
-            Terminal.Execute("mv " + Path.GetFullPath(zip) + " ../");
+            var fileToPick = Directory.EnumerateFiles(mainDownloadedDir, "*.*", SearchOption.AllDirectories).FirstOrDefault(f => f.Contains("antd") && f.EndsWith("zip"));
+            Console.WriteLine("> Trying to pick: {0}", fileToPick);
+            var destination = global.tmpDir + "/" + Path.GetFileName(fileToPick);
+            Console.WriteLine("> and moving it here: {0}", destination);
+            File.Move(fileToPick, destination);
+            //Terminal.Execute("mv " + Path.GetFullPath(fileToPick) + " ../");
         }
 
         /// <summary>
         /// ok
         /// </summary>
-        public static void ExtractDownloadedZip() {
-            var downloadedZip = Directory.GetFiles(global.tmpDir, global.zipEndsWith).FirstOrDefault();
+        public static void ExtractPickedZip() {
+            Console.WriteLine("> ExtractPickedZip:");
+            var downloadedZip = Directory.GetFiles(global.tmpDir, "*.*").FirstOrDefault(f => f.Contains("antd"));
             if (!File.Exists(downloadedZip)) {
-                Console.WriteLine("> This file {0} does not exist!", downloadedZip);
+                Console.WriteLine("> A file does not exist!");
                 return;
             }
+            var destination = global.tmpDir + "/antd";
+            ZipFile.ExtractToDirectory(downloadedZip, destination);
             Terminal.Execute("7z x " + downloadedZip);
         }
     }
