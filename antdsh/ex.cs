@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -134,7 +135,7 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void UmountTmpRam() {
-            Terminal.Execute("umount " + global.tmpDir);
+            Terminal.Execute("umount -t tmpfs " + global.tmpDir);
         }
 
         /// <summary>
@@ -163,7 +164,11 @@ namespace antdsh {
             }
         }
 
-        public static void CreateSquashFromZip(string squashName) {
+        /// <summary>
+        /// ok
+        /// </summary>
+        /// <param name="squashName"></param>
+        public static void CreateSquash(string squashName) {
             var src = Directory.EnumerateFiles(global.tmpDir).Where(d => d.Contains("antd")).FirstOrDefault();
             if (src == null) {
                 Console.WriteLine("Unexpected error while creating the squashfs");
@@ -179,29 +184,109 @@ namespace antdsh {
             Terminal.Execute("rm -fR " + global.tmpDir + "/*");
         }
 
-        public static void ChangeRunningVersion(KeyValuePair<string, string> newestVersionFound, string linkedVersionValue) {
-            Console.WriteLine("> Updating!");
-            string fileToLink;
-            if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
-                fileToLink = newestVersionFound.Key;
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void PrintVersions() {
+            var versions = new HashSet<KeyValuePair<string, string>>();
+            var files = Directory.EnumerateFiles(global.versionsDir, "*.*");
+            var zips = files.Where(s => s.EndsWith(global.zipEndsWith)).ToArray();
+            if (zips.Length > 0) {
+                foreach (var zip in zips) {
+                    versions.Add(SetVersionKeyValuePair(zip));
+                }
             }
-            else if (newestVersionFound.Key.Contains(global.zipEndsWith)) {
-                fileToLink = Path.GetFullPath(newestVersionFound.Key.Replace(global.zipStartsWith, global.squashStartsWith).Replace(global.zipEndsWith, global.squashEndsWith));
-                Terminal.Execute("7z x " + Path.GetFullPath(newestVersionFound.Key));
-                Terminal.Execute("mksquashfs " +
-                    Path.GetFullPath(newestVersionFound.Key.Replace(global.zipEndsWith, "")) + " " +
-                    fileToLink +
-                    " -comp xz -Xbcj x86 -Xdict-size 75%");
+            var squashes = files.Where(s => s.EndsWith(global.squashEndsWith)).ToArray();
+            if (squashes.Length > 0) {
+                foreach (var squash in squashes) {
+                    versions.Add(SetVersionKeyValuePair(squash));
+                }
             }
-            else {
-                Console.WriteLine("> Update failed unexpectedly");
+            var versionsOrdered = new KeyValuePair<string, string>[] { };
+            if (versions.ToArray().Length > 0) {
+                versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
+                foreach (var version in versions) {
+                    Console.WriteLine(">    {0}    -    {1}", version.Key, version.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        /// <returns></returns>
+        public static KeyValuePair<string, string> GetVersionByNumber(string number) {
+            var versions = new HashSet<KeyValuePair<string, string>>();
+            var files = Directory.EnumerateFiles(global.versionsDir, "*.*");
+            var zips = files.Where(s => s.EndsWith(global.zipEndsWith)).ToArray();
+            if (zips.Length > 0) {
+                foreach (var zip in zips) {
+                    versions.Add(SetVersionKeyValuePair(zip));
+                }
+            }
+            var squashes = files.Where(s => s.EndsWith(global.squashEndsWith)).ToArray();
+            if (squashes.Length > 0) {
+                foreach (var squash in squashes) {
+                    versions.Add(SetVersionKeyValuePair(squash));
+                }
+            }
+            var newestVersionFound = new KeyValuePair<string, string>(null, null);
+            if (versions.ToArray().Length > 0) {
+                newestVersionFound = versions.Where(v => v.Value == number).FirstOrDefault();
+            }
+            return newestVersionFound;
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        /// <param name="url"></param>
+        public static void DownloadFromUrl(string url) {
+            Console.WriteLine("> Download file from: {0}", url);
+            var to = global.tmpDir + "/" + global.downloadName;
+            Console.WriteLine("> Download file to: {0}", to);
+            Terminal.Execute("wget " + url + " -O " + to);
+            Console.WriteLine("> Download complete");
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void ExtractDownloadedFile() {
+            var downloadedFile = global.tmpDir + "/" + global.downloadName;
+            if (!File.Exists(downloadedFile)) {
+                Console.WriteLine("> This file {0} does not exist!", downloadedFile);
                 return;
             }
-            Terminal.Execute("ln -s " + Path.GetFullPath(fileToLink) + " " + Path.GetFullPath(global.antdRunning));
-            Terminal.Execute("systemctl restart antd-prepare.service");
-            Terminal.Execute("systemctl restart framework-antd.mount");
-            Terminal.Execute("systemctl antd-launcher.service");
-            return;
+            Terminal.Execute("7z x " + downloadedFile);
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void RemoveDownloadedFile() {
+            Terminal.Execute("rm -fR " + global.tmpDir + "/" + global.downloadName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void MoveDownloadedZip() {
+            var mainDownloadedDir = Directory.GetDirectories(global.tmpDir).FirstOrDefault();
+            var zip = Directory.GetFiles(mainDownloadedDir, global.zipEndsWith).FirstOrDefault();
+            Terminal.Execute("mv " + Path.GetFullPath(zip) + " ../");
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void ExtractDownloadedZip() {
+            var downloadedZip = Directory.GetFiles(global.tmpDir, global.zipEndsWith).FirstOrDefault();
+            if (!File.Exists(downloadedZip)) {
+                Console.WriteLine("> This file {0} does not exist!", downloadedZip);
+                return;
+            }
+            Terminal.Execute("7z x " + downloadedZip);
         }
     }
 }

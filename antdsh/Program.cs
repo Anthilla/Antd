@@ -27,8 +27,8 @@ namespace antdsh {
             else if (command == "start") { shell.Start(); }
             else if (command == "update-check") { shell.UpdateCheck(); }
             else if (command == "update-launch") { shell.UpdateLaunch(); }
-            else if (command == "update-git") { shell.UpdateGit(); }
-            else if (command == "update-selectversion") { shell.UpdateSelectVersion(); }
+            else if (command == "update-url") { shell.UpdateFromUrl(); }
+            else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "info") { shell.Info(); }
             else if (command == "set-directory-download") { shell.SetDirectoryDownload(); }
         }

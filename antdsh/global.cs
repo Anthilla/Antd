@@ -12,6 +12,7 @@ namespace antdsh {
         public static string appsDir { get { return "/mnt/cdrom/Apps"; } }
         public const string configFile = "antdsh.config";
         public const string antdRunning = "running";
+        public const string downloadName = "antdDownload.zip";
 
         public const string zipStartsWith = "antd";
         public const string zipEndsWith = ".7z";
