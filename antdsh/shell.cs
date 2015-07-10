@@ -12,218 +12,177 @@ using System.Threading.Tasks;
 namespace antdsh {
     public class shell {
 
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void Info() {
             Console.WriteLine("> This is a shell for antd :)");
         }
 
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void Start() {
+            Console.WriteLine("> Looking for antds in {0}", global.versionsDir);
+            var newestVersionFound = ex.GetNewestVersion();
+            if (newestVersionFound.Key != null) {
+                ex.LinkVersionToRunning(newestVersionFound.Key);
+                Console.WriteLine("> New antd '{0}' linked to running version", newestVersionFound.Key);
+            }
+            else {
+                Console.WriteLine("> There's no antd to link.");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void UpdateCheck() {
-            var running = Directory.EnumerateFiles(global.root, global.antdRunning).ToArray();
-            var versions = new HashSet<KeyValuePair<string, string>>();
-            var linkedVersion = new KeyValuePair<string, string>(null, null);
-            if (running.Length > 0) {
-                var linkedVersionName = Terminal.Execute("file " + global.antdRunning).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-                linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
-            }
-            else {
-                Console.WriteLine("> There's no running version of antd.");
+            var linkedVersionName = ex.GetRunningVersion();
+            if (linkedVersionName != null) {
+                var linkedVersion = ex.SetVersionKeyValuePair(linkedVersionName);
+                var newestVersionFound = ex.GetNewestVersion();
+                if (linkedVersion.Key != null && newestVersionFound.Key != null) {
+                    Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
+                    var linkedDate = Convert.ToInt32(linkedVersion.Value);
+                    var newestDate = Convert.ToInt32(newestVersionFound.Value);
+                    if (linkedVersion.Value == newestVersionFound.Value) {
+                        Console.WriteLine("> Antd is up to date!");
+                        return;
+                    }
+                    else if (newestDate > linkedDate) {
+                        Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
+                        return;
+                    }
+                    else {
+                        Console.WriteLine("> There's nothing to update.");
+                        return;
+                    }
+                }
                 return;
             }
-            var zips = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.zipStartsWith) && s.EndsWith(global.zipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
-                    versions.Add(new KeyValuePair<string, string>(zip, zip.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "")));
-                }
-            }
-            var squashes = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.squashStartsWith) && s.EndsWith(global.squashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
-                    versions.Add(new KeyValuePair<string, string>(squash, squash.Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, "")));
-                }
-            }
-            var versionsOrdered = new KeyValuePair<string, string>[] { };
-            if (versions.ToArray().Length > 0) {
-                versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
-            }
-            else {
-                Console.WriteLine("> There's no new version of antd.");
-                return;
-            }
-            var newestVersionFound = new KeyValuePair<string, string>(null, null);
-            if (versionsOrdered.Length > 0) {
-                newestVersionFound = versionsOrdered.Last();
-            }
-            if (linkedVersion.Key != null && newestVersionFound.Key != null) {
-                Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
-                var linkedDate = DateTime.ParseExact(linkedVersion.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                var newestDate = DateTime.ParseExact(newestVersionFound.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                if (linkedVersion.Value == newestVersionFound.Value) {
-                    Console.WriteLine("> Antd is up to date!");
-                    return;
-                }
-                else if (newestDate > linkedDate) {
-                    Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
-                    return;
-                }
-                else {
-                    Console.WriteLine("> There's nothing to update.");
-                    return;
-                }
-            }
-            return;
         }
 
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void UpdateLaunch() {
-            var running = Directory.EnumerateFiles(global.root, global.antdRunning).ToArray();
-            var versions = new HashSet<KeyValuePair<string, string>>();
-            var linkedVersion = new KeyValuePair<string, string>(null, null);
-            if (running.Length > 0) {
-                var linkedVersionName = Terminal.Execute("file " + global.antdRunning).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-                linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
-            }
-            else {
-                Console.WriteLine("> There's no running version of antd.");
+            var linkedVersionName = ex.GetRunningVersion();
+            if (linkedVersionName != null) {
+                var linkedVersion = ex.SetVersionKeyValuePair(linkedVersionName);
+                var newestVersionFound = ex.GetNewestVersion();
+                if (linkedVersion.Key != null && newestVersionFound.Key != null) {
+                    Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
+                    var linkedDate = Convert.ToInt32(linkedVersion.Value);
+                    var newestDate = Convert.ToInt32(newestVersionFound.Value);
+                    if (linkedVersion.Value == newestVersionFound.Value) {
+                        Console.WriteLine("> Antd is already up to date!");
+                        return;
+                    }
+                    else if (newestDate > linkedDate) {
+                        Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
+                        Console.WriteLine("> Updating!");
+                        if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
+                            ex.RemoveLink();
+                            ex.LinkVersionToRunning(newestVersionFound.Key);
+                        }
+                        else if (newestVersionFound.Key.Contains(global.zipEndsWith)) {
+                            var squashName = global.versionsDir + "/" + global.squashStartsWith + newestVersionFound.Value + global.squashEndsWith;
+                            ex.MountTmpRam();
+                            ex.CopyToTmp(newestVersionFound.Key);
+                            ex.ExtractZipTmp(newestVersionFound.Key);
+                            ex.RemoveTmpZips();
+                            ex.CreateSquashFromZip(squashName);
+                            ex.CleanTmp();
+                            ex.UmountTmpRam();
+                            ex.RemoveLink();
+                            ex.LinkVersionToRunning(squashName);
+                        }
+                        else {
+                            Console.WriteLine("> Update failed unexpectedly");
+                            return;
+                        }
+                        Terminal.Execute("systemctl restart antd-prepare.service");
+                        Terminal.Execute("systemctl restart framework-antd.mount");
+                        Terminal.Execute("systemctl antd-launcher.service");
+                        return;
+                    }
+                    else {
+                        Console.WriteLine("> There's nothing to update.");
+                        return;
+                    }
+                }
                 return;
             }
-            var zips = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.zipStartsWith) && s.EndsWith(global.zipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
-                    versions.Add(new KeyValuePair<string, string>(zip, zip.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "")));
-                }
-            }
-            var squashes = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.squashStartsWith) && s.EndsWith(global.squashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
-                    versions.Add(new KeyValuePair<string, string>(squash, squash.Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, "")));
-                }
-            }
-            var versionsOrdered = new KeyValuePair<string, string>[] { };
-            if (versions.ToArray().Length > 0) {
-                versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
-            }
-            else {
-                Console.WriteLine("> There's no new version of antd.");
-                return;
-            }
-            var newestVersionFound = new KeyValuePair<string, string>(null, null);
-            if (versionsOrdered.Length > 0) {
-                newestVersionFound = versionsOrdered.Last();
-            }
-            if (linkedVersion.Key != null && newestVersionFound.Key != null) {
-                Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
-                var linkedDate = DateTime.ParseExact(linkedVersion.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                var newestDate = DateTime.ParseExact(newestVersionFound.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                if (linkedVersion.Value == newestVersionFound.Value) {
-                    Console.WriteLine("> Update exited -> antd is already up to date!");
-                    return;
-                }
-                else if (newestDate > linkedDate) {
-                    Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
-                    common.ChangeRunningVersion(newestVersionFound, linkedVersion.Value);
-                }
-                else {
-                    Console.WriteLine("> Update failed unexpectedly");
-                    return;
-                }
-            }
-            return;
         }
 
-        public static void UpdateForce() {
-            var running = Directory.EnumerateFiles(global.root, global.antdRunning).ToArray();
-            var versions = new HashSet<KeyValuePair<string, string>>();
-            var linkedVersion = new KeyValuePair<string, string>(null, null);
-            if (running.Length > 0) {
-                var linkedVersionName = Terminal.Execute("file " + global.antdRunning).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-                linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
-            }
-            else {
-                Console.WriteLine("> There's no running version of antd.");
-                return;
-            }
-            var zips = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.zipStartsWith) && s.EndsWith(global.zipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
-                    versions.Add(new KeyValuePair<string, string>(zip, zip.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "")));
-                }
-            }
-            var squashes = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.squashStartsWith) && s.EndsWith(global.squashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
-                    versions.Add(new KeyValuePair<string, string>(squash, squash.Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, "")));
-                }
-            }
-            var versionsOrdered = new KeyValuePair<string, string>[] { };
-            if (versions.ToArray().Length > 0) {
-                versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
-            }
-            else {
-                Console.WriteLine("> There's no new version of antd.");
-                return;
-            }
-            var newestVersionFound = new KeyValuePair<string, string>(null, null);
-            if (versionsOrdered.Length > 0) {
-                newestVersionFound = versionsOrdered.Last();
-            }
-            if (linkedVersion.Key != null && newestVersionFound.Key != null) {
-                Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
-                var linkedDate = DateTime.ParseExact(linkedVersion.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                var newestDate = DateTime.ParseExact(newestVersionFound.Value, global.dateFormat, CultureInfo.InvariantCulture);
-                Console.WriteLine("> Updating!");
-                common.ChangeRunningVersion(newestVersionFound, linkedVersion.Value);
-                return;
-            }
-            return;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public static void UpdateGit() {
-            var running = Directory.EnumerateFiles(global.root, global.antdRunning).ToArray();
-            var versions = new HashSet<KeyValuePair<string, string>>();
-            var linkedVersion = new KeyValuePair<string, string>(null, null);
-            if (running.Length > 0) {
-                var linkedVersionName = Terminal.Execute("file " + global.antdRunning).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-                linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
-            }
-            if (!File.Exists(Path.Combine(global.configDir, global.configFile))) {
-                Console.WriteLine("> There's no config file!");
-                Console.WriteLine(">     try with: set-directory-download");
-                return;
-            }
-            else if (config.downloadDirectory.Get().ToCharArray().Length < 1) {
-                Console.WriteLine("> Impossible to read the config file");
-                Console.WriteLine(">     try with: set-directory-download");
-                return;
-            }
-            else {
-                using (var client = new WebClient()) {
-                    Console.Write("> ");
-                    client.DownloadFile("https://github.com/Anthilla/Antd/archive/master.zip", config.downloadDirectory.Get());
-                    Console.WriteLine("Download from github repository completed");
-                    var newestVersionFound = new KeyValuePair<string, string>(null, null);
-                    common.ChangeRunningVersion(newestVersionFound, linkedVersion.Value);
+            var linkedVersionName = ex.GetRunningVersion();
+            if (linkedVersionName != null) {
+                var linkedVersion = ex.SetVersionKeyValuePair(linkedVersionName);
+                var newestVersionFound = ex.GetNewestVersion();
+                if (linkedVersion.Key != null && newestVersionFound.Key != null) {
+                    Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, newestVersionFound.Value);
+                    var linkedDate = Convert.ToInt32(linkedVersion.Value);
+                    var newestDate = Convert.ToInt32(newestVersionFound.Value);
+                    if (linkedVersion.Value == newestVersionFound.Value) {
+                        Console.WriteLine("> Antd is already up to date!");
+                        return;
+                    }
+                    else if (newestDate > linkedDate) {
+                        Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
+                        Console.WriteLine("> Updating!");
+                        if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
+                            ex.RemoveLink();
+                            ex.LinkVersionToRunning(newestVersionFound.Key);
+                        }
+                        else if (newestVersionFound.Key.Contains(global.zipEndsWith)) {
+                            var squashName = global.versionsDir + "/" + global.squashStartsWith + newestVersionFound.Value + global.squashEndsWith;
+                            ex.MountTmpRam();
+                            ex.CopyToTmp(newestVersionFound.Key);
+                            ex.ExtractZipTmp(newestVersionFound.Key);
+                            ex.RemoveTmpZips();
+                            ex.CreateSquashFromZip(squashName);
+                            ex.CleanTmp();
+                            ex.UmountTmpRam();
+                            ex.RemoveLink();
+                            ex.LinkVersionToRunning(squashName);
+                        }
+                        else {
+                            Console.WriteLine("> Update failed unexpectedly");
+                            return;
+                        }
+                        Terminal.Execute("systemctl restart antd-prepare.service");
+                        Terminal.Execute("systemctl restart framework-antd.mount");
+                        Terminal.Execute("systemctl antd-launcher.service");
+                        return;
+                    }
+                    else {
+                        Console.WriteLine("> There's nothing to update.");
+                        return;
+                    }
                 }
+                return;
             }
-            return;
         }
 
         public static void UpdateSelectVersion() {
-            var running = Directory.EnumerateFiles(global.root, global.antdRunning).ToArray();
+            ex.CheckRunningExists();
             var versions = new HashSet<KeyValuePair<string, string>>();
             var linkedVersion = new KeyValuePair<string, string>(null, null);
-            if (running.Length > 0) {
-                var linkedVersionName = Terminal.Execute("file " + global.antdRunning).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-                linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
-            }
-            else {
-                Console.WriteLine("> There's no running version of antd.");
-                return;
-            }
-            var zips = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.zipStartsWith) && s.EndsWith(global.zipEndsWith)).ToArray();
+            var linkedVersionName = ex.GetRunningVersion();
+            linkedVersion = new KeyValuePair<string, string>(linkedVersionName, linkedVersionName.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "").Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, ""));
+            var zips = Directory.EnumerateFiles(global.configDir, "*.*").Where(s => s.StartsWith(global.zipStartsWith) && s.EndsWith(global.zipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(new KeyValuePair<string, string>(zip, zip.Replace(global.zipStartsWith, "").Replace(global.zipEndsWith, "")));
                 }
             }
-            var squashes = Directory.EnumerateFiles(global.root, "*.*").Where(s => s.StartsWith(global.squashStartsWith) && s.EndsWith(global.squashEndsWith)).ToArray();
+            var squashes = Directory.EnumerateFiles(global.configDir, "*.*").Where(s => s.StartsWith(global.squashStartsWith) && s.EndsWith(global.squashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(new KeyValuePair<string, string>(squash, squash.Replace(global.squashStartsWith, "").Replace(global.squashEndsWith, "")));
@@ -247,6 +206,7 @@ namespace antdsh {
             var getVersion = versionsOrdered.Where(v => v.Value == versionNumber).FirstOrDefault();
             if (getVersion.Key != null) {
                 newestVersionFound = getVersion;
+                Terminal.Execute("ln -s " + newestVersionFound.Key + " " + Path.GetFullPath(global.antdRunning));
             }
             else {
                 Console.Write("> Error -> the number you wrote does not exist!");
@@ -256,7 +216,7 @@ namespace antdsh {
             Console.Write("Confirm? y/n: ");
             var confirm = Console.ReadLine();
             if (confirm == "y") {
-                common.ChangeRunningVersion(newestVersionFound, linkedVersion.Value);
+                ex.ChangeRunningVersion(newestVersionFound, linkedVersion.Value);
             }
             else if (confirm == "n") {
                 Console.Write("> Change version closed...");

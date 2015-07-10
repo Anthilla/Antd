@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="common.cs" />
+    <Compile Include="ex.cs" />
     <Compile Include="config.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Program.cs" />

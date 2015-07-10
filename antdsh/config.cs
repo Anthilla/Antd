@@ -11,9 +11,9 @@ namespace antdsh {
         public class downloadDirectory {
             public static void Set(string text) {
                 if (!Directory.Exists(text)) {
-                    Console.WriteLine("> This directory '{0}' does not exist...", text);
-                    return;
+                    Console.WriteLine("> Creating {0}", text);
                 }
+                Directory.CreateDirectory(text);
                 var path = Path.Combine(global.configDir, global.configFile);
                 File.Delete(path);
                 FileSystem.WriteFile(path, text);

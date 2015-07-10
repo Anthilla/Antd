@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace antdsh {
     public class global {
-        public readonly static string root = config.downloadDirectory.Get();  
-        public readonly static string configDir = AppDomain.CurrentDomain.BaseDirectory;
+        public static string configDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antdsh_config"; } }
+        public static string versionsDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antdsh_versions"; } }
+        public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antdsh_tmp"; } }
+        public static string appsDir { get { return "/mnt/cdrom/Apps"; } }
         public const string configFile = "antdsh.config";
-        public const string antdRunning = "antdRunning";
+        public const string antdRunning = "running";
 
         public const string zipStartsWith = "antd";
         public const string zipEndsWith = ".7z";
