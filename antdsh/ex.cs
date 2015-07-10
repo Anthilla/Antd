@@ -172,7 +172,7 @@ namespace antdsh {
         /// </summary>
         /// <param name="squashName"></param>
         public static void CreateSquash(string squashName) {
-            var src = Directory.EnumerateFiles(global.tmpDir).Where(d => d.Contains("antd")).FirstOrDefault();
+            var src = Directory.EnumerateDirectories(global.tmpDir).Where(d => d.Contains("antd")).FirstOrDefault();
             if (src == null) {
                 Console.WriteLine("Unexpected error while creating the squashfs");
                 return;
@@ -289,7 +289,6 @@ namespace antdsh {
             var destination = global.tmpDir + "/" + Path.GetFileName(fileToPick);
             Console.WriteLine("> and moving it here: {0}", destination);
             File.Move(fileToPick, destination);
-            //Terminal.Execute("mv " + Path.GetFullPath(fileToPick) + " ../");
         }
 
         /// <summary>
@@ -304,7 +303,6 @@ namespace antdsh {
             }
             var destination = global.tmpDir + "/antd";
             ZipFile.ExtractToDirectory(downloadedZip, destination);
-            Terminal.Execute("7z x " + downloadedZip);
         }
     }
 }

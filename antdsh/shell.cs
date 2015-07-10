@@ -129,7 +129,6 @@ namespace antdsh {
             ex.PickAndMoveZipFileInDownloadedDirectory();
             ex.RemoveDownloadedFile();
             ex.ExtractPickedZip();
-            return;
             ex.RemoveTmpZips();
             ex.CreateSquash(squashName);
             ex.CleanTmp();
