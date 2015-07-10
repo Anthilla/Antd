@@ -14,6 +14,15 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
+        public static void Kill() {
+            Terminal.Execute("systemctl restart antd-prepare.service");
+            Terminal.Execute("systemctl restart framework-antd.mount");
+            Terminal.Execute("systemctl restart antd-launcher.service");
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void CheckRunningExists() {
             var running = Terminal.Execute("ls -la " + global.versionsDir + " | grep " + global.antdRunning);
             if (!running.Contains(global.antdRunning)) {

@@ -34,6 +34,7 @@ namespace antdsh {
             else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "reload-services") { shell.ReloadServices(); }
             else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
+            else if (command == "stop-services") { shell.StopServices(); }
             else if (command == "isrunning") { shell.IsRunning(); }
             else if (command == "info") { shell.Info(); }
             else { Console.WriteLine("> Command not found :)"); return; }
@@ -54,6 +55,14 @@ namespace antdsh {
             Console.WriteLine(">         at the moment antd is downloaded from its Github repository;");
             Console.WriteLine(">     update-select");
             Console.WriteLine(">         select a running version from the ones listed;");
+            Console.WriteLine(">     reload-services");
+            Console.WriteLine(">         reload all antd related systemctl services and mounts;");
+            Console.WriteLine(">     reload-systemctl");
+            Console.WriteLine(">         reload systemctl daemon;");
+            Console.WriteLine(">     stop-services");
+            Console.WriteLine(">         stop all antd related systemctl services and mounts;");
+            Console.WriteLine(">     isrunning");
+            Console.WriteLine(">         check whether antd process is active or not;");
             Console.WriteLine(">     info");
         }
     }

@@ -83,6 +83,7 @@ namespace antdsh {
                     else if (newestDate > linkedDate) {
                         Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
                         Console.WriteLine("> Updating!");
+                        ex.Kill();
                         if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
                             ex.RemoveLink();
                             ex.LinkVersionToRunning(newestVersionFound.Key);
@@ -119,6 +120,7 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void UpdateFromUrl() {
+            ex.Kill();
             var squashName = global.versionsDir + "/" + global.squashStartsWith + DateTime.Now.ToString("yyyyMMdd") + global.squashEndsWith;
             ex.MountTmpRam();
             ex.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
@@ -151,9 +153,9 @@ namespace antdsh {
                     Console.WriteLine("> You are running {0} and the latest version is {1}.", linkedVersion.Value, selectedVersion.Value);
                     var linkedDate = Convert.ToInt32(linkedVersion.Value);
                     var selectedtDate = Convert.ToInt32(selectedVersion.Value);
-
                     Console.WriteLine("> New version of antd found!! -> {0}", selectedtDate);
                     Console.WriteLine("> Updating!");
+                    ex.Kill();
                     if (selectedVersion.Key.Contains(global.squashEndsWith)) {
                         ex.RemoveLink();
                         ex.LinkVersionToRunning(selectedVersion.Key);
@@ -193,6 +195,13 @@ namespace antdsh {
         /// </summary>
         public static void ReloadSystemctl() {
             Terminal.Execute("systemctl daemon-reload");
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void StopServices() {
+            ex.Kill();
         }
 
         /// <summary>
