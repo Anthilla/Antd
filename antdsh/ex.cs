@@ -272,7 +272,6 @@ namespace antdsh {
         public static void RemoveDownloadedFile() {
             var dir = global.tmpDir + "/" + global.downloadFirstDir;
             Directory.Delete(dir, true);
-            //Terminal.Execute("rm -fR " + global.tmpDir + "/" + global.downloadName);
         }
 
         /// <summary>
@@ -295,7 +294,6 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void ExtractPickedZip() {
-            Console.WriteLine("> ExtractPickedZip:");
             var downloadedZip = Directory.GetFiles(global.tmpDir, "*.*").FirstOrDefault(f => f.Contains("antd"));
             if (!File.Exists(downloadedZip)) {
                 Console.WriteLine("> A file does not exist!");
@@ -303,6 +301,15 @@ namespace antdsh {
             }
             var destination = global.tmpDir + "/antd";
             ZipFile.ExtractToDirectory(downloadedZip, destination);
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void RestartSystemctlAntdServices() {
+            Terminal.Execute("systemctl restart antd-prepare.service");
+            Terminal.Execute("systemctl restart framework-antd.mount");
+            Terminal.Execute("systemctl restart antd-launcher.service");
         }
     }
 }

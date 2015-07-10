@@ -32,6 +32,9 @@ namespace antdsh {
             else if (command == "update-launch") { shell.UpdateLaunch(); }
             else if (command == "update-url") { shell.UpdateFromUrl(); }
             else if (command == "update-select") { shell.UpdateSelect(); }
+            else if (command == "reload-services") { shell.ReloadServices(); }
+            else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
+            else if (command == "isrunning") { shell.IsRunning(); }
             else if (command == "info") { shell.Info(); }
             else { Console.WriteLine("> Command not found :)"); return; }
         }

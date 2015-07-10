@@ -103,9 +103,7 @@ namespace antdsh {
                             Console.WriteLine("> Update failed unexpectedly");
                             return;
                         }
-                        Terminal.Execute("systemctl restart antd-prepare.service");
-                        Terminal.Execute("systemctl restart framework-antd.mount");
-                        Terminal.Execute("systemctl antd-launcher.service");
+                        ex.RestartSystemctlAntdServices();
                         return;
                     }
                     else {
@@ -135,6 +133,7 @@ namespace antdsh {
             ex.UmountTmpRam();
             ex.RemoveLink();
             ex.LinkVersionToRunning(squashName);
+            ex.RestartSystemctlAntdServices();
         }
 
         /// <summary>
@@ -175,12 +174,37 @@ namespace antdsh {
                         Console.WriteLine("> Update failed unexpectedly");
                         return;
                     }
-                    Terminal.Execute("systemctl restart antd-prepare.service");
-                    Terminal.Execute("systemctl restart framework-antd.mount");
-                    Terminal.Execute("systemctl antd-launcher.service");
+                    ex.RestartSystemctlAntdServices();
                     return;
                 }
                 return;
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void ReloadServices() {
+            ex.RestartSystemctlAntdServices();
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void ReloadSystemctl() {
+            Terminal.Execute("systemctl daemon-reload");
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void IsRunning() {
+            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
+            if (res.Length > 0) {
+                Console.WriteLine("> Yes, is running.");
+            }
+            else {
+                Console.WriteLine("> No.");
             }
         }
     }
