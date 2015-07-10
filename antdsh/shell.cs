@@ -133,7 +133,7 @@ namespace antdsh {
             ex.RemoveDownloadedFile();
             Console.WriteLine(">>>> RemoveDownloadedFile");
             //mv l'altro zip da qui dentroa a tmp
-            ex.MoveDownloadedZip();
+            ex.MoveDownloadedZip(); //non trova la cartella perchè l'unzip lo crea nella cartella dove lanci il comando
             Console.WriteLine(">>>> MoveDownloadedZip");
             //da qui estrai zip e monta e lancia, ecc
             ex.ExtractDownloadedZip();

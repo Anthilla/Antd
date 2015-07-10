@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -121,7 +122,12 @@ namespace antdsh {
         /// </summary>
         /// <param name="file"></param>
         public static void ExtractZipTmp(string file) {
-            Terminal.Execute("7z x " + file.Replace(global.versionsDir, global.tmpDir));
+            using (ZipArchive archive = ZipFile.OpenRead(file.Replace(global.versionsDir, global.tmpDir))) {
+                foreach (ZipArchiveEntry entry in archive.Entries) {
+                    entry.ExtractToFile(global.tmpDir + "/" + entry.Name);
+                }
+            }
+            //Terminal.Execute("7z x " + file.Replace(global.versionsDir, global.tmpDir));
         }
 
         /// <summary>
@@ -246,6 +252,9 @@ namespace antdsh {
             var to = global.tmpDir + "/" + global.downloadName;
             Console.WriteLine("> Download file to: {0}", to);
             Terminal.Execute("wget " + url + " -O " + to);
+            //using (var client = new WebClient()) {
+            //    client.DownloadFile("https://github.com/Anthilla/Antd/archive/master.zip", to);
+            //}
             Console.WriteLine("> Download complete");
         }
 
@@ -257,6 +266,11 @@ namespace antdsh {
             if (!File.Exists(downloadedFile)) {
                 Console.WriteLine("> This file {0} does not exist!", downloadedFile);
                 return;
+            }
+            using (ZipArchive archive = ZipFile.OpenRead(downloadedFile)) {
+                foreach (ZipArchiveEntry entry in archive.Entries) {
+                    entry.ExtractToFile(global.tmpDir + "/" + global.downloadNameDir);
+                }
             }
             Terminal.Execute("7z x " + downloadedFile);
         }
