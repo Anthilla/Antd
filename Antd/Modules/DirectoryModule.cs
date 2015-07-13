@@ -41,10 +41,18 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/tree/{path*}"] = x => {
-                var p = x.path;
+                string p = (x.path == null) ? "/" : x.path;
                 DirectoryViewModel dirs = new DirectoryViewModel();
-                dirs.parents = new DirectoryLister("/" + p, false).ParentList.Reverse();
-                dirs.children2 = new DirectoryLister("/" + p, false).FullList2;
+                dirs.parents = new DirectoryLister(p, false).ParentList.Reverse();
+                dirs.children2 = new DirectoryLister(p, false).FullList2;
+                return View["page-dir", dirs];
+            };
+
+            Get["/tree/{path?}"] = x => {
+                string p = (x.path == null) ? "/" : "/" + x.path;
+                DirectoryViewModel dirs = new DirectoryViewModel();
+                dirs.parents = new DirectoryLister(p, false).ParentList.Reverse();
+                dirs.children2 = new DirectoryLister(p, false).FullList2;
                 return View["page-dir", dirs];
             };
 

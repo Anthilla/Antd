@@ -59,6 +59,16 @@ namespace Antd {
                 }
                 return Response.AsText("gg");
             };
+
+            Get["/path/{path*}"] = x => {
+                string p = (x.path == null) ? "/" : x.path;
+                return Response.AsText(p);
+            };
+
+            Get["/path/{path?}"] = x => {
+                string p = (x.path == null) ? "/" : x.path;
+                return Response.AsText(p);
+            };
         }
     }
 }
