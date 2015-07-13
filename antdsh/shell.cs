@@ -92,7 +92,7 @@ namespace antdsh {
                     else if (newestDate > linkedDate) {
                         Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
                         Console.WriteLine("> Updating!");
-                        ex.Kill();
+                        ex.StopServices();
                         ex.CleanTmp();
                         if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
                             ex.RemoveLink();
@@ -130,7 +130,7 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void UpdateFromUrl() {
-            ex.Kill();
+            ex.StopServices();
             ex.CleanTmp();
             var squashName = global.versionsDir + "/" + global.squashStartsWith + DateTime.Now.ToString("yyyyMMdd") + global.squashEndsWith;
             ex.MountTmpRam();
@@ -166,7 +166,7 @@ namespace antdsh {
                     var selectedtDate = Convert.ToInt32(selectedVersion.Value);
                     Console.WriteLine("> New version of antd found!! -> {0}", selectedtDate);
                     Console.WriteLine("> Updating!");
-                    ex.Kill();
+                    ex.StopServices();
                     ex.CleanTmp();
                     if (selectedVersion.Key.Contains(global.squashEndsWith)) {
                         ex.RemoveLink();
@@ -212,8 +212,8 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        public static void StopServices() {
-            ex.Kill();
+        public static void Stop() {
+            ex.StopServices();
         }
 
         /// <summary>

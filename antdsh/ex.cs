@@ -14,7 +14,7 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        public static void Kill() {
+        public static void StopServices() {
             Terminal.Execute("systemctl stop antd-prepare.service");
             Terminal.Execute("systemctl stop framework-antd.mount");
             Terminal.Execute("systemctl stop antd-launcher.service");

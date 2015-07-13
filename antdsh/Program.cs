@@ -27,13 +27,13 @@ namespace antdsh {
         static void Command(string command) {
             if (command == "help") { Help(); }
             else if (command == "start") { shell.Start(); }
+            else if (command == "stop") { shell.Stop(); }
             else if (command == "update-check") { shell.UpdateCheck(); }
             else if (command == "update-launch") { shell.UpdateLaunch(); }
             else if (command == "update-url") { shell.UpdateFromUrl(); }
             else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "reload-services") { shell.ReloadServices(); }
             else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
-            else if (command == "stop-services") { shell.StopServices(); }
             else if (command == "isrunning") { shell.IsRunning(); }
             else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
