@@ -87,7 +87,6 @@ namespace antdsh {
                 Console.WriteLine("> There's no running version of antd.");
                 return null;
             }
-            Console.WriteLine("> " + Terminal.Execute("file " + RunningPath));
             var version = Terminal.Execute("file " + RunningPath).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
             Console.WriteLine("> Running version detected: {0}", version);
             return version;
@@ -169,10 +168,26 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void RemoveTmpZips() {
-            var files = Directory.EnumerateFiles(global.tmpDir, "*.*").Where(f=> f.EndsWith(".7z") || f.EndsWith(".zip"));
+            var files = Directory.EnumerateFiles(global.tmpDir, "*.*").Where(f => f.EndsWith(".7z") || f.EndsWith(".zip"));
             foreach (var file in files) {
                 Console.WriteLine("> Deleting {0}", file);
                 File.Delete(file);
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void RemoveTmpAll() {
+            var files = Directory.EnumerateFiles(global.tmpDir);
+            foreach (var file in files) {
+                Console.WriteLine("> Deleting file {0}", file);
+                File.Delete(file);
+            }
+            var dirs = Directory.EnumerateDirectories(global.tmpDir);
+            foreach (var dir in dirs) {
+                Console.WriteLine("> Deleting directory {0}", dir);
+                Directory.Delete(dir, true);
             }
         }
 
@@ -193,7 +208,7 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void CleanTmp() {
-            CleanTmp();
+            RemoveTmpAll();
             UmountTmpRam();
         }
 

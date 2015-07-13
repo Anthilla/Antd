@@ -10,8 +10,8 @@ namespace antdsh {
         static void Main(string[] args) {
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
-            Console.WriteLine("> antdsh");
             if (args.Length == 0) {
+                Console.WriteLine("> antdsh, waiting for a command");
                 var input = Console.ReadLine();
                 Command(input);
                 Main(args);
@@ -41,28 +41,24 @@ namespace antdsh {
 
         static void Help() {
             Console.WriteLine("> Command List:");
-            Console.WriteLine(">     help:");
-            Console.WriteLine(">         show the command list;");
-            Console.WriteLine(">     start");
-            Console.WriteLine(">         initialize a running version of antd;");
-            Console.WriteLine(">     update-check");
-            Console.WriteLine(">         check for the newest version of antd;");
-            Console.WriteLine(">     update-launch");
-            Console.WriteLine(">         update antd to its newest version;");
-            Console.WriteLine(">     update-url");
-            Console.WriteLine(">         update antd from an url,");
-            Console.WriteLine(">         at the moment antd is downloaded from its Github repository;");
-            Console.WriteLine(">     update-select");
-            Console.WriteLine(">         select a running version from the ones listed;");
-            Console.WriteLine(">     reload-services");
-            Console.WriteLine(">         reload all antd related systemctl services and mounts;");
-            Console.WriteLine(">     reload-systemctl");
-            Console.WriteLine(">         reload systemctl daemon;");
-            Console.WriteLine(">     stop-services");
-            Console.WriteLine(">         stop all antd related systemctl services and mounts;");
-            Console.WriteLine(">     isrunning");
-            Console.WriteLine(">         check whether antd process is active or not;");
-            Console.WriteLine(">     info");
+            WriteHelp("help", "show the command list");
+            WriteHelp("start", "initialize a running version of antd");
+            WriteHelp("update-check", "check for the newest version of antd");
+            WriteHelp("update-launch", "update antd to its newest version");
+            WriteHelp("update-url", "update antd from an url");
+            WriteHelp("update-select", "select a running version from the ones listed");
+            WriteHelp("reload-services", "reload all antd related systemctl services and mounts");
+            WriteHelp("reload-systemctl", "reload systemctl daemon");
+            WriteHelp("stop-services", "stop all antd related systemctl services and mounts");
+            WriteHelp("isrunning", "check whether antd process is active or not");
+            WriteHelp("clean-tmp", "remove every files and directories from tmp directory");
+            WriteHelp("info", "generic");
+            WriteHelp("exit", "exit from the application");
+        }
+
+        static void WriteHelp(string command, string description) {
+            Console.WriteLine(">     {0}:", command);
+            Console.WriteLine(">         {0};", description);
         }
     }
 }
