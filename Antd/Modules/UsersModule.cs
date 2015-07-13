@@ -27,13 +27,10 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Auth;
 using Antd.CCTable;
-using Antd.Status;
 using Antd.Users;
 using Nancy;
 using Nancy.Security;
-using Newtonsoft.Json;
 using System.Dynamic;
 
 namespace Antd {
@@ -46,7 +43,8 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ALL = Antd.Users.SystemUser.GetAll();
+                vmod.SystemUsers = SystemUser.GetAll();
+                vmod.ApplicationUsers = ApplicationUser.GetAll();
 
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
@@ -54,7 +52,16 @@ namespace Antd {
                 return View["_page-users", vmod];
             };
 
-            Post["/status"] = x => {
+            Post["/application"] = x => {
+                string fname = this.Request.Form.FirstName;
+                string lname = this.Request.Form.LastName;
+                string passwd = this.Request.Form.Passwd;
+                string email = this.Request.Form.Email;
+                ApplicationUser.Create(fname, lname, passwd, email);
+                return Response.AsRedirect("/users");
+            };
+
+            Post["/system"] = x => {
                 string fname = this.Request.Form.Name;
                 SystemUser.CreateUser(fname);
                 return Response.AsRedirect("/users");

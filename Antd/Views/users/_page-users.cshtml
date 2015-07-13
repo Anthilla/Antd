@@ -44,9 +44,10 @@
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
     }
+    @Html.Partial("page-users-application", Model)
+    @Html.Partial("page-users-system", Model)
     @Html.Partial("page-users-attributes", Model)
     @Html.Partial("page-users-manage", Model)
-    @Html.Partial("page-users-status", Model)
 }
 
 @section Scripts {

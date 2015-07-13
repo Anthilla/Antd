@@ -1,0 +1,74 @@
+﻿<legend id="Application">Application Users</legend>
+<form action="/users/application" method="POST" enctype="multipart/form-data">
+    <div class="grid">
+        <div class="row">
+            <div class="span4">
+                <label>First Name</label>
+            </div>
+            <div class="span8">
+                <input name="FirstName" type="text" style="width: 90%; height: 30px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Last Name</label>
+            </div>
+            <div class="span8">
+                <input name="Name" type="text" style="width: 90%; height: 30px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Password</label>
+            </div>
+            <div class="span8">
+                <input name="Passwd" type="password" style="width: 90%; height: 30px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Email</label>
+            </div>
+            <div class="span8">
+                <input name="Email" type="text" style="width: 90%; height: 30px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>&nbsp</label>
+            </div>
+            <div class="span8">
+                <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
+            </div>
+        </div>
+</form>
+<input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+
+<table class="table searchable">
+    <thead>
+        <tr>
+            <th class="text-left">username</th>
+            <th class="text-left">password</th>
+            <th class="text-left">lastchanged</th>
+            <th class="text-left">max number of days</th>
+            <th class="text-left">min number of days</th>
+            <th class="text-left">warn</th>
+            <th class="text-left">inactive</th>
+            <th class="text-left">expire</th>
+        </tr>
+    </thead>
+    <tbody id="SysctlBodyTable">
+        @foreach (Antd.Users.UserModel user in Model.ApplicationUsers) {
+            <tr>
+                <td style="text-align: center;">@user.Alias </td>
+                <td style="text-align: center;">@user.Password </td>
+                <td style="text-align: center;">@user.LastChanged </td>
+                <td style="text-align: center;">@user.MinimumNumberOfDays </td>
+                <td style="text-align: center;">@user.MaximumNumberOfDays </td>
+                <td style="text-align: center;">@user.Warn </td>
+                <td style="text-align: center;">@user.Inactive </td>
+                <td style="text-align: center;">@user.Expire </td>
+            </tr>
+        }
+    </tbody>
+</table>
