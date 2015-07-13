@@ -50,16 +50,17 @@
         </thead>
         <tbody id="SysctlBodyTable">
             @foreach (Antd.ViewModels.StatusSysctlViewModel value in Model.Sysctl) {
-                <tr>
+                @if (value.runningValue.ToCharArray().Length < 15) {
+<tr>
                     <td style="text-align: right;">
                         <label>@value.label </label>
                     </td>
                     <td style="text-align: center;">@value.stockValue </td>
                     <td style="text-align: center;">@value.runningValue </td>
                     <td style="text-align: center;">@value.antdValue
-                        @*<div class="border-3-anthilla-orange value-comparer" style="position: absolute; z-index: 99; height: 40px; width: 550px; margin-left: -600px; margin-top: -25px; background-color: transparent !important; display: none;"></div>*@
-                    </td>
+                </td>
                 </tr>
+                }
             }
         </tbody>
     </table>
