@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Auth.T2FA;
+using Antd.Mail;
 using Antd.Security;
 using Nancy;
 using Nancy.Extensions;
@@ -64,10 +65,7 @@ namespace Antd {
             };
 
             Get["/enable"] = x => {
-                Antd.Auth.T2FA.Config.Enable();
-                Console.WriteLine(Antd.Auth.T2FA.Config.IsEnabled);
-                Antd.Auth.T2FA.Config.Disable();
-                Console.WriteLine(Antd.Auth.T2FA.Config.IsEnabled);
+                Console.WriteLine(SMTP.Settings.Port);
                 return Response.AsXml("");
             };
         }

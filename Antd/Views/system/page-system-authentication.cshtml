@@ -10,10 +10,10 @@
                     <p>SMTP is not configured yet, before enabling 2FA-Token Authentication you have to configure SMTP</p>
                 }
                 else if (Model.AuthStatus == true) {
-                    <input class="bg-anthilla-green" type="button" value="Disable" />
+                    <input id="Disable2FA" class="bg-anthilla-green" type="button" value="Disable" />
                 }
                 else if (Model.AuthStatus == false) {
-                    <input class="bg-anthilla-green" type="button" value="Enable" />
+                    <input id="Enable2FA" class="bg-anthilla-green" type="button" value="Enable" />
                 }
             </td>
         </tr>

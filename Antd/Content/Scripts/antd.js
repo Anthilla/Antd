@@ -242,6 +242,35 @@ $('input[data-role="refresh-result"]').click(function (event) {
     });
 });
 
+//2fa,,
+$('#Disable2FA').click(function () {
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/auth/disable/',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            location.reload(true);
+            return false;
+        }
+    });
+});
+
+$('#Enable2FA').click(function () {
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/system/auth/enable/',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            location.reload(true);
+            return false;
+        }
+    });
+});
+
 //dnd per mappatura
 $(document).ready(function () {
     InitializeDragAndDrop();

@@ -49,28 +49,44 @@ namespace Antd.Mail {
             public static XmlWriter xmlWriter = new XmlWriter(_files);
 
             public static void SetUrl(string value) {
-                xmlWriter.Write(Label.SMTP.Url, Cryptography.Encrypt(value, key, vector).GetString());
+                xmlWriter.Write(Label.SMTP.Url, value);
             }
 
-            public static string Url { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Url).GetBytes(), key, vector); } }
+            public static string Url {
+                get {
+                    return (xmlWriter.ReadValue(Label.SMTP.Url) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Url);
+                }
+            }
 
             public static void SetPort(string value) {
-                xmlWriter.Write(Label.SMTP.Port, Cryptography.Encrypt(value, key, vector).GetString());
+                xmlWriter.Write(Label.SMTP.Port, value);
             }
 
-            public static string Port { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Port).GetBytes(), key, vector); } }
+            public static string Port {
+                get {
+                    return (xmlWriter.ReadValue(Label.SMTP.Port) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Port);
+                }
+            }
 
             public static void SetAccount(string value) {
-                xmlWriter.Write(Label.SMTP.Account, Cryptography.Encrypt(value, key, vector).GetString());
+                xmlWriter.Write(Label.SMTP.Account, value);
             }
 
-            public static string Account { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Account).GetBytes(), key, vector); } }
+            public static string Account {
+                get {
+                    return (xmlWriter.ReadValue(Label.SMTP.Account) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Account);
+                }
+            }
 
             public static void SetPassword(string value) {
-                xmlWriter.Write(Label.SMTP.Password, Cryptography.Encrypt(value, key, vector).GetString());
+                xmlWriter.Write(Label.SMTP.Password, value);
             }
 
-            public static string Password { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Password).GetBytes(), key, vector); } }
+            public static string Password {
+                get {
+                    return (xmlWriter.ReadValue(Label.SMTP.Password) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Password);
+                }
+            }
 
             public static bool ConfigExists { get { return (xmlWriter.ReadValue(Label.SMTP.Url) == null) ? false : true; } }
         }

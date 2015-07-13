@@ -65,6 +65,16 @@ namespace Antd {
                 return View["_page-system", vmod];
             };
 
+            Get["/auth/disable"] = x => {
+                Antd.Auth.T2FA.Config.Disable();
+                return Response.AsJson(true);
+            };
+
+            Get["/auth/enable"] = x => {
+                Antd.Auth.T2FA.Config.Enable();
+                return Response.AsJson(true);
+            };
+
             Get["/mounts"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.MountRunning = Mount.Running;
