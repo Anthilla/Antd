@@ -117,7 +117,7 @@ namespace Antd {
                 var password = (string)this.Request.Form.Password;
                 Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
-                DateTime? expiry = DateTime.Now.AddHours(1);
+                DateTime? expiry = DateTime.Now.AddHours(100);
                 if (this.Request.Form.RememberMe.HasValue) {
                     expiry = DateTime.Now.AddHours(8);
                 }
