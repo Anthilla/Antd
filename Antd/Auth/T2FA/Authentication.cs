@@ -48,9 +48,9 @@ namespace Antd.Auth.T2FA {
                 Text = @"Here's your token: " + token.Value
             };
             using (var client = new SmtpClient()) {
-                client.Connect("smtp.gmail.com", 587, false);
+                client.Connect("mailtrap.io", 2525, false);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate("damiano.zanardi@anthilla.com", "AnthillaDev2015");
+                client.Authenticate("3937775a0196cfbde", "171ca6354a6024");
                 client.Send(message);
                 client.Disconnect(true);
             }

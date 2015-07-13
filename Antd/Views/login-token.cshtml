@@ -44,6 +44,17 @@
                 <form action="/token" method="POST" enctype="multipart/form-data">
                     <img alt="anthilla" id="anthilla-logo" src="/Content/Style/anthilla_logo_300x50_verde.png" />
 
+                    <label>Username</label>
+                    <div class="input-control text state-anthilla-gray" data-role="input-control">
+                        <input name="Email" type="hidden" value="">
+                        <input name="Username" type="text">
+                    </div>
+
+                    <label>Password</label>
+                    <div class="input-control text state-anthilla-gray" data-role="input-control">
+                        <input name="Password" type="password">
+                    </div>
+
                     <label>Token</label>
                     <div class="input-control text state-anthilla-gray" data-role="input-control">
                         <input name="Session" type="hidden" value="@Model.Session">

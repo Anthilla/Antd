@@ -33,11 +33,8 @@ using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;
 using Nancy.Extensions;
-using Newtonsoft.Json;
 using System;
 using System.Dynamic;
-using System.Net;
-using System.Text;
 
 namespace Antd {
 
@@ -61,7 +58,8 @@ namespace Antd {
                 Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
                 if (validationGuid == null) {
-                    return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
+                    //return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
+                    return this.Context.GetRedirect("~/login");
                 }
                 else {
                     string email;
@@ -113,8 +111,11 @@ namespace Antd {
             Post["/token"] = x => {
                 var token = (string)this.Request.Form.Token;
                 var session = (string)this.Request.Form.Session;
-
                 var validation = Authentication.Confirm(session, token);
+
+                var username = (string)this.Request.Form.Username;
+                var password = (string)this.Request.Form.Password;
+                Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
                 DateTime? expiry = DateTime.Now.AddHours(1);
                 if (this.Request.Form.RememberMe.HasValue) {
@@ -122,6 +123,9 @@ namespace Antd {
                 }
 
                 if (validation == false) {
+                    return this.Context.GetRedirect("~/login");
+                }
+                else if (validationGuid == null) {
                     return this.Context.GetRedirect("~/login");
                 }
                 else {
