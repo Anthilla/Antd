@@ -193,7 +193,8 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void CleanTmp() {
-            Terminal.Execute("rm -fR " + global.tmpDir + "/*");
+            CleanTmp();
+            UmountTmpRam();
         }
 
         /// <summary>

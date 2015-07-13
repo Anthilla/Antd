@@ -11,17 +11,15 @@ namespace antdsh {
             Directory.CreateDirectory(global.configDir);
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
-            ex.CleanTmp();
-            ex.UmountTmpRam();
             Console.WriteLine("> antdsh");
             if (args.Length == 0) {
                 var input = Console.ReadLine();
                 Command(input);
-                return;
+                Main(args);
             }
             else {
                 Command(args[0]);
-                return;
+                shell.Exit();
             }
         }
 
@@ -36,7 +34,9 @@ namespace antdsh {
             else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
             else if (command == "stop-services") { shell.StopServices(); }
             else if (command == "isrunning") { shell.IsRunning(); }
+            else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
+            else if (command == "exit") { shell.Exit(); }
             else { Console.WriteLine("> Command not found :)"); return; }
         }
 

@@ -22,6 +22,14 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
+        public static void Exit() {
+            Console.WriteLine("> Bye bye");
+            System.Environment.Exit(1);
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void Start() {
             Console.WriteLine("> Looking for antds in {0}", global.versionsDir);
             var newestVersionFound = ex.GetNewestVersion();
@@ -84,6 +92,7 @@ namespace antdsh {
                         Console.WriteLine("> New version of antd found!! -> {0}", newestDate);
                         Console.WriteLine("> Updating!");
                         ex.Kill();
+                        ex.CleanTmp();
                         if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
                             ex.RemoveLink();
                             ex.LinkVersionToRunning(newestVersionFound.Key);
@@ -121,6 +130,7 @@ namespace antdsh {
         /// </summary>
         public static void UpdateFromUrl() {
             ex.Kill();
+            ex.CleanTmp();
             var squashName = global.versionsDir + "/" + global.squashStartsWith + DateTime.Now.ToString("yyyyMMdd") + global.squashEndsWith;
             ex.MountTmpRam();
             ex.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
@@ -156,6 +166,7 @@ namespace antdsh {
                     Console.WriteLine("> New version of antd found!! -> {0}", selectedtDate);
                     Console.WriteLine("> Updating!");
                     ex.Kill();
+                    ex.CleanTmp();
                     if (selectedVersion.Key.Contains(global.squashEndsWith)) {
                         ex.RemoveLink();
                         ex.LinkVersionToRunning(selectedVersion.Key);
@@ -215,6 +226,14 @@ namespace antdsh {
             else {
                 Console.WriteLine("> No.");
             }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void CleanTmp() {
+            Console.WriteLine("> Cleaning tmp.");
+            ex.CleanTmp();
         }
     }
 }
