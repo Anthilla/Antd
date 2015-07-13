@@ -12,7 +12,9 @@ namespace antdsh {
             Directory.CreateDirectory(global.tmpDir);
             if (args.Length == 0) {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("> antdsh, waiting for a command: ");
+                Console.Write("antdsh");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(" > ");
                 Console.ResetColor();
                 var input = Console.ReadLine();
                 Command(input);
