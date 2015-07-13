@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace antdsh {
@@ -234,6 +235,15 @@ namespace antdsh {
         public static void CleanTmp() {
             Console.WriteLine("> Cleaning tmp.");
             ex.CleanTmp();
+        }
+
+        public static void Progress() {
+            using (var progress = new ProgressBar()) {
+                for (int i = 0; i <= 100; i++) {
+                    progress.Report((double)i / 100);
+                    Thread.Sleep(20);
+                }
+            }
         }
     }
 }

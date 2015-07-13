@@ -17,7 +17,10 @@
             }
             else if (command == '' || command == ' ') {
             }
-            else if (command.substring(0, 3) == 'cd ' && command != 'cd ..') {
+            else if (command == 'cd -') {
+                term.echo('Command "' + command + '" not implemented yet!');
+            }
+            else if (command.substring(0, 3) == 'cd ') {
                 directory = command.substring(3, command.length);
                 jQuery.support.cors = true;
                 $.ajax({

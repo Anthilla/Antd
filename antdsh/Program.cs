@@ -36,6 +36,7 @@ namespace antdsh {
             else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
             else if (command == "exit") { shell.Exit(); }
+            else if (command == "progress") { shell.Progress(); }
             else { Console.WriteLine("> Command not found :)"); return; }
         }
 
