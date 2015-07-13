@@ -15,9 +15,10 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void Kill() {
-            Terminal.Execute("systemctl restart antd-prepare.service");
-            Terminal.Execute("systemctl restart framework-antd.mount");
-            Terminal.Execute("systemctl restart antd-launcher.service");
+            Terminal.Execute("systemctl stop antd-prepare.service");
+            Terminal.Execute("systemctl stop framework-antd.mount");
+            Terminal.Execute("systemctl stop antd-launcher.service");
+            //Terminal.Execute("killall mono");
         }
 
         /// <summary>

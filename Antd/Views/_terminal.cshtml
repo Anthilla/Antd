@@ -20,7 +20,7 @@
             else if (command == 'cd -') {
                 term.echo('Command "' + command + '" not implemented yet!');
             }
-            else if (command.substring(0, 3) == 'cd ') {
+            else if (command.substring(0, 3) == 'cd ' && command != 'cd -' && command != 'cd ..') {
                 directory = command.substring(3, command.length);
                 jQuery.support.cors = true;
                 $.ajax({
@@ -87,6 +87,7 @@
                         Directory: directory
                     },
                     success: function (data) {
+                        console.log(data);
                         term.echo(data);
                         return false;
                     }

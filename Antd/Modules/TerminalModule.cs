@@ -47,14 +47,7 @@ namespace Antd {
 
             Post["/"] = x => {
                 string cmd = this.Request.Form.Command;
-                string directory = this.Request.Form.Directory;
-                string result;
-                if (directory == "") {
-                    result = Terminal.Execute(cmd);
-                }
-                else {
-                    result = Terminal.Execute(cmd, directory);
-                }
+                string result = (this.Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
