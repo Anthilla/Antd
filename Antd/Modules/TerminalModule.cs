@@ -48,6 +48,7 @@ namespace Antd {
             Post["/"] = x => {
                 string cmd = this.Request.Form.Command;
                 string result = (this.Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
+                FileSystem.WriteFile("/mnt/cdrom/pippo", result);
                 return Response.AsJson(result);
             };
 
