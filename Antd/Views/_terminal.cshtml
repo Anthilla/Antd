@@ -14,11 +14,14 @@
             var self = $(this);
             if (command == 'help') {
                 term.echo("just type something...");
+                scrollToBottom();
             }
             else if (command == '' || command == ' ') {
+                scrollToBottom();
             }
             else if (command == 'cd -') {
                 term.echo('Command "' + command + '" not implemented yet!');
+                scrollToBottom();
             }
             else if (command.substring(0, 3) == 'cd ' && command != 'cd -' && command != 'cd ..') {
                 directory = command.substring(3, command.length);
@@ -32,9 +35,11 @@
                     success: function (data) {
                         if (data == '0') {
                             term.echo(command + ' No such file or directory');
+                            scrollToBottom();
                         }
                         else {
                             term.set_prompt(data);
+                            scrollToBottom();
                         }
                     }
                 });
@@ -50,9 +55,11 @@
                     success: function (data) {
                         if (data == '0') {
                             term.echo(command + ' No such file or directory');
+                            scrollToBottom();
                         }
                         else {
                             term.set_prompt(data);
+                            scrollToBottom();
                         }
                     }
                 });
@@ -73,6 +80,7 @@
                         $('input#Clipboard0').val(c);
                         $('input#Clipboard1').val(data);
                         term.echo(data);
+                        scrollToBottom();
                         return false;
                     }
                 });
@@ -89,6 +97,7 @@
                     success: function (data) {
                         console.log(data);
                         term.echo(data);
+                        scrollToBottom();
                         return false;
                     }
                 });
@@ -97,4 +106,8 @@
             greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
         });
     });
+
+    function scrollToBottom() {
+        $('#TerminalContainer').scrollTop($('#TerminalContainer')[0].scrollHeight);
+    }
 </script>
