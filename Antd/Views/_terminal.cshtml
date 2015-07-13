@@ -68,6 +68,8 @@
                         Directory: directory
                     },
                     success: function (data) {
+                        term.echo('Both the command and its result are copied in the clipboard...');
+                        term.echo('');
                         $('input#Clipboard0').val(c);
                         $('input#Clipboard1').val(data);
                         term.echo(data);
