@@ -325,8 +325,8 @@ namespace antdsh {
                 Console.WriteLine("A file does not exist!");
                 return;
             }
-            var destination = global.tmpDir + "/antd";
-            ZipFile.ExtractToDirectory(downloadedZip, destination);
+            //var destination = global.tmpDir;
+            ZipFile.ExtractToDirectory(downloadedZip, global.tmpDir);
         }
 
         /// <summary>
