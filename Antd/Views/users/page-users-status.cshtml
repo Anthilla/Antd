@@ -33,14 +33,14 @@
     <tbody id="SysctlBodyTable">
         @foreach (Antd.Users.UserModel user in Model.ALL) {
             <tr>
-                <td style="text-align: center;">@user.username </td>
-                <td style="text-align: center;">@user.password </td>
-                <td style="text-align: center;">@user.lastchanged </td>
-                <td style="text-align: center;">@user.minimumnumberofdays </td>
-                <td style="text-align: center;">@user.maximumnumberofdays </td>
-                <td style="text-align: center;">@user.warn </td>
-                <td style="text-align: center;">@user.inactive </td>
-                <td style="text-align: center;">@user.expire </td>
+                <td style="text-align: center;">@user.Alias </td>
+                <td style="text-align: center;">@user.Password </td>
+                <td style="text-align: center;">@user.LastChanged </td>
+                <td style="text-align: center;">@user.MinimumNumberOfDays </td>
+                <td style="text-align: center;">@user.MaximumNumberOfDays </td>
+                <td style="text-align: center;">@user.Warn </td>
+                <td style="text-align: center;">@user.Inactive </td>
+                <td style="text-align: center;">@user.Expire </td>
             </tr>
         }
     </tbody>
