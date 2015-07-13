@@ -27,7 +27,7 @@ namespace antdsh {
         public static void CheckRunningExists() {
             var running = Terminal.Execute("ls -la " + global.versionsDir + " | grep " + global.antdRunning);
             if (!running.Contains(global.antdRunning)) {
-                Console.WriteLine("> There's no running version of antd.");
+                Console.WriteLine("There's no running version of antd.");
                 return;
             }
         }
@@ -67,7 +67,7 @@ namespace antdsh {
         /// </summary>
         /// <param name="fileToLink"></param>
         public static void LinkVersionToRunning(string fileToLink) {
-            Console.WriteLine("> Linking {0} to {1}", fileToLink, RunningPath);
+            Console.WriteLine("Linking {0} to {1}", fileToLink, RunningPath);
             Terminal.Execute("ln -s " + fileToLink + " " + RunningPath);
         }
 
@@ -85,11 +85,11 @@ namespace antdsh {
         public static string GetRunningVersion() {
             var running = Terminal.Execute("ls -la " + global.versionsDir + " | grep " + global.antdRunning);
             if (!running.Contains(global.antdRunning)) {
-                Console.WriteLine("> There's no running version of antd.");
+                Console.WriteLine("There's no running version of antd.");
                 return null;
             }
             var version = Terminal.Execute("file " + RunningPath).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
-            Console.WriteLine("> Running version detected: {0}", version);
+            Console.WriteLine("Running version detected: {0}", version);
             return version;
         }
 
@@ -171,7 +171,7 @@ namespace antdsh {
         public static void RemoveTmpZips() {
             var files = Directory.EnumerateFiles(global.tmpDir, "*.*").Where(f => f.EndsWith(".7z") || f.EndsWith(".zip"));
             foreach (var file in files) {
-                Console.WriteLine("> Deleting {0}", file);
+                Console.WriteLine("Deleting {0}", file);
                 File.Delete(file);
             }
         }
@@ -182,12 +182,12 @@ namespace antdsh {
         public static void RemoveTmpAll() {
             var files = Directory.EnumerateFiles(global.tmpDir);
             foreach (var file in files) {
-                Console.WriteLine("> Deleting file {0}", file);
+                Console.WriteLine("Deleting file {0}", file);
                 File.Delete(file);
             }
             var dirs = Directory.EnumerateDirectories(global.tmpDir);
             foreach (var dir in dirs) {
-                Console.WriteLine("> Deleting directory {0}", dir);
+                Console.WriteLine("Deleting directory {0}", dir);
                 Directory.Delete(dir, true);
             }
         }
@@ -235,7 +235,7 @@ namespace antdsh {
             if (versions.ToArray().Length > 0) {
                 versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
                 foreach (var version in versions) {
-                    Console.WriteLine(">    {0}    -    {1}", version.Key, version.Value);
+                    Console.WriteLine("   {0}    -    {1}", version.Key, version.Value);
                 }
             }
         }
@@ -271,11 +271,11 @@ namespace antdsh {
         /// </summary>
         /// <param name="url"></param>
         public static void DownloadFromUrl(string url) {
-            Console.WriteLine("> Download file from: {0}", url);
+            Console.WriteLine("Download file from: {0}", url);
             var to = global.tmpDir + "/" + global.downloadName;
-            Console.WriteLine("> Download file to: {0}", to);
+            Console.WriteLine("Download file to: {0}", to);
             Terminal.Execute("wget " + url + " -O " + to);
-            Console.WriteLine("> Download complete");
+            Console.WriteLine("Download complete");
         }
 
         /// <summary>
@@ -284,11 +284,11 @@ namespace antdsh {
         public static void ExtractDownloadedFile() {
             var downloadedFile = global.tmpDir + "/" + global.downloadName;
             if (!File.Exists(downloadedFile)) {
-                Console.WriteLine("> A file does not exist!");
+                Console.WriteLine("A file does not exist!");
                 return;
             }
             var destination = global.tmpDir + "/" + global.downloadFirstDir;
-            Console.WriteLine("> Extract from {0} to {1}", downloadedFile, destination);
+            Console.WriteLine("Extract from {0} to {1}", downloadedFile, destination);
             ZipFile.ExtractToDirectory(downloadedFile, destination);
         }
 
@@ -306,13 +306,13 @@ namespace antdsh {
         public static void PickAndMoveZipFileInDownloadedDirectory() {
             var mainDownloadedDir = global.tmpDir + "/" + global.downloadFirstDir;
             if (!Directory.Exists(mainDownloadedDir)) {
-                Console.WriteLine("> This {0} directory does not exist.", mainDownloadedDir);
+                Console.WriteLine("This {0} directory does not exist.", mainDownloadedDir);
                 return;
             }
             var fileToPick = Directory.EnumerateFiles(mainDownloadedDir, "*.*", SearchOption.AllDirectories).FirstOrDefault(f => f.Contains("antd") && f.EndsWith("zip"));
-            Console.WriteLine("> Trying to pick: {0}", fileToPick);
+            Console.WriteLine("Trying to pick: {0}", fileToPick);
             var destination = global.tmpDir + "/" + Path.GetFileName(fileToPick);
-            Console.WriteLine("> and moving it here: {0}", destination);
+            Console.WriteLine("and moving it here: {0}", destination);
             File.Move(fileToPick, destination);
         }
 
@@ -322,7 +322,7 @@ namespace antdsh {
         public static void ExtractPickedZip() {
             var downloadedZip = Directory.GetFiles(global.tmpDir, "*.*").FirstOrDefault(f => f.Contains("antd"));
             if (!File.Exists(downloadedZip)) {
-                Console.WriteLine("> A file does not exist!");
+                Console.WriteLine("A file does not exist!");
                 return;
             }
             var destination = global.tmpDir + "/antd";
