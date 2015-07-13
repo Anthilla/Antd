@@ -57,6 +57,28 @@ namespace Antd {
 
                 Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
+                //check if auth is ennabled
+                if (Antd.Auth.T2FA.Config.IsEnabled == false) {
+                    if (validationGuid == null) {
+                        return this.Context.GetRedirect("~/login");
+                    }
+                    else {
+
+                        DateTime? expiry = DateTime.Now.AddHours(12);
+                        if (this.Request.Form.RememberMe.HasValue) {
+                            expiry = DateTime.Now.AddDays(3);
+                        }
+
+                        if (validationGuid == null) {
+                            return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
+                        }
+                        else {
+                            NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
+                            return this.LoginAndRedirect(Guid.Parse(validationGuid.ToGuid().ToString()), DateTime.Now.AddHours(100)).WithCookie(cookie);
+                        }
+                    }
+                }
+
                 if (validationGuid == null) {
                     //return this.Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
                     return this.Context.GetRedirect("~/login");

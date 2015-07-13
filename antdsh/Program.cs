@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace antdsh {
     class Program {
         static void Main(string[] args) {
-            Directory.CreateDirectory(global.configDir);
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
             Console.WriteLine("> antdsh");

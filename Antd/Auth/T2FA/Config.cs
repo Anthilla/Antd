@@ -27,35 +27,35 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Mail;
 using Antd.Security;
-using MailKit.Net.Smtp;
-using MimeKit;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Antd.Auth.T2FA {
-    public class Authentication {
-        public static void SendNotification(string session, string alias, string to) {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Anthilla Authentication Manager", "authentication.manager@anthilla.com"));
-            message.To.Add(new MailboxAddress(alias, to));
-            message.Subject = DateTime.Now.ToString("yyyy/MM/dd") + " Anthilla Authentication Token";
-            var token = TokenRepository.Create(session);
-            message.Body = new TextPart("plain") {
-                Text = @"Here's your token: " + token.Value
+    public class Config {
+
+        private static string coreFileName = "authConfig";
+        private static string[] _files = new string[] {
+                coreFileName + "Current",
+                coreFileName + "001",
+                coreFileName + "002"
             };
-            using (var client = new SmtpClient()) {
-                client.Connect(SMTP.Settings.Url, Convert.ToInt32(SMTP.Settings.Port), false);
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate(SMTP.Settings.Account, SMTP.Settings.Password);
-                client.Send(message);
-                client.Disconnect(true);
-            }
+
+        public static XmlWriter xmlWriter = new XmlWriter(_files);
+
+        public static void Enable() {
+            xmlWriter.Write(Label.Auth.IsEnabled, true.ToString());
         }
 
-        public static bool Confirm(string session, string value) {
-            var savedToken = TokenRepository.Fetch(session);
-            return (value == savedToken) ? true : false;
+        public static void Disable() {
+            xmlWriter.Write(Label.Auth.IsEnabled, false.ToString());
         }
+
+        public static bool IsEnabled { get { return Convert.ToBoolean(xmlWriter.ReadValue(Label.Auth.IsEnabled)); } }
+
+        public static bool ValueExists { get { return (xmlWriter.ReadValue(Label.Auth.IsEnabled) == null)? false: true; } }
     }
 }

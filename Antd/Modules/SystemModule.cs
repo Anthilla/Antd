@@ -61,6 +61,7 @@ namespace Antd {
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.AuthStatus = Antd.Auth.T2FA.Config.IsEnabled;
                 return View["_page-system", vmod];
             };
 

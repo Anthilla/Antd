@@ -28,8 +28,11 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Auth.T2FA;
+using Antd.Security;
 using Nancy;
+using Nancy.Extensions;
 using System;
+using System.Dynamic;
 using System.Net.NetworkInformation;
 
 namespace Antd {
@@ -60,14 +63,12 @@ namespace Antd {
                 return Response.AsText("gg");
             };
 
-            Get["/path/{path*}"] = x => {
-                string p = (x.path == null) ? "/" : x.path;
-                return Response.AsText(p);
-            };
-
-            Get["/path/{path?}"] = x => {
-                string p = (x.path == null) ? "/" : x.path;
-                return Response.AsText(p);
+            Get["/enable"] = x => {
+                Antd.Auth.T2FA.Config.Enable();
+                Console.WriteLine(Antd.Auth.T2FA.Config.IsEnabled);
+                Antd.Auth.T2FA.Config.Disable();
+                Console.WriteLine(Antd.Auth.T2FA.Config.IsEnabled);
+                return Response.AsXml("");
             };
         }
     }

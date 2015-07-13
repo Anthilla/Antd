@@ -34,7 +34,6 @@ using Common.Logging.Simple;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
-using System;
 using System.Collections.Specialized;
 using System.IO;
 using WebDAVSharp.Server;
@@ -147,6 +146,13 @@ namespace Antd.Boot {
             WebDavServer server = new WebDavServer(new WebDavDiskStore(path));
             server.Listener.Prefixes.Add(uri);
             server.Start();
+        }
+
+        public static void InitAuthentication() {
+            ConsoleLogger.Log("    authentication -> initialize");
+            if (Antd.Auth.T2FA.Config.ValueExists == false) {
+                Antd.Auth.T2FA.Config.Disable();
+            }
         }
     }
 }

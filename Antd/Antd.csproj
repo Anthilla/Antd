@@ -168,6 +168,7 @@
     <Compile Include="AntdHub.cs" />
     <Compile Include="Apps\Manage.cs" />
     <Compile Include="Auth\T2FA\Authentication.cs" />
+    <Compile Include="Auth\T2FA\Config.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
@@ -303,6 +304,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\login-token.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\mail\page-mail-imap.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\mail\page-mail-smtp.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\system\page-system-authentication.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\_cctable-table-dataview.cshtml">

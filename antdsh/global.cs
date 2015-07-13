@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace antdsh {
     public class global {
-        public static string configDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_config"; } }
         public static string versionsDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_versions"; } }
         public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_tmp"; } }
         public static string appsDir { get { return "/mnt/cdrom/Apps"; } }

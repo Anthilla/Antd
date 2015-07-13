@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.Boot;
+using Antd.Security;
 using MailKit.Net.Smtp;
 using MimeKit;
 
@@ -35,9 +36,43 @@ namespace Antd.Mail {
     public class SMTP {
 
         public class Settings {
-            public static void Write(string key, string value) {
-                ParametersConfig.Write(key, value);
+            private static byte[] key = Cryptography.CoreKey();
+            private static byte[] vector = Cryptography.CoreVector();
+
+            private static string coreFileName = "smtpConfig";
+            private static string[] _files = new string[] {
+                coreFileName + "Current",
+                coreFileName + "001",
+                coreFileName + "002"
+            };
+
+            public static XmlWriter xmlWriter = new XmlWriter(_files);
+
+            public static void SetUrl(string value) {
+                xmlWriter.Write(Label.SMTP.Url, Cryptography.Encrypt(value, key, vector).GetString());
             }
+
+            public static string Url { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Url).GetBytes(), key, vector); } }
+
+            public static void SetPort(string value) {
+                xmlWriter.Write(Label.SMTP.Port, Cryptography.Encrypt(value, key, vector).GetString());
+            }
+
+            public static string Port { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Port).GetBytes(), key, vector); } }
+
+            public static void SetAccount(string value) {
+                xmlWriter.Write(Label.SMTP.Account, Cryptography.Encrypt(value, key, vector).GetString());
+            }
+
+            public static string Account { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Account).GetBytes(), key, vector); } }
+
+            public static void SetPassword(string value) {
+                xmlWriter.Write(Label.SMTP.Password, Cryptography.Encrypt(value, key, vector).GetString());
+            }
+
+            public static string Password { get { return Cryptography.Decrypt(xmlWriter.ReadValue(Label.SMTP.Password).GetBytes(), key, vector); } }
+
+            public static bool ConfigExists { get { return (xmlWriter.ReadValue(Label.SMTP.Url) == null) ? false : true; } }
         }
 
         public static void Send() {

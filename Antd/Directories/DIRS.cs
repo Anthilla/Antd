@@ -58,7 +58,6 @@ namespace Antd {
         }
 
         public static void MountOBind(string source, string destination) {
-            //ex: mount -o bind /mnt/cdrom/DIRS/DIR_framework_antd_config/ /framework/antd/config/
             Terminal.Execute("mount -o bind " + source + " " + destination);
         }
     }

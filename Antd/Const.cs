@@ -37,16 +37,27 @@ namespace Antd {
         public static string Port { get { return "antd_port"; } }
         public static string Database { get { return "antd_database"; } }
         public static string Files { get { return "antd_files"; } }
+
+        public class SMTP {
+            public static string Url { get { return "smtp_url"; } }
+            public static string Port { get { return "smtp_port"; } }
+            public static string Account { get { return "smtp_account"; } }
+            public static string Password { get { return "smtp_password"; } }
+        }
+
+        public class IMAP {
+            public static string Url { get { return "imap_url"; } }
+            public static string Port { get { return "imap_port"; } }
+            public static string Account { get { return "imap_account"; } }
+            public static string Password { get { return "imap_password"; } }
+        }
+
+        public class Auth {
+            public static string IsEnabled { get { return "isenabled"; } }
+        }
     }
 
     public class Folder {
-        private class tmp {
-            public static string Root { get { return AppDomain.CurrentDomain.BaseDirectory; } }
-            public static string Config { get { return Path.Combine(Folder.Root, "config"); } }
-            public static string Database { get { return Path.Combine(Folder.Root, "database"); } }
-            public static string FileRepository { get { return Path.Combine(Folder.Root, "files"); } }
-            public static string Networkd { get { return Path.Combine(Folder.Root, "networkd"); } }
-        }
         public static string Root { get { return "/cfg/antd"; } }
         public static string Config { get { return Folder.Root + "/config"; } }
         public static string Database { get { return Folder.Root + "/database"; } }

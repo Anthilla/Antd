@@ -43,6 +43,7 @@ namespace Antd {
 
             AntdBoot.SetWorkDirectories();
             AntdBoot.SetCoreParameters();
+            AntdBoot.InitAuthentication();
 
             var uri = CoreParametersConfig.GetHostUri();
             var stop = new ManualResetEvent(false);
