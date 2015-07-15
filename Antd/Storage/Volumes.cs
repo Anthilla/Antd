@@ -39,7 +39,7 @@ namespace Antd.Storage {
         public static List<string[]> Blkid() {
             var list = new List<string[]>() { };
             var result = Terminal.Execute("blkid");
-            var rows = result.Split(new String[] {  @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = result.Split(new String[] {  @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 list.Add(row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
             }

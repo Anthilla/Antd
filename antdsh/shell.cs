@@ -276,6 +276,13 @@ namespace antdsh {
         }
 
         /// <summary>
+        /// ok
+        /// </summary>
+        public static void Execute(string command) {
+            Console.WriteLine(Terminal.Execute(string.Join(" ", command.Split(' ').Skip(1).ToArray())));
+        }
+
+        /// <summary>
         /// test
         /// </summary>
         public static void Progress() {

@@ -47,6 +47,7 @@ namespace antdsh {
             else if (command == "info") { shell.Info(); }
             else if (command == "exit") { shell.Exit(); }
             else if (command == "progress") { shell.Progress(); }
+            else if (command.Length > 2 && command.Substring(0, 3) == "ex ") { shell.Execute(command); }
             else if (command == "") { return; }
             else { Console.WriteLine("Command not found"); return; }
         }
