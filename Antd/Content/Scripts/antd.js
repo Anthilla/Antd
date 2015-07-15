@@ -17,6 +17,22 @@ function SetCreateUser() {
     $('#UserCreateDashboard').toggle();
 }
 
+$('select[name="UserType"]').windowed({
+    change: function (event, selected) {
+        var selected = $(selected);
+        if (selected.val() == 'app') {
+            $('#AppUsersDBoard').hide();
+            $('#SysUsersDBoard').hide();
+            $('#AppUsersDBoard').show();
+        }
+        if (selected.val() == 'sys') {
+            $('#AppUsersDBoard').hide();
+            $('#SysUsersDBoard').hide();
+            $('#SysUsersDBoard').show();
+        }
+    }
+});
+
 //cctable
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {

@@ -510,6 +510,7 @@ label {
 }
 
 #DashboardForm,
+#UserCreateDashboard,
 #UserGroupForm,
 #FunctionGroupForm,
 #GroupRelationForm {
