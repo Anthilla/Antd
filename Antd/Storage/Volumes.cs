@@ -35,10 +35,15 @@ using System.Threading.Tasks;
 
 namespace Antd.Storage {
     public class Volumes {
-        public static string[] Blkid() {
+
+        public static List<string[]> Blkid() {
+            var list = new List<string[]>() { };
             var result = Terminal.Execute("blkid");
             var rows = result.Split(new String[] {  @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            return rows;
+            foreach (var row in rows) {
+                list.Add(row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+            }
+            return list;
         }
     }
 }

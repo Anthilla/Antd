@@ -3,7 +3,8 @@
     <tbody>
         @foreach (string row in Antd.Storage.Volumes.Blkid()) { 
             <tr>
-                <td class="right">@row</td>
+                <td class="right">@row[0]</td>
+                <td class="right">@row[1]</td>
             </tr>
         }
     </tbody>
