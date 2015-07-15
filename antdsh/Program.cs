@@ -21,7 +21,7 @@ namespace antdsh {
                 Console.Write(" > ");
                 Console.ResetColor();
                 var input = Console.ReadLine();
-                Command(input);
+                Command(input.Trim());
                 Main(args);
             }
             else {
@@ -47,7 +47,8 @@ namespace antdsh {
             else if (command == "info") { shell.Info(); }
             else if (command == "exit") { shell.Exit(); }
             else if (command == "progress") { shell.Progress(); }
-            else { Console.WriteLine("> Command not found :)"); return; }
+            else if (command == "") { return; }
+            else { Console.WriteLine("Command not found"); return; }
         }
 
         static void Help() {
