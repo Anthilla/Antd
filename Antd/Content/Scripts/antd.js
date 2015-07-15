@@ -12,6 +12,11 @@ $('#TerminalClose').click(function () {
     $('#TerminalContainer').hide();
 });
 
+//users
+function SetCreateUser() {
+    $('#UserCreateDashboard').toggle();
+}
+
 //cctable
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {
