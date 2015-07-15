@@ -90,12 +90,7 @@ namespace antdsh {
             if (response == "n") {
                 Console.WriteLine("Ok, I'm removing everything.");
                 ex.StopServices();
-                Terminal.Execute("umount " + antdconst.Folder.Networkd);
-                Terminal.Execute("umount " + antdconst.Folder.FileRepository);
-                Terminal.Execute("umount " + antdconst.Folder.Database);
-                Terminal.Execute("umount " + antdconst.Folder.Config);
-                Terminal.Execute("umount " + antdconst.Folder.Root);
-                Terminal.Execute("umount /framework/antd");
+                UmountAll();
             }
             else if (response == "n") {
                 Console.WriteLine("Ok.");
@@ -281,6 +276,7 @@ namespace antdsh {
         /// </summary>
         public static void Execute(string command) {
             Console.WriteLine(Terminal.Execute(string.Join(" ", command.Split(' ').Skip(1).ToArray())));
+            return;
         }
 
         /// <summary>

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace antdsh {
     class Program {
+        static string command;
+        static List<string> commandList = new List<string>() { };
+
         static void Main(string[] args) {
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
@@ -22,8 +25,9 @@ namespace antdsh {
                 Console.Write(" > ");
                 Console.ResetColor();
                 //Keyupevent();
-                var input = Console.ReadLine();
-                Command(input.Trim());
+                command = Console.ReadLine();
+                commandList.Add(command);
+                Command(command.Trim());
                 Main(args);
             }
             else {
@@ -51,9 +55,8 @@ namespace antdsh {
             else if (command == "exit") { shell.Exit(); }
             else if (command == "progress") { shell.Progress(); }
             else if (command == "clear") { Terminal.Execute("clear"); }
-            else if (command.Length > 2 && command.Substring(0, 3) == "ex ") { shell.Execute(command); }
             else if (command == "") { return; }
-            else { Console.WriteLine("Command not found"); return; }
+            else { shell.Execute(command); }
         }
 
         static void Help() {
