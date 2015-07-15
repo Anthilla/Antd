@@ -339,5 +339,16 @@ namespace antdsh {
             Terminal.Execute("systemctl restart framework-antd.mount");
             Terminal.Execute("systemctl restart antd-launcher.service");
         }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void UmountAntd() {
+            Terminal.Execute("umount " + antdconst.Folder.Networkd);
+            Terminal.Execute("umount " + antdconst.Folder.FileRepository);
+            Terminal.Execute("umount " + antdconst.Folder.Database);
+            Terminal.Execute("umount " + antdconst.Folder.Config);
+            Terminal.Execute("umount " + antdconst.Folder.Root);
+        }
     }
 }

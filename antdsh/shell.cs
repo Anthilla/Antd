@@ -283,6 +283,19 @@ namespace antdsh {
         }
 
         /// <summary>
+        /// ok
+        /// </summary>
+        public static void UmountAll() {
+            var r = Terminal.Execute("cat /proc/mounts | grep /antd");
+            var f = Terminal.Execute("df | grep /cfg/antd");
+            if (r.Length > 0 || f.Length > 0) {
+                ex.UmountAntd();
+                UmountAll();
+            }
+            else return;
+        }
+
+        /// <summary>
         /// test
         /// </summary>
         public static void Progress() {
