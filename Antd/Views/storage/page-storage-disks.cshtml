@@ -9,24 +9,55 @@
         }
     </tbody>
 </table>
+<div class="tab-control" data-role="tab-control">
 
-@*<div class="tab-control" data-role="tab-control">
     <ul class="tabs">
-        <li class="active"><a href="#Disk1">Disk #1</a></li>
-        <li class="active"><a href="#Disk2">Disk #2</a></li>
+        <li class="active"><a href="#ByID">Disk By ID</a></li>
+        <li><a href="#ByLabel">Disk By Label</a></li>
+        <li><a href="#ByPartLabel">Disk By PartLabel</a></li>
+        <li><a href="#ByPartUuid">Disk By PartUuid</a></li>
+        <li><a href="#ByUuid">Disk By Uuid</a></li>
     </ul>
 
     <div class="frames">
-        <div class="frame" id="Disk1">
-            <textarea readonly="readonly" style="width: 90%; min-height: 300px;" placeholder="Disk Details...">
-
-            </textarea>
+        <div class="frame" id="ByID">
+            <ul class="fg-white">
+                @foreach (string d in Antd.Storage.Disks.GET.ByID()) {
+                    <li>@d</li>
+                }
+            </ul>
         </div>
 
-        <div class="frame" id="Disk2">
-            <textarea readonly="readonly" style="width: 90%; min-height: 300px;" placeholder="Disk Details...">
+        <div class="frame" id="ByLabel">
+            <ul class="fg-white">
+                @foreach (string d in Antd.Storage.Disks.GET.ByLabel()) {
+                    <li>@d</li>
+                }
+            </ul>
+        </div>
 
-            </textarea>
+        <div class="frame" id="ByPartLabel">
+            <ul class="fg-white">
+                @foreach (string d in Antd.Storage.Disks.GET.ByPartLabel()) {
+                    <li>@d</li>
+                }
+            </ul>
+        </div>
+
+        <div class="frame" id="ByPartUuid">
+            <ul class="fg-white">
+                @foreach (string d in Antd.Storage.Disks.GET.ByPartUuid()) {
+                    <li>@d</li>
+                }
+            </ul>
+        </div>
+
+        <div class="frame" id="ByUuid">
+            <ul class="fg-white">
+                @foreach (string d in Antd.Storage.Disks.GET.ByUuid()) {
+                    <li>@d</li>
+                }
+            </ul>
         </div>
     </div>
-</div>*@
+</div>
