@@ -58,19 +58,19 @@ namespace Antd.Storage {
         public static List<Block> Blkid() {
             var list = new List<Block>() { };
             var result = Terminal.Execute("blkid");
-            var rows = result.Split(new String[] { @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = result.Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 var cells = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block();
                 blk.Name = cells[0];
                 blk.Attributes = cells[1];
                 var attrs = cells[1].Split(' ').ToArray();
-                blk.Type = AssignValue("TYPE=", attrs);
-                blk.UUID = AssignValue("UUID=", attrs);
-                blk.SecType = AssignValue("SEC_TYPE=", attrs);
-                blk.Label = AssignValue("LABEL=", attrs);
-                blk.PartLabel = AssignValue("PARTLABEL=", attrs);
-                blk.PartUUID = AssignValue("PARTUUID=", attrs);
+                //blk.Type = AssignValue("TYPE=", attrs);
+                //blk.UUID = AssignValue("UUID=", attrs);
+                //blk.SecType = AssignValue("SEC_TYPE=", attrs);
+                //blk.Label = AssignValue("LABEL=", attrs);
+                //blk.PartLabel = AssignValue("PARTLABEL=", attrs);
+                //blk.PartUUID = AssignValue("PARTUUID=", attrs);
                 list.Add(blk);
             }
             return list;
