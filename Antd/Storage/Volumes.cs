@@ -81,8 +81,11 @@ namespace Antd.Storage {
         }
 
         private static string GetValue(string input) {
-            var val = input.Split('=').ToArray()[1];
-            return val.Substring(1, val.Length - 1);
+            if (input != null) {
+                var val = input.Split('=').ToArray()[1];
+                return val.Substring(1, val.Length - 1);
+            }
+            return "";
         }
     }
 }
