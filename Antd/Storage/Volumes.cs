@@ -35,5 +35,10 @@ using System.Threading.Tasks;
 
 namespace Antd.Storage {
     public class Volumes {
+        public static string[] Blkid() {
+            var result = Terminal.Execute("blkid");
+            var rows = result.Split(new String[] {  @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            return rows;
+        }
     }
 }

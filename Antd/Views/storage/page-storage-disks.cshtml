@@ -1,5 +1,16 @@
 ﻿<legend id="Disks">Disks</legend>
-<div class="tab-control" data-role="tab-control">
+<table class="table">
+    <tbody>
+        @foreach (string row in Antd.Storage.Volumes.Blkid()) { 
+            <tr>
+                <td class="right">@row</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@*<div class="tab-control" data-role="tab-control">
     <ul class="tabs">
         <li class="active"><a href="#Disk1">Disk #1</a></li>
         <li class="active"><a href="#Disk2">Disk #2</a></li>
@@ -18,4 +29,4 @@
             </textarea>
         </div>
     </div>
-</div>
+</div>*@
