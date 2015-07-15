@@ -39,33 +39,23 @@ namespace Antd.Storage {
 
         public class GET {
             public static string[] ByID() {
-                var a = Directory.EnumerateDirectories("/dev/disk/by-id").ToArray();
-                var b = Directory.EnumerateDirectories("/dev/disk/by-id").ToArray();
-                return a.Union(b).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-id").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByLabel() {
-                var a = Directory.EnumerateDirectories("/dev/disk/by-label").ToArray();
-                var b = Directory.EnumerateDirectories("/dev/disk/by-label").ToArray();
-                return a.Union(b).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-label").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartLabel() {
-                var a = Directory.EnumerateDirectories("/dev/disk/by-partlabel").ToArray();
-                var b = Directory.EnumerateDirectories("/dev/disk/by-partlabel").ToArray();
-                return a.Union(b).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartUuid() {
-                var a = Directory.EnumerateDirectories("/dev/disk/by-partuuid").ToArray();
-                var b = Directory.EnumerateDirectories("/dev/disk/by-partuuid").ToArray();
-                return a.Union(b).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByUuid() {
-                var a = Directory.EnumerateDirectories("/dev/disk/by-uuid").ToArray();
-                var b = Directory.EnumerateDirectories("/dev/disk/by-uuid").ToArray();
-                return a.Union(b).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-uuid").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
         }
     }

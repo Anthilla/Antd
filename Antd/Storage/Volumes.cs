@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,8 @@ namespace Antd.Storage {
         public static List<Block> Blkid() {
             var list = new List<Block>() { };
             var result = Terminal.Execute("blkid");
-            var rows = result.Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = result.Split(new String[] { ((char)13 + (char)10).ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+
             foreach (var row in rows) {
                 var cells = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block();
@@ -86,6 +88,12 @@ namespace Antd.Storage {
                 return val.Substring(1, val.Length - 1);
             }
             return "";
+        }
+
+        public static List<string> Lsblk() {
+            var result = Terminal.Execute("lsblk -npl");
+            var rows = result.Split(new String[] { @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            return rows.ToList();
         }
     }
 }
