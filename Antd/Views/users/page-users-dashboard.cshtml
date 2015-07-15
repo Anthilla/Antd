@@ -1,0 +1,66 @@
+﻿<div id="UserCreateDashboard" style="display: none;">
+    <form action="/users/application" method="POST" enctype="multipart/form-data">
+        <div class="grid">
+            <div class="row">
+                <div class="span4">
+                    <label>First Name</label>
+                </div>
+                <div class="span8">
+                    <input name="FirstName" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Last Name</label>
+                </div>
+                <div class="span8">
+                    <input name="Name" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Password</label>
+                </div>
+                <div class="span8">
+                    <input name="Passwd" type="password" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Email</label>
+                </div>
+                <div class="span8">
+                    <input name="Email" type="text" style="width: 90%; height: 30px;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>&nbsp</label>
+                </div>
+                <div class="span8">
+                    <input id="submit" class="bg-blue fg-white" type="submit" value="Submit" style="width: 90% !important;">
+                </div>
+            </div>
+        </div>
+    </form>
+    <form action="/users/system" method="POST" enctype="multipart/form-data">
+        <div class="grid">
+            <div class="row">
+                <div class="span4">
+                    <label>User name</label>
+                </div>
+                <div class="span8">
+                    <input name="Name" type="text" style="width: 90%; height: 30px;" />
+                </div>
+                <div class="row">
+                    <div class="span4">
+                        <label>&nbsp</label>
+                    </div>
+                    <div class="span8">
+                        <input id="submit" class="bg-blue fg-white" type="submit" value="Submit">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
