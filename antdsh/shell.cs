@@ -276,7 +276,7 @@ namespace antdsh {
         /// </summary>
         public static void Execute(string command) {
             Console.WriteLine(Terminal.Execute(string.Join(" ", command.Split(' ').Skip(1).ToArray())));
-            return;
+            //return;
         }
 
         /// <summary>
