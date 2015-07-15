@@ -1,4 +1,5 @@
-﻿using System;
+﻿using antdlib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace antdsh {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(" > ");
                 Console.ResetColor();
+                //Keyupevent();
                 var input = Console.ReadLine();
                 Command(input.Trim());
                 Main(args);
@@ -48,6 +50,7 @@ namespace antdsh {
             else if (command == "info") { shell.Info(); }
             else if (command == "exit") { shell.Exit(); }
             else if (command == "progress") { shell.Progress(); }
+            else if (command == "clear") { Terminal.Execute("clear"); }
             else if (command.Length > 2 && command.Substring(0, 3) == "ex ") { shell.Execute(command); }
             else if (command == "") { return; }
             else { Console.WriteLine("Command not found"); return; }
@@ -73,6 +76,18 @@ namespace antdsh {
         static void WriteHelp(string command, string description) {
             Console.WriteLine("    {0}:", command);
             Console.WriteLine("        {0};", description);
+        }
+
+        static void Keyupevent() {
+            var keyinfo = Console.ReadKey();
+            if (keyinfo.Key == ConsoleKey.DownArrow) {
+                Console.WriteLine("DownArrow pressed");
+                return;
+            }
+            else if (keyinfo.Key == ConsoleKey.UpArrow) {
+                Console.WriteLine("UpArrow pressed");
+                return;
+            }
         }
     }
 }

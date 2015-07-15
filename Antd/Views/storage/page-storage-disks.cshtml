@@ -1,10 +1,10 @@
 ﻿<legend id="Disks">Disks</legend>
 <table class="table">
     <tbody>
-        @foreach (string[] row in Antd.Storage.Volumes.Blkid()) { 
+        @foreach (Antd.Storage.Volumes.Block blk in Antd.Storage.Volumes.Blkid()) { 
             <tr>
-                <td class="right">@row[0]</td>
-                <td class="right">@row[1]</td>
+                <td class="right">@blk.Name</td>
+                <td class="right">@blk.Attributes</td>
             </tr>
         }
     </tbody>

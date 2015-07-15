@@ -349,6 +349,7 @@ namespace antdsh {
             Terminal.Execute("umount " + antdconst.Folder.Database);
             Terminal.Execute("umount " + antdconst.Folder.Config);
             Terminal.Execute("umount " + antdconst.Folder.Root);
+            Terminal.Execute("umount /framework/antd");
         }
     }
 }
