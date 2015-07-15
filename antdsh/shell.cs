@@ -72,6 +72,8 @@ namespace antdsh {
             if (res.Length == 0) {
                 Console.WriteLine("No antd process found.");
                 Console.WriteLine("Try to restart or to update again.");
+                Console.WriteLine("----------------------------------");
+                Console.WriteLine(Terminal.Execute("systemctl status antd-launcher.service"));
             }
             else {
                 Console.WriteLine(res);
@@ -88,8 +90,13 @@ namespace antdsh {
             if (response == "n") {
                 Console.WriteLine("Ok, I'm removing everything.");
                 ex.StopServices();
+                Terminal.Execute("umount " + antdconst.Folder.Networkd);
+                Terminal.Execute("umount " + antdconst.Folder.FileRepository);
+                Terminal.Execute("umount " + antdconst.Folder.Database);
+                Terminal.Execute("umount " + antdconst.Folder.Config);
+                Terminal.Execute("umount " + antdconst.Folder.Root);
             }
-            else if (response == "n")  {
+            else if (response == "n") {
                 Console.WriteLine("Ok.");
                 return;
             }
