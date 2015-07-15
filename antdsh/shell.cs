@@ -275,7 +275,8 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void Execute(string command) {
-            Console.WriteLine(Terminal.Execute(string.Join(" ", command.Split(' ').Skip(1).ToArray())));
+            Console.WriteLine("Executing external command: {0}", command);
+            Console.WriteLine(Terminal.Execute(command));
             //return;
         }
 
