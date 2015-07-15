@@ -35,7 +35,6 @@ using System.Linq;
 namespace Antd.Users {
     public class ApplicationUser {
         public static IEnumerable<UserModel> GetAll() {
-            //return new HashSet<UserModel>(DeNSo.Session.New.Get<UserModel>(u => u != null).ToList());
             return DeNSo.Session.New.Get<UserModel>(u => u != null).ToList();
         }
 
@@ -52,7 +51,7 @@ namespace Antd.Users {
                 Email = email,
                 UserType = UserType.IsApplicationUser
             };
-            user.Alias = SetUserAlias(fname, lname);
+            user.Alias = SetUserAlias(fname, lname).ToLower();
             user.Password = SetPassword(passwd);
             DeNSo.Session.New.Set(user);
         }
