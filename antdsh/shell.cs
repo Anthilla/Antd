@@ -47,6 +47,57 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
+        public static void Stop() {
+            ex.StopServices();
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void IsRunning() {
+            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
+            if (res.Length > 0) {
+                Console.WriteLine("Yes, is running.");
+            }
+            else {
+                Console.WriteLine("No.");
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void Status() {
+            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
+            if (res.Length == 0) {
+                Console.WriteLine("No antd process found.");
+                Console.WriteLine("Try to restart or to update again.");
+            }
+            else {
+                Console.WriteLine(res);
+                Console.WriteLine(Terminal.Execute("systemctl status antd-launcher.service"));
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void Remove() {
+            Console.Write("Are you sure? (y/n): ");
+            var response = Console.ReadLine();
+            if (response == "n") {
+                Console.WriteLine("Ok, I'm removing everything.");
+                ex.StopServices();
+            }
+            else if (response == "n")  {
+                Console.WriteLine("Ok.");
+                return;
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
         public static void UpdateCheck() {
             var linkedVersionName = ex.GetRunningVersion();
             if (linkedVersionName != null) {
@@ -212,31 +263,14 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        public static void Stop() {
-            ex.StopServices();
-        }
-
-        /// <summary>
-        /// ok
-        /// </summary>
-        public static void IsRunning() {
-            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
-            if (res.Length > 0) {
-                Console.WriteLine("Yes, is running.");
-            }
-            else {
-                Console.WriteLine("No.");
-            }
-        }
-
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void CleanTmp() {
             Console.WriteLine("Cleaning tmp.");
             ex.CleanTmp();
         }
 
+        /// <summary>
+        /// test
+        /// </summary>
         public static void Progress() {
             using (var progress = new ProgressBar()) {
                 for (int i = 0; i <= 100; i++) {

@@ -46,10 +46,10 @@ namespace Antd.Boot {
         private readonly static string[] WorkDirectories =
         {
             Folder.Root,
-            Folder.Config,
-            Folder.Database,
-            Folder.FileRepository,
-            Folder.Networkd
+            //Folder.Config,
+            //Folder.Database,
+            //Folder.FileRepository,
+            //Folder.Networkd
         };
 
         private readonly static string[] WatchDirectories =
