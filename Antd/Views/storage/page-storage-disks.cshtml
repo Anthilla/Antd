@@ -1,7 +1,7 @@
 ﻿<legend id="Disks">Disks</legend>
 <table class="table">
     <tbody>
-        @foreach (string row in Antd.Storage.Volumes.Blkid()) { 
+        @foreach (string[] row in Antd.Storage.Volumes.Blkid()) { 
             <tr>
                 <td class="right">@row[0]</td>
                 <td class="right">@row[1]</td>
@@ -9,7 +9,6 @@
         }
     </tbody>
 </table>
-
 
 @*<div class="tab-control" data-role="tab-control">
     <ul class="tabs">
