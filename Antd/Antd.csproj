@@ -175,7 +175,6 @@
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
     <Compile Include="Directories\DIRS.cs" />
-    <Compile Include="Storage\StorageModel.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Terminal\CommandRepository.cs" />
     <Compile Include="Common\Extensions.cs" />

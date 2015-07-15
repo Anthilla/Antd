@@ -36,14 +36,53 @@ using System.Threading.Tasks;
 namespace Antd.Storage {
     public class Volumes {
 
-        public static List<string[]> Blkid() {
-            var list = new List<string[]>() { };
+        public class Block {
+            public string Name { get; set; }
+
+            public string Attributes { get; set; }
+
+            public string Type { get; set; }
+
+            public string UUID { get; set; }
+
+            public string SecType { get; set; }
+
+            public string Label { get; set; }
+
+            public string PartLabel { get; set; }
+
+            public string PartUUID { get; set; }
+        }
+
+
+        public static List<Block> Blkid() {
+            var list = new List<Block>() { };
             var result = Terminal.Execute("blkid");
-            var rows = result.Split(new String[] {  @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = result.Split(new String[] { @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
-                list.Add(row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+                var cells = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block();
+                blk.Name = cells[0];
+                blk.Attributes = cells[1];
+                var attrs = cells[1].Split(' ').ToArray();
+                blk.Type = AssignValue("TYPE=", attrs);
+                blk.UUID = AssignValue("UUID=", attrs);
+                blk.SecType = AssignValue("SEC_TYPE=", attrs);
+                blk.Label = AssignValue("LABEL=", attrs);
+                blk.PartLabel = AssignValue("PARTLABEL=", attrs);
+                blk.PartUUID = AssignValue("PARTUUID=", attrs);
+                list.Add(blk);
             }
             return list;
+        }
+
+        private static string AssignValue(string label, string[] arr) {
+            return GetValue(arr.Where(a => a.Contains(label)).FirstOrDefault());
+        }
+
+        private static string GetValue(string input) {
+            var val = input.Split('=').ToArray()[1];
+            return val.Substring(1, val.Length - 1);
         }
     }
 }
