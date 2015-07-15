@@ -75,7 +75,9 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void RemoveLink() {
-            Terminal.Execute("rm " + global.versionsDir + "/" + global.antdRunning);
+            var running = global.versionsDir + "/" + global.antdRunning;
+            Console.WriteLine("Removing running {0}", running);
+            Terminal.Execute("rm " + running);
         }
 
         /// <summary>
