@@ -4,48 +4,103 @@
     <tbody>
         @foreach (Antd.Storage.Volumes.Block blk in Model) { 
             <tr>
-                <td colspan="2">@blk.Name @if (blk.MountPoint != "") {<p>> @blk.MountPoint </p>}</td>
+                <td colspan="2">
+                    <p class="bg-anthilla-green fg-anthilla-gray" style="width: auto; height: 30px; padding:5px 30px; display: inline-block; margin: 5px 7px;">
+                         @blk.Name
+                    </p>
+                    @if (blk.MountPoint != "" || blk.MountPoint == null) {
+                        <p class="fg-anthilla-green bg-anthilla-gray-ml" style="width: auto; height: 30px; padding: 5px 20px; display: inline-block; margin: 5px 7px;"><i class="icon-arrow-right"></i></p>
+                        <p class="bg-anthilla-green fg-anthilla-gray" style="width: auto; height: 30px; padding:5px 30px; display: inline-block; margin: 5px 7px;">
+                            @blk.MountPoint 
+                        </p>
+                    }
+                </td>
             </tr>
             <tr>
-                <td>
-                    <canvas id="myChart" width="200" height="200"></canvas>
+                <td style="margin: 5px 15px;">
+                    @if (blk.Size != "" || blk.Size == null) {
+                        <canvas class="disk-size-chart" width="200" height="200" data-size="@blk.Size"></canvas>
+                    }
                 </td>
                 <td>
-                    @if (blk.Label != "") {<label>Label</label> <p>@blk.Label</p>}
-                    @if (blk.UUID != "") {<label>UUID</label> <p>@blk.UUID</p>}
-                    @if (blk.PartLabel != "") {<label>PartLabel</label> <p>@blk.PartLabel</p>}
-                    @if (blk.PartUUID != "") {<label>PartUUID</label> <p>@blk.PartUUID</p>}
-                    @if (blk.Type != "") {<label>Type</label> <p>@blk.Type</p>}
-                    @if (blk.DiskType != "") {<label>DiskType</label> <p>@blk.DiskType</p>}
+                    @if (blk.Label != "" || blk.Label == null) {<label>Label</label> <p>@blk.Label</p>}
+                    @if (blk.UUID != "" || blk.UUID == null) {<label>UUID</label> <p>@blk.UUID</p>}
+                    @if (blk.PartLabel != "" || blk.PartLabel == null) {<label>PartLabel</label> <p>@blk.PartLabel</p>}
+                    @if (blk.PartUUID != "" || blk.PartUUID == null) {<label>PartUUID</label> <p>@blk.PartUUID</p>}
+                    @if (blk.Type != "" || blk.Type == null) {<label>Volume Type</label> <p>@blk.Type</p>}
+                    @if (blk.DiskType != "" || blk.DiskType == null) {<label>Device Type</label> <p>@blk.DiskType</p>}
                 </td>
             </tr> 
         }
     </tbody>
 </table>
 <script type="text/javascript">
-    var data = [
-    {
-        value: 65,
-        color: "#F7464A",
-        highlight: "#F7464A",
-        label: "used"
-    },
-    {
-        value: 35,
-        color: "#A7BD39",
-        highlight: "#A7BD39",
-        label: "free"
-    }
-    ];
-    var chartOptions = {
-        animation: false,
-        segmentShowStroke: true,
-        segmentStrokeColor: "#fff",
-        segmentStrokeWidth: 2,
-        percentageInnerCutout: 50,
-        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    };
+    //var data = [
+    //{
+    //    value: 65,
+    //    color: "#F7464A",
+    //    highlight: "#F7464A",
+    //    label: "used"
+    //},
+    //{
+    //    value: 35,
+    //    color: "#A7BD39",
+    //    highlight: "#A7BD39",
+    //    label: "free"
+    //}
+    //];
+    //var chartOptions = {
+    //    animation: false,
+    //    segmentShowStroke: true,
+    //    segmentStrokeColor: "#fff",
+    //    segmentStrokeWidth: 2,
+    //    percentageInnerCutout: 50,
+    //    legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    //};
 
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myPieChart = new Chart(ctx).Pie(data, chartOptions);
+    ////var ctx = document.getElementById("myChart").getContext("2d");
+    ////var myPieChart = new Chart(ctx).Pie(data, chartOptions);
+
+    $(document).ready(function () {
+        console.log('doc rdy');
+        BuildCharts();
+    });
+
+    function BuildCharts() {
+        var diskChartOptions = {
+            animation: false,
+            segmentShowStroke: true,
+            segmentStrokeColor: "#fff",
+            segmentStrokeWidth: 2,
+            percentageInnerCutout: 50,
+            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+        };
+        // Get context with jQuery - using jQuery's .get() method.
+        //var ctx = $("#myChart").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        //var myNewChart = new Chart(ctx);
+        $('.disk-size-chart').each(function () {
+            var size = $(this).attr('data-size');
+            console.log('this size: ' + size);
+            var diskdata = [{
+                value: size,
+                color: "#F7464A",
+                highlight: "#F7464A",
+                label: "size"
+            },
+            {
+                value: 35,
+                color: "#A7BD39",
+                highlight: "#A7BD39",
+                label: "free"
+            }];
+            console.log('defined data: ' + diskdata[0].value);
+            var thisCanvas = $(this).get(0).getContext("2d");
+            if (thisCanvas.length > 0) {
+                console.log('canvas exists');
+            }
+            var pieChart = new Chart(thisCanvas).Pie(diskdata, diskChartOptions);
+            console.log('init');
+        });
+    }
 </script>

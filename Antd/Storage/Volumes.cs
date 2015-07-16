@@ -66,6 +66,12 @@ namespace Antd.Storage {
             public string DiskType { get; set; }
 
             public string MountPoint { get; set; }
+
+            public class Info {
+                public string DiskBytes { get; set; }
+
+                public string DiskSectors { get; set; }
+            }
         }
 
         public class GET {
