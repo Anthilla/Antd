@@ -8,3 +8,6 @@ mv /mnt/cdrom/Scripts/Autoupdate/tmp/DIR_framework_antdsh.squashfs.xz /mnt/cdrom
 mount /mnt/cdrom/Apps/DIR_framework_antdsh.squashfs.xz /framework/antdsh
 mono /framework/antdsh/antdsh.exe update-url
 echo Antd Installed
+echo I have to wait some seconds...
+sleep 30
+mono /framework/antdsh/antdsh.exe status
