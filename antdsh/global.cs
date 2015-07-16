@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace antdsh {
+﻿namespace antdsh {
     public class global {
         public static string versionsDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_versions"; } }
         public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_tmp"; } }

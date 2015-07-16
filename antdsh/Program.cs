@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace antdsh {
     class Program {
         static string command;
-        static List<string> commandList = new List<string>() { };
+        static HashSet<cmd> commandList = new HashSet<cmd>() { };
 
         static void Main(string[] args) {
             Directory.CreateDirectory(global.versionsDir);
@@ -24,9 +24,9 @@ namespace antdsh {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(" > ");
                 Console.ResetColor();
-                //Keyupevent();
+                //KeyEvent();
                 command = Console.ReadLine();
-                commandList.Add(command);
+                if (command != "") { AddCommand(command); }
                 Command(command.Trim());
                 Main(args);
             }
@@ -55,6 +55,7 @@ namespace antdsh {
             else if (command == "exit") { shell.Exit(); }
             else if (command == "progress") { shell.Progress(); }
             else if (command == "clear") { Terminal.Execute("clear"); }
+            else if (command == "history") { PrintHistory(); }
             else if (command == "") { return; }
             else { shell.Execute(command); }
         }
@@ -81,7 +82,24 @@ namespace antdsh {
             Console.WriteLine("        {0};", description);
         }
 
-        static void Keyupevent() {
+        static void AddCommand(string command) {
+            if (command != "history") {
+                var cmd = new cmd() {
+                    timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                    command = command
+                };
+                commandList.Add(cmd);
+            }
+        }
+
+        static void PrintHistory() {
+            foreach (var cmd in commandList) {
+                Console.WriteLine(cmd.command);
+            }
+            return;
+        }
+
+        static void KeyEvent() {
             var keyinfo = Console.ReadKey();
             if (keyinfo.Key == ConsoleKey.DownArrow) {
                 Console.WriteLine("DownArrow pressed");
@@ -92,5 +110,22 @@ namespace antdsh {
                 return;
             }
         }
+
+        //string[] items = { "nought", "one", "two", "three", "four" };
+
+        //var item = items[4];
+
+        //var pad1 = Enumerable.Repeat("", 1);
+        //var pad2 = Enumerable.Repeat("", 2);
+
+        //var padded = pad1.Concat(items);
+        //var next1 = items.Concat(pad1);
+        //var next2 = items.Skip(1).Concat(pad2);
+
+        //var sandwiched =
+        //    padded
+        //        .Zip(next1, (previous, current) => new { previous, current })
+        //        .Zip(next2, (pair, next) => new { pair.previous, pair.current, next })
+        //        .FirstOrDefault(triplet => triplet.current == item);
     }
 }
