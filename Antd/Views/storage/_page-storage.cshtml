@@ -45,7 +45,7 @@
         @Html.Partial("_cctable-main", Model.CCTable)
     }
     @*@Html.Partial("page-storage-database", Model)*@
-    @Html.Partial("page-storage-disks")
+    @Html.Partial("page-storage-disks", Model.VolumesInfo)
     @*@Html.Partial("page-storage-volumes")*@
     @*@Html.Partial("page-storage-backup")*@
     @*@Html.Partial("page-storage-iscsi")*@

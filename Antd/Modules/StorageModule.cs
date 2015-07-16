@@ -29,6 +29,7 @@
 
 using Antd.CCTable;
 using Antd.Database;
+using Antd.Storage;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -48,6 +49,7 @@ namespace Antd {
                 //vmod.DatabasePath = AntdDatabase.Path;
                 //vmod.DatabaseJnlPath = AntdDatabase.JournalPath;
                 //vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
+                vmod.VolumesInfo = Volumes.BlocksFromDd();
 
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
@@ -58,6 +60,11 @@ namespace Antd {
             Get["/database/raid/{path*}"] = x => {
                 string path = x.path;
                 AntdDatabase.AddRaidPath(path);
+                return Response.AsJson(true);
+            };
+
+            Get["/reload/volumes"] = x => {
+                Volumes.PopulateBlocks();
                 return Response.AsJson(true);
             };
         }

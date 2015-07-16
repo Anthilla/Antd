@@ -33,6 +33,31 @@ $('select[name="UserType"]').windowed({
     }
 });
 
+//volumes
+
+$('i[id="ReloadVolumes"]').mouseover(function (event) {
+    $(this).addClass('fg-anthilla-green');
+});
+
+$('i[id="ReloadVolumes"]').mouseout(function (event) {
+    $(this).removeClass('fg-anthilla-green');
+});
+
+$('i[id="ReloadVolumes"]').click(function (event) {
+    event.preventDefault();
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/storage/reload/volumes/',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            location.reload(true);
+            return false;
+        }
+    });
+});
+
 //cctable
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {

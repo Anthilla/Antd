@@ -35,6 +35,8 @@ namespace Antd.Storage {
     public class Volumes {
 
         public class Block {
+            public string _Id { get; set; }
+
             public string Name { get; set; }
 
             public string Attributes { get; set; }
@@ -88,37 +90,63 @@ namespace Antd.Storage {
             }
         }
 
-        public static List<Block> Blocks() {
-            var list = new List<Block>() { };
+        public static void PopulateBlocks() {
+            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var row in rows) {
+                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block();
+                blk.Name = cells[0];
+                blk.Maj = cells[1];
+                blk.Min = cells[1];
+                blk.Rm = cells[2];
+                blk.Size = cells[3];
+                blk.Ro = cells[4];
+                blk.DiskType = cells[5];
+                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
+                var fromBlkid = GetBlockFromBlkid(blk.Name);
+                if (fromBlkid != null) {
+                    blk.Label = fromBlkid.Label;
+                    blk.UUID = fromBlkid.UUID;
+                    blk.PartLabel = fromBlkid.PartLabel;
+                    blk.PartUUID = fromBlkid.PartUUID;
+                    blk.Type = fromBlkid.Type;
+                }
+                SaveToDb(blk);
+            }
+        }
+
+        public static List<Block> BlocksFromDd() {
+            var list = DeNSo.Session.New.Get<Block>(b => b != null).ToList();
+            if (list.ToArray().Length < 1) {
+                PopulateBlocks();
+            }
+            return list;
+        }
+
+        public static void SaveToDb(Block model) {
+            model._Id = Guid.NewGuid().ToString();
+            var old = DeNSo.Session.New.Get<Block>(b => b != null && b.Name == model.Name).FirstOrDefault();
+            if (old != null) {
+                DeNSo.Session.New.Delete(old);
+            }
+            DeNSo.Session.New.Set(model);
+        }
+
+        public static List<string> BlockList() {
             var blocks = new List<string>() { };
             var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 blocks.Add(row);
             }
-            foreach (var b in blocks) {
-                var blk = new Block();
-                var fromLsblk = GetBlockFromLsblk(b);
-                var fromBlkid = GetBlockFromBlkid(b);
-                blk.Name = b;
-                blk.Size = fromLsblk.Size;
-                blk.Label = fromBlkid.Label;
-                blk.UUID = fromBlkid.UUID;
-                blk.PartLabel = fromBlkid.PartLabel;
-                blk.PartUUID = fromBlkid.PartUUID;
-                blk.Type = fromBlkid.Type;
-                blk.DiskType = fromLsblk.DiskType;
-                blk.MountPoint = fromLsblk.MountPoint;
-                list.Add(blk);
-            }
-            return list;
+            return blocks;
         }
 
         private static Block GetBlockFromLsblk(string q) {
-            return Lsblk().Where(b => b.Name == q).FirstOrDefault();
+            return Lsblk().Where(b => b.Name == q && b != null).FirstOrDefault();
         }
 
         private static Block GetBlockFromBlkid(string q) {
-            return Blkid().Where(b => b.Name == q).FirstOrDefault();
+            return Blkid().Where(b => b.Name == q && b != null).FirstOrDefault();
         }
 
         private static List<Block> Lsblk() {
