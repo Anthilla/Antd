@@ -50,6 +50,7 @@ namespace Antd {
             Console.CancelKeyPress +=
                 (sender, e) => {
                     Console.WriteLine("^C");
+                    System.Environment.Exit(1);
                     stop.Set();
                     e.Cancel = true;
                 };

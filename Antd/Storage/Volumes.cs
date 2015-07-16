@@ -29,10 +29,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.Storage {
     public class Volumes {
@@ -53,26 +50,36 @@ namespace Antd.Storage {
             public string PartLabel { get; set; }
 
             public string PartUUID { get; set; }
+
+            public string Maj { get; set; }
+
+            public string Min { get; set; }
+
+            public string Rm { get; set; }
+
+            public string Size { get; set; }
+
+            public string Ro { get; set; }
+
+            public string MountPoint { get; set; }
         }
 
 
         public static List<Block> Blkid() {
             var list = new List<Block>() { };
-            var result = Terminal.Execute("blkid");
-            var rows = result.Split(new String[] { ((char)13 + (char)10).ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-
+            var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 var cells = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block();
                 blk.Name = cells[0];
                 blk.Attributes = cells[1];
                 var attrs = cells[1].Split(' ').ToArray();
-                //blk.Type = AssignValue("TYPE=", attrs);
-                //blk.UUID = AssignValue("UUID=", attrs);
-                //blk.SecType = AssignValue("SEC_TYPE=", attrs);
-                //blk.Label = AssignValue("LABEL=", attrs);
-                //blk.PartLabel = AssignValue("PARTLABEL=", attrs);
-                //blk.PartUUID = AssignValue("PARTUUID=", attrs);
+                blk.Type = AssignValue("TYPE=", attrs);
+                blk.UUID = AssignValue("UUID=", attrs);
+                blk.SecType = AssignValue("SEC_TYPE=", attrs);
+                blk.Label = AssignValue("LABEL=", attrs);
+                blk.PartLabel = AssignValue("PARTLABEL=", attrs);
+                blk.PartUUID = AssignValue("PARTUUID=", attrs);
                 list.Add(blk);
             }
             return list;
@@ -85,15 +92,29 @@ namespace Antd.Storage {
         private static string GetValue(string input) {
             if (input != null) {
                 var val = input.Split('=').ToArray()[1];
-                return val.Substring(1, val.Length - 1);
+                return val.Substring(1, val.Length - 2);
             }
             return "";
         }
 
-        public static List<string> Lsblk() {
-            var result = Terminal.Execute("lsblk -npl");
-            var rows = result.Split(new String[] { @"\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            return rows.ToList();
+        public static List<Block> Lsblk() {
+            var list = new List<Block>() { };
+            //procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
+            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var row in rows) {
+                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block();
+                blk.Name = cells[0];
+                blk.Maj = cells[1];
+                blk.Min = cells[1];
+                blk.Rm = cells[2];
+                blk.Size = cells[3];
+                blk.Ro = cells[4];
+                blk.Type = cells[5];
+                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
+                list.Add(blk);
+            }
+            return list;
         }
     }
 }

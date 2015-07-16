@@ -1,10 +1,26 @@
 ﻿<legend id="Disks">Disks</legend>
 <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>UUID</th>
+            <th>Sec Type</th>
+            <th>Label</th>
+            <th>Part Label</th>
+            <th>Part UUID</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (Antd.Storage.Volumes.Block blk in Antd.Storage.Volumes.Blkid()) { 
             <tr>
                 <td class="right">@blk.Name</td>
-                <td class="right">@blk.Attributes</td>
+                <td class="right">@blk.Type</td>
+                <td class="right">@blk.UUID</td>
+                <td class="right">@blk.SecType</td>
+                <td class="right">@blk.Label</td>
+                <td class="right">@blk.PartLabel</td>
+                <td class="right">@blk.PartUUID</td>
             </tr>
         }
     </tbody>
@@ -61,3 +77,31 @@
         </div>
     </div>
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Maj</th>
+            <th>Min</th>
+            <th>RM</th>
+            <th>Size</th>
+            <th>RO</th>
+            <th>Type</th>
+            <th>Mount point</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Antd.Storage.Volumes.Block blk in Antd.Storage.Volumes.Lsblk()) { 
+            <tr>
+                <td class="right">@blk.Name</td>
+                <td class="right">@blk.Maj</td>
+                <td class="right">@blk.Min</td>
+                <td class="right">@blk.Rm</td>
+                <td class="right">@blk.Size</td>
+                <td class="right">@blk.Ro</td>
+                <td class="right">@blk.Type</td>
+                <td class="right">@blk.MountPoint</td>
+            </tr>
+        }
+    </tbody>
+</table>

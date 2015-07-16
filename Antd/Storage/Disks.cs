@@ -28,34 +28,30 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.Storage {
     public class Disks {
 
         public class GET {
             public static string[] ByID() {
-                return Terminal.Execute("ls -1 /dev/disk/by-id").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-label").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-uuid").Split(new String[] { @"\\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
         }
     }
