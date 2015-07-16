@@ -1,71 +1,27 @@
 ﻿<legend id="Disks">Disks & Volumes</legend>
 <i id="ReloadVolumes" style="float: right; position: relative; top: -50px; right: 15px; font-size: 20px; margin-bottom: -20px;" class="icon-loop"></i>
 <table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Label</th>
-            <th>UUID</th>
-            <th>Part Label</th>
-            <th>Part UUID</th>
-            <th>FS Type</th>
-            <th>Disk Type</th>
-            <th>Mount Point</th>
-        </tr>
-    </thead>
     <tbody>
         @foreach (Antd.Storage.Volumes.Block blk in Model) { 
-            <tr data-id="@blk._Id">
-                <td class="right">@blk.Name</td>
-                <td class="right">@blk.Size</td>
-                <td class="right">@blk.Label</td>
-                <td class="right">@blk.UUID</td>
-                <td class="right">@blk.PartLabel</td>
-                <td class="right">@blk.PartUUID</td>
-                <td class="right">@blk.Type</td>
-                <td class="right">@blk.DiskType</td>
-                <td class="right">@blk.MountPoint</td>
+            <tr>
+                <td colspan="2">@blk.Name @if (blk.MountPoint != "") {<p>> @blk.MountPoint </p>}</td>
             </tr>
+            <tr>
+                <td>
+                    <canvas id="myChart" width="200" height="200"></canvas>
+                </td>
+                <td>
+                    @if (blk.Label != "") {<label>Label</label> <p>@blk.Label</p>}
+                    @if (blk.UUID != "") {<label>UUID</label> <p>@blk.UUID</p>}
+                    @if (blk.PartLabel != "") {<label>PartLabel</label> <p>@blk.PartLabel</p>}
+                    @if (blk.PartUUID != "") {<label>PartUUID</label> <p>@blk.PartUUID</p>}
+                    @if (blk.Type != "") {<label>Type</label> <p>@blk.Type</p>}
+                    @if (blk.DiskType != "") {<label>DiskType</label> <p>@blk.DiskType</p>}
+                </td>
+            </tr> 
         }
     </tbody>
 </table>
-
-<div class="grid">
-    <div class="row">
-        @foreach (string block in Antd.Storage.Volumes.BlockList()) {
-        <div class="span6">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td colspan="2" rowspan="4" style="margin-left: 20px;">
-                            <canvas id="myChart" width="200" height="200"></canvas>
-                        </td>
-                        <th colspan="4"> @block</th>
-                    </tr>
-                    <tr>
-                        <td>Total</td>
-                        <td class="totPer"></td>
-                        <td class="totDim"></td>
-                        <td rowspan="3"><i class="icon-cog"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Free</td>
-                        <td class="frePer"></td>
-                        <td class="freDim"></td>
-                    </tr>
-                    <tr>
-                        <td>Used</td>
-                        <td class="usePer"></td>
-                        <td class="useDim"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        }
-    </div>
-</div>
-
 <script type="text/javascript">
     var data = [
     {

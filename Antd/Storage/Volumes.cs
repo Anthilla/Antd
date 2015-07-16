@@ -116,7 +116,7 @@ namespace Antd.Storage {
         }
 
         public static List<Block> BlocksFromDd() {
-            var list = DeNSo.Session.New.Get<Block>(b => b != null).ToList();
+            var list = DeNSo.Session.New.Get<Block>(b => b != null).OrderBy(n => n.Name).ToList();
             if (list.ToArray().Length < 1) {
                 PopulateBlocks();
             }

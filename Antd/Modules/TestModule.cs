@@ -50,23 +50,9 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Get["/net"] = x => {
-                foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces()) {
-                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet) {
-                        Console.WriteLine(ni.Name);
-                        foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses) {
-                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
-                                Console.WriteLine(ip.Address.ToString());
-                            }
-                        }
-                    }
-                }
+            Get["/ssh"] = x => {
+                Antd.Ssh.Test.Start("10.1.3.194", "root", "root");
                 return Response.AsText("gg");
-            };
-
-            Get["/enable"] = x => {
-                Console.WriteLine(SMTP.Settings.Port);
-                return Response.AsXml("");
             };
         }
     }
