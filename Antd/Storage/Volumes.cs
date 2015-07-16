@@ -61,11 +61,86 @@ namespace Antd.Storage {
 
             public string Ro { get; set; }
 
+            public string DiskType { get; set; }
+
             public string MountPoint { get; set; }
         }
 
+        public class GET {
+            public static string[] ByID() {
+                return Terminal.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
 
-        public static List<Block> Blkid() {
+            public static string[] ByLabel() {
+                return Terminal.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
+
+            public static string[] ByPartLabel() {
+                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
+
+            public static string[] ByPartUuid() {
+                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
+
+            public static string[] ByUuid() {
+                return Terminal.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
+        }
+
+        public static List<Block> Blocks() {
+            var list = new List<Block>() { };
+            var blocks = new List<string>() { };
+            var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var row in rows) {
+                blocks.Add(row);
+            }
+            foreach (var b in blocks) {
+                var blk = new Block();
+                var fromLsblk = GetBlockFromLsblk(b);
+                var fromBlkid = GetBlockFromBlkid(b);
+                blk.Name = b;
+                blk.Size = fromLsblk.Size;
+                blk.Label = fromBlkid.Label;
+                blk.UUID = fromBlkid.UUID;
+                blk.PartLabel = fromBlkid.PartLabel;
+                blk.PartUUID = fromBlkid.PartUUID;
+                blk.Type = fromBlkid.Type;
+                blk.DiskType = fromLsblk.DiskType;
+                blk.MountPoint = fromLsblk.MountPoint;
+                list.Add(blk);
+            }
+            return list;
+        }
+
+        private static Block GetBlockFromLsblk(string q) {
+            return Lsblk().Where(b => b.Name == q).FirstOrDefault();
+        }
+
+        private static Block GetBlockFromBlkid(string q) {
+            return Blkid().Where(b => b.Name == q).FirstOrDefault();
+        }
+
+        private static List<Block> Lsblk() {
+            var list = new List<Block>() { };
+            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var row in rows) {
+                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block();
+                blk.Name = cells[0];
+                blk.Maj = cells[1];
+                blk.Min = cells[1];
+                blk.Rm = cells[2];
+                blk.Size = cells[3];
+                blk.Ro = cells[4];
+                blk.DiskType = cells[5];
+                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
+                list.Add(blk);
+            }
+            return list;
+        }
+
+        private static List<Block> Blkid() {
             var list = new List<Block>() { };
             var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
@@ -95,26 +170,6 @@ namespace Antd.Storage {
                 return val.Substring(1, val.Length - 2);
             }
             return "";
-        }
-
-        public static List<Block> Lsblk() {
-            var list = new List<Block>() { };
-            //procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
-            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var row in rows) {
-                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var blk = new Block();
-                blk.Name = cells[0];
-                blk.Maj = cells[1];
-                blk.Min = cells[1];
-                blk.Rm = cells[2];
-                blk.Size = cells[3];
-                blk.Ro = cells[4];
-                blk.Type = cells[5];
-                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
-                list.Add(blk);
-            }
-            return list;
         }
     }
 }

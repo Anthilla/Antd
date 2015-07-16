@@ -46,9 +46,9 @@
     }
     @*@Html.Partial("page-storage-database", Model)*@
     @Html.Partial("page-storage-disks")
-    @Html.Partial("page-storage-volumes")
-    @Html.Partial("page-storage-backup")
-    @Html.Partial("page-storage-iscsi")
+    @*@Html.Partial("page-storage-volumes")*@
+    @*@Html.Partial("page-storage-backup")*@
+    @*@Html.Partial("page-storage-iscsi")*@
 }
 
 @section Scripts {
@@ -67,20 +67,6 @@
                         return false;
                     }
                 });
-            }
-        });
-
-        $(".cake").cake({
-            data: {
-                total: '100',
-                used: '74'
-            }
-        });
-
-        $(".cake2").cake({
-            data: {
-                total: '100',
-                used: '23'
             }
         });
     </script>

@@ -3,6 +3,37 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Size</th>
+            <th>Label</th>
+            <th>UUID</th>
+            <th>Part Label</th>
+            <th>Part UUID</th>
+            <th>FS Type</th>
+            <th>Disk Type</th>
+            <th>Mount Point</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Antd.Storage.Volumes.Block blk in Antd.Storage.Volumes.Blocks()) { 
+            <tr>
+                <td class="right">@blk.Name</td>
+                <td class="right">@blk.Size</td>
+                <td class="right">@blk.Label</td>
+                <td class="right">@blk.UUID</td>
+                <td class="right">@blk.PartLabel</td>
+                <td class="right">@blk.PartUUID</td>
+                <td class="right">@blk.Type</td>
+                <td class="right">@blk.DiskType</td>
+                <td class="right">@blk.MountPoint</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*<hr class="bg-anthilla-gray" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
             <th>Type</th>
             <th>UUID</th>
             <th>Sec Type</th>
@@ -24,8 +55,8 @@
             </tr>
         }
     </tbody>
-</table>
-<hr class="bg-anthilla-gray" />
+</table>*@
+@*<hr class="bg-anthilla-gray" />
 <div class="tab-control" data-role="tab-control">
 
     <ul class="tabs">
@@ -39,7 +70,7 @@
     <div class="frames">
         <div class="frame" id="ByID">
             <ul class="fg-white">
-                @foreach (string d in Antd.Storage.Disks.GET.ByID()) {
+                @foreach (string d in Antd.Storage.Volumes.GET.ByID()) {
                     <li>@d</li>
                 }
             </ul>
@@ -47,7 +78,7 @@
 
         <div class="frame" id="ByLabel">
             <ul class="fg-white">
-                @foreach (string d in Antd.Storage.Disks.GET.ByLabel()) {
+                @foreach (string d in Antd.Storage.Volumes.GET.ByLabel()) {
                     <li>@d</li>
                 }
             </ul>
@@ -55,7 +86,7 @@
 
         <div class="frame" id="ByPartLabel">
             <ul class="fg-white">
-                @foreach (string d in Antd.Storage.Disks.GET.ByPartLabel()) {
+                @foreach (string d in Antd.Storage.Volumes.GET.ByPartLabel()) {
                     <li>@d</li>
                 }
             </ul>
@@ -63,7 +94,7 @@
 
         <div class="frame" id="ByPartUuid">
             <ul class="fg-white">
-                @foreach (string d in Antd.Storage.Disks.GET.ByPartUuid()) {
+                @foreach (string d in Antd.Storage.Volumes.GET.ByPartUuid()) {
                     <li>@d</li>
                 }
             </ul>
@@ -71,14 +102,14 @@
 
         <div class="frame" id="ByUuid">
             <ul class="fg-white">
-                @foreach (string d in Antd.Storage.Disks.GET.ByUuid()) {
+                @foreach (string d in Antd.Storage.Volumes.GET.ByUuid()) {
                     <li>@d</li>
                 }
             </ul>
         </div>
     </div>
-</div>
-<hr class="bg-anthilla-gray" />
+</div>*@
+@*<hr class="bg-anthilla-gray" />
 <table class="table">
     <thead>
         <tr>
@@ -107,3 +138,67 @@
         }
     </tbody>
 </table>
+<hr class="bg-anthilla-gray" />*@
+
+@*<div class="grid">
+    <div class="row">
+        @foreach (string a in new List<string>() { "disco uno", "disco due" }) { 
+            <div class="span6">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" rowspan="4" style="margin-left: 20px;">
+                                <canvas id="myChart" width="200" height="200"></canvas>
+                            </td>
+                            <th colspan="4">disk name</th>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td class="totPer"></td>
+                            <td class="totDim"></td>
+                            <td rowspan="3"><i class="icon-cog"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Free</td>
+                            <td class="frePer"></td>
+                            <td class="freDim"></td>
+                        </tr>
+                        <tr>
+                            <td>Used</td>
+                            <td class="usePer"></td>
+                            <td class="useDim"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>*@
+
+@*<script type="text/javascript">
+    var data = [
+    {
+        value: 65,
+        color: "#F7464A",
+        highlight: "#F7464A",
+        label: "used"
+    },
+    {
+        value: 35,
+        color: "#A7BD39",
+        highlight: "#A7BD39",
+        label: "free"
+    }
+    ];
+    var chartOptions = {
+        animation: false,
+        segmentShowStroke: true,
+        segmentStrokeColor: "#fff",
+        segmentStrokeWidth: 2,
+        percentageInnerCutout: 50,
+        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    };
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myPieChart = new Chart(ctx).Pie(data, chartOptions);
+</script>*@

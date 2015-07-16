@@ -61,7 +61,7 @@ namespace Antd {
 
                 AntdBoot.StartScheduler(false);
                 AntdBoot.StartDirectoryWatcher(true);
-                AntdBoot.StartNetworkd();
+                //AntdBoot.StartNetworkd();
                 AntdBoot.CheckSysctl(false);
                 //AntdBoot.TestWebDav("http://localhost:7788/", "/test");
 
