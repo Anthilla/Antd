@@ -13,3 +13,7 @@ echo Antd Installed
 echo I have to wait some seconds...
 sleep 30
 mono /framework/antdsh/antdsh.exe status
+
+
+
+echo Finished
