@@ -384,3 +384,35 @@ ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.1 &
 ucarp -v 42 -p anthilla -a 10.1.1.252 -s 10.1.1.2 &
 ```
 in this case the identified is 42 and the password is anthilla
+
+### S3: Server Mockup:
+
+present network servers like:
+- NTP
+- DNS
+- mDNS
+- LOG
+- MONITOR
+- DHCP
+- SSH
+- KERBEROS
+- RADIUS
+- PROXY
+- SWITCHING
+- ROUTING
+- MAIL
+- DIRECTORY SHARING
+- PRINTERS
+
+The association between servers have to help to identify and map Clients/Users
+DNS maps IP/NAMES - NAMES/IP
+DHCP maps MAC/IP with reservations
+RADIUS maps MAC/IP to users/group/functions as trigger for configurations and 802.1X
+KERBEROS maps IP/NAME to user/group
+SSH maps IP/NAME to user/group
+
+Other servers publish services for identified Users
+and make continous checking
+
+
+
