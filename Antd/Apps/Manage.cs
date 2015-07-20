@@ -100,5 +100,15 @@ namespace Antd.Apps {
             }
             return list;
         }
+
+        public static string[] GetWantedDirectories(string appPath) {
+            var list = new List<string>() { };
+            foreach (string[] pair in ReadInfoListed(appPath)) {
+                if (pair[0] == "path") {
+                    list.Add(pair[1]);
+                }
+            }
+            return list.ToArray();
+        }
     }
 }

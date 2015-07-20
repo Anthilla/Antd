@@ -45,10 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="apps.cs" />
     <Compile Include="cmd.cs" />
     <Compile Include="ex.cs" />
     <Compile Include="global.cs" />
+    <Compile Include="ignorethis_apps.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="progress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +61,10 @@
     <ProjectReference Include="..\antdlib\antdlib.csproj">
       <Project>{9d55f357-b584-4f81-a2e7-5cbd9e69789c}</Project>
       <Name>antdlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Antd\Antd.csproj">
+      <Project>{7294764b-234d-43e7-9f67-9ca79e9fda34}</Project>
+      <Name>Antd</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
