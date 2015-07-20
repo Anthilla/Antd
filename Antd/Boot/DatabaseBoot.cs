@@ -27,14 +27,15 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+//using DeNSo.P2P;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.Threading;
 
 namespace Antd.Boot {
-
     public class DatabaseBoot {
 
         public static void Start(string[] dbPaths, bool doTest) {
@@ -43,6 +44,9 @@ namespace Antd.Boot {
             DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
             DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
+
+            //EventP2PDispatcher.EnableP2PEventMesh();
+            //EventP2PDispatcher.MakeNodeAvaiableToPNRP(Cloud.Available);
 
             DeNSo.Session.DefaultDataBase = "antd_db_0";
             DeNSo.Session.Start();
@@ -53,6 +57,7 @@ namespace Antd.Boot {
         }
 
         public static void ShutDown() {
+            //EventP2PDispatcher.StopP2PEventMesh();
             DeNSo.Session.ShutDown();
         }
 
