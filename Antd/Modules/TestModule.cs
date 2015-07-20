@@ -54,11 +54,6 @@ namespace Antd {
                 Antd.Ssh.Test.Start("10.1.3.194", "root", "root");
                 return Response.AsText("gg");
             };
-
-            Get["/rsa"] = x => {
-                RSA.Test();
-                return Response.AsText("gg");
-            };
         }
     }
 }

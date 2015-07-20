@@ -29,6 +29,8 @@ namespace antdsh {
             if (newestVersionFound.Key != null) {
                 ex.LinkVersionToRunning(newestVersionFound.Key);
                 Console.WriteLine("New antd '{0}' linked to running version", newestVersionFound.Key);
+                Console.WriteLine("Restarting services now...");
+                ex.RestartSystemctlAntdServices();
             }
             else {
                 Console.WriteLine("There's no antd to link.");
@@ -39,8 +41,26 @@ namespace antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        public static void Stop() {
-            ex.StopServices();
+        public static void Restart() {
+            Stop();
+            ex.RestartSystemctlAntdServices();
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void Stop(string confirm = null) {
+            Console.Write("Do you want to stop and unmount everything? (y/n): ");
+            var response = (confirm == null) ? "y" : Console.ReadLine();
+            if (response == "y") {
+                Console.WriteLine("Ok, I'm removing everything.");
+                ex.StopServices();
+                UmountAll();
+            }
+            else if (response == "n") {
+                Console.WriteLine("Ok.");
+                return;
+            }
         }
 
         /// <summary>
@@ -70,23 +90,6 @@ namespace antdsh {
             else {
                 Console.WriteLine(res);
                 Console.WriteLine(Terminal.Execute("systemctl status antd-launcher.service"));
-            }
-        }
-
-        /// <summary>
-        /// ok
-        /// </summary>
-        public static void Remove() {
-            Console.Write("Are you sure? (y/n): ");
-            var response = Console.ReadLine();
-            if (response == "n") {
-                Console.WriteLine("Ok, I'm removing everything.");
-                ex.StopServices();
-                UmountAll();
-            }
-            else if (response == "n") {
-                Console.WriteLine("Ok.");
-                return;
             }
         }
 
@@ -239,13 +242,6 @@ namespace antdsh {
                 }
                 return;
             }
-        }
-
-        /// <summary>
-        /// ok
-        /// </summary>
-        public static void RestartServices() {
-            ex.RestartSystemctlAntdServices();
         }
 
         /// <summary>

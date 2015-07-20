@@ -1,14 +1,8 @@
 ﻿using Renci.SshNet;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Antd.Ssh {
     public class Test {
-        static SshClient client;
-        static ForwardedPortDynamic port;
 
         public static void Start(string server, string user, string password, int serverport = 22) {
             try {
@@ -32,14 +26,6 @@ namespace Antd.Ssh {
                 Console.WriteLine(ex.ToString());
             }
         }
-
-        public static void Stop() {
-            port.Stop();
-            port.Dispose();
-            client.Disconnect();
-            client.Dispose();
-        }
-
 
         public static void Mainz() {
             // Setup Credentials and Server Information

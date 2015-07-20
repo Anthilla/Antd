@@ -40,9 +40,8 @@ namespace antdsh {
             if (command == "help") { Help(); }
             else if (command == "start") { shell.Start(); }
             else if (command == "stop") { shell.Stop(); }
-            else if (command == "restart") { shell.RestartServices(); }
+            else if (command == "restart") { shell.Restart(); }
             else if (command == "status") { shell.Status(); }
-            else if (command == "remove") { shell.Remove(); }
             else if (command == "umount-all") { shell.UmountAll(); }
             else if (command == "update-check") { shell.UpdateCheck(); }
             else if (command == "update-launch") { shell.UpdateLaunch(); }
