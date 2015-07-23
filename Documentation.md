@@ -276,6 +276,71 @@ it is depends of the name assigned for each interface (eth0.10, eth0.20 and so o
 
 ### S2: Firewall:
 
+NFTABLES configuration
+
+TABLES
+- Adding new tables
+```
+nft add table ip <name>
+nft add talbe ip6 <name>
+```
+
+- Listing all tables
+```
+nft list tables ip
+nft list tables ip6
+```
+
+- Listing content of specif table
+```
+nft list table ip <name>
+```
+
+- delete table
+```
+nft delete table ip <name>
+```
+
+- Flushing table
+```
+nft flush table ip filter
+```
+
+CHAINS
+
+- basic rule
+```
+nft add chain ip <name> <type> { type filter hook input priority 0 \; }
+```
+```
+filter, which is obviously used to filter packets. This is supported by the arp, bridge, ip, ip6 and inet table families.
+route, which is used to reroute packets if any relevant IP header field or the packet mark is modified. If you are familiar with iptables, this chain type provides equivalent semantics to the mangle table. This is supported by the ip and ip6 table families.
+nat, which is used to perform Networking Address Translation (NAT). The first packet that belongs to a flow always hits this chain, follow up packets not. Therefore, never use this chain for filtering. This is supported by the ip and ip6 table families.
+```
+The possible hooks that you can use when you configure your chain are:
+```
+prerouting: the routing decision for those packets didn't happen yet, so you don't know if they are addressed to the local or remote systems.
+input: It happens after the routing decision, you can see packets that are directed to the local system and processes running in system.
+forward: It also happens after the routing decision, you can see packet that are
+output: to catch packets that are originated from processes in the local machine.
+postrouting: After the routing decision for packets leaving the local system.
+```
+
+- Adding new chain
+```
+nft add chain ip <name> <name>
+nft add chain ip filter input or output
+```
+- Delete new chain
+```
+nft delete chain ip <name> <type>
+nft delete chain ip filter input
+```
+- Flushing chain
+```
+nft flush chain <name> <type>
+nft flush chain filter input
+```
 this is a sample iptables configuration (netfilter framework).
 it is possible include these rules into a file and charge it. otherwise it is necessary add iptables line to add the ruleset. for instance:
 
