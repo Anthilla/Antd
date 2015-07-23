@@ -308,7 +308,7 @@ nft flush table ip filter
 
 CHAINS
 
-- basic rule
+- Basic rule
 ```
 nft add chain ip <name> <type> { type filter hook input priority 0 \; }
 ```
@@ -328,14 +328,16 @@ postrouting: After the routing decision for packets leaving the local system.
 
 - Adding new chain
 ```
-nft add chain ip <name> <name>
+nft add chain ip <name> <type>
 nft add chain ip filter input or output
 ```
+
 - Delete new chain
 ```
 nft delete chain ip <name> <type>
 nft delete chain ip filter input
 ```
+
 - Flushing chain
 ```
 nft flush chain <name> <type>
