@@ -31,21 +31,28 @@ using Nancy;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Nancy.Routing;
 
 namespace Antd {
     public class TMP {
         public string _Id { get; set; }
         public string guid { get; set; }
         public List<int> list { get; set; }
-        public string name {get;set;}
+        public string name { get; set; }
         public DateTime date { get; set; }
+    }
+
+    public class DefaultRouteMetadataProvider : IRouteMetadataProvider {
+        public object GetMetadata(RouteDescription routeDescription) {
+            return new MyRouteMetadata();
+        }
     }
 
     public class TestModule : NancyModule {
 
         public TestModule()
             : base("/test") {
-            Get["/"] = x => {
+            Get["Test page", "/"] = x => {
                 return Response.AsText("Hello World!");
             };
 
@@ -63,7 +70,7 @@ namespace Antd {
                 model._Id = Guid.NewGuid().ToString();
                 model.date = DateTime.Now;
                 model.guid = Guid.NewGuid().ToString();
-                model.name = model.date.ToString().Substring(0, 5) + model.guid.Substring(5,5);
+                model.name = model.date.ToString().Substring(0, 5) + model.guid.Substring(5, 5);
                 model.list = new List<int>() { };
                 DeNSo.Session.New.Set(model);
                 return Response.AsXml(model);

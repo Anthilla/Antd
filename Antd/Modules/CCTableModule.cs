@@ -32,7 +32,6 @@ using Antd.CommandManagement;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
-using System.Linq;
 
 namespace Antd {
 

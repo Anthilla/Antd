@@ -39,11 +39,17 @@ namespace Antd.Boot {
     public class DatabaseBoot {
 
         public static void Start(string[] dbPaths, bool doTest) {
+            //DeNSo.Configuration.BasePath = dbPaths;
+            //DeNSo.Configuration.EnableJournaling = true;
+            //DeNSo.Configuration.EnableDataCompression = false;
+            //DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
+            //DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
+
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
-            DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
-            DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
+            DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 2, 0);
+            DeNSo.Configuration.EnableOperationsLog = false;
 
             //EventP2PDispatcher.EnableP2PEventMesh();
             //EventP2PDispatcher.MakeNodeAvaiableToPNRP(Cloud.Available);
@@ -52,7 +58,7 @@ namespace Antd.Boot {
             DeNSo.Session.Start();
 
             if (doTest == true) {
-                Test();
+                //Test();
             }
         }
 
