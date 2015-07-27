@@ -27,16 +27,19 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Auth.T2FA;
-using Antd.Mail;
-using Antd.Security;
 using Nancy;
-using Nancy.Extensions;
 using System;
-using System.Dynamic;
-using System.Net.NetworkInformation;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Antd {
+    public class TMP {
+        public string _Id { get; set; }
+        public string guid { get; set; }
+        public List<int> list { get; set; }
+        public string name {get;set;}
+        public DateTime date { get; set; }
+    }
 
     public class TestModule : NancyModule {
 
@@ -54,6 +57,34 @@ namespace Antd {
                 Antd.Ssh.Test.Start("10.1.3.194", "root", "root");
                 return Response.AsText("gg");
             };
+
+            Get["/e/1"] = x => {
+                var model = new TMP();
+                model._Id = Guid.NewGuid().ToString();
+                model.date = DateTime.Now;
+                model.guid = Guid.NewGuid().ToString();
+                model.name = model.date.ToString().Substring(0, 5) + model.guid.Substring(5,5);
+                model.list = new List<int>() { };
+                DeNSo.Session.New.Set(model);
+                return Response.AsXml(model);
+            };
+
+            Get["/e/1/{guid}"] = x => {
+                string guid = x.guid;
+                var model = DeNSo.Session.New.Get<TMP>(m => m.guid == guid).First();
+                return Response.AsXml(model);
+            };
+
+            Get["/e/2/{guid}"] = x => {
+                string guid = x.guid;
+                var model = DeNSo.Session.New.Get<TMP>(m => m.guid == guid).First();
+                for (int i = 0; i < new Random().Next(1, 21); i++) {
+                    model.list.Add(i);
+                }
+                DeNSo.Session.New.Set(model);
+                return Response.AsXml(model);
+            };
+
         }
     }
 }
