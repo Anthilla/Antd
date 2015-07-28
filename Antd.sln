@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdsh", "antdsh\antdsh.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib", "antdlib\antdlib.csproj", "{9D55F357-B584-4F81-A2E7-5CBD9E69789C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthillaspsh", "anthillaspsh\anthillaspsh.csproj", "{548EBADA-4744-46D4-98FD-4B1561D69FBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthillaspsh", "ignorethis_anthillaspsh\anthillaspsh.csproj", "{548EBADA-4744-46D4-98FD-4B1561D69FBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
