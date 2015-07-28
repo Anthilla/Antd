@@ -58,7 +58,8 @@ namespace Antd.Boot {
             DeNSo.Session.Start();
 
             if (doTest == true) {
-                //Test();
+                Test();
+                //Test2();
             }
         }
 
@@ -75,6 +76,19 @@ namespace Antd.Boot {
                     ConsoleLogger.Warn("Although john has created this folder, please check that you do not miss anything!");
                 }
             }
+        }
+
+        private static void Test2() {
+            ConsoleLogger.Log("Test DATABASE");
+            var guid = Guid.NewGuid().ToString();
+            ConsoleLogger.Log(">> write");
+            TestClass write = new TestClass {
+                _Id = guid,
+                Date = DateTime.Now,
+                Foo = "foo"
+            };
+            write.Bar = write.Foo + write.Date.ToString() + write.Foo;
+
         }
 
         private static void Test() {

@@ -127,11 +127,11 @@ namespace Antd.Apps {
 
         private static AppInfo MapInfoFile(string path) {
             var text = FileSystem.ReadFile(path);
-            var rows = text.Split(',').ToArray();
+            var rows = text.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var appinfo = new AppInfo();
             foreach (var row in rows) {
-                var pair = row.Split(':').ToArray();
-                if (pair.Length > 0) {
+                var pair = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                if (pair.Length > 1) {
                     var kvp = new KeyValuePair<string, string>(pair[0], pair[1]);
                     appinfo.Values.Add(kvp);
                 }

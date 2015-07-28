@@ -1,13 +1,13 @@
-﻿<legend id="List">List</legend>
+﻿<legend id="List">App List</legend>
 
 @foreach (Antd.Apps.Management.AppInfo app in Antd.Apps.Management.DetectApps()) {
     <table class="table">
         <tbody>
-            <tr><td colspan="2"><p>@app.Name</p></td></tr>
+            <tr><td colspan="2"><label>@app.Name</label></td></tr>
             @foreach (KeyValuePair<string, string> kvp in app.Values) {
                 <tr>
-                    <td>@kvp.Key</td>
-                    <td>@kvp.Value</td>
+                    <td><label>@kvp.Key</label></td>
+                    <td><p>@kvp.Value</p></td>
                 </tr>
             }
         </tbody>
