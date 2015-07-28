@@ -1,39 +1,15 @@
 ﻿<legend id="List">List</legend>
-<table class="table">
-    <tbody>
-        @foreach (string appDetected in Antd.Apps.Management.FindFiles()) {
-            <tr>
-                <td colspan="3">
-                    <p><i class="icon-file on-left"></i>@appDetected</p>
-                </td>
-            </tr>
-        }
-        @foreach (string appDetected in Antd.Apps.Management.FindDirectories()) {
-            <tr>
-                <td colspan="3">
-                    <p><i class="icon-folder on-left"></i>@appDetected</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Application Info</label>
-                </td>
-                <td colspan="2">
-                    <ul class="fg-white">
-                        @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed(appDetected)) {
-                            if (arr[0].Contains("path")) { 
-                            <li>@arr[0] -> @arr[1] <i class="icon-link fg-amber" data-role="show-mount" data-folder="@arr[1]"></i></li>
-                            }
-                            else {
-                            <li>@arr[0] -> @arr[1]</li>
-                            }
-                        }
-                    </ul>
-                </td>
-            </tr>
-            <tr>
 
-            </tr>
-        }
-    </tbody>
-</table>
+@foreach (Antd.Apps.Management.AppInfo app in Antd.Apps.Management.DetectApps()) {
+    <table class="table">
+        <tbody>
+            <tr><td colspan="2"><p>@app.Name</p></td></tr>
+            @foreach (KeyValuePair<string, string> kvp in app.Values) {
+                <tr>
+                    <td>@kvp.Key</td>
+                    <td>@kvp.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

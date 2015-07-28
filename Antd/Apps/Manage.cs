@@ -34,6 +34,11 @@ using System.Linq;
 
 namespace Antd.Apps {
     public class Management {
+        public class AppInfo {
+            public string Name { get; set; }
+
+            public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>() { };
+        }
 
         private static string AppsDir = "/mnt/cdrom/Apps";
         public static bool Detect(string searchPattern) {
@@ -109,6 +114,32 @@ namespace Antd.Apps {
                 }
             }
             return list.ToArray();
+        }
+
+        public static AppInfo[] DetectApps() {
+            var list = new List<AppInfo>() { };
+            var appinfoFiles = Directory.EnumerateFiles("/framework", "*.appinfo", SearchOption.AllDirectories).ToArray();
+            for (int i = 0; i < appinfoFiles.Length; i++) {
+                list.Add(MapInfoFile(appinfoFiles[i]));
+            }
+            return list.ToArray();
+        }
+
+        private static AppInfo MapInfoFile(string path) {
+            var text = FileSystem.ReadFile(path);
+            var rows = text.Split(',').ToArray();
+            var appinfo = new AppInfo();
+            foreach (var row in rows) {
+                var pair = row.Split(':').ToArray();
+                if (pair.Length > 0) {
+                    var kvp = new KeyValuePair<string, string>(pair[0], pair[1]);
+                    appinfo.Values.Add(kvp);
+                }
+            }
+            if (appinfo.Values.Count() > 0) {
+                appinfo.Name = appinfo.Values.Where(k => k.Key == "name").FirstOrDefault().Value;
+            }
+            return appinfo;
         }
     }
 }
