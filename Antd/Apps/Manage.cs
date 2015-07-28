@@ -69,7 +69,7 @@ namespace Antd.Apps {
         public static string[] GetWantedDirectories(AppInfo appinfo) {
             var list = new List<string>() { };
             foreach (var kvp in appinfo.Values) {
-                if (kvp.Key == "path") {
+                if (kvp.Key == "app_path") {
                     list.Add(kvp.Value);
                 }
             }
