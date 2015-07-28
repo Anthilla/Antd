@@ -48,7 +48,6 @@
     <Compile Include="cmd.cs" />
     <Compile Include="ex.cs" />
     <Compile Include="global.cs" />
-    <Compile Include="ignorethis_apps.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="progress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
