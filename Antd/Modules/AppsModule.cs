@@ -43,11 +43,7 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 bool b;
-                if (Management.Detect(".squashfs") == false) {
-                    //ViewBag.Message = "No app detected in " + Folder.Apps;
-                    b = false;
-                }
-                else if (AnthillaSP.Setting.CheckSquash() == false) {
+                if (AnthillaSP.Setting.CheckSquash() == false) {
                     //ViewBag.Message = "No squashfs detected in " + Folder.Apps;
                     b = false;
                 }

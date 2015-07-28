@@ -40,82 +40,6 @@ namespace Antd.Apps {
             public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>() { };
         }
 
-        private static string AppsDir = "/mnt/cdrom/Apps";
-        public static bool Detect(string searchPattern) {
-            if (!Directory.Exists(Folder.Apps)) {
-                return false;
-            }
-            var folders = Directory.GetDirectories(Folder.Apps).ToArray();
-            var squashes = Directory.GetFiles(Folder.Apps, searchPattern).ToArray();
-            var newArray = folders.Concat(squashes).ToArray();
-            if (newArray.Length > 0) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        public static string[] FindFiles() {
-            var apps = new List<string>() { };
-            var files = Directory.GetFiles(AppsDir);
-            if (files.Length < 0) {
-                ConsoleLogger.Log("There's no file in {0}", AppsDir);
-            }
-            else {
-                var squashfs = files.Where(i => i.Contains(".squashfs")).ToArray();
-                foreach (var s in squashfs) {
-                    apps.Add(s.Replace(@"\", "/"));
-                }
-            }
-            return apps.ToArray();
-        }
-
-        public static string[] FindDirectories() {
-            var apps = new List<string>() { };
-            var dirs = Directory.GetDirectories(AppsDir);
-            if (dirs.Length < 0) {
-                ConsoleLogger.Log("There's no directory in {0}", AppsDir);
-            }
-            else {
-                foreach (var d in dirs) {
-                    var f = Directory.GetFiles(Path.GetFullPath(d), "*.appinfo");
-                    if (f.Length > 0) {
-                        apps.Add(d.Replace(@"\", "/"));
-                    }
-                }
-            }
-            return apps.ToArray();
-        }
-
-        public static string ReadInfo(string appPath) {
-            var f = Directory.GetFiles(Path.GetFullPath(appPath), "*.appinfo").FirstOrDefault();
-            return FileSystem.ReadFile(f);
-        }
-
-        public static List<string[]> ReadInfoListed(string appPath) {
-            var list = new List<string[]>() { };
-            var f = Directory.GetFiles(Path.GetFullPath(appPath), "*.appinfo").FirstOrDefault();
-            var arr = FileSystem.ReadFile(f).Split(new String[] { @"," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var a in arr) {
-                var kv = a.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                if (kv.Length == 2) {
-                    list.Add(kv);
-                }
-            }
-            return list;
-        }
-
-        public static string[] GetWantedDirectories(string appPath) {
-            var list = new List<string>() { };
-            foreach (string[] pair in ReadInfoListed(appPath)) {
-                if (pair[0] == "path") {
-                    list.Add(pair[1]);
-                }
-            }
-            return list.ToArray();
-        }
-
         public static AppInfo[] DetectApps() {
             var list = new List<AppInfo>() { };
             var appinfoFiles = Directory.EnumerateFiles("/framework", "*.appinfo", SearchOption.AllDirectories).ToArray();
@@ -140,6 +64,16 @@ namespace Antd.Apps {
                 appinfo.Name = appinfo.Values.Where(k => k.Key == "name").FirstOrDefault().Value;
             }
             return appinfo;
+        }
+
+        public static string[] GetWantedDirectories(AppInfo appinfo) {
+            var list = new List<string>() { };
+            foreach (var kvp in appinfo.Values) {
+                if (kvp.Key == "path") {
+                    list.Add(kvp.Value);
+                }
+            }
+            return list.ToArray();
         }
     }
 }
