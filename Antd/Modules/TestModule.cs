@@ -42,11 +42,11 @@ namespace Antd {
         public DateTime date { get; set; }
     }
 
-    public class DefaultRouteMetadataProvider : IRouteMetadataProvider {
-        public object GetMetadata(RouteDescription routeDescription) {
-            return new MyRouteMetadata();
-        }
-    }
+    //public class DefaultRouteMetadataProvider : IRouteMetadataProvider {
+    //    public object GetMetadata(RouteDescription routeDescription) {
+    //        return new MyRouteMetadata();
+    //    }
+    //}
 
     public class TestModule : NancyModule {
 
