@@ -161,7 +161,7 @@ namespace Antd.Apps {
                         sw.WriteLine("ConditionPathExists=/framework/anthillasp");
                         sw.WriteLine("");
                         sw.WriteLine("[Mount]");
-                        sw.WriteLine("What=/mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz");
+                        sw.WriteLine("What=/mnt/cdrom/DIRS/DIR_framework_anthillasp/running");
                         sw.WriteLine("Where=/framework/anthillasp/");
                         sw.WriteLine("");
                         sw.WriteLine("[Install]");
