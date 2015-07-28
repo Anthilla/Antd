@@ -343,101 +343,103 @@ nft delete chain ip filter input
 nft flush chain <name> <type>
 nft flush chain filter input
 ```
-this is a sample iptables configuration (netfilter framework).
-it is possible include these rules into a file and charge it. otherwise it is necessary add iptables line to add the ruleset. for instance:
 
+
+RULES
+
+- Adding new rules
 ```
-iptables -A Always -m state --state ESTABLISHED,RELATED -j ACCEPT
-```
-
-look below:
-
-
-```
-*filter
-:INPUT ACCEPT [0:0]
-:FORWARD ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:Always - [0:0]
-:Allow - [0:0]
-:Bogus - [0:0]
-:Enemies - [0:0]
-
--A INPUT -j Bogus
--A INPUT -j Always
--A INPUT -j Enemies
--A INPUT -j Allow
-
--A FORWARD -j Bogus
--A FORWARD -j Always
--A FORWARD -j Enemies
--A FORWARD -j Allow
-
--A Bogus -s 169.254.0.0/16 -j DROP
--A Bogus -s 172.16.0.0/12 -j DROP
--A Bogus -s 192.0.2.0/24 -j DROP
--A Bogus -s 192.168.0.0/16 -j DROP
--A Bogus -s 10.0.0.0/8 -j ACCEPT
-
-
--A Always -p udp --dport 123 -j ACCEPT
--A Always -m state --state ESTABLISHED,RELATED -j ACCEPT
--A Always -i lo -j ACCEPT
-
--A Friends -s 123.123.123.123 -j ACCEPT
--A Friends -s 111.111.111.0/24 -j ACCEPT
--A Friends -j DROP
-
--A Enemies  -m recent --name psc --update --seconds 60 -j DROP
--A Enemies -i ! lo -m tcp -p tcp --dport 1433  -m recent --name psc --set -j DROP
--A Enemies -i ! lo -m tcp -p tcp --dport 3306  -m recent --name psc --set -j DROP
--A Enemies -i ! lo -m tcp -p tcp --dport 8086  -m recent --name psc --set -j DROP
--A Enemies -i ! lo -m tcp -p tcp --dport 10000 -m recent --name psc --set -j DROP
--A Enemies -s 99.99.99.99 -j DROP
-
--A Allow -p icmp --icmp-type echo-request -j Friends
--A Allow -p icmp --icmp-type any -m limit --limit 1/second -j ACCEPT
--A Allow -p icmp --icmp-type any -j DROP
--A Allow -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
--A Allow -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
--A Allow -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
--A Allow -j DROP
-
-COMMIT
-```
-we can also customize a lot of scenarios but it depends of the situation
-
-- Flushing rules:
-```
-iptables -F
-iptables -X
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
+nft add rule filter output ip daddr 8.8.8.8 counter
+nft add rule filter output tcp dport ssh counter
 ```
 
-- Remove rule:
+- You can disable host name resolution via using the -n option:
 ```
-iptables -D INPUT -i eth0 -p tcp --dport 443 -j ACCEPT
+nft list -n table filter
 ```
-or
-```
-iptables -D Allow -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
-```
-or again
-```
-iptables -t nat -nvL --line-numbers
-iptables -nvL --line-numbers
 
-iptables -D OUTPUT 1 -t nat 
-iptables -D INPUT 10
+- You can also disable service name resolution via -nn:
 ```
-in this mode we can see the line numbers by iptables and remove it 
-it depends of iptables customization
+nft list -nn table filter
+```
+
+- Adding a rule at a given position
+If you want to add a rule at a given position, you have to use the handle as reference:
+```
+nft list table filter -n -a
+```
+
+- If you want to add a rule after the rule with handler number 8, you have to type:
+```
+nft add rule filter output position 8 ip daddr 127.0.0.8 drop
+```
+- Removing rules by handle
+```
+nft delete rule filter output handle 5
+```
+- Removing rules in a chain
+```
+nft delete rule filter output
+```
+- Atomic rule replacement
+You can use the -f option to atomically update your rule-set:
+```
+nft -f file
+```
+
+- You can save your rule-set by storing the existing listing in a file, ie.
+```
+nft list table filter > filter-table
+```
+- Then you can restore it by using the -f option:
+``` 
+nft -f filter-table
+```
+
+- Building rules through expressions
+```
+nftables provides the following built-in operations:
+```
+One which stands for non equal. Alternatively you can use !=.
+```
+lt means less than. Alternatively you can use <.
+gt means less than. Alternatively you can use >.
+le means less than. Alternatively you can use <=.
+ge means less than. Alternatively you can use >=.
+```
+```
+nft add rule filter input tcp dport != 22
+nft add rule filter input tcp dport >= 1024
+```
+
+- Ruleset level
+```
+nft list ruleset
+```
+
+- Listing the ruleset per family:
+```
+nft list ruleset arp
+nft list ruleset ip
+nft list ruleset ip6
+nft list ruleset bridge
+nft list ruleset inet
+```
+
+- Flushing ruleset
+```
+nft flush ruleset arp
+nft flush ruleset ip
+nft flush ruleset ip6
+nft flush ruleset bridge
+nft flush ruleset inet
+```
+
+- Monitoring ruleset updates
+```
+nft monitor
+nft monitor rules
+```
 
 ### S2: Failover:
 
