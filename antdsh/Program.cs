@@ -24,10 +24,21 @@ namespace antdsh {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(" > ");
                 Console.ResetColor();
-                //KeyEvent();
-                command = Console.ReadLine();
-                if (command != "") { AddCommand(command); }
-                Command(command.Trim());
+
+                //KeyEvent(args);
+                //var keyinfo = Console.ReadKey();
+                //if (keyinfo.Key == ConsoleKey.DownArrow) {
+                //    SelectNextCommand();
+                //}
+                //else if (keyinfo.Key == ConsoleKey.UpArrow) {
+                //    SelectPreviousCommand();
+                //}
+                //else if (keyinfo.Key != ConsoleKey.UpArrow || keyinfo.Key != ConsoleKey.DownArrow) {
+                    command = Console.ReadLine();
+                    if (command != "") { AddCommand(command); }
+                    Command(command.Trim());
+                //}
+
                 Main(args);
             }
             else {
@@ -56,6 +67,7 @@ namespace antdsh {
             else if (command == "clear") { Terminal.Execute("clear"); }
             else if (command == "history") { PrintHistory(); }
             else if (command == "") { return; }
+            else if (command.StartsWith("test")) { Console.WriteLine($"testing: {command}"); }
             else { shell.Execute(command); }
         }
 
@@ -98,15 +110,21 @@ namespace antdsh {
             return;
         }
 
-        static void KeyEvent() {
-            var keyinfo = Console.ReadKey();
-            if (keyinfo.Key == ConsoleKey.DownArrow) {
-                Console.WriteLine("DownArrow pressed");
-                return;
+        static void SelectPreviousCommand() {
+            if (commandList.Count() > 0) {
+                // si inizia a prendere l'ultimo della lista :O
+                // poi se il comando è già l'ultimo si sale
+                // poi si prende la posizione del comando :D
+                Console.SetCursorPosition(30, Console.CursorTop);
+                command = commandList.Last().command;
+                Console.WriteLine(commandList.Last().command);
+                //Console.ReadLine();
             }
-            else if (keyinfo.Key == ConsoleKey.UpArrow) {
-                Console.WriteLine("UpArrow pressed");
-                return;
+        }
+
+        static void SelectNextCommand() {
+            if (commandList.Count() > 0) {
+                Console.WriteLine(command);
             }
         }
 
