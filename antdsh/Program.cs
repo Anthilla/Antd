@@ -24,21 +24,9 @@ namespace antdsh {
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(" > ");
                 Console.ResetColor();
-
-                //KeyEvent(args);
-                //var keyinfo = Console.ReadKey();
-                //if (keyinfo.Key == ConsoleKey.DownArrow) {
-                //    SelectNextCommand();
-                //}
-                //else if (keyinfo.Key == ConsoleKey.UpArrow) {
-                //    SelectPreviousCommand();
-                //}
-                //else if (keyinfo.Key != ConsoleKey.UpArrow || keyinfo.Key != ConsoleKey.DownArrow) {
-                    command = Console.ReadLine();
-                    if (command != "") { AddCommand(command); }
-                    Command(command.Trim());
-                //}
-
+                command = Console.ReadLine();
+                if (command != "") { AddCommand(command); }
+                Command(command.Trim());
                 Main(args);
             }
             else {
@@ -62,30 +50,33 @@ namespace antdsh {
             else if (command == "isrunning") { shell.IsRunning(); }
             else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
-            else if (command == "exit") { shell.Exit(); }
-            else if (command == "progress") { shell.Progress(); }
-            else if (command == "clear") { Terminal.Execute("clear"); }
+            //else if (command == "progress") { shell.Progress(); }
+            //else if (command == "clear") { Terminal.Execute("clear"); }
             else if (command == "history") { PrintHistory(); }
+            //else if (command.StartsWith("test")) { Console.WriteLine($"testing: {command}"); }
+            else if (command == "exit") { shell.Exit(); }
             else if (command == "") { return; }
-            else if (command.StartsWith("test")) { Console.WriteLine($"testing: {command}"); }
             else { shell.Execute(command); }
         }
 
         static void Help() {
             Console.WriteLine("> Command List:");
-            WriteHelp("help", "show the command list");
+            WriteHelp("help", "show this list");
             WriteHelp("start", "initialize a running version of antd");
+            WriteHelp("stop", "stop any running version of antd");
             WriteHelp("restart", "restart antd related systemctl services and mounts");
-            WriteHelp("update-check", "check for the newest version of antd");
-            WriteHelp("update-launch", "update antd to its newest version");
+            WriteHelp("status", "show antd status from systemctl");
+            WriteHelp("umount-all", "umount all antd directories recursively");
+            WriteHelp("update-check", "check if a newer version of antd exists on this machine");
+            WriteHelp("update-launch", "update antd to the newest version found on this machine");
             WriteHelp("update-url", "update antd from an url");
-            WriteHelp("update-select", "select a running version from the ones listed");
+            WriteHelp("update-select", "select a running version from the ones found on this machine");
             WriteHelp("reload-systemctl", "reload systemctl daemon");
-            WriteHelp("stop-services", "stop all antd related systemctl services and mounts");
             WriteHelp("isrunning", "check whether antd process is active or not");
             WriteHelp("clean-tmp", "remove every files and directories from tmp directory");
-            WriteHelp("info", "generic");
-            WriteHelp("exit", "exit from the application");
+            WriteHelp("info", "generic command");
+            WriteHelp("history", "show the commands used in this antdsh session");
+            WriteHelp("exit", "exit from antdsh");
         }
 
         static void WriteHelp(string command, string description) {
@@ -108,24 +99,6 @@ namespace antdsh {
                 Console.WriteLine(cmd.command);
             }
             return;
-        }
-
-        static void SelectPreviousCommand() {
-            if (commandList.Count() > 0) {
-                // si inizia a prendere l'ultimo della lista :O
-                // poi se il comando è già l'ultimo si sale
-                // poi si prende la posizione del comando :D
-                Console.SetCursorPosition(30, Console.CursorTop);
-                command = commandList.Last().command;
-                Console.WriteLine(commandList.Last().command);
-                //Console.ReadLine();
-            }
-        }
-
-        static void SelectNextCommand() {
-            if (commandList.Count() > 0) {
-                Console.WriteLine(command);
-            }
         }
 
         public class cmd {
