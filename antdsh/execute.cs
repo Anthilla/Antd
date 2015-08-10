@@ -10,7 +10,6 @@ namespace antdsh {
     public class execute {
         /// <summary>
         /// ok
-        /// todo: add a retry loop
         /// </summary>
         public static void StopServices() {
             Terminal.Execute("systemctl stop antd-prepare.service");
