@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ex.cs" />
+    <Compile Include="execute.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="progress.cs" />

@@ -46,10 +46,7 @@ namespace antdsh {
             else if (command == "isrunning") { shell.IsRunning(); }
             else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
-            //else if (command == "progress") { shell.Progress(); }
-            //else if (command == "clear") { Terminal.Execute("clear"); }
             else if (command == "history") { PrintHistory(); }
-            //else if (command.StartsWith("test")) { Console.WriteLine($"testing: {command}"); }
             else if (command == "exit") { shell.Exit(); }
             else if (command == "") { return; }
             else { shell.Execute(command); }
@@ -73,6 +70,7 @@ namespace antdsh {
             WriteHelp("info", "generic command");
             WriteHelp("history", "show the commands used in this antdsh session");
             WriteHelp("exit", "exit from antdsh");
+            WriteHelp(" ", "any other command not listed here will be executed on this machine and you will get its return code");
         }
 
         static void WriteHelp(string command, string description) {
