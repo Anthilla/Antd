@@ -101,12 +101,12 @@ namespace Antd.CommandManagement {
 
         public static void Launch(string guid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == guid).FirstOrDefault();
-            if (command != null) Terminal.Execute(command.File, command.Arguments);
+            if (command != null) Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
         }
 
         public static string LaunchAndGetOutput(string inputid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
-            if (command != null) return Terminal.Execute(command.File + " " + command.Arguments);
+            if (command != null) return Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
             return null;
         }
 
@@ -116,7 +116,7 @@ namespace Antd.CommandManagement {
                 var layout = command.Layout;
                 var newFile = layout.GetFirstString();
                 var newArguments = layout.GetAllStringsButFirst();
-                return Terminal.Execute(newFile + " " + newArguments);
+                return Terminal.MultiLine.Execute(layout.Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
             }
             return null;
         }
@@ -127,9 +127,8 @@ namespace Antd.CommandManagement {
                 var layout = command.Layout;
                 var findReplace = "{" + inputid + "}";
                 var newCommand = layout.Replace(findReplace, newValue);
-                var newFile = newCommand.GetFirstString();
-                var newArguments = newCommand.GetAllStringsButFirst();
-                return Terminal.Execute(newFile + " " + newArguments);
+                //return Terminal.Execute($"{newCommand}");
+                return Terminal.MultiLine.Execute(newCommand.Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
             }
             return null;
         }

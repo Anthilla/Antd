@@ -44,7 +44,7 @@ namespace Antd {
             Process process = new Process {
                 StartInfo = {
                     FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
+                    Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false
@@ -63,9 +63,9 @@ namespace Antd {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine($"{command} has failed");
                 Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");
                 return error;
             }
@@ -76,7 +76,7 @@ namespace Antd {
             Process process = new Process {
                 StartInfo = {
                     FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
+                    Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -96,11 +96,83 @@ namespace Antd {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine($"{command} has failed");
                 Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");
                 return output;
+            }
+        }
+
+        public class MultiLine {
+
+            public static string Execute(string[] commands) {
+                string genericOutput = string.Empty;
+                foreach (var command in commands) {
+                    Process process = new Process {
+                        StartInfo = {
+                        FileName = "bash",
+                        Arguments = "-c \"" + command + "\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    }
+                    };
+                    try {
+                        process.Start();
+                        using (StreamReader streamReader = process.StandardOutput) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        using (StreamReader streamReader = process.StandardError) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        process.WaitForExit();
+                    }
+                    catch (Exception ex) {
+                        genericOutput += ex.Message;
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine("{0} has failed", command);
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+                return genericOutput;
+            }
+
+            public static string Execute(string[] commands, string dir) {
+                string genericOutput = string.Empty;
+                foreach (var command in commands) {
+                    Process process = new Process {
+                        StartInfo = {
+                        FileName = "bash",
+                        Arguments = "-c \"" + command + "\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        WorkingDirectory = dir.ToString()
+                    }
+                    };
+                    try {
+                        process.Start();
+                        using (StreamReader streamReader = process.StandardOutput) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        using (StreamReader streamReader = process.StandardError) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        process.WaitForExit();
+                    }
+                    catch (Exception ex) {
+                        genericOutput += ex.Message;
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine("{0} has failed", command);
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+                return genericOutput;
             }
         }
     }

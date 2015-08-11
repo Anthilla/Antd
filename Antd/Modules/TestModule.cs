@@ -60,6 +60,15 @@ namespace Antd {
                 return View["page-test"];
             };
 
+            Post["/page"] = x => {
+                var o = (string)this.Request.Form.Text;
+                var arr = o.Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                foreach (var a in arr) {
+                    Console.WriteLine(a);
+                }
+                return View["page-test"];
+            };
+
             Get["/ssh"] = x => {
                 Antd.Ssh.Test.Start("10.1.3.194", "root", "root");
                 return Response.AsText("gg");

@@ -80,12 +80,14 @@ namespace Antd {
                         command = this.Request.Form.CCTableCommandText;
                         break;
                     case "checkbox":
+                        //todo il comando in realtà è doppio, uno per true e uno per false
                         command = this.Request.Form.CCTableCommandBoolean;
                         break;
                     default:
                         command = "echo error during command assignment";
                         break;
                 }
+                ConsoleLogger.Info(command);
 
                 string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
                 string inputlocation = "CCTable" + this.Request.Form.TableName;
@@ -108,6 +110,7 @@ namespace Antd {
                     string thisResult = (resultString == "") ? Terminal.Execute(commandString) : resultString;
                     CCTableRepository.CreateRowDataView(table, tableName, label, commandString, thisResult);
                 }
+                ConsoleLogger.Info(commandString);
 
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
@@ -151,6 +154,14 @@ namespace Antd {
                 CCTableRepository.EditTableRow(guid, cmd);
                 return Response.AsJson("CCTable Row deleted");
             };
+
+            Post["/launch/{inputid}/{value}"] = x => {
+                string inputid = (string)this.Request.Form.Input;
+                string value = (string)this.Request.Form.Value;
+                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
+                return Response.AsJson(r);
+            };
+
         }
     }
 }

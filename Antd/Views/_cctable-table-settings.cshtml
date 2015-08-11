@@ -17,7 +17,7 @@
                         <p>@row.InputLabel</p>
                     </td>
                     <td style="width: 175px !important">
-                        <input id="@row.HtmlSumbitID" type="button" value="Apply" class="bg-anthilla-green" style="width: 100% !important"/>
+                        <input id="@row.HtmlSumbitID" type="button" value="Apply" class="bg-anthilla-green" style="width: 100% !important" />
                     </td>
                     <td>
                         <p>@row.Notes</p>
@@ -32,16 +32,19 @@
                 <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="@row.Guid" style="display: none;">
                     <td colspan="4" data-row-commands="list">
                         <label style="display: inline-block;">Associated Command</label>
-                        <p data-command="set" style="display: inline-block;">@Antd.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID)</p>
+                        <p data-command="set" style="display: inline-block;">
+                            @Html.Raw(Antd.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID))
+                            @*@Antd.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID)*@
+                        </p>
                         <br />
                         <label style="display: inline-block;">Input Command</label>
                         <p data-command="get" style="display: inline-block;">@row.InputCommand</p>
                     </td>
                     <td>
-                        <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet set-edit-command" style="width: 100% !important"/>
+                        <input data-cmd-guid="@row.Guid" type="button" value="Edit Command" class="bg-anthilla-violet set-edit-command" style="width: 100% !important" />
                     </td>
                     <td>
-                        <input data-cmd-guid="@row.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important"/>
+                        <input data-cmd-guid="@row.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important" />
                     </td>
                 </tr>
             }
@@ -86,7 +89,7 @@
                     <label>Command -> set</label>
                 </div>
                 <div class="span7">
-                    <input type="text" name="CCTableCommandNone" style="width: 90%; height: 25px;" value="" />
+                    <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="CCTableCommandNone" autocomplete="off"></textarea>
                 </div>
                 <div class="span3">
                 </div>
@@ -98,7 +101,7 @@
                     <label>Command -> set</label>
                 </div>
                 <div class="span7">
-                    <input type="text" name="CCTableCommandText" class="add-to-this" style="width: 90%; height: 25px;" value="" />
+                    <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="CCTableCommandText" autocomplete="off"></textarea>
                 </div>
                 <div class="span3">
                     <input class="bg-indigo" id="AddInputReference" type="button" value="Add Input Reference">
@@ -109,7 +112,7 @@
                     <label>Command -> get</label>
                 </div>
                 <div class="span7">
-                    <input type="text" name="InputCommand" style="width: 90%; height: 25px;" value="" />
+                    <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="InputCommand" autocomplete="off"></textarea>
                 </div>
                 <div class="span3">
                     <p>Write the command to get the value</p>
@@ -122,7 +125,7 @@
                     <label>Command -> set for "true"</label>
                 </div>
                 <div class="span7">
-                    <input type="text" name="CCTableCommandBoolean" style="width: 90%; height: 25px;" value="" />
+                    <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="CCTableCommandBoolean" autocomplete="off"></textarea>
                 </div>
                 <div class="span3">
                 </div>
@@ -132,7 +135,7 @@
                     <label>Command -> set for "false"</label>
                 </div>
                 <div class="span7">
-                    <input type="text" name="CCTableCommandBoolean" style="width: 90%; height: 25px;" value="" />
+                    <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="CCTableCommandBoolean" autocomplete="off"></textarea>
                 </div>
                 <div class="span3">
                 </div>
@@ -176,6 +179,6 @@
         </div>
     </form>
     <hr class="bg-anthilla-gray" />
-    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row"/>
-    <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete"/>
+    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row" />
+    <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete" />
 </div>

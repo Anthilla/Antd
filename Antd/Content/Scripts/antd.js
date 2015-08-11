@@ -527,7 +527,6 @@ function DisableInputs() {
 ///////////////////////////////////////////////////////////////////
 
 $('[id^=Update]').click(function () {
-    //$('p[id^=Update]').click(function () {
     var self = $(this);
     var id = self.attr('id');
     var inputID = id.replace('Update', 'New');
@@ -535,19 +534,41 @@ $('[id^=Update]').click(function () {
     if (newValue.length > 0) {
         jQuery.support.cors = true;
         $.ajax({
-            url: '/command/mgmt/ex/' + inputID + '/' + newValue,
-            type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
+            url: '/cctable/launch/',
+            type: 'POST',
+            data: {
+                Input: inputID,
+                Value: newValue
+            },
             success: function (data) {
-                console.log(inputID + ': ' + data);
-                alert('Value changed -> ' + inputID + ': ' + data);
                 location.reload(true);
                 return false;
             }
         });
     }
 });
+
+//$('[id^=Update]').click(function () {
+//    var self = $(this);
+//    var id = self.attr('id');
+//    var inputID = id.replace('Update', 'New');
+//    var newValue = $('#' + inputID).val();
+//    if (newValue.length > 0) {
+//        jQuery.support.cors = true;
+//        $.ajax({
+//            url: '/command/mgmt/ex/' + inputID + '/' + newValue,
+//            type: 'GET',
+//            dataType: 'json',
+//            contentType: 'application/json;charset=utf-8',
+//            success: function (data) {
+//                location.reload(true);
+//                return false;
+//            }
+//        });
+//    }
+//});
+
+///////////////////////////////////////////////////////////////////
 
 $('a.anchor').click(function (event) {
     event.preventDefault();
