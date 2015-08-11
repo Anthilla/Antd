@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.Models;
-using Antd.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,10 +68,7 @@ namespace Antd.ViewHelpers {
                 model.antdValue = antdValue ?? "";
                 list.Add(model);
             }
-            //list = (from l in list
-            //        where l != null
-            //        orderby l.label ascending
-            //        select l).ToList();
+
             return list;
         }
     }

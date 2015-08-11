@@ -30,7 +30,7 @@
 using antdlib.Models;
 using System.Collections.Generic;
 
-namespace Antd.ViewModels {
+namespace Antd.ViewHelpers {
 
     public class DirectoryViewModel {
 
@@ -39,5 +39,16 @@ namespace Antd.ViewModels {
         public IEnumerable<string> children { get; set; }
 
         public IEnumerable<DirItemModel> children2 { get; set; }
+    }
+
+    public class StatusSysctlViewModel {
+
+        public string label { get; set; }
+
+        public string stockValue { get; set; }
+
+        public string runningValue { get; set; }
+
+        public string antdValue { get; set; }
     }
 }
