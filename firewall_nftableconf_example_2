@@ -1,0 +1,109 @@
+flush ruleset
+
+table ip filter{
+  chain input {
+    type filter hook input priority 0;
+    ip protocol icmp limit rate 10/second counter accept
+    ip protocol icmp drop
+    ct state {established, related} counter accept
+    ct state invalid counter drop
+    iifname "lo" accept
+    iifname != "lo" ip daddr 127.0.0.1/8 counter drop
+    iifname ${WAN} ip saddr 121.12.242.43 drop;
+    iifname ${WAN} ip saddr { 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12 } drop;
+    iif lo ct state new accept;
+    iif ${LAN_ML} ip saddr ${LAN_MLNET} ct state new accept;
+    iif ${LAN_IN} ip saddr ${LAN_INLOCALNET} ct state new accept;
+    ip protocol {udp,tcp} {udp,tcp} dport { ${TORRENT_PORT_LAN}, ${TORRENT_PORT_WAN}, ${TRACKER_TORRENT_PORT_WAN} } ct state new accept;
+    iifname ${WAN} ip protocol tcp ct state new tcp dport 80 accept;
+    icmp type echo-request accept
+    tcp dport {22, 80} limit rate 15/minute counter accept
+    ip saddr 10.0.2.0/24 jump web
+    reject
+    counter drop
+  }
+  chain web {
+    tcp dport 80 accept
+    tcp dport 8080 accept
+  }
+  chain output {
+    type filter hook output priority 0;
+    counter accept
+  }
+  chain forward {
+    type filter hook forward priority 0;
+    iifname ${WAN} meta oif ${LAN_IN} ip daddr 192.168.1.10 tcp dport ${TORRENT_PORT_LAN} ct state new accept;
+    iif ${LAN_ML} ct state new drop;
+    iifname ${WAN} ct state new drop;
+    ct state established,related accept;
+    counter drop
+  }
+}
+
+table ip nat {
+  chain prerouting {
+    type nat hook prerouting priority 0;
+    iifname ${WAN} tcp dport ${TORRENT_PORT_LAN} dnat 192.168.1.10:${TORRENT_PORT_LAN}
+    counter accept
+  }
+  chain input {
+    type nat hook input priority 0;
+    counter accept
+  }
+  chain output {
+    type nat hook output priority 0;
+    counter accept
+  }
+  chain postrouting {
+    type nat hook postrouting priority 0;
+    oif ${LAN_ML} ip saddr ${LAN_INLOCALNET} snat ${MLIP};
+    oifname ${WAN} ip saddr ${LAN_INLOCALNET} masquerade;
+    counter accept
+  }
+}
+
+
+table ip6 filter{
+  chain input {
+    type filter hook input priority 0;
+    ip6 nexthdr icmpv6 limit rate 10/second counter accept
+    ip6 nexthdr icmpv6 drop
+    ct state {established, related} counter accept
+    ct state invalid counter drop
+    iifname "lo" accept
+    iifname != lo ip6 daddr ::1/128 counter drop
+    icmpv6 type {echo-request,nd-neighbor-solicit} accept
+    tcp dport {22, 80} acceptlimit rate 15/minute counter accept
+    reject
+    counter drop
+  }
+   chain output {
+    type filter hook output priority 0;
+    counter accept
+  }
+  chain forward {
+    type filter hook forward priority 0;
+    counter drop
+  }
+}
+
+table ip6 nat6 {
+  chain prerouting {
+    type nat hook prerouting priority 0;
+    counter accept
+  }
+  chain input {
+    type nat hook input priority 0;
+    counter accept
+  }
+   chain output {
+    type nat hook output priority 0;
+    counter accept
+  }
+   chain postrouting {
+    type nat hook postrouting priority 0;
+    counter accept
+  }
+}
+
+ 
