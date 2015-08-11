@@ -1,5 +1,5 @@
 #### IPROUTE2, BRIDGE/SWITCH (2xLAN) + 2xWAN ####
-
+```
 killall dhclient
 systemctl stop systemd-networkd.service
 systemctl stop systemd-networkd.socket
@@ -59,9 +59,9 @@ brctl addif br0 eth9
 brctl stp br1 off
 ip addr add 10.1.19.1/16 dev br1
 ip link set up dev br1
-
+```
 #### NFTABLE FIREWALL, NAT, ROUTER, BRIDGE/SWITCH, WITH 2 WAN NOT REDUNDANT ####
-
+```
 flush ruleset
 
 table ip filter {
@@ -223,3 +223,4 @@ table ip6 nat6 {
                  accept
         }
 }
+```
