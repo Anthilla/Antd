@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CCTable;
+using antdlib.CCTable;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

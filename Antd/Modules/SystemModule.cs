@@ -27,10 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CCTable;
-using Antd.MachineStatus;
-using Antd.Models;
-using Antd.Status;
+using antdlib.CCTable;
+using antdlib.Models;
+using antdlib.Status;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
@@ -38,6 +37,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using antdlib;
+using Antd.MachineStatus;
 
 namespace Antd {
 
@@ -61,17 +62,17 @@ namespace Antd {
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
-                vmod.AuthStatus = Antd.Auth.T2FA.Config.IsEnabled;
+                vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
                 return View["_page-system", vmod];
             };
 
             Get["/auth/disable"] = x => {
-                Antd.Auth.T2FA.Config.Disable();
+                antdlib.Auth.T2FA.Config.Disable();
                 return Response.AsJson(true);
             };
 
             Get["/auth/enable"] = x => {
-                Antd.Auth.T2FA.Config.Enable();
+                antdlib.Auth.T2FA.Config.Enable();
                 return Response.AsJson(true);
             };
 

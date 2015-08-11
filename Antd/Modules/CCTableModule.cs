@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,9 +28,8 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
-using Antd.CCTable;
-using Antd.CommandManagement;
+using antdlib.CCTable;
+using antdlib.CommandManagement;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -80,7 +81,7 @@ namespace Antd {
                         command = this.Request.Form.CCTableCommandText;
                         break;
                     case "checkbox":
-                        //todo il comando in realtà è doppio, uno per true e uno per false
+                        //todo: il comando in realtà è doppio, uno per true e uno per false
                         command = this.Request.Form.CCTableCommandBoolean;
                         break;
                     default:
@@ -155,13 +156,21 @@ namespace Antd {
                 return Response.AsJson("CCTable Row deleted");
             };
 
+            //todo: IMPORTANTE - questa api lancia un comando
+            //ma è solamente un caso particolare, ovvero se c'è un input:text con un valore dentro
+            //e va a sostituire il valore nel comando da lanciare
+            //bisogna fare anche il comando per:
+            // 1 - hidden (senza valore)
+            // 2a - bool:true (input:check:checked)
+            // 2b - bool:false (input:check:unchecked)
+            //OVVIAMENTE bisgogna aggiustare anche gli script jquery e l'html
+            //ad esempio in input:bool il valore Name è uguale sia per il true che per il false
             Post["/launch/{inputid}/{value}"] = x => {
                 string inputid = (string)this.Request.Form.Input;
                 string value = (string)this.Request.Form.Value;
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
                 return Response.AsJson(r);
             };
-
         }
     }
 }

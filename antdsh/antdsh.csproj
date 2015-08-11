@@ -48,7 +48,6 @@
     <Compile Include="execute.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="progress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="shell.cs" />
   </ItemGroup>

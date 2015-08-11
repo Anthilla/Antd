@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 ///     All rights reserved.
 ///
@@ -26,8 +28,7 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
-using Antd.Apps;
+using antdlib.Apps;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -55,7 +56,7 @@ namespace Antd {
             };
 
             Get["/set/anthillasp"] = x => {
-                if (Antd.Apps.AnthillaSP.Units.CheckFiles() == false) {
+                if (AnthillaSP.Units.CheckFiles() == false) {
                     AnthillaSP.CreateUnits();
                 }
                 AnthillaSP.Start();

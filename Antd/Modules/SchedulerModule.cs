@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Scheduler;
+using antdlib.Scheduler;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

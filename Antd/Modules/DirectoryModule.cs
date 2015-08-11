@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Antd.ViewModels;
+using antdlib;
 using Nancy;
 using Nancy.Security;
 using System.Linq;

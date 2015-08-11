@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CommandManagement;
+using antdlib.CommandManagement;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

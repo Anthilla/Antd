@@ -526,6 +526,7 @@ function DisableInputs() {
 }
 ///////////////////////////////////////////////////////////////////
 
+//todo: aggiungere altri metodi, vedi todo in CCTableModule
 $('[id^=Update]').click(function () {
     var self = $(this);
     var id = self.attr('id');

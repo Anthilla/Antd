@@ -27,8 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CCTable;
-using Antd.Users;
+using antdlib.CCTable;
+using antdlib.Users;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

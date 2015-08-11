@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,8 +28,7 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
-using Antd.Models;
+using antdlib.Models;
 using Nancy;
 using Nancy.Security;
 
@@ -46,8 +47,7 @@ namespace Antd {
             Post["/"] = x => {
                 string file = (string)this.Request.Form.File;
                 string args = (string)this.Request.Form.Arguments;
-
-                CommandModel command = Terminal.Execute(file + " "+ args).ConvertCommandToModel();
+                var command = Terminal.Execute(file + " "+ args).ConvertCommandToModel();
                 return View["page-console", command];
             };
         }

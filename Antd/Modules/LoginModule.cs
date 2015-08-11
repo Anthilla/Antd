@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,9 +28,8 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
-using Antd.Auth;
-using Antd.Auth.T2FA;
+using antdlib.Auth;
+using antdlib.Auth.T2FA;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;
@@ -58,7 +59,7 @@ namespace Antd {
                 Guid? validationGuid = UserDatabase.ValidateUser(username, password);
 
                 //check if auth is ennabled
-                if (Antd.Auth.T2FA.Config.IsEnabled == false) {
+                if (Config.IsEnabled == false) {
                     if (validationGuid == null) {
                         return this.Context.GetRedirect("~/login");
                     }

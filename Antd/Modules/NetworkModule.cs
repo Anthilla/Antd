@@ -27,8 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CCTable;
-using Antd.Network.Management;
+using antdlib.CCTable;
+using antdlib.Network.Management;
+using antdlib.Status;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -43,7 +44,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.units = Antd.Status.Networkd.ReadUnits();
+                vmod.units = Networkd.ReadUnits();
                 vmod.Interfaces = NetworkInterface.All;
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
@@ -54,7 +55,7 @@ namespace Antd {
             Post["/d"] = x => {
                 string fname = this.Request.Form.File;
                 string txt = this.Request.Form.Text;
-                Antd.Status.Networkd.CreateCustomUnit(txt, fname);
+                Networkd.CreateCustomUnit(txt, fname);
                 return Response.AsRedirect("/status/networkd");
             };
 

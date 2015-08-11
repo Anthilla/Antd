@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Models;
+using antdlib.Models;
 using Antd.ViewModels;
 using System;
 using System.Collections.Generic;

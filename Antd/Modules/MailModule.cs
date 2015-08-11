@@ -27,8 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.CCTable;
-using Antd.Mail;
+using antdlib.CCTable;
+using antdlib.Mail;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;

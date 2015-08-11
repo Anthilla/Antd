@@ -31,7 +31,6 @@ using Nancy;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Nancy.Routing;
 
 namespace Antd {
     public class TMP {
@@ -41,12 +40,6 @@ namespace Antd {
         public string name { get; set; }
         public DateTime date { get; set; }
     }
-
-    //public class DefaultRouteMetadataProvider : IRouteMetadataProvider {
-    //    public object GetMetadata(RouteDescription routeDescription) {
-    //        return new MyRouteMetadata();
-    //    }
-    //}
 
     public class TestModule : NancyModule {
 
@@ -70,7 +63,7 @@ namespace Antd {
             };
 
             Get["/ssh"] = x => {
-                Antd.Ssh.Test.Start("10.1.3.194", "root", "root");
+                antdlib.Ssh.Test.Start("10.1.3.194", "root", "root");
                 return Response.AsText("gg");
             };
 

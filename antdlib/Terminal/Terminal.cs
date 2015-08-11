@@ -27,9 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace antdlib {
 
@@ -41,7 +44,7 @@ namespace antdlib {
             Process process = new Process {
                 StartInfo = {
                     FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
+                    Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false
@@ -60,9 +63,9 @@ namespace antdlib {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine($"{command} has failed");
                 Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");
                 return error;
             }
@@ -73,7 +76,7 @@ namespace antdlib {
             Process process = new Process {
                 StartInfo = {
                     FileName = "bash",
-                    Arguments = "-c \"" + command + "\"",
+                    Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -93,12 +96,111 @@ namespace antdlib {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine("{0} has failed", command);
+                Console.WriteLine($"{command} has failed");
                 Console.WriteLine("Error message:");
-                Console.WriteLine("{0}", ex.Message);
+                Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");
                 return output;
             }
+        }
+
+        public class MultiLine {
+
+            public static string Execute(string[] commands) {
+                string genericOutput = string.Empty;
+                foreach (var command in commands) {
+                    Process process = new Process {
+                        StartInfo = {
+                        FileName = "bash",
+                        Arguments = "-c \"" + command + "\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    }
+                    };
+                    try {
+                        process.Start();
+                        using (StreamReader streamReader = process.StandardOutput) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        using (StreamReader streamReader = process.StandardError) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        process.WaitForExit();
+                    }
+                    catch (Exception ex) {
+                        genericOutput += ex.Message;
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine("{0} has failed", command);
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+                return genericOutput;
+            }
+
+            public static string Execute(string[] commands, string dir) {
+                string genericOutput = string.Empty;
+                foreach (var command in commands) {
+                    Process process = new Process {
+                        StartInfo = {
+                        FileName = "bash",
+                        Arguments = "-c \"" + command + "\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        WorkingDirectory = dir.ToString()
+                    }
+                    };
+                    try {
+                        process.Start();
+                        using (StreamReader streamReader = process.StandardOutput) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        using (StreamReader streamReader = process.StandardError) {
+                            genericOutput += streamReader.ReadToEnd();
+                        }
+                        process.WaitForExit();
+                    }
+                    catch (Exception ex) {
+                        genericOutput += ex.Message;
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine("{0} has failed", command);
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine("{0}", ex.Message);
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+                return genericOutput;
+            }
+        }
+    }
+
+    public static class TerminalExtension {
+
+        public static CommandModel ConvertCommandToModel(this String commandOutput) {
+            CommandModel command = new CommandModel {
+                date = DateTime.Now,
+                output = commandOutput,
+                outputTable = TextToList(commandOutput),
+                error = commandOutput,
+                errorTable = TextToList(commandOutput)
+            };
+            return command;
+        }
+
+        public static List<string> TextToList(string text) {
+            List<string> stringList = new List<string>();
+            string[] rowDivider = new String[] { "\n" };
+            string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (string row in rowList) {
+                if (!string.IsNullOrEmpty(row)) {
+                    stringList.Add(row);
+                }
+            }
+
+            return stringList;
         }
     }
 }

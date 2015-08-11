@@ -27,7 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Auth;
+using antdlib.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
