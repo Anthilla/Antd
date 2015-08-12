@@ -137,8 +137,10 @@
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Directories\DirectoryWatcher.cs" />
     <Compile Include="Directories\DIRS.cs" />
+    <Compile Include="Log\Dmesg.cs" />
     <Compile Include="Log\LogModel.cs" />
     <Compile Include="Log\LogRepository.cs" />
+    <Compile Include="Log\Syslog.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />
