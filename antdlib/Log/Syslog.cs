@@ -34,6 +34,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace antdlib.Log {
-    class Syslog {
+    //https://syslog-ng.org/
+    //https://en.wikipedia.org/wiki/Syslog-ng
+    public class Syslog {
     }
 }
