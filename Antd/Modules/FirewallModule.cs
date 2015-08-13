@@ -68,7 +68,24 @@ namespace Antd {
                 var name = Request.Form.TableName;
                 var type = Request.Form.TableType;
                 NFTableRepository.AddTable(name, type);
-                return Response.AsJson(true);
+                return Response.AsRedirect("/firewall/nft");
+            };
+
+            Post["/nft/chain"] = x => {
+                var tableName = Request.Form.TableName;
+                var name = Request.Form.ChainName;
+                var type = Request.Form.ChainType;
+                var hook = Request.Form.ChainHook;
+                NFTableRepository.AddChain(tableName, name, type, hook);
+                return Response.AsRedirect("/firewall/nft");
+            };
+
+            Post["/nft/rule"] = x => {
+                var tableName = Request.Form.TableName;
+                var chainName = Request.Form.ChainName;
+                var rules = (string[])Request.Form.Rules;
+                NFTableRepository.AddRules(tableName, chainName, rules);
+                return Response.AsRedirect("/firewall/nft");
             };
         }
     }

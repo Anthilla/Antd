@@ -57,19 +57,35 @@ namespace antdlib.Firewall {
             DeNSo.Session.New.Set(NFT);
         }
 
-        public static void AddChain(string tableName, string name, string[] rules) {
+        public static void AddChain(string tableName, string name, string type, string hook) {
             var table = NFT.Tables.Where(t => t != null && t.Name == tableName).FirstOrDefault();
             NFT.Tables.Remove(table);
             var chain = new NFTableChain() {
                 Guid = Guid.NewGuid().ToString(),
-                Name = name
+                Name = name,
+                Type = type,
+                Hook = hook
             };
-            foreach (var rule in rules) {
-                var r = new NFTableRule() {
+            table.Chain.Add(chain);
+            NFT.Tables.Add(table);
+            DeNSo.Session.New.Set(NFT);
+        }
+
+        public static void AddRules(string tableName, string chainName, string[] rules, string rulesGuid = null) {
+            var table = NFT.Tables.Where(t => t != null && t.Name == tableName).FirstOrDefault();
+            NFT.Tables.Remove(table);
+            var chain = table.Chain.Where(c => c.Name == chainName).FirstOrDefault();
+            table.Chain.Remove(chain);
+            if (rulesGuid != null) {
+                var ruleSet = chain.Rules.Where(r => r.Guid == rulesGuid).FirstOrDefault();
+                chain.Rules.Remove(ruleSet);
+            }
+            foreach (var value in rules) {
+                var rule = new NFTableRule() {
                     Guid = Guid.NewGuid().ToString(),
-                    Value = rule
+                    Value = value
                 };
-                chain.Rules.Add(r);
+                chain.Rules.Add(rule);
             }
             table.Chain.Add(chain);
             NFT.Tables.Add(table);

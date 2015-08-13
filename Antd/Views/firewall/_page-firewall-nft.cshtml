@@ -47,7 +47,7 @@
             </div>
             <div class="element-divider"></div>
             @if (Model.DisplayTable == false) {
-                <a id="SetNFTable" class="element upcase fg-anthilla-green border-2-anthilla-green" style="padding-top: 11px; cursor: pointer !important;">
+                <a id="SetNFTable" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px; cursor: pointer !important;">
                     Set NFTable
                 </a>
             }
@@ -55,37 +55,77 @@
     </nav>
 }
 
-@section Dashboard {
-}
-
 @section MainContent {
     @if (Model.DisplayTable == true) {
-        <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
-            <legend><i class="icon-dashboard on-left"></i> NFTable Configuration</legend>
-            <table class="table" data-table-content="@Model.Table.Guid">
+        <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
+            <legend><i class="icon-fire on-left"></i> NFTable Configuration</legend>
+            <table class="table" data-table-content="@Model.Table._Id">
                 <tbody>
                     @foreach (antdlib.Firewall.NFTableTable table in Model.Table.Tables) {
+                        @foreach (antdlib.Firewall.NFTableChain chain in table.Chain) {
+                            <tr>
+                                <td>@chain.Name - @chain.Type @chain.Hook @chain.Priority</td>
+                            </tr>
+                        }
                         <tr>
-                            <td>here'sa tabslersagglghlhlgglrrrlghghrrllgh</td>
+                            <td>
+                                <form action="/firewall/nft/chain" method="POST" enctype="multipart/form-data" data-chain-form="@table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Type</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="hidden" name="TableName" value="@Model.Table._Id">
+                                            <input type="text" name="ChainType" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Name</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="text" name="ChainName" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Hook</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="text" name="ChainHook" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>&nbsp</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input class="bg-anthilla-green" type="submit" value="Create Chain">
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr class="bg-anthilla-gray" />
+                                <input type="button" class="bg-anthilla-blu" data-nft-role="add-table" data-chain-guid="@table.Guid" value="New Chain" />
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <form action="/firewall/nft/table" method="POST" enctype="multipart/form-data" data-table-form="@Model.Table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
-                <div class="row">
-                    <div class="span3">
-                        <label>Table Name</label>
-                    </div>
-                    <div class="span7">
-                        <input type="text" name="TableName" style="width: 90%; height: 25px;">
-                    </div>
-                </div>
+            <form action="/firewall/nft/table" method="POST" enctype="multipart/form-data" data-table-form="@Model.Table._Id" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
                 <div class="row">
                     <div class="span3">
                         <label>Table Type</label>
                     </div>
                     <div class="span7">
                         <input type="text" name="TableType" style="width: 90%; height: 25px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Table Name</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="TableName" style="width: 90%; height: 25px;">
                     </div>
                 </div>
                 <div class="row">
@@ -98,7 +138,7 @@
                 </div>
             </form>
             <hr class="bg-anthilla-gray" />
-            <input type="button" class="bg-anthilla-blu" data-nft-role="add-table" data-table-guid="@Model.Table.Guid value="New Table" />
+            <input type="button" class="bg-anthilla-blu" data-nft-role="add-table" data-table-guid="@Model.Table._Id" value="New Table" />
         </div>
     }
 }

@@ -1,7 +1,10 @@
 flush ruleset;
 
+{obj type name}
 table ip filter {
+	{obj name}
 	chain input {
+		{definition: obj type obj where obj priority#}
 		 type filter hook input priority 0;
 		 ip protocol icmp accept
 		 ip protocol esp accept

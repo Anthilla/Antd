@@ -51,7 +51,7 @@ namespace antdlib.Firewall {
                         sw.WriteLine($"table {table.Type} {table.Name} {{");
                         foreach (var chain in table.Chain) {
                             sw.WriteLine($"chain {chain.Name} {{");
-                            sw.WriteLine($"type {table.Name} hook {chain.Name} priority 0;");
+                            sw.WriteLine($"type {chain.Type} hook {chain.Hook} priority {chain.Priority.ToString()};");
                             foreach (var rule in chain.Rules) {
                                 sw.WriteLine($"{rule.Value}");
                             }
