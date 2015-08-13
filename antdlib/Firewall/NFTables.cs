@@ -27,12 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace antdlib.Firewall {
     public class NFTables {
@@ -48,9 +43,23 @@ namespace antdlib.Firewall {
                 File.Delete(path);
             }
             using (StreamWriter sw = File.CreateText(path)) {
-                sw.WriteLine("flush ruleset;");
-                sw.WriteLine("");
-                //todo inserire tables e chains
+                var nft = NFTableRepository.Get();
+                if (nft != null) {
+                    sw.WriteLine("flush ruleset;");
+                    sw.WriteLine("");
+                    foreach (var table in nft.Tables) {
+                        sw.WriteLine($"table {table.Type} {table.Name} {{");
+                        foreach (var chain in table.Chain) {
+                            sw.WriteLine($"chain {chain.Name} {{");
+                            sw.WriteLine($"type {table.Name} hook {chain.Name} priority 0;");
+                            foreach (var rule in chain.Rules) {
+                                sw.WriteLine($"{rule}");
+                            }
+                            sw.WriteLine("}");
+                        }
+                        sw.WriteLine("}");
+                    }
+                }
             }
         }
     }
