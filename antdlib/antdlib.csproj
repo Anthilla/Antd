@@ -123,6 +123,9 @@
     <Compile Include="Common\ConsoleTime.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
+    <Compile Include="Firewall\NFTableRepository.cs" />
+    <Compile Include="Firewall\NFTables.cs" />
+    <Compile Include="Firewall\NFTableModel.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\XmlWriter.cs" />
