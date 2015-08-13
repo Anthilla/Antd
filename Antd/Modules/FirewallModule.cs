@@ -65,9 +65,9 @@ namespace Antd {
             };
 
             Post["/nft/table"] = x => {
-                var name = Request.Form.TableName;
                 var type = Request.Form.TableType;
-                NFTableRepository.AddTable(name, type);
+                var name = Request.Form.TableName;
+                NFTableRepository.AddTable(type, name);
                 return Response.AsRedirect("/firewall/nft");
             };
 

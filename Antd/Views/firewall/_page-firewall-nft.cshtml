@@ -62,6 +62,9 @@
             <table class="table" data-table-content="@Model.Table._Id">
                 <tbody>
                     @foreach (antdlib.Firewall.NFTableTable table in Model.Table.Tables) {
+                        <tr>
+                            <td><label>@table.Type @table.Name</label></td>
+                        </tr>
                         @foreach (antdlib.Firewall.NFTableChain chain in table.Chain) {
                             <tr>
                                 <td>@chain.Name - @chain.Type @chain.Hook @chain.Priority</td>
@@ -105,7 +108,7 @@
                                     </div>
                                 </form>
                                 <hr class="bg-anthilla-gray" />
-                                <input type="button" class="bg-anthilla-blu" data-nft-role="add-table" data-chain-guid="@table.Guid" value="New Chain" />
+                                <input type="button" class="bg-anthilla-blu" data-nft-role="add-chain" data-chain-guid="@table.Guid" value="New Chain" />
                             </td>
                         </tr>
                     }
@@ -159,6 +162,11 @@
         $('input[data-nft-role="add-table"]').click(function () {
             var guid = $(this).attr('data-table-guid');
             $('form[data-table-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-nft-role="add-chain"]').click(function () {
+            var guid = $(this).attr('data-chain-guid');
+            $('form[data-chain-form="' + guid + '"]').toggle();
         });
     </script>
 }

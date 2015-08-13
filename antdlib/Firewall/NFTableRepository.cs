@@ -57,9 +57,8 @@ namespace antdlib.Firewall {
             DeNSo.Session.New.Set(NFT);
         }
 
-        public static void AddChain(string tableName, string name, string type, string hook) {
-            var table = NFT.Tables.Where(t => t != null && t.Name == tableName).FirstOrDefault();
-            NFT.Tables.Remove(table);
+        public static void AddChain(string tableGuid, string name, string type, string hook) {
+            var table = NFT.Tables.Where(t => t.Guid == tableGuid).FirstOrDefault();
             var chain = new NFTableChain() {
                 Guid = Guid.NewGuid().ToString(),
                 Name = name,
