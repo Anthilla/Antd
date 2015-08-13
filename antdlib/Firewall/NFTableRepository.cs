@@ -32,14 +32,14 @@ using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTableRepository {
-        private static NFTableFile NFT = DeNSo.Session.New.Get<NFTableFile>(n => n != null && n._Id == "AD11998C-91E2-48A5-A460-2EB550259A24").FirstOrDefault();
+        private static NFTableFile NFT = DeNSo.Session.New.Get<NFTableFile>(n => n._Id == "AD11998C-91E2-48A5-A460-2EB550259A24").FirstOrDefault();
 
         public static NFTableFile Get() {
             return NFT;
         }
 
         public static void Create() {
-            DeNSo.Session.New.DeleteAll<NFTableFile>(DeNSo.Session.New.Get<NFTableFile>().ToList());
+            //DeNSo.Session.New.DeleteAll<NFTableFile>(DeNSo.Session.New.Get<NFTableFile>().ToList());
             var nft = new NFTableFile() {
                 _Id = "AD11998C-91E2-48A5-A460-2EB550259A24",
                 FileName = "nftable001.list"

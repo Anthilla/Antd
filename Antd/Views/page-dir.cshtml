@@ -75,7 +75,7 @@
     </nav>
 
     <ul style="list-style: none !important;">
-        @foreach (Antd.Models.DirItemModel el in Model.children2) {
+        @foreach (antdlib.Models.DirItemModel el in Model.children2) {
             if (el.isFile == true) {
             <li>
                 <p><i class="icon-file on-left"></i>@el.path</p>

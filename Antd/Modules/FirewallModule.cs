@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.CCTable;
+using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
@@ -49,6 +50,25 @@ namespace Antd {
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
                 return View["_page-firewall", vmod];
+            };
+
+            Get["/nft"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
+                vmod.Table = NFTableRepository.Get();
+                return View["_page-firewall-nft", vmod];
+            };
+
+            Post["/nft"] = x => {
+                NFTableRepository.Create();
+                return Response.AsJson(true);
+            };
+
+            Post["/nft/table"] = x => {
+                var name = Request.Form.TableName;
+                var type = Request.Form.TableType;
+                NFTableRepository.AddTable(name, type);
+                return Response.AsJson(true);
             };
         }
     }
