@@ -39,6 +39,8 @@ namespace antdlib.Firewall {
     }
 
     public class NFTableTable {
+        public string Guid { get; set; }
+
         public string Type { get; set; }
 
         public string Name { get; set; }
@@ -47,8 +49,16 @@ namespace antdlib.Firewall {
     }
 
     public class NFTableChain {
+        public string Guid { get; set; }
+        
         public string Name { get; set; }
 
-        public List<string> Rules { get; set; } = new List<string>() { };
+        public List<NFTableRule> Rules { get; set; } = new List<NFTableRule>() { };
+    }
+
+    public class NFTableRule {
+        public string Guid { get; set; }
+
+        public string Value { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using System.Linq;
 
 namespace antdlib.Firewall {
@@ -48,6 +49,7 @@ namespace antdlib.Firewall {
 
         public static void AddTable(string name, string type) {
             var table = new NFTableTable() {
+                Guid = Guid.NewGuid().ToString(),
                 Name = name,
                 Type = type
             };
@@ -59,10 +61,15 @@ namespace antdlib.Firewall {
             var table = NFT.Tables.Where(t => t != null && t.Name == tableName).FirstOrDefault();
             NFT.Tables.Remove(table);
             var chain = new NFTableChain() {
+                Guid = Guid.NewGuid().ToString(),
                 Name = name
             };
             foreach (var rule in rules) {
-                chain.Rules.Add(rule);
+                var r = new NFTableRule() {
+                    Guid = Guid.NewGuid().ToString(),
+                    Value = rule
+                };
+                chain.Rules.Add(r);
             }
             table.Chain.Add(chain);
             NFT.Tables.Add(table);

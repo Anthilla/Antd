@@ -53,7 +53,7 @@ namespace antdlib.Firewall {
                             sw.WriteLine($"chain {chain.Name} {{");
                             sw.WriteLine($"type {table.Name} hook {chain.Name} priority 0;");
                             foreach (var rule in chain.Rules) {
-                                sw.WriteLine($"{rule}");
+                                sw.WriteLine($"{rule.Value}");
                             }
                             sw.WriteLine("}");
                         }
