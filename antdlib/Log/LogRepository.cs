@@ -27,38 +27,51 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
 using System.Linq;
 
 namespace antdlib.Log {
 
-    public class LogRepo {
+    public class Logger {
 
-        public LogModel[] GetAll() {
+        public static LogModel[] GetAll() {
             var list = DeNSo.Session.New.Get<LogModel>().ToList();
             return (from l in list
                     where l != null
-                    orderby l.time descending
+                    orderby l.LogTimestamp descending
                     select l).ToArray();
         }
 
-        public static void Create(string _time, string _mode, string _file) {
+        public static void TraceEvent(LogModel.EventLevel level, string source, string eventId, string activity, string keyword, string user, 
+            string opCode, string reg, string sessionId, string relationId, string message) {
             var l = new LogModel() {
-                _Id = Guid.NewGuid().ToString(),
-                time = _time,
-                mode = _mode,
-                file = _file
+                Level = level,
+                Source = source,
+                EventID = eventId,
+                Activity = activity,
+                Keyword = keyword,
+                User = user,
+                OperativeCode = opCode,
+                Reg = reg,
+                SessionID = sessionId,
+                RelationID = relationId,
+                Message = message
             };
             DeNSo.Session.New.Set(l);
         }
 
-        public static void Create(string _time, string _mode, string _file, string _oldfile) {
+        public static void TraceFileChange(string mode, string file) {
             var l = new LogModel() {
-                _Id = Guid.NewGuid().ToString(),
-                time = _time,
-                mode = _mode,
-                file = _file,
-                oldfile = _oldfile
+                Mode = mode,
+                File = file
+            };
+            DeNSo.Session.New.Set(l);
+        }
+
+        public static void TraceFileChange(string mode, string file, string oldfile) {
+            var l = new LogModel() {
+                Mode = mode,
+                File = file,
+                Oldfile = oldfile
             };
             DeNSo.Session.New.Set(l);
         }

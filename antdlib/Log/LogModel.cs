@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -30,14 +32,50 @@
 namespace antdlib.Log {
 
     public class LogModel {
-        public string _Id { get; set; }
 
-        public string time { get; set; }
+        //this.GetType().FullName + "." + System.Reflection.MethodBase.GetCurrentMethod().Name;
+        //string method = string.Format("{0}.{1}", MethodBase.GetCurrentMethod().DeclaringType.FullName, MethodBase.GetCurrentMethod().Name);
 
-        public string mode { get; set; }
+        public enum EventLevel : byte {
+            ApiRequest = 0,
+            InvokedMethod = 1,
+            Error = 99
+        }
 
-        public string file { get; set; }
+        public string _Id { get; } = Guid.NewGuid().ToString();
 
-        public string oldfile { get; set; }
+        public string LogGuid { get; } = Guid.NewGuid().ToString();
+
+        public string AntdUID { get; } = AssemblyInfo.Guid;
+
+        public string LogTimestamp { get; set; } = Timestamp.Now;
+
+        public EventLevel Level { get; set; }
+
+        public string Source { get; set; }
+
+        public string EventID { get; set; }
+
+        public string Activity { get; set; }
+
+        public string Keyword { get; set; }
+
+        public string User { get; set; }
+
+        public string OperativeCode { get; set; }
+
+        public string Reg { get; set; }
+
+        public string SessionID { get; set; }
+
+        public string RelationID { get; set; }
+
+        public string Message { get; set; } //also  hhtpRequestStatus
+
+        public string Mode { get; set; }
+
+        public string File { get; set; }
+
+        public string Oldfile { get; set; }
     }
 }

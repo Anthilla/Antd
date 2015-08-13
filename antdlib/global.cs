@@ -1,4 +1,7 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System.Reflection;
+using System.Runtime.InteropServices;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,19 +29,7 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 namespace antdlib {
-    //public class antdconst {
-    //    public class Folder {
-    //        public static string Root { get { return "/cfg/antd"; } }
-    //        public static string Config { get { return Folder.Root + "/config"; } }
-    //        public static string Database { get { return Folder.Root + "/database"; } }
-    //        public static string FileRepository { get { return Folder.Root + "/files"; } }
-    //        public static string Networkd { get { return Folder.Root + "/networkd"; } }
-    //        public static string Apps { get { return "/mnt/cdrom/Apps"; } }
-    //        public static string AppsUnits { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
-    //    }
-    //}
 
     public class Label {
         public static string Root { get { return "antd_root"; } }
@@ -87,5 +78,16 @@ namespace antdlib {
 
     public class Uri {
         public static string Antd { get { return "http://+:" + Port.Antd + "/"; } }
+    }
+
+    public class AssemblyInfo {
+
+        private static string GetGuid() {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            var attribute = (GuidAttribute)assembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
+            return attribute.Value;
+        }
+
+        public static string Guid { get { return GetGuid(); } }
     }
 }

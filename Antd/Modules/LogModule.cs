@@ -35,15 +35,13 @@ using System.Dynamic;
 namespace Antd {
 
     public class LogModule : NancyModule {
-        private LogRepo repo = new LogRepo();
-
         public LogModule()
             : base("/log") {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.LOGS = repo.GetAll();
+                vmod.LOGS = Logger.GetAll();
                 return View["_page-log", vmod];
             };
         }

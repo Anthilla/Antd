@@ -94,5 +94,8 @@ namespace antdlib.Log {
 
     //For more details see dmesg(1).
     public class Dmesg {
+        public static void Status() {
+
+        }
     }
 }

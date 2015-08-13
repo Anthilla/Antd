@@ -45,6 +45,14 @@ namespace Antd {
 
         public TestModule()
             : base("/test") {
+
+            Before += y => {
+                return null;
+            };
+
+            After += y => {
+            };
+
             Get["Test page", "/"] = x => {
                 return Response.AsText("Hello World!");
             };
