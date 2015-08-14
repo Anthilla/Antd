@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System.Collections.Generic;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,11 +28,36 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using System.IO;
+using System.Linq;
 
 namespace antdlib {
     public class DIRS {
+
+        public static string[] LookForDirectories() {
+            var list = new List<string>() { };
+            var directories = Directory.EnumerateDirectories(Folder.Dirs).ToArray();
+            return list.Concat(directories).ToArray();
+        }
+
+        public static string[] LookForFiles() {
+            var list = new List<string>() { };
+            var files = Directory.EnumerateFiles(Folder.Dirs).ToArray();
+            return list.Concat(files).ToArray();
+        }
+
+        public static List<KeyValuePair<string, string>> MountDirectories() {
+            var list = new List<KeyValuePair<string, string>>() { };
+            foreach (var dir in LookForDirectories()) {
+                var dirName = Path.GetDirectoryName(dir);
+                var realDirectory = dirName.Replace("DIR_", "").Replace("_", "/");
+                Directory.CreateDirectory(realDirectory);
+                MountOBind(dir, realDirectory);
+                list.Add(new KeyValuePair<string, string>(dir, realDirectory));
+            }
+            return list;
+        }
+
         public static void SetDirectory(string[] dirs) {
             foreach (var dir in dirs) {
                 SetDirectory(dir);
@@ -55,5 +82,6 @@ namespace antdlib {
         public static void MountOBind(string source, string destination) {
             Terminal.Execute("mount -o bind " + source + " " + destination);
         }
+
     }
 }
