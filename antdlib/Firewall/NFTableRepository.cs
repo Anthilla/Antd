@@ -47,11 +47,11 @@ namespace antdlib.Firewall {
             DeNSo.Session.New.Set(nft);
         }
 
-        public static void AddTable(string name, string type) {
+        public static void AddTable(string type, string name) {
             var table = new NFTableTable() {
                 Guid = Guid.NewGuid().ToString(),
-                Name = name,
-                Type = type
+                Type = type,
+                Name = name
             };
             NFT.Tables.Add(table);
             DeNSo.Session.New.Set(NFT);
@@ -59,6 +59,7 @@ namespace antdlib.Firewall {
 
         public static void AddChain(string tableGuid, string name, string type, string hook) {
             var table = NFT.Tables.Where(t => t.Guid == tableGuid).FirstOrDefault();
+            NFT.Tables.Remove(table);
             var chain = new NFTableChain() {
                 Guid = Guid.NewGuid().ToString(),
                 Name = name,
@@ -70,10 +71,10 @@ namespace antdlib.Firewall {
             DeNSo.Session.New.Set(NFT);
         }
 
-        public static void AddRules(string tableName, string chainName, string[] rules, string rulesGuid = null) {
-            var table = NFT.Tables.Where(t => t != null && t.Name == tableName).FirstOrDefault();
+        public static void AddRules(string tableGuid, string chainGuid, string[] rules, string rulesGuid = null) {
+            var table = NFT.Tables.Where(t => t != null && t.Guid == tableGuid).FirstOrDefault();
             NFT.Tables.Remove(table);
-            var chain = table.Chain.Where(c => c.Name == chainName).FirstOrDefault();
+            var chain = table.Chain.Where(c => c.Guid == chainGuid).FirstOrDefault();
             table.Chain.Remove(chain);
             if (rulesGuid != null) {
                 var ruleSet = chain.Rules.Where(r => r.Guid == rulesGuid).FirstOrDefault();

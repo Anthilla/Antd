@@ -63,22 +63,67 @@
                 <tbody>
                     @foreach (antdlib.Firewall.NFTableTable table in Model.Table.Tables) {
                         <tr>
-                            <td><label>@table.Type @table.Name</label></td>
+                            <td colspan="2"><label>@table.Type @table.Name</label></td>
                         </tr>
                         @foreach (antdlib.Firewall.NFTableChain chain in table.Chain) {
                             <tr>
-                                <td>@chain.Name - @chain.Type @chain.Hook @chain.Priority</td>
+                                <td colspan="2">
+                                    <label style="display:inline-block !important;">chain @chain.Name</label> <p style="display:inline-block !important;">- @chain.Type @chain.Hook @chain.Priority</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <ul style="list-style:none !important;" class="fg-white">
+                                        @foreach (antdlib.Firewall.NFTableRule rule in chain.Rules) {
+                                            <li>@rule.Value</li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form action="/firewall/nft/rule" method="POST" enctype="multipart/form-data" data-rule-form="@chain.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>Rules</label>
+                                            </div>
+                                            <div class="span7 rule-area" data-role-form="@chain.Guid">
+                                                <input type="hidden" name="TableGuid" value="@table.Guid">
+                                                <input type="hidden" name="ChainGuid" value="@chain.Guid">
+                                                <input type="text" name="Rules" style="width: 90%; height: 25px;">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>&nbsp</label>
+                                            </div>
+                                            <div class="span7">
+                                                <input class="bg-anthilla-green" data-role-guid="@chain.Guid" data-role="add-ruleset" type="button" value="Add Rule">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>&nbsp</label>
+                                            </div>
+                                            <div class="span7">
+                                                <input class="bg-anthilla-green" type="submit" value="Create Chain">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr class="bg-anthilla-gray" />
+                                    <input type="button" class="bg-anthilla-blu" data-nft-role="add-rule" data-rule-guid="@chain.Guid" value="New Rule Set" />
+                                </td>
                             </tr>
                         }
                         <tr>
-                            <td>
+                            <td colspan="2">
                                 <form action="/firewall/nft/chain" method="POST" enctype="multipart/form-data" data-chain-form="@table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
                                     <div class="row">
                                         <div class="span3">
                                             <label>Chain Type</label>
                                         </div>
                                         <div class="span7">
-                                            <input type="hidden" name="TableName" value="@Model.Table._Id">
+                                            <input type="hidden" name="TableGuid" value="@table.Guid">
                                             <input type="text" name="ChainType" style="width: 90%; height: 25px;">
                                         </div>
                                     </div>
@@ -167,6 +212,17 @@
         $('input[data-nft-role="add-chain"]').click(function () {
             var guid = $(this).attr('data-chain-guid');
             $('form[data-chain-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-nft-role="add-rule"]').click(function () {
+            var guid = $(this).attr('data-rule-guid');
+            $('form[data-rule-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-role="add-ruleset"]').click(function () {
+            var guid = $(this).attr('data-role-guid');
+            var html = '<input type="text" name="Rules" style="width: 90%; height: 25px;">';
+            $('.rule-area[data-role-form="' + guid + '"]').append(html);
         });
     </script>
 }

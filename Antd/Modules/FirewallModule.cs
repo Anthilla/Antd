@@ -31,7 +31,9 @@ using antdlib.CCTable;
 using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
+using System;
 using System.Dynamic;
+using System.Linq;
 
 namespace Antd {
 
@@ -72,19 +74,19 @@ namespace Antd {
             };
 
             Post["/nft/chain"] = x => {
-                var tableName = Request.Form.TableName;
+                var tableGuid = Request.Form.TableGuid;
                 var name = Request.Form.ChainName;
                 var type = Request.Form.ChainType;
                 var hook = Request.Form.ChainHook;
-                NFTableRepository.AddChain(tableName, name, type, hook);
+                NFTableRepository.AddChain(tableGuid, name, type, hook);
                 return Response.AsRedirect("/firewall/nft");
             };
 
             Post["/nft/rule"] = x => {
-                var tableName = Request.Form.TableName;
-                var chainName = Request.Form.ChainName;
-                var rules = (string[])Request.Form.Rules;
-                NFTableRepository.AddRules(tableName, chainName, rules);
+                var tableGuid = Request.Form.TableGuid;
+                var chainGuid = Request.Form.ChainGuid;
+                var rules = (string)Request.Form.Rules;
+                NFTableRepository.AddRules(tableGuid, chainGuid, rules.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray());
                 return Response.AsRedirect("/firewall/nft");
             };
         }
