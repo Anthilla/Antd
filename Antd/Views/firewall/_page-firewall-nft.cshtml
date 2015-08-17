@@ -77,8 +77,14 @@
 @section MainContent {
     <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
         <legend><i class="icon-fire on-left"></i> NFTable Configuration .3</legend>
-        @*<canvas style="width: 1487px; margin-left: -13px; position: absolute; z-index: 0; opacity: 0.5; height: 530px;" id="canvas" class="ribbed-blue border-2-anthilla-gray"></canvas>*@
-        <div class="grid bg-transparent" style="width: 1487px; margin-left: -13px;">
+        <div style="position:absolute; z-index :0; opacity: 1;">
+            <div style="width: 1480px; margin-left: -13px; height:65px;" class="bg-mauve"></div>
+            <div style="width: 1480px; margin-left: -13px;  height: 76px;" class="bg-taupe"></div>
+            <div style="width: 1480px; margin-left: -13px;  height: 224px;" class="bg-olive"></div>
+            <div style="width: 1480px; margin-left: -13px;  height: 154px;" class="bg-steel"></div>
+        </div>
+        <canvas style="width: 1487px; margin-left: -13px; position: absolute; z-index: 1; opacity: 0.5; height: 530px;" id="canvas" class="ribbed-blue border-2-anthilla-gray"></canvas>
+        <div class="grid bg-transparent" style="width: 1487px; margin-left: -13px; position:relative; z-index: 4;">
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
                 @EmptyBox()
                 @EmptyBox()
@@ -266,6 +272,17 @@
             $('input.data-display-hook').val(hook);
             //get ruleset, se ci sono, con ajax
             //e mostrarle  in textarea
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/firewall/rule/' + type + '/' + hook,
+                type: 'GET',
+                dataType: 'json',
+                //contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    $('textarea[name="Ruleset"]').text(data);
+                    return false;
+                }
+            });
         });
 
         function Lines() {

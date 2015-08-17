@@ -69,6 +69,8 @@ namespace antdlib.Firewall {
     }
 
     public class NFTableRuleSet {
+        public string _Id { get; set; }
+
         public string Guid { get; set; }
 
         public string Type { get; set; }
@@ -77,6 +79,6 @@ namespace antdlib.Firewall {
 
         public int Priority { get; set; } = 0;
 
-        public string[] Rules { get; set; } = new string[] { };
+        public string Rules { get; set; } = "";
     }
 }

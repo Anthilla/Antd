@@ -40,18 +40,19 @@ namespace antdlib.Firewall {
 
         public static void SaveRuleSet(string type, string hook, string rules) {
             var set = new NFTableRuleSet() {
+                _Id = $"{type}-{hook}",
                 Guid = Guid.NewGuid().ToString(),
                 Type = type,
                 Hook = hook,
                 Priority = 0
             };
-            set.Rules = rules.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            set.Rules = rules;
             DeNSo.Session.New.Set(set);
         }
 
-        public static string[] GetRuleSet(string type, string hook) {
+        public static string GetRuleSet(string type, string hook) {
             var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Type == type && t.Hook == hook).FirstOrDefault();
-            return ruleset.Rules;
+            return (ruleset == null) ? "" : ruleset.Rules;
         }
 
         public static void Create() {

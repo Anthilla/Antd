@@ -60,7 +60,6 @@ namespace Antd {
                 var type = (string)Request.Form.Type;
                 var hook = (string)Request.Form.Hook;
                 var rules = (string)Request.Form.Ruleset;
-                Console.WriteLine(type, hook, rules);
                 NFTableRepository.SaveRuleSet(type, hook, rules);
                 return Response.AsRedirect("/firewall");
             };
