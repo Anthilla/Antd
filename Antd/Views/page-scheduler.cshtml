@@ -326,15 +326,15 @@
         }
     }
 
-    @foreach (Antd.Scheduler.JobModel job in Model.JobList) {
+    @foreach (antdlib.Scheduler.JobModel job in Model.JobList) {
         @if (job != null) {
             <div data-role="panel" class="panel collapsed border-2-anthilla-gray" data-guid="@job.Guid" style="margin-bottom: 5px;">
                 <div class="panel-header bg-anthilla-gray fg-white">
                     <p class="fg-white" style="display: inline-block;">
-                        @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                        @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsOneTimeOnly) {
                             <i class="icon-alarm-clock on-left"></i>
                         }
-                        @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                        @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                             <i class="icon-history on-left"></i>
                         }
                         @job.Alias
@@ -353,10 +353,10 @@
                         </li>
                         <li>
                             <label>Period</label>
-                            @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                            @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsOneTimeOnly) {
                                 <p>One-time-only</p>
                             }
-                            @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                            @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                                 <p>With Cron Expression: @job.CronExpression</p>
                             }
                         </li>
@@ -366,13 +366,13 @@
                         </li>
                     </ul>
                     <hr />
-                    @if (job.isEnabled == true && job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                    @if (job.isEnabled == true && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                         <p class="button bg-yellow" data-action="disable" data-guid="@job.Guid" style="color: black !important;">Status: Enabled</p>
                     }
-                    @if (job.isEnabled == false && job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsCron) {
+                    @if (job.isEnabled == false && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                         <p class="button bg-yellow" data-action="enable" data-guid="@job.Guid" style="color: black !important;">Status: Disabled</p>
                     }
-                    @if (job.TriggerPeriod == Antd.Scheduler.TriggerPeriod.IsOneTimeOnly) {
+                    @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsOneTimeOnly) {
                         <p class="button bg-yellow" data-action="launch" data-guid="@job.Guid" style="color: black !important;">Launch Now</p>
                     }
                     <p class="button bg-yellow" data-action="delete" data-guid="@job.Guid" style="color: black !important;">Delete</p>

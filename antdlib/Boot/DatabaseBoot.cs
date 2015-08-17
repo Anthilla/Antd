@@ -38,16 +38,12 @@ namespace antdlib.Boot {
     public class DatabaseBoot {
 
         public static void Start(string[] dbPaths, bool doTest) {
-            //DeNSo.Configuration.BasePath = dbPaths;
-            //DeNSo.Configuration.EnableJournaling = true;
-            //DeNSo.Configuration.EnableDataCompression = false;
-            //DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
-            //DeNSo.Configuration.SaveInterval = new TimeSpan(0, 2, 0);
-
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
-            DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 2, 0);
-            DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 2, 0);
+            DeNSo.Configuration.EnableDataCompression = false; /*DensoV3*/
+            DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 1, 0);
+            DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
+            DeNSo.Configuration.SaveInterval = new TimeSpan(0, 1, 0); /*DensoV3*/
             DeNSo.Configuration.EnableOperationsLog = false;
 
             //EventP2PDispatcher.EnableP2PEventMesh();

@@ -4,7 +4,8 @@ using Newtonsoft.Json;
 namespace antdlib.Database {
     public class AntdDatabase {
         private static string GetVersion() {
-            return DeNSo.Configuration.Version.ToString();
+            return "";
+            //return DeNSo.Configuration.Version.ToString();
         }
 
         public static string Version { get { return GetVersion(); } }
