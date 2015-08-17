@@ -51,7 +51,7 @@
 }
 
 @helper RulesetBox(string type, string hook, string color = "green") {
-    <div class="tile half no-outline border-anthilla-gray" style="width: 70px !important; text-align: center; margin-right: 0px;">
+    <div data-object="ruleset" data-type="@type" data-hook="@hook" class="tile half no-outline border-anthilla-gray" style="width: 70px !important; text-align: center; margin-right: 0px;">
         <div style="width: 100%; height: 50%; border-bottom: 1px solid #3A3A3A; padding: 2px;" class="ribbed-@color fg-black">
             <span style="font-size: 12px !important">@type</span>
         </div>
@@ -77,7 +77,7 @@
 @section MainContent {
     <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
         <legend><i class="icon-fire on-left"></i> NFTable Configuration .3</legend>
-        <canvas style="width: 1487px; margin-left: -13px; position: absolute; z-index: 0; opacity: 0.5; height: 530px;" id="canvas" class="ribbed-blue border-2-anthilla-gray"></canvas>
+        @*<canvas style="width: 1487px; margin-left: -13px; position: absolute; z-index: 0; opacity: 0.5; height: 530px;" id="canvas" class="ribbed-blue border-2-anthilla-gray"></canvas>*@
         <div class="grid bg-transparent" style="width: 1487px; margin-left: -13px;">
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
                 @EmptyBox()
@@ -102,7 +102,7 @@
                 @EmptyBox()
                 @EmptyBox()
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="protocol">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
@@ -125,7 +125,7 @@
                 @EmptyBox()
                 @EmptyBox()
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="network">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
@@ -148,7 +148,7 @@
                 @EmptyBox()
                 @EmptyBox()
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="network">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
@@ -171,7 +171,7 @@
                 @EmptyBox()
                 @EmptyBox()
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="network">
                 @EmptyBox()
                 @ConnectionBox("taps")
                 @EmptyBox()
@@ -194,7 +194,7 @@
                 @EmptyBox()
                 @ConnectionBox("af_packet")
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="link">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
@@ -217,7 +217,7 @@
                 @EmptyBox()
                 @EmptyBox()
             </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="link">
                 @ConnectionBox("(start)")
                 @ConnectionBox("ingress")
                 @ConnectionBox("bridge check")
@@ -241,11 +241,31 @@
                 @ConnectionBox("interface output")
             </div>
         </div>
+        <hr class="bg-anthilla-gray" />
+        <h2 style="display: inline-block;" class="fg-white">Rules for: </h2>
+        <h2 style="display: inline-block;" class="fg-white data-display-type"></h2>
+        <h2 style="display: inline-block;" class="fg-white data-display-hook"></h2>
+        <br />
+        <form action="/firewall/rule" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="Type" class="data-display-type" />
+            <input type="hidden" name="Hook" class="data-display-hook" />
+            <textarea name="Ruleset" class="bg-anthilla-gray border-anthilla-gray fg-white" style="width: 855px; min-height: 350px;"></textarea>
+            <input type="submit" value="Update Rules" />
+        </form>
     </div>
 }
 
 @section Scripts {
     <script type="text/javascript">
-
+        $('div[data-object="ruleset"]').dblclick(function () {
+            var type = $(this).attr('data-type');
+            var hook = $(this).attr('data-hook');
+            $('.data-display-type').text(type);
+            $('input.data-display-type').val(type);
+            $('.data-display-hook').text(hook);
+            $('input.data-display-hook').val(hook);
+            //get ruleset, se ci sono, con ajax
+            //e mostrarle  in textarea
+        });
     </script>
 }
