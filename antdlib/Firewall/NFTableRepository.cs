@@ -38,6 +38,22 @@ namespace antdlib.Firewall {
             return NFT;
         }
 
+        public static void SaveRuleSet(string type, string hook, string rules) {
+            var set = new NFTableRuleSet() {
+                Guid = Guid.NewGuid().ToString(),
+                Type = type,
+                Hook = hook,
+                Priority = 0
+            };
+            set.Rules = rules.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            DeNSo.Session.New.Set(set);
+        }
+
+        public static string[] GetRuleSet(string type, string hook) {
+            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Type == type && t.Hook == hook).FirstOrDefault();
+            return ruleset.Rules;
+        }
+
         public static void Create() {
             //DeNSo.Session.New.DeleteAll<NFTableFile>(DeNSo.Session.New.Get<NFTableFile>().ToList());
             var nft = new NFTableFile() {

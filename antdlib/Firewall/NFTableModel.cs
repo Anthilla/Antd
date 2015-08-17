@@ -50,7 +50,7 @@ namespace antdlib.Firewall {
 
     public class NFTableChain {
         public string Guid { get; set; }
-        
+
         public string Name { get; set; } //es: chain NAME { }
 
         public string Type { get; set; } //es: type TYPE hook input priority 0;
@@ -66,5 +66,17 @@ namespace antdlib.Firewall {
         public string Guid { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class NFTableRuleSet {
+        public string Guid { get; set; }
+
+        public string Type { get; set; }
+
+        public string Hook { get; set; }
+
+        public int Priority { get; set; } = 0;
+
+        public string[] Rules { get; set; } = new string[] { };
     }
 }

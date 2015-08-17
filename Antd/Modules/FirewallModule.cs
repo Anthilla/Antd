@@ -45,17 +45,15 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.FirewallMaximumStates = "9000";
-                vmod.FirewallMaximumTableEntries = "20000";
-                vmod.AliasesHostnamesResolveInterval = "300";
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
-
-                vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
-                vmod.Table = NFTableRepository.Get();
+                //vmod.FirewallMaximumStates = "9000";
+                //vmod.FirewallMaximumTableEntries = "20000";
+                //vmod.AliasesHostnamesResolveInterval = "300";
+                //vmod.CurrentContext = this.Request.Path;
+                //vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
+                //vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                //vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
+                //vmod.Table = NFTableRepository.Get();
                 return View["_page-firewall-nft", vmod];
-                //return View["_page-firewall", vmod];
             };
 
             Post["/rule"] = x => {
@@ -63,7 +61,15 @@ namespace Antd {
                 var hook = (string)Request.Form.Hook;
                 var rules = (string)Request.Form.Ruleset;
                 Console.WriteLine(type, hook, rules);
+                NFTableRepository.SaveRuleSet(type, hook, rules);
                 return Response.AsRedirect("/firewall");
+            };
+
+            Get["/rule/{type}/{hook}"] = x => {
+                string type = x.type;
+                string hook = x.hook;
+                var rules = NFTableRepository.GetRuleSet(type, hook);
+                return Response.AsJson(rules);
             };
 
             Get["/nft"] = x => {
