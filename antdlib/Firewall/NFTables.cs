@@ -62,5 +62,12 @@ namespace antdlib.Firewall {
                 }
             }
         }
+
+        public static void ReadFile(string dir) {
+            var path = Path.Combine(dir, fileName);
+            if (File.Exists(path)) {
+                //leggi e splitta eccetera
+            }
+        }
     }
 }

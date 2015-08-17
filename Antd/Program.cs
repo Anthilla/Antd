@@ -66,6 +66,8 @@ namespace Antd {
                 AntdBoot.CheckSysctl(false);
                 //AntdBoot.TestWebDav("http://localhost:7788/", "/test");
 
+                antdlib.Firewall.NFTableRepository.Create();
+
                 ConsoleLogger.Log("antd is running");
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
 

@@ -41,7 +41,7 @@ namespace antdlib.Boot {
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.EnableDataCompression = false; /*DensoV3*/
-            DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 1, 0);
+            //DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.SaveInterval = new TimeSpan(0, 1, 0); /*DensoV3*/
             DeNSo.Configuration.EnableOperationsLog = false;

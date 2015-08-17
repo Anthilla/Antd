@@ -1,0 +1,273 @@
+﻿@*
+    ///-------------------------------------------------------------------------------------
+    ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    ///     All rights reserved.
+    ///
+    ///     Redistribution and use in source and binary forms, with or without
+    ///     modification, are permitted provided that the following conditions are met:
+    ///         * Redistributions of source code must retain the above copyright
+    ///           notice, this list of conditions and the following disclaimer.
+    ///         * Redistributions in binary form must reproduce the above copyright
+    ///           notice, this list of conditions and the following disclaimer in the
+    ///           documentation and/or other materials provided with the distribution.
+    ///         * Neither the name of the Anthilla S.r.l. nor the
+    ///           names of its contributors may be used to endorse or promote products
+    ///           derived from this software without specific prior written permission.
+    ///
+    ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    ///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    ///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    ///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    ///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    ///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    ///
+    ///     20141110
+    ///-------------------------------------------------------------------------------------*@
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@using System.Collections.Generic
+@{Layout = "_layout.cshtml";}
+
+@section PageBar {
+    <style type="text/css">
+        #Firewall-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-fire on-left" style="line-height: 5px;"></i>
+                NFTable
+            </div>
+            <div class="element-divider"></div>
+            @if (Model.DisplayTable == false) {
+                <a id="SetNFTable" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px; cursor: pointer !important;">
+                    Set NFTable
+                </a>
+            }
+        </nav>
+    </nav>
+}
+
+@section MainContent {
+    <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
+        <legend><i class="icon-fire on-left"></i> NFTable Configuration .3</legend>
+        <div class="grid" style="width: 100%;">
+            <div class="row">
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"><label>input path</label></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"><label>forward path</label></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"><label>output path</label></div>
+            </div>
+
+            <div class="row ol-pink" style="outline: 3px solid; min-height: 40px; margin-bottom: 10px;" data-layer="application">
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+            </div>
+            <div class="row ol-amber" style="outline: 3px solid; min-height: 40px; margin-bottom: 10px;" data-layer="protocol">
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+            </div>
+            <div class="row ol-green" style="outline: 3px solid; min-height: 40px; margin-bottom: 10px;" data-layer="network">
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+            </div>
+            <div class="row ol-cyan" style="outline: 3px solid; min-height: 40px; margin-bottom: 10px;" data-layer="link">
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+                <div class="span6" style="margin: 0px !important; padding: 3px 15px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
+        <legend><i class="icon-fire on-left"></i> NFTable Configuration .2</legend>
+        <div class="grid">
+            <div class="row">
+                <div class="span10">
+                    <textarea name="File" style="width: 100%; max-width: 100%; min-width: 100%; min-height: 250px;" class="bg-anthilla-gray border-anthilla-gray fg-white"></textarea>
+                </div>
+                <div class="span5">
+                    <input data-role="add-table" type="button" value="add table" class="bg-anthilla-green upcase" style="padding: 2px 25px; color: #3A3A3A !important;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.DisplayTable == true) {
+        <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
+            <legend><i class="icon-fire on-left"></i> NFTable Configuration</legend>
+            <table class="table" data-table-content="@Model.Table._Id">
+                <tbody>
+                    @foreach (antdlib.Firewall.NFTableTable table in Model.Table.Tables) {
+                        <tr>
+                            <td colspan="2"><label>@table.Type @table.Name</label></td>
+                        </tr>
+                        @foreach (antdlib.Firewall.NFTableChain chain in table.Chain) {
+                            <tr>
+                                <td colspan="2">
+                                    <label style="display:inline-block !important;">chain @chain.Name</label> <p style="display:inline-block !important;">- @chain.Type @chain.Hook @chain.Priority</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <ul style="list-style:none !important;" class="fg-white">
+                                        @foreach (antdlib.Firewall.NFTableRule rule in chain.Rules) {
+                                            <li>@rule.Value</li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form action="/firewall/nft/rule" method="POST" enctype="multipart/form-data" data-rule-form="@chain.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>Rules</label>
+                                            </div>
+                                            <div class="span7 rule-area" data-role-form="@chain.Guid">
+                                                <input type="hidden" name="TableGuid" value="@table.Guid">
+                                                <input type="hidden" name="ChainGuid" value="@chain.Guid">
+                                                <input type="text" name="Rules" style="width: 90%; height: 25px;">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>&nbsp</label>
+                                            </div>
+                                            <div class="span7">
+                                                <input class="bg-anthilla-green" data-role-guid="@chain.Guid" data-role="add-ruleset" type="button" value="Add Rule">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span3">
+                                                <label>&nbsp</label>
+                                            </div>
+                                            <div class="span7">
+                                                <input class="bg-anthilla-green" type="submit" value="Create Chain">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <hr class="bg-anthilla-gray" />
+                                    <input type="button" class="bg-anthilla-blu" data-nft-role="add-rule" data-rule-guid="@chain.Guid" value="New Rule Set" />
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2">
+                                <form action="/firewall/nft/chain" method="POST" enctype="multipart/form-data" data-chain-form="@table.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Type</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="hidden" name="TableGuid" value="@table.Guid">
+                                            <input type="text" name="ChainType" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Name</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="text" name="ChainName" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>Chain Hook</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input type="text" name="ChainHook" style="width: 90%; height: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span3">
+                                            <label>&nbsp</label>
+                                        </div>
+                                        <div class="span7">
+                                            <input class="bg-anthilla-green" type="submit" value="Create Chain">
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr class="bg-anthilla-gray" />
+                                <input type="button" class="bg-anthilla-blu" data-nft-role="add-chain" data-chain-guid="@table.Guid" value="New Chain" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <form action="/firewall/nft/table" method="POST" enctype="multipart/form-data" data-table-form="@Model.Table._Id" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+                <div class="row">
+                    <div class="span3">
+                        <label>Table Type</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="TableType" style="width: 90%; height: 25px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>Table Name</label>
+                    </div>
+                    <div class="span7">
+                        <input type="text" name="TableName" style="width: 90%; height: 25px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span3">
+                        <label>&nbsp</label>
+                    </div>
+                    <div class="span7">
+                        <input class="bg-anthilla-green" type="submit" value="Create Table">
+                    </div>
+                </div>
+            </form>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" class="bg-anthilla-blu" data-nft-role="add-table" data-table-guid="@Model.Table._Id" value="New Table" />
+        </div>
+    }
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $('#SetNFTable').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/firewall/nft',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('input[data-nft-role="add-table"]').click(function () {
+            var guid = $(this).attr('data-table-guid');
+            $('form[data-table-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-nft-role="add-chain"]').click(function () {
+            var guid = $(this).attr('data-chain-guid');
+            $('form[data-chain-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-nft-role="add-rule"]').click(function () {
+            var guid = $(this).attr('data-rule-guid');
+            $('form[data-rule-form="' + guid + '"]').toggle();
+        });
+
+        $('input[data-role="add-ruleset"]').click(function () {
+            var guid = $(this).attr('data-role-guid');
+            var html = '<input type="text" name="Rules" style="width: 90%; height: 25px;">';
+            $('.rule-area[data-role-form="' + guid + '"]').append(html);
+        });
+    </script>
+}

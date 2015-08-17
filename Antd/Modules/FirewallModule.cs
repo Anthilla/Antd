@@ -51,7 +51,11 @@ namespace Antd {
                 vmod.CurrentContext = this.Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
-                return View["_page-firewall", vmod];
+
+                vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
+                vmod.Table = NFTableRepository.Get();
+                return View["_page-firewall-nft", vmod];
+                //return View["_page-firewall", vmod];
             };
 
             Get["/nft"] = x => {
