@@ -267,5 +267,22 @@
             //get ruleset, se ci sono, con ajax
             //e mostrarle  in textarea
         });
+
+        function Lines() {
+            var canvas = $('#canvas');
+            var ctx = canvas[0].getContext('2d');
+
+            ctx.beginPath();
+            //inizio linea retta
+            ctx.moveTo(50, 50); //a
+            ctx.lineTo(150, 50); //b
+            //punta della freccia
+            ctx.moveTo(100, 75); //c
+            ctx.lineTo(150, 50); //b
+            ctx.lineTo(100, 25); //d
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+        }
     </script>
 }
