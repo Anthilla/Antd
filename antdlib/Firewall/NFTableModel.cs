@@ -30,44 +30,6 @@
 using System.Collections.Generic;
 
 namespace antdlib.Firewall {
-    public class NFTableFile {
-        public string _Id { get; set; }
-
-        public string FileName { get; set; }
-
-        public List<NFTableTable> Tables { get; set; } = new List<NFTableTable>() { };
-    }
-
-    public class NFTableTable {
-        public string Guid { get; set; }
-
-        public string Type { get; set; } //es: ip
-
-        public string Name { get; set; } //es: filter
-
-        public List<NFTableChain> Chain { get; set; } = new List<NFTableChain>() { };
-    }
-
-    public class NFTableChain {
-        public string Guid { get; set; }
-
-        public string Name { get; set; } //es: chain NAME { }
-
-        public string Type { get; set; } //es: type TYPE hook input priority 0;
-
-        public string Hook { get; set; } //es: type filter hook HOOK priority 0;
-
-        public int Priority { get; set; } = 0;  //es: type filter hook input PRIORITY 0;
-
-        public List<NFTableRule> Rules { get; set; } = new List<NFTableRule>() { };
-    }
-
-    public class NFTableRule {
-        public string Guid { get; set; }
-
-        public string Value { get; set; }
-    }
-
     public class NFTableRuleSet {
         public string _Id { get; set; }
 
@@ -80,5 +42,15 @@ namespace antdlib.Firewall {
         public int Priority { get; set; } = 0;
 
         public string Rules { get; set; } = "";
+
+        public string RulesForIp { get; set; } = "";
+
+        public string RulesForArp { get; set; } = "";
+
+        public string RulesForIp6 { get; set; } = "";
+
+        public string RulesForBridge { get; set; } = "";
+
+        public string RulesForInet { get; set; } = "";
     }
 }

@@ -32,13 +32,7 @@ using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTableRepository {
-        private static NFTableFile NFT = DeNSo.Session.New.Get<NFTableFile>(n => n._Id == "AD11998C-91E2-48A5-A460-2EB550259A24").FirstOrDefault();
-
-        public static NFTableFile Get() {
-            return NFT;
-        }
-
-        public static void SaveRuleSet(string type, string hook, string rules) {
+        public static void SaveRuleSet(string type, string hook,  string rulesForIp, string rulesForIp6, string rulesForBridge) {
             var set = new NFTableRuleSet() {
                 _Id = $"{type}-{hook}",
                 Guid = Guid.NewGuid().ToString(),
@@ -46,67 +40,15 @@ namespace antdlib.Firewall {
                 Hook = hook,
                 Priority = 0
             };
-            set.Rules = rules;
+            set.RulesForIp = rulesForIp;
+            set.RulesForIp6 = rulesForIp6;
+            set.RulesForBridge = rulesForBridge;
             DeNSo.Session.New.Set(set);
         }
 
-        public static string GetRuleSet(string type, string hook) {
+        public static NFTableRuleSet GetRuleSet(string type, string hook) {
             var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Type == type && t.Hook == hook).FirstOrDefault();
-            return (ruleset == null) ? "" : ruleset.Rules;
-        }
-
-        public static void Create() {
-            //DeNSo.Session.New.DeleteAll<NFTableFile>(DeNSo.Session.New.Get<NFTableFile>().ToList());
-            var nft = new NFTableFile() {
-                _Id = "AD11998C-91E2-48A5-A460-2EB550259A24",
-                FileName = "nftable001.list"
-            };
-            DeNSo.Session.New.Set(nft);
-        }
-
-        public static void AddTable(string type, string name) {
-            var table = new NFTableTable() {
-                Guid = Guid.NewGuid().ToString(),
-                Type = type,
-                Name = name
-            };
-            NFT.Tables.Add(table);
-            DeNSo.Session.New.Set(NFT);
-        }
-
-        public static void AddChain(string tableGuid, string name, string type, string hook) {
-            var table = NFT.Tables.Where(t => t.Guid == tableGuid).FirstOrDefault();
-            NFT.Tables.Remove(table);
-            var chain = new NFTableChain() {
-                Guid = Guid.NewGuid().ToString(),
-                Name = name,
-                Type = type,
-                Hook = hook
-            };
-            table.Chain.Add(chain);
-            NFT.Tables.Add(table);
-            DeNSo.Session.New.Set(NFT);
-        }
-
-        public static void AddRules(string tableGuid, string chainGuid, string[] rules, string rulesGuid = null) {
-            var table = NFT.Tables.Where(t => t != null && t.Guid == tableGuid).FirstOrDefault();
-            NFT.Tables.Remove(table);
-            var chain = table.Chain.Where(c => c.Guid == chainGuid).FirstOrDefault();
-            table.Chain.Remove(chain);
-            if (rulesGuid != null) {
-                var ruleSet = chain.Rules.Where(r => r.Guid == rulesGuid).FirstOrDefault();
-                chain.Rules.Remove(ruleSet);
-            }
-            foreach (var value in rules) {
-                var rule = new NFTableRule() {
-                    Guid = Guid.NewGuid().ToString(),
-                    Value = value
-                };
-                chain.Rules.Add(rule);
-            }
-            table.Chain.Add(chain);
-            NFT.Tables.Add(table);
-            DeNSo.Session.New.Set(NFT);
+            return ruleset;
         }
     }
 }

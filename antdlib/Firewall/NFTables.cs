@@ -43,23 +43,6 @@ namespace antdlib.Firewall {
                 File.Delete(path);
             }
             using (StreamWriter sw = File.CreateText(path)) {
-                var nft = NFTableRepository.Get();
-                if (nft != null) {
-                    sw.WriteLine("flush ruleset;");
-                    sw.WriteLine("");
-                    foreach (var table in nft.Tables) {
-                        sw.WriteLine($"table {table.Type} {table.Name} {{");
-                        foreach (var chain in table.Chain) {
-                            sw.WriteLine($"chain {chain.Name} {{");
-                            sw.WriteLine($"type {chain.Type} hook {chain.Hook} priority {chain.Priority.ToString()};");
-                            foreach (var rule in chain.Rules) {
-                                sw.WriteLine($"{rule.Value}");
-                            }
-                            sw.WriteLine("}");
-                        }
-                        sw.WriteLine("}");
-                    }
-                }
             }
         }
 

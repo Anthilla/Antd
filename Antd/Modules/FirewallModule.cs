@@ -45,22 +45,16 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.FirewallMaximumStates = "9000";
-                //vmod.FirewallMaximumTableEntries = "20000";
-                //vmod.AliasesHostnamesResolveInterval = "300";
-                //vmod.CurrentContext = this.Request.Path;
-                //vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                //vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
-                //vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
-                //vmod.Table = NFTableRepository.Get();
                 return View["_page-firewall-nft", vmod];
             };
 
             Post["/rule"] = x => {
                 var type = (string)Request.Form.Type;
                 var hook = (string)Request.Form.Hook;
-                var rules = (string)Request.Form.Ruleset;
-                NFTableRepository.SaveRuleSet(type, hook, rules);
+                var rulesForIp = (string)Request.Form.RuleIp;
+                var rulesForIp6 = (string)Request.Form.RuleIp6;
+                var rulesForBridge = (string)Request.Form.RuleBridge;
+                NFTableRepository.SaveRuleSet(type, hook, rulesForIp, rulesForIp6, rulesForBridge);
                 return Response.AsRedirect("/firewall");
             };
 
@@ -68,43 +62,12 @@ namespace Antd {
                 string type = x.type;
                 string hook = x.hook;
                 var rules = NFTableRepository.GetRuleSet(type, hook);
-                return Response.AsJson(rules);
-            };
-
-            Get["/nft"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.DisplayTable = (NFTableRepository.Get() == null) ? false : true;
-                vmod.Table = NFTableRepository.Get();
-                return View["_page-firewall-nft", vmod];
-            };
-
-            Post["/nft"] = x => {
-                NFTableRepository.Create();
-                return Response.AsJson(true);
-            };
-
-            Post["/nft/table"] = x => {
-                var type = Request.Form.TableType;
-                var name = Request.Form.TableName;
-                NFTableRepository.AddTable(type, name);
-                return Response.AsRedirect("/firewall/nft");
-            };
-
-            Post["/nft/chain"] = x => {
-                var tableGuid = Request.Form.TableGuid;
-                var name = Request.Form.ChainName;
-                var type = Request.Form.ChainType;
-                var hook = Request.Form.ChainHook;
-                NFTableRepository.AddChain(tableGuid, name, type, hook);
-                return Response.AsRedirect("/firewall/nft");
-            };
-
-            Post["/nft/rule"] = x => {
-                var tableGuid = Request.Form.TableGuid;
-                var chainGuid = Request.Form.ChainGuid;
-                var rules = (string)Request.Form.Rules;
-                NFTableRepository.AddRules(tableGuid, chainGuid, rules.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray());
-                return Response.AsRedirect("/firewall/nft");
+                var array = new string[] {
+                    (rules == null)? "" : rules.RulesForIp,
+                    (rules == null)? "" : rules.RulesForIp6,
+                    (rules == null)? "" : rules.RulesForBridge
+                };
+                return Response.AsJson(array);
             };
         }
     }
