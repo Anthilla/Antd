@@ -69,42 +69,177 @@
     </div>
 }
 
+@helper EmptyBox() {
+    <div class="tile half no-outline bg-transparent" style="width: 70px !important; text-align: center; margin-right: 0px; cursor: default !important;">
+    </div>
+}
+
 @section MainContent {
     <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
         <legend><i class="icon-fire on-left"></i> NFTable Configuration .3</legend>
+        <canvas style="width: 1487px; margin-left: -13px; position: absolute; z-index: 0; opacity: 0.5; height: 530px;" id="canvas" class="ribbed-blue border-2-anthilla-gray"></canvas>
         <div class="grid bg-transparent" style="width: 1487px; margin-left: -13px;">
-
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-                @for (int i = 1; i < 22; i++) {
-                    @RulesetBox(i.ToString(), "", "blue")
-                }
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("local process")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
             </div>
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-              
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("xfrm decode")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("xfrm/socket lookup")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("xfrm encode")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
             </div>
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-             
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("filter", "input")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("routing decision")
+                @RulesetBox("raw", "output")
+                @ConnectionBox("conntrack")
+                @RulesetBox("mangle", "output")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
             </div>
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-               
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("mangle", "input")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("filter", "output")
+                @RulesetBox("nat", "output")
+                @ConnectionBox("reroute check")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
             </div>
             <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-             
-            </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-              
-            </div>
-            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
-          
-            </div>
-
-            @*@RulesetBox("broute", "brouting", "blue")
-                @RulesetBox("nat", "prerouting", "blue")
+                @EmptyBox()
+                @ConnectionBox("taps")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
                 @RulesetBox("raw", "prerouting")
-                @ConnectionBox("conntrack", "gray")
+                @ConnectionBox("conntrack")
                 @RulesetBox("mangle", "prerouting")
                 @RulesetBox("nat", "prerouting")
-                @ConnectionBox("bridging decision")*@
+                @ConnectionBox("routing decision")
+                @EmptyBox()
+                @RulesetBox("mangle", "forward")
+                @RulesetBox("filter", "forward")
+                @EmptyBox()
+                @RulesetBox("mangle", "postrouting")
+                @RulesetBox("nat", "postrouting")
+                @EmptyBox()
+                @ConnectionBox("xfrm lookup")
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("af_packet")
+            </div>
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("filter", "input", "blue")
+                @EmptyBox()
+                @RulesetBox("mangle", "forward")
+                @RulesetBox("filter", "forward")
+                @EmptyBox()
+                @RulesetBox("mangle", "postrouting")
+                @RulesetBox("nat", "postrouting")
+                @RulesetBox("nat", "output", "blue")
+                @RulesetBox("filter", "postrouting", "blue")
+                @RulesetBox("nat", "output", "blue")
+                @EmptyBox()
+                @EmptyBox()
+            </div>
+            <div class="row bg-transparent" style="min-height: 40px; margin-bottom: 10px;" data-layer="application">
+                @ConnectionBox("(start)")
+                @ConnectionBox("ingress")
+                @ConnectionBox("bridge check")
+                @RulesetBox("broute", "brouting", "blue")
+                @RulesetBox("nat", "prerouting", "blue")
+                @RulesetBox("raw", "prerouting")
+                @ConnectionBox("conntrack")
+                @RulesetBox("mangle", "prerouting")
+                @RulesetBox("nat", "prerouting")
+                @ConnectionBox("bridging decision")
+                @RulesetBox("filter", "forward", "blue")
+                @RulesetBox("mangle", "forward")
+                @RulesetBox("filter", "forward")
+                @RulesetBox("nat", "postrouting", "blue")
+                @RulesetBox("mangle", "postrouting")
+                @RulesetBox("nat", "postrouting")
+                @EmptyBox()
+                @EmptyBox()
+                @EmptyBox()
+                @ConnectionBox("egress")
+                @ConnectionBox("interface output")
+            </div>
         </div>
     </div>
 }
