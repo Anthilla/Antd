@@ -216,6 +216,8 @@ namespace antdlib.CCTable {
                     return CCTableFlags.TableType.Settings;
                 case 2:
                     return CCTableFlags.TableType.DataView;
+                case 3:
+                    return CCTableFlags.TableType.Conf;
                 default:
                     return CCTableFlags.TableType.None;
             }

@@ -1,11 +1,14 @@
-﻿@foreach (Antd.CCTable.CCTableModel table in Model) {
-    if (table.Type == Antd.CCTable.CCTableFlags.TableType.Settings) { 
+﻿@foreach (antdlib.CCTable.CCTableModel table in Model) {
+    if (table.Type == antdlib.CCTable.CCTableFlags.TableType.Settings) {
         @Html.Partial("_cctable-table-settings", table)
     }
-    else if (table.Type == Antd.CCTable.CCTableFlags.TableType.DataView) {
+    else if (table.Type == antdlib.CCTable.CCTableFlags.TableType.DataView) {
         @Html.Partial("_cctable-table-dataview", table)
     }
-    else{
+    else if (table.Type == antdlib.CCTable.CCTableFlags.TableType.Conf) {
+        @Html.Partial("_cctable-table-conf", table)
+    }
+    else {
         <p>
             <i class="icon-cone on-left fg-anthilla-orange"></i> 
             There is a chance that one of your table you want to render is a smidgen too corrupt 

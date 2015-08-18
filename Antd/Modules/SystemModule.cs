@@ -38,7 +38,7 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using antdlib;
-using Antd.MachineStatus;
+using antdlib.MachineStatus;
 
 namespace Antd {
 

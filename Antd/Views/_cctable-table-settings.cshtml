@@ -2,7 +2,7 @@
     <legend><i class="icon-dashboard on-left"></i> @Model.Alias</legend>
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
-            @foreach (Antd.CCTable.CCTableRowModel row in Model.Content) {
+            @foreach (antdlib.CCTable.CCTableRowModel row in Model.Content) {
                 <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid" data-row-role="main">
                     <td style="width: 200px;">
                         <label>@row.Label</label>
@@ -33,8 +33,7 @@
                     <td colspan="4" data-row-commands="list">
                         <label style="display: inline-block;">Associated Command</label>
                         <p data-command="set" style="display: inline-block;">
-                            @Html.Raw(Antd.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID))
-                            @*@Antd.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID)*@
+                            @Html.Raw(antdlib.CommandManagement.CommandRepository.GetCommandByGuid(row.HtmlInputID))
                         </p>
                         <br />
                         <label style="display: inline-block;">Input Command</label>

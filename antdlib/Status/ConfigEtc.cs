@@ -33,7 +33,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Antd.MachineStatus {
+namespace antdlib.MachineStatus {
 
     public static class ConfigEtc {
 

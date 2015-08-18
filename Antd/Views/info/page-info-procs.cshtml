@@ -2,7 +2,7 @@
 @if (Model.PROCS != null) {
     <table id="Output" class="table">
         <tbody>
-            @foreach (Antd.ProcModel proc in Model.PROCS) {
+            @foreach (antdlib.ProcModel proc in Model.PROCS) {
                 <tr>
                     <td class="right"><a class="kill-this" data-pid="@proc.PID"><i class="icon-cancel fg-red"></i></a></td>
                     <td class="right">@proc.UID</td>

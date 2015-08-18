@@ -1,5 +1,5 @@
 ﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
-    <legend><i class="icon-bars on-left"></i>@Model.Alias</legend>
+    <legend><i class="icon-wrench on-left"></i> @Model.Alias</legend>
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
             @foreach (antdlib.CCTable.CCTableRowModel row in Model.Content) {
@@ -8,7 +8,7 @@
                         <label>@row.Label</label>
                     </td>
                     <td data-role="result-container" data-row-guid="@row.Guid">
-                        @for (int i = 0; i < row.ValueResultArray.Length; i++) { 
+                        @for (int i = 0; i < row.ValueResultArray.Length; i++) {
                             <p style="display: inline-block; padding: 3px; margin: 3px;" class="fg-white border-anthilla-gray result-part-item" data-part="@row.ValueResultArray[i]" data-position="@i.ToString()">
                                 @row.ValueResultArray[i]
                             </p>
@@ -18,26 +18,26 @@
                         <p><i class="icon-arrow-right"></i> @row.InputCommand</p>
                     </td>
                     <td style="width: 155px;">
-                        <input type="button" class="bg-mauve" data-role="map-result" data-row-guid="@row.Guid" value="Map Data"/>
+                        <input type="button" class="bg-mauve" data-role="map-result" data-row-guid="@row.Guid" value="Map Data" />
                         @if (row.HasMap == true) {
                             <p class="button bg-steel" data-role="refresh-result" data-row-guid="@row.Guid" style="display: inline-block !important"><i class="icon-loop"></i></p>
                         }
                     </td>
                 </tr>
-                        if (row.HasMap == true) {
-                            foreach (antdlib.CCTable.CCTableRowMapped mp in antdlib.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
-                <tr>
-                    <td></td>
-                    <td>
-                        <label>@mp.Key</label>
-                    </td>
-                    <td>
-                        <p>@mp.Value</p>
-                    </td>
-                    <td></td>
-                </tr> 
-                            }
-                        }
+                if (row.HasMap == true) {
+                    foreach (antdlib.CCTable.CCTableRowMapped mp in antdlib.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label>@mp.Key</label>
+                            </td>
+                            <td>
+                                <p>@mp.Value</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                    }
+                }
                 <tr style="display: none;" data-row-map-guid="@row.Guid">
                     <td></td>
                     <td colspan="2">
@@ -133,6 +133,6 @@
         </div>
     </form>
     <hr class="bg-anthilla-gray" />
-    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Data"/>
-    <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete"/>
+    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row" />
+    <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete" />
 </div>

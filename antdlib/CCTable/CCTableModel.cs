@@ -35,6 +35,7 @@ namespace antdlib.CCTable {
         public enum TableType {
             Settings = 1,
             DataView = 2,
+            Conf = 3,
             None = 99
         }
 

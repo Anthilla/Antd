@@ -1,14 +1,14 @@
 ﻿<legend id="Anthilasp">Anthilla SP</legend>
 <table class="table hovered">
     <tbody>
-        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == false) {
+        @if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == false) {
             <tr>
                 <td colspan="2">
                     <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
                 </td>
             </tr>
         }
-        @if (Antd.Apps.AnthillaSP.Units.CheckFiles() == true) {
+        @if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == true) {
             <tr>
                 <td colspan="2">
                     <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
@@ -20,7 +20,7 @@
                 <label>Anthilla SP</label>
             </td>
             <td>
-                @if (Antd.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) { 
+                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) { 
                     <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
                 }
                 else {
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                @Antd.Apps.AnthillaSP.Status.AnthillaSP();
+                @antdlib.Apps.AnthillaSP.Status.AnthillaSP();
             </td>
         </tr>
         <tr>
@@ -38,7 +38,7 @@
                 <label>Anthilla Server</label>
             </td>
             <td>
-                @if (Antd.Apps.AnthillaSP.Status.IsActiveAnthillaServer() == false) { 
+                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaServer() == false) { 
                     <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
                 }
                 else {
@@ -48,7 +48,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                @Antd.Apps.AnthillaSP.Status.AnthillaServer();
+                @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
             </td>
         </tr>
         @*        <tr>
@@ -69,7 +69,7 @@
             </td>
             <td>
                 <ul class="fg-white">
-                    @foreach (string[] arr in Antd.Apps.Management.ReadInfoListed("/framework/a")) {
+                    @foreach (string[] arr in antdlib.Apps.Management.ReadInfoListed("/framework/a")) {
                         if (arr[0].Contains("path")) { 
                         <li>@arr[0] -> @arr[1] <i class="icon-loop fg-amber" data-role="show-mount"></i></li>
                         }
