@@ -39,81 +39,81 @@ namespace antdlib.Status {
 
     public class Mount {
 
-        private static List<MountModel> GetAllMounts() {
-            string text = FileSystem.ReadFile("/proc", "mounts");
-            var output = JsonConvert.SerializeObject(text);
-            List<MountModel> mounts = MapMountJson(output);
-            return mounts;
-        }
+        //private static List<MountModel> GetAllMounts() {
+        //    string text = FileSystem.ReadFile("/proc", "mounts");
+        //    var output = JsonConvert.SerializeObject(text);
+        //    List<MountModel> mounts = MapMountJson(output);
+        //    return mounts;
+        //}
 
-        public static List<MountModel> Running { get { return GetAllMounts(); } }
+        //public static List<MountModel> Running { get { return GetAllMounts(); } }
 
-        private static List<MountModel> ReadMountCustomFile() {
-            string text = FileSystem.ReadFile(Folder.Config, "antd.mounts");
-            var output = JsonConvert.SerializeObject(text);
-            List<MountModel> mounts = MapMountJson(output);
-            return mounts;
-        }
+        //private static List<MountModel> ReadMountCustomFile() {
+        //    string text = FileSystem.ReadFile(Folder.Config, "antd.mounts");
+        //    var output = JsonConvert.SerializeObject(text);
+        //    List<MountModel> mounts = MapMountJson(output);
+        //    return mounts;
+        //}
 
-        public static List<MountModel> Antd { get { return ReadMountCustomFile(); } }
+        //public static List<MountModel> Antd { get { return ReadMountCustomFile(); } }
 
-        private static List<MountModel> MapMountJson(string _mountJson) {
-            string mountJson2 = _mountJson;
-            mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-            string mountJson = mountJson2;
-            mountJson = Regex.Replace(mountJson2, @"\\t", " ");
-            string[] rowDivider = new String[] { "\n" };
-            string[] mountJsonRow = new string[] { };
-            mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<MountModel> mounts = new List<MountModel>() { };
-            foreach (string rowJson in mountJsonRow) {
-                if (rowJson != null && rowJson != "") {
-                    var fCh = rowJson.ToArray()[0];
-                    if (fCh != '#') {
-                        string[] mountJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { " " };
-                        mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                        MountModel mount = MapMount(mountJsonCell);
-                        mounts.Add(mount);
-                    }
-                }
-            }
-            return mounts;
-        }
+        //private static List<MountModel> MapMountJson(string _mountJson) {
+        //    string mountJson2 = _mountJson;
+        //    mountJson2 = Regex.Replace(_mountJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+        //    string mountJson = mountJson2;
+        //    mountJson = Regex.Replace(mountJson2, @"\\t", " ");
+        //    string[] rowDivider = new String[] { "\n" };
+        //    string[] mountJsonRow = new string[] { };
+        //    mountJsonRow = mountJson.Split(rowDivider, StringSplitOptions.None).ToArray();
+        //    List<MountModel> mounts = new List<MountModel>() { };
+        //    foreach (string rowJson in mountJsonRow) {
+        //        if (rowJson != null && rowJson != "") {
+        //            var fCh = rowJson.ToArray()[0];
+        //            if (fCh != '#') {
+        //                string[] mountJsonCell = new string[] { };
+        //                string[] cellDivider = new String[] { " " };
+        //                mountJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
+        //                MountModel mount = MapMount(mountJsonCell);
+        //                mounts.Add(mount);
+        //            }
+        //        }
+        //    }
+        //    return mounts;
+        //}
 
-        private static MountModel MapMount(string[] _mountJsonCell) {
-            string[] mountJsonCell = _mountJsonCell;
-            MountModel mount = new MountModel();
-            if (mountJsonCell.Length > 1) {
-                mount.device = mountJsonCell[0];
-                mount.mountpoint = mountJsonCell[1];
-                mount.fstype = mountJsonCell[2];
-                mount.rorw = mountJsonCell[3];
-                mount.dv1 = mountJsonCell[4];
-                mount.dv2 = mountJsonCell[5];
-            }
-            return mount;
-        }
+        //private static MountModel MapMount(string[] _mountJsonCell) {
+        //    string[] mountJsonCell = _mountJsonCell;
+        //    MountModel mount = new MountModel();
+        //    if (mountJsonCell.Length > 1) {
+        //        mount.device = mountJsonCell[0];
+        //        mount.mountpoint = mountJsonCell[1];
+        //        mount.fstype = mountJsonCell[2];
+        //        mount.rorw = mountJsonCell[3];
+        //        mount.dv1 = mountJsonCell[4];
+        //        mount.dv2 = mountJsonCell[5];
+        //    }
+        //    return mount;
+        //}
 
-        public static void WriteConfig() {
-            var parameters = Running;
-            string path = Path.Combine(Folder.Config, "antd.mounts");
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
-            using (StreamWriter sw = File.CreateText(path)) {
-                sw.WriteLine("# " + path);
-                sw.WriteLine("# Custom Configuration for Antd");
-                foreach (MountModel p in parameters) {
-                    sw.WriteLine(p.device + " " +
-                                p.mountpoint + " " +
-                                p.fstype + " " +
-                                p.rorw + " " +
-                                p.dv1 + " " +
-                                p.dv2);
-                }
-                sw.WriteLine("");
-            }
-        }
+        //public static void WriteConfig() {
+        //    var parameters = Running;
+        //    string path = Path.Combine(Folder.Config, "antd.mounts");
+        //    if (File.Exists(path)) {
+        //        File.Delete(path);
+        //    }
+        //    using (StreamWriter sw = File.CreateText(path)) {
+        //        sw.WriteLine("# " + path);
+        //        sw.WriteLine("# Custom Configuration for Antd");
+        //        foreach (MountModel p in parameters) {
+        //            sw.WriteLine(p.device + " " +
+        //                        p.mountpoint + " " +
+        //                        p.fstype + " " +
+        //                        p.rorw + " " +
+        //                        p.dv1 + " " +
+        //                        p.dv2);
+        //        }
+        //        sw.WriteLine("");
+        //    }
+        //}
     }
 }

@@ -4,40 +4,13 @@
         <tbody>
             @foreach (antdlib.CCTable.CCTableRowModel row in Model.Content) {
                 <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
-                    <td style="width: 200px;">
-                        <label>@row.Label</label>
-                    </td>
-                    <td data-role="result-container" data-row-guid="@row.Guid">
-                        @for (int i = 0; i < row.ValueResultArray.Length; i++) {
-                            <p style="display: inline-block; padding: 3px; margin: 3px;" class="fg-white border-anthilla-gray result-part-item" data-part="@row.ValueResultArray[i]" data-position="@i.ToString()">
-                                @row.ValueResultArray[i]
-                            </p>
-                        }
-                    </td>
-                    <td style="width: 325px;">
-                        <p><i class="icon-arrow-right"></i> @row.InputCommand</p>
-                    </td>
-                    <td style="width: 155px;">
-                        <input type="button" class="bg-mauve" data-role="map-result" data-row-guid="@row.Guid" value="Map Data" />
-                        @if (row.HasMap == true) {
-                            <p class="button bg-steel" data-role="refresh-result" data-row-guid="@row.Guid" style="display: inline-block !important"><i class="icon-loop"></i></p>
-                        }
+                    <td style="width: 90%;">
+                        <label>configuring: @row.File</label>
+                        <textarea class="bg-anthilla-gray fg-white" style="width: 90%;">
+                            @antdlib.FileSystem.ReadFile(row.File)
+                        </textarea>
                     </td>
                 </tr>
-                if (row.HasMap == true) {
-                    foreach (antdlib.CCTable.CCTableRowMapped mp in antdlib.CCTable.CCTableRepository.MapData(row.ValueResultArray, row.MapRules)) {
-                        <tr>
-                            <td></td>
-                            <td>
-                                <label>@mp.Key</label>
-                            </td>
-                            <td>
-                                <p>@mp.Value</p>
-                            </td>
-                            <td></td>
-                        </tr>
-                    }
-                }
             }
         </tbody>
     </table>

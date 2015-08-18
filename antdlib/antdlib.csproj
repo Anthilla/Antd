@@ -160,6 +160,9 @@
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
+    <Compile Include="Mount\MountModel.cs" />
+    <Compile Include="Mount\MountRepository.cs" />
+    <Compile Include="Mount\DFP.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -27,19 +27,16 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-namespace antdlib.Models {
-    //public class MountModel {
+namespace antdlib.Mount {
+    public class MountModel {
+        public string _Id { get; set; }
 
-    //    public string device { get; set; }
+        public string DFPGuid { get; set; }
 
-    //    public string mountpoint { get; set; }
+        public string DFPTimestamp { get; set; }
 
-    //    public string fstype { get; set; }
+        public string PathToSystem { get; set; }
 
-    //    public string rorw { get; set; }
-
-    //    public string dv1 { get; set; }
-
-    //    public string dv2 { get; set; }
-    //}
+        public string PathToDIRS { get; set; }
+    }
 }

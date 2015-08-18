@@ -60,11 +60,13 @@ namespace antdlib.CCTable {
         public static List<CCTableRowModel> GetRows(string guid) {
             var list = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.TableGuid == guid).ToList();
             foreach (var i in list) {
-                var f = i.InputCommand.GetFirstString();
-                var a = i.InputCommand.GetAllStringsButFirst();
-                var b = "";
-                var c = a != null || a != "" ? a : b;
-                i.ValueResult = Terminal.Execute(f + " " + c);
+                if (i.InputCommand != null) {
+                    var f = i.InputCommand.GetFirstString();
+                    var a = i.InputCommand.GetAllStringsButFirst();
+                    var b = "";
+                    var c = a != null || a != "" ? a : b;
+                    i.ValueResult = Terminal.Execute(f + " " + c);
+                }
             }
             return list;
         }
@@ -120,16 +122,28 @@ namespace antdlib.CCTable {
         }
 
         public static void CreateRowConf(string tableGuid, string tableName, string file) {
+            var newFileName = $"{Folder.Dirs}/FILE{file.Replace("/", "_")}";
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 NUid = UID.ShortGuid,
                 TableGuid = tableGuid,
-                File = file
+                File = newFileName
             };
-            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
+            SetConfFile(file, newFileName);
+        }
+
+        //516  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|sort -u|grep -v.conf
+        //517  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'
+        //518  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf
+        //519  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v.d
+        //520  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v conf.d
+
+        private static void SetConfFile(string source, string destination) {
+            Terminal.Execute($"cp {source} {destination}");
+            System.IO.File.Copy(source, destination, true);
+            Terminal.Execute($"mount --bind {source} {destination}");
         }
 
         public static void DeleteTable(string guid) {
@@ -151,7 +165,7 @@ namespace antdlib.CCTable {
         public static void Refresh(string guid) {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             var command = row.InputCommand;
-            var result = Terminal.Execute(command); 
+            var result = Terminal.Execute(command);
             row.ValueResult = result;
             row.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             DeNSo.Session.New.Set(row);

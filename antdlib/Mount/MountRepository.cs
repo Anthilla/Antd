@@ -27,19 +27,15 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-namespace antdlib.Models {
-    //public class MountModel {
+using System;
+using System.IO;
 
-    //    public string device { get; set; }
-
-    //    public string mountpoint { get; set; }
-
-    //    public string fstype { get; set; }
-
-    //    public string rorw { get; set; }
-
-    //    public string dv1 { get; set; }
-
-    //    public string dv2 { get; set; }
-    //}
+namespace antdlib.Mount {
+    public class MountRepository {
+        public static void Set(string directory) {
+            var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
+            var path = Path.Combine(directory, file);
+            FileSystem.WriteFile(path, Timestamp.Now);
+        }
+    }
 }

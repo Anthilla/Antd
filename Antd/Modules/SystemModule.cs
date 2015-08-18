@@ -78,8 +78,8 @@ namespace Antd {
 
             Get["/mounts"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.MountRunning = Mount.Running;
-                vmod.MountAntd = Mount.Antd;
+                //vmod.MountRunning = Mount.Running;
+                //vmod.MountAntd = Mount.Antd;
                 return View["_page-system-mounts", vmod];
             };
 
