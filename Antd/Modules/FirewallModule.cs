@@ -41,7 +41,7 @@ namespace Antd {
 
         public FirewallModule()
             : base("/firewall") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
