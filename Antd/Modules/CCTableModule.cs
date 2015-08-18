@@ -171,6 +171,20 @@ namespace Antd {
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
                 return Response.AsJson(r);
             };
+
+            Post["/row/conf"] = x => {
+                string table = (string)this.Request.Form.TableGuid;
+                string tableName = (string)this.Request.Form.TableName;
+                string file = (string)this.Request.Form.File;
+
+                if (file != "") {
+                    CCTableRepository.CreateRowConf(table, tableName, file);
+                }
+
+                string context = (string)this.Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
+            };
         }
     }
 }

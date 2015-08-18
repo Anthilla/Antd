@@ -38,86 +38,20 @@
                         </tr>
                     }
                 }
-                <tr style="display: none;" data-row-map-guid="@row.Guid">
-                    <td></td>
-                    <td colspan="2">
-                        <form action="/cctable/row/mapdata" method="POST" enctype="multipart/form-data" class="border-anthilla-gray bg-anthilla-gray-m" style="padding: 10px;">
-                            <div class="grid">
-                                <input type="hidden" name="ItemGuid" value="@row.Guid">
-                                <input type="hidden" name="ItemResult" value="@row.ValueResult">
-                                <input type="hidden" name="Context" value="@Model.Context">
-                                <div class="row">
-                                    <div class="span5">
-                                        <input type="text" name="MapLabel" style="width: 90%; height: 25px;" placeholder="Map Label">
-                                    </div>
-                                    <div class="span5 droppable">
-                                        <input type="text" name="MapLabelIndexText" style="width: 90%; height: 25px;" placeholder="Map Data">
-                                        <input type="hidden" name="MapLabelIndex">
-                                    </div>
-                                </div>
-                                <div class="further-result-map">
-                                </div>
-                                <div class="row">
-                                    <div class="span5">
-                                        <label>&nbsp</label>
-                                    </div>
-                                    <div class="span5">
-                                        <input class="bg-steel" data-role="add-mapping-row" type="button" value="Add Map Row" style="width: 90%;">
-                                    </div>
-                                </div>
-                                <hr class="bg-anthilla-gray" style="height: 1px !important;">
-                                <div class="row">
-                                    <div class="span5">
-                                        <label>&nbsp</label>
-                                    </div>
-                                    <div class="span5">
-                                        <input class="bg-amber" type="submit" value="Map!" style="width: 90%;">
-                                    </div>
-                                    <div class="span2">
-                                        <input class="bg-steel" type="button" data-role="notify-howto-map" value="?" style="width: 90%;">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </td>
-                    <td></td>
-                </tr>
             }
         </tbody>
     </table>
-    <form action="/cctable/row/dataview" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+    <form action="/cctable/row/conf" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
         <div class="row">
             <div class="span3">
-                <label>Label</label>
+                <label>File</label>
             </div>
             <div class="span7">
                 <input type="hidden" name="TableGuid" value="@Model.Guid">
                 <input type="hidden" name="TableName" value="@Model.Alias">
                 <input type="hidden" name="Context" value="@Model.Context">
-                <input type="text" name="Label" style="width: 90%; height: 25px;">
+                <input type="text" name="File" style="width: 90%; height: 25px;">
             </div>
-        </div>
-        <hr class="bg-anthilla-gray" style="height: 1px !important;">
-        <div class="row">
-            <div class="span3">
-                <label>Command | Result</label>
-            </div>
-            <div class="span5">
-                <textarea class="border-anthilla-green bg-anthilla-gray fg-white" style="width: 90%; height: 25px; display: inline;" name="Command" autocomplete="off"></textarea>
-            </div>
-            <div class="span5">
-                <input type="text" name="Result" style="width: 90%; height: 25px;">
-            </div>
-            <div class="span5">
-                <input class="bg-darkTeal" data-role="import-data" type="button" value="Import Data" style="width: 130px;">
-                <br />
-                <input class="bg-teal" data-role="open-console" type="button" value="Open Console" style="width: 130px;">
-                <br />
-                <input class="bg-steel" data-role="notify-howto-import" type="button" value="How to" style="width: 130px;">
-            </div>
-        </div>
-        <div class="further-commands" data-table="@Model.Guid">
-            <!-- your new commands-rows will go here -->
         </div>
         <hr class="bg-anthilla-gray" style="height: 1px !important;">
         <div class="row">
@@ -126,9 +60,6 @@
             </div>
             <div class="span7">
                 <input class="bg-anthilla-green" type="submit" value="Create" style="width: 90%;">
-            </div>
-            <div class="span3">
-                @*<input type="button" class="bg-anthilla-blu" data-cctable-role="add-column" data-table-guid="@Model.Guid" value="New Column"/>*@
             </div>
         </div>
     </form>

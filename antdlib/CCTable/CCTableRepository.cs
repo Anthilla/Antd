@@ -119,6 +119,19 @@ namespace antdlib.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
+        public static void CreateRowConf(string tableGuid, string tableName, string file) {
+            var model = new CCTableRowModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                NUid = UID.ShortGuid,
+                TableGuid = tableGuid,
+                File = file
+            };
+            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            DeNSo.Session.New.Set(model);
+        }
+
         public static void DeleteTable(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);

@@ -84,6 +84,8 @@ namespace antdlib.CCTable {
 
         public string Label { get; set; }
 
+        public string File { get; set; }
+
         public string InputType { get; set; }
 
         public string InputLabel { get; set; }
