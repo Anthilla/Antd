@@ -76,92 +76,75 @@
 
 @section MainContent {
     <div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
-        <legend><i class="icon-fire on-left"></i> NFTable Configuration .3</legend>
-        <canvas id="arrows" style="width: 1450px; position: absolute; z-index: 1; height: 300px;"></canvas>
+        <legend><i class="icon-fire on-left"></i> NFTable Configuration</legend>
         <div class="grid bg-transparent" style="width: 1450px; position:relative; z-index: 4;">
             <div class="row bg-transparent" style="margin-bottom: 10px;">
+                @ConnectionBox("IP", "gray")
                 @EmptyBox()
                 @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @ConnectionBox("Local Machine")
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-            </div>
-            <div class="row bg-transparent" style="margin-bottom: 10px;">
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @RulesetBox("nat", "input", "cyan")
+                @RulesetBox("route", "input", "red")
                 @RulesetBox("filter", "input")
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @RulesetBox("nat", "output", "cyan")
+                @RulesetBox("nat", "input", "blue")
+                @ConnectionBox("local macine")
+                @RulesetBox("nat", "output", "blue")
                 @RulesetBox("filter", "output")
-                @EmptyBox()
-                @ConnectionBox("Routing Decision", "white")
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
+                @RulesetBox("route", "output", "red")
             </div>
             <div class="row bg-transparent" style="margin-bottom: 10px;">
-                @RulesetBox("nat", "prerouting", "cyan")
+                @EmptyBox()
+                @RulesetBox("nat", "prerouting", "blue")
                 @RulesetBox("filter", "prerouting")
-                @EmptyBox()
-                @ConnectionBox("Routing Decision", "white")
-                @EmptyBox()
+                @RulesetBox("route", "prerouting", "red")
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @RulesetBox("nat", "postrouting", "cyan")
+                @RulesetBox("route", "postrouting", "red")
                 @RulesetBox("filter", "postrouting")
-                @EmptyBox()
+                @RulesetBox("nat", "postrouting", "blue")
             </div>
             <div class="row bg-transparent" style="margin-bottom: 10px;">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @RulesetBox("nat", "forward", "cyan")
+                @RulesetBox("route", "forward", "red")
                 @RulesetBox("filter", "forward")
+                @RulesetBox("nat", "forward", "blue")
+            </div>
+            <hr class="bg-anthilla-gray" />
+            <div class="row bg-transparent" style="margin-bottom: 10px;">
+                @ConnectionBox("ARP", "gray")
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("route", "input", "red")
+                @RulesetBox("filter", "input")
+                @RulesetBox("nat", "input", "blue")
+                @EmptyBox()
+                @RulesetBox("nat", "output", "blue")
+                @RulesetBox("filter", "output")
+                @RulesetBox("route", "output", "red")
+            </div>
+            <hr class="bg-anthilla-gray" />
+            <div class="row bg-transparent" style="margin-bottom: 10px;">
+                @ConnectionBox("BRIDGE", "gray")
+                @EmptyBox()
+                @EmptyBox()
+                @RulesetBox("route", "input", "red")
+                @RulesetBox("filter", "input")
+                @RulesetBox("nat", "input", "blue")
+                @EmptyBox()
+                @RulesetBox("nat", "output", "blue")
+                @RulesetBox("filter", "output")
+                @RulesetBox("route", "output", "red")
+            </div>
+            <div class="row bg-transparent" style="margin-bottom: 10px;">
                 @EmptyBox()
                 @EmptyBox()
                 @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
-                @EmptyBox()
+                @RulesetBox("route", "forward", "red")
+                @RulesetBox("filter", "forward")
+                @RulesetBox("nat", "forward", "blue")
             </div>
         </div>
 
@@ -206,38 +189,6 @@
                     return false;
                 }
             });
-        });
-
-        $(document).ready(function () {
-            var canvas = $('#arrows');
-            var ctx = canvas[0].getContext('2d');
-            //1450px * 300px
-
-            //ctx.beginPath();
-            ////inizio linea retta
-            //ctx.moveTo(50, 50); //a
-            //ctx.lineTo(150, 50); //b
-            ////punta della freccia
-            //ctx.moveTo(100, 75); //c
-            //ctx.lineTo(150, 50); //b
-            //ctx.lineTo(100, 25); //d
-            //ctx.lineWidth = 3;
-            //ctx.strokeStyle = 'white';
-            //ctx.stroke();
-
-            ctx.beginPath();
-            //inizio linea retta
-            ctx.moveTo(30, 90); //a
-            ctx.lineTo(50, 90); //b
-            //punta della freccia
-            ctx.moveTo(40, 94); //c
-            ctx.lineTo(50, 90); //b
-            ctx.lineTo(40, 86); //d
-
-
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'white';
-            ctx.stroke();
         });
     </script>
 }
