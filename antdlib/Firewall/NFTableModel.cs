@@ -35,6 +35,8 @@ namespace antdlib.Firewall {
 
         public string Guid { get; set; }
 
+        public string Table { get; set; }
+
         public string Type { get; set; }
 
         public string Hook { get; set; }

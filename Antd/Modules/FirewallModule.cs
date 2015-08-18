@@ -49,25 +49,35 @@ namespace Antd {
             };
 
             Post["/rule"] = x => {
+                var table = (string)Request.Form.Table;
                 var type = (string)Request.Form.Type;
                 var hook = (string)Request.Form.Hook;
                 var rulesForIp = (string)Request.Form.RuleIp;
                 var rulesForIp6 = (string)Request.Form.RuleIp6;
+                var rulesForArp = (string)Request.Form.RuleArp;
                 var rulesForBridge = (string)Request.Form.RuleBridge;
-                NFTableRepository.SaveRuleSet(type, hook, rulesForIp, rulesForIp6, rulesForBridge);
+                NFTableRepository.SaveRuleSet(table, type, hook, rulesForIp, rulesForIp6, rulesForArp, rulesForBridge);
                 return Response.AsRedirect("/firewall");
             };
 
-            Get["/rule/{type}/{hook}"] = x => {
+            Get["/rule/{table}/{type}/{hook}"] = x => {
+                string table = x.table;
                 string type = x.type;
                 string hook = x.hook;
-                var rules = NFTableRepository.GetRuleSet(type, hook);
+                var rules = NFTableRepository.GetRuleSet(table, type, hook);
                 var array = new string[] {
                     (rules == null)? "" : rules.RulesForIp,
                     (rules == null)? "" : rules.RulesForIp6,
+                    (rules == null)? "" : rules.RulesForArp,
                     (rules == null)? "" : rules.RulesForBridge
                 };
                 return Response.AsJson(array);
+            };
+
+            Post["/apply"] = x => {
+                NFTables.WriteFile();
+                NFTables.Set();
+                return Response.AsJson(true);
             };
         }
     }

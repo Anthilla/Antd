@@ -141,6 +141,7 @@ namespace antdsh {
 
         /// <summary>
         /// 09 - controlla la cartella /mnt/cdrom/DIRS e monta il suo contenuto
+        /// todo: crea file o cartelle se non ci sono
         /// </summary>
         public static void SetAndMountDirs() {
             WriteLine("Mounting directories and files: ");

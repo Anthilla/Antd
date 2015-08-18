@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,28 +28,114 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using System.IO;
+using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTables {
-        private static string fileName = "nftable001.list";
+        private static string fileName = "FILE_cfg_antd_firewall_nftable.list";
 
         public static void Set() {
             Terminal.Execute($"nft -f {fileName}");
         }
 
-        public static void WriteFile(string dir) {
-            var path = Path.Combine(dir, fileName);
+        private static string[] ChainType = new string[] {
+            "filter",
+            "route",
+            "nat"
+        };
+
+        private static string[] HookType = new string[] {
+            "prerouting",
+            "input",
+            "forward",
+            "output",
+            "postrouting"
+        };
+
+        private static string[] HookTypeForArp = new string[] {
+            "input",
+            "output"
+        };
+
+        private static string[] HookTypeForBridge = new string[] {
+            "input",
+            "forward",
+            "output"
+        };
+
+        public static void WriteFile() {
+            var path = Path.Combine(Folder.Config, fileName);
             if (File.Exists(path)) {
                 File.Delete(path);
             }
             using (StreamWriter sw = File.CreateText(path)) {
+                sw.WriteLine("flush ruleset;");
+                sw.WriteLine("");
+                WriteTable(sw, "ip", ChainType, HookType);
+                WriteTable(sw, "ip6", ChainType, HookType);
+                WriteTable(sw, "arp", ChainType, HookTypeForArp);
+                WriteTable(sw, "bridge", ChainType, HookTypeForBridge);
             }
         }
 
-        public static void ReadFile(string dir) {
-            var path = Path.Combine(dir, fileName);
+        public static void WriteTable(StreamWriter sw, string table, string[] chains, string[] hooks) {
+            for (int c = 0; c < chains.Length; c++) {
+                sw.WriteLine($"table {table} {chains[c]} {{");
+                WriteChain(sw, table, chains[c], hooks);
+                sw.WriteLine("}");
+            }
+        }
+
+        public static void WriteChain(StreamWriter sw, string table, string chain, string[] hooks) {
+            for (int h = 0; h < hooks.Length; h++) {
+                var ruleset = NFTableRepository.GetRuleSet(table, chain, hooks[h]);
+                sw.WriteLine($"chain {chain} {hooks[h]} {{");
+                if (ruleset != null) {
+                    sw.WriteLine($"type {chain} {hooks[h]} priority {ruleset.Priority.ToString()};");
+                    WriteRules(sw, table, ruleset);
+                }
+                else {
+                    sw.WriteLine("");
+                }
+                sw.WriteLine("}");
+            }
+        }
+
+        public static void WriteRules(StreamWriter sw, string table, NFTableRuleSet ruleset) {
+            string[] rules;
+            switch (table) {
+                case "ip":
+                    rules = ruleset.RulesForIp.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var line in rules) {
+                        sw.WriteLine($"{line}");
+                    }
+                    break;
+                case "ip6":
+                    rules = ruleset.RulesForIp6.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var line in rules) {
+                        sw.WriteLine($"{line}");
+                    }
+                    break;
+                case "arp":
+                    rules = ruleset.RulesForArp.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var line in rules) {
+                        sw.WriteLine($"{line}");
+                    }
+                    break;
+                case "bridge":
+                    rules = ruleset.RulesForBridge.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var line in rules) {
+                        sw.WriteLine($"{line}");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static void ReadFile() {
+            var path = Path.Combine(Folder.Config, fileName);
             if (File.Exists(path)) {
                 //leggi e splitta eccetera
             }

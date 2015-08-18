@@ -32,22 +32,29 @@ using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTableRepository {
-        public static void SaveRuleSet(string type, string hook,  string rulesForIp, string rulesForIp6, string rulesForBridge) {
+        public static void SaveRuleSet(string table, string type, string hook, string rulesForIp, string rulesForIp6, string rulesForArp,string rulesForBridge) {
             var set = new NFTableRuleSet() {
-                _Id = $"{type}-{hook}",
+                _Id = $"{table}-{type}-{hook}",
                 Guid = Guid.NewGuid().ToString(),
+                Table = table,
                 Type = type,
                 Hook = hook,
                 Priority = 0
             };
             set.RulesForIp = rulesForIp;
             set.RulesForIp6 = rulesForIp6;
+            set.RulesForArp = rulesForArp;
             set.RulesForBridge = rulesForBridge;
             DeNSo.Session.New.Set(set);
         }
 
-        public static NFTableRuleSet GetRuleSet(string type, string hook) {
-            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Type == type && t.Hook == hook).FirstOrDefault();
+        public static NFTableRuleSet GetRuleSet(string table, string type, string hook) {
+            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Table == table && t.Type == type && t.Hook == hook).FirstOrDefault();
+            return ruleset;
+        }
+
+        public static NFTableRuleSet[] GetAll() {
+            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>().ToArray();
             return ruleset;
         }
     }
