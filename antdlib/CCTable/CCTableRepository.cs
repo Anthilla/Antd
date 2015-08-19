@@ -122,17 +122,29 @@ namespace antdlib.CCTable {
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRowConf(string tableGuid, string tableName, string file) {
-            var newFileName = $"{Folder.Dirs}/FILE{file.Replace("/", "_")}";
+        public static void CreateRowConf(string tableGuid, string tableName, string file, CCTableFlags.ConfType type) {
+            string newPath;
+            if (type == CCTableFlags.ConfType.File) {
+                newPath = $"{Folder.Dirs}/FILE{file.Replace("/", "_")}";
+            }
+            else {
+                newPath = $"{Folder.Dirs}/DIR{file.Replace("/", "_")}";
+            }
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 NUid = UID.ShortGuid,
                 TableGuid = tableGuid,
-                File = newFileName
+                File = newPath,
+                ConfType = type
             };
             DeNSo.Session.New.Set(model);
-            SetConfFile(file, newFileName);
+            if (type == CCTableFlags.ConfType.File) {
+                SetConfFile(file, newPath);
+            }
+            else {
+                SetConfDirectory(file, newPath);
+            }
         }
 
         private static void SetConfFile(string source, string destination) {
@@ -141,14 +153,35 @@ namespace antdlib.CCTable {
             Terminal.Execute($"mount --bind {source} {destination}");
         }
 
-        //516  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|sort -u|grep -v.conf
-        //520  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v conf.d
+        private static void SetConfDirectory(string source, string destination) {
+            Terminal.Execute($"cp {source} {destination}");
+            FileSystem.CopyDirectory(source, destination);
+            MountPoint.Mount.Dir(source);
+        }
+
+        public static void UpdateConfFile(string file, string text) {
+            FileSystem.WriteFile(file, text);
+        }
 
         public static CCTableConfModel[] GetEtcConfs() {
             var confs = Directory.EnumerateFiles("/etc", "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
             var files = confs.GetConfFiles();
             var dirs = confs.GetServices();
             return files.Concat(dirs).ToArray();
+        }
+
+        public static CCTableConfModel[] GetEtcConfs(string directory) {
+            var list = new List<CCTableConfModel>() { };
+            var confs = Directory.EnumerateFiles(directory, "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
+            foreach (var conf in confs) {
+                var m = new CCTableConfModel() {
+                    Name = conf.Replace("\\", "/"),
+                    Path = conf.Replace("\\", "/"),
+                    Type = CCTableFlags.ConfType.File
+                };
+                list.Add(m);
+            }
+            return list.ToArray();
         }
 
         public static void DeleteTable(string guid) {

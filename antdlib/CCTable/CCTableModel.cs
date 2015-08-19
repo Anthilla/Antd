@@ -111,6 +111,8 @@ namespace antdlib.CCTable {
 
         public CCTableFlags.CommandFunction FlagCommandFunction { get; set; }
 
+        public CCTableFlags.ConfType ConfType { get; set; }
+
         public List<CCTableRowMap> MapRules { get; set; }
 
         public bool HasMap { get; set; }

@@ -272,14 +272,12 @@ function InitializeDragAndDrop() {
     }
 }
 
-//creo il metodo di selectize per andare a scegliere file/directory per creare la riga nella cctable.conf
-// :O
-
+//selectize
 $(document).ready(function () {
     $.when(
         LoadEtcConfs()
     ).then(
-        console.log('loaded')
+        console.log('.')
     );
 });
 
@@ -337,7 +335,7 @@ var SelectizerOptions = function () {
 
 var $etcConfsSelectizer = $('#show-etc-confs').selectize({
     maxItems: 1,
-    valueField: 'name',
+    valueField: 'path',
     labelField: 'name',
     searchField: ['name', 'path'],
     create: false,
@@ -351,6 +349,7 @@ function LoadEtcConfs() {
         var etcConfsSelectizer = $etcConfsSelectizer[0].selectize;
         etcConfsSelectizer.load(function (callback) {
             Callback(callback, this.settings.remoteUrl);
+            $('#show-etc-confs').hide();
         });
     }
 }

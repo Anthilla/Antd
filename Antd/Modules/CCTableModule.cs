@@ -177,8 +177,16 @@ namespace Antd {
                 string tableName = (string)this.Request.Form.TableName;
                 string file = (string)this.Request.Form.File;
 
+                CCTableFlags.ConfType type;
+                if (file.EndsWith(".conf")) {
+                    type = CCTableFlags.ConfType.File;
+                }
+                else {
+                    type = CCTableFlags.ConfType.Directory;
+                }
+
                 if (file != "") {
-                    CCTableRepository.CreateRowConf(table, tableName, file);
+                    CCTableRepository.CreateRowConf(table, tableName, file, type);
                 }
 
                 string context = (string)this.Request.Form.Context;
@@ -188,6 +196,15 @@ namespace Antd {
 
             Get["/conf/files"] = x => {
                 return Response.AsJson(CCTableRepository.GetEtcConfs());
+            };
+
+            Post["/update/conf"] = x => {
+                string file = (string)this.Request.Form.FileName;
+                string text = (string)this.Request.Form.FileText;
+                CCTableRepository.UpdateConfFile(file, text);
+                string context = (string)this.Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
             };
         }
     }

@@ -62,9 +62,6 @@ namespace antdlib {
         }
 
         public static void WriteFile(string path, string content) {
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
             using (StreamWriter sw = File.CreateText(path)) {
                 sw.Write(content);
             }
@@ -73,11 +70,17 @@ namespace antdlib {
         public static void WriteFile(string directory, string filename, string content) {
             Directory.CreateDirectory(directory);
             string path = Path.Combine(directory, filename);
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
             using (StreamWriter sw = File.CreateText(path)) {
                 sw.Write(content);
+            }
+        }
+
+        public static void CopyDirectory(string source, string destination) {
+            foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)) {
+                Directory.CreateDirectory(dirPath.Replace(source, destination));
+            }
+            foreach (string newPath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)) {
+                File.Copy(newPath, newPath.Replace(source, destination), true);
             }
         }
     }

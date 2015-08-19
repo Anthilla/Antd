@@ -94,6 +94,13 @@ namespace antdlib.MountPoint {
             }
         }
 
+        public static void Dir(string directory) {
+            MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, directory);
+            var DIR = SetDIRSPath(directory);
+            SetBind(DIR, directory);
+            Check();
+        }
+
         private static void CheckMount(string directory) {
             bool livecdDFP;
             var livecdPath = SetLiveCDPath(directory);
