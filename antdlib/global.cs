@@ -65,6 +65,7 @@ namespace antdlib {
         public static string Ssh { get { return Folder.Root + "/ssh"; } }
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }
+        public static string LiveCd { get { return "/mnt/livecd"; } }
         public static string AppsUnits { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
     }
 

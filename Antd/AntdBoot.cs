@@ -45,26 +45,14 @@ namespace Antd {
 
     public class AntdBoot {
 
-        private readonly static string[] WorkDirectories =
-        {
-            Folder.Root,
-            Folder.Config,
-            Folder.Database,
-            Folder.FileRepository,
-            Folder.Networkd
-        };
+        public static void SetWorkingDirectories() {
+            antdlib.MountPoint.Mount.WorkingDirectories();
+            ConsoleLogger.Log("    working directories -> checked");
+        }
 
-        private readonly static string[] WatchDirectories =
-        {
-            Folder.Config
-        };
-
-        public static void SetWorkDirectories() {
-            foreach (var path in WorkDirectories) {
-                DIRS.SetDirectory(path);
-                ConsoleLogger.Log("    directory -> {0} set", path);
-            }
-            ConsoleLogger.Log("    directories -> checked");
+        public static void SetMounts() {
+            antdlib.MountPoint.Mount.AllDirectories();
+            ConsoleLogger.Log("    mounts -> checked");
         }
 
         public static void SetCoreParameters() {
@@ -91,6 +79,10 @@ namespace Antd {
             JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("    scheduler -> loaded");
         }
+
+        private readonly static string[] WatchDirectories = new string[] {
+            Folder.Config
+        };
 
         public static void StartDirectoryWatcher(bool isActive) {
             if (isActive) {

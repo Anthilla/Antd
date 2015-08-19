@@ -139,7 +139,6 @@
     <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Directories\DirectoryWatcher.cs" />
-    <Compile Include="Directories\DIRS.cs" />
     <Compile Include="Log\Dmesg.cs" />
     <Compile Include="Log\LogModel.cs" />
     <Compile Include="Log\LogRepository.cs" />
@@ -160,9 +159,10 @@
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
-    <Compile Include="Mount\MountModel.cs" />
-    <Compile Include="Mount\MountRepository.cs" />
-    <Compile Include="Mount\DFP.cs" />
+    <Compile Include="MountPoint\Mount.cs" />
+    <Compile Include="MountPoint\MountModel.cs" />
+    <Compile Include="MountPoint\MountRepository.cs" />
+    <Compile Include="MountPoint\DFP.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

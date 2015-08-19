@@ -42,7 +42,7 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
-            AntdBoot.SetWorkDirectories();
+            AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
             AntdBoot.InitAuthentication();
 
@@ -51,7 +51,7 @@ namespace Antd {
             Console.CancelKeyPress +=
                 (sender, e) => {
                     Console.WriteLine("^C");
-                    System.Environment.Exit(1);
+                    Environment.Exit(1);
                     stop.Set();
                     e.Cancel = true;
                 };
@@ -60,15 +60,8 @@ namespace Antd {
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
 
-                AntdBoot.StartScheduler(false);
-                AntdBoot.StartDirectoryWatcher(true);
-                //AntdBoot.StartNetworkd();
-                AntdBoot.CheckSysctl(false);
-                //AntdBoot.TestWebDav("http://localhost:7788/", "/test");
-
                 ConsoleLogger.Log("antd is running");
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
-
                 stop.WaitOne();
             }
         }
@@ -78,9 +71,15 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading core service configuration");
+
             AntdBoot.StartDatabase();
+            AntdBoot.SetMounts();
             AntdBoot.StartSignalR(app, true);
             AntdBoot.StartNancy(app);
+
+            AntdBoot.StartScheduler(false);
+            AntdBoot.StartDirectoryWatcher(true);
+            AntdBoot.CheckSysctl(false);
         }
     }
 }
