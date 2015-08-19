@@ -542,8 +542,8 @@
     <Content Include="Content\fonts\metroSysIcons.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\antda.cctable.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Content\Scripts\antd.cctable.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Scripts\anthilla.notify.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

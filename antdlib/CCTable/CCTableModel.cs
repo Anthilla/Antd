@@ -55,6 +55,11 @@ namespace antdlib.CCTable {
             Testing = 1,
             None = 99
         }
+
+        public enum ConfType : byte {
+            File = 0,
+            Directory = 1
+        }
     }
 
     public class CCTableModel {
@@ -121,5 +126,13 @@ namespace antdlib.CCTable {
         public string Key { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class CCTableConfModel {
+        public string Name { get; set; }
+        
+        public string Path { get; set; }
+
+        public CCTableFlags.ConfType Type { get; set; }
     }
 }

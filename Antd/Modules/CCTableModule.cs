@@ -185,6 +185,11 @@ namespace Antd {
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
+
+            Get["/conf/files"] = x => {
+                var files = CCTableRepository.GetExistingConfFiles();
+                return Response.AsJson(files);
+            };
         }
     }
 }

@@ -6,7 +6,7 @@
                 <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
                     <td style="width: 90%;">
                         <label>configuring: @row.File</label>
-                        <textarea class="bg-anthilla-gray fg-white" style="width: 90%;">
+                        <textarea class="bg-anthilla-gray fg-white border-anthilla-gray" style="width: 90%;">
                             @antdlib.FileSystem.ReadFile(row.File)
                         </textarea>
                     </td>

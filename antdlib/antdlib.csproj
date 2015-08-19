@@ -117,6 +117,7 @@
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
+    <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
     <Compile Include="Common\ConsoleLogger.cs" />

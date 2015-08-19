@@ -30,6 +30,7 @@
 using antdlib.CommandManagement;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace antdlib.CCTable {
@@ -134,16 +135,28 @@ namespace antdlib.CCTable {
             SetConfFile(file, newFileName);
         }
 
-        //516  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|sort -u|grep -v.conf
-        //517  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'
-        //518  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf
-        //519  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v.d
-        //520  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v conf.d
-
         private static void SetConfFile(string source, string destination) {
             Terminal.Execute($"cp {source} {destination}");
-            System.IO.File.Copy(source, destination, true);
+            File.Copy(source, destination, true);
             Terminal.Execute($"mount --bind {source} {destination}");
+        }
+
+        //516  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|sort -u|grep -v.conf
+        //520  find /etc -type f -name*.conf |awk -F \/ '{print ""$3""}'|grep conf|grep -v conf.d
+
+        public static CCTableConfModel[] GetEtcConfs() {
+            var confs = Directory.EnumerateFiles("/etc", "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
+            return confs.GetConfFiles().Concat(confs.GetServices()).ToArray();
+        }
+
+        public static string[] GetExistingConfFiles() {
+            var files = Directory.EnumerateFiles("/etc", "*", SearchOption.TopDirectoryOnly).Where(f => !f.Contains("portage")).ToArray();
+            return files;
+        }
+
+        public static string[] GetExistingConfDirectories() {
+            var directories = Directory.EnumerateDirectories("/etc", "*", SearchOption.TopDirectoryOnly).Where(f => !f.Contains("portage")).ToArray();
+            return directories;
         }
 
         public static void DeleteTable(string guid) {
