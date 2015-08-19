@@ -1,32 +1,32 @@
 ﻿@*
-///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------*@
+    ///-------------------------------------------------------------------------------------
+    ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    ///     All rights reserved.
+    ///
+    ///     Redistribution and use in source and binary forms, with or without
+    ///     modification, are permitted provided that the following conditions are met:
+    ///         * Redistributions of source code must retain the above copyright
+    ///           notice, this list of conditions and the following disclaimer.
+    ///         * Redistributions in binary form must reproduce the above copyright
+    ///           notice, this list of conditions and the following disclaimer in the
+    ///           documentation and/or other materials provided with the distribution.
+    ///         * Neither the name of the Anthilla S.r.l. nor the
+    ///           names of its contributors may be used to endorse or promote products
+    ///           derived from this software without specific prior written permission.
+    ///
+    ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    ///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    ///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    ///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    ///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    ///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    ///
+    ///     20141110
+    ///-------------------------------------------------------------------------------------*@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
@@ -36,37 +36,32 @@
 }
 
 @section MainContent {
-    <legend id="Mount">Mount</legend>
+    <legend id="Mounts">Mounts</legend>
     <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
-
-    <table class="table searchable" style="width: 50%; display: inline-block; float: left;">
-        <thead>
-            <tr>
-                <th class="text-left" style="text-align: center;">Running (/proc/mounts)</th>
-            </tr>
-        </thead>
-        <tbody id="MountRunningTable">
-            @foreach (antdlib.Models.MountModel value in Model.MountRunning) {
-                <tr>
-                    <td style="text-align: right;">
-                        @value.device @value.mountpoint @value.fstype @value.rorw @value.dv1 @value.dv2
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <table class="table searchable" style="width: 50%; display: inline-block; float: left;">
-        <thead>
-            <tr>
-                <th class="text-left" style="text-align: center;">Antd (@antdlib.Folder.Config)</th>
-            </tr>
-        </thead>
-        <tbody id="MountAntdTable">
-            @foreach (antdlib.Models.MountModel value in Model.MountAntd) {
-                <tr>
-                    <td style="text-align: right;">
-                        @value.device @value.mountpoint @value.fstype @value.rorw @value.dv1 @value.dv2
+    <table class="table">
+        <tbody>
+            @foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountRepository.Get()) {
+                <tr data-guid="@mount.DFPGuid" data-timestamp="@mount.DFPTimestamp">
+                    <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDIRSPath(mount.Path)</td>
+                    <td style="width: 20px; text-align: center;"><i class="icon-arrow-right-5 fg-white"></i></td>
+                    <td style="width: 40%;">@mount.Path</td>
+                    <td>
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
+                            <i class="icon-record fg-green on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Unmounted) {
+                            <i class="icon-record fg-red on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTMP) {
+                            <i class="icon-record fg-orange on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
+                            <i class="icon-stop-2 fg-orange on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
+                            <i class="icon-stop-2 fg-red on-left"></i>
+                        }
+                        @mount.MountStatus
                     </td>
                 </tr>
             }
@@ -76,11 +71,6 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('tr>td').not('tr>td:first-child').css('width', '25%');
-            $('tr>td:first-child').css('width', '200px');
-        });
-
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');

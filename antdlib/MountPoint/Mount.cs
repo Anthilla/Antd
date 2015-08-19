@@ -132,12 +132,12 @@ namespace antdlib.MountPoint {
             Terminal.Execute($"mount -o bind {source} {destination}");
         }
 
-        private static string SetDIRSPath(string source) {
-            return Path.Combine(Folder.Dirs, $"DIR{source.Replace("/", "_")}");
+        public static string SetDIRSPath(string source) {
+            return Path.Combine(Folder.Dirs, $"DIR{source.Replace("/", "_")}").Replace("\\", "/");
         }
 
         private static string SetLiveCDPath(string source) {
-            return Path.Combine(Folder.LiveCd, source);
+            return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
         }
     }
 }
