@@ -271,3 +271,86 @@ function InitializeDragAndDrop() {
         }
     }
 }
+
+//creo il metodo di selectize per andare a scegliere file/directory per creare la riga nella cctable.conf
+// :O
+
+$(document).ready(function () {
+    $.when(
+        LoadEtcConfs()
+    ).then(
+        console.log('loaded')
+    );
+});
+
+function Callback(callback, url) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        data: {
+            s: ' '
+        },
+        error: function () {
+            callback();
+            return false;
+        },
+        success: function (data) {
+            callback(data);
+        }
+    });
+}
+
+var SelectizerOptions = function () {
+    return {
+        load: function (query, callback) {
+            if (!query.length) return callback();
+            $.ajax({
+                url: this.settings.remoteUrl,
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    s: query
+                },
+                error: function (input) {
+                    callback();
+                },
+                success: function (data) {
+                    callback(data);
+                }
+            });
+        },
+        render: function (data, escape) {
+            var icon = 'bug';
+            if (escape(data.type) == 0) {
+                icon = 'file';
+            }
+            else {
+                icon = 'folder';
+            }
+            return '<div><span data-path="' + escape(data.path) + '" class="button name bg-anthilla-violet">' +
+                '<i class="icon-' + icon + ' on-left"></i>'
+                + escape(data.name) + '</span></div>';
+        }
+    };
+}();
+
+var $etcConfsSelectizer = $('#show-etc-confs').selectize({
+    maxItems: 1,
+    valueField: 'name',
+    labelField: 'name',
+    searchField: ['name', 'path'],
+    create: false,
+    render: { option: SelectizerOptions.render },
+    remoteUrl: '/cctable/conf/files',
+    load: SelectizerOptions.load
+});
+
+function LoadEtcConfs() {
+    if ($('#show-etc-confs').size() > 0) {
+        var etcConfsSelectizer = $etcConfsSelectizer[0].selectize;
+        etcConfsSelectizer.load(function (callback) {
+            Callback(callback, this.settings.remoteUrl);
+        });
+    }
+}

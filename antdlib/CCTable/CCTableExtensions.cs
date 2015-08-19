@@ -38,14 +38,18 @@ namespace antdlib.CCTable {
     public static class CCTableExtensions {
 
         public static CCTableConfModel[] GetConfFiles(this string[] array) {
-            var list = new List<CCTableConfModel>() { };
+            var list = new HashSet<CCTableConfModel>() { };
             for (int i = 0; i < array.Length; i++) {
-                var confNameSplit = array[i].Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+                var conf = array[i];
+                if (array[i].Contains("\\")) {
+                    conf = array[i].Replace("\\", "/");
+                }
+                var confNameSplit = conf.Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                 if (confNameSplit.Length < 3) { //so che è un file perché non c'è niente dopo
-                    if (array[i].EndsWith(".conf")) { //e so che è un file .conf
+                    if (conf.EndsWith(".conf")) { //e so che è un file .conf
                         var m = new CCTableConfModel() {
                             Name = confNameSplit[1],
-                            Path = Path.GetFullPath(confNameSplit[1]).Replace("\\", "/"),
+                            Path = $"/etc/{confNameSplit[1]}",
                             Type = CCTableFlags.ConfType.File
                         };
                         list.Add(m);
@@ -56,17 +60,23 @@ namespace antdlib.CCTable {
         }
 
         public static CCTableConfModel[] GetServices(this string[] array) {
-            var list = new List<CCTableConfModel>() { };
+            var list = new HashSet<CCTableConfModel>() { };
             for (int i = 0; i < array.Length; i++) {
-                var confNameSplit = array[i].Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-                if (confNameSplit.Length > 3) { //so che è una cartella perché c'è altro dopo
-                    if (!array[i].EndsWith(".d")) { //e so che non è una cartella con dentro delle conf da non toccare
-                        var m = new CCTableConfModel() {
-                            Name = confNameSplit[1],
-                            Path = Path.GetFullPath(confNameSplit[1]).Replace("\\", "/"),
-                            Type = CCTableFlags.ConfType.Directory
-                        };
-                        list.Add(m);
+                var conf = array[i];
+                if (array[i].Contains("\\")) {
+                    conf = array[i].Replace("\\", "/");
+                }
+                var confNameSplit = conf.Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+                if (confNameSplit.Length >= 3) { //so che è una cartella perché c'è altro dopo
+                    if (!confNameSplit[1].EndsWith(".d")) { //e so che non è una cartella con dentro delle conf da non toccare
+                        if (list.Where(l=>l.Name == confNameSplit[1]).Count() < 1) { //nella mia lista non c'è già un entry con il nome uguale (a confNameSplit[1])
+                            var m = new CCTableConfModel() {
+                                Name = confNameSplit[1],
+                                Path = $"/etc/{confNameSplit[1]}",
+                                Type = CCTableFlags.ConfType.Directory
+                            };
+                            list.Add(m);
+                        }
                     }
                 }
             }

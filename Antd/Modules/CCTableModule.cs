@@ -187,8 +187,7 @@ namespace Antd {
             };
 
             Get["/conf/files"] = x => {
-                var files = CCTableRepository.GetExistingConfFiles();
-                return Response.AsJson(files);
+                return Response.AsJson(CCTableRepository.GetEtcConfs());
             };
         }
     }

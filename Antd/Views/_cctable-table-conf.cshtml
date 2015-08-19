@@ -17,13 +17,15 @@
     <form action="/cctable/row/conf" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
         <div class="row">
             <div class="span3">
-                <label>File</label>
+                <label>File or Directory</label>
             </div>
             <div class="span7">
                 <input type="hidden" name="TableGuid" value="@Model.Guid">
                 <input type="hidden" name="TableName" value="@Model.Alias">
                 <input type="hidden" name="Context" value="@Model.Context">
-                <input type="text" name="File" style="width: 90%; height: 25px;">
+                <div>
+                    <input id="show-etc-confs" name="File" type="text">
+                </div>
             </div>
         </div>
         <hr class="bg-anthilla-gray" style="height: 1px !important;">

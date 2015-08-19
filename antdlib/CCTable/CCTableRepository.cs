@@ -146,17 +146,9 @@ namespace antdlib.CCTable {
 
         public static CCTableConfModel[] GetEtcConfs() {
             var confs = Directory.EnumerateFiles("/etc", "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
-            return confs.GetConfFiles().Concat(confs.GetServices()).ToArray();
-        }
-
-        public static string[] GetExistingConfFiles() {
-            var files = Directory.EnumerateFiles("/etc", "*", SearchOption.TopDirectoryOnly).Where(f => !f.Contains("portage")).ToArray();
-            return files;
-        }
-
-        public static string[] GetExistingConfDirectories() {
-            var directories = Directory.EnumerateDirectories("/etc", "*", SearchOption.TopDirectoryOnly).Where(f => !f.Contains("portage")).ToArray();
-            return directories;
+            var files = confs.GetConfFiles();
+            var dirs = confs.GetServices();
+            return files.Concat(dirs).ToArray();
         }
 
         public static void DeleteTable(string guid) {
