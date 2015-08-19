@@ -101,7 +101,6 @@ namespace Antd {
                 DeNSo.Session.New.Set(model);
                 return Response.AsXml(model);
             };
-
         }
     }
 }

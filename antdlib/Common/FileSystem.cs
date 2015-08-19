@@ -76,6 +76,8 @@ namespace antdlib {
         }
 
         public static void CopyDirectory(string source, string destination) {
+            Directory.CreateDirectory(source);
+            Directory.CreateDirectory(destination);
             foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)) {
                 Directory.CreateDirectory(dirPath.Replace(source, destination));
             }
