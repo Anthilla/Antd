@@ -28,17 +28,12 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.CCTable;
-using antdlib.Models;
 using antdlib.Status;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
-using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
-using System.Linq;
 using antdlib;
-using antdlib.MachineStatus;
 
 namespace Antd {
 
@@ -87,60 +82,6 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.Sysctl = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["_page-system-sysctl", vmod];
-            };
-
-            Get["/conf"] = x => {
-                dynamic vmod = new ExpandoObject();
-                HashSet<DirItemModel> etcList = new DirectoryLister("/etc", true).FullList2;
-                HashSet<DirItemModel> cfgList = new DirectoryLister(Folder.Config, true).FullList2;
-                List<dynamic> nl = new List<dynamic>() { };
-                foreach (DirItemModel dir in etcList) {
-                    dynamic imod = new ExpandoObject();
-                    imod.isFile = dir.isFile;
-                    imod.etcPath = dir.path;
-                    bool hasCfg;
-                    string cfgPath;
-                    string cfgName;
-                    string p = dir.path.ConvertPathToFileName().Replace("D:", "");
-                    string c = (from i in cfgList
-                                where i.name == p
-                                select i.path).FirstOrDefault();
-                    if (c == null) {
-                        hasCfg = false;
-                        cfgPath = "";
-                        cfgName = "";
-                    }
-                    else {
-                        hasCfg = true;
-                        cfgPath = c;
-                        cfgName = Path.GetFileName(c);
-                    }
-                    imod.hasCfg = hasCfg;
-                    imod.cfgPath = cfgPath;
-                    imod.cfgName = cfgName;
-                    nl.Add(imod);
-                }
-                vmod.Conf = nl;
-                return View["_page-system-conf", vmod];
-            };
-
-            Post["/export/file/{path*}"] = x => {
-                string path = x.path;
-                ConfigEtc.Export(path);
-                return Response.AsJson("done");
-            };
-
-            Get["/read/file/{path*}"] = x => {
-                string path = x.path;
-                string text = FileSystem.ReadFile(path.RemoveDriveLetter());
-                return Response.AsJson(text);
-            };
-
-            Post["/file"] = x => {
-                string path = this.Request.Form.FilePath;
-                string content = this.Request.Form.FileContent;
-                ConfigEtc.EditFile(path, content);
-                return Response.AsRedirect("/system");
             };
 
             Post["/sysctl/{param}/{value}"] = x => {

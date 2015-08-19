@@ -179,7 +179,6 @@
     <Compile Include="Security\Token.cs" />
     <Compile Include="Ssh\Keys.cs" />
     <Compile Include="Ssh\Test.cs" />
-    <Compile Include="Status\ConfigEtc.cs" />
     <Compile Include="Status\Mount.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
