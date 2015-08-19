@@ -33,13 +33,16 @@ using System.IO;
 
 namespace antdlib.MountPoint {
     public class DFP {
-        public static void Set(string directory) {
+        public static void Set(string directory, string timestamp) {
             var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
             var path = Path.Combine(directory, file);
-            FileSystem.WriteFile(path, Timestamp.Now);
+            FileSystem.WriteFile(path, timestamp);
         }
 
         public static string GetTimestamp(string directory) {
+            if (!Directory.Exists(directory)) {
+                return null;
+            }
             var dfp = Directory.EnumerateFiles(directory, ".antd.dfp*.dfp", SearchOption.TopDirectoryOnly).First();
             return (!File.Exists(Path.GetFullPath(dfp))) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
         }

@@ -46,9 +46,7 @@ namespace antdlib.MountPoint {
                 var dir = defaults[i];
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
-                DFP.Set(dir);
                 Directory.CreateDirectory(DIR);
-                DFP.Set(DIR);
                 SetBind(DIR, dir);
             }
         }
@@ -73,9 +71,7 @@ namespace antdlib.MountPoint {
                 var dir = mounts[i].Path;
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
-                DFP.Set(dir);
                 Directory.CreateDirectory(DIR);
-                DFP.Set(DIR);
                 SetBind(DIR, dir);
             }
             for (int i = 0; i < mounts.Length; i++) {
@@ -102,6 +98,9 @@ namespace antdlib.MountPoint {
         }
 
         private static void CheckMount(string directory) {
+            string timestampNow = Timestamp.Now;
+            DFP.Set(SetDIRSPath(directory), timestampNow);
+            DFP.Set(directory, timestampNow);
             bool livecdDFP;
             var livecdPath = SetLiveCDPath(directory);
             var livecdTimestamp = DFP.GetTimestamp(livecdPath);
@@ -133,6 +132,8 @@ namespace antdlib.MountPoint {
             else {
                 MountRepository.SetAsError(directory);
             }
+            DFP.Delete(SetDIRSPath(directory));
+            DFP.Delete(directory);
         }
 
         private static void SetBind(string source, string destination) {
