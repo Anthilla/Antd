@@ -31,6 +31,15 @@ using System.Runtime.InteropServices;
 ///-------------------------------------------------------------------------------------
 namespace antdlib {
 
+    public enum ServiceDataType : byte {
+        Boolean = 1,
+        String = 2,
+        StringArray = 3,
+        Section = 97,
+        Disabled = 98,
+        Other = 99
+    }
+
     public class Label {
         public static string Root { get { return "antd_root"; } }
         public static string Port { get { return "antd_port"; } }

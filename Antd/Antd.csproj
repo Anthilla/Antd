@@ -176,6 +176,7 @@
     <Compile Include="Modules\ConsoleModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
     <Compile Include="Modules\HookNancyModule.cs" />
+    <Compile Include="Modules\ServicesModule.cs" />
     <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\HypervisorModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
@@ -249,6 +250,15 @@
     <None Include="Views\mail\page-mail-smtp.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Views\services\page-services-samba.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\services\_page-services.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\services\_services-pagebar.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\system\page-system-authentication.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -261,13 +271,13 @@
     <None Include="Views\users\page-users-application.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\_cctable-table-confOLD.cshtml">
+    <None Include="Views\_cctable-table-conf.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\_cctable-table-dataview.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\_cctable-table-conf.cshtml">
+    <None Include="Views\_cctable-table-confOLD2.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\_cctable-table-settings.cshtml">
