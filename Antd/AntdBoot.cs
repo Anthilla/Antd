@@ -134,12 +134,12 @@ namespace Antd {
         }
 
         public static void TestWebDav(string uri, string path) {
-            NameValueCollection properties = new NameValueCollection();
-            properties["showDateTime"] = "true";
-            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
-            WebDavServer server = new WebDavServer(new WebDavDiskStore(path));
-            server.Listener.Prefixes.Add(uri);
-            server.Start();
+            //NameValueCollection properties = new NameValueCollection();
+            //properties["showDateTime"] = "true";
+            //LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
+            //WebDavServer server = new WebDavServer(new WebDavDiskStore(path));
+            //server.Listener.Prefixes.Add(uri);
+            //server.Start();
         }
 
         public static void InitAuthentication() {

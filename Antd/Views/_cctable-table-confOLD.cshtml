@@ -3,7 +3,7 @@
     <table class="table" data-table-content="@Model.Guid">
         <tbody>
             @foreach (antdlib.CCTable.CCTableRowModel row in Model.Content) {
-                if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.File) {
+                @if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.File) {
                     <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
                         <td style="width: 90%;">
                             <form action="/cctable/update/conf" method="POST" enctype="multipart/form-data">
@@ -16,7 +16,7 @@
                         </td>
                     </tr>
                 }
-                if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.Directory) {
+                @if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.Directory) {
                     <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
                         <td style="width: 90%;">
                             <label><i class="icon-folder on-left"></i> @row.File</label>
@@ -35,6 +35,12 @@
                                     </div>
                                 </div>
                             }
+
+                            @*<ul style="list-style: none;" class="fg-white">
+                                @foreach (antdlib.CCTable.CCTableConfModel file in antdlib.CCTable.CCTableRepository.GetEtcConfs(row.File)) {
+                                    <li>@file.Path</li>
+                                }
+                            </ul>*@
                         </td>
                     </tr>
                 }
