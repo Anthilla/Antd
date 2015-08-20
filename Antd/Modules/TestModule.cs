@@ -31,6 +31,9 @@ using Nancy;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using antdlib.CCTable;
+using antdlib;
 
 namespace Antd {
     public class TMP {
@@ -70,36 +73,15 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Get["/ssh"] = x => {
-                antdlib.Ssh.Test.Start("10.1.3.194", "root", "root");
-                return Response.AsText("gg");
-            };
-
-            Get["/e/1"] = x => {
-                var model = new TMP();
-                model._Id = Guid.NewGuid().ToString();
-                model.date = DateTime.Now;
-                model.guid = Guid.NewGuid().ToString();
-                model.name = model.date.ToString().Substring(0, 5) + model.guid.Substring(5, 5);
-                model.list = new List<int>() { };
-                DeNSo.Session.New.Set(model);
-                return Response.AsXml(model);
-            };
-
-            Get["/e/1/{guid}"] = x => {
-                string guid = x.guid;
-                var model = DeNSo.Session.New.Get<TMP>(m => m.guid == guid).First();
-                return Response.AsXml(model);
-            };
-
-            Get["/e/2/{guid}"] = x => {
-                string guid = x.guid;
-                var model = DeNSo.Session.New.Get<TMP>(m => m.guid == guid).First();
-                for (int i = 0; i < new Random().Next(1, 21); i++) {
-                    model.list.Add(i);
+            Get["/split"] = x => {
+                var input = FileSystem.ReadFile("/etc/sambaGlobal.conf");
+                var start = ";";
+                var end = "\n";
+                var obbb = input.SplitAndGetTextBetween(start, end);
+                foreach (var vars in obbb) {
+                    Console.WriteLine(vars);
                 }
-                DeNSo.Session.New.Set(model);
-                return Response.AsXml(model);
+                return View["page-test"];
             };
         }
     }

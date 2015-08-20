@@ -211,22 +211,28 @@ namespace Antd {
 
             Post["/map/conf"] = x => {
                 var guid = Guid.NewGuid().ToString();
-                char comment = (char)Request.Form.CharComment;
-                string filePath = (string)Request.Form.FilePath;
+                var commentInput = ((string)Request.Form.CharComment).ToCharArray();
+                var comment = (commentInput.Length > 0) ? commentInput[0] : ' ';
+                var filePath = (string)Request.Form.FilePath;
                 bool hasInclude = Request.Form.PermitsInclude.HasValue;
-                string include = (string)Request.Form.VerbInclude;
+                var include = (string)Request.Form.VerbInclude;
                 bool hasSection = Request.Form.PermitsSection.HasValue;
-                char sectionOpen = (char)Request.Form.CharSectionOpen;
-                char sectionClose = (char)Request.Form.CharSectionClose;
-                char dataSeparator = (char)Request.Form.CharKevValueSeparator;
+                var sectionOpenInput = ((string)Request.Form.CharSectionOpen).ToCharArray();
+                var sectionOpen = (sectionOpenInput.Length > 0) ? sectionOpenInput[0] : ' ';
+                var sectionCloseInput = ((string)Request.Form.CharSectionClose).ToCharArray();
+                var sectionClose = (sectionCloseInput.Length > 0) ? sectionCloseInput[0] : ' ';
+                var dataSeparatorInput = ((string)Request.Form.CharKevValueSeparator).ToCharArray();
+                var dataSeparator = (dataSeparatorInput.Length > 0) ? dataSeparatorInput[0] : ' ';
                 bool hasBlock = Request.Form.PermitsBlock.HasValue;
-                char blockOpen = (char)Request.Form.CharBlockOpen;
-                char blockClose = (char)Request.Form.CharBlockClose;
-                char endOfLine = (char)Request.Form.CharEndOfLine;
+                var blockOpenInput = ((string)Request.Form.CharBlockOpen).ToCharArray();
+                var blockOpen = (blockOpenInput.Length > 0) ? blockOpenInput[0] : ' ';
+                var blockCloseInput = ((string)Request.Form.CharBlockClose).ToCharArray();
+                var blockClose = (blockCloseInput.Length > 0) ? blockCloseInput[0] : ' ';
+                var endOfLineInput = ((string)Request.Form.CharEndOfLine).ToCharArray();
+                var endOfLine = (endOfLineInput.Length > 0) ? endOfLineInput[0] : '\n';
 
-                CCTableConf.MapRepository.Create(guid, filePath, comment, hasInclude, include, hasSection, sectionOpen, sectionClose, dataSeparator, hasBlock, blockOpen, blockClose, endOfLine);
+                CCTableConf.Mapping.Repository.Create(guid, filePath, comment, hasInclude, include, hasSection, sectionOpen, sectionClose, dataSeparator, hasBlock, blockOpen, blockClose, endOfLine);
 
-                //qui mappare le righe di testo
                 var number = (string)Request.Form.LineNumber;
                 var numbers = number.Split(new String[] { "," }, StringSplitOptions.None).ToIntArray();
                 var type = (string)Request.Form.LineType;
@@ -235,8 +241,8 @@ namespace Antd {
                 if (numbers.Length == types.Length) {
                     var l = (numbers.Length + types.Length) / 2;
                     for (int i = 0; i < l; i++) {
-                        var ti = CCTableConf.MapRepository.ConvertToDataType(types[i]);
-                        CCTableConf.MapRepository.AddLine(guid, numbers[i], ti);
+                        var ti = CCTableConf.Mapping.Repository.ConvertToDataType(types[i]);
+                        CCTableConf.Mapping.Repository.AddLine(guid, numbers[i], ti);
                     }
                 }
 

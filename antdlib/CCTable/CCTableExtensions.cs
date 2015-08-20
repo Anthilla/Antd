@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace antdlib.CCTable {
     public static class CCTableExtensions {
@@ -66,7 +67,7 @@ namespace antdlib.CCTable {
                 var confNameSplit = conf.Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
                 if (confNameSplit.Length >= 3) { //so che è una cartella perché c'è altro dopo
                     if (!confNameSplit[1].EndsWith(".d")) { //e so che non è una cartella con dentro delle conf da non toccare
-                        if (list.Where(l=>l.Name == confNameSplit[1]).Count() < 1) { //nella mia lista non c'è già un entry con il nome uguale (a confNameSplit[1])
+                        if (list.Where(l => l.Name == confNameSplit[1]).Count() < 1) { //nella mia lista non c'è già un entry con il nome uguale (a confNameSplit[1])
                             var m = new CCTableConfModel() {
                                 Name = confNameSplit[1],
                                 Path = $"/etc/{confNameSplit[1]}",
@@ -78,6 +79,24 @@ namespace antdlib.CCTable {
                 }
             }
             return list.ToArray();
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, char end) {
+            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            MatchCollection matches = r.Matches(input);
+            foreach (Match match in matches) {
+                Console.WriteLine(match.Groups[1].Value);
+                yield return match.Groups[1].Value;
+            }
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, string end) {
+            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            MatchCollection matches = r.Matches(input);
+            foreach (Match match in matches) {
+                Console.WriteLine(match.Groups[1].Value);
+                yield return match.Groups[1].Value;
+            }
         }
     }
 }

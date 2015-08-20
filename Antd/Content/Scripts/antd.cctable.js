@@ -353,3 +353,13 @@ function LoadEtcConfs() {
         });
     }
 }
+
+$(document).ready(function () {
+    var table = $('tbody[data-role="file-rows"]');
+    table.find('tr').each(function (index) {
+        $(this).find('input[name="LineNumber"]').val(index);
+        $(this).find('.LineNumber').text(index);
+    });
+});
+
+$('select[name="LineType"]').windowed();

@@ -180,11 +180,11 @@
     <Compile Include="Security\Token.cs" />
     <Compile Include="Ssh\Keys.cs" />
     <Compile Include="Ssh\Test.cs" />
-    <Compile Include="Status\Mount.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Storage\Volumes.cs" />
+    <Compile Include="Svcs\Samba\SambaCongif.cs" />
     <Compile Include="SystemConfig\General.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\UnitRepo.cs" />
@@ -202,6 +202,25 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Svcs\Bind\" />
+    <Folder Include="Svcs\Dhcp\" />
+    <Folder Include="Svcs\Glusterfs\" />
+    <Folder Include="Svcs\Libvirt\" />
+    <Folder Include="Svcs\Lxc\" />
+    <Folder Include="Svcs\Nfs\" />
+    <Folder Include="Svcs\Nftable\" />
+    <Folder Include="Svcs\Nginx\" />
+    <Folder Include="Svcs\Ntpd\" />
+    <Folder Include="Svcs\Qemu\" />
+    <Folder Include="Svcs\Squid\" />
+    <Folder Include="Svcs\Ssh\" />
+    <Folder Include="Svcs\Syslog-ng\" />
+    <Folder Include="Svcs\Systemd\Hostnamectl\" />
+    <Folder Include="Svcs\Systemd\Journald\" />
+    <Folder Include="Svcs\Systemd\Networkd\" />
+    <Folder Include="Svcs\Zfs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -54,10 +54,6 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('tr>td:first-child').css('width', '200px');
-        });
-
         $('#FirewallOptimizationOptionsSelect').change(function () {
             var thisVal = $(this).find(':selected').val();
             var r = $('#FirewallOptimizationOptionsDescription');
