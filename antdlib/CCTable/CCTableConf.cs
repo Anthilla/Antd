@@ -35,5 +35,129 @@ using System.Threading.Tasks;
 
 namespace antdlib.CCTable {
     public class CCTableConf {
+
+        public enum DataType : byte {
+            Boolean = 1, //specificare il tipo yes/no true/false True/False
+            String = 2,
+            StringArray = 3,
+            None = 98,
+            Other = 99
+        }
+
+        /// <summary>
+        /// Char* = definisce un carattere speciale
+        /// Permits* = definisce se il file permette un certo comportamento
+        /// Verb* = stringa che definisce un certo comportamento
+        /// </summary>
+        public class TextMapModel {
+            public char CharComment { get; set; } = ' ';
+
+            public bool PermitsInclude { get; set; } = false;
+
+            public string VerbInclude { get; set; } = "";
+
+            public bool PermitsSection { get; set; } = false;
+
+            public char CharSectionOpen { get; set; } = ' ';
+
+            public char CharSectionClose { get; set; } = ' ';
+
+            public char CharKevValueSeparator { get; set; } = ' ';
+
+            public bool PermitsBlock { get; set; } = false;
+
+            public char CharBlockOpen { get; set; } = ' ';
+
+            public char CharBlockClose { get; set; } = ' ';
+
+            public char CharEndOfLine { get; set; } = ' ';
+        }
+
+        public class LineMapModel {
+            public int Number { get; set; }
+
+            public DataType Type { get; set; }
+
+            public Tuple<string, string> BooleanPair { get; set; }
+        }
+
+        public class FileMapModel {
+            public string _Id { get; set; }
+
+            public string Guid { get; set; }
+
+            public string FilePath { get; set; }
+
+            public TextMapModel TextMap { get; set; }
+
+            public List<LineMapModel> LinesMap { get; set; } = new List<LineMapModel>() { };
+        }
+
+        public class MapRepository {
+
+            public static void Create(string guid,
+                string filePath,
+                char comment,
+                bool hasInclude, string include,
+                bool hasSection, char sectionOpen, char sectionClose,
+                char dataSeparator,
+                bool hasBlock, char blockOpen, char blockClose,
+                char endOfLine) {
+                var textMap = new TextMapModel() {
+                    CharComment = comment,
+                    CharKevValueSeparator = dataSeparator,
+                    CharEndOfLine = endOfLine
+                };
+                if(hasInclude == true) {
+                    textMap.PermitsInclude = true;
+                    textMap.VerbInclude = include;
+                }
+                if (hasSection == true) {
+                    textMap.PermitsSection = true;
+                    textMap.CharSectionOpen = sectionOpen;
+                    textMap.CharSectionClose = sectionClose;
+                }
+                if(hasBlock == true) {
+                    textMap.PermitsBlock = true;
+                    textMap.CharBlockOpen = blockOpen;
+                    textMap.CharBlockClose = blockClose;
+                }
+                var map = new FileMapModel() {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = guid,
+                    FilePath = filePath,
+                    TextMap = textMap
+                };
+                DeNSo.Session.New.Set(map);
+            }
+
+            public static void AddLine(string guid, int number, DataType type, Tuple<string, string> boolPair = null) {
+                var map = DeNSo.Session.New.Get<FileMapModel>(m => m.Guid == guid).FirstOrDefault();
+                var line = new LineMapModel() {
+                    Number = number,
+                    Type = type
+                };
+                if (type == DataType.Boolean && boolPair !=  null) {
+                    line.BooleanPair = boolPair;
+                }
+                map.LinesMap.Add(line);
+                DeNSo.Session.New.Set(map);
+            }
+
+            public static DataType ConvertToDataType(string type) {
+                switch (type) {
+                    case "boolean":
+                        return DataType.Boolean;
+                    case "string":
+                        return DataType.String;
+                    case "array":
+                        return DataType.StringArray;
+                    case "none":
+                        return DataType.None;
+                    default:
+                        return DataType.Other;
+                }
+            }
+        }
     }
 }

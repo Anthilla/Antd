@@ -32,7 +32,9 @@ using antdlib.CCTable;
 using antdlib.CommandManagement;
 using Nancy;
 using Nancy.Security;
+using System;
 using System.Dynamic;
+using System.Linq;
 
 namespace Antd {
 
@@ -60,29 +62,29 @@ namespace Antd {
             };
 
             Post["/row"] = x => {
-                string table = (string)this.Request.Form.TableGuid;
-                string tableName = (string)this.Request.Form.TableName;
-                string label = (string)this.Request.Form.Label;
-                string inputType = (string)this.Request.Form.InputType.Value;
-                string inputValue = (string)this.Request.Form.InputLabel;
-                string inputCommand = (string)this.Request.Form.InputCommand;
-                string notes = (string)this.Request.Form.Notes;
-                string osi = (string)this.Request.Form.FlagOSI.Value;
-                string func = (string)this.Request.Form.FlagFunction.Value;
+                string table = (string)Request.Form.TableGuid;
+                string tableName = (string)Request.Form.TableName;
+                string label = (string)Request.Form.Label;
+                string inputType = (string)Request.Form.InputType.Value;
+                string inputValue = (string)Request.Form.InputLabel;
+                string inputCommand = (string)Request.Form.InputCommand;
+                string notes = (string)Request.Form.Notes;
+                string osi = (string)Request.Form.FlagOSI.Value;
+                string func = (string)Request.Form.FlagFunction.Value;
                 CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand,
                     notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
 
                 string command;
                 switch (inputType) {
                     case "hidden":
-                        command = this.Request.Form.CCTableCommandNone;
+                        command = Request.Form.CCTableCommandNone;
                         break;
                     case "text":
-                        command = this.Request.Form.CCTableCommandText;
+                        command = Request.Form.CCTableCommandText;
                         break;
                     case "checkbox":
                         //todo: il comando in realtà è doppio, uno per true e uno per false
-                        command = this.Request.Form.CCTableCommandBoolean;
+                        command = Request.Form.CCTableCommandBoolean;
                         break;
                     default:
                         command = "echo error during command assignment";
@@ -91,21 +93,21 @@ namespace Antd {
                 ConsoleLogger.Info(command);
 
                 string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-                string inputlocation = "CCTable" + this.Request.Form.TableName;
+                string inputlocation = "CCTable" + Request.Form.TableName;
                 CommandRepository.Create(inputid, command, command, inputlocation, notes);
 
-                string context = (string)this.Request.Form.Context;
+                string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
             Post["/row/dataview"] = x => {
-                string table = (string)this.Request.Form.TableGuid;
-                string tableName = (string)this.Request.Form.TableName;
+                string table = (string)Request.Form.TableGuid;
+                string tableName = (string)Request.Form.TableName;
                 string label = (string)this.Request.Form.Label;
 
-                string commandString = (string)this.Request.Form.Command;
-                string resultString = (string)this.Request.Form.Result;
+                string commandString = (string)Request.Form.Command;
+                string resultString = (string)Request.Form.Result;
                 ConsoleLogger.Log(commandString);
                 if (commandString != "") {
                     string thisResult = (resultString == "") ? Terminal.Execute(commandString) : resultString;
@@ -113,26 +115,26 @@ namespace Antd {
                 }
                 ConsoleLogger.Info(commandString);
 
-                string context = (string)this.Request.Form.Context;
+                string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
             Post["/row/mapdata"] = x => {
-                string rowGuid = (string)this.Request.Form.ItemGuid;
-                string result = (string)this.Request.Form.ItemResult;
+                string rowGuid = (string)Request.Form.ItemGuid;
+                string result = (string)Request.Form.ItemResult;
 
-                string labelArray = (string)this.Request.Form.MapLabel;
-                string indexArray = (string)this.Request.Form.MapLabelIndex;
+                string labelArray = (string)Request.Form.MapLabel;
+                string indexArray = (string)Request.Form.MapLabelIndex;
                 CCTableRepository.SaveMapData(rowGuid, labelArray, indexArray);
 
-                string context = (string)this.Request.Form.Context;
+                string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
             Post["/row/refresh"] = x => {
-                string guid = (string)this.Request.Form.Guid;
+                string guid = (string)Request.Form.Guid;
                 CCTableRepository.Refresh(guid);
                 return Response.AsJson(true);
             };
@@ -199,9 +201,45 @@ namespace Antd {
             };
 
             Post["/update/conf"] = x => {
-                string file = (string)this.Request.Form.FileName;
-                string text = (string)this.Request.Form.FileText;
+                string file = (string)Request.Form.FileName;
+                string text = (string)Request.Form.FileText;
                 CCTableRepository.UpdateConfFile(file, text);
+                string context = (string)Request.Form.Context;
+                string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                return Response.AsRedirect(redirect);
+            };
+
+            Post["/map/conf"] = x => {
+                var guid = Guid.NewGuid().ToString();
+                char comment = (char)Request.Form.CharComment;
+                string filePath = (string)Request.Form.FilePath;
+                bool hasInclude = Request.Form.PermitsInclude.HasValue;
+                string include = (string)Request.Form.VerbInclude;
+                bool hasSection = Request.Form.PermitsSection.HasValue;
+                char sectionOpen = (char)Request.Form.CharSectionOpen;
+                char sectionClose = (char)Request.Form.CharSectionClose;
+                char dataSeparator = (char)Request.Form.CharKevValueSeparator;
+                bool hasBlock = Request.Form.PermitsBlock.HasValue;
+                char blockOpen = (char)Request.Form.CharBlockOpen;
+                char blockClose = (char)Request.Form.CharBlockClose;
+                char endOfLine = (char)Request.Form.CharEndOfLine;
+
+                CCTableConf.MapRepository.Create(guid, filePath, comment, hasInclude, include, hasSection, sectionOpen, sectionClose, dataSeparator, hasBlock, blockOpen, blockClose, endOfLine);
+
+                //qui mappare le righe di testo
+                var number = (string)Request.Form.LineNumber;
+                var numbers = number.Split(new String[] { "," }, StringSplitOptions.None).ToIntArray();
+                var type = (string)Request.Form.LineType;
+                var types = type.Split(new String[] { "," }, StringSplitOptions.None).ToArray();
+                //linee e typi dovrebbero essere uguali
+                if (numbers.Length == types.Length) {
+                    var l = (numbers.Length + types.Length) / 2;
+                    for (int i = 0; i < l; i++) {
+                        var ti = CCTableConf.MapRepository.ConvertToDataType(types[i]);
+                        CCTableConf.MapRepository.AddLine(guid, numbers[i], ti);
+                    }
+                }
+
                 string context = (string)this.Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
