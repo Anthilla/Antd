@@ -115,5 +115,26 @@
                 dataFile.attr('name', dataFile.attr('name') + '_' + index);
             });
         });
+
+        $(document).ready(function () {
+            $('[data-share-form]').each(function (sindexx) {
+                $(this).find('[data-object="share-parameter"]').each(function (index) {
+                    var dataKey = $(this).find('[name="DataKey"]');
+                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                    var dataValue = $(this).find('[name="DataValue"]');
+                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                    var dataFile = $(this).find('[name="DataFilePath"]');
+                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
+                });
+            });
+        });
+
+        $('#AddNewParameterSamba').click(function () {
+            $('#NewParameterSambaDashboard').toggle();
+        });
+
+        $('#AddNewShare').click(function () {
+            $('#NewSambaShare').toggle();
+        });
     </script>
 }

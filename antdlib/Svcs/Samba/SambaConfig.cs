@@ -45,6 +45,8 @@ namespace antdlib.Svcs.Samba {
 
         private static string mainFile = "smb.conf";
 
+        private static string antdSambaFile = "antd.samba.conf";
+
         public static void SetReady() {
             Terminal.Execute($"cp {dir} {DIR}");
             FileSystem.CopyDirectory(dir, DIR);
@@ -350,7 +352,7 @@ namespace antdlib.Svcs.Samba {
             public static void DumpGlobalConfig() {
                 var parameters = MapFile.Get().Data.ToArray();
                 var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
-                foreach(var file in filesToClean) {
+                foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
                 for (int i = 0; i < parameters.Length; i++) {
@@ -367,12 +369,21 @@ namespace antdlib.Svcs.Samba {
                 File.AppendAllText(path, $"{text}{Environment.NewLine}");
             }
 
-            public static void SaveShare(List<ServiceSamba> newParameters) {
+            public static void SaveShareConfig(string fileName, string name, string queryName, List<ServiceSamba> newParameters) {
+                var data = MapFile.Get().Data;
                 var shares = MapFile.Get().Share;
-                var data = new List<LineModel>() { };
+                var oldShare = shares.Where(o => o.Name == queryName).FirstOrDefault();
+                shares.Remove(oldShare);
+                var shareData = new List<LineModel>() { };
                 foreach (var parameter in newParameters) {
-                    data.Add(ConvertData(parameter));
+                    shareData.Add(ConvertData(parameter));
                 }
+                var newShare = new ShareModel() {
+                    FilePath = fileName,
+                    Name = name,
+                    Data = shareData
+                };
+                shares.Add(newShare);
                 var samba = new SambaModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
@@ -383,15 +394,118 @@ namespace antdlib.Svcs.Samba {
                 DeNSo.Session.New.Set(samba);
             }
 
-            public static void DumpShare() {
-                var parameters = MapFile.Get().Data.ToArray();
-                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
-                foreach (var file in filesToClean) {
-                    CleanFile(file);
-                }
+            public static void DumpShare(string shareName) {
+                var share = MapFile.Get().Share.Where(s => s.Name == shareName).FirstOrDefault();
+                var parameters = share.Data.ToArray();
+                var file = share.FilePath;
+                CleanFile(file);
+                AppendLine(file, $"{MapRules.CharSectionOpen}{share.Name}{MapRules.CharSectionClose}");
                 for (int i = 0; i < parameters.Length; i++) {
                     var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
                     AppendLine(parameters[i].FilePath, line);
+                }
+            }
+
+            public static void AddParameterToGlobal(string key, string value) {
+                SetCustomFile();
+                ServiceDataType type = SupposeDataType(value);
+                var booleanVerbs = SupposeBooleanVerbs(value);
+                var line = new LineModel() {
+                    FilePath = $"{DIR}/{antdSambaFile}",
+                    Key = key,
+                    Value = value,
+                    Type = type,
+                    BooleanVerbs = booleanVerbs
+                };
+                var shares = MapFile.Get().Share;
+                var data = MapFile.Get().Data;
+                data.Add(line);
+                var samba = new SambaModel() {
+                    _Id = serviceGuid,
+                    Guid = serviceGuid,
+                    Timestamp = Timestamp.Now,
+                    Share = shares,
+                    Data = data
+                };
+                DeNSo.Session.New.Set(samba);
+            }
+
+            private static void SetCustomFile() {
+                var path = $"{DIR}/{antdSambaFile}";
+                if (!File.Exists(path)) {
+                    File.Create(path);
+                }
+            }
+
+            public static void RewriteSMBCONF() {
+                var file = $"{DIR}/{mainFile}";
+                CleanFile(file);
+                AppendLine(file, "[global]");
+                AppendLine(file, "");
+                AppendLine(file, $"{MapRules.CharComment}GLOBAL START");
+                foreach (var path in GetGlobalPaths()) {
+                    AppendLine(file, $"{MapRules.VerbInclude} {MapRules.CharKevValueSeparator} {path}");
+                }
+                AppendLine(file, $"{MapRules.CharComment}GLOBAL END");
+                AppendLine(file, "");
+                AppendLine(file, $"{MapRules.CharComment}SHARE START");
+                foreach (var path in GetSharePaths()) {
+                    AppendLine(file, $"{MapRules.VerbInclude} {MapRules.CharKevValueSeparator} {path}");
+                }
+                AppendLine(file, $"{MapRules.CharComment}SHARE END");
+            }
+
+            private static HashSet<dynamic> GetGlobalPaths() {
+                var share = MapFile.Get().Data.Select(s => s.FilePath).ToHashSet();
+                return share;
+            }
+
+            private static HashSet<dynamic> GetSharePaths() {
+                var share = MapFile.Get().Share.Select(s => s.FilePath).ToHashSet();
+                return share;
+            }
+
+            public static void AddShare(string name, string directory) {
+                SetShareFile(name);
+                var shareData = new List<LineModel>() { };
+                var defaultParameter00 = new LineModel() {
+                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    Key = "path",
+                    Value = directory,
+                    Type = ServiceDataType.String,
+                    BooleanVerbs = new KeyValuePair<string, string>("", "") 
+                };
+                shareData.Add(defaultParameter00);
+                var defaultParameter01 = new LineModel() {
+                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    Key = "browseable",
+                    Value = "yes",
+                    Type = ServiceDataType.Boolean,
+                    BooleanVerbs = new KeyValuePair<string, string>("yes", "no")
+                };
+                shareData.Add(defaultParameter01);
+                var sh = new ShareModel() {
+                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    Name = name,
+                    Data = shareData
+                };
+                var shares = MapFile.Get().Share;
+                var data = MapFile.Get().Data;
+                shares.Add(sh);
+                var samba = new SambaModel() {
+                    _Id = serviceGuid,
+                    Guid = serviceGuid,
+                    Timestamp = Timestamp.Now,
+                    Share = shares,
+                    Data = data
+                };
+                DeNSo.Session.New.Set(samba);
+            }
+
+            private static void SetShareFile(string shareName) {
+                var sharePath = $"{DIR}/share/{shareName.Replace(" ", "_")}.conf";
+                if (!File.Exists(sharePath)) {
+                    File.Create(sharePath);
                 }
             }
         }

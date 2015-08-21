@@ -76,14 +76,39 @@ namespace Antd {
                 SambaConfig.WriteFile.SaveGlobalConfig(parameters);
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.DumpGlobalConfig();
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
 
             Post["/update/sambashares"] = x => {
-                //var parameters = this.Bind<List<ServiceSamba>>();
-                //SambaConfig.WriteFile.SaveConfig(parameters);
-                //Thread.Sleep(1000);
-                //SambaConfig.WriteFile.Dump();
+                var parameters = this.Bind<List<ServiceSamba>>();
+                string file = Request.Form.ShareFile;
+                string name = Request.Form.ShareName;
+                string query = Request.Form.ShareQueryName;
+                SambaConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.DumpShare(name);
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addparam"] = x => {
+                string key = Request.Form.NewParameterKey;
+                string value = Request.Form.NewParameterValue;
+                SambaConfig.WriteFile.AddParameterToGlobal(key, value);
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addshare"] = x => {
+                string name = Request.Form.NewShareName;
+                string directory = Request.Form.NewShareDirectory;
+                SambaConfig.WriteFile.AddShare(name, directory);
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
         }
