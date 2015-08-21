@@ -184,6 +184,7 @@
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Storage\Volumes.cs" />
+    <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
     <Compile Include="Svcs\Samba\SambaCongif.cs" />
     <Compile Include="SystemConfig\General.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
@@ -202,6 +203,15 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Svcs\Samba\json-schema1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Svcs\Samba\samba.command.list">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Svcs\Samba\samba.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Svcs\Bind\" />
@@ -230,6 +240,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

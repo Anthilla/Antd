@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace antdlib {
 
@@ -139,6 +140,42 @@ namespace antdlib {
             char[] chars = new char[bytes.Length / sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, char end) {
+            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            MatchCollection matches = r.Matches(input);
+            foreach (Match match in matches) {
+                yield return match.Groups[1].Value;
+            }
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, string end) {
+            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            MatchCollection matches = r.Matches(input);
+            foreach (Match match in matches) {
+                yield return match.Groups[1].Value;
+            }
+        }
+
+        public static string RemoveTextBetween(this string input, char start, char end) {
+            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            MatchCollection matches = r.Matches(input);
+            string output = "";
+            foreach (Match match in matches) {
+                output = input.Replace(match.Groups[1].Value, "");
+            }
+            return output;
+        }
+
+        public static string RemoveTextBetween(this string input, string start, string end) {
+            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            MatchCollection matches = r.Matches(input);
+            string output = "";
+            foreach (Match match in matches) {
+                output = input.Replace(match.Groups[1].Value, "");
+            }
+            return output;
         }
     }
 }

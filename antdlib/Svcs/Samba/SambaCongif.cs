@@ -1,6 +1,4 @@
-﻿
-using antdlib.MountPoint;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -29,12 +27,11 @@ using antdlib.MountPoint;
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib.MountPoint;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace antdlib.Svcs.Samba {
     public class SambaConfig {
@@ -73,8 +70,14 @@ namespace antdlib.Svcs.Samba {
             public ServiceDataType Type { get; set; }
 
             public KeyValuePair<string, string> BooleanVerbs { get; set; }
+        }
 
-            public bool IsShare { get; set; }
+        public class ShareModel {
+            public string FilePath { get; set; }
+
+            public string Name { get; set; }
+
+            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
         }
 
         public class SambaModel {
@@ -85,30 +88,51 @@ namespace antdlib.Svcs.Samba {
             public string Timestamp { get; set; }
 
             public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+
+            public List<ShareModel> Share { get; set; } = new List<ShareModel>() { };
         }
 
         public class MapFile {
 
             private static string CleanText(string text) {
-                var clean = text.Replace("\t", " ");
+                var clean = text/*.Replace("\t", " ")*//*.RemoveTextBetween(MapRules.CharComment, MapRules.CharEndOfLine)*/;
                 return clean;
             }
 
             private static IEnumerable<LineModel> ReadFile(string path) {
                 var text = FileSystem.ReadFile(path);
                 var cleanText = CleanText(text);
-                var lines = text.Split(MapRules.CharEndOfLine);
+                var lines = cleanText.Split(MapRules.CharEndOfLine);
+                var list = new List<LineModel>() { };
                 foreach (var line in lines) {
-                    if (line != "") {
-                        yield return ReadLine(path, line);
+                    if (line != "" && !line.StartsWith("include")) {
+                        list.Add(ReadLine(path, line));
+                        //yield return ReadLine(path, line);
                     }
                 }
+                return list;
+            }
+
+            private static ShareModel ReadFileShare(string path) {
+                var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
+                var model = new ShareModel() {
+                    FilePath = path,
+                    Name = shareName
+                };
+                foreach (var data in ReadFile(path)) {
+                    model.Data.Add(data);
+                }
+                return model;
+            }
+
+            private static string GetShareName(string path) {
+                var text = FileSystem.ReadFile(path);
+                return text.SplitAndGetTextBetween(MapRules.CharSectionOpen, MapRules.CharSectionClose).FirstOrDefault();
             }
 
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var isShare = false;
                 var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
@@ -116,15 +140,14 @@ namespace antdlib.Svcs.Samba {
                 }
                 else if (line.StartsWith(MapRules.CharSectionOpen.ToString())) {
                     type = ServiceDataType.Disabled;
-                    isShare = true;
                 }
                 else {
-                    type = SupposeDataType(value);
                     value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    type = SupposeDataType(value.Trim());
                 }
                 KeyValuePair<string, string> booleanVerbs;
                 if (type == ServiceDataType.Boolean) {
-                    booleanVerbs = SupposeBooleanVerbs(value);
+                    booleanVerbs = SupposeBooleanVerbs(value.Trim());
                 }
                 else {
                     booleanVerbs = new KeyValuePair<string, string>("", "");
@@ -134,8 +157,7 @@ namespace antdlib.Svcs.Samba {
                     Key = key.Trim(),
                     Value = value.Trim(),
                     Type = type,
-                    BooleanVerbs = booleanVerbs,
-                    IsShare = isShare
+                    BooleanVerbs = booleanVerbs
                 };
                 return model;
             }
@@ -147,9 +169,9 @@ namespace antdlib.Svcs.Samba {
                     value == "no" || value == "No") {
                     return ServiceDataType.Boolean;
                 }
-                else if (value.Length > 5 && value.Contains(",")) {
-                    return ServiceDataType.StringArray;
-                }
+                //else if (value.Length > 5 && value.Contains(",")) {
+                //    return ServiceDataType.StringArray;
+                //}
                 else {
                     return ServiceDataType.String;
                 }
@@ -173,44 +195,33 @@ namespace antdlib.Svcs.Samba {
                 }
             }
 
-            private static void Create() {
+            public static void Render() {
+                var shares = new List<ShareModel>() { };
+                var data = new List<LineModel>() { };
+                foreach (var file in SimpleStructure) {
+                    if (file.Contains("/share/")) {
+                        shares.Add(ReadFileShare(file));
+                    }
+                    else {
+                        var lines = ReadFile(file);
+                        foreach (var line in lines) {
+                            data.Add(line);
+                        }
+                    }
+                }
                 var samba = new SambaModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
-                    Timestamp = Timestamp.Now
+                    Timestamp = Timestamp.Now,
+                    Share = shares,
+                    Data = data
                 };
                 DeNSo.Session.New.Set(samba);
             }
 
-            private static void AddLines(string path) {
-                var samba = DeNSo.Session.New.Get<SambaModel>(s => s.Guid == serviceGuid).FirstOrDefault();
-                samba.Timestamp = Timestamp.Now;
-                foreach (var data in ReadFile(path)) {
-                    samba.Data.Add(data);
-                }
-                DeNSo.Session.New.Set(samba);
-            }
-
-            private static void FlushData() {
-                var samba = DeNSo.Session.New.Get<SambaModel>(s => s.Guid == serviceGuid).FirstOrDefault();
-                samba.Timestamp = Timestamp.Now;
-                samba.Data = new List<LineModel>() { };
-                DeNSo.Session.New.Set(samba);
-            }
-
-            public static void Render() {
-                if (DeNSo.Session.New.Get<SambaModel>(s => s.Guid == serviceGuid).FirstOrDefault() == null) {
-                    Create();
-                }
-                FlushData();
-
-                foreach (var file in SimpleStructure) {
-                    AddLines(file);
-                }
-            }
-
             public static SambaModel Get() {
-                return DeNSo.Session.New.Get<SambaModel>(s => s.Guid == serviceGuid).FirstOrDefault();
+                var samba = DeNSo.Session.New.Get<SambaModel>(s => s.Guid == serviceGuid).FirstOrDefault();
+                return samba;
             }
         }
 

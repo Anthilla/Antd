@@ -8,37 +8,117 @@
         <i id="RefreshSamba" class="icon-redo fg-anthilla-blu" style="float:right; cursor: pointer; margin: auto 10px;"></i>
     }
 </legend>
-@if (antdlib.Svcs.Samba.SambaConfig.IsActive == true) {
-    <table class="table">
-        <thead id="SambaStructure" style="display: none;">
-            <tr>
-                <td colspan="3">
-                    <ul class="fg-white" style="list-style: none;">
-                        <li><label>Service Structure</label></li>
-                        @foreach (KeyValuePair<string, List<string>> directory in antdlib.Svcs.Samba.SambaConfig.Structure) {
-                            <li>@directory.Key</li>
-                            <li>
-                                <ul class="fg-grayLight" style="list-style: none;">
-                                    @foreach (string included in directory.Value) {
-                                        <li>@included.ToString()</li>
+@if (antdlib.Svcs.Samba.SambaConfig.IsActive == true && antdlib.Svcs.Samba.SambaConfig.MapFile.Get() != null) {
+
+    <div data-role="tab-control" class="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#samba_global">Global</a></li>
+            <li><a href="#samba_share">Share</a></li>
+        </ul>
+
+        <div class="frames">
+            <div id="samba_global" class="frame" style="display: block;">
+                <input type="text" class="search-field" data-table="SambaSearch" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+                <table class="table" data-search="SambaSearch">
+                    <thead id="SambaStructure" style="display: none;">
+                        <tr>
+                            <td colspan="3">
+                                <ul class="fg-white" style="list-style: none;">
+                                    <li><label>Service Structure</label></li>
+                                    @foreach (KeyValuePair<string, List<string>> directory in antdlib.Svcs.Samba.SambaConfig.Structure) {
+                                        <li>@directory.Key</li>
+                                        <li>
+                                            <ul class="fg-grayLight" style="list-style: none;">
+                                                @foreach (string included in directory.Value) {
+                                                    <li>@included.ToString()</li>
+                                                }
+                                            </ul>
+                                        </li>
                                     }
                                 </ul>
-                            </li>
-                        }
-                    </ul>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            @if (antdlib.Svcs.Samba.SambaConfig.MapFile.Get() != null) {
-                @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Data) {
-                    if (data.Type != antdlib.ServiceDataType.Disabled) {
-                        <tr>
-                            <td>@data.Key <i class="icon-arrow-right-5 on-left on-right"></i> @data.Value</td>
+                            </td>
                         </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Data) {
+                            if (data.Type != antdlib.ServiceDataType.Disabled) {
+                                @SambaDisplayData(data.Type, data.Key, data.Value, data.FilePath, data.BooleanVerbs)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="samba_share" class="frame" style="display: none;">
+                <table class="table">
+                    <tbody>
+                        @foreach (antdlib.Svcs.Samba.SambaConfig.ShareModel share in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Share) {
+                            <tr>
+                                <td colspan="3">@share.Name</td>
+                            </tr>
+                            @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in share.Data) {
+                                if (data.Type != antdlib.ServiceDataType.Disabled) {
+                                    @SambaDisplayShareData(data.Type, data.Key, data.Value, data.FilePath, share.Name, data.BooleanVerbs)
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+}
+
+@helper SambaDisplayData(antdlib.ServiceDataType type, string key, string value, string filePath, KeyValuePair<string, string> verbs) {
+    <tr data-file="@filePath">
+        @if (type == antdlib.ServiceDataType.String || type == antdlib.ServiceDataType.StringArray) {
+        <td style="width: 33%;">@key</td>
+        <td>
+            <input type="text" value="@value" style="width: 90%;" />
+        </td>
+        }
+        else if (type == antdlib.ServiceDataType.Boolean) {
+        <td style="width: 33%;">@key</td>
+        <td>
+            <select>
+                @if (value == verbs.Key) {
+                    <option value="@verbs.Key" selected>@verbs.Key</option>
+                    <option value="@verbs.Value">@verbs.Value</option>
                     }
-                }
-            }
-        </tbody>
-    </table>
+                    else {
+                    <option value="@verbs.Key">@verbs.Key</option>
+                    <option value="@verbs.Value" selected>@verbs.Value</option>
+                    }
+            </select>
+        </td>
+        }
+    </tr>
+}
+
+@helper SambaDisplayShareData(antdlib.ServiceDataType type, string key, string value, string filePath, string shareName, KeyValuePair<string, string> verbs) {
+    <tr data-file="@filePath" data-share="@shareName">
+        @if (type == antdlib.ServiceDataType.String || type == antdlib.ServiceDataType.StringArray) {
+            <td class="bg-anthilla-gray-m" style="border-right: 4px solid #3A3A3A;"></td>
+            <td style="width: 33%;">@key</td>
+            <td>
+                <input type="text" value="@value" style="width: 90%;" />
+            </td>
+        }
+        else if (type == antdlib.ServiceDataType.Boolean) {
+            <td class="bg-anthilla-gray-m" style="border-right: 4px solid #3A3A3A;"></td>
+            <td style="width: 33%;">@key</td>
+            <td>
+                <select>
+                    @if (value == verbs.Key) {
+                        <option value="@verbs.Key" selected>@verbs.Key</option>
+                        <option value="@verbs.Value">@verbs.Value</option>
+                    }
+                    else {
+                        <option value="@verbs.Key">@verbs.Key</option>
+                        <option value="@verbs.Value" selected>@verbs.Value</option>
+                    }
+                </select>
+            </td>
+        }
+    </tr>
 }

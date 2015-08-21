@@ -34,6 +34,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using antdlib.CCTable;
 using antdlib;
+using Newtonsoft.Json;
+using antdlib.Svcs.Samba;
 
 namespace Antd {
     public class TMP {
@@ -73,14 +75,28 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Get["/split"] = x => {
-                var input = FileSystem.ReadFile("/etc/sambaGlobal.conf");
-                var start = ";";
-                var end = "\n";
-                var obbb = input.SplitAndGetTextBetween(start, end);
-                foreach (var vars in obbb) {
-                    Console.WriteLine(vars);
-                }
+            Get["/cmdsamba"] = x => {
+                var text = FileSystem.ReadFile(@"D:\Projects\Antd\Antd\bin\Debug\Svcs\Samba\samba.json");
+                Console.WriteLine(text);
+                var des = JsonConvert.DeserializeObject<List<SambaCommandModel>>(text);
+                Console.WriteLine(des);
+                var lis = new List<SambaCommandModel>(){ };
+                var m = new SambaCommandModel() {
+                    command= "command",
+                    description= "ssss",
+                    type="asdasda",
+                    synonyms = "sadasdas"
+                };
+                var m22 = new SambaCommandModel() {
+                    command = "command",
+                    description = "ssss",
+                    type = "asdasda",
+                    synonyms = "sadasdas"
+                };
+                lis.Add(m);
+                lis.Add(m22);
+                var models = JsonConvert.SerializeObject(lis);
+                Console.WriteLine(models);
                 return View["page-test"];
             };
         }
