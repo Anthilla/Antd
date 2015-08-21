@@ -185,7 +185,7 @@
     <Compile Include="Status\Uptime.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
-    <Compile Include="Svcs\Samba\SambaCongif.cs" />
+    <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="SystemConfig\General.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\UnitRepo.cs" />
@@ -195,6 +195,7 @@
     <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserModel.cs" />
+    <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
   </ItemGroup>
   <ItemGroup>

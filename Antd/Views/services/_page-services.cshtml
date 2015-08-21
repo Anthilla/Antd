@@ -88,10 +88,32 @@
             });
         });
 
+        $('#ReloadSamba').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/reloadconfig/samba',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
         $('#ShowSambaStructure').mousedown(function () {
             $('#SambaStructure').show();
         }).mouseup(function () {
             $('#SambaStructure').hide();
         });;
+
+        $(document).ready(function () {
+            $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
     </script>
 }

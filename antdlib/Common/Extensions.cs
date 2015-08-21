@@ -177,5 +177,13 @@ namespace antdlib {
             }
             return output;
         }
+
+        public static HashSet<dynamic> ToHashSet(this IEnumerable<dynamic> input) {
+            var list = new HashSet<dynamic>() { };
+            foreach(var i in input) {
+                list.Add(i);
+            }
+            return list;
+        }
     }
 }

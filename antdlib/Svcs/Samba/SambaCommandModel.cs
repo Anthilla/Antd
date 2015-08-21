@@ -34,6 +34,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace antdlib.Svcs.Samba {
+    /// <summary>
+    /// JsonConvert.Deserialize lista dei comandi in questo modello
+    /// </summary>
     public class SambaCommandModel {
 
         public string command  { get; set; }

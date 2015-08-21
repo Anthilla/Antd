@@ -29,9 +29,15 @@
 
 using antdlib.CCTable;
 using antdlib.Svcs.Samba;
+using antlib.ViewBinds;
 using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Security;
+using System;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using System.Threading;
 
 namespace Antd {
 
@@ -43,9 +49,9 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.CurrentContext = Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-services", vmod];
             };
 
@@ -58,6 +64,27 @@ namespace Antd {
             Post["/refresh/samba"] = x => {
                 SambaConfig.MapFile.Render();
                 return Response.AsJson(true);
+            };
+
+            Post["/reloadconfig/samba"] = x => {
+                SambaConfig.ReloadConfig();
+                return Response.AsJson(true);
+            };
+
+            Post["/update/samba"] = x => {
+                var parameters = this.Bind<List<ServiceSamba>>();
+                SambaConfig.WriteFile.SaveGlobalConfig(parameters);
+                Thread.Sleep(1000);
+                SambaConfig.WriteFile.DumpGlobalConfig();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/update/sambashares"] = x => {
+                //var parameters = this.Bind<List<ServiceSamba>>();
+                //SambaConfig.WriteFile.SaveConfig(parameters);
+                //Thread.Sleep(1000);
+                //SambaConfig.WriteFile.Dump();
+                return Response.AsRedirect("/services");
             };
         }
     }

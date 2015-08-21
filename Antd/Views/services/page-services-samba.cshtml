@@ -19,41 +19,63 @@
         <div class="frames">
             <div id="samba_global" class="frame" style="display: block;">
                 <input type="text" class="search-field" data-table="SambaSearch" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
-                <table class="table" data-search="SambaSearch">
-                    <thead id="SambaStructure" style="display: none;">
-                        <tr>
-                            <td colspan="3">
-                                <ul class="fg-white" style="list-style: none;">
-                                    <li><label>Service Structure</label></li>
-                                    @foreach (KeyValuePair<string, List<string>> directory in antdlib.Svcs.Samba.SambaConfig.Structure) {
-                                        <li>@directory.Key</li>
-                                        <li>
-                                            <ul class="fg-grayLight" style="list-style: none;">
-                                                @foreach (string included in directory.Value) {
-                                                    <li>@included.ToString()</li>
-                                                }
-                                            </ul>
-                                        </li>
-                                    }
-                                </ul>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Data) {
-                            if (data.Type != antdlib.ServiceDataType.Disabled) {
-                                @SambaDisplayData(data.Type, data.Key, data.Value, data.FilePath, data.BooleanVerbs)
+                <form action="/services/update/samba" id="SambaForm" method="POST" enctype="multipart/form-data">
+                    <table class="table" data-search="SambaSearch">
+                        <thead id="SambaStructure" style="display: none;">
+                            <tr>
+                                <td colspan="3">
+                                    <ul class="fg-white" style="list-style: none;">
+                                        <li><label>Service Structure</label></li>
+                                        @foreach (KeyValuePair<string, List<string>> directory in antdlib.Svcs.Samba.SambaConfig.Structure) {
+                                            <li>
+                                                @directory.Key
+                                            </li>
+                                            <li>
+                                                <ul class="fg-grayLight" style="list-style: none;">
+                                                    @foreach (string included in directory.Value) {
+                                                        <li>
+                                                            @included
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <input type="submit" value="Update Global Configuration" class="bg-anthilla-blu" />
+                                    <input id="ReloadSamba" type="button" value="Reload Global Configuration" class="bg-anthilla-blu" />
+                                </td>
+                            </tr>
+                            @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Data) {
+                                if (data.Type != antdlib.ServiceDataType.Disabled) {
+                                    @SambaDisplayData(data.Type, data.Key, data.Value, data.FilePath, data.BooleanVerbs)
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
             </div>
             <div id="samba_share" class="frame" style="display: none;">
-                <table class="table">
+                <input type="text" class="search-field" data-table="SambaShareSearch" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+                <table class="table" data-search="SambaShareSearch">
                     <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <input type="submit" value="Update Share Configuration" class="bg-anthilla-blu" />
+                                <input id="ReloadSambaShares" type="button" value="Reload Share Configuration" class="bg-anthilla-blu" />
+                            </td>
+                        </tr>
                         @foreach (antdlib.Svcs.Samba.SambaConfig.ShareModel share in antdlib.Svcs.Samba.SambaConfig.MapFile.Get().Share) {
                             <tr>
-                                <td colspan="3">@share.Name</td>
+                                <td colspan="3">
+                                    <input name="ShareName" type="text" value="@share.Name" />
+                                    <input name="DatabaseShareName" type="hidden" value="@share.Name" />
+                                </td>
                             </tr>
                             @foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in share.Data) {
                                 if (data.Type != antdlib.ServiceDataType.Disabled) {
@@ -63,34 +85,36 @@
                         }
                     </tbody>
                 </table>
-
             </div>
         </div>
     </div>
 }
 
 @helper SambaDisplayData(antdlib.ServiceDataType type, string key, string value, string filePath, KeyValuePair<string, string> verbs) {
-    <tr data-file="@filePath">
-        @if (type == antdlib.ServiceDataType.String || type == antdlib.ServiceDataType.StringArray) {
-        <td style="width: 33%;">@key</td>
-        <td>
-            <input type="text" value="@value" style="width: 90%;" />
+    <tr data-file="@filePath" data-object="samba-parameter">
+        <td style="width: 33%;">
+            @key
+            <input name="DataKey" type="hidden" value="@key" />
+            <input name="DataFilePath" type="hidden" value="@filePath" />
         </td>
+        @if (type == antdlib.ServiceDataType.String || type == antdlib.ServiceDataType.StringArray) {
+            <td>
+                <input name="DataValue" type="text" value="@value" style="width: 90%;" />
+            </td>
         }
         else if (type == antdlib.ServiceDataType.Boolean) {
-        <td style="width: 33%;">@key</td>
-        <td>
-            <select>
-                @if (value == verbs.Key) {
-                    <option value="@verbs.Key" selected>@verbs.Key</option>
-                    <option value="@verbs.Value">@verbs.Value</option>
+            <td>
+                <select name="DataValue">
+                    @if (value == verbs.Key) {
+                        <option value="@verbs.Key" selected>@verbs.Key</option>
+                        <option value="@verbs.Value">@verbs.Value</option>
                     }
                     else {
-                    <option value="@verbs.Key">@verbs.Key</option>
-                    <option value="@verbs.Value" selected>@verbs.Value</option>
+                        <option value="@verbs.Key">@verbs.Key</option>
+                        <option value="@verbs.Value" selected>@verbs.Value</option>
                     }
-            </select>
-        </td>
+                </select>
+            </td>
         }
     </tr>
 }

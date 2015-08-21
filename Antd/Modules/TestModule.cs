@@ -36,6 +36,7 @@ using antdlib.CCTable;
 using antdlib;
 using Newtonsoft.Json;
 using antdlib.Svcs.Samba;
+using System.IO;
 
 namespace Antd {
     public class TMP {
