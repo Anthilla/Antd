@@ -78,46 +78,6 @@ namespace antdlib.Svcs.Bind {
             Terminal.Execute($"");
         }
 
-        private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
-            var list = new List<KeyValuePair<string, List<string>>>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    var dump = new List<string>() { };
-                    foreach (var line in lines) {
-                        dump.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                    list.Add(new KeyValuePair<string, List<string>>(files[i].Replace("\\", "/"), dump));
-                }
-            }
-            if (list.Count() < 1) {
-                list.Add(new KeyValuePair<string, List<string>>($"{DIR}/{mainFile}", new List<string>() { }));
-            }
-            return list;
-        }
-
-        public static List<KeyValuePair<string, List<string>>> Structure { get { return GetServiceStructure(); } }
-
-        //private static List<string> GetServiceSimpleStructure() {
-        //    var list = new List<string>() { };
-        //    var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-        //    for (int i = 0; i < files.Length; i++) {
-        //        if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-        //            var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-        //            foreach (var line in lines) {
-        //                list.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-        //            }
-        //        }
-        //    }
-        //    if (list.Count() < 1) {
-        //        list.Add($"{DIR}/{mainFile}");
-        //    }
-        //    return list;
-        //}
-
-        //public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
-
         public class MapRules {
             public static char CharCommentConf { get { return '#'; } }
 
@@ -201,56 +161,6 @@ namespace antdlib.Svcs.Bind {
                 return clean;
             }
 
-            private static IEnumerable<LineModel> ReadFile(string path) {
-                var text = FileSystem.ReadFile(path);
-                var lines = text.Split(MapRules.CharEndOfLine);
-                var list = new List<LineModel>() { };
-                foreach (var line in lines) {
-                    if (line != "" && !line.StartsWith("include")) {
-                        var cleanLine = CleanLine(line);
-                        list.Add(ReadLine(path, cleanLine));
-                    }
-                }
-                return list;
-            }
-
-            private static string GetShareName(string path) {
-                var text = FileSystem.ReadFile(path);
-                return text.SplitAndGetTextBetween(MapRules.CharSectionOpen, MapRules.CharSectionClose).FirstOrDefault();
-            }
-
-            private static LineModel ReadLine(string path, string line) {
-                var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
-                var value = "";
-                if (line.StartsWith(MapRules.CharCommentConf.ToString())) {
-                    type = ServiceDataType.Disabled;
-                }
-                else if (line.StartsWith(MapRules.CharSectionOpen.ToString())) {
-                    type = ServiceDataType.Disabled;
-                }
-                else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
-                    type = SupposeDataType(value.Trim());
-                }
-                KeyValuePair<string, string> booleanVerbs;
-                if (type == ServiceDataType.Boolean) {
-                    booleanVerbs = SupposeBooleanVerbs(value.Trim());
-                }
-                else {
-                    booleanVerbs = new KeyValuePair<string, string>("", "");
-                }
-                var model = new LineModel() {
-                    FilePath = path,
-                    Key = key.Trim(),
-                    Value = value.Trim(),
-                    Type = type,
-                    BooleanVerbs = booleanVerbs
-                };
-                return model;
-            }
-
             private static ServiceDataType SupposeDataType(string value) {
                 if (value == "true" || value == "True" ||
                     value == "false" || value == "False" ||
@@ -290,9 +200,46 @@ namespace antdlib.Svcs.Bind {
                 File.WriteAllText(path, text);
             }
 
-            private static void PrependLine(string path, string[] line) {
-                var lines = File.ReadAllLines(path);
-                File.WriteAllLines(path, line.Concat(lines).ToArray());
+            //private static void PrependLine(string path, string[] line) {
+            //    var lines = File.ReadAllLines(path);
+            //    File.WriteAllLines(path, line.Concat(lines).ToArray());
+            //}
+
+            private static IEnumerable<LineModel> ReadLines(string path, string text) {
+                var list = new List<LineModel>();
+                var splitLines = text.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (int i = 0; i < splitLines.Length; i++) {
+                    var keyValuePair = splitLines[i].Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    ServiceDataType type;
+                    var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                    var value = "";
+                    if (splitLines[i].StartsWith(MapRules.CharCommentConf.ToString())) {
+                        type = ServiceDataType.Disabled;
+                    }
+                    else if (splitLines[i].StartsWith(MapRules.CharSectionOpen.ToString())) {
+                        type = ServiceDataType.Disabled;
+                    }
+                    else {
+                        value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                        type = SupposeDataType(value.Trim());
+                    }
+                    KeyValuePair<string, string> booleanVerbs;
+                    if (type == ServiceDataType.Boolean) {
+                        booleanVerbs = SupposeBooleanVerbs(value.Trim());
+                    }
+                    else {
+                        booleanVerbs = new KeyValuePair<string, string>("", "");
+                    }
+                    var model = new LineModel() {
+                        FilePath = path,
+                        Key = key.Trim(),
+                        Value = value.Trim(),
+                        Type = type,
+                        BooleanVerbs = booleanVerbs
+                    };
+                    list.Add(model);
+                }
+                return list;
             }
 
             public static void Render() {
@@ -315,10 +262,8 @@ namespace antdlib.Svcs.Bind {
                                         (?(Level)(?!))        # zero-width negative lookahead assertion
                                         \}                    # Match )",
                     RegexOptions.IgnorePatternWhitespace);
-
                 var matches = regex.Matches(input);
                 var optionsName = new List<string>() { };
-
                 for (int i = 0; i < matches.Count; i++) {
                     var current = matches[i].Value;
                     int f = ((i - 1) < 0) ? 0 : i - 1;
@@ -326,20 +271,20 @@ namespace antdlib.Svcs.Bind {
                     var currentSplit = input.Split(new String[] { current }, StringSplitOptions.None).ToArray();
                     var prevSplit = currentSplit[0].Split(new String[] { prev }, StringSplitOptions.None).ToArray();
                     var name = (prevSplit.Length > 1) ? prevSplit[1] : prevSplit[0];
+                    var data = ReadLines(path, matches[i].Value);
                     var option = new OptionModel() {
                         FilePath = path,
                         Name = name.Replace(";", "").Replace("\n", "").Trim(),
-                        StringDefinition = matches[i].Value
-                        //read data :D
+                        StringDefinition = matches[i].Value,
+                        Data = data.ToList()
                     };
                     options.Add(option);
                 }
-
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    Options = options.ToList(),
+                    Options = options,
                     Includes = includes
                 };
                 DeNSo.Session.New.Set(bind);

@@ -22,13 +22,26 @@
     </form>
 }
 
-@helper BindDisplayOption(string name, string definition, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> data) {
+@helper BindDisplayOption(string name, string definition, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> options) {
     <tr data-file="@filePath" data-object="bind-parameter">
-        <td style="width: 25%;">
+        <td style="width: 25%;" colspan="2">
             @name
             <input name="DataOptionName" type="hidden" value="@name" />
             <input name="DataOptionFilePath" type="hidden" value="@filePath" />
         </td>
-        <td>@definition</td>
+        <td>@*@definition*@</td>
     </tr>
+foreach (antdlib.Svcs.Bind.BindConfig.LineModel option in options) {
+        <tr data-file="@filePath" data-object="bind-parameter">
+            <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A;"></td>
+            <td style="width: 25%;">
+                @option.Key
+                <input name="DataOptionName" type="hidden" value="@option.Key" />
+                <input name="DataOptionFilePath" type="hidden" value="@filePath" />
+            </td>
+            <td style="width: 25%;">
+                @option.Value
+            </td>
+        </tr>
+}
 }
