@@ -324,8 +324,7 @@ namespace antdlib.Svcs.Bind {
                     int f = ((i - 1) < 0) ? 0 : i - 1;
                     var prev = matches[f].Value;
                     var currentSplit = input.Split(new String[] { current }, StringSplitOptions.None).ToArray();
-                    int secondSplit = (currentSplit.Length > 2) ? currentSplit.Length - 1 : 0;
-                    var prevSplit = currentSplit[secondSplit].Split(new String[] { prev }, StringSplitOptions.None).ToArray();
+                    var prevSplit = currentSplit[0].Split(new String[] { prev }, StringSplitOptions.None).ToArray();
                     var name = (prevSplit.Length > 1) ? prevSplit[1] : prevSplit[0];
                     var option = new OptionModel() {
                         FilePath = path,
@@ -335,22 +334,6 @@ namespace antdlib.Svcs.Bind {
                     };
                     options.Add(option);
                 }
-                //var lines = File.ReadAllLines(path).Where(l => !l.Trim().StartsWith(MapRules.CharCommentConf.ToString()) && !l.StartsWith(MapRules.VerbIncludeZone));
-                //foreach (var line in lines) {
-                //    if (line.Trim().StartsWith(MapRules.VerbInclude)) {
-                //        includes.Add(line);
-                //    }
-                //    else if (line.Trim().EndsWith(MapRules.CharBlockOpen.ToString())) {
-                //        var l = line.Replace(MapRules.CharBlockOpen.ToString(), "");
-                //        var arr = l.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                //        var option = new OptionModel() {
-                //            FilePath = path,
-                //            Name = arr[0]
-                //            //read data :D
-                //        };
-                //        options.Add(option);
-                //    }
-                //}
 
                 var bind = new BindModel() {
                     _Id = serviceGuid,
