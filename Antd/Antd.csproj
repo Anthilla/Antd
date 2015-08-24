@@ -259,7 +259,7 @@
     <None Include="Views\services\page-services-systemd-journald.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\services\page-services-systemd-hostmanectl.cshtml">
+    <None Include="Views\services\page-services-systemd-hostnamectl.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\services\page-services-syslogng.cshtml">

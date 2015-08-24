@@ -28,7 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.MountPoint;
-using antlib.ViewBinds;
+using antdlib.ViewBinds;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +37,7 @@ using System.Linq;
 namespace antdlib.Svcs.Samba {
     public class SambaConfig {
 
-        private static string serviceGuid = "65754563-A529-4017-A7AF-AB2A6B64F56A";
+        private static string serviceGuid = "61ED9A36-0D50-4BAE-9434-96E3078657FF";
 
         private static string dir = "/etc/samba";
 

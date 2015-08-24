@@ -27,8 +27,144 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-namespace antlib.ViewBinds {
+namespace antdlib.ViewBinds {
     public class ServiceSamba {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceBind {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceDhcp {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceGlusterfs {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceLibvirt {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceLxc {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceNfs {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceNftable {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceNginx {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceNtpd {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceQemu {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceSquid {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceSsh {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceSyslogng {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceHostnamectl {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceJournald {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceNetworkd {
+        public string DataKey { get; set; }
+
+        public string DataValue { get; set; }
+
+        public string DataFilePath { get; set; }
+    }
+
+    public class ServiceZfs {
         public string DataKey { get; set; }
 
         public string DataValue { get; set; }
