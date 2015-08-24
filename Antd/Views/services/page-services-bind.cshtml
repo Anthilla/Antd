@@ -1,1 +1,38 @@
-﻿<legend id="Bind">Bind</legend>
+﻿<legend id="Bind">
+    Bind
+    @if (antdlib.Svcs.Bind.BindConfig.IsActive == false) {
+        <i id="ActivateBind" class="icon-upload fg-anthilla-orange" style="float:right; cursor: pointer;"></i>
+    }
+    else {
+        <i id="RefreshBind" class="icon-redo fg-anthilla-blu" style="float:right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReloadBind" class="icon-cycle fg-lightGreen" style="float:right; cursor: pointer; margin: auto 10px;"></i>
+    }
+</legend>
+
+@if (antdlib.Svcs.Bind.BindConfig.IsActive == true && antdlib.Svcs.Bind.BindConfig.MapFile.Get() != null) {
+
+    <form action="/services/update/bind" id="BindForm" method="POST" enctype="multipart/form-data">
+        <table class="table" data-search="BindSearch">
+            <tbody>
+                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().Options) {
+                    @BindDisplayOption(option.Type, option.Name, option.FilePath, option.Data)
+                }
+            </tbody>
+        </table>
+    </form>
+}
+
+@helper BindDisplayOption(string type, string name, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> data) {
+    <tr data-file="@filePath" data-object="bind-parameter">
+        <td style="width: 16%;">
+            @type
+        </td>
+        <td style="width: 16%;">
+            @name
+            <input name="DataOptionType" type="hidden" value="@type" />
+            <input name="DataOptionName" type="hidden" value="@name" />
+            <input name="DataOptionFilePath" type="hidden" value="@filePath" />
+        </td>
+        <td></td>
+    </tr>
+}

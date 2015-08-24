@@ -43,7 +43,17 @@ namespace antdlib.Svcs.Bind {
 
         private static string DIR = Mount.SetDIRSPath(dir);
 
-        private static string mainFile = "smb.conf";
+        private static string dyn = "/etc/bind/dyn";
+
+        private static string DYN = Mount.SetDIRSPath(dyn);
+
+        private static string master = "/etc/bind/master";
+
+        private static string MASTER = Mount.SetDIRSPath(master);
+
+        private static string mainFile = "named.conf";
+
+        private static string mainFileRndc = "rndc.conf";
 
         private static string antdBindFile = "antd.bind.conf";
 
@@ -60,8 +70,11 @@ namespace antdlib.Svcs.Bind {
 
         public static bool IsActive { get { return CheckIsActive(); } }
 
+        /// <summary>
+        /// todo cambiare comando
+        /// </summary>
         public static void ReloadConfig() {
-            Terminal.Execute($"smbcontrol all reload-config");
+            Terminal.Execute($"");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
@@ -85,31 +98,41 @@ namespace antdlib.Svcs.Bind {
 
         public static List<KeyValuePair<string, List<string>>> Structure { get { return GetServiceStructure(); } }
 
-        private static List<string> GetServiceSimpleStructure() {
-            var list = new List<string>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    foreach (var line in lines) {
-                        list.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                }
-            }
-            if (list.Count() < 1) {
-                list.Add($"{DIR}/{mainFile}");
-            }
-            return list;
-        }
+        //private static List<string> GetServiceSimpleStructure() {
+        //    var list = new List<string>() { };
+        //    var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
+        //    for (int i = 0; i < files.Length; i++) {
+        //        if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
+        //            var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
+        //            foreach (var line in lines) {
+        //                list.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
+        //            }
+        //        }
+        //    }
+        //    if (list.Count() < 1) {
+        //        list.Add($"{DIR}/{mainFile}");
+        //    }
+        //    return list;
+        //}
 
-        public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
+        //public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
 
         public class MapRules {
-            public static char CharComment { get { return ';'; } }
+            public static char CharCommentConf { get { return '#'; } }
+
+            public static string CharCommentConfAlt { get { return "//"; } }
+
+            public static char CharCommentZone { get { return ';'; } }
 
             public static string VerbInclude { get { return "include"; } }
 
-            public static char CharKevValueSeparator { get { return '='; } }
+            public static string VerbIncludeZone { get { return "zone"; } }
+
+            public static char CharOrigin { get { return '$'; } }
+
+            public static string VerbOrigin { get { return "$ORIGIN"; } }
+
+            public static char CharKevValueSeparator { get { return ' '; } }
 
             public static char CharValueArraySeparator { get { return ','; } }
 
@@ -118,6 +141,17 @@ namespace antdlib.Svcs.Bind {
             public static char CharSectionOpen { get { return '['; } }
 
             public static char CharSectionClose { get { return ']'; } }
+
+            public static char CharBlockOpen { get { return '{'; } }
+
+            public static char CharBlockClose { get { return '}'; } }
+
+            public static char CharZoneOpen { get { return '('; } }
+
+            public static char CharZoneClose { get { return ')'; } }
+
+            public static char CharEndOfLineValue { get { return ';'; } }
+
         }
 
         public class LineModel {
@@ -132,8 +166,10 @@ namespace antdlib.Svcs.Bind {
             public KeyValuePair<string, string> BooleanVerbs { get; set; }
         }
 
-        public class ShareModel {
+        public class OptionModel {
             public string FilePath { get; set; }
+
+            public string Type { get; set; }
 
             public string Name { get; set; }
 
@@ -147,9 +183,9 @@ namespace antdlib.Svcs.Bind {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<OptionModel> Options { get; set; } = new List<OptionModel>() { };
 
-            public List<ShareModel> Share { get; set; } = new List<ShareModel>() { };
+            public List<string> Includes { get; set; } = new List<string>() { };
         }
 
         public class MapFile {
@@ -157,8 +193,8 @@ namespace antdlib.Svcs.Bind {
             private static string CleanLine(string line) {
                 var removeTab = line.Replace("\t", " ");
                 var clean = removeTab;
-                if (removeTab.Contains(MapRules.CharComment) && !line.StartsWith(MapRules.CharComment.ToString())) {
-                    var splitAtComment = removeTab.Split(MapRules.CharComment);
+                if (removeTab.Contains(MapRules.CharCommentConf) && !line.StartsWith(MapRules.CharCommentConf.ToString())) {
+                    var splitAtComment = removeTab.Split(MapRules.CharCommentConf);
                     clean = splitAtComment[0].Trim();
                 }
                 return clean;
@@ -177,18 +213,6 @@ namespace antdlib.Svcs.Bind {
                 return list;
             }
 
-            private static ShareModel ReadFileShare(string path) {
-                var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
-                var model = new ShareModel() {
-                    FilePath = path,
-                    Name = shareName
-                };
-                foreach (var data in ReadFile(path)) {
-                    model.Data.Add(data);
-                }
-                return model;
-            }
-
             private static string GetShareName(string path) {
                 var text = FileSystem.ReadFile(path);
                 return text.SplitAndGetTextBetween(MapRules.CharSectionOpen, MapRules.CharSectionClose).FirstOrDefault();
@@ -199,7 +223,7 @@ namespace antdlib.Svcs.Bind {
                 ServiceDataType type;
                 var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
                 var value = "";
-                if (line.StartsWith(MapRules.CharComment.ToString())) {
+                if (line.StartsWith(MapRules.CharCommentConf.ToString())) {
                     type = ServiceDataType.Disabled;
                 }
                 else if (line.StartsWith(MapRules.CharSectionOpen.ToString())) {
@@ -259,26 +283,59 @@ namespace antdlib.Svcs.Bind {
                 }
             }
 
+            private static void ReformatFile(string path) {
+                var text = File.ReadAllText(path).Replace("\t", " ").Replace("\r", "").Replace("\n", "").Replace("  ", " ").Replace("{", "{\n").Replace(";", ";\n").Replace("};", "};\n").Replace("} ", "}\n");
+                File.WriteAllText(path, "");
+                File.WriteAllText(path, text);
+            }
+
+            private static void PrependLine(string path, string[] line) {
+                var lines = File.ReadAllLines(path);
+                File.WriteAllLines(path, line.Concat(lines).ToArray());
+            }
+
             public static void Render() {
-                var shares = new List<ShareModel>() { };
-                var data = new List<LineModel>() { };
-                foreach (var file in SimpleStructure) {
-                    if (file.Contains("/share/")) {
-                        shares.Add(ReadFileShare(file));
+                var path = $"{DIR}/{mainFile}";
+                var includes = new List<string>() { };
+                var options = new List<OptionModel>() { };
+                var firstLine = File.ReadAllLines(path).ToArray()[0];
+                if (!firstLine.StartsWith($"{MapRules.CharCommentConf}antd")) {
+                    PrependLine(path, new String[] { $"{MapRules.CharCommentConf}antd{{timestamp {Timestamp.Now};}};\n" });
+                }
+                ReformatFile(path);
+                var lines = File.ReadAllLines(path).Where(l => !l.Trim().StartsWith(MapRules.CharCommentConf.ToString()) && !l.StartsWith(MapRules.VerbIncludeZone));
+                foreach (var line in lines) {
+                    if (line.Trim().StartsWith(MapRules.VerbInclude)) {
+                        includes.Add(line);
                     }
-                    else {
-                        var lines = ReadFile(file);
-                        foreach (var line in lines) {
-                            data.Add(line);
+                    else if (line.Trim().EndsWith(MapRules.CharBlockOpen.ToString())) {
+                        var l = line.Replace(MapRules.CharBlockOpen.ToString(), "");
+                        var arr = l.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        string name;
+                        string type = "";
+                        if (arr.Length > 1) {
+                            name = arr[1];
+                            type = arr[0];
                         }
+                        else {
+                            name = arr[0];
+                        }
+                        var option = new OptionModel() {
+                            FilePath = path,
+                            Name = name,
+                            Type = type
+                            //read data :D
+                        };
+                        options.Add(option);
                     }
                 }
+
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    Share = shares,
-                    Data = data
+                    Options = options.ToList(),
+                    Includes = includes
                 };
                 DeNSo.Session.New.Set(bind);
             }
@@ -334,31 +391,31 @@ namespace antdlib.Svcs.Bind {
             }
 
             public static void SaveGlobalConfig(List<ServiceBind> newParameters) {
-                var shares = MapFile.Get().Share;
-                var data = new List<LineModel>() { };
-                foreach (var parameter in newParameters) {
-                    data.Add(ConvertData(parameter));
-                }
+                //var shares = MapFile.Get().Share;
+                //var data = new List<LineModel>() { };
+                //foreach (var parameter in newParameters) {
+                //    data.Add(ConvertData(parameter));
+                //}
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    Share = shares,
-                    Data = data
+                    //Share = shares,
+                    //Data = data
                 };
                 DeNSo.Session.New.Set(bind);
             }
 
             public static void DumpGlobalConfig() {
-                var parameters = MapFile.Get().Data.ToArray();
-                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
-                foreach (var file in filesToClean) {
-                    CleanFile(file);
-                }
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
-                }
+                //var parameters = MapFile.Get().Data.ToArray();
+                //var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
+                //foreach (var file in filesToClean) {
+                //    CleanFile(file);
+                //}
+                //for (int i = 0; i < parameters.Length; i++) {
+                //    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
+                //    AppendLine(parameters[i].FilePath, line);
+                //}
             }
 
             private static void CleanFile(string path) {
@@ -369,143 +426,34 @@ namespace antdlib.Svcs.Bind {
                 File.AppendAllText(path, $"{text}{Environment.NewLine}");
             }
 
-            public static void SaveShareConfig(string fileName, string name, string queryName, List<ServiceBind> newParameters) {
-                var data = MapFile.Get().Data;
-                var shares = MapFile.Get().Share;
-                var oldShare = shares.Where(o => o.Name == queryName).FirstOrDefault();
-                shares.Remove(oldShare);
-                var shareData = new List<LineModel>() { };
-                foreach (var parameter in newParameters) {
-                    shareData.Add(ConvertData(parameter));
-                }
-                var newShare = new ShareModel() {
-                    FilePath = fileName,
-                    Name = name,
-                    Data = shareData
-                };
-                shares.Add(newShare);
-                var bind = new BindModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
-                    Timestamp = Timestamp.Now,
-                    Share = shares,
-                    Data = data
-                };
-                DeNSo.Session.New.Set(bind);
-            }
-
-            public static void DumpShare(string shareName) {
-                var share = MapFile.Get().Share.Where(s => s.Name == shareName).FirstOrDefault();
-                var parameters = share.Data.ToArray();
-                var file = share.FilePath;
-                CleanFile(file);
-                AppendLine(file, $"{MapRules.CharSectionOpen}{share.Name}{MapRules.CharSectionClose}");
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
-                }
-            }
-
             public static void AddParameterToGlobal(string key, string value) {
-                SetCustomFile();
-                ServiceDataType type = SupposeDataType(value);
-                var booleanVerbs = SupposeBooleanVerbs(value);
-                var line = new LineModel() {
-                    FilePath = $"{DIR}/{antdBindFile}",
-                    Key = key,
-                    Value = value,
-                    Type = type,
-                    BooleanVerbs = booleanVerbs
-                };
-                var shares = MapFile.Get().Share;
-                var data = MapFile.Get().Data;
-                data.Add(line);
-                var bind = new BindModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
-                    Timestamp = Timestamp.Now,
-                    Share = shares,
-                    Data = data
-                };
-                DeNSo.Session.New.Set(bind);
+                //SetCustomFile();
+                //ServiceDataType type = SupposeDataType(value);
+                //var booleanVerbs = SupposeBooleanVerbs(value);
+                //var line = new LineModel() {
+                //    FilePath = $"{DIR}/{antdBindFile}",
+                //    Key = key,
+                //    Value = value,
+                //    Type = type,
+                //    BooleanVerbs = booleanVerbs
+                //};
+                //var shares = MapFile.Get().Share;
+                //var data = MapFile.Get().Data;
+                //data.Add(line);
+                //var bind = new BindModel() {
+                //    _Id = serviceGuid,
+                //    Guid = serviceGuid,
+                //    Timestamp = Timestamp.Now,
+                //    Share = shares,
+                //    Data = data
+                //};
+                //DeNSo.Session.New.Set(bind);
             }
 
             private static void SetCustomFile() {
                 var path = $"{DIR}/{antdBindFile}";
                 if (!File.Exists(path)) {
                     File.Create(path);
-                }
-            }
-
-            public static void RewriteSMBCONF() {
-                var file = $"{DIR}/{mainFile}";
-                CleanFile(file);
-                AppendLine(file, "[global]");
-                AppendLine(file, "");
-                AppendLine(file, $"{MapRules.CharComment}GLOBAL START");
-                foreach (var path in GetGlobalPaths()) {
-                    AppendLine(file, $"{MapRules.VerbInclude} {MapRules.CharKevValueSeparator} {path}");
-                }
-                AppendLine(file, $"{MapRules.CharComment}GLOBAL END");
-                AppendLine(file, "");
-                AppendLine(file, $"{MapRules.CharComment}SHARE START");
-                foreach (var path in GetSharePaths()) {
-                    AppendLine(file, $"{MapRules.VerbInclude} {MapRules.CharKevValueSeparator} {path}");
-                }
-                AppendLine(file, $"{MapRules.CharComment}SHARE END");
-            }
-
-            private static HashSet<dynamic> GetGlobalPaths() {
-                var share = MapFile.Get().Data.Select(s => s.FilePath).ToHashSet();
-                return share;
-            }
-
-            private static HashSet<dynamic> GetSharePaths() {
-                var share = MapFile.Get().Share.Select(s => s.FilePath).ToHashSet();
-                return share;
-            }
-
-            public static void AddShare(string name, string directory) {
-                SetShareFile(name);
-                var shareData = new List<LineModel>() { };
-                var defaultParameter00 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
-                    Key = "path",
-                    Value = directory,
-                    Type = ServiceDataType.String,
-                    BooleanVerbs = new KeyValuePair<string, string>("", "") 
-                };
-                shareData.Add(defaultParameter00);
-                var defaultParameter01 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
-                    Key = "browseable",
-                    Value = "yes",
-                    Type = ServiceDataType.Boolean,
-                    BooleanVerbs = new KeyValuePair<string, string>("yes", "no")
-                };
-                shareData.Add(defaultParameter01);
-                var sh = new ShareModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
-                    Name = name,
-                    Data = shareData
-                };
-                var shares = MapFile.Get().Share;
-                var data = MapFile.Get().Data;
-                shares.Add(sh);
-                var bind = new BindModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
-                    Timestamp = Timestamp.Now,
-                    Share = shares,
-                    Data = data
-                };
-                DeNSo.Session.New.Set(bind);
-            }
-
-            private static void SetShareFile(string shareName) {
-                var sharePath = $"{DIR}/share/{shareName.Replace(" ", "_")}.conf";
-                if (!File.Exists(sharePath)) {
-                    File.Create(sharePath);
                 }
             }
         }

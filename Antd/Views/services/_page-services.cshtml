@@ -29,10 +29,15 @@
     ///-------------------------------------------------------------------------------------*@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-@using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
+    <style type="text/css">
+        #Services-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
     @Html.Partial("_services-pagebar")
 }
 
@@ -41,27 +46,45 @@
 }
 
 @section MainContent {
+    @*<div style="float: left; width: 15%;">
+            <nav class="sidebar dark">
+                <ul>
+                    <li class="title"><i class="icon-target-2 on-left"></i>Services</li>
+                    <li class="stick"><a href="#"><i class="icon-cog"></i>Bind</a></li>
+                    <li class="stick">
+                        <a href="#" class="dropdown-toggle"><i class="icon-tree-view"></i>Systemd</a>
+                        <ul data-role="dropdown" class="dropdown-menu">
+                            <li><a href="">Subitem 1</a></li>
+                            <li><a href="">Subitem 2</a></li>
+                            <li><a href="">Subitem 3</a></li>
+                        </ul>
+                    </li>
+                    <li class="stick bg-anthilla-green"><a href="#">Thread item</a></li>
+                </ul>
+            </nav>
+        </div>*@
+
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
-    }
+        }
     @Html.Partial("page-services-bind")
-    @Html.Partial("page-services-dhcp")
-    @Html.Partial("page-services-glusterfs")
-    @Html.Partial("page-services-libvirt")
-    @Html.Partial("page-services-lxc")
-    @Html.Partial("page-services-nfs")
-    @Html.Partial("page-services-nftable")
-    @Html.Partial("page-services-nginx")
-    @Html.Partial("page-services-ntpd")
-    @Html.Partial("page-services-qemu")
+    @*@Html.Partial("page-services-dhcp")
+        @Html.Partial("page-services-glusterfs")
+        @Html.Partial("page-services-libvirt")
+        @Html.Partial("page-services-lxc")
+        @Html.Partial("page-services-nfs")
+        @Html.Partial("page-services-nftable")
+        @Html.Partial("page-services-nginx")
+        @Html.Partial("page-services-ntpd")
+        @Html.Partial("page-services-qemu")*@
     @Html.Partial("page-services-samba")
-    @Html.Partial("page-services-squid")
-    @Html.Partial("page-services-ssh")
-    @Html.Partial("page-services-syslogng")
-    @Html.Partial("page-services-systemd-hostnamectl")
-    @Html.Partial("page-services-systemd-journald")
-    @Html.Partial("page-services-systemd-networkd")
-    @Html.Partial("page-services-zfs")
+    @*@Html.Partial("page-services-squid")
+        @Html.Partial("page-services-ssh")
+        @Html.Partial("page-services-syslogng")
+        @Html.Partial("page-services-systemd-hostnamectl")
+        @Html.Partial("page-services-systemd-journald")
+        @Html.Partial("page-services-systemd-networkd")
+        @Html.Partial("page-services-zfs")*@
 }
 
 @section Scripts {
@@ -83,6 +106,7 @@
             });
         });
 
+        //START SAMBA
         $('#ActivateSamba').click(function () {
             jQuery.support.cors = true;
             $.ajax({
@@ -153,5 +177,42 @@
         $('#AddNewShare').click(function () {
             $('#NewSambaShare').toggle();
         });
+        //END SAMBA
+
+        //START BIND
+        $('#ActivateBind').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/activate/bind',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#RefreshBind').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/refresh/bind',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ReloadBind').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/reloadconfig/bind',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+        //END BIND
+
     </script>
 }

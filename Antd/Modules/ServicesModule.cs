@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.CCTable;
+using antdlib.Svcs.Bind;
 using antdlib.Svcs.Samba;
 using antdlib.ViewBinds;
 using Nancy;
@@ -55,6 +56,7 @@ namespace Antd {
                 return View["_page-services", vmod];
             };
 
+            #region SAMBA
             Post["/activate/samba"] = x => {
                 SambaConfig.SetReady();
                 SambaConfig.MapFile.Render();
@@ -111,6 +113,26 @@ namespace Antd {
                 SambaConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
+            #endregion SAMBA
+
+            #region BIND
+            Post["/activate/bind"] = x => {
+                BindConfig.SetReady();
+                BindConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/refresh/bind"] = x => {
+                BindConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/reloadconfig/bind"] = x => {
+                BindConfig.ReloadConfig();
+                return Response.AsJson(true);
+            };
+            #endregion BIND
+
         }
     }
 }

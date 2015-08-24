@@ -158,22 +158,39 @@ namespace antdlib {
             }
         }
 
-        public static string RemoveTextBetween(this string input, char start, char end) {
-            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, string end) {
+            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end));
             MatchCollection matches = r.Matches(input);
-            string output = "";
             foreach (Match match in matches) {
-                output = input.Replace(match.Groups[1].Value, "");
+                yield return match.Groups[1].Value;
             }
-            return output;
         }
 
-        public static string RemoveTextBetween(this string input, string start, string end) {
-            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, char end) {
+            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end.ToString()));
             MatchCollection matches = r.Matches(input);
-            string output = "";
             foreach (Match match in matches) {
-                output = input.Replace(match.Groups[1].Value, "");
+                yield return match.Groups[1].Value;
+            }
+        }
+
+        public static string RemoveTextBetween(this string input, char start, char end) {
+            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = r.Matches(input);
+            var list = new List<string>();
+            foreach (Match match in matches) {
+                if (match.Groups[1].Value.Length > 0) {
+                    list.Add(match.Groups[1].Value);
+                }
+            }
+            string output = input;
+            if (list.Count() > 0) {
+                var removeThis = list.ToArray()[list.Count() - 1];
+                var t = input;
+                if(removeThis.Length > 0) {
+                    t = input.Replace(removeThis, "");
+                }
+                output = t.RemoveTextBetween(start, end);
             }
             return output;
         }

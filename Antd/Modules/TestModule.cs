@@ -81,11 +81,11 @@ namespace Antd {
                 Console.WriteLine(text);
                 var des = JsonConvert.DeserializeObject<List<SambaCommandModel>>(text);
                 Console.WriteLine(des);
-                var lis = new List<SambaCommandModel>(){ };
+                var lis = new List<SambaCommandModel>() { };
                 var m = new SambaCommandModel() {
-                    command= "command",
-                    description= "ssss",
-                    type="asdasda",
+                    command = "command",
+                    description = "ssss",
+                    type = "asdasda",
                     synonyms = "sadasdas"
                 };
                 var m22 = new SambaCommandModel() {
@@ -98,6 +98,20 @@ namespace Antd {
                 lis.Add(m22);
                 var models = JsonConvert.SerializeObject(lis);
                 Console.WriteLine(models);
+                return View["page-test"];
+            };
+
+            Get["/regex"] = x => {
+                var text = "1234567890{qwertyu{iopas}d}fghjknbvcdr{567ujm092nxeuh9ew1886124844}";
+                var start = Regex.Escape("{");
+                var end = Regex.Escape("}");
+
+                var regex2 = new Regex(@"{([^{}]+|(?<Level>})|(?<-Level>{))+(?(Level)(?!))}");
+
+                MatchCollection matches = regex2.Matches(text);
+                foreach (Match match in matches) {
+                    Console.WriteLine(match.Groups[1].Value);
+                }
                 return View["page-test"];
             };
         }
