@@ -227,7 +227,7 @@
     <Folder Include="Svcs\Qemu\" />
     <Folder Include="Svcs\Squid\" />
     <Folder Include="Svcs\Ssh\" />
-    <Folder Include="Svcs\Syslog-ng\" />
+    <Folder Include="Svcs\Syslogng\" />
     <Folder Include="Svcs\Systemd\Hostnamectl\" />
     <Folder Include="Svcs\Systemd\Journald\" />
     <Folder Include="Svcs\Systemd\Networkd\" />

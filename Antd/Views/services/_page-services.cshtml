@@ -44,7 +44,24 @@
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
     }
+    @Html.Partial("page-services-bind")
+    @Html.Partial("page-services-dhcp")
+    @Html.Partial("page-services-glusterfs")
+    @Html.Partial("page-services-libvirt")
+    @Html.Partial("page-services-lxc")
+    @Html.Partial("page-services-nfs")
+    @Html.Partial("page-services-nftable")
+    @Html.Partial("page-services-nginx")
+    @Html.Partial("page-services-ntpd")
+    @Html.Partial("page-services-qemu")
     @Html.Partial("page-services-samba")
+    @Html.Partial("page-services-squid")
+    @Html.Partial("page-services-ssh")
+    @Html.Partial("page-services-syslogng")
+    @Html.Partial("page-services-systemd-hostnamectl")
+    @Html.Partial("page-services-systemd-journald")
+    @Html.Partial("page-services-systemd-networkd")
+    @Html.Partial("page-services-zfs")
 }
 
 @section Scripts {
