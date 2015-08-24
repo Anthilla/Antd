@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace antdlib.Svcs.Bind {
     public class BindConfig {
@@ -169,9 +170,9 @@ namespace antdlib.Svcs.Bind {
         public class OptionModel {
             public string FilePath { get; set; }
 
-            public string Type { get; set; }
-
             public string Name { get; set; }
+
+            public string StringDefinition { get; set; }
 
             public List<LineModel> Data { get; set; } = new List<LineModel>() { };
         }
@@ -298,37 +299,58 @@ namespace antdlib.Svcs.Bind {
                 var path = $"{DIR}/{mainFile}";
                 var includes = new List<string>() { };
                 var options = new List<OptionModel>() { };
-                var firstLine = File.ReadAllLines(path).ToArray()[0];
-                if (!firstLine.StartsWith($"{MapRules.CharCommentConf}antd")) {
-                    PrependLine(path, new String[] { $"{MapRules.CharCommentConf}antd{{timestamp {Timestamp.Now};}};\n" });
-                }
+                //var firstLine = File.ReadAllLines(path).ToArray()[0];
+                //if (!firstLine.StartsWith($"{MapRules.CharCommentConf}antd")) {
+                //    PrependLine(path, new String[] { $"{MapRules.CharCommentConf}antd{{timestamp {Timestamp.Now};}};\n" });
+                //}
                 ReformatFile(path);
-                var lines = File.ReadAllLines(path).Where(l => !l.Trim().StartsWith(MapRules.CharCommentConf.ToString()) && !l.StartsWith(MapRules.VerbIncludeZone));
-                foreach (var line in lines) {
-                    if (line.Trim().StartsWith(MapRules.VerbInclude)) {
-                        includes.Add(line);
-                    }
-                    else if (line.Trim().EndsWith(MapRules.CharBlockOpen.ToString())) {
-                        var l = line.Replace(MapRules.CharBlockOpen.ToString(), "");
-                        var arr = l.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        string name;
-                        string type = "";
-                        if (arr.Length > 1) {
-                            name = arr[1];
-                            type = arr[0];
-                        }
-                        else {
-                            name = arr[0];
-                        }
-                        var option = new OptionModel() {
-                            FilePath = path,
-                            Name = name,
-                            Type = type
-                            //read data :D
-                        };
-                        options.Add(option);
-                    }
+                var input = File.ReadAllText(path);
+                var regex = new Regex(@"
+                                        \{                    # Match (
+                                        (
+                                            [^{}]+            # all chars except ()
+                                            | (?<Level>\{)    # or if ( then Level += 1
+                                            | (?<-Level>\})   # or if ) then Level -= 1
+                                        )+                    # Repeat (to go from inside to outside)
+                                        (?(Level)(?!))        # zero-width negative lookahead assertion
+                                        \}                    # Match )",
+                    RegexOptions.IgnorePatternWhitespace);
+
+                var matches = regex.Matches(input);
+                var optionsName = new List<string>() { };
+
+                for (int i = 0; i < matches.Count; i++) {
+                    var current = matches[i].Value;
+                    int f = ((i - 1) < 0) ? 0 : i - 1;
+                    var prev = matches[f].Value;
+                    var currentSplit = input.Split(new String[] { current }, StringSplitOptions.None).ToArray();
+                    int secondSplit = (currentSplit.Length > 2) ? currentSplit.Length - 1 : 0;
+                    var prevSplit = currentSplit[secondSplit].Split(new String[] { prev }, StringSplitOptions.None).ToArray();
+                    var name = (prevSplit.Length > 1) ? prevSplit[1] : prevSplit[0];
+                    var option = new OptionModel() {
+                        FilePath = path,
+                        Name = name.Replace(";", "").Replace("\n", "").Trim(),
+                        StringDefinition = matches[i].Value
+                        //read data :D
+                    };
+                    options.Add(option);
                 }
+                //var lines = File.ReadAllLines(path).Where(l => !l.Trim().StartsWith(MapRules.CharCommentConf.ToString()) && !l.StartsWith(MapRules.VerbIncludeZone));
+                //foreach (var line in lines) {
+                //    if (line.Trim().StartsWith(MapRules.VerbInclude)) {
+                //        includes.Add(line);
+                //    }
+                //    else if (line.Trim().EndsWith(MapRules.CharBlockOpen.ToString())) {
+                //        var l = line.Replace(MapRules.CharBlockOpen.ToString(), "");
+                //        var arr = l.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                //        var option = new OptionModel() {
+                //            FilePath = path,
+                //            Name = arr[0]
+                //            //read data :D
+                //        };
+                //        options.Add(option);
+                //    }
+                //}
 
                 var bind = new BindModel() {
                     _Id = serviceGuid,

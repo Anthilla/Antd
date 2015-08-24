@@ -15,24 +15,20 @@
         <table class="table" data-search="BindSearch">
             <tbody>
                 @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().Options) {
-                    @BindDisplayOption(option.Type, option.Name, option.FilePath, option.Data)
+                    @BindDisplayOption(option.Name, option.StringDefinition, option.FilePath, option.Data)
                 }
             </tbody>
         </table>
     </form>
 }
 
-@helper BindDisplayOption(string type, string name, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> data) {
+@helper BindDisplayOption(string name, string definition, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> data) {
     <tr data-file="@filePath" data-object="bind-parameter">
-        <td style="width: 16%;">
-            @type
-        </td>
-        <td style="width: 16%;">
+        <td style="width: 25%;">
             @name
-            <input name="DataOptionType" type="hidden" value="@type" />
             <input name="DataOptionName" type="hidden" value="@name" />
             <input name="DataOptionFilePath" type="hidden" value="@filePath" />
         </td>
-        <td></td>
+        <td>@definition</td>
     </tr>
 }

@@ -102,15 +102,21 @@ namespace Antd {
             };
 
             Get["/regex"] = x => {
-                var text = "1234567890{qwertyu{iopas}d}fghjknbvcdr{567ujm092nxeuh9ew1886124844}";
-                var start = Regex.Escape("{");
-                var end = Regex.Escape("}");
+                var input = "option {12345678as15590{qwertyu{iopa666s}}} 12345678eee90 {qwertyu{iopasdasdasdaas}}";
 
-                var regex2 = new Regex(@"{([^{}]+|(?<Level>})|(?<-Level>{))+(?(Level)(?!))}");
+                var regex = new Regex(@"
+    \{                    # Match (
+    (
+        [^{}]+            # all chars except ()
+        | (?<Level>\{)    # or if ( then Level += 1
+        | (?<-Level>\})   # or if ) then Level -= 1
+    )+                    # Repeat (to go from inside to outside)
+    (?(Level)(?!))        # zero-width negative lookahead assertion
+    \}                    # Match )",
+                    RegexOptions.IgnorePatternWhitespace);
 
-                MatchCollection matches = regex2.Matches(text);
-                foreach (Match match in matches) {
-                    Console.WriteLine(match.Groups[1].Value);
+                foreach (Match c in regex.Matches(input)) {
+                    Console.WriteLine(c.Value.Trim('(', ')'));
                 }
                 return View["page-test"];
             };
