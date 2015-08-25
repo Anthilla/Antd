@@ -14,7 +14,10 @@
     <form action="/services/update/bind" id="BindForm" method="POST" enctype="multipart/form-data">
         <table class="table" data-search="BindSearch">
             <tbody>
-                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().Options) {
+                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindAcl) {
+                    @BindDisplayOption(option.Name, option.StringDefinition, option.FilePath, option.Data)
+                }
+                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindZone) {
                     @BindDisplayOption(option.Name, option.StringDefinition, option.FilePath, option.Data)
                 }
             </tbody>
@@ -29,7 +32,7 @@
             <input name="DataOptionName" type="hidden" value="@name" />
             <input name="DataOptionFilePath" type="hidden" value="@filePath" />
         </td>
-        <td>@*@definition*@</td>
+        <td>@definition</td>
     </tr>
 foreach (antdlib.Svcs.Bind.BindConfig.LineModel option in options) {
         <tr data-file="@filePath" data-object="bind-parameter">

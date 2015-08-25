@@ -113,6 +113,35 @@ namespace antdlib.Svcs.Bind {
 
             public static char CharEndOfLineValue { get { return ';'; } }
 
+            public class Statement {
+                public static string Acl { get { return "acl"; } }
+
+                public static string Controls { get { return "controls"; } }
+
+                public static string Include { get { return "include"; } }
+
+                public static string Key { get { return "key"; } }
+
+                public static string Logging { get { return "logging"; } }
+
+                public static string Lwres { get { return "lwres"; } }
+
+                public static string Masters { get { return "masters"; } }
+
+                public static string Options { get { return "options"; } }
+
+                public static string Server { get { return "server"; } }
+
+                public static string StatisticsChannels { get { return "statistics-channels"; } }
+
+                public static string TrustedKeys { get { return "trusted-keys"; } }
+
+                public static string ManagedKeys { get { return "managed-keys"; } }
+
+                public static string View { get { return "view"; } }
+
+                public static string Zone { get { return "zone"; } }
+            }
         }
 
         public class LineModel {
@@ -144,9 +173,34 @@ namespace antdlib.Svcs.Bind {
 
             public string Timestamp { get; set; }
 
-            public List<OptionModel> Options { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> BindAcl { get; set; } = new List<OptionModel>() { };
 
-            public List<string> Includes { get; set; } = new List<string>() { };
+            public List<OptionModel> BindControls { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindInclude { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindKey { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindLogging { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindLwres { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindMasters { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindOptions { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindServer { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindStatisticsChannels { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindTrustedKeys { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindManagedKeys { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindView { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> BindZone { get; set; } = new List<OptionModel>() { };
+
         }
 
         public class MapFile {
@@ -200,92 +254,82 @@ namespace antdlib.Svcs.Bind {
                 File.WriteAllText(path, text);
             }
 
-            //private static void PrependLine(string path, string[] line) {
-            //    var lines = File.ReadAllLines(path);
-            //    File.WriteAllLines(path, line.Concat(lines).ToArray());
-            //}
-
-            private static IEnumerable<LineModel> ReadLines(string path, string text) {
-                var list = new List<LineModel>();
-                var splitLines = text.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                for (int i = 0; i < splitLines.Length; i++) {
-                    var keyValuePair = splitLines[i].Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    ServiceDataType type;
-                    var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
-                    var value = "";
-                    if (splitLines[i].StartsWith(MapRules.CharCommentConf.ToString())) {
-                        type = ServiceDataType.Disabled;
-                    }
-                    else if (splitLines[i].StartsWith(MapRules.CharSectionOpen.ToString())) {
-                        type = ServiceDataType.Disabled;
-                    }
-                    else {
-                        value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
-                        type = SupposeDataType(value.Trim());
-                    }
-                    KeyValuePair<string, string> booleanVerbs;
-                    if (type == ServiceDataType.Boolean) {
-                        booleanVerbs = SupposeBooleanVerbs(value.Trim());
-                    }
-                    else {
-                        booleanVerbs = new KeyValuePair<string, string>("", "");
-                    }
-                    var model = new LineModel() {
-                        FilePath = path,
-                        Key = key.Trim(),
-                        Value = value.Trim(),
-                        Type = type,
-                        BooleanVerbs = booleanVerbs
-                    };
-                    list.Add(model);
-                }
-                return list;
-            }
+            //private static IEnumerable<LineModel> ReadLines(string path, string text) {
+            //    var list = new List<LineModel>();
+            //    var splitLines = text.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            //    for (int i = 0; i < splitLines.Length; i++) {
+            //        var keyValuePair = splitLines[i].Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            //        ServiceDataType type;
+            //        var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+            //        var value = "";
+            //        if (splitLines[i].StartsWith(MapRules.CharCommentConf.ToString())) {
+            //            type = ServiceDataType.Disabled;
+            //        }
+            //        else if (splitLines[i].StartsWith(MapRules.CharSectionOpen.ToString())) {
+            //            type = ServiceDataType.Disabled;
+            //        }
+            //        else {
+            //            value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+            //            type = SupposeDataType(value.Trim());
+            //        }
+            //        KeyValuePair<string, string> booleanVerbs;
+            //        if (type == ServiceDataType.Boolean) {
+            //            booleanVerbs = SupposeBooleanVerbs(value.Trim());
+            //        }
+            //        else {
+            //            booleanVerbs = new KeyValuePair<string, string>("", "");
+            //        }
+            //        var model = new LineModel() {
+            //            FilePath = path,
+            //            Key = key.Trim(),
+            //            Value = value.Trim(),
+            //            Type = type,
+            //            BooleanVerbs = booleanVerbs
+            //        };
+            //        list.Add(model);
+            //    }
+            //    return list;
+            ////}
 
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var includes = new List<string>() { };
                 var options = new List<OptionModel>() { };
-                //var firstLine = File.ReadAllLines(path).ToArray()[0];
-                //if (!firstLine.StartsWith($"{MapRules.CharCommentConf}antd")) {
-                //    PrependLine(path, new String[] { $"{MapRules.CharCommentConf}antd{{timestamp {Timestamp.Now};}};\n" });
-                //}
                 ReformatFile(path);
-                var input = File.ReadAllText(path);
-                var regex = new Regex(@"
-                                        \{                    # Match (
-                                        (
-                                            [^{}]+            # all chars except ()
-                                            | (?<Level>\{)    # or if ( then Level += 1
-                                            | (?<-Level>\})   # or if ) then Level -= 1
-                                        )+                    # Repeat (to go from inside to outside)
-                                        (?(Level)(?!))        # zero-width negative lookahead assertion
-                                        \}                    # Match )",
-                    RegexOptions.IgnorePatternWhitespace);
-                var matches = regex.Matches(input);
-                var optionsName = new List<string>() { };
-                for (int i = 0; i < matches.Count; i++) {
-                    var current = matches[i].Value;
-                    int f = ((i - 1) < 0) ? 0 : i - 1;
-                    var prev = matches[f].Value;
-                    var currentSplit = input.Split(new String[] { current }, StringSplitOptions.None).ToArray();
-                    var prevSplit = currentSplit[0].Split(new String[] { prev }, StringSplitOptions.None).ToArray();
-                    var name = (prevSplit.Length > 1) ? prevSplit[1] : prevSplit[0];
-                    var data = ReadLines(path, matches[i].Value);
-                    var option = new OptionModel() {
-                        FilePath = path,
-                        Name = name.Replace(";", "").Replace("\n", "").Trim(),
-                        StringDefinition = matches[i].Value,
-                        Data = data.ToList()
-                    };
-                    options.Add(option);
-                }
+                var namedFileText = File.ReadAllText(path);
+
+                var acl = BindStatement.AssignAcl(path, namedFileText).ToList();
+                var controls = BindStatement.AssignControls(path, namedFileText).ToList();
+                var include = BindStatement.AssignInclude(path, namedFileText).ToList();
+                var key = BindStatement.AssignKey(path, namedFileText).ToList();
+                var logging = BindStatement.AssignLogging(path, namedFileText).ToList();
+                var lwres = BindStatement.AssignLwres(path, namedFileText).ToList();
+                var masters = BindStatement.AssignMasters(path, namedFileText).ToList();
+                var server = BindStatement.AssignServer(path, namedFileText).ToList();
+                var statisticsChannels = BindStatement.AssignStatisticsChannels(path, namedFileText).ToList();
+                var trustedKeys = BindStatement.AssignTrustedKeys(path, namedFileText).ToList();
+                var managedKeys = BindStatement.AssignManagedKeys(path, namedFileText).ToList();
+                var view = BindStatement.AssignView(path, namedFileText).ToList();
+                var zones = BindStatement.AssignZone(path, namedFileText).ToList();
+
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    Options = options,
-                    Includes = includes
+                    BindAcl = acl,
+                    BindControls = controls,
+                    BindInclude = include,
+                    BindKey = key,
+                    BindLogging = logging,
+                    BindLwres = lwres,
+                    BindMasters = masters,
+                    BindOptions = options,
+                    BindServer = server,
+                    BindStatisticsChannels = statisticsChannels,
+                    BindTrustedKeys = trustedKeys,
+                    BindManagedKeys = managedKeys,
+                    BindView = view,
+                    BindZone = zones
                 };
                 DeNSo.Session.New.Set(bind);
             }
