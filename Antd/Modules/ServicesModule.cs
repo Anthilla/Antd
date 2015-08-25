@@ -131,6 +131,16 @@ namespace Antd {
                 BindConfig.ReloadConfig();
                 return Response.AsJson(true);
             };
+
+            Post["/update/bind/{section}"] = x => {
+                var section = (string)x.section;
+                var parameters = this.Bind<List<ServiceBind>>();
+                BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
+                Thread.Sleep(1000);
+                BindConfig.WriteFile.DumpGlobalConfig();
+                return Response.AsRedirect("/services");
+            };
+
             #endregion BIND
 
         }

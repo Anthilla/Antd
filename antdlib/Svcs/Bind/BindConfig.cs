@@ -157,11 +157,11 @@ namespace antdlib.Svcs.Bind {
         }
 
         public class OptionModel {
-            public string FilePath { get; set; }
+            public string FilePath { get; set; } = $"{DIR}/{mainFile}";
 
             public string Name { get; set; }
 
-            public string StringDefinition { get; set; }
+            public string StringDefinition { get; set; } = "";
 
             public List<LineModel> Data { get; set; } = new List<LineModel>() { };
         }
@@ -294,42 +294,42 @@ namespace antdlib.Svcs.Bind {
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var includes = new List<string>() { };
-                var options = new List<OptionModel>() { };
-                ReformatFile(path);
+                //ReformatFile(path);
                 var namedFileText = File.ReadAllText(path);
 
-                var acl = BindStatement.AssignAcl(path, namedFileText).ToList();
-                var controls = BindStatement.AssignControls(path, namedFileText).ToList();
-                var include = BindStatement.AssignInclude(path, namedFileText).ToList();
-                var key = BindStatement.AssignKey(path, namedFileText).ToList();
-                var logging = BindStatement.AssignLogging(path, namedFileText).ToList();
-                var lwres = BindStatement.AssignLwres(path, namedFileText).ToList();
-                var masters = BindStatement.AssignMasters(path, namedFileText).ToList();
-                var server = BindStatement.AssignServer(path, namedFileText).ToList();
-                var statisticsChannels = BindStatement.AssignStatisticsChannels(path, namedFileText).ToList();
-                var trustedKeys = BindStatement.AssignTrustedKeys(path, namedFileText).ToList();
-                var managedKeys = BindStatement.AssignManagedKeys(path, namedFileText).ToList();
-                var view = BindStatement.AssignView(path, namedFileText).ToList();
-                var zones = BindStatement.AssignZone(path, namedFileText).ToList();
+                //var acl = BindStatement.AssignAcl(namedFileText).ToList();
+                var controls = BindStatement.AssignControls(namedFileText).ToList();
+                //var include = BindStatement.AssignInclude(namedFileText).ToList();
+                //var key = BindStatement.AssignKey(namedFileText).ToList();
+                var logging = BindStatement.AssignLogging(namedFileText).ToList();
+                var lwres = BindStatement.AssignLwres(namedFileText).ToList();
+                //var masters = BindStatement.AssignMasters(namedFileText).ToList();
+                var options = BindStatement.AssignOptions(namedFileText).ToList();
+                //var server = BindStatement.AssignServer(namedFileText).ToList();
+                var statisticsChannels = BindStatement.AssignStatisticsChannels(namedFileText).ToList();
+                var trustedKeys = BindStatement.AssignTrustedKeys(namedFileText).ToList();
+                var managedKeys = BindStatement.AssignManagedKeys(namedFileText).ToList();
+                //var view = BindStatement.AssignView(namedFileText).ToList();
+                //var zones = BindStatement.AssignZone(namedFileText).ToList();
 
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    BindAcl = acl,
+                    //BindAcl = acl,
                     BindControls = controls,
-                    BindInclude = include,
-                    BindKey = key,
+                    //BindInclude = include,
+                    //BindKey = key,
                     BindLogging = logging,
                     BindLwres = lwres,
-                    BindMasters = masters,
+                    //BindMasters = masters,
                     BindOptions = options,
-                    BindServer = server,
+                    //BindServer = server,
                     BindStatisticsChannels = statisticsChannels,
                     BindTrustedKeys = trustedKeys,
                     BindManagedKeys = managedKeys,
-                    BindView = view,
-                    BindZone = zones
+                    //BindView = view,
+                    //BindZone = zones
                 };
                 DeNSo.Session.New.Set(bind);
             }
@@ -342,8 +342,8 @@ namespace antdlib.Svcs.Bind {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceBind parameter) {
-                ServiceDataType type = SupposeDataType(parameter.DataValue);
-                var booleanVerbs = SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = BindStatement.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = BindStatement.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
@@ -354,101 +354,124 @@ namespace antdlib.Svcs.Bind {
                 return data;
             }
 
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
+            public static void SaveGlobalConfig(string section, List<ServiceBind> newParameters) {
+                var bind = MapFile.Get();
+                bind.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    data.Add(ConvertData(parameter));
                 }
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
-            }
-
-            public static void SaveGlobalConfig(List<ServiceBind> newParameters) {
-                //var shares = MapFile.Get().Share;
-                //var data = new List<LineModel>() { };
-                //foreach (var parameter in newParameters) {
-                //    data.Add(ConvertData(parameter));
-                //}
-                var bind = new BindModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
-                    Timestamp = Timestamp.Now,
-                    //Share = shares,
-                    //Data = data
+                var options = new List<OptionModel>() { };
+                var option = new OptionModel() {
+                    Name = section,
+                    Data = data
                 };
+                options.Add(option);
+                if (section == "acl") { bind.BindAcl = options; }
+                else if (section == "controls") { bind.BindControls = options; }
+                else if (section == "include") { bind.BindInclude = options; }
+                else if (section == "key") { bind.BindKey = options; }
+                else if (section == "logging") { bind.BindLogging = options; }
+                else if (section == "lwres") { bind.BindLwres = options; }
+                else if (section == "masters") { bind.BindMasters = options; }
+                else if (section == "options") { bind.BindOptions = options; }
+                else if (section == "server") { bind.BindServer = options; }
+                else if (section == "statistics-channels") { bind.BindStatisticsChannels = options; }
+                else if (section == "trusted-keys") { bind.BindTrustedKeys = options; }
+                else if (section == "managed-leys") { bind.BindManagedKeys = options; }
+                else if (section == "view") { bind.BindView = options; }
+                else if (section == "zones") { bind.BindZone = options; }
                 DeNSo.Session.New.Set(bind);
             }
 
+            /// <summary>
+            /// todo, write file from model :D
+            /// </summary>
             public static void DumpGlobalConfig() {
-                //var parameters = MapFile.Get().Data.ToArray();
-                //var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
-                //foreach (var file in filesToClean) {
-                //    CleanFile(file);
-                //}
-                //for (int i = 0; i < parameters.Length; i++) {
-                //    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                //    AppendLine(parameters[i].FilePath, line);
-                //}
+                var filePath = $"{DIR}/{mainFile}";
+                var bind = MapFile.Get();
+                CleanFile(filePath);
+
+                foreach (var section in bind.BindOptions) {
+                    WriteSimpleSection("options", filePath, section.Data);
+                }
+                foreach (var section in bind.BindAcl) {
+                    WriteMutipleSection("acl", filePath, section.Data);
+                }
+                foreach (var section in bind.BindControls) {
+                    WriteMutipleSection("controls", filePath, section.Data);
+                }
+                foreach (var section in bind.BindInclude) {
+                    WriteMutipleSection("include", filePath, section.Data);
+                }
+                foreach (var section in bind.BindKey) {
+                    WriteMutipleSection("key", filePath, section.Data);
+                }
+                foreach (var section in bind.BindLogging) {
+                    WriteSimpleSection("logging", filePath, section.Data);
+                }
+                foreach (var section in bind.BindLwres) {
+                    WriteSimpleSection("lwres", filePath, section.Data);
+                }
+                foreach (var section in bind.BindMasters) {
+                    WriteMutipleSection("masters", filePath, section.Data);
+                }
+                foreach (var section in bind.BindServer) {
+                    WriteMutipleSection("server", filePath, section.Data);
+                }
+                foreach (var section in bind.BindStatisticsChannels) {
+                    WriteSimpleSection("statistics-channel", filePath, section.Data);
+                }
+                foreach (var section in bind.BindTrustedKeys) {
+                    WriteSimpleSection("trusted-keys", filePath, section.Data);
+                }
+                foreach (var section in bind.BindManagedKeys) {
+                    WriteSimpleSection("managed-keys", filePath, section.Data);
+                }
+                foreach (var section in bind.BindView) {
+                    WriteMutipleSection("view", filePath, section.Data);
+                }
+                foreach (var section in bind.BindZone) {
+                    WriteMutipleSection("zone", filePath, section.Data);
+                }
             }
 
             private static void CleanFile(string path) {
                 File.WriteAllText(path, "");
             }
 
-            private static void AppendLine(string path, string text) {
-                File.AppendAllText(path, $"{text}{Environment.NewLine}");
-            }
-
-            public static void AddParameterToGlobal(string key, string value) {
-                //SetCustomFile();
-                //ServiceDataType type = SupposeDataType(value);
-                //var booleanVerbs = SupposeBooleanVerbs(value);
-                //var line = new LineModel() {
-                //    FilePath = $"{DIR}/{antdBindFile}",
-                //    Key = key,
-                //    Value = value,
-                //    Type = type,
-                //    BooleanVerbs = booleanVerbs
-                //};
-                //var shares = MapFile.Get().Share;
-                //var data = MapFile.Get().Data;
-                //data.Add(line);
-                //var bind = new BindModel() {
-                //    _Id = serviceGuid,
-                //    Guid = serviceGuid,
-                //    Timestamp = Timestamp.Now,
-                //    Share = shares,
-                //    Data = data
-                //};
-                //DeNSo.Session.New.Set(bind);
-            }
-
-            private static void SetCustomFile() {
-                var path = $"{DIR}/{antdBindFile}";
-                if (!File.Exists(path)) {
-                    File.Create(path);
+            private static void WriteSimpleSection(string sectionName, string filePath, List<LineModel> lines) {
+                var linesToAppend = new List<string>() { };
+                linesToAppend.Add($"{sectionName} {{");
+                foreach (var line in lines) {
+                    if (line.Type == ServiceDataType.StringArray) {
+                        linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
+                    }
+                    else {
+                        if (line.Value.Contains("/")) {
+                            linesToAppend.Add($"{line.Key} {line.Value};");
+                        }
+                        else {
+                            linesToAppend.Add($"{line.Key} \"{line.Value}\";");
+                        }
+                    }
                 }
+                linesToAppend.Add("};\n");
+                File.AppendAllLines(filePath, linesToAppend);
+            }
+
+            /// <summary>
+            /// todo: include ha una sintassi a parte
+            /// todo: includere nella stringa il NOME della sezione, e vedere se ci vogliono gli apici o no
+            /// </summary>
+            /// <param name="sectionName"></param>
+            /// <param name="filePath"></param>
+            /// <param name="lines"></param>
+            private static void WriteMutipleSection(string sectionName, string filePath, List<LineModel> lines) {
+                var linesToAppend = new List<string>() { };
+                linesToAppend.Add($"{sectionName} {{");
+
+                File.AppendAllLines(filePath, linesToAppend);
             }
         }
     }

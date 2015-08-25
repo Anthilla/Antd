@@ -30,21 +30,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace antdlib.Svcs.Bind {
     public class BindStatement {
+        public static ServiceDataType SupposeDataType(string value) {
+            if (value == "true" || value == "True" ||
+                value == "false" || value == "False" ||
+                value == "yes" || value == "Yes" ||
+                value == "no" || value == "No") {
+                return ServiceDataType.Boolean;
+            }
+            else if (value.Contains(";")) {
+                return ServiceDataType.StringArray;
+            }
+            else {
+                return ServiceDataType.String;
+            }
+        }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignAcl(string filePath, string input) {
+        public static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
+            if (value == "true" || value == "false") {
+                return new KeyValuePair<string, string>("true", "false");
+            }
+            else if (value == "True" || value == "False") {
+                return new KeyValuePair<string, string>("True", "False");
+            }
+            else if (value == "yes" || value == "no") {
+                return new KeyValuePair<string, string>("yes", "no");
+            }
+            else if (value == "Yes" || value == "No") {
+                return new KeyValuePair<string, string>("Yes", "No");
+            }
+            else {
+                return new KeyValuePair<string, string>("", "");
+            }
+        }
+
+        public static IEnumerable<BindConfig.OptionModel> AssignAcl(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]acl[\\s]*([a-zA-Z0-9.\\-_]*)[\\s]*{{";
+            var str = $"[^#]*acl[\\s]*([a-zA-Z0-9.\\-_]*)[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var aclName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("acl", "").Trim();
-                var aclStr = $"[^#]acl[\\s]*iif[\\s]*{{[\\s]*((?!acl[\\s]*)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+                var aclStr = $"[^#]*acl[\\s]*iif[\\s]*{{[\\s]*((?!acl[\\s]*)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
                 var aclRegex = new Regex(aclStr);
                 var aclMatches = aclRegex.Matches(input);
                 var data = "";
@@ -52,7 +82,6 @@ namespace antdlib.Svcs.Bind {
                     data = aclMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = aclName,
                     StringDefinition = data,
                     //Data = data.ToList()
@@ -62,41 +91,65 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignControls(string filePath, string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]controls[\\s]*{{";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var controlsName = "controls";
-                var controlsStr = $"[^#]controls[\\s]*{{[\\s]*((?![ghjqczxvm]+)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-                var controlsRegex = new Regex(controlsStr);
-                var controlsMatches = controlsRegex.Matches(input);
-                var data = "";
-                if (controlsMatches.Count > 0) {
-                    data = controlsMatches[0].Value;
+        public static IEnumerable<BindConfig.OptionModel> AssignControls(string input) {
+            var controls = new List<BindConfig.OptionModel>() { };
+            var controlsStr = $"[^#]*controls[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var controlsRegex = new Regex(controlsStr);
+            var controlsMatches = controlsRegex.Matches(input);
+            var data = (controlsMatches.Count > 0) ? controlsMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("controls {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = controlsName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new BindConfig.OptionModel() {
+                Name = "controls",
+                Data = dataList
+            };
+            controls.Add(option);
+            return controls;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignInclude(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignInclude(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]include[\\s]*\"([a-zA-Z0-9\\s./] *)\";";
+            var str = $"[^#]*include[\\s]*\"([a-zA-Z0-9\\s./] *)\";";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var includeStr = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("include", "").Trim();
                 var includeName = "include";
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = includeName,
                     StringDefinition = includeStr,
                     //Data = data.ToList()
@@ -106,14 +159,14 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignKey(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignKey(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]key[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{";
+            var str = $"[^#]*key[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var keyName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("key", "").Trim();
-                var keyStr = $"[^#]key[\\s]*\"{keyName}\"[\\s]*{{[\\s]*((?!con|log|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
+                var keyStr = $"[^#]*key[\\s]*\"{keyName}\"[\\s]*{{[\\s]*((?!con|log|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
                 var keyRegex = new Regex(keyStr);
                 var keyMatches = keyRegex.Matches(input);
                 var data = "";
@@ -121,7 +174,6 @@ namespace antdlib.Svcs.Bind {
                     data = keyMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = keyName,
                     StringDefinition = data,
                     //Data = data.ToList()
@@ -131,64 +183,115 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignLogging(string filePath, string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var loggingName = "logging";
-                var loggingStr = $"[^#]logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var loggingRegex = new Regex(loggingStr);
-                var loggingMatches = loggingRegex.Matches(input);
-                var data = "";
-                if (loggingMatches.Count > 0) {
-                    data = loggingMatches[0].Value;
+        public static IEnumerable<BindConfig.OptionModel> AssignLogging(string input) {
+            var logging = new List<BindConfig.OptionModel>() { };
+            //[^#]*logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\s;="/_.}{-])*;
+            var loggingStr = $"logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var loggingRegex = new Regex(loggingStr);
+            var loggingMatches = loggingRegex.Matches(input);
+            var data = (loggingMatches.Count > 0) ? loggingMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("logging {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = loggingName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new BindConfig.OptionModel() {
+                Name = "logging",
+                Data = dataList
+            };
+            logging.Add(option);
+            return logging;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignLwres(string filePath, string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]lwres[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var lwresName = "lwres";
-                var lwresStr = $"[^#]lwres[\\s]*{{[\\s]*((?!con|log|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var lwresRegex = new Regex(lwresStr);
-                var lwresMatches = lwresRegex.Matches(input);
-                var data = "";
-                if (lwresMatches.Count > 0) {
-                    data = lwresMatches[0].Value;
+        public static IEnumerable<BindConfig.OptionModel> AssignLwres(string input) {
+            var lwres = new List<BindConfig.OptionModel>() { };
+            var lwresStr = $"lwres[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var lwresRegex = new Regex(lwresStr);
+            var lwresMatches = lwresRegex.Matches(input);
+            var data = (lwresMatches.Count > 0) ? lwresMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("lwres {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = lwresName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new BindConfig.OptionModel() {
+                Name = "lwres",
+                Data = dataList
+            };
+            lwres.Add(option);
+            return lwres;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignMasters(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignMasters(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]masters[\\s]*([a-zA-Z0-9]*)[\\s]*([a-zA-Z0-9.:/]*)[\\s]*{{";
+            var str = $"[^#]*masters[\\s]*([a-zA-Z0-9]*)[\\s]*([a-zA-Z0-9.:/]*)[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var mastersName = matches[i].Value.Replace("{", "").Replace("masters", "").Trim();
-                var mastersStr = $"[^#]masters[\\s]*\"{Regex.Escape(mastersName)}\"[\\s]*{{[\\s]*((?!con|logg|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
+                var mastersStr = $"[^#]*masters[\\s]*\"{Regex.Escape(mastersName)}\"[\\s]*{{[\\s]*((?!con|logg|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
                 var mastersRegex = new Regex(mastersStr);
                 var mastersMatches = mastersRegex.Matches(input);
                 var data = "";
@@ -196,7 +299,6 @@ namespace antdlib.Svcs.Bind {
                     data = mastersMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = mastersName,
                     StringDefinition = data,
                     //Data = data.ToList()
@@ -206,14 +308,14 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignServer(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignServer(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]server[\\s]*([a-zA-Z0-9.\\-\"_]*[\\s]*{{";
+            var str = $"[^#]*server[\\s]*([a-zA-Z0-9.\\-\"_]*)[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var serverName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("server", "").Trim();
-                var serverStr = $"[^#]server[\\s]*\"{serverName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+                var serverStr = $"[^#]*server[\\s]*\"{serverName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
                 var serverRegex = new Regex(serverStr);
                 var serverMatches = serverRegex.Matches(input);
                 var data = "";
@@ -221,7 +323,6 @@ namespace antdlib.Svcs.Bind {
                     data = serverMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = serverName,
                     StringDefinition = data,
                     //Data = data.ToList()
@@ -231,89 +332,214 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignStatisticsChannels(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignOptions(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]statistics-channels[\\s]*{{[\\s]*((?!con|key|logg|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var statisticsChannelsName = "statistics-channels";
-                var statisticsChannelsStr = $"[^#]statistics-channels[\\s]*{{[\\s]*((?!con|key|logg|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var statisticsChannelsRegex = new Regex(statisticsChannelsStr);
-                var statisticsChannelsMatches = statisticsChannelsRegex.Matches(input);
-                var data = "";
-                if (statisticsChannelsMatches.Count > 0) {
-                    data = statisticsChannelsMatches[0].Value;
+            var optionsStr = $"*options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var optionsRegex = new Regex(optionsStr);
+            var optionsMatches = optionsRegex.Matches(input);
+            var data = (optionsMatches.Count > 0) ? optionsMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("options {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = statisticsChannelsName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
+            var option = new BindConfig.OptionModel() {
+                Name = "options",
+                Data = dataList
+            };
+            options.Add(option);
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignTrustedKeys(string filePath, string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]trusted-keys[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|logg|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var trustedKeysName = "trusted-keys";
-                var trustedKeysStr = $"[^#]trusted-keys[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|logg|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var trustedKeysRegex = new Regex(trustedKeysStr);
-                var trustedKeysMatches = trustedKeysRegex.Matches(input);
-                var data = "";
-                if (trustedKeysMatches.Count > 0) {
-                    data = trustedKeysMatches[0].Value;
+        public static IEnumerable<BindConfig.OptionModel> AssignStatisticsChannels(string input) {
+            var statisticsChannels = new List<BindConfig.OptionModel>() { };
+            var statisticsChannelsStr = $"statistics-channels[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var statisticsChannelsRegex = new Regex(statisticsChannelsStr);
+            var statisticsChannelsMatches = statisticsChannelsRegex.Matches(input);
+            var data = (statisticsChannelsMatches.Count > 0) ? statisticsChannelsMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("statistics-channels {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = trustedKeysName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new BindConfig.OptionModel() {
+                Name = "statisticsChannels",
+                Data = dataList
+            };
+            statisticsChannels.Add(option);
+            return statisticsChannels;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignManagedKeys(string filePath, string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]managed-keys[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|logg|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var managedKeysName = "managed-keys";
-                var managedKeysStr = $"[^#]managed-keys[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|logg|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var managedKeysRegex = new Regex(managedKeysStr);
-                var managedKeysMatches = managedKeysRegex.Matches(input);
-                var data = "";
-                if (managedKeysMatches.Count > 0) {
-                    data = managedKeysMatches[0].Value;
+        public static IEnumerable<BindConfig.OptionModel> AssignTrustedKeys(string input) {
+            var trustedKeys = new List<BindConfig.OptionModel>() { };
+            var trustedKeysStr = $"trusted-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var trustedKeysRegex = new Regex(trustedKeysStr);
+            var trustedKeysMatches = trustedKeysRegex.Matches(input);
+            var data = (trustedKeysMatches.Count > 0) ? trustedKeysMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("trusted-keys {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
                 }
-                var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
-                    Name = managedKeysName,
-                    StringDefinition = data,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new BindConfig.OptionModel() {
+                Name = "trustedKeys",
+                Data = dataList
+            };
+            trustedKeys.Add(option);
+            return trustedKeys;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignView(string filePath, string input) {
+        public static IEnumerable<BindConfig.OptionModel> AssignManagedKeys(string input) {
+            var managedKeys = new List<BindConfig.OptionModel>() { };
+            var managedKeysStr = $"managed-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var managedKeysRegex = new Regex(managedKeysStr);
+            var managedKeysMatches = managedKeysRegex.Matches(input);
+            var data = (managedKeysMatches.Count > 0) ? managedKeysMatches[0].Value : "";
+            var dataList = new List<BindConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("managed-keys {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new BindConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+            }
+            var option = new BindConfig.OptionModel() {
+                Name = "managedKeys",
+                Data = dataList
+            };
+            managedKeys.Add(option);
+            return managedKeys;
+        }
+
+        public static IEnumerable<BindConfig.OptionModel> AssignView(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]view[\\s]*([a-zA-Z0-9.\\-\"_]*[\\s]*{{";
+            var str = $"[^#]*view[\\s]*([a-zA-Z0-9.\\-\"_]*)[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var viewName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("view", "").Trim();
-                var viewStr = $"[^#]view[\\s]*\"{viewName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+                var viewStr = $"[^#]*view[\\s]*\"{viewName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
                 var viewRegex = new Regex(viewStr);
                 var viewMatches = viewRegex.Matches(input);
                 var data = "";
@@ -321,7 +547,6 @@ namespace antdlib.Svcs.Bind {
                     data = viewMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = viewName,
                     StringDefinition = data,
                     //Data = data.ToList()
@@ -331,14 +556,19 @@ namespace antdlib.Svcs.Bind {
             return options;
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignZone(string filePath, string input) {
+        /// <summary>
+        /// solo le zone hanno il [^#]* per skippare il commento
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static IEnumerable<BindConfig.OptionModel> AssignZone(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]zone[\\s]*[{"\""}]*([a-zA-Z0-9.\\-_]*)[{"\""}]*[\\s]*{{";
+            var str = $"[^#]*zone[\\s]*[{"\""}]*([a-zA-Z0-9.\\-_]*)[{"\""}]*[\\s]*{{";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var zoneName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("zone", "").Trim();
-                var zoneStr = $"[^#]zone[\\s]*\"{zoneName}\"[\\s]*{{[\\s]*((?!zone[\\s]*\")[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+                var zoneStr = $"[^#]*zone[\\s]*\"{zoneName}\"[\\s]*{{[\\s]*((?!zone[\\s]*\")[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
                 var zoneRegex = new Regex(zoneStr);
                 var zoneMatches = zoneRegex.Matches(input);
                 var data = "";
@@ -346,7 +576,6 @@ namespace antdlib.Svcs.Bind {
                     data = zoneMatches[0].Value;
                 }
                 var option = new BindConfig.OptionModel() {
-                    FilePath = filePath,
                     Name = zoneName,
                     StringDefinition = data,
                     //Data = data.ToList()

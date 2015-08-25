@@ -66,7 +66,7 @@
 
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
-        }
+    }
     @Html.Partial("page-services-bind")
     @*@Html.Partial("page-services-dhcp")
         @Html.Partial("page-services-glusterfs")
@@ -212,6 +212,37 @@
                 }
             });
         });
+
+        //$(document).ready(function () {
+        //    $.when(
+        //        $('input[data-array="bind"]').selectize({
+        //            delimiter: ';',
+        //            persist: false,
+        //            create: function (input) {
+        //                return {
+        //                    value: input,
+        //                    text: input
+        //                }
+        //            }
+        //        })
+        //    ).done(function (x) {
+        //        $('input[data-array="bind"]').hide();
+        //    });
+        //});
+
+        $(document).ready(function () {
+            $('form[data-role="bind-section-update"]').each(function (sindexx) {
+                $(this).find('[data-object="bind-parameter"]').each(function (index) {
+                    var dataKey = $(this).find('[name="DataKey"]');
+                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                    var dataValue = $(this).find('[name="DataValue"]');
+                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                    var dataFile = $(this).find('[name="DataFilePath"]');
+                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
+                });
+            });
+        });
+
         //END BIND
 
     </script>

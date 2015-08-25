@@ -9,42 +9,114 @@
     }
 </legend>
 
-@if (antdlib.Svcs.Bind.BindConfig.IsActive == true && antdlib.Svcs.Bind.BindConfig.MapFile.Get() != null) {
-
-    <form action="/services/update/bind" id="BindForm" method="POST" enctype="multipart/form-data">
-        <table class="table" data-search="BindSearch">
-            <tbody>
-                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindAcl) {
-                    @BindDisplayOption(option.Name, option.StringDefinition, option.FilePath, option.Data)
-                }
-                @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindZone) {
-                    @BindDisplayOption(option.Name, option.StringDefinition, option.FilePath, option.Data)
-                }
-            </tbody>
-        </table>
-    </form>
+@if (antdlib.Svcs.Bind.BindConfig.IsActive == true) {
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindLogging.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindLogging) {
+            <form action="/services/update/bind/logging" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindLwres.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindLwres) {
+            <form action="/services/update/bind/lwres" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindOptions.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindOptions) {
+            <form action="/services/update/bind/options" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindStatisticsChannels.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindStatisticsChannels) {
+            <form action="/services/update/bind/statistics-channel" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindTrustedKeys.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindTrustedKeys) {
+            <form action="/services/update/bind/trusted-keys" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
+    if (antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindManagedKeys.Count > 0) {
+        @foreach (antdlib.Svcs.Bind.BindConfig.OptionModel option in antdlib.Svcs.Bind.BindConfig.MapFile.Get().BindManagedKeys) {
+            <form action="/services/update/bind/managed-keys" id="BindForm" data-role="bind-section-update" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="BindSearch">
+                    <tbody>
+                        @BindDisplayOption(option.Name, option.FilePath, option.Data)
+                    </tbody>
+                </table>
+            </form>
+        }
+    }
 }
 
-@helper BindDisplayOption(string name, string definition, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> options) {
-    <tr data-file="@filePath" data-object="bind-parameter">
-        <td style="width: 25%;" colspan="2">
+@helper BindDisplayOption(string name, string filePath, List<antdlib.Svcs.Bind.BindConfig.LineModel> lines) {
+    <tr data-file="@filePath" data-object="bind-parameter" style="border-bottom: 4px solid #3A3A3A;">
+        <td colspan="3">
             @name
-            <input name="DataOptionName" type="hidden" value="@name" />
-            <input name="DataOptionFilePath" type="hidden" value="@filePath" />
+            <input type="submit" value="Update Bind @name" style="float:right;" class="bg-emerald"/>
         </td>
-        <td>@definition</td>
     </tr>
-foreach (antdlib.Svcs.Bind.BindConfig.LineModel option in options) {
+foreach (antdlib.Svcs.Bind.BindConfig.LineModel line in lines) {
         <tr data-file="@filePath" data-object="bind-parameter">
-            <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A;"></td>
-            <td style="width: 25%;">
-                @option.Key
-                <input name="DataOptionName" type="hidden" value="@option.Key" />
-                <input name="DataOptionFilePath" type="hidden" value="@filePath" />
+            <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A; width: 13%;"></td>
+            <td style="width: 20%;">
+                @line.Key
+                <input name="DataKey" type="hidden" value="@line.Key" />
+                <input name="DataFilePath" type="hidden" value="@filePath" />
             </td>
-            <td style="width: 25%;">
-                @option.Value
-            </td>
+            @if (line.Type == antdlib.ServiceDataType.String) {
+                <td>
+                    <input name="DataValue" type="text" value="@line.Value" style="width: 90%;" />
+                </td>
+            }
+            else if (line.Type == antdlib.ServiceDataType.StringArray) {
+                <td>
+                    <input data-array="bind" name="DataValue" type="text" value="@line.Value" style="width: 90%;" />
+                </td>
+            }
+            else if (line.Type == antdlib.ServiceDataType.Boolean) {
+                <td>
+                    <select name="DataValue">
+                        @if (line.Value == line.BooleanVerbs.Key) {
+                            <option value="@line.BooleanVerbs.Key" selected>@line.BooleanVerbs.Key</option>
+                            <option value="@line.BooleanVerbs.Value">@line.BooleanVerbs.Value</option>
+                        }
+                        else {
+                            <option value="@line.BooleanVerbs.Key">@line.BooleanVerbs.Key</option>
+                            <option value="@line.BooleanVerbs.Value" selected>@line.BooleanVerbs.Value</option>
+                        }
+                    </select>
+                </td>
+            }
         </tr>
 }
 }
