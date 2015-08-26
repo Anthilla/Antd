@@ -141,6 +141,51 @@ namespace Antd {
                 return Response.AsRedirect("/services");
             };
 
+            Post["/update/bind/zone/{zone}"] = x => {
+                var zoneName = (string)x.zone;
+                var parameters = this.Bind<List<ServiceBind>>();
+                BindConfig.WriteFile.SaveZoneConfig(zoneName, parameters);
+                Thread.Sleep(1000);
+                BindConfig.WriteFile.DumpGlobalConfig();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addacl"] = x => {
+                string name = Request.Form.NewAclName;
+                BindConfig.MapFile.AddAcl(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addkey"] = x => {
+                string name = Request.Form.NewKeyName;
+                BindConfig.MapFile.AddKey(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addmasters"] = x => {
+                string name = Request.Form.NewMastersName;
+                BindConfig.MapFile.AddMasters(name);
+                return Response.AsRedirect("/services");
+            };
+
+
+            Post["/samba/addserver"] = x => {
+                string name = Request.Form.NewServerName;
+                BindConfig.MapFile.AddServer(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addview"] = x => {
+                string name = Request.Form.NewViewName;
+                BindConfig.MapFile.AddView(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/samba/addzone"] = x => {
+                string name = Request.Form.NewZoneName;
+                BindConfig.MapFile.AddZone(name);
+                return Response.AsRedirect("/services");
+            };
             #endregion BIND
 
         }

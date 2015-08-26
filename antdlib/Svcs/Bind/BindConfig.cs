@@ -310,7 +310,7 @@ namespace antdlib.Svcs.Bind {
                 var trustedKeys = BindStatement.AssignTrustedKeys(namedFileText).ToList();
                 var managedKeys = BindStatement.AssignManagedKeys(namedFileText).ToList();
                 //var view = BindStatement.AssignView(namedFileText).ToList();
-                //var zones = BindStatement.AssignZone(namedFileText).ToList();
+                var zones = BindStatement.AssignZone(namedFileText).ToList();
 
                 var bind = new BindModel() {
                     _Id = serviceGuid,
@@ -329,7 +329,7 @@ namespace antdlib.Svcs.Bind {
                     BindTrustedKeys = trustedKeys,
                     BindManagedKeys = managedKeys,
                     //BindView = view,
-                    //BindZone = zones
+                    BindZone = zones
                 };
                 DeNSo.Session.New.Set(bind);
             }
@@ -337,6 +337,54 @@ namespace antdlib.Svcs.Bind {
             public static BindModel Get() {
                 var bind = DeNSo.Session.New.Get<BindModel>(s => s.Guid == serviceGuid).FirstOrDefault();
                 return bind;
+            }
+
+            public static void AddAcl(string name) {
+                var acl = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindAcl.Add(acl);
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void AddKey(string name) {
+                var key = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindKey.Add(key);
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void AddMasters(string name) {
+                var masters = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindMasters.Add(masters);
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void AddServer(string name) {
+                var server = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindServer.Add(server);
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void AddView(string name) {
+                var view = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindView.Add(view);
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void AddZone(string name) {
+                var zone = new OptionModel() { Name = name };
+                var bind = Get();
+                bind.Timestamp = Timestamp.Now;
+                bind.BindZone.Add(zone);
+                DeNSo.Session.New.Set(bind);
             }
         }
 
@@ -359,7 +407,9 @@ namespace antdlib.Svcs.Bind {
                 bind.Timestamp = Timestamp.Now;
                 var data = new List<LineModel>() { };
                 foreach (var parameter in newParameters) {
-                    data.Add(ConvertData(parameter));
+                    if (parameter.DataKey.Length > 0) {
+                        data.Add(ConvertData(parameter));
+                    }
                 }
                 var options = new List<OptionModel>() { };
                 var option = new OptionModel() {
@@ -380,13 +430,30 @@ namespace antdlib.Svcs.Bind {
                 else if (section == "trusted-keys") { bind.BindTrustedKeys = options; }
                 else if (section == "managed-leys") { bind.BindManagedKeys = options; }
                 else if (section == "view") { bind.BindView = options; }
-                else if (section == "zones") { bind.BindZone = options; }
                 DeNSo.Session.New.Set(bind);
             }
 
-            /// <summary>
-            /// todo, write file from model :D
-            /// </summary>
+            public static void SaveZoneConfig(string zoneName, List<ServiceBind> newParameters) {
+                var bind = MapFile.Get();
+                bind.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                var options = bind.BindZone;
+                var oldOption = options.Where(o => o.Name == zoneName).FirstOrDefault();
+                options.Remove(oldOption);
+                var newOption = new OptionModel() {
+                    Name = zoneName,
+                    Data = data
+                };
+                options.Add(newOption);
+                bind.BindZone = options;
+                DeNSo.Session.New.Set(bind);
+            }
+
             public static void DumpGlobalConfig() {
                 var filePath = $"{DIR}/{mainFile}";
                 var bind = MapFile.Get();
@@ -396,16 +463,16 @@ namespace antdlib.Svcs.Bind {
                     WriteSimpleSection("options", filePath, section.Data);
                 }
                 foreach (var section in bind.BindAcl) {
-                    WriteMutipleSection("acl", filePath, section.Data);
+                    WriteMutipleSection("acl", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindControls) {
-                    WriteMutipleSection("controls", filePath, section.Data);
+                    WriteMutipleSection("controls", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindInclude) {
-                    WriteMutipleSection("include", filePath, section.Data);
+                    WriteMutipleSection("include", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindKey) {
-                    WriteMutipleSection("key", filePath, section.Data);
+                    WriteMutipleSection("key", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindLogging) {
                     WriteSimpleSection("logging", filePath, section.Data);
@@ -414,10 +481,10 @@ namespace antdlib.Svcs.Bind {
                     WriteSimpleSection("lwres", filePath, section.Data);
                 }
                 foreach (var section in bind.BindMasters) {
-                    WriteMutipleSection("masters", filePath, section.Data);
+                    WriteMutipleSection("masters", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindServer) {
-                    WriteMutipleSection("server", filePath, section.Data);
+                    WriteMutipleSection("server", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindStatisticsChannels) {
                     WriteSimpleSection("statistics-channel", filePath, section.Data);
@@ -429,10 +496,10 @@ namespace antdlib.Svcs.Bind {
                     WriteSimpleSection("managed-keys", filePath, section.Data);
                 }
                 foreach (var section in bind.BindView) {
-                    WriteMutipleSection("view", filePath, section.Data);
+                    WriteMutipleSection("view", section.Name, filePath, section.Data);
                 }
                 foreach (var section in bind.BindZone) {
-                    WriteMutipleSection("zone", filePath, section.Data);
+                    WriteMutipleSection("zone", section.Name, filePath, section.Data);
                 }
             }
 
@@ -440,9 +507,9 @@ namespace antdlib.Svcs.Bind {
                 File.WriteAllText(path, "");
             }
 
-            private static void WriteSimpleSection(string sectionName, string filePath, List<LineModel> lines) {
+            private static void WriteSimpleSection(string section, string filePath, List<LineModel> lines) {
                 var linesToAppend = new List<string>() { };
-                linesToAppend.Add($"{sectionName} {{");
+                linesToAppend.Add($"{section} {{");
                 foreach (var line in lines) {
                     if (line.Type == ServiceDataType.StringArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
@@ -467,10 +534,30 @@ namespace antdlib.Svcs.Bind {
             /// <param name="sectionName"></param>
             /// <param name="filePath"></param>
             /// <param name="lines"></param>
-            private static void WriteMutipleSection(string sectionName, string filePath, List<LineModel> lines) {
+            private static void WriteMutipleSection(string section, string name, string filePath, List<LineModel> lines) {
                 var linesToAppend = new List<string>() { };
-                linesToAppend.Add($"{sectionName} {{");
-
+                var nametowrite = "";
+                if (section == "zone") {
+                    nametowrite = $" \"{name}\" ";
+                }
+                else {
+                    nametowrite = $" {name} ";
+                }
+                linesToAppend.Add($"{section}{nametowrite}{{");
+                foreach (var line in lines) {
+                    if (line.Type == ServiceDataType.StringArray) {
+                        linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
+                    }
+                    else {
+                        if (line.Value.Contains("/")) {
+                            linesToAppend.Add($"{line.Key} {line.Value};");
+                        }
+                        else {
+                            linesToAppend.Add($"{line.Key} \"{line.Value}\";");
+                        }
+                    }
+                }
+                linesToAppend.Add("};\n");
                 File.AppendAllLines(filePath, linesToAppend);
             }
         }

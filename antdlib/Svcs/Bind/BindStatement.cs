@@ -69,22 +69,54 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignAcl(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*acl[\\s]*([a-zA-Z0-9.\\-_]*)[\\s]*{{";
+            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var aclName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("acl", "").Trim();
-                var aclStr = $"[^#]*acl[\\s]*iif[\\s]*{{[\\s]*((?!acl[\\s]*)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-                var aclRegex = new Regex(aclStr);
-                var aclMatches = aclRegex.Matches(input);
-                var data = "";
-                if (aclMatches.Count > 0) {
-                    data = aclMatches[0].Value;
+                var aclDataString = matches[i].Value.Trim();
+                var aclDataStringSplit = aclDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var aclName = (aclDataStringSplit.Length > 0) ? aclDataStringSplit[0].Replace("acl", "").Replace("\"", "").Trim() : "";
+                var data = (aclDataStringSplit.Length > 1) ? aclDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("acl {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
                     Name = aclName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
@@ -161,22 +193,54 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignKey(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*key[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{";
+            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var keyName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("key", "").Trim();
-                var keyStr = $"[^#]*key[\\s]*\"{keyName}\"[\\s]*{{[\\s]*((?!con|log|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var keyRegex = new Regex(keyStr);
-                var keyMatches = keyRegex.Matches(input);
-                var data = "";
-                if (keyMatches.Count > 0) {
-                    data = keyMatches[0].Value;
+                var aclDataString = matches[i].Value.Trim();
+                var aclDataStringSplit = aclDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var aclName = (aclDataStringSplit.Length > 0) ? aclDataStringSplit[0].Replace("acl", "").Replace("\"", "").Trim() : "";
+                var data = (aclDataStringSplit.Length > 1) ? aclDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("acl {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
-                    Name = keyName,
+                    Name = aclName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
@@ -286,22 +350,54 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignMasters(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*masters[\\s]*([a-zA-Z0-9]*)[\\s]*([a-zA-Z0-9.:/]*)[\\s]*{{";
+            var str = $"[^#]masters[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(masters[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var mastersName = matches[i].Value.Replace("{", "").Replace("masters", "").Trim();
-                var mastersStr = $"[^#]*masters[\\s]*\"{Regex.Escape(mastersName)}\"[\\s]*{{[\\s]*((?!con|logg|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{-])*;";
-                var mastersRegex = new Regex(mastersStr);
-                var mastersMatches = mastersRegex.Matches(input);
-                var data = "";
-                if (mastersMatches.Count > 0) {
-                    data = mastersMatches[0].Value;
+                var mastersDataString = matches[i].Value.Trim();
+                var mastersDataStringSplit = mastersDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var mastersName = (mastersDataStringSplit.Length > 0) ? mastersDataStringSplit[0].Replace("masters", "").Replace("\"", "").Trim() : "";
+                var data = (mastersDataStringSplit.Length > 1) ? mastersDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("masters {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
                     Name = mastersName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
@@ -310,22 +406,54 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignServer(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*server[\\s]*([a-zA-Z0-9.\\-\"_]*)[\\s]*{{";
+            var str = $"[^#]server[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(server[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var serverName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("server", "").Trim();
-                var serverStr = $"[^#]*server[\\s]*\"{serverName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-                var serverRegex = new Regex(serverStr);
-                var serverMatches = serverRegex.Matches(input);
-                var data = "";
-                if (serverMatches.Count > 0) {
-                    data = serverMatches[0].Value;
+                var serverDataString = matches[i].Value.Trim();
+                var serverDataStringSplit = serverDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var serverName = (serverDataStringSplit.Length > 0) ? serverDataStringSplit[0].Replace("server", "").Replace("\"", "").Trim() : "";
+                var data = (serverDataStringSplit.Length > 1) ? serverDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("server {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
                     Name = serverName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
@@ -334,7 +462,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignOptions(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var optionsStr = $"*options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var optionsStr = $"options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
             var optionsRegex = new Regex(optionsStr);
             var optionsMatches = optionsRegex.Matches(input);
             var data = (optionsMatches.Count > 0) ? optionsMatches[0].Value : "";
@@ -534,51 +662,110 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignView(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*view[\\s]*([a-zA-Z0-9.\\-\"_]*)[\\s]*{{";
+            var str = $"[^#]view[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(view[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var viewName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("view", "").Trim();
-                var viewStr = $"[^#]*view[\\s]*\"{viewName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-                var viewRegex = new Regex(viewStr);
-                var viewMatches = viewRegex.Matches(input);
-                var data = "";
-                if (viewMatches.Count > 0) {
-                    data = viewMatches[0].Value;
+                var viewDataString = matches[i].Value.Trim();
+                var viewDataStringSplit = viewDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var viewName = (viewDataStringSplit.Length > 0) ? viewDataStringSplit[0].Replace("view", "").Replace("\"", "").Trim() : "";
+                var data = (viewDataStringSplit.Length > 1) ? viewDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("view {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
                     Name = viewName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
             return options;
         }
 
-        /// <summary>
-        /// solo le zone hanno il [^#]* per skippare il commento
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         public static IEnumerable<BindConfig.OptionModel> AssignZone(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*zone[\\s]*[{"\""}]*([a-zA-Z0-9.\\-_]*)[{"\""}]*[\\s]*{{";
+            var str = $"[^#]zone[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(zone[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
-                var zoneName = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("zone", "").Trim();
-                var zoneStr = $"[^#]*zone[\\s]*\"{zoneName}\"[\\s]*{{[\\s]*((?!zone[\\s]*\")[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-                var zoneRegex = new Regex(zoneStr);
-                var zoneMatches = zoneRegex.Matches(input);
-                var data = "";
-                if (zoneMatches.Count > 0) {
-                    data = zoneMatches[0].Value;
+                var zoneDataString = matches[i].Value.Trim();
+                var zoneDataStringSplit = zoneDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
+                var zoneName = (zoneDataStringSplit.Length > 0) ? zoneDataStringSplit[0].Replace("zone", "").Replace("\"", "").Trim() : "";
+                var data = (zoneDataStringSplit.Length > 1) ? zoneDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
+                var dataList = new List<BindConfig.LineModel>() { };
+                if (data.Length > 0) {
+                    var txt = data.Replace("zone {", "");
+                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0;x < simpleDataMatches.Count; x++) {
+                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1 && !split[0].StartsWith("//")) {
+                            var k = split[0];
+                            var v = split[1].Replace(";", "").Replace("\"", "");
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = SupposeDataType(v),
+                                BooleanVerbs = SupposeBooleanVerbs(v),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
+                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    for (int x = 0; x < multipleDataMatches.Count; x++) {
+                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        if (split.Length > 1) {
+                            var k = split[0];
+                            var v = split[1].Replace("};", "").Trim();
+                            var ddd = new BindConfig.LineModel() {
+                                Key = k,
+                                Value = v,
+                                Type = ServiceDataType.StringArray,
+                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                                FilePath = ""
+                            };
+                            dataList.Add(ddd);
+                        }
+                    }
                 }
                 var option = new BindConfig.OptionModel() {
                     Name = zoneName,
                     StringDefinition = data,
-                    //Data = data.ToList()
+                    Data = dataList
                 };
                 options.Add(option);
             }
