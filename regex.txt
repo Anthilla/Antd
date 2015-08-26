@@ -1,0 +1,48 @@
+#stringhe regex valide
+#zone - filtra nomi
+[^#]zone[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{														$"[^#]zone[\\s]*[{"\""}]*([a-zA-Z\d.\\-_]*)[{"\""}]*[\\s]*{{"
+[^#]zone[\s]*"113.0.203.in-addr.arpa"[\s]*{[\s]*((?!zone[\s]*")[a-zA-Z\d\s;"/_.}{-])*;				$"[^#]zone[\\s]*\"{zoneName}\"[\\s]*{{[\\s]*((?!zone[\\s]*\")[a-zA-Z\d\\s;\"/_.}}{{-])*;"
+#zone -> nome + dati
+[^#]zone[\s]*"([a-zA-Z\d.\-_]*)"[\s]*{[\s]*((?!(zone[\s]*")|(include))[a-zA-Z\d\s;"/_.}{-])*; 
+#acl - filtra nomi
+[^#]acl[\s]*([a-zA-Z\d.\-_]*)[\s]*{																$"[^#]acl[\\s]*([a-zA-Z\d.\\-_]*)[\\s]*{{"
+[^#]acl[\s]*iif[\s]*{[\s]*((?!acl[\s]*)[a-zA-Z\d\s;"/_.}{-])*};									$"[^#]acl[\\s]*iif[\\s]*{{[\\s]*((?!acl[\\s]*)[a-zA-Z\d\\s;\"/_.}}{{-])*;"
+#controls
+[^#]controls[\s]*{																					$"[^#]controls[\\s]*{{"
+[^#]controls[\s]*{[\s]*((?![ghjqczxvm]+)|(?!logging)[a-zA-Z\d\s;"/_.}{-])*;						$"[^#]controls[\\s]*{{[\\s]*((?![ghjqczxvm]+)[a-zA-Z\d\\s;\"/_.}}{{-])*;"
+#include
+[^#]include[\s]*"([a-zA-Z\d\s./]*)";																$"[^#]include[\\s]*\"([a-zA-Z\d\\s./] *)\";"
+#key
+[^#]key[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{														$"[^#]key[\\s]*[\"]*([a-zA-Z\d.\\-_]*)[\"]*[\\s]*{{"
+[^#]key[\s]*"updbindkey"[\s]*{[\s]*((?!con|log|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\s;="/_.}{-])*;	$"[^#]key[\\s]*\"{keyName}\"[\\s]*{{[\\s]*((?!con|log|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\\s;=\"/_.}}{{-])*;"
+#logging
+[^#]logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\s;="/_.}{-])*;					$"[^#]logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\\s;=\"/_.}}{{-])*;"
+#lwres
+																									$"[^#]lwres[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\\s;=\"/_.}}{{-])*;"
+#masters
+[^#]masters[\s]*([a-zA-Z\d]*)[\s]*([a-zA-Z\d.:/]*)[\s]*{											$"[^#]masters[\\s]*([a-zA-Z\d]*)[\\s]*([a-zA-Z\d.:/]*)[\\s]*{{"
+[^#]masters[\s]*namse 3245.677.65:\/34[\s]*{[\s]*((?!con|logg|sta|acl|opt|tru|zon|inc|key)[a-zA-Z\d\s;="/_.}{-])*;			$"[^#]masters[\\s]*\"{Regex.Escape(mastersName)}\"[\\s]*{{[\\s]*((?!con|logg|key|sta|acl|opt|tru|zon|inc)[a-zA-Z\d\\s;=\"/_.}}{{-])*;"
+#server
+																									$"[^#]server[\\s]*([a-zA-Z\d.\\-\"_]*[\\s]*{{"
+[^#]server[\s]*servername[\s]*{[\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z\d\s;="/_.}{-])*;					$"[^#]server[\\s]*\"{serverName}\"[\\s]*{{[\\s]*((?!con|logg|ser|sta|acl|opt|tru|zon|inc|key)[a-zA-Z\d\\s;\"/_.}}{{-])*;"
+#options
+[^#]options[\s]*{[\s]*([a-zA-Z\d\s;="/_.}{\-*])*;
+#prendo tutti le le kvp di options escludendo options e tutt i campi con valori multipli key {val; val;}
+((?![options {])(?![a-zA-Z\d\s"/\-_.*]*[\s]{)([a-zA-Z\d\s"/\-_.*]*)[\s])
+#prendo solo le kvp con valori multipli
+(?![options {])((?![a-zA-Z\d\s"/\-_.*]*[\s]*[a-zA-Z\d\s"/\-_.*]*;)([a-zA-Z\d\s"/\-_.*]*)[\s])
+({[a-zA-Z\d\s-"/._;*]*;[\s]};)|([a-zA-Z\d\s-"/._*]*[\s][a-zA-Z\d\s-"/._*]*;)
+#catturo solo le etichette con valori multipli
+[a-zA-Z\d\s-"/._*]*{
+
+#uso queste due per il sotto get delle coppie k-v di una data sezione (options qui)
+	#catturo solo le etichette con valori multipli e i loro valori
+	[a-zA-Z\d\s-"/._*]*{[a-zA-Z\d\s-"/._*;]*};
+	#prende solo i kvp normali
+	(?!([a-zA-Z\d\s-"/._*;]*})|(;))[a-zA-Z\d\s-/._"*]*[;]
+
+#prende blocco di una sezione, con nome 
+[^#]zone[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{[\s]*((?!(zone[\s]*)|(include))[a-zA-Z\d\s;"/_.}{-])*; 
+[^#]acl[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{[\s]*((?!(acl[\s]*)|(include))[a-zA-Z\d\s;"/_.}{-])*;
+
+

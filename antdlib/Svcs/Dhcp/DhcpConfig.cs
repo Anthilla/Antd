@@ -43,7 +43,7 @@ namespace antdlib.Svcs.Dhcp {
 
         private static string DIR = Mount.SetDIRSPath(dir);
 
-        private static string mainFile = "smb.conf";
+        private static string mainFile = "dhcpd.conf";
 
         private static string antdDhcpFile = "antd.dhcp.conf";
 
