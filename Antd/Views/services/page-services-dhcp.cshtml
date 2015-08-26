@@ -1,1 +1,10 @@
-﻿<legend id="DHCP">DHCP</legend>
+﻿<legend id="DHCP">
+    DHCP
+    @if (antdlib.Svcs.Dhcp.DhcpConfig.IsActive == false) {
+        <i id="ActivateDhcp" class="icon-upload fg-anthilla-orange" style="float:right; cursor: pointer;"></i>
+    }
+    else {
+        <i id="RefreshDhcp" class="icon-redo fg-anthilla-blu" style="float:right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReloadDhcp" class="icon-cycle fg-lightGreen" style="float:right; cursor: pointer; margin: auto 10px;"></i>
+    }
+</legend>

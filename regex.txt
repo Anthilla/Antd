@@ -44,5 +44,27 @@
 #prende blocco di una sezione, con nome 
 [^#]zone[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{[\s]*((?!(zone[\s]*)|(include))[a-zA-Z\d\s;"/_.}{-])*; 
 [^#]acl[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{[\s]*((?!(acl[\s]*)|(include))[a-zA-Z\d\s;"/_.}{-])*;
+(controls[\s\S]*{[\s\S]+};)[\s\S]*(logging|acl)[\s\S]{
+acl|controls|include|key|logging|lwres|masters|options|server|statistics-channels|trusted-keys|managed-keys|view|zone
 
+[a-zA-Z\d\s-"/._*]*{[a-zA-Z\d\s-"/._*;]*};
 
+([\n]+[\w\d\s\-=".:]+;)
+
+####DHCPD####
+#questo prende i valori della zone (anche se la zona è un vlore di qualcosaltro)
+[^#]zone[\s]*["]*([a-zA-Z\d.\-_]*)["]*[\s]*{[\s]*((?!(key[\s]*)|(include))[a-zA-Z\d\s;"/_.}{-])*;[\s]+}
+#greppa i valori di global
+([\n]+[\w\d\s\-=".:]+;)						-> fix, prende anche i singoli valori di altri parametri :/
+([^\s{}]*[\s\w\d\-.=":]*[^}];)				-> pulisce dalle {} ma ancora prende troppe cose
+#greppa linee commentate
+[#]+[\w\d\s\-]*\n							-> MA solo se finiscono con un line break
+											-> devo fare la stessa cosa ma SOLO con i ;
+#greppa le key e tutto ciò che c'è dentro
+key[\s\S]*};
+#greppa le zone (singole)
+zone[\s\w\d.{]*;
+#greppa gli host
+host[\s\w\d{.:;\-]*
+#subnetmask
+subnet[\s\w\d.]*{[\s\w\d.;{-]* OPPURE subnet[\s\w\d.]*mask[\s\w\d.]*{[\s\w\d.;{-]*

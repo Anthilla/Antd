@@ -210,8 +210,6 @@ namespace Antd {
                 DhcpConfig.WriteFile.SaveGlobalConfig(parameters);
                 Thread.Sleep(1000);
                 DhcpConfig.WriteFile.DumpGlobalConfig();
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
 
@@ -223,8 +221,6 @@ namespace Antd {
                 DhcpConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
                 Thread.Sleep(1000);
                 DhcpConfig.WriteFile.DumpShare(name);
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
 
@@ -232,17 +228,12 @@ namespace Antd {
                 string key = Request.Form.NewParameterKey;
                 string value = Request.Form.NewParameterValue;
                 DhcpConfig.WriteFile.AddParameterToGlobal(key, value);
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
 
             Post["/dhcp/addshare"] = x => {
                 string name = Request.Form.NewShareName;
                 string directory = Request.Form.NewShareDirectory;
-                DhcpConfig.WriteFile.AddShare(name, directory);
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.RewriteSMBCONF();
                 return Response.AsRedirect("/services");
             };
             #endregion SAMBA
