@@ -68,8 +68,8 @@
         @Html.Partial("_cctable-main", Model.CCTable)
     }
     @Html.Partial("page-services-bind")
-    @*@Html.Partial("page-services-dhcp")
-        @Html.Partial("page-services-glusterfs")
+    @Html.Partial("page-services-dhcp")
+    @*@Html.Partial("page-services-glusterfs")
         @Html.Partial("page-services-libvirt")
         @Html.Partial("page-services-lxc")
         @Html.Partial("page-services-nfs")
@@ -266,8 +266,80 @@
         $('#AddNewZoneBind').click(function () {
             $('#NewZoneBindDashboard').toggle();
         });
-
         //END BIND
 
+        //START DHCP
+        $('#ActivateDhcp').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/activate/dhcp',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#RefreshDhcp').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/refresh/dhcp',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ReloadDhcp').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/reloadconfig/dhcp',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ShowDhcpStructure').mousedown(function () {
+            $('#DhcpStructure').show();
+        }).mouseup(function () {
+            $('#DhcpStructure').hide();
+        });;
+
+        $(document).ready(function () {
+            $('#DhcpForm').find('tr[data-object="dhcp-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+
+        $(document).ready(function () {
+            $('[data-share-form]').each(function (sindexx) {
+                $(this).find('[data-object="share-parameter"]').each(function (index) {
+                    var dataKey = $(this).find('[name="DataKey"]');
+                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                    var dataValue = $(this).find('[name="DataValue"]');
+                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                    var dataFile = $(this).find('[name="DataFilePath"]');
+                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
+                });
+            });
+        });
+
+        $('#AddNewParameterDhcp').click(function () {
+            $('#NewParameterDhcpDashboard').toggle();
+        });
+
+        $('#AddNewShare').click(function () {
+            $('#NewDhcpShare').toggle();
+        });
+        //END DHCP
+        
     </script>
 }

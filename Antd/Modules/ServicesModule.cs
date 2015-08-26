@@ -29,6 +29,7 @@
 
 using antdlib.CCTable;
 using antdlib.Svcs.Bind;
+using antdlib.Svcs.Dhcp;
 using antdlib.Svcs.Samba;
 using antdlib.ViewBinds;
 using Nancy;
@@ -168,7 +169,6 @@ namespace Antd {
                 return Response.AsRedirect("/services");
             };
 
-
             Post["/samba/addserver"] = x => {
                 string name = Request.Form.NewServerName;
                 BindConfig.MapFile.AddServer(name);
@@ -188,6 +188,64 @@ namespace Antd {
             };
             #endregion BIND
 
+            #region SAMBA
+            Post["/activate/dhcp"] = x => {
+                DhcpConfig.SetReady();
+                DhcpConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/refresh/dhcp"] = x => {
+                DhcpConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/reloadconfig/dhcp"] = x => {
+                DhcpConfig.ReloadConfig();
+                return Response.AsJson(true);
+            };
+
+            Post["/update/dhcp"] = x => {
+                var parameters = this.Bind<List<ServiceDhcp>>();
+                DhcpConfig.WriteFile.SaveGlobalConfig(parameters);
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.DumpGlobalConfig();
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/update/dhcpshares"] = x => {
+                var parameters = this.Bind<List<ServiceDhcp>>();
+                string file = Request.Form.ShareFile;
+                string name = Request.Form.ShareName;
+                string query = Request.Form.ShareQueryName;
+                DhcpConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.DumpShare(name);
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addparam"] = x => {
+                string key = Request.Form.NewParameterKey;
+                string value = Request.Form.NewParameterValue;
+                DhcpConfig.WriteFile.AddParameterToGlobal(key, value);
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addshare"] = x => {
+                string name = Request.Form.NewShareName;
+                string directory = Request.Form.NewShareDirectory;
+                DhcpConfig.WriteFile.AddShare(name, directory);
+                Thread.Sleep(1000);
+                DhcpConfig.WriteFile.RewriteSMBCONF();
+                return Response.AsRedirect("/services");
+            };
+            #endregion SAMBA
         }
     }
 }
