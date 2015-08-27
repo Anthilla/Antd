@@ -248,87 +248,43 @@ namespace antdlib.Svcs.Bind {
                 }
             }
 
-            private static void ReformatFile(string path) {
-                var text = File.ReadAllText(path).Replace("\t", " ").Replace("\r", "").Replace("\n", "").Replace("  ", " ").Replace("{", "{\n").Replace(";", ";\n").Replace("};", "};\n").Replace("} ", "}\n");
-                File.WriteAllText(path, "");
-                File.WriteAllText(path, text);
-            }
-
-            //private static IEnumerable<LineModel> ReadLines(string path, string text) {
-            //    var list = new List<LineModel>();
-            //    var splitLines = text.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            //    for (int i = 0; i < splitLines.Length; i++) {
-            //        var keyValuePair = splitLines[i].Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            //        ServiceDataType type;
-            //        var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
-            //        var value = "";
-            //        if (splitLines[i].StartsWith(MapRules.CharCommentConf.ToString())) {
-            //            type = ServiceDataType.Disabled;
-            //        }
-            //        else if (splitLines[i].StartsWith(MapRules.CharSectionOpen.ToString())) {
-            //            type = ServiceDataType.Disabled;
-            //        }
-            //        else {
-            //            value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
-            //            type = SupposeDataType(value.Trim());
-            //        }
-            //        KeyValuePair<string, string> booleanVerbs;
-            //        if (type == ServiceDataType.Boolean) {
-            //            booleanVerbs = SupposeBooleanVerbs(value.Trim());
-            //        }
-            //        else {
-            //            booleanVerbs = new KeyValuePair<string, string>("", "");
-            //        }
-            //        var model = new LineModel() {
-            //            FilePath = path,
-            //            Key = key.Trim(),
-            //            Value = value.Trim(),
-            //            Type = type,
-            //            BooleanVerbs = booleanVerbs
-            //        };
-            //        list.Add(model);
-            //    }
-            //    return list;
-            ////}
-
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var includes = new List<string>() { };
-                //ReformatFile(path);
                 var namedFileText = File.ReadAllText(path);
 
-                //var acl = BindStatement.AssignAcl(namedFileText).ToList();
+                var acl = BindStatement.AssignAcl(namedFileText).ToList();
                 var controls = BindStatement.AssignControls(namedFileText).ToList();
-                //var include = BindStatement.AssignInclude(namedFileText).ToList();
-                //var key = BindStatement.AssignKey(namedFileText).ToList();
+                var include = BindStatement.AssignInclude(namedFileText).ToList();
+                var key = BindStatement.AssignKey(namedFileText).ToList();
                 var logging = BindStatement.AssignLogging(namedFileText).ToList();
                 var lwres = BindStatement.AssignLwres(namedFileText).ToList();
-                //var masters = BindStatement.AssignMasters(namedFileText).ToList();
+                var masters = BindStatement.AssignMasters(namedFileText).ToList();
                 var options = BindStatement.AssignOptions(namedFileText).ToList();
-                //var server = BindStatement.AssignServer(namedFileText).ToList();
+                var server = BindStatement.AssignServer(namedFileText).ToList();
                 var statisticsChannels = BindStatement.AssignStatisticsChannels(namedFileText).ToList();
                 var trustedKeys = BindStatement.AssignTrustedKeys(namedFileText).ToList();
                 var managedKeys = BindStatement.AssignManagedKeys(namedFileText).ToList();
-                //var view = BindStatement.AssignView(namedFileText).ToList();
+                var view = BindStatement.AssignView(namedFileText).ToList();
                 var zones = BindStatement.AssignZone(namedFileText).ToList();
 
                 var bind = new BindModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    //BindAcl = acl,
+                    BindAcl = acl,
                     BindControls = controls,
-                    //BindInclude = include,
-                    //BindKey = key,
+                    BindInclude = include,
+                    BindKey = key,
                     BindLogging = logging,
                     BindLwres = lwres,
-                    //BindMasters = masters,
+                    BindMasters = masters,
                     BindOptions = options,
-                    //BindServer = server,
+                    BindServer = server,
                     BindStatisticsChannels = statisticsChannels,
                     BindTrustedKeys = trustedKeys,
                     BindManagedKeys = managedKeys,
-                    //BindView = view,
+                    BindView = view,
                     BindZone = zones
                 };
                 DeNSo.Session.New.Set(bind);

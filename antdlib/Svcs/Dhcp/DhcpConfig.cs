@@ -167,7 +167,7 @@ namespace antdlib.Svcs.Dhcp {
 
                 public static string Range { get { return "range"; } }
 
-                public static string Subnet6 { get { return "subnet6"; } }
+                public static string Class { get { return "subnet6"; } }
 
                 public static string SharedNetwork { get { return "shared-network"; } }
 
@@ -204,35 +204,35 @@ namespace antdlib.Svcs.Dhcp {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> Global { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpGlobal { get; set; } = new List<LineModel>() { };
 
-            public List<LineModel> Include { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpInclude { get; set; } = new List<LineModel>() { };
 
-            public List<OptionModel> Key { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpKey { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Subnet { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubnet { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Host { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpHost { get; set; } = new List<OptionModel>() { };
 
-            public List<LineModel> Prefix6 { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpPrefix6 { get; set; } = new List<LineModel>() { };
 
-            public List<LineModel> Range6 { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpRange6 { get; set; } = new List<LineModel>() { };
 
-            public List<LineModel> Range { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpRange { get; set; } = new List<LineModel>() { };
 
-            public List<OptionModel> Subnet6 { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubnet6 { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Failover { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpFailover { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Logging { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpLogging { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> SharedNetwork { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSharedNetwork { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Group { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpGroup { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Class { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpClass { get; set; } = new List<OptionModel>() { };
 
-            public List<OptionModel> Subclass { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubclass { get; set; } = new List<OptionModel>() { };
         }
 
         public class MapFile {
@@ -281,17 +281,42 @@ namespace antdlib.Svcs.Dhcp {
             }
 
             public static void Render() {
-                var options = new List<OptionModel>() { };
-                var data = new List<LineModel>() { };
-
+                var path = $"{DIR}/{mainFile}";
+                var input = File.ReadAllText(path);
+                var global = DhcpStatement.AssignGlobal(input).ToList();
+                var include = DhcpStatement.AssignInclude(input).ToList();
+                var key = DhcpStatement.AssignKey(input).ToList();
+                var subnet = DhcpStatement.AssignSubnet(input).ToList();
+                var host = DhcpStatement.AssignHost(input).ToList();
+                var prefix6 = DhcpStatement.AssignPrefix6(input).ToList();
+                var range6 = DhcpStatement.AssignRange6(input).ToList();
+                var range = DhcpStatement.AssignRange(input).ToList();
+                var subnet6 = DhcpStatement.AssignClass(input).ToList();
+                var failover = DhcpStatement.AssignFailover(input).ToList();
+                var logging = DhcpStatement.AssignLogging(input).ToList();
+                var sharedNetwork = DhcpStatement.AssignSharedNetwork(input).ToList();
+                var group = DhcpStatement.AssignGroup(input).ToList();
+                var @class = DhcpStatement.AssignClass(input).ToList();
+                var subclass = DhcpStatement.AssignSubclass(input).ToList();
                 var dhcp = new DhcpModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
-                    Global = data,
-                    Host = options,
-                    Key = options,
-                    Subnet = options
+                    DhcpGlobal = global,
+                    DhcpInclude = include,
+                    DhcpKey = key,
+                    DhcpSubnet = subnet,
+                    DhcpHost = host,
+                    DhcpPrefix6 = prefix6,
+                    DhcpRange6 = range6,
+                    DhcpRange = range,
+                    DhcpSubnet6 = subnet6,
+                    DhcpFailover = failover,
+                    DhcpLogging = logging,
+                    DhcpSharedNetwork = sharedNetwork,
+                    DhcpGroup = group,
+                    DhcpClass = @class,
+                    DhcpSubclass = subclass
                 };
                 DeNSo.Session.New.Set(dhcp);
             }
@@ -299,6 +324,86 @@ namespace antdlib.Svcs.Dhcp {
             public static DhcpModel Get() {
                 var dhcp = DeNSo.Session.New.Get<DhcpModel>(s => s.Guid == serviceGuid).FirstOrDefault();
                 return dhcp;
+            }
+
+            public static void AddKey(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpKey.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddSubnet(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpSubnet.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddClass(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpClass.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddHost(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpHost.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddSubclass(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpSubclass.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddSubnet6(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpSubnet6.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddFailover(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpFailover.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddLogging(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpLogging.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddGroup(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpGroup.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddSharedNetwork(string name) {
+                var ob = new OptionModel() { Name = name };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpSharedNetwork.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
             }
         }
 
@@ -356,7 +461,7 @@ namespace antdlib.Svcs.Dhcp {
             }
 
             public static void DumpGlobalConfig() {
-  
+
             }
 
             private static void CleanFile(string path) {
