@@ -167,7 +167,7 @@ namespace antdlib.Svcs.Dhcp {
 
                 public static string Range { get { return "range"; } }
 
-                public static string Class { get { return "subnet6"; } }
+                public static string Subnet6 { get { return "subnet6"; } }
 
                 public static string SharedNetwork { get { return "shared-network"; } }
 

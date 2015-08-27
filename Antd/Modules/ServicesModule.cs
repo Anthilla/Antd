@@ -151,44 +151,44 @@ namespace Antd {
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addacl"] = x => {
+            Post["/bind/addacl"] = x => {
                 string name = Request.Form.NewAclName;
                 BindConfig.MapFile.AddAcl(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addkey"] = x => {
+            Post["/bind/addkey"] = x => {
                 string name = Request.Form.NewKeyName;
                 BindConfig.MapFile.AddKey(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addmasters"] = x => {
+            Post["/bind/addmasters"] = x => {
                 string name = Request.Form.NewMastersName;
                 BindConfig.MapFile.AddMasters(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addserver"] = x => {
+            Post["/bind/addserver"] = x => {
                 string name = Request.Form.NewServerName;
                 BindConfig.MapFile.AddServer(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addview"] = x => {
+            Post["/bind/addview"] = x => {
                 string name = Request.Form.NewViewName;
                 BindConfig.MapFile.AddView(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/samba/addzone"] = x => {
+            Post["/bind/addzone"] = x => {
                 string name = Request.Form.NewZoneName;
                 BindConfig.MapFile.AddZone(name);
                 return Response.AsRedirect("/services");
             };
             #endregion BIND
 
-            #region SAMBA
+            #region DHCP
             Post["/activate/dhcp"] = x => {
                 DhcpConfig.SetReady();
                 DhcpConfig.MapFile.Render();
@@ -224,19 +224,66 @@ namespace Antd {
                 return Response.AsRedirect("/services");
             };
 
-            Post["/dhcp/addparam"] = x => {
-                string key = Request.Form.NewParameterKey;
-                string value = Request.Form.NewParameterValue;
-                DhcpConfig.WriteFile.AddParameterToGlobal(key, value);
+            Post["/dhcp/addkey"] = x => {
+                string name = Request.Form.NewKeyName;
+                DhcpConfig.MapFile.AddKey(name);
                 return Response.AsRedirect("/services");
             };
 
-            Post["/dhcp/addshare"] = x => {
-                string name = Request.Form.NewShareName;
-                string directory = Request.Form.NewShareDirectory;
+            Post["/dhcp/addsubnet"] = x => {
+                string name = Request.Form.NewSubnet6Name;
+                DhcpConfig.MapFile.AddSubnet6(name);
                 return Response.AsRedirect("/services");
             };
-            #endregion SAMBA
+
+            Post["/dhcp/addsubnet"] = x => {
+                string name = Request.Form.NewSubnetName;
+                DhcpConfig.MapFile.AddSubnet(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addhost"] = x => {
+                string name = Request.Form.NewHostName;
+                DhcpConfig.MapFile.AddHost(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addclass"] = x => {
+                string name = Request.Form.NewClassName;
+                DhcpConfig.MapFile.AddClass(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addsubclass"] = x => {
+                string name = Request.Form.NewSubclassName;
+                DhcpConfig.MapFile.AddSubclass(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addfailover"] = x => {
+                string name = Request.Form.NewFailoverName;
+                DhcpConfig.MapFile.AddFailover(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addlogging"] = x => {
+                string name = Request.Form.NewLoggingName;
+                DhcpConfig.MapFile.AddLogging(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addgroup"] = x => {
+                string name = Request.Form.NewGroupName;
+                DhcpConfig.MapFile.AddGroup(name);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addkey"] = x => {
+                string name = Request.Form.NewKeyName;
+                DhcpConfig.MapFile.AddKey(name);
+                return Response.AsRedirect("/services");
+            };
+            #endregion DHCP
         }
     }
 }
