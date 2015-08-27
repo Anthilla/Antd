@@ -67,71 +67,114 @@ namespace antdlib.Svcs.Dhcp {
             }
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignAcl(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var aclDataString = matches[i].Value.Trim();
-                var aclDataStringSplit = aclDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var aclName = (aclDataStringSplit.Length > 0) ? aclDataStringSplit[0].Replace("acl", "").Replace("\"", "").Trim() : "";
-                var data = (aclDataStringSplit.Length > 1) ? aclDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("acl {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
+        public static IEnumerable<DhcpConfig.LineModel> AssignGlobal(string input) {
+            var global = new List<DhcpConfig.LineModel>() { };
+            var globalStr = $"(?!range|prefix|zone|host|algor|secret)(^[^#{{}}\\s].*?;)";
+            var globalRegex = new Regex(globalStr, RegexOptions.Multiline);
+            var globalMatches = globalRegex.Matches(input);
+            for (int i = 0; i < globalMatches.Count; i++) {
+                var split = globalMatches[i].Value.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                if (split.Length > 1) {
+                    var k = split[0].Trim();
+                    var v = split[1].Trim().Replace(";", "").Trim();
+                    var ddd = new DhcpConfig.LineModel() {
+                        Key = k,
+                        Value = v,
+                        Type = SupposeDataType(v),
+                        BooleanVerbs = SupposeBooleanVerbs(v),
+                        FilePath = ""
+                    };
+                    global.Add(ddd);
                 }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = aclName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
             }
-            return options;
+            return global;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignControls(string input) {
-            var controls = new List<DhcpConfig.OptionModel>() { };
-            var controlsStr = $"[^#]*controls[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var controlsRegex = new Regex(controlsStr);
-            var controlsMatches = controlsRegex.Matches(input);
-            var data = (controlsMatches.Count > 0) ? controlsMatches[0].Value : "";
+        public static IEnumerable<DhcpConfig.LineModel> AssignInclude(string input) {
+            var include = new List<DhcpConfig.LineModel>() { };
+            var includeStr = $"include[\\s\\w\\d\\-{{.:\"=/]*;";
+            var includeRegex = new Regex(includeStr);
+            var includeMatches = includeRegex.Matches(input);
+            for (int i = 0; i < includeMatches.Count; i++) {
+                var v = includeMatches[i].Value.Replace("\t", " ").Replace("include ", "").Trim();
+                var ddd = new DhcpConfig.LineModel() {
+                    Key = "include",
+                    Value = v,
+                    Type = SupposeDataType(v),
+                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    FilePath = ""
+                };
+                include.Add(ddd);
+            }
+            return include;
+        }
+
+        public static IEnumerable<DhcpConfig.LineModel> AssignPrefix6(string input) {
+            var prefix6 = new List<DhcpConfig.LineModel>() { };
+            var prefix6Str = $"prefix6[\\s\\w\\d\\-{{.:\"=/]*;";
+            var prefix6Regex = new Regex(prefix6Str);
+            var prefix6Matches = prefix6Regex.Matches(input);
+            for (int i = 0; i < prefix6Matches.Count; i++) {
+                var v = prefix6Matches[i].Value.Replace("\t", " ").Replace("prefix6 ", "").Trim();
+                var ddd = new DhcpConfig.LineModel() {
+                    Key = "prefix6",
+                    Value = v,
+                    Type = SupposeDataType(v),
+                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    FilePath = ""
+                };
+                prefix6.Add(ddd);
+            }
+            return prefix6;
+        }
+
+        public static IEnumerable<DhcpConfig.LineModel> AssignRange6(string input) {
+            var range6 = new List<DhcpConfig.LineModel>() { };
+            var range6Str = $"range6[\\s\\w\\d\\-{{.:\"=/]*;";
+            var range6Regex = new Regex(range6Str);
+            var range6Matches = range6Regex.Matches(input);
+            for (int i = 0; i < range6Matches.Count; i++) {
+                var v = range6Matches[i].Value.Replace("\t", " ").Replace("range6 ", "").Trim();
+                var ddd = new DhcpConfig.LineModel() {
+                    Key = "range6",
+                    Value = v,
+                    Type = SupposeDataType(v),
+                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    FilePath = ""
+                };
+                range6.Add(ddd);
+            }
+            return range6;
+        }
+
+        public static IEnumerable<DhcpConfig.LineModel> AssignRange(string input) {
+            var range = new List<DhcpConfig.LineModel>() { };
+            var rangeStr = $"range[\\s\\w\\d\\-{{.:\"=/]*;";
+            var rangeRegex = new Regex(rangeStr);
+            var rangeMatches = rangeRegex.Matches(input);
+            for (int i = 0; i < rangeMatches.Count; i++) {
+                var v = rangeMatches[i].Value.Replace("\t", " ").Replace("range ", "").Trim();
+                var ddd = new DhcpConfig.LineModel() {
+                    Key = "range",
+                    Value = v,
+                    Type = SupposeDataType(v),
+                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    FilePath = ""
+                };
+                range.Add(ddd);
+            }
+            return range;
+        }
+
+        public static IEnumerable<DhcpConfig.OptionModel> AssignKey(string input) {
+            var key = new List<DhcpConfig.OptionModel>() { };
+            var keyStr = $"key[\\s\\S]*}};";
+            var keyRegex = new Regex(keyStr);
+            var keyMatches = keyRegex.Matches(input);
+            var data = (keyMatches.Count > 0) ? keyMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>() { };
             if (data.Length > 0) {
-                var txt = data.Replace("controls {", "");
+                var txt = data.Replace("key {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -166,91 +209,216 @@ namespace antdlib.Svcs.Dhcp {
                 }
             }
             var option = new DhcpConfig.OptionModel() {
-                Name = "controls",
+                Name = "key",
                 Data = dataList
             };
-            controls.Add(option);
-            return controls;
+            key.Add(option);
+            return key;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignInclude(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]*include[\\s]*\"([a-zA-Z0-9\\s./] *)\";";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var includeStr = matches[i].Value.Replace("{", "").Replace("\"", "").Replace("include", "").Trim();
-                var includeName = "include";
-                var option = new DhcpConfig.OptionModel() {
-                    Name = includeName,
-                    StringDefinition = includeStr,
-                    //Data = data.ToList()
-                };
-                options.Add(option);
-            }
-            return options;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignKey(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var aclDataString = matches[i].Value.Trim();
-                var aclDataStringSplit = aclDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var aclName = (aclDataStringSplit.Length > 0) ? aclDataStringSplit[0].Replace("acl", "").Replace("\"", "").Trim() : "";
-                var data = (aclDataStringSplit.Length > 1) ? aclDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("acl {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
+        public static IEnumerable<DhcpConfig.OptionModel> AssignSubnet(string input) {
+            var subnet = new List<DhcpConfig.OptionModel>() { };
+            var subnetStr = $"subnet[\\s\\w\\d.]*mask[\\s\\w\\d.]*{{[\\s\\w\\d.;{{-]*";
+            var subnetRegex = new Regex(subnetStr);
+            var subnetMatches = subnetRegex.Matches(input);
+            var data = (subnetMatches.Count > 0) ? subnetMatches[0].Value : "";
+            var dataList = new List<DhcpConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("subnet {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
                     }
                 }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = aclName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
             }
-            return options;
+            var option = new DhcpConfig.OptionModel() {
+                Name = "subnet",
+                Data = dataList
+            };
+            subnet.Add(option);
+            return subnet;
+        }
+
+        public static IEnumerable<DhcpConfig.OptionModel> AssignHost(string input) {
+            var host = new List<DhcpConfig.OptionModel>() { };
+            var hostStr = $"[^\\S]host[\\s\\w\\d{{.:;\\-]*";
+            var hostRegex = new Regex(hostStr);
+            var hostMatches = hostRegex.Matches(input);
+            var data = (hostMatches.Count > 0) ? hostMatches[0].Value : "";
+            var dataList = new List<DhcpConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("host {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+            }
+            var option = new DhcpConfig.OptionModel() {
+                Name = "host",
+                Data = dataList
+            };
+            host.Add(option);
+            return host;
+        }
+
+        public static IEnumerable<DhcpConfig.OptionModel> AssignSubnet6(string input) {
+            var subnet6 = new List<DhcpConfig.OptionModel>() { };
+            var subnet6Str = $"[^\\S][^\\S]subnet6[\\s\\w\\d\\-{{.:;\"=/]*";
+            var subnet6Regex = new Regex(subnet6Str);
+            var subnet6Matches = subnet6Regex.Matches(input);
+            var data = (subnet6Matches.Count > 0) ? subnet6Matches[0].Value : "";
+            var dataList = new List<DhcpConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("subnet6 {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+            }
+            var option = new DhcpConfig.OptionModel() {
+                Name = "subnet6",
+                Data = dataList
+            };
+            subnet6.Add(option);
+            return subnet6;
+        }
+
+        public static IEnumerable<DhcpConfig.OptionModel> AssignFailover(string input) {
+            var failover = new List<DhcpConfig.OptionModel>() { };
+            var failoverStr = $"[^\\S]failover[\\s\\w\\d\\-{{.:;\"]*";
+            var failoverRegex = new Regex(failoverStr);
+            var failoverMatches = failoverRegex.Matches(input);
+            var data = (failoverMatches.Count > 0) ? failoverMatches[0].Value : "";
+            var dataList = new List<DhcpConfig.LineModel>() { };
+            if (data.Length > 0) {
+                var txt = data.Replace("failover {", "");
+                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                for (int i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1 && !split[0].StartsWith("//")) {
+                        var k = split[0];
+                        var v = split[1].Replace(";", "").Replace("\"", "");
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = SupposeDataType(v),
+                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                for (int i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (split.Length > 1) {
+                        var k = split[0];
+                        var v = split[1].Replace("};", "").Trim();
+                        var ddd = new DhcpConfig.LineModel() {
+                            Key = k,
+                            Value = v,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
+                            FilePath = ""
+                        };
+                        dataList.Add(ddd);
+                    }
+                }
+            }
+            var option = new DhcpConfig.OptionModel() {
+                Name = "failover",
+                Data = dataList
+            };
+            failover.Add(option);
+            return failover;
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignLogging(string input) {
             var logging = new List<DhcpConfig.OptionModel>() { };
-            //[^#]*logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\s;="/_.}{-])*;
-            var loggingStr = $"logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var loggingStr = $"logging[\\s\\w\\d\\-{{.:\"=/;}}]*";
             var loggingRegex = new Regex(loggingStr);
             var loggingMatches = loggingRegex.Matches(input);
             var data = (loggingMatches.Count > 0) ? loggingMatches[0].Value : "";
@@ -298,15 +466,15 @@ namespace antdlib.Svcs.Dhcp {
             return logging;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignLwres(string input) {
-            var lwres = new List<DhcpConfig.OptionModel>() { };
-            var lwresStr = $"lwres[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var lwresRegex = new Regex(lwresStr);
-            var lwresMatches = lwresRegex.Matches(input);
-            var data = (lwresMatches.Count > 0) ? lwresMatches[0].Value : "";
+        public static IEnumerable<DhcpConfig.OptionModel> AssignSharedNetwork(string input) {
+            var sharedNetwork = new List<DhcpConfig.OptionModel>() { };
+            var sharedNetworkStr = $"[^\\S][^\\S]shared-network[\\s\\w\\d\\-{{.:;\"=/]*";
+            var sharedNetworkRegex = new Regex(sharedNetworkStr);
+            var sharedNetworkMatches = sharedNetworkRegex.Matches(input);
+            var data = (sharedNetworkMatches.Count > 0) ? sharedNetworkMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>() { };
             if (data.Length > 0) {
-                var txt = data.Replace("lwres {", "");
+                var txt = data.Replace("shared-network {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -341,134 +509,22 @@ namespace antdlib.Svcs.Dhcp {
                 }
             }
             var option = new DhcpConfig.OptionModel() {
-                Name = "lwres",
+                Name = "shared-network",
                 Data = dataList
             };
-            lwres.Add(option);
-            return lwres;
+            sharedNetwork.Add(option);
+            return sharedNetwork;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignMasters(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]masters[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(masters[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var mastersDataString = matches[i].Value.Trim();
-                var mastersDataStringSplit = mastersDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var mastersName = (mastersDataStringSplit.Length > 0) ? mastersDataStringSplit[0].Replace("masters", "").Replace("\"", "").Trim() : "";
-                var data = (mastersDataStringSplit.Length > 1) ? mastersDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("masters {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = mastersName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
-            }
-            return options;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignServer(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]server[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(server[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var serverDataString = matches[i].Value.Trim();
-                var serverDataStringSplit = serverDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var serverName = (serverDataStringSplit.Length > 0) ? serverDataStringSplit[0].Replace("server", "").Replace("\"", "").Trim() : "";
-                var data = (serverDataStringSplit.Length > 1) ? serverDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("server {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = serverName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
-            }
-            return options;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignOptions(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var optionsStr = $"options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var optionsRegex = new Regex(optionsStr);
-            var optionsMatches = optionsRegex.Matches(input);
-            var data = (optionsMatches.Count > 0) ? optionsMatches[0].Value : "";
+        public static IEnumerable<DhcpConfig.OptionModel> AssignGroup(string input) {
+            var group = new List<DhcpConfig.OptionModel>() { };
+            var groupStr = $"[^\\S][^\\S]group[\\s\\w\\d\\-{{.:;\"=/]*";
+            var groupRegex = new Regex(groupStr);
+            var groupMatches = groupRegex.Matches(input);
+            var data = (groupMatches.Count > 0) ? groupMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>() { };
             if (data.Length > 0) {
-                var txt = data.Replace("options {", "");
+                var txt = data.Replace("group {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -503,22 +559,22 @@ namespace antdlib.Svcs.Dhcp {
                 }
             }
             var option = new DhcpConfig.OptionModel() {
-                Name = "options",
+                Name = "group",
                 Data = dataList
             };
-            options.Add(option);
-            return options;
+            group.Add(option);
+            return group;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignStatisticsChannels(string input) {
-            var statisticsChannels = new List<DhcpConfig.OptionModel>() { };
-            var statisticsChannelsStr = $"statistics-channels[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var statisticsChannelsRegex = new Regex(statisticsChannelsStr);
-            var statisticsChannelsMatches = statisticsChannelsRegex.Matches(input);
-            var data = (statisticsChannelsMatches.Count > 0) ? statisticsChannelsMatches[0].Value : "";
+        public static IEnumerable<DhcpConfig.OptionModel> AssignClass(string input) {
+            var @class = new List<DhcpConfig.OptionModel>() { };
+            var classStr = $"[^\\S]class[\\s\\w\\d\\-{{.:;\"=]*";
+            var classRegex = new Regex(classStr);
+            var classMatches = classRegex.Matches(input);
+            var data = (classMatches.Count > 0) ? classMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>() { };
             if (data.Length > 0) {
-                var txt = data.Replace("statistics-channels {", "");
+                var txt = data.Replace("class {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -553,22 +609,22 @@ namespace antdlib.Svcs.Dhcp {
                 }
             }
             var option = new DhcpConfig.OptionModel() {
-                Name = "statisticsChannels",
+                Name = "class",
                 Data = dataList
             };
-            statisticsChannels.Add(option);
-            return statisticsChannels;
+            @class.Add(option);
+            return @class;
         }
 
-        public static IEnumerable<DhcpConfig.OptionModel> AssignTrustedKeys(string input) {
-            var trustedKeys = new List<DhcpConfig.OptionModel>() { };
-            var trustedKeysStr = $"trusted-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var trustedKeysRegex = new Regex(trustedKeysStr);
-            var trustedKeysMatches = trustedKeysRegex.Matches(input);
-            var data = (trustedKeysMatches.Count > 0) ? trustedKeysMatches[0].Value : "";
+        public static IEnumerable<DhcpConfig.OptionModel> AssignSubclass(string input) {
+            var subclass = new List<DhcpConfig.OptionModel>() { };
+            var subclassStr = $"[^\\S]subclass[\\s\\w\\d\\-{{.:;\"=/]*";
+            var subclassRegex = new Regex(subclassStr);
+            var subclassMatches = subclassRegex.Matches(input);
+            var data = (subclassMatches.Count > 0) ? subclassMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>() { };
             if (data.Length > 0) {
-                var txt = data.Replace("trusted-keys {", "");
+                var txt = data.Replace("subclass {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -603,173 +659,11 @@ namespace antdlib.Svcs.Dhcp {
                 }
             }
             var option = new DhcpConfig.OptionModel() {
-                Name = "trustedKeys",
+                Name = "subclass",
                 Data = dataList
             };
-            trustedKeys.Add(option);
-            return trustedKeys;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignManagedKeys(string input) {
-            var managedKeys = new List<DhcpConfig.OptionModel>() { };
-            var managedKeysStr = $"managed-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
-            var managedKeysRegex = new Regex(managedKeysStr);
-            var managedKeysMatches = managedKeysRegex.Matches(input);
-            var data = (managedKeysMatches.Count > 0) ? managedKeysMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
-            if (data.Length > 0) {
-                var txt = data.Replace("managed-keys {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    if (split.Length > 1 && !split[0].StartsWith("//")) {
-                        var k = split[0];
-                        var v = split[1].Replace(";", "").Replace("\"", "");
-                        var ddd = new DhcpConfig.LineModel() {
-                            Key = k,
-                            Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
-                            FilePath = ""
-                        };
-                        dataList.Add(ddd);
-                    }
-                }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    if (split.Length > 1) {
-                        var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
-                        var ddd = new DhcpConfig.LineModel() {
-                            Key = k,
-                            Value = v,
-                            Type = ServiceDataType.StringArray,
-                            BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                            FilePath = ""
-                        };
-                        dataList.Add(ddd);
-                    }
-                }
-            }
-            var option = new DhcpConfig.OptionModel() {
-                Name = "managedKeys",
-                Data = dataList
-            };
-            managedKeys.Add(option);
-            return managedKeys;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignView(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]view[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(view[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var viewDataString = matches[i].Value.Trim();
-                var viewDataStringSplit = viewDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var viewName = (viewDataStringSplit.Length > 0) ? viewDataStringSplit[0].Replace("view", "").Replace("\"", "").Trim() : "";
-                var data = (viewDataStringSplit.Length > 1) ? viewDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("view {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = viewName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
-            }
-            return options;
-        }
-
-        public static IEnumerable<DhcpConfig.OptionModel> AssignZone(string input) {
-            var options = new List<DhcpConfig.OptionModel>() { };
-            var str = $"[^#]zone[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(zone[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
-            var regex = new Regex(str);
-            var matches = regex.Matches(input);
-            for (int i = 0; i < matches.Count; i++) {
-                var zoneDataString = matches[i].Value.Trim();
-                var zoneDataStringSplit = zoneDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var zoneName = (zoneDataStringSplit.Length > 0) ? zoneDataStringSplit[0].Replace("zone", "").Replace("\"", "").Trim() : "";
-                var data = (zoneDataStringSplit.Length > 1) ? zoneDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<DhcpConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("zone {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0;x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new DhcpConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                }
-                var option = new DhcpConfig.OptionModel() {
-                    Name = zoneName,
-                    StringDefinition = data,
-                    Data = dataList
-                };
-                options.Add(option);
-            }
-            return options;
+            subclass.Add(option);
+            return subclass;
         }
     }
 }
