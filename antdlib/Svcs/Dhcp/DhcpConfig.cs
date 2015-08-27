@@ -150,6 +150,28 @@ namespace antdlib.Svcs.Dhcp {
                 public static string Subnet { get { return "subnet"; } }
 
                 public static string Host { get { return "host"; } }
+
+                public static string Class { get { return "class"; } }
+
+                public static string Sublass { get { return "subclass"; } }
+
+                public static string Failover { get { return "failover"; } }
+
+                public static string Logging { get { return "logging"; } }
+
+                public static string Include { get { return "include"; } }
+
+                public static string Prefix6 { get { return "prefix6"; } }
+
+                public static string Range6 { get { return "range6"; } }
+
+                public static string Range { get { return "range"; } }
+
+                public static string Subnet6 { get { return "subnet6"; } }
+
+                public static string SharedNetwork { get { return "shared-network"; } }
+
+                public static string Group { get { return "group"; } }
             }
         }
 
@@ -184,11 +206,33 @@ namespace antdlib.Svcs.Dhcp {
 
             public List<LineModel> Global { get; set; } = new List<LineModel>() { };
 
+            public List<LineModel> Include { get; set; } = new List<LineModel>() { };
+
             public List<OptionModel> Key { get; set; } = new List<OptionModel>() { };
 
             public List<OptionModel> Subnet { get; set; } = new List<OptionModel>() { };
 
             public List<OptionModel> Host { get; set; } = new List<OptionModel>() { };
+
+            public List<LineModel> Prefix6 { get; set; } = new List<LineModel>() { };
+
+            public List<LineModel> Range6 { get; set; } = new List<LineModel>() { };
+
+            public List<LineModel> Range { get; set; } = new List<LineModel>() { };
+
+            public List<OptionModel> Subnet6 { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> Failover { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> Logging { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> SharedNetwork { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> Group { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> Class { get; set; } = new List<OptionModel>() { };
+
+            public List<OptionModel> Subclass { get; set; } = new List<OptionModel>() { };
         }
 
         public class MapFile {

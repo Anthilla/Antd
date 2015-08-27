@@ -186,6 +186,7 @@
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Svcs\Bind\BindConfig.cs" />
     <Compile Include="Svcs\Bind\BindStatement.cs" />
+    <Compile Include="Svcs\Dhcp\DhcpStatement.cs" />
     <Compile Include="Svcs\Dhcp\DhcpConfig.cs" />
     <Compile Include="Svcs\Glusterfs\GlusterfsConfig.cs" />
     <Compile Include="Svcs\Lxc\LxcConfig.cs" />

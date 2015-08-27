@@ -57,6 +57,10 @@ acl|controls|include|key|logging|lwres|masters|options|server|statistics-channel
 #greppa i valori di global
 ([\n]+[\w\d\s\-=".:]+;)						-> fix, prende anche i singoli valori di altri parametri :/
 ([^\s{}]*[\s\w\d\-.=":]*[^}];)				-> pulisce dalle {} ma ancora prende troppe cose
+^\s*[^#{}]\s*.*?;							-> prende tutte le line (non commentate) che hanno singoli valori [MULTILINE OPTION ATTIVA!!!]
+^[^#{}\s].*?;								-> prende come sopra, ma toglie anche i valori con indentature (che farebbero parte di altri valori)
+(?!prefix|range|zone)(^[^#{}\s].*?;)		-> rimuove i valori a line singola, MA rimane ancora il problema delle indentature (che possono NON esserci)
+(?!range|prefix|zone|host|algor|secret)(^[^#{}\s].*?;) -> esclude più parole non permesse :/ (si può sistemare meglio)
 #greppa linee commentate
 [#]+[\w\d\s\-]*\n							-> MA solo se finiscono con un line break
 											-> devo fare la stessa cosa ma SOLO con i ;
@@ -65,6 +69,28 @@ key[\s\S]*};
 #greppa le zone (singole)
 zone[\s\w\d.{]*;
 #greppa gli host
-host[\s\w\d{.:;\-]*
+[^\S]host[\s\w\d{.:;\-]*
 #subnetmask
 subnet[\s\w\d.]*{[\s\w\d.;{-]* OPPURE subnet[\s\w\d.]*mask[\s\w\d.]*{[\s\w\d.;{-]*
+#failover
+[^\S]failover[\s\w\d\-{.:;"]*
+#class
+[^\S]class[\s\w\d\-{.:;"=]*
+#subclass
+[^\S]subclass[\s\w\d\-{.:;"=/]*
+#subnet6
+[^\S][^\S]subnet6[\s\w\d\-{.:;"=/]*
+#shared-network
+[^\S][^\S]shared-network[\s\w\d\-{.:;"=/]*
+#prefix6
+prefix6[\s\w\d\-{.:"=/]*;
+#range6
+range6[\s\w\d\-{.:"=/]*;
+#range
+range[\s\w\d\-{.:"=/]*;
+#logging
+logging[\s\w\d\-{.:"=/;}]*
+#include
+include[\s\w\d\-.:"=/]*;
+#group
+[^\S][^\S]group[\s\w\d\-{.:;"=/]*
