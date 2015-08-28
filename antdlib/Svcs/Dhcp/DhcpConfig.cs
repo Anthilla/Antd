@@ -434,7 +434,7 @@ namespace antdlib.Svcs.Dhcp {
                 return data;
             }
 
-            public static void SaveGlobalConfig(string section, List<ServiceDhcp> newParameters) {
+            public static void SaveConfigFor(string section, List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
                 var data = new List<LineModel>() { };
@@ -449,11 +449,7 @@ namespace antdlib.Svcs.Dhcp {
                     Data = data
                 };
                 options.Add(option);
-                if (section == "global") { dhcp.DhcpGlobal = data; }
-                else if (section == "prefix6") { dhcp.DhcpPrefix6 = data; }
-                else if (section == "range6") { dhcp.DhcpRange6 = data; }
-                else if (section == "range") { dhcp.DhcpRange = data; }
-                else if (section == "key") { dhcp.DhcpKey = options; }
+                if (section == "key") { dhcp.DhcpKey = options; }
                 else if (section == "subnet6") { dhcp.DhcpSubnet6 = options; }
                 else if (section == "subnet") { dhcp.DhcpSubnet = options; }
                 else if (section == "host") { dhcp.DhcpHost = options; }
@@ -463,6 +459,82 @@ namespace antdlib.Svcs.Dhcp {
                 else if (section == "logging") { dhcp.DhcpLogging = options; }
                 else if (section == "group") { dhcp.DhcpGroup = options; }
                 else if (section == "shared-network") { dhcp.DhcpSharedNetwork = options; }
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void SaveGlobal(List<ServiceDhcp> newParameters) {
+                var dhcp = MapFile.Get();
+                dhcp.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        var a = new LineModel() {
+                            Key = parameter.DataKey,
+                            Value = parameter.DataValue,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";")
+                        };
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                dhcp.DhcpGlobal = data;
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void SavePrefix6(List<ServiceDhcp> newParameters) {
+                var dhcp = MapFile.Get();
+                dhcp.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        var a = new LineModel() {
+                            Key = parameter.DataKey,
+                            Value = parameter.DataValue,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";")
+                        };
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                dhcp.DhcpPrefix6 = data;
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void SaveRange6(List<ServiceDhcp> newParameters) {
+                var dhcp = MapFile.Get();
+                dhcp.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        var a = new LineModel() {
+                            Key = parameter.DataKey,
+                            Value = parameter.DataValue,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";")
+                        };
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                dhcp.DhcpRange6 = data;
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void SaveRange(List<ServiceDhcp> newParameters) {
+                var dhcp = MapFile.Get();
+                dhcp.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        var a = new LineModel() {
+                            Key = parameter.DataKey,
+                            Value = parameter.DataValue,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";")
+                        };
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                dhcp.DhcpRange = data;
                 DeNSo.Session.New.Set(dhcp);
             }
 

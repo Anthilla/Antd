@@ -27,8 +27,93 @@
 
         <div class="frames">
             <div id="dhcp_global" class="frame">
+                @if (antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGlobal.Count > 0) {
+                    <form action="/services/update/dhcp/global" id="DhcpForm" data-role="dhcp-section-update" method="POST" enctype="multipart/form-data">
+                        <table class="table" data-search="DhcpSearch" data-section="dhcp-acl">
+                            <tbody>
+                                @foreach (antdlib.Svcs.Dhcp.DhcpConfig.LineModel option in antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGlobal) {
+                                    <tr data-file="@option.FilePath" data-object="dhcp-parameter">
+                                        <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A; width: 13%;"></td>
+                                        <td style="width: 20%;">
+                                            <input name="DataKey" type="text" style="width: 90%;" value="@option.Key" />
+                                            <input name="DataFilePath" type="hidden" value="@option.FilePath" />
 
+                                        </td>
+                                        <td class="bg-anthilla-gray-m">
+                                            <input data-array="dhcp" name="DataValue" type="text" style="width: 90%;" value="@option.Value" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                }
 
+                @if (antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpPrefix6.Count > 0) {
+                    <form action="/services/update/dhcp/prefix6" id="DhcpForm" data-role="dhcp-section-update" method="POST" enctype="multipart/form-data">
+                        <table class="table" data-search="DhcpSearch" data-section="dhcp-acl">
+                            <tbody>
+                                @foreach (antdlib.Svcs.Dhcp.DhcpConfig.LineModel option in antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpPrefix6) {
+                                    <tr data-file="@option.FilePath" data-object="dhcp-parameter">
+                                        <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A; width: 13%;"></td>
+                                        <td style="width: 20%;">
+                                            <input name="DataKey" type="text" style="width: 90%;" value="@option.Key" />
+                                            <input name="DataFilePath" type="hidden" value="@option.FilePath" />
+
+                                        </td>
+                                        <td class="bg-anthilla-gray-m">
+                                            <input data-array="dhcp" name="DataValue" type="text" style="width: 90%;" value="@option.Value" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                }
+
+                @if (antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange6.Count > 0) {
+                    <form action="/services/update/dhcp/range6" id="DhcpForm" data-role="dhcp-section-update" method="POST" enctype="multipart/form-data">
+                        <table class="table" data-search="DhcpSearch" data-section="dhcp-acl">
+                            <tbody>
+                                @foreach (antdlib.Svcs.Dhcp.DhcpConfig.LineModel option in antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange6) {
+                                    <tr data-file="@option.FilePath" data-object="dhcp-parameter">
+                                        <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A; width: 13%;"></td>
+                                        <td style="width: 20%;">
+                                            <input name="DataKey" type="text" style="width: 90%;" value="@option.Key" />
+                                            <input name="DataFilePath" type="hidden" value="@option.FilePath" />
+
+                                        </td>
+                                        <td class="bg-anthilla-gray-m">
+                                            <input data-array="dhcp" name="DataValue" type="text" style="width: 90%;" value="@option.Value" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                }
+
+                @if (antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange.Count > 0) {
+                    <form action="/services/update/dhcp/range" id="DhcpForm" data-role="dhcp-section-update" method="POST" enctype="multipart/form-data">
+                        <table class="table" data-search="DhcpSearch" data-section="dhcp-acl">
+                            <tbody>
+                                @foreach (antdlib.Svcs.Dhcp.DhcpConfig.LineModel option in antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange) {
+                                    <tr data-file="@option.FilePath" data-object="dhcp-parameter">
+                                        <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A; width: 13%;"></td>
+                                        <td style="width: 20%;">
+                                            <input name="DataKey" type="text" style="width: 90%;" value="@option.Key" />
+                                            <input name="DataFilePath" type="hidden" value="@option.FilePath" />
+
+                                        </td>
+                                        <td class="bg-anthilla-gray-m">
+                                            <input data-array="dhcp" name="DataValue" type="text" style="width: 90%;" value="@option.Value" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                }
             </div>
 
             <div id="dhcp_key" class="frame" style="display: none;">

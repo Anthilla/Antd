@@ -214,9 +214,30 @@ namespace Antd {
             Post["/update/dhcp/{section}"] = x => {
                 var parameters = this.Bind<List<ServiceDhcp>>();
                 var section = (string)x.section;
-                DhcpConfig.WriteFile.SaveGlobalConfig(section, parameters);
+                if (section == "global") {
+                    DhcpConfig.WriteFile.SaveGlobal(parameters);
+                }
+                if (section == "prefix6") {
+                    DhcpConfig.WriteFile.SavePrefix6(parameters);
+                }
+                if (section == "range6") {
+                    DhcpConfig.WriteFile.SaveRange6(parameters);
+                }
+                if (section == "range") {
+                    DhcpConfig.WriteFile.SaveRange(parameters);
+                }
+                else {
+                    DhcpConfig.WriteFile.SaveConfigFor(section, parameters);
+                }
                 Thread.Sleep(1000);
                 DhcpConfig.WriteFile.DumpGlobalConfig();
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addglobal"] = x => {
+                string k = Request.Form.NewKey;
+                string v = Request.Form.NewValue;
+                DhcpConfig.MapFile.AddGlobal(k, v);
                 return Response.AsRedirect("/services");
             };
 
