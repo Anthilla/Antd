@@ -205,22 +205,40 @@ namespace Antd {
                 return Response.AsJson(true);
             };
 
-            Post["/update/dhcp"] = x => {
+            Post["/update/dhcp/{section}"] = x => {
                 var parameters = this.Bind<List<ServiceDhcp>>();
-                DhcpConfig.WriteFile.SaveGlobalConfig(parameters);
+                var section = (string)x.section;
+                DhcpConfig.WriteFile.SaveGlobalConfig(section, parameters);
                 Thread.Sleep(1000);
                 DhcpConfig.WriteFile.DumpGlobalConfig();
                 return Response.AsRedirect("/services");
             };
 
-            Post["/update/dhcpshares"] = x => {
-                var parameters = this.Bind<List<ServiceDhcp>>();
-                string file = Request.Form.ShareFile;
-                string name = Request.Form.ShareName;
-                string query = Request.Form.ShareQueryName;
-                DhcpConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.DumpShare(name);
+            Post["/dhcp/addrange"] = x => {
+                string k = Request.Form.NewKey;
+                string v = Request.Form.NewValue;
+                DhcpConfig.MapFile.AddGlobal(k, v);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addprefix6"] = x => {
+                string k = Request.Form.NewKey;
+                string v = Request.Form.NewValue;
+                DhcpConfig.MapFile.AddPrefix6(k, v);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addrange6"] = x => {
+                string k = Request.Form.NewKey;
+                string v = Request.Form.NewValue;
+                DhcpConfig.MapFile.AddRange6(k, v);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/dhcp/addrange"] = x => {
+                string k = Request.Form.NewKey;
+                string v = Request.Form.NewValue;
+                DhcpConfig.MapFile.AddRange(k, v);
                 return Response.AsRedirect("/services");
             };
 

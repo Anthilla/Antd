@@ -326,6 +326,62 @@ namespace antdlib.Svcs.Dhcp {
                 return dhcp;
             }
 
+            public static void AddGlobal(string key, string value) {
+                var ob = new LineModel() {
+                    FilePath = $"{DIR}/{mainFile}",
+                    Key = key,
+                    Value = value,
+                    Type = SupposeDataType(value),
+                    BooleanVerbs = SupposeBooleanVerbs(value)
+                };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpGlobal.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddPrefix6(string key, string value) {
+                var ob = new LineModel() {
+                    FilePath = $"{DIR}/{mainFile}",
+                    Key = key,
+                    Value = value,
+                    Type = SupposeDataType(value),
+                    BooleanVerbs = SupposeBooleanVerbs(value)
+                };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpPrefix6.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddRange6(string key, string value) {
+                var ob = new LineModel() {
+                    FilePath = $"{DIR}/{mainFile}",
+                    Key = key,
+                    Value = value,
+                    Type = SupposeDataType(value),
+                    BooleanVerbs = SupposeBooleanVerbs(value)
+                };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpRange6.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
+            public static void AddRange(string key, string value) {
+                var ob = new LineModel() {
+                    FilePath = $"{DIR}/{mainFile}",
+                    Key = key,
+                    Value = value,
+                    Type = SupposeDataType(value),
+                    BooleanVerbs = SupposeBooleanVerbs(value)
+                };
+                var dhcp = Get();
+                dhcp.Timestamp = Timestamp.Now;
+                dhcp.DhcpRange.Add(ob);
+                DeNSo.Session.New.Set(dhcp);
+            }
+
             public static void AddKey(string name) {
                 var ob = new OptionModel() { Name = name };
                 var dhcp = Get();
@@ -409,8 +465,8 @@ namespace antdlib.Svcs.Dhcp {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceDhcp parameter) {
-                ServiceDataType type = SupposeDataType(parameter.DataValue);
-                var booleanVerbs = SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = DhcpStatement.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = DhcpStatement.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
@@ -421,64 +477,127 @@ namespace antdlib.Svcs.Dhcp {
                 return data;
             }
 
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
+            public static void SaveGlobalConfig(string section, List<ServiceDhcp> newParameters) {
+                var dhcp = MapFile.Get();
+                dhcp.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        data.Add(ConvertData(parameter));
+                    }
                 }
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
-            }
-
-            public static void SaveGlobalConfig(List<ServiceDhcp> newParameters) {
-                var dhcp = new DhcpModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
-                    Timestamp = Timestamp.Now,
+                var options = new List<OptionModel>() { };
+                var option = new OptionModel() {
+                    Name = section,
+                    Data = data
                 };
+                options.Add(option);
+                if (section == "global") { dhcp.DhcpGlobal = data; }
+                else if (section == "prefix6") { dhcp.DhcpPrefix6 = data; }
+                else if (section == "range6") { dhcp.DhcpRange6 = data; }
+                else if (section == "range") { dhcp.DhcpRange = data; }
+                else if (section == "key") { dhcp.DhcpKey = options; }
+                else if (section == "subnet6") { dhcp.DhcpSubnet6 = options; }
+                else if (section == "subnet") { dhcp.DhcpSubnet = options; }
+                else if (section == "host") { dhcp.DhcpHost = options; }
+                else if (section == "class") { dhcp.DhcpClass = options; }
+                else if (section == "subclass") { dhcp.DhcpSubclass = options; }
+                else if (section == "failover") { dhcp.DhcpFailover = options; }
+                else if (section == "logging") { dhcp.DhcpLogging = options; }
+                else if (section == "group") { dhcp.DhcpGroup = options; }
+                else if (section == "shared-network") { dhcp.DhcpSharedNetwork = options; }
                 DeNSo.Session.New.Set(dhcp);
             }
 
             public static void DumpGlobalConfig() {
+                var filePath = $"{DIR}/{mainFile}";
+                var dhcp = MapFile.Get();
+                CleanFile(filePath);
 
+                WriteSimpleSection(filePath, dhcp.DhcpGlobal);
+                WriteSimpleSection(filePath, dhcp.DhcpPrefix6);
+                WriteSimpleSection(filePath, dhcp.DhcpRange);
+                WriteSimpleSection(filePath, dhcp.DhcpRange6);
+
+                foreach (var section in dhcp.DhcpKey) {
+                    WriteMutipleSection("key", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpSubnet) {
+                    WriteMutipleSection("subnet", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpSubnet6) {
+                    WriteMutipleSection("subnet6", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpHost) {
+                    WriteMutipleSection("host", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpClass) {
+                    WriteMutipleSection("class", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpSubclass) {
+                    WriteMutipleSection("subclass", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpFailover) {
+                    WriteMutipleSection("failover", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpLogging) {
+                    WriteMutipleSection("logging", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpGroup) {
+                    WriteMutipleSection("group", section.Name, filePath, section.Data);
+                }
+                foreach (var section in dhcp.DhcpSharedNetwork) {
+                    WriteMutipleSection("shared-network", section.Name, filePath, section.Data);
+                }
             }
 
             private static void CleanFile(string path) {
                 File.WriteAllText(path, "");
             }
 
-            private static void AppendLine(string path, string text) {
-                File.AppendAllText(path, $"{text}{Environment.NewLine}");
+            private static void WriteSimpleSection(string filePath, List<LineModel> lines) {
+                var linesToAppend = new List<string>() { };
+                foreach (var line in lines) {
+                    if (line.Type == ServiceDataType.StringArray) {
+                        linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
+                    }
+                    else {
+                        if (line.Value.Contains("/")) {
+                            linesToAppend.Add($"{line.Key} {line.Value};");
+                        }
+                        else {
+                            linesToAppend.Add($"{line.Key} \"{line.Value}\";");
+                        }
+                    }
+                }
+                File.AppendAllLines(filePath, linesToAppend);
             }
 
-            public static void SaveShareConfig(string fileName, string name, string queryName, List<ServiceDhcp> newParameters) {
-            }
-
-            public static void DumpShare(string shareName) {
-            }
-
-            public static void AddParameterToGlobal(string key, string value) {
+            private static void WriteMutipleSection(string section, string name, string filePath, List<LineModel> lines) {
+                var linesToAppend = new List<string>() { };
+                var nametowrite = "";
+                if (section == "zone") {
+                    nametowrite = $" \"{name}\" ";
+                }
+                else {
+                    nametowrite = $" {name} ";
+                }
+                linesToAppend.Add($"{section}{nametowrite}{{");
+                foreach (var line in lines) {
+                    if (line.Type == ServiceDataType.StringArray) {
+                        linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
+                    }
+                    else {
+                        if (line.Value.Contains("/")) {
+                            linesToAppend.Add($"{line.Key} {line.Value};");
+                        }
+                        else {
+                            linesToAppend.Add($"{line.Key} \"{line.Value}\";");
+                        }
+                    }
+                }
+                linesToAppend.Add("};\n");
+                File.AppendAllLines(filePath, linesToAppend);
             }
         }
     }
