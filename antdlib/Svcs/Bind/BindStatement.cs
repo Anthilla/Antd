@@ -67,72 +67,37 @@ namespace antdlib.Svcs.Bind {
             }
         }
 
-        public static IEnumerable<BindConfig.OptionModel> AssignAcl(string input) {
-            var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+        public static IEnumerable<BindConfig.LineModel> AssignAcl(string input) {
+            var acls = new List<BindConfig.LineModel>() { };
+            var str = $"[^#]acl[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 var aclDataString = matches[i].Value.Trim();
-                var aclDataStringSplit = aclDataString.Split(new String[] { "{" }, StringSplitOptions.RemoveEmptyEntries);
-                var aclName = (aclDataStringSplit.Length > 0) ? aclDataStringSplit[0].Replace("acl", "").Replace("\"", "").Trim() : "";
-                var data = (aclDataStringSplit.Length > 1) ? aclDataStringSplit[1].TrimEnd(';').TrimEnd('}').Trim() : "";
-                var dataList = new List<BindConfig.LineModel>() { };
-                if (data.Length > 0) {
-                    var txt = data.Replace("acl {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0; x < simpleDataMatches.Count; x++) {
-                        var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1 && !split[0].StartsWith("//")) {
-                            var k = split[0];
-                            var v = split[1].Replace(";", "").Replace("\"", "");
-                            var ddd = new BindConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = SupposeDataType(v),
-                                BooleanVerbs = SupposeBooleanVerbs(v),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
-                    for (int x = 0; x < multipleDataMatches.Count; x++) {
-                        var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                        if (split.Length > 1) {
-                            var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
-                            var ddd = new BindConfig.LineModel() {
-                                Key = k,
-                                Value = v,
-                                Type = ServiceDataType.StringArray,
-                                BooleanVerbs = new KeyValuePair<string, string>(";", ";"),
-                                FilePath = ""
-                            };
-                            dataList.Add(ddd);
-                        }
-                    }
-                }
-                var option = new BindConfig.OptionModel() {
-                    Name = aclName,
-                    StringDefinition = data,
-                    Data = dataList
+                var keyData = new Regex("acl.*{").Matches(aclDataString)[0].Value.Trim();
+                var key = keyData.Split(new String[] {" " }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("{", "").Trim();
+                var value = new Regex("{[\\s\\w\\d./;]*").Matches(aclDataString)[0].Value.Replace("\t", "").Replace("{", "").Replace("}", "").Trim();
+                var acl = new BindConfig.LineModel() {
+                    Key = key,
+                    Value = value,
+                    Type = ServiceDataType.StringArray,
+                    BooleanVerbs = new KeyValuePair<string, string>(";", ";")
                 };
-                options.Add(option);
+                acls.Add(acl);
             }
-            return options;
+            return acls;
         }
 
         public static IEnumerable<BindConfig.OptionModel> AssignControls(string input) {
             var controls = new List<BindConfig.OptionModel>() { };
-            var controlsStr = $"[^#]*controls[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var controlsStr = $"[^#]*controls[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var controlsRegex = new Regex(controlsStr);
             var controlsMatches = controlsRegex.Matches(input);
             var data = (controlsMatches.Count > 0) ? controlsMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("controls {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -148,7 +113,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -175,7 +140,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignInclude(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]*include[\\s]*\"([a-zA-Z0-9\\s./] *)\";";
+            var str = $"[^#]*include[\\s]*\"([\\w\\d\\s./] *)\";";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -193,7 +158,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignKey(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]acl[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+            var str = $"[^#]acl[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(acl[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -204,7 +169,7 @@ namespace antdlib.Svcs.Bind {
                 var dataList = new List<BindConfig.LineModel>() { };
                 if (data.Length > 0) {
                     var txt = data.Replace("acl {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                     for (int x = 0; x < simpleDataMatches.Count; x++) {
                         var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -220,7 +185,7 @@ namespace antdlib.Svcs.Bind {
                             dataList.Add(ddd);
                         }
                     }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                     for (int x = 0; x < multipleDataMatches.Count; x++) {
                         var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
@@ -249,15 +214,15 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignLogging(string input) {
             var logging = new List<BindConfig.OptionModel>() { };
-            //[^#]*logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\s;="/_.}{-])*;
-            var loggingStr = $"logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            //[^#]*logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[\\w\\d\s;="/_.}{-])*;
+            var loggingStr = $"logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var loggingRegex = new Regex(loggingStr);
             var loggingMatches = loggingRegex.Matches(input);
             var data = (loggingMatches.Count > 0) ? loggingMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("logging {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -273,7 +238,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -300,14 +265,14 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignLwres(string input) {
             var lwres = new List<BindConfig.OptionModel>() { };
-            var lwresStr = $"lwres[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var lwresStr = $"lwres[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|statistics-ch)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var lwresRegex = new Regex(lwresStr);
             var lwresMatches = lwresRegex.Matches(input);
             var data = (lwresMatches.Count > 0) ? lwresMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("lwres {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -323,7 +288,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -350,7 +315,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignMasters(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]masters[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(masters[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+            var str = $"[^#]masters[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(masters[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -361,7 +326,7 @@ namespace antdlib.Svcs.Bind {
                 var dataList = new List<BindConfig.LineModel>() { };
                 if (data.Length > 0) {
                     var txt = data.Replace("masters {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                     for (int x = 0; x < simpleDataMatches.Count; x++) {
                         var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -377,7 +342,7 @@ namespace antdlib.Svcs.Bind {
                             dataList.Add(ddd);
                         }
                     }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                     for (int x = 0; x < multipleDataMatches.Count; x++) {
                         var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
@@ -406,7 +371,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignServer(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]server[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(server[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+            var str = $"[^#]server[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(server[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -417,7 +382,7 @@ namespace antdlib.Svcs.Bind {
                 var dataList = new List<BindConfig.LineModel>() { };
                 if (data.Length > 0) {
                     var txt = data.Replace("server {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                     for (int x = 0; x < simpleDataMatches.Count; x++) {
                         var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -433,7 +398,7 @@ namespace antdlib.Svcs.Bind {
                             dataList.Add(ddd);
                         }
                     }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                     for (int x = 0; x < multipleDataMatches.Count; x++) {
                         var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
@@ -462,14 +427,14 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignOptions(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var optionsStr = $"options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var optionsStr = $"options[\\s]*{{[\\s]*((?!con|key|lwr|logg|mast|statistics-ch)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var optionsRegex = new Regex(optionsStr);
             var optionsMatches = optionsRegex.Matches(input);
             var data = (optionsMatches.Count > 0) ? optionsMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("options {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -485,7 +450,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -512,14 +477,14 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignStatisticsChannels(string input) {
             var statisticsChannels = new List<BindConfig.OptionModel>() { };
-            var statisticsChannelsStr = $"statistics-channels[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var statisticsChannelsStr = $"[^#]statistics-channels[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|logg|inc)[\\w\\d\\s;=\"/_.}}{{-])*;";
             var statisticsChannelsRegex = new Regex(statisticsChannelsStr);
             var statisticsChannelsMatches = statisticsChannelsRegex.Matches(input);
             var data = (statisticsChannelsMatches.Count > 0) ? statisticsChannelsMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("statistics-channels {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -535,7 +500,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -562,14 +527,14 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignTrustedKeys(string input) {
             var trustedKeys = new List<BindConfig.OptionModel>() { };
-            var trustedKeysStr = $"trusted-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var trustedKeysStr = $"trusted-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var trustedKeysRegex = new Regex(trustedKeysStr);
             var trustedKeysMatches = trustedKeysRegex.Matches(input);
             var data = (trustedKeysMatches.Count > 0) ? trustedKeysMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("trusted-keys {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -585,7 +550,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -612,14 +577,14 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignManagedKeys(string input) {
             var managedKeys = new List<BindConfig.OptionModel>() { };
-            var managedKeysStr = $"managed-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[a-zA-Z0-9\\s;=\"/_.}}{{\\-*])*;";
+            var managedKeysStr = $"managed-keys[\\s]*{{[\\s]*((?!con|key|logg|opt|mast|lwr|statistics-ch)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var managedKeysRegex = new Regex(managedKeysStr);
             var managedKeysMatches = managedKeysRegex.Matches(input);
             var data = (managedKeysMatches.Count > 0) ? managedKeysMatches[0].Value : "";
             var dataList = new List<BindConfig.LineModel>() { };
             if (data.Length > 0) {
                 var txt = data.Replace("managed-keys {", "");
-                var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                 for (int i = 0; i < simpleDataMatches.Count; i++) {
                     var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -635,7 +600,7 @@ namespace antdlib.Svcs.Bind {
                         dataList.Add(ddd);
                     }
                 }
-                var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                 for (int i = 0; i < multipleDataMatches.Count; i++) {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
@@ -662,7 +627,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignView(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]view[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(view[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+            var str = $"[^#]view[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(view[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -673,7 +638,7 @@ namespace antdlib.Svcs.Bind {
                 var dataList = new List<BindConfig.LineModel>() { };
                 if (data.Length > 0) {
                     var txt = data.Replace("view {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
+                    var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
                     for (int x = 0; x < simpleDataMatches.Count; x++) {
                         var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1 && !split[0].StartsWith("//")) {
@@ -689,7 +654,7 @@ namespace antdlib.Svcs.Bind {
                             dataList.Add(ddd);
                         }
                     }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                     for (int x = 0; x < multipleDataMatches.Count; x++) {
                         var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
@@ -718,7 +683,7 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignZone(string input) {
             var options = new List<BindConfig.OptionModel>() { };
-            var str = $"[^#]zone[\\s]*[\"]*([a-zA-Z0-9.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(zone[\\s]*)|(include))[a-zA-Z0-9\\s;\"/_.}}{{-])*;";
+            var str = $"[^#]zone[\\s]*[\"]*([\\w\\d.\\-_]*)[\"]*[\\s]*{{[\\s]*((?!(zone[\\s]*)|(include))[\\w\\d\\s;\"/_.}}{{-])*;";
             var regex = new Regex(str);
             var matches = regex.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
@@ -729,8 +694,8 @@ namespace antdlib.Svcs.Bind {
                 var dataList = new List<BindConfig.LineModel>() { };
                 if (data.Length > 0) {
                     var txt = data.Replace("zone {", "");
-                    var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                    for (int x = 0;x < simpleDataMatches.Count; x++) {
+                    var simpleDataMatches = new Regex($"(?!([\\w\\d\\s-\"/._*;]*}})|(;))[\\w\\d\\s-/._\"*]*[;]").Matches(txt);
+                    for (int x = 0; x < simpleDataMatches.Count; x++) {
                         var split = simpleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1 && !split[0].StartsWith("//")) {
                             var k = split[0];
@@ -745,7 +710,7 @@ namespace antdlib.Svcs.Bind {
                             dataList.Add(ddd);
                         }
                     }
-                    var multipleDataMatches = new Regex($"[a-zA-Z0-9\\s-\"/._*]*{{[a-zA-Z0-9\\s-\"/._*;]*}};").Matches(txt);
+                    var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
                     for (int x = 0; x < multipleDataMatches.Count; x++) {
                         var split = multipleDataMatches[x].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {

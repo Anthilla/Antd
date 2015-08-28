@@ -136,7 +136,12 @@ namespace Antd {
             Post["/update/bind/{section}"] = x => {
                 var section = (string)x.section;
                 var parameters = this.Bind<List<ServiceBind>>();
-                BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
+                if (section == "acl") {
+                    BindConfig.WriteFile.SaveAcls(parameters);
+                }
+                else {
+                    BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
+                }
                 Thread.Sleep(1000);
                 BindConfig.WriteFile.DumpGlobalConfig();
                 return Response.AsRedirect("/services");
@@ -152,8 +157,9 @@ namespace Antd {
             };
 
             Post["/bind/addacl"] = x => {
-                string name = Request.Form.NewAclName;
-                BindConfig.MapFile.AddAcl(name);
+                string k = Request.Form.NewAclKey;
+                string v = Request.Form.NewAclValue;
+                BindConfig.MapFile.AddAcl(k, v);
                 return Response.AsRedirect("/services");
             };
 

@@ -213,22 +213,23 @@
             });
         });
 
-        //$(document).ready(function () {
-        //    $.when(
-        //        $('input[data-array="bind"]').selectize({
-        //            delimiter: ';',
-        //            persist: false,
-        //            create: function (input) {
-        //                return {
-        //                    value: input,
-        //                    text: input
-        //                }
-        //            }
-        //        })
-        //    ).done(function (x) {
-        //        $('input[data-array="bind"]').hide();
-        //    });
-        //});
+        $(document).ready(function () {
+            $.when(
+                $('input[data-array="bind"]').selectize({
+                    delimiter: ';',
+                    persist: false,
+                    create: function (input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
+                    }
+                })
+            ).done(function (x) {
+                $('.selectize-input.items').find('div.item[data-value=""]').remove();
+                $('input[data-array="bind"]').hide();
+            });
+        });
 
         $(document).ready(function () {
             $('form[data-role="bind-section-update"]').each(function (sindexx) {
@@ -338,6 +339,24 @@
 
         $('#AddNewShare').click(function () {
             $('#NewDhcpShare').toggle();
+        });
+
+        $(document).ready(function () {
+            $.when(
+                $('input[data-array="dhcp"]').selectize({
+                    delimiter: ';',
+                    persist: false,
+                    create: function (input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
+                    }
+                })
+            ).done(function (x) {
+                $('.selectize-input.items').find('div.item[data-value=""]').remove();
+                $('input[data-array="dhcp"]').hide();
+            });
         });
         //END DHCP
         

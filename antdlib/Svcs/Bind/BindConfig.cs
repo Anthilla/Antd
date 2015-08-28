@@ -54,9 +54,9 @@ namespace antdlib.Svcs.Bind {
 
         private static string mainFile = "named.conf";
 
-        private static string mainFileRndc = "rndc.conf";
+        //private static string mainFileRndc = "rndc.conf";
 
-        private static string antdBindFile = "antd.bind.conf";
+        //private static string antdBindFile = "antd.bind.conf";
 
         public static void SetReady() {
             Terminal.Execute($"cp {dir} {DIR}");
@@ -173,7 +173,7 @@ namespace antdlib.Svcs.Bind {
 
             public string Timestamp { get; set; }
 
-            public List<OptionModel> BindAcl { get; set; } = new List<OptionModel>() { };
+            public List<LineModel> BindAcl { get; set; } = new List<LineModel>() { };
 
             public List<OptionModel> BindControls { get; set; } = new List<OptionModel>() { };
 
@@ -295,8 +295,11 @@ namespace antdlib.Svcs.Bind {
                 return bind;
             }
 
-            public static void AddAcl(string name) {
-                var acl = new OptionModel() { Name = name };
+            public static void AddAcl(string key, string value) {
+                var acl = new LineModel() {
+                    Key = key,
+                    Value = value
+                };
                 var bind = Get();
                 bind.Timestamp = Timestamp.Now;
                 bind.BindAcl.Add(acl);
@@ -373,8 +376,7 @@ namespace antdlib.Svcs.Bind {
                     Data = data
                 };
                 options.Add(option);
-                if (section == "acl") { bind.BindAcl = options; }
-                else if (section == "controls") { bind.BindControls = options; }
+                if (section == "controls") { bind.BindControls = options; }
                 else if (section == "include") { bind.BindInclude = options; }
                 else if (section == "key") { bind.BindKey = options; }
                 else if (section == "logging") { bind.BindLogging = options; }
@@ -386,6 +388,25 @@ namespace antdlib.Svcs.Bind {
                 else if (section == "trusted-keys") { bind.BindTrustedKeys = options; }
                 else if (section == "managed-leys") { bind.BindManagedKeys = options; }
                 else if (section == "view") { bind.BindView = options; }
+                DeNSo.Session.New.Set(bind);
+            }
+
+            public static void SaveAcls(List<ServiceBind> newParameters) {
+                var bind = MapFile.Get();
+                bind.Timestamp = Timestamp.Now;
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    if (parameter.DataKey.Length > 0) {
+                        var a = new LineModel() {
+                            Key = parameter.DataKey,
+                            Value = parameter.DataValue,
+                            Type = ServiceDataType.StringArray,
+                            BooleanVerbs = new KeyValuePair<string, string>(";", ";")
+                        };
+                        data.Add(ConvertData(parameter));
+                    }
+                }
+                bind.BindAcl = data;
                 DeNSo.Session.New.Set(bind);
             }
 
@@ -418,9 +439,7 @@ namespace antdlib.Svcs.Bind {
                 foreach (var section in bind.BindOptions) {
                     WriteSimpleSection("options", filePath, section.Data);
                 }
-                foreach (var section in bind.BindAcl) {
-                    WriteMutipleSection("acl", section.Name, filePath, section.Data);
-                }
+                WriteAcl(filePath, bind.BindAcl);
                 foreach (var section in bind.BindControls) {
                     WriteMutipleSection("controls", section.Name, filePath, section.Data);
                 }
@@ -461,6 +480,16 @@ namespace antdlib.Svcs.Bind {
 
             private static void CleanFile(string path) {
                 File.WriteAllText(path, "");
+            }
+
+            private static void WriteAcl(string filePath, List<LineModel> lines) {
+                var linesToAppend = new List<string>() { };
+                foreach (var line in lines) {
+                    linesToAppend.Add($"acl {line.Key} {{");
+                    linesToAppend.Add($"{line.Value}");
+                    linesToAppend.Add("};\n");
+                }
+                File.AppendAllLines(filePath, linesToAppend);
             }
 
             private static void WriteSimpleSection(string section, string filePath, List<LineModel> lines) {
