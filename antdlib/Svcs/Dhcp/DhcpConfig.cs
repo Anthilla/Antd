@@ -29,7 +29,6 @@
 
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,8 +43,6 @@ namespace antdlib.Svcs.Dhcp {
         private static string DIR = Mount.SetDIRSPath(dir);
 
         private static string mainFile = "dhcpd.conf";
-
-        private static string antdDhcpFile = "antd.dhcp.conf";
 
         public static void SetReady() {
             Terminal.Execute($"cp {dir} {DIR}");
@@ -66,46 +63,6 @@ namespace antdlib.Svcs.Dhcp {
         public static void ReloadConfig() {
             //Terminal.Execute($"smbcontrol all reload-config");
         }
-
-        private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
-            var list = new List<KeyValuePair<string, List<string>>>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    var dump = new List<string>() { };
-                    foreach (var line in lines) {
-                        dump.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                    list.Add(new KeyValuePair<string, List<string>>(files[i].Replace("\\", "/"), dump));
-                }
-            }
-            if (list.Count() < 1) {
-                list.Add(new KeyValuePair<string, List<string>>($"{DIR}/{mainFile}", new List<string>() { }));
-            }
-            return list;
-        }
-
-        public static List<KeyValuePair<string, List<string>>> Structure { get { return GetServiceStructure(); } }
-
-        private static List<string> GetServiceSimpleStructure() {
-            var list = new List<string>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    foreach (var line in lines) {
-                        list.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                }
-            }
-            if (list.Count() < 1) {
-                list.Add($"{DIR}/{mainFile}");
-            }
-            return list;
-        }
-
-        public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
 
         public class MapRules {
             public static char CharCommentConf { get { return '#'; } }
