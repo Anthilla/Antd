@@ -121,10 +121,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -196,10 +196,10 @@ namespace antdlib.Svcs.Bind {
                         var split = multipleDataMatches[y].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
                             var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
+                            var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                             var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                            var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                            var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                            var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                             var ddd = new BindConfig.LineModel() {
                                 Key = k,
                                 Value = v,
@@ -223,7 +223,6 @@ namespace antdlib.Svcs.Bind {
 
         public static IEnumerable<BindConfig.OptionModel> AssignLogging(string input) {
             var logging = new List<BindConfig.OptionModel>() { };
-            //[^#]*logging[\s]*{[\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[\\w\\d\s;="/_.}{-])*;
             var loggingStr = $"logging[\\s]*{{[\\s]*((?!con|key|sta|acl|opt|tru|zon|inc)[\\w\\d\\s;=\"/_.}}{{\\-*])*;";
             var loggingRegex = new Regex(loggingStr);
             var loggingMatches = loggingRegex.Matches(input);
@@ -252,10 +251,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -305,10 +304,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -362,10 +361,10 @@ namespace antdlib.Svcs.Bind {
                         var split = multipleDataMatches[y].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
                             var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
+                            var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                             var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                            var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                            var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                            var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                             var ddd = new BindConfig.LineModel() {
                                 Key = k,
                                 Value = v,
@@ -421,10 +420,10 @@ namespace antdlib.Svcs.Bind {
                         var split = multipleDataMatches[y].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
                             var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
+                            var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                             var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                            var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                            var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                            var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                             var ddd = new BindConfig.LineModel() {
                                 Key = k,
                                 Value = v,
@@ -476,10 +475,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -529,10 +528,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -582,10 +581,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -635,10 +634,10 @@ namespace antdlib.Svcs.Bind {
                     var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
-                        var v = split[1].Replace("};", "").Trim();
+                        var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                         var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                        var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new BindConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -692,10 +691,10 @@ namespace antdlib.Svcs.Bind {
                         var split = multipleDataMatches[y].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
                             var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
+                            var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                             var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                            var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                            var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                            var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                             var ddd = new BindConfig.LineModel() {
                                 Key = k,
                                 Value = v,
@@ -751,10 +750,10 @@ namespace antdlib.Svcs.Bind {
                         var split = multipleDataMatches[y].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                         if (split.Length > 1) {
                             var k = split[0];
-                            var v = split[1].Replace("};", "").Trim();
+                            var v = split[1].Replace("};", "").Replace("\t", " ").Replace("\n", " ").Trim();
                             var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                            var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
-                            var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                            var splitValue2 = splitValue[0].Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            var type = (splitValue2.Length > 1) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                             var ddd = new BindConfig.LineModel() {
                                 Key = k,
                                 Value = v,

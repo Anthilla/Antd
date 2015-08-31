@@ -35,10 +35,8 @@ using antdlib.ViewBinds;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Threading;
 
 namespace Antd {
@@ -47,7 +45,7 @@ namespace Antd {
 
         public ServicesModule()
             : base("/services") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

@@ -42,6 +42,8 @@ namespace antdlib.ViewBinds {
         public string DataValue { get; set; }
 
         public string DataFilePath { get; set; }
+
+        public string TypeIsDataArray { get; set; } = "false";
     }
 
     public class ServiceDhcp {
@@ -50,6 +52,8 @@ namespace antdlib.ViewBinds {
         public string DataValue { get; set; }
 
         public string DataFilePath { get; set; }
+
+        public string TypeIsDataArray { get; set; } = "false";
     }
 
     public class ServiceGlusterfs {

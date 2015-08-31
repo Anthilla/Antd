@@ -214,39 +214,6 @@ namespace antdlib.Svcs.Bind {
                 return clean;
             }
 
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                //else if (value.Length > 5 && value.Contains(",")) {
-                //    return ServiceDataType.StringArray;
-                //}
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
-            }
-
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var includes = new List<string>() { };
@@ -532,6 +499,9 @@ namespace antdlib.Svcs.Bind {
                     if (line.Type == ServiceDataType.StringArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
                     }
+                    else if (line.Type == ServiceDataType.DataArray) {
+                        linesToAppend.Add($"{line.Key} {{ {line.Value.Replace(",", ";")} }};");
+                    }
                     else {
                         if (line.Value.Contains("/")) {
                             linesToAppend.Add($"{line.Key} {line.Value};");
@@ -547,3 +517,6 @@ namespace antdlib.Svcs.Bind {
         }
     }
 }
+
+
+//mksquashfs /mnt/cdrom/Apps/antd /mnt/cdrom/Apps/DIR_framework_antd20150831.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%
