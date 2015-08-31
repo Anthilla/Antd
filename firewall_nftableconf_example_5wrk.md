@@ -73,6 +73,7 @@ table ip filter {
                  ct state invalid drop
                  ip protocol { icmp, esp, ah, udp } accept
                  icmp type echo-request accept
+                 icmp type echo-request limit rate 10/second accept
                  udp dport { isakmp, l2tp, ipsec-nat-t} accept
                  iif { lo, br0, br1} accept
                  tcp dport { http, ssh, 953, 53} accept
