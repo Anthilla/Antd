@@ -35,7 +35,8 @@ namespace antdlib.MountPoint {
     public class MountRepository {
         public static MountModel[] Get() {
             var list = new List<MountModel>() { };
-            foreach (var mountItem in DeNSo.Session.New.Get<MountModel>().ToArray()) {
+            var dbGet = DeNSo.Session.New.Get<MountModel>().ToArray();
+            foreach (var mountItem in dbGet) {
                 list.Add(mountItem);
             }
             return list.ToArray();

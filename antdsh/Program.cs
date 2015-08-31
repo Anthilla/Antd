@@ -78,8 +78,14 @@ namespace antdsh {
             else if (command == "info") { shell.Info(); }
             else if (command == "history") { PrintHistory(); }
             else if (command == "exit") { shell.Exit(); }
+            else if (command == "red-button") { DestroyCreatedFiles(); }
             else if (command == "") { return; }
             else { shell.Execute(command); }
+        }
+
+        static void DestroyCreatedFiles() {
+            Terminal.Execute("rm -fR /cfg/*");
+            Terminal.Execute("rm -fR /mnt/cdrom/DIRS/*");
         }
 
         static void Help() {

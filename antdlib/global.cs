@@ -35,6 +35,7 @@ namespace antdlib {
         Boolean = 1,
         String = 2,
         StringArray = 3,
+        DataArray = 4,
         Section = 97,
         Disabled = 98,
         Other = 99

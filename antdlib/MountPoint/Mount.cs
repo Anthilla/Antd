@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -35,6 +36,7 @@ namespace antdlib.MountPoint {
     public class Mount {
 
         public static void WorkingDirectories() {
+            ConsoleLogger.Info("  Database is not active yet, so I will mount these directories by default:");
             var defaults = new string[] {
                 Folder.Root,
                 Folder.Config,
@@ -43,6 +45,7 @@ namespace antdlib.MountPoint {
                 Folder.Networkd,
             };
             for (int i = 0; i < defaults.Length; i++) {
+                ConsoleLogger.Info($"  > {defaults[i]}");
                 var dir = defaults[i];
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
@@ -52,8 +55,10 @@ namespace antdlib.MountPoint {
         }
 
         public static void AllDirectories() {
-            var mounts = MountRepository.Get();
-            if (mounts.Length < 1) {
+            ConsoleLogger.Log("  Checking for saved mounts information:");
+            if (MountRepository.Get().Length < 1) {
+                ConsoleLogger.Log("    No mounts information found...");
+                ConsoleLogger.Log("    I will load my default values!");
                 var defaults = new string[] {
                     Folder.Root,
                     Folder.Config,
@@ -62,21 +67,24 @@ namespace antdlib.MountPoint {
                     Folder.Networkd,
                 };
                 for (int i = 0; i < defaults.Length; i++) {
-                    var m = MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaults[i]);
-                    mounts.ToList().Add(m);
+                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaults[i]);
                 }
             }
-            //todo: controllo la DIRS e guardo cosa c'è già...??
+            var mounts = MountRepository.Get();
+            //todo: controllo le DIRS e guardo cosa c'è già...??
+            var y = (mounts.Length == 1) ? "y" : "ies";
+            ConsoleLogger.Log($"     Mounting {mounts.Length} director{y}:");
             for (int i = 0; i < mounts.Length; i++) {
                 var dir = mounts[i].Path;
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(DIR);
+                ConsoleLogger.Info($"         {DIR} -> {dir}");
                 SetBind(DIR, dir);
             }
+            ConsoleLogger.Log($"     Checking detected directories status:");
             for (int i = 0; i < mounts.Length; i++) {
-                var dir = mounts[i].Path;
-                CheckMount(dir);
+                CheckMount(mounts[i].Path);
             }
         }
 
@@ -84,8 +92,8 @@ namespace antdlib.MountPoint {
             var mounts = MountRepository.Get();
             if (mounts.Length > 0) {
                 for (int i = 0; i < mounts.Length; i++) {
-                    var dir = mounts[i].Path;
-                    CheckMount(dir);
+                    ConsoleLogger.Log($"         {mounts[i].Path}:");
+                    CheckMount(mounts[i].Path);
                 }
             }
         }
@@ -98,41 +106,46 @@ namespace antdlib.MountPoint {
         }
 
         private static void CheckMount(string directory) {
+            ConsoleLogger.Log($">>     check: {directory}");
+            var mntDirectory = SetDIRSPath(directory);
             string timestampNow = Timestamp.Now;
-            DFP.Set(SetDIRSPath(directory), timestampNow);
+            DFP.Set(mntDirectory, timestampNow);
             DFP.Set(directory, timestampNow);
-            bool livecdDFP;
-            var livecdPath = SetLiveCDPath(directory);
-            var livecdTimestamp = DFP.GetTimestamp(livecdPath);
-            livecdDFP = (livecdTimestamp == null) ? false : true;
-            bool dirsDFP;
-            var dirsPath = SetDIRSPath(directory);
-            var dirsTimestamp = DFP.GetTimestamp(dirsPath);
-            dirsDFP = (dirsTimestamp == null) ? false : true;
-            bool directoryDFP;
+            //var livecdPath = SetLiveCDPath(directory);
+            //var livecdTimestamp = DFP.GetTimestamp(livecdPath);
+            //bool livecdDFP = (livecdTimestamp == null) ? false : true;
+            //ConsoleLogger.Success($">> livecd DFP: {livecdTimestamp} - {livecdDFP}");
+            var dirsTimestamp = DFP.GetTimestamp(mntDirectory);
+            bool dirsDFP = (dirsTimestamp == null) ? false : true;
             var directoryTimestamp = DFP.GetTimestamp(directory);
-            directoryDFP = (directoryTimestamp == null) ? false : true;
-            if (livecdDFP == false && dirsDFP == true && directoryDFP == true) {
+            bool directoryDFP = (directoryTimestamp == null) ? false : true;
+            if (/*livecdDFP == false &&*/ dirsDFP == true && directoryDFP == true) {
                 if (dirsTimestamp == directoryTimestamp) {
+                    ConsoleLogger.Success($"             mounted");
                     MountRepository.SetAsMounted(directory);
                 }
                 else {
+                    ConsoleLogger.Log($"             mounted on a different directory");
                     MountRepository.SetAsDifferentMounted(directory);
                 }
             }
-            else if (livecdDFP == false && dirsDFP == true && directoryDFP == false) {
+            else if (/*livecdDFP == false &&*/ dirsDFP == true && directoryDFP == false) {
+                ConsoleLogger.Log($"             not mounted");
                 MountRepository.SetAsNotMounted(directory);
             }
-            else if (livecdDFP == false && dirsDFP == false && directoryDFP == true) {
+            else if (/*livecdDFP == false &&*/ dirsDFP == false && directoryDFP == true) {
+                ConsoleLogger.Log($"             tmp mounted");
                 MountRepository.SetAsTMPMounted(directory);
             }
-            else if (livecdDFP == false && dirsDFP == false && directoryDFP == false) {
+            else if (/*livecdDFP == false &&*/ dirsDFP == false && directoryDFP == false) {
+                ConsoleLogger.Log($"             error");
                 MountRepository.SetAsError(directory);
             }
             else {
+                ConsoleLogger.Warn($"             unknown error");
                 MountRepository.SetAsError(directory);
             }
-            DFP.Delete(SetDIRSPath(directory));
+            DFP.Delete(mntDirectory);
             DFP.Delete(directory);
         }
 
@@ -141,7 +154,7 @@ namespace antdlib.MountPoint {
         }
 
         public static string SetDIRSPath(string source) {
-            return Path.Combine(Folder.Dirs, $"DIR{source.Replace("/", "_")}").Replace("\\", "/");
+            return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/")}";
         }
 
         private static string SetLiveCDPath(string source) {

@@ -31,15 +31,10 @@ using antdlib.Scheduler;
 using antdlib;
 using antdlib.Status;
 using antdlib.Boot;
-using Common.Logging;
-using Common.Logging.Simple;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
-using System.Collections.Specialized;
 using System.IO;
-using WebDAVSharp.Server;
-using WebDAVSharp.Server.Stores.DiskStore;
 
 namespace Antd {
 
