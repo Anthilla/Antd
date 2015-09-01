@@ -155,6 +155,10 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log($"             error");
                 MountRepository.SetAsError(directory);
             }
+            else if (isMntd == true && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
+                ConsoleLogger.Log($"             unauthorizedaccessexception");
+                MountRepository.SetAsMountedReadOnly(directory);
+            }
             else {
                 ConsoleLogger.Warn($"             unknown error");
                 MountRepository.SetAsError(directory);

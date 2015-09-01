@@ -85,6 +85,14 @@ namespace antdlib.MountPoint {
             }
         }
 
+        public static void SetAsMountedReadOnly(string path) {
+            var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
+            if (mount != null) {
+                mount.MountStatus = MountStatus.MountedReadOnly;
+                DeNSo.Session.New.Set(mount);
+            }
+        }
+
         public static void SetAsDifferentMounted(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {

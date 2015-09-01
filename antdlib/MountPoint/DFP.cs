@@ -33,26 +33,73 @@ using System.IO;
 
 namespace antdlib.MountPoint {
     public class DFP {
+
+        /// <summary>
+        /// todo: trovare un modo per scrivere e controllare anche se la cartella è in RO
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="timestamp"></param>
         public static void Set(string directory, string timestamp) {
-            var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
-            var path = Path.Combine(directory, file);
-            FileSystem.WriteFile(path, timestamp);
+            try {
+                var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
+                var path = Path.Combine(directory, file);
+                FileSystem.WriteFile(path, timestamp);
+            }
+            catch (UnauthorizedAccessException unauthEx) {
+                ConsoleLogger.Warn($"Error @ {unauthEx.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"Error @ {ex.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
+            }
         }
 
+        /// <summary>
+        /// todo: trovare un modo per scrivere e controllare anche se la cartella è in RO
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
         public static string GetTimestamp(string directory) {
-            ConsoleLogger.Log($"getting DFP for {directory}");
-            if (!Directory.Exists(directory)) {
+            try {
+                ConsoleLogger.Log($"getting DFP for {directory}");
+                if (!Directory.Exists(directory)) {
+                    return null;
+                }
+                var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
+                return (!File.Exists(Path.GetFullPath(dfp))) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
+            }
+            catch (UnauthorizedAccessException unauthEx) {
+                ConsoleLogger.Warn($"Error @ {unauthEx.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
+                return "unauthorizedaccessexception";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"Error @ {ex.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
                 return null;
             }
-            var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
-            return (!File.Exists(Path.GetFullPath(dfp))) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
         }
 
+        /// <summary>
+        /// todo: trovare un modo per scrivere e controllare anche se la cartella è in RO
+        /// </summary>
+        /// <param name="directory"></param>
         public static void Delete(string directory) {
-            ConsoleLogger.Log($"deleting DFP for {directory}");
-            var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
-            if (File.Exists(Path.GetFullPath(dfp))) {
-                File.Delete(Path.GetFullPath(dfp));
+            try {
+                ConsoleLogger.Log($"deleting DFP for {directory}");
+                var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
+                if (File.Exists(Path.GetFullPath(dfp))) {
+                    File.Delete(Path.GetFullPath(dfp));
+                }
+            }
+            catch (UnauthorizedAccessException unauthEx) {
+                ConsoleLogger.Warn($"Error @ {unauthEx.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"Error @ {ex.TargetSite}");
+                ConsoleLogger.Warn($"Cannot access  to {directory}");
             }
         }
     }

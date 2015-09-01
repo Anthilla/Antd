@@ -35,10 +35,33 @@ using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Antd {
 
     public class AntdBoot {
+
+        public static void CheckIfGlobalRepositoryIsWriteable() {
+            var bootExtData = Terminal.Execute("blkid | grep BootExt");
+            var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value;
+            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value;
+            ConsoleLogger.Log("    global repository -> checking");
+            var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
+            if (mountResult.Length > 0) {
+                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+                    ConsoleLogger.Log("                      is RO -> remounting");
+                    Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                }
+                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                    ConsoleLogger.Log("                      is RW -> ok!");
+                }
+            }
+            else {
+                ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
+            }
+            ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Log("    global repository -> checked");
+        }
 
         public static void SetWorkingDirectories() {
             antdlib.MountPoint.Mount.WorkingDirectories();

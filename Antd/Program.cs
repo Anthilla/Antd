@@ -43,6 +43,7 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
+            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
             AntdBoot.InitAuthentication();

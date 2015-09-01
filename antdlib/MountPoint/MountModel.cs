@@ -45,6 +45,7 @@ namespace antdlib.MountPoint {
         Unmounted = 2,
         MountedTMP = 3,
         DifferentMount = 4,
+        MountedReadOnly = 5,
         Error = 99
     }
 }
