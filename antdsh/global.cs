@@ -31,7 +31,7 @@ namespace antdsh {
     public class global {
         public static string dir { get { return "/mnt/cdrom/DIRS"; } }
         public static string versionsDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd"; } }
-        public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd_tmp"; } }
+        public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_tmp"; } }
         public static string appsDir { get { return "/mnt/cdrom/Apps"; } }
         public static string unitsDir { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
         public const string configFile = "antdsh.config";

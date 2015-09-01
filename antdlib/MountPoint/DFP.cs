@@ -40,15 +40,17 @@ namespace antdlib.MountPoint {
         }
 
         public static string GetTimestamp(string directory) {
+            ConsoleLogger.Log($"getting DFP for {directory}");
             if (!Directory.Exists(directory)) {
                 return null;
             }
-            var dfp = Directory.EnumerateFiles(directory, "*.dfp", SearchOption.TopDirectoryOnly).First();
+            var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
             return (!File.Exists(Path.GetFullPath(dfp))) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
         }
 
         public static void Delete(string directory) {
-            var dfp = Directory.EnumerateFiles(directory, "*.dfp", SearchOption.TopDirectoryOnly).First();
+            ConsoleLogger.Log($"deleting DFP for {directory}");
+            var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
             if (File.Exists(Path.GetFullPath(dfp))) {
                 File.Delete(Path.GetFullPath(dfp));
             }

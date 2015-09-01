@@ -28,27 +28,35 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.IO;
 
 namespace antdlib.MountPoint {
     public class Mount {
 
+        private static string[] defaultDirectories = new string[] {
+                    Folder.Root,
+                    Folder.Config,
+                    Folder.Database,
+                    //Folder.FileRepository,
+                    //Folder.Networkd,
+                };
+
         public static void WorkingDirectories() {
-            ConsoleLogger.Info("  Database is not active yet, so I will mount these directories by default:");
-            var defaults = new string[] {
-                Folder.Root,
-                Folder.Config,
-                Folder.Database,
-                Folder.FileRepository,
-                Folder.Networkd,
-            };
-            for (int i = 0; i < defaults.Length; i++) {
-                ConsoleLogger.Info($"  > {defaults[i]}");
-                var dir = defaults[i];
+            ConsoleLogger.Info("  I try to mount these directories by default:");
+            for (int i = 0; i < defaultDirectories.Length; i++) {
+                ConsoleLogger.Info($"  > {defaultDirectories[i]}");
+                var dir = defaultDirectories[i];
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(DIR);
-                SetBind(DIR, dir);
+                if (IsAlreadyMounted(dir) == false) {
+                    ConsoleLogger.Log($"    - mounting {DIR}");
+                    SetBind(DIR, dir);
+                }
+                else {
+                    ConsoleLogger.Log($"    - {DIR} already mounted");
+                }
             }
         }
 
@@ -57,19 +65,13 @@ namespace antdlib.MountPoint {
             if (MountRepository.Get().Length < 1) {
                 ConsoleLogger.Log("    No mounts information found...");
                 ConsoleLogger.Log("    I will load my default values!");
-                var defaults = new string[] {
-                    Folder.Root,
-                    Folder.Config,
-                    Folder.Database,
-                    Folder.FileRepository,
-                    Folder.Networkd,
-                };
-                for (int i = 0; i < defaults.Length; i++) {
-                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaults[i]);
+                for (int i = 0; i < defaultDirectories.Length; i++) {
+                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaultDirectories[i]);
                 }
             }
+            ConsoleLogger.Log("  Checking current mounts and directories status:");
+            CheckCurrentStatus();
             var mounts = MountRepository.Get();
-            //todo: controllo le DIRS e guardo cosa c'è già...??
             var y = (mounts.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"     Mounting {mounts.Length} director{y}:");
             for (int i = 0; i < mounts.Length; i++) {
@@ -88,11 +90,18 @@ namespace antdlib.MountPoint {
             }
         }
 
-        /// <summary>
-        /// controllo le cartelle in DIR, le enumero e salvo a db con status (controlla status)
-        /// </summary>
         public static void CheckCurrentStatus() {
-            var directories = Directory.EnumerateDirectories(Folder.Dirs, "*");
+            var directories = Directory.EnumerateDirectories(Folder.Dirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+            var y = (directories.Length == 1) ? "y" : "ies";
+            ConsoleLogger.Log($"      {directories.Length} director{y} found in {Folder.Dirs}");
+            for (int i = 0; i < directories.Length; i++) {
+                var realPath = GetDIRSPath(directories[i]);
+                ConsoleLogger.Log($"      {directories[i]} found, should be mounted under {realPath}");
+                var mount = MountRepository.Get(realPath);
+                if (mount == null) {
+                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, realPath);
+                }
+            }
         }
 
         public static void Check() {
@@ -114,40 +123,35 @@ namespace antdlib.MountPoint {
 
         private static void CheckMount(string directory) {
             ConsoleLogger.Log($">>     check: {directory}");
-            ConsoleLogger.Log($">>     is {directory} already mounted?");
             var isMntd = IsAlreadyMounted(directory);
-            ConsoleLogger.Log($">>     ___{isMntd}");
+            ConsoleLogger.Log($">>     is {directory} already mounted? {isMntd}");
             var mntDirectory = SetDIRSPath(directory);
             string timestampNow = Timestamp.Now;
             DFP.Set(mntDirectory, timestampNow);
             DFP.Set(directory, timestampNow);
-            //var livecdPath = SetLiveCDPath(directory);
-            //var livecdTimestamp = DFP.GetTimestamp(livecdPath);
-            //bool livecdDFP = (livecdTimestamp == null) ? false : true;
-            //ConsoleLogger.Success($">> livecd DFP: {livecdTimestamp} - {livecdDFP}");
             var dirsTimestamp = DFP.GetTimestamp(mntDirectory);
             bool dirsDFP = (dirsTimestamp == null) ? false : true;
             var directoryTimestamp = DFP.GetTimestamp(directory);
             bool directoryDFP = (directoryTimestamp == null) ? false : true;
-            if (/*livecdDFP == false &&*/ isMntd == true && dirsDFP == true && directoryDFP == true) {
+            if (isMntd == true && dirsDFP == true && directoryDFP == true) {
                 if (dirsTimestamp == directoryTimestamp) {
                     ConsoleLogger.Success($"             mounted");
                     MountRepository.SetAsMounted(directory);
                 }
                 else {
-                    ConsoleLogger.Log($"             mounted on a different directory");
+                    ConsoleLogger.Log($"             mounted, but on a different directory");
                     MountRepository.SetAsDifferentMounted(directory);
                 }
             }
-            else if (/*livecdDFP == false &&*/ isMntd == false && dirsDFP == true && directoryDFP == false) {
+            else if (isMntd == false && dirsDFP == true && directoryDFP == false) {
                 ConsoleLogger.Log($"             not mounted");
                 MountRepository.SetAsNotMounted(directory);
             }
-            else if (/*livecdDFP == false &&*/ isMntd == true && dirsDFP == false && directoryDFP == true) {
+            else if (isMntd == true && dirsDFP == false && directoryDFP == true) {
                 ConsoleLogger.Log($"             tmp mounted");
                 MountRepository.SetAsTMPMounted(directory);
             }
-            else if (/*livecdDFP == false &&*/ isMntd == false && dirsDFP == false && directoryDFP == false) {
+            else if (isMntd == false && dirsDFP == false && directoryDFP == false) {
                 ConsoleLogger.Log($"             error");
                 MountRepository.SetAsError(directory);
             }
@@ -167,16 +171,14 @@ namespace antdlib.MountPoint {
             return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/")}";
         }
 
+        public static string GetDIRSPath(string source) {
+            return source.Replace(Folder.Dirs, "").Replace("DIR", "").Replace("_", "/").Replace("//", "/");
+        }
+
         private static string SetLiveCDPath(string source) {
             return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
         }
 
-        /// <summary>
-        /// questo metodo va come check in checkMount per vedere se la cartella è già montata da qualche parte -> indica lo status
-        /// mentre fa da controllo in AllDirectories per evitare che venga montata più volte
-        /// </summary>
-        /// <param name="directory"></param>
-        /// <returns></returns>
         private static bool IsAlreadyMounted(string directory) {
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");

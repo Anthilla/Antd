@@ -76,47 +76,10 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Get["/cmdsamba"] = x => {
-                var text = FileSystem.ReadFile(@"D:\Projects\Antd\Antd\bin\Debug\Svcs\Samba\samba.json");
-                Console.WriteLine(text);
-                var des = JsonConvert.DeserializeObject<List<SambaCommandModel>>(text);
-                Console.WriteLine(des);
-                var lis = new List<SambaCommandModel>() { };
-                var m = new SambaCommandModel() {
-                    command = "command",
-                    description = "ssss",
-                    type = "asdasda",
-                    synonyms = "sadasdas"
-                };
-                var m22 = new SambaCommandModel() {
-                    command = "command",
-                    description = "ssss",
-                    type = "asdasda",
-                    synonyms = "sadasdas"
-                };
-                lis.Add(m);
-                lis.Add(m22);
-                var models = JsonConvert.SerializeObject(lis);
-                Console.WriteLine(models);
-                return View["page-test"];
-            };
-
-            Get["/regex"] = x => {
-                var input = "option {12345678as15590{qwertyu{iopa666s}}} 12345678eee90 {qwertyu{iopasdasdasdaas}}";
-
-                var regex = new Regex(@"
-    \{                    # Match (
-    (
-        [^{}]+            # all chars except ()
-        | (?<Level>\{)    # or if ( then Level += 1
-        | (?<-Level>\})   # or if ) then Level -= 1
-    )+                    # Repeat (to go from inside to outside)
-    (?(Level)(?!))        # zero-width negative lookahead assertion
-    \}                    # Match )",
-                    RegexOptions.IgnorePatternWhitespace);
-
-                foreach (Match c in regex.Matches(input)) {
-                    Console.WriteLine(c.Value.Trim('(', ')'));
+            Get["/enum"] = x => {
+                var directories = Directory.EnumerateDirectories(Folder.Dirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+                for (int i = 0; i < directories.Length; i++) {
+                    Console.WriteLine(directories[i].Replace("\\", "/"));
                 }
                 return View["page-test"];
             };
