@@ -78,12 +78,21 @@ namespace antdlib.MountPoint {
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(DIR);
                 ConsoleLogger.Info($"         {DIR} -> {dir}");
-                SetBind(DIR, dir);
+                if (IsAlreadyMounted(dir) == false) {
+                    SetBind(DIR, dir);
+                }
             }
             ConsoleLogger.Log($"     Checking detected directories status:");
             for (int i = 0; i < mounts.Length; i++) {
                 CheckMount(mounts[i].Path);
             }
+        }
+
+        /// <summary>
+        /// controllo le cartelle in DIR, le enumero e salvo a db con status (controlla status)
+        /// </summary>
+        public static void CheckCurrentStatus() {
+            var directories = Directory.EnumerateDirectories(Folder.Dirs, "*");
         }
 
         public static void Check() {
@@ -105,6 +114,9 @@ namespace antdlib.MountPoint {
 
         private static void CheckMount(string directory) {
             ConsoleLogger.Log($">>     check: {directory}");
+            ConsoleLogger.Log($">>     is {directory} already mounted?");
+            var isMntd = IsAlreadyMounted(directory);
+            ConsoleLogger.Log($">>     ___{isMntd}");
             var mntDirectory = SetDIRSPath(directory);
             string timestampNow = Timestamp.Now;
             DFP.Set(mntDirectory, timestampNow);
@@ -117,7 +129,7 @@ namespace antdlib.MountPoint {
             bool dirsDFP = (dirsTimestamp == null) ? false : true;
             var directoryTimestamp = DFP.GetTimestamp(directory);
             bool directoryDFP = (directoryTimestamp == null) ? false : true;
-            if (/*livecdDFP == false &&*/ dirsDFP == true && directoryDFP == true) {
+            if (/*livecdDFP == false &&*/ isMntd == true && dirsDFP == true && directoryDFP == true) {
                 if (dirsTimestamp == directoryTimestamp) {
                     ConsoleLogger.Success($"             mounted");
                     MountRepository.SetAsMounted(directory);
@@ -127,15 +139,15 @@ namespace antdlib.MountPoint {
                     MountRepository.SetAsDifferentMounted(directory);
                 }
             }
-            else if (/*livecdDFP == false &&*/ dirsDFP == true && directoryDFP == false) {
+            else if (/*livecdDFP == false &&*/ isMntd == false && dirsDFP == true && directoryDFP == false) {
                 ConsoleLogger.Log($"             not mounted");
                 MountRepository.SetAsNotMounted(directory);
             }
-            else if (/*livecdDFP == false &&*/ dirsDFP == false && directoryDFP == true) {
+            else if (/*livecdDFP == false &&*/ isMntd == true && dirsDFP == false && directoryDFP == true) {
                 ConsoleLogger.Log($"             tmp mounted");
                 MountRepository.SetAsTMPMounted(directory);
             }
-            else if (/*livecdDFP == false &&*/ dirsDFP == false && directoryDFP == false) {
+            else if (/*livecdDFP == false &&*/ isMntd == false && dirsDFP == false && directoryDFP == false) {
                 ConsoleLogger.Log($"             error");
                 MountRepository.SetAsError(directory);
             }
@@ -157,6 +169,18 @@ namespace antdlib.MountPoint {
 
         private static string SetLiveCDPath(string source) {
             return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
+        }
+
+        /// <summary>
+        /// questo metodo va come check in checkMount per vedere se la cartella è già montata da qualche parte -> indica lo status
+        /// mentre fa da controllo in AllDirectories per evitare che venga montata più volte
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        private static bool IsAlreadyMounted(string directory) {
+            var df = Terminal.Execute($"df | grep {directory}");
+            var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
+            return (df.Length > 0 || pm.Length > 0) ? true : false;
         }
     }
 }
