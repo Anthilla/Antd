@@ -3,6 +3,11 @@ Antd
 
 [![Join the chat at https://gitter.im/Anthilla/Antd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Anthilla/Antd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+<a href="https://scan.coverity.com/projects/antd">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/6211/badge.svg"/>
+</a>
+
 About
 -----
  
