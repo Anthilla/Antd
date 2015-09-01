@@ -36,12 +36,12 @@
 }
 
 @section MainContent {
-    <legend id="Mounts">Mounts</legend>
-    <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+    <legend id="Mounts">Antd-Managed Mounts</legend>
     <table class="table">
         <tbody>
             @foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountRepository.Get()) {
                 <tr data-guid="@mount.DFPGuid" data-timestamp="@mount.DFPTimestamp">
+                    <td style="width: 40px;">@mount.MountContext</td>
                     <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDIRSPath(mount.Path)</td>
                     <td style="width: 20px; text-align: center;"><i class="icon-arrow-right-5 fg-white"></i></td>
                     <td style="width: 40%;">@mount.Path</td>
@@ -67,6 +67,46 @@
             }
         </tbody>
     </table>
+
+    <legend id="Mounts">Local Machine Mounts</legend>
+    <table class="table">
+        <tbody>
+            @foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountLocal.Get()) {
+                <tr>
+                    <td style="width: 100px;">@mount.Type</td>
+                    <td>@mount.Device</td>
+                    <td style="width: 20px; text-align: center;"><i class="icon-link fg-white"></i></td>
+                    <td style="width: 35%;">@mount.Path</td>
+                    <td style="width: 20px; text-align: center;"><i class="icon-arrow-right-5 fg-white"></i></td>
+                    <td style="width: 35%;">@mount.MountedPath</td>
+                    <td style="width: 20px; text-align: center;">
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
+                            <i class="icon-record fg-green on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Unmounted) {
+                            <i class="icon-record fg-red on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTMP) {
+                            <i class="icon-record fg-orange on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
+                            <i class="icon-stop-2 fg-orange on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadOnly) {
+                            <i class="icon-eye fg-green on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadWrite) {
+                            <i class="icon-pencil fg-green on-left"></i>
+                        }
+                        @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
+                            <i class="icon-stop-2 fg-red on-left"></i>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
 
 @section Scripts {

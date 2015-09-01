@@ -39,32 +39,39 @@ namespace antdlib.MountPoint {
             foreach (var mountItem in dbGet) {
                 list.Add(mountItem);
             }
-            return list.ToArray();
+            return list.OrderBy(m => m.MountContext).ToArray();
         }
 
         public static MountModel Get(string path) {
             return DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
         }
 
-        public static MountModel Create(string guid, string timestamp, string path) {
-            var exMount = Get(path);
-            if (exMount != null) {
-                return exMount;
+        public static MountModel Create(string guid, string timestamp, string path, MountContext type) {
+            var get = Get(path);
+            if (get == null) {
+                var exMount = Get(path);
+                if (exMount != null) {
+                    return exMount;
+                }
+                var mount = new MountModel() {
+                    _Id = Guid.NewGuid().ToString(),
+                    DFPGuid = guid,
+                    DFPTimestamp = timestamp,
+                    MountContext = type,
+                    Path = path
+                };
+                DeNSo.Session.New.Set(mount);
+                return mount;
             }
-            var mount = new MountModel() {
-                _Id = Guid.NewGuid().ToString(),
-                DFPGuid = guid,
-                DFPTimestamp = timestamp,
-                Path = path
-            };
-            DeNSo.Session.New.Set(mount);
-            return mount;
+            else
+                return get;
         }
 
-        public static void SetAsMounted(string path) {
+        public static void SetAsMounted(string path, string mounted) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.Mounted;
+                mount.MountedPath = mounted;
                 DeNSo.Session.New.Set(mount);
             }
         }

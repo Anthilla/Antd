@@ -163,6 +163,7 @@
     <Compile Include="Models\VersionModel.cs" />
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="MountPoint\MountModel.cs" />
+    <Compile Include="MountPoint\MountLocal.cs" />
     <Compile Include="MountPoint\MountRepository.cs" />
     <Compile Include="MountPoint\DFP.cs" />
     <Compile Include="Network\Network.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Security\Token.cs" />
     <Compile Include="Ssh\Keys.cs" />
     <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Status\Local.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Status\Uptime.cs" />

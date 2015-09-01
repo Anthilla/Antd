@@ -66,7 +66,7 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log("    No mounts information found...");
                 ConsoleLogger.Log("    I will load my default values!");
                 for (int i = 0; i < defaultDirectories.Length; i++) {
-                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaultDirectories[i]);
+                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaultDirectories[i], MountContext.Core);
                 }
             }
             ConsoleLogger.Log("  Checking current mounts and directories status:");
@@ -75,7 +75,7 @@ namespace antdlib.MountPoint {
             var y = (mounts.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"     Mounting {mounts.Length} director{y}:");
             for (int i = 0; i < mounts.Length; i++) {
-                var dir = mounts[i].Path;
+                var dir = mounts[i].Path.Replace("\\", "");
                 var DIR = SetDIRSPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(DIR);
@@ -99,7 +99,7 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log($"      {directories[i]} found, should be mounted under {realPath}");
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
-                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, realPath);
+                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, realPath, MountContext.External);
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void Dir(string directory) {
-            MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, directory);
+            MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, directory, MountContext.External);
             var DIR = SetDIRSPath(directory);
             SetBind(DIR, directory);
             Check();
@@ -133,10 +133,14 @@ namespace antdlib.MountPoint {
             bool dirsDFP = (dirsTimestamp == null) ? false : true;
             var directoryTimestamp = DFP.GetTimestamp(directory);
             bool directoryDFP = (directoryTimestamp == null) ? false : true;
-            if (isMntd == true && dirsDFP == true && directoryDFP == true) {
+            if (isMntd == true && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
+                ConsoleLogger.Log($"             unauthorizedaccessexception");
+                MountRepository.SetAsMountedReadOnly(directory);
+            }
+            else if (isMntd == true && dirsDFP == true && directoryDFP == true) {
                 if (dirsTimestamp == directoryTimestamp) {
                     ConsoleLogger.Success($"             mounted");
-                    MountRepository.SetAsMounted(directory);
+                    MountRepository.SetAsMounted(directory, mntDirectory);
                 }
                 else {
                     ConsoleLogger.Log($"             mounted, but on a different directory");
@@ -154,10 +158,6 @@ namespace antdlib.MountPoint {
             else if (isMntd == false && dirsDFP == false && directoryDFP == false) {
                 ConsoleLogger.Log($"             error");
                 MountRepository.SetAsError(directory);
-            }
-            else if (isMntd == true && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
-                ConsoleLogger.Log($"             unauthorizedaccessexception");
-                MountRepository.SetAsMountedReadOnly(directory);
             }
             else {
                 ConsoleLogger.Warn($"             unknown error");

@@ -35,9 +35,19 @@ namespace antdlib.MountPoint {
 
         public string DFPTimestamp { get; set; }
 
-        public string Path { get; set; }
+        public string Device { get; set; } = "";
+
+        public string Path { get; set; } = "";
+
+        public string MountedPath { get; set; } = "";
 
         public MountStatus MountStatus { get; set; } = MountStatus.Unmounted;
+
+        public MountContext MountContext { get; set; } = MountContext.Core;
+
+        public string Type { get; set; } = "";
+
+        public string Options { get; set; } = "";
     }
 
     public enum MountStatus : byte {
@@ -46,6 +56,13 @@ namespace antdlib.MountPoint {
         MountedTMP = 3,
         DifferentMount = 4,
         MountedReadOnly = 5,
+        MountedReadWrite = 6,
         Error = 99
+    }
+
+    public enum MountContext : byte {
+        Core = 1,
+        External = 2,
+        Other = 99
     }
 }
