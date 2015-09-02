@@ -42,9 +42,9 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.CurrentContext = Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-setup", vmod];
             };
         }

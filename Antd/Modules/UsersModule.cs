@@ -46,23 +46,23 @@ namespace Antd {
                 vmod.SystemUsers = SystemUser.GetAll();
                 vmod.ApplicationUsers = ApplicationUser.GetAll();
 
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.CurrentContext = Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-users", vmod];
             };
 
             Post["/create"] = x => {
-                string type = this.Request.Form.UserType.Value;
+                string type = Request.Form.UserType.Value;
                 if (type == "app") {
-                    string fname = this.Request.Form.FirstName;
-                    string lname = this.Request.Form.LastName;
-                    string passwd = this.Request.Form.Passwd;
-                    string email = this.Request.Form.Email;
+                    string fname = Request.Form.FirstName;
+                    string lname = Request.Form.LastName;
+                    string passwd = Request.Form.Passwd;
+                    string email = Request.Form.Email;
                     ApplicationUser.Create(fname, lname, passwd, email);
                 }
                 else if (type == "sys") {
-                    string name = this.Request.Form.Name;
+                    string name = Request.Form.Name;
                     SystemUser.CreateUser(name);
                 }
                 return Response.AsRedirect("/users");

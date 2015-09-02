@@ -45,14 +45,14 @@ namespace Antd {
             };
 
             Post["/"] = x => {
-                string cmd = this.Request.Form.Command;
-                string result = (this.Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
+                string cmd = Request.Form.Command;
+                string result = (Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
                 FileSystem.WriteFile("/mnt/cdrom/pippo.txt", result);
                 return Response.AsJson(result);
             };
 
             Post["/directory"] = x => {
-                string directory = this.Request.Form.Directory;
+                string directory = Request.Form.Directory;
                 string result;
                 if (Directory.Exists(directory)) {
                     result = directory + " > ";
@@ -64,7 +64,7 @@ namespace Antd {
             };
 
             Post["/directory/parent"] = x => {
-                string directory = this.Request.Form.Directory;
+                string directory = Request.Form.Directory;
                 string result;
                 if (Directory.Exists(directory)) {
                     var parent = Directory.GetParent(directory);

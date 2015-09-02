@@ -57,9 +57,9 @@ namespace Antd {
                 vmod.MaxProcesses = "2";
                 vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.CurrentContext = Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
                 return View["_page-system", vmod];
             };

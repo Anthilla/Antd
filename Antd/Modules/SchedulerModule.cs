@@ -47,26 +47,26 @@ namespace Antd {
             };
 
             Post["/now"] = x => {
-                string _alias = (string)this.Request.Form.Alias;
-                string _command = (string)this.Request.Form.Command;
+                var _alias = (string)Request.Form.Alias;
+                var _command = (string)Request.Form.Command;
                 Job.Schedule(_alias, _command);
                 dynamic model = new ExpandoObject();
                 return Response.AsRedirect("/scheduler");
             };
 
             Post["/cron"] = x => {
-                string _alias = (string)this.Request.Form.Alias;
-                string _command = (string)this.Request.Form.Command;
-                string _cron = (string)this.Request.Form.CronResult;
+                var _alias = (string)Request.Form.Alias;
+                var _command = (string)Request.Form.Command;
+                var _cron = (string)Request.Form.CronResult;
                 Job.Schedule(_alias, _command, _cron);
                 dynamic model = new ExpandoObject();
                 return Response.AsRedirect("/scheduler");
             };
 
             //Post["/other"] = x => {
-            //    string _alias = (string)this.Request.Form.Alias;
-            //    string _command = (string)this.Request.Form.Command;
-            //    string _cron = (string)this.Request.Form.CronResult;
+            //    var _alias = (string)Request.Form.Alias;
+            //    var _command = (string)Request.Form.Command;
+            //    var _cron = (string)Request.Form.CronResult;
             //    Job.Schedule(_alias, _command, _cron);
             //    dynamic model = new ExpandoObject();
             //    return Response.AsRedirect("/scheduler");

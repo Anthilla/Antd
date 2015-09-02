@@ -62,7 +62,7 @@ namespace Antd {
             };
 
             Post["/page"] = x => {
-                var o = (string)this.Request.Form.Text;
+                var o = (string)Request.Form.Text;
                 var arr = o.Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 foreach (var a in arr) {
                     Console.WriteLine(a);

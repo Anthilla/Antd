@@ -72,7 +72,7 @@ namespace Antd.Modules {
             };
 
             Post["/killproc"] = x => {
-                string pid = (string)this.Request.Form.data;
+                string pid = (string)Request.Form.data;
                 CommandModel command = Terminal.Execute("kill " + pid).ConvertCommandToModel();
                 return Response.AsRedirect("/procs");
             };

@@ -46,15 +46,15 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 vmod.units = Networkd.ReadUnits();
                 vmod.Interfaces = NetworkInterface.All;
-                vmod.CurrentContext = this.Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(this.Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(this.Request.Path).ToArray().Length;
+                vmod.CurrentContext = Request.Path;
+                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
+                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-network", vmod];
             };
 
             Post["/d"] = x => {
-                string fname = this.Request.Form.File;
-                string txt = this.Request.Form.Text;
+                string fname = Request.Form.File;
+                string txt = Request.Form.Text;
                 Networkd.CreateCustomUnit(txt, fname);
                 return Response.AsRedirect("/status/networkd");
             };

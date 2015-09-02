@@ -44,8 +44,8 @@ namespace Antd {
             };
 
             Post["/"] = x => {
-                string file = (string)this.Request.Form.File;
-                string args = (string)this.Request.Form.Arguments;
+                string file = (string)Request.Form.File;
+                string args = (string)Request.Form.Arguments;
                 var command = Terminal.Execute(file + " "+ args).ConvertCommandToModel();
                 return View["page-console", command];
             };

@@ -51,9 +51,9 @@ namespace Antd {
             };
 
             Post["/"] = x => {
-                string tbl = (string)this.Request.Form.Alias;
-                string context = (string)this.Request.Form.Context;
-                string tblType = (string)this.Request.Form.TableType;
+                string tbl = (string)Request.Form.Alias;
+                string context = (string)Request.Form.Context;
+                string tblType = (string)Request.Form.TableType;
                 if (tbl.RemoveWhiteSpace().Length > 0) {
                     CCTableRepository.CreateTable(tbl, tblType, context);
                 }
@@ -104,7 +104,7 @@ namespace Antd {
             Post["/row/dataview"] = x => {
                 string table = (string)Request.Form.TableGuid;
                 string tableName = (string)Request.Form.TableName;
-                string label = (string)this.Request.Form.Label;
+                string label = (string)Request.Form.Label;
 
                 string commandString = (string)Request.Form.Command;
                 string resultString = (string)Request.Form.Result;
@@ -168,16 +168,16 @@ namespace Antd {
             //OVVIAMENTE bisgogna aggiustare anche gli script jquery e l'html
             //ad esempio in input:bool il valore Name è uguale sia per il true che per il false
             Post["/launch/{inputid}/{value}"] = x => {
-                string inputid = (string)this.Request.Form.Input;
-                string value = (string)this.Request.Form.Value;
+                string inputid = (string)Request.Form.Input;
+                string value = (string)Request.Form.Value;
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
                 return Response.AsJson(r);
             };
 
             Post["/row/conf"] = x => {
-                string table = (string)this.Request.Form.TableGuid;
-                string tableName = (string)this.Request.Form.TableName;
-                string file = (string)this.Request.Form.File;
+                string table = (string)Request.Form.TableGuid;
+                string tableName = (string)Request.Form.TableName;
+                string file = (string)Request.Form.File;
 
                 CCTableFlags.ConfType type;
                 if (file.EndsWith(".conf")) {
@@ -191,7 +191,7 @@ namespace Antd {
                     CCTableRepository.CreateRowConf(table, tableName, file, type);
                 }
 
-                string context = (string)this.Request.Form.Context;
+                string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
@@ -246,7 +246,7 @@ namespace Antd {
                     }
                 }
 
-                string context = (string)this.Request.Form.Context;
+                string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };

@@ -47,11 +47,11 @@ namespace Antd {
             };
 
             Post["/"] = x => {
-                string command = this.Request.Form.Command;
-                string layout = this.Request.Form.CommandLayout;
-                string notes = this.Request.Form.Notes;
-                string inputid = this.Request.Form.InputID;
-                string inputlocation = this.Request.Url;
+                string command = Request.Form.Command;
+                string layout = Request.Form.CommandLayout;
+                string notes = Request.Form.Notes;
+                string inputid = Request.Form.InputID;
+                string inputlocation = Request.Url;
                 CommandRepository.Create(inputid, command, layout, inputlocation, notes);
                 return Response.AsRedirect("/command/mgmt");
             };
