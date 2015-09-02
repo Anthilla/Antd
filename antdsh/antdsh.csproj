@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boot.cs" />
     <Compile Include="execute.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Program.cs" />

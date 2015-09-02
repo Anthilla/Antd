@@ -75,14 +75,6 @@ namespace Antd {
                 }
                 return View["page-test"];
             };
-
-            Get["/enum"] = x => {
-                var directories = Directory.EnumerateDirectories(Folder.Dirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
-                for (int i = 0; i < directories.Length; i++) {
-                    Console.WriteLine(directories[i].Replace("\\", "/"));
-                }
-                return View["page-test"];
-            };
         }
     }
 }

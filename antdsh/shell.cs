@@ -29,9 +29,7 @@
 
 using antdlib;
 using System;
-using System.Threading;
 using static System.Console;
-//using static antdsh.execute;
 
 namespace antdsh {
     public class shell {

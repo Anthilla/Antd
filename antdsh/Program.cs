@@ -38,8 +38,16 @@ namespace antdsh {
         static HashSet<cmd> commandList = new HashSet<cmd>() { };
 
         static void Main(string[] args) {
+            var startTime = DateTime.Now;
+            Console.Title = "antdsh";
+
+            Boot.CheckIfGlobalRepositoryIsWriteable();
+
+            ///controlla qui
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
+            ///controlla qui
+             
             if (args.Length == 0) {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));

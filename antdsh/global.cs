@@ -29,19 +29,20 @@
 
 namespace antdsh {
     public class global {
-        public static string dir { get { return "/mnt/cdrom/DIRS"; } }
-        public static string versionsDir { get { return "/mnt/cdrom/DIRS/DIR_framework_antd"; } }
-        public static string tmpDir { get { return "/mnt/cdrom/DIRS/DIR_framework_tmp"; } }
-        public static string appsDir { get { return "/mnt/cdrom/Apps"; } }
-        public static string unitsDir { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
+        public static string coreRepo { get { return "/mnt/cdrom"; } }
+        public static string appsDir { get { return $"{coreRepo}/Apps"; } }
+        public static string versionsDir { get { return $"{appsDir}/Anthilla_Antd"; } }
+        public static string dir { get { return $"{coreRepo}/DIRS"; } }
+        public static string tmpDir { get { return $"{coreRepo}/tmp"; } }
+        public static string unitsDir { get { return $"{coreRepo}/Units/applicative.target.wants"; } }
         public const string configFile = "antdsh.config";
-        public const string antdRunning = "running";
+        public const string antdRunning = "active-version";
         public const string downloadName = "antdDownload.zip";
         public const string downloadFirstDir = "antdDownloadFirst";
 
         public const string zipStartsWith = "antd";
         public const string zipEndsWith = ".7z";
-        public const string squashStartsWith = "DIR_framework_antd";
+        public const string squashStartsWith = "DIR_framework_antd-";
         public const string squashEndsWith = ".squashfs.xz";
 
         public const string dateFormat = "yyyyMMdd";
@@ -50,8 +51,6 @@ namespace antdsh {
             public static string kernelDir { get { return "/mnt/cdrom/Kernel"; } }
 
             public static string systemDir { get { return "/mnt/cdrom/System"; } }
-
-
         }
 
         public class units {
