@@ -4,6 +4,8 @@
 # NuGet.exe
 nuget.exe
 .nuget/NuGet.exe
+.nuget/
+.nuget
 
 # User-specific files
 *.suo
