@@ -39,6 +39,8 @@ namespace Antd {
 
         public RawModule()
             : base("/rawdata") {
+            this.RequiresAuthentication();
+
             Get["/dir/{path*}"] = x => {
                 var p = x.path;
                 var model = new DirectoryLister("/" + p, false).FullList2;

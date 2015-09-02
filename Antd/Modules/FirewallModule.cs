@@ -27,13 +27,10 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.CCTable;
 using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
-using System;
 using System.Dynamic;
-using System.Linq;
 
 namespace Antd {
 

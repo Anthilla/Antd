@@ -31,6 +31,7 @@ using antdlib;
 using antdlib.Models;
 using antdlib.Status;
 using Nancy;
+using Nancy.Security;
 using System.Dynamic;
 
 namespace Antd.Modules {
@@ -39,6 +40,8 @@ namespace Antd.Modules {
 
         public InfoModule()
             : base("/info") {
+            this.RequiresAuthentication();
+
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.hostname = Terminal.Execute("hostname");

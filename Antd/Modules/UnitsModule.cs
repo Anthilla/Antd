@@ -30,6 +30,7 @@
 using antdlib.Models;
 using antdlib.Systemd;
 using Nancy;
+using Nancy.Security;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,8 @@ namespace Antd {
 
         public UnitsModule()
             : base("/units") {
+            this.RequiresAuthentication();
+
             Get["/"] = x => {
                 List<UnitModel> units = Units.All;
                 return View["page-units", units];

@@ -40,7 +40,7 @@ namespace Antd {
 
         public NetworkModule()
             : base("/network") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

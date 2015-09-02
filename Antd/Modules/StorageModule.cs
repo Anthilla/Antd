@@ -40,15 +40,10 @@ namespace Antd {
 
         public StorageModule()
             : base("/storage") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.DatabaseVersion = AntdDatabase.Version;
-                //vmod.DatabaseName = AntdDatabase.Name;
-                //vmod.DatabasePath = AntdDatabase.Path;
-                //vmod.DatabaseJnlPath = AntdDatabase.JournalPath;
-                //vmod.DatabaseRaidPaths = AntdDatabase.RaidPaths;
                 vmod.VolumesInfo = Volumes.BlocksFromDd();
 
                 vmod.CurrentContext = this.Request.Path;

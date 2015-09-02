@@ -28,10 +28,8 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib.Apps;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 using System.IO;
 
 namespace Antd {
