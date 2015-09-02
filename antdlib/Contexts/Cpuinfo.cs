@@ -41,6 +41,7 @@ namespace antdlib {
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return meminfoJson;
         }
 
@@ -48,6 +49,7 @@ namespace antdlib {
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
             var meminfo = ConvertCpuinfo(meminfoContent);
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return meminfo;
         }
 
@@ -65,6 +67,7 @@ namespace antdlib {
                     cpuinfoList.Add(cpuinfo);
                 }
             }
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return cpuinfoList;
         }
     }

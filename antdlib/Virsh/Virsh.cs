@@ -33,6 +33,7 @@ namespace antdlib.Virsh {
     public class Virsh {
 
         public static void Launch(string command, string options) {
+            Log.Logger.TraceMethod("Virsh", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Job.Schedule("virsh -> " + command, "virsh " + command + " " + options);
         }
     }

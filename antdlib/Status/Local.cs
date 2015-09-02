@@ -36,6 +36,7 @@ using System.Text.RegularExpressions;
 namespace antdlib.Status {
     public class Local {
         private static string GetSystemVersion() {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var version = "";
             var sq = Terminal.Execute("losetup | grep /dev/loop0");
             var sqSplt = sq.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -49,6 +50,7 @@ namespace antdlib.Status {
         public static string SystemVersion { get { return GetSystemVersion(); } }
 
         private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<SystemComponentModel>() { };
             var activeLinkData = Terminal.Execute($"find {Folder.AntdRepo} -type l | grep active");
             ConsoleLogger.Warn(activeLinkData);

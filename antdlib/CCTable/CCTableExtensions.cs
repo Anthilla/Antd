@@ -53,6 +53,7 @@ namespace antdlib.CCTable {
                     }
                 }
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list.ToArray();
         }
 
@@ -77,6 +78,7 @@ namespace antdlib.CCTable {
                     }
                 }
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list.ToArray();
         }
     }

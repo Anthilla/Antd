@@ -29,6 +29,7 @@ using antdlib;
 ///     20141110
 ///-------------------------------------------------------------------------------------
 using Nancy;
+using Nancy.Security;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;

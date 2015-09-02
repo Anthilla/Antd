@@ -41,7 +41,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.LOGS = Logger.GetAll();
+                vmod.LOGS = Logger.GetAllMethods();
                 return View["_page-log", vmod];
             };
         }

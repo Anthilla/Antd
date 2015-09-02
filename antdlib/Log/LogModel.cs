@@ -52,30 +52,30 @@ namespace antdlib.Log {
 
         public EventLevel Level { get; set; }
 
-        public string Source { get; set; }
+        public string Source { get; set; } = "";
 
-        public string EventID { get; set; }
+        public string EventID { get; set; } = "";
 
-        public string Activity { get; set; }
+        public string Activity { get; set; } = "";
 
-        public string Keyword { get; set; }
+        public string Keyword { get; set; } = "";
 
-        public string User { get; set; }
+        public string User { get; set; } = "";
 
-        public string OperativeCode { get; set; }
+        public string OperativeCode { get; set; } = "";
 
-        public string Reg { get; set; }
+        public string Reg { get; set; } = "";
 
-        public string SessionID { get; set; }
+        public string SessionID { get; set; } = "";
 
-        public string RelationID { get; set; }
+        public string RelationID { get; set; } = "";
 
-        public string Message { get; set; } //also  hhtpRequestStatus
+        public string Message { get; set; } = "";
 
-        public string Mode { get; set; }
+        public string Mode { get; set; } = "";
 
-        public string File { get; set; }
+        public string File { get; set; } = "";
 
-        public string Oldfile { get; set; }
+        public string Oldfile { get; set; } = "";
     }
 }

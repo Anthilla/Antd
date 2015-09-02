@@ -34,6 +34,7 @@ using System.Collections.Generic;
 namespace antdlib.MountPoint {
     public class MountLocal {
         public static IEnumerable<MountModel> Get() {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<MountModel>() { };
             var deny = new List<string>() { };
             var procmounts = FileSystem.ReadFile("/proc/mounts");
@@ -90,6 +91,7 @@ namespace antdlib.MountPoint {
         }
 
         public static string GetSquashMount(string device) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var sq = Terminal.Execute($"losetup | grep {device}");
             if (sq.Length > 0) {
                 var data = sq.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -105,6 +107,7 @@ namespace antdlib.MountPoint {
         }
 
         public static string GetBindMount(string path) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string v = null;
             var mnt = MountRepository.Get(path);
             if (mnt != null) {

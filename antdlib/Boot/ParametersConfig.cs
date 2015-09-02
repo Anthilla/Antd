@@ -64,8 +64,5 @@ namespace antdlib.Boot {
             var arr = new string[] { value };
             xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
         }
-
-        //public static void Remove(string key) {
-        //}
     }
 }

@@ -3,30 +3,21 @@
     <thead>
         <tr>
             <th class="text-left">Timestamp</th>
-            <th class="text-left">Action</th>
-            <th class="text-left">File</th>
-            <th class="text-left">Old File</th>
+            <th class="text-left">Source</th>
+            <th class="text-left">Keyword</th>
         </tr>
     </thead>
     <tbody>
         @foreach (antdlib.Log.LogModel log in Model.LOGS) {
             <tr>
                 <td class="right">
-                    <p>@log.time</p>
+                    <p>@log.LogTimestamp</p>
                 </td>
                 <td class="right">
-                    <p>@log.mode</p>
+                    <p>@log.Source</p>
                 </td>
                 <td class="right">
-                    <p>@log.file</p>
-                </td>
-                <td class="right">
-                    @if (log.oldfile != "") {
-                        <p>@log.oldfile</p>
-                    }
-                    else {
-                        <p>&nbsp</p>
-                    }
+                    <p>@log.Keyword</p>
                 </td>
             </tr>
         }

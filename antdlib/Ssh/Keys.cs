@@ -34,6 +34,7 @@ namespace antdlib.Ssh {
         public static string folder = "/mnt/cdrom/DIRS/DIR_cfg_antd_ssh";
 
         public static void Generate() {
+            Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute("ssh-keygen -t rsa -f " + folder + "/key000t -N " + Guid.NewGuid().ToString());
         }
     }

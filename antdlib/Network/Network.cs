@@ -42,6 +42,7 @@ namespace antdlib.Network.Management {
     public class NetworkInterface {
 
         private static List<string> GetInterfaceList() {
+            Log.Logger.TraceMethod("Netword", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var dirs = Directory.GetDirectories("/sys/class/net");
             var list = new List<string>() { };
             foreach (var dir in dirs) {
@@ -51,6 +52,7 @@ namespace antdlib.Network.Management {
         }
 
         private static List<NetworkInterfaceModel> MapInterface() {
+            Log.Logger.TraceMethod("Netword", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<NetworkInterfaceModel>() { };
             foreach (var name in GetInterfaceList()) {
                 var str = Terminal.Execute("ip addr show " + name);

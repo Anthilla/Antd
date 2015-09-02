@@ -41,6 +41,7 @@ namespace antdlib.CCTable {
             foreach (var item in list) {
                 item.Content = GetRows(item.Guid);
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list;
         }
 
@@ -49,12 +50,14 @@ namespace antdlib.CCTable {
             foreach (var item in list) {
                 item.Content = GetRows(item.Guid);
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list;
         }
 
         public static CCTableModel GetByGuid(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             cc.Content = GetRows(cc.Guid);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return cc;
         }
 
@@ -69,6 +72,7 @@ namespace antdlib.CCTable {
                     i.ValueResult = Terminal.Execute(f + " " + c);
                 }
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list;
         }
 
@@ -81,6 +85,7 @@ namespace antdlib.CCTable {
             };
             model.Type = GetTableType(type);
             DeNSo.Session.New.Set(model);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void CreateRow(string tableGuid, string tableName, string label, string inputType,
@@ -102,6 +107,7 @@ namespace antdlib.CCTable {
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void CreateRowDataView(string tableGuid, string tableName, string label, string inputCommand, string result) {
@@ -120,6 +126,7 @@ namespace antdlib.CCTable {
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void CreateRowConf(string tableGuid, string tableName, string file, CCTableFlags.ConfType type) {
@@ -145,28 +152,33 @@ namespace antdlib.CCTable {
             else {
                 SetConfDirectory(file, newPath);
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         private static void SetConfFile(string source, string destination) {
             Terminal.Execute($"cp {source} {destination}");
             File.Copy(source, destination, true);
             Terminal.Execute($"mount --bind {source} {destination}");
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         private static void SetConfDirectory(string source, string destination) {
             Terminal.Execute($"cp {source} {destination}");
             FileSystem.CopyDirectory(source, destination);
             MountPoint.Mount.Dir(source);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void UpdateConfFile(string file, string text) {
             FileSystem.WriteFile(file, text);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static CCTableConfModel[] GetEtcConfs() {
             var confs = Directory.EnumerateFiles("/etc", "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
             var files = confs.GetConfFiles();
             var dirs = confs.GetServices();
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return files.Concat(dirs).ToArray();
         }
 
@@ -181,23 +193,27 @@ namespace antdlib.CCTable {
                 };
                 list.Add(m);
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list.ToArray();
         }
 
         public static void DeleteTable(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void DeleteTableRow(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             DeNSo.Session.New.Delete(cc);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void EditTableRow(string guid, string command) {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             var i = row.HtmlInputID;
             CommandRepository.Edit(i, command);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void Refresh(string guid) {
@@ -207,6 +223,7 @@ namespace antdlib.CCTable {
             row.ValueResult = result;
             row.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             DeNSo.Session.New.Set(row);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void SaveMapData(string rowGuid, string labelArray, string indexArray) {
@@ -221,6 +238,7 @@ namespace antdlib.CCTable {
             }
             r.HasMap = true;
             DeNSo.Session.New.Set(r);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static List<CCTableRowMapped> MapData(string[] result, List<CCTableRowMap> mapList) {
@@ -237,10 +255,12 @@ namespace antdlib.CCTable {
                 y.Value = z;
                 x.Add(y);
             }
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return x;
         }
 
         public static CCTableFlags.CommandFunction GetCommandFunction(string src) {
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             int n = Convert.ToInt32(src);
             switch (n) {
                 case 0:
@@ -253,6 +273,7 @@ namespace antdlib.CCTable {
         }
 
         public static CCTableFlags.OsiLevel GetOsiLevel(string src) {
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             int n = Convert.ToInt32(src);
             switch (n) {
                 case 1:
@@ -275,6 +296,7 @@ namespace antdlib.CCTable {
         }
 
         public static CCTableFlags.TableType GetTableType(string src) {
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             int n = Convert.ToInt32(src);
             switch (n) {
                 case 1:

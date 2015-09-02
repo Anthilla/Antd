@@ -39,6 +39,7 @@ namespace antdlib.Systemd {
         }
 
         public static void SetInfo(string guid, string[] args) {
+            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             UnitFileModel unit = new UnitFileModel() {
                 _Id = guid,
                 description = args[0],

@@ -61,6 +61,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void AllDirectories() {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log("  Checking for saved mounts information:");
             if (MountRepository.Get().Length < 1) {
                 ConsoleLogger.Log("    No mounts information found...");
@@ -100,6 +101,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void CheckCurrentStatus() {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var directories = Directory.EnumerateDirectories(Folder.Dirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             var y = (directories.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"      {directories.Length} director{y} found in {Folder.Dirs}");
@@ -114,6 +116,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void Check() {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mounts = MountRepository.Get();
             if (mounts.Length > 0) {
                 for (int i = 0; i < mounts.Length; i++) {
@@ -124,6 +127,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void Dir(string directory) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             MountRepository.Create(directory, MountContext.External);
             var DIR = SetDIRSPath(directory);
             SetBind(DIR, directory);
@@ -131,6 +135,7 @@ namespace antdlib.MountPoint {
         }
 
         private static void CheckMount(string directory) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log($">>     check: {directory}");
             var isMntd = IsAlreadyMounted(directory);
             ConsoleLogger.Log($">>     is {directory} already mounted? {isMntd}");
@@ -177,10 +182,12 @@ namespace antdlib.MountPoint {
         }
 
         private static void SetBind(string source, string destination) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute($"mount -o bind {source} {destination}");
         }
 
         public static string SetDIRSPath(string source) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
         }
 
@@ -189,10 +196,12 @@ namespace antdlib.MountPoint {
         }
 
         private static string SetLiveCDPath(string source) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
         }
 
         private static bool IsAlreadyMounted(string directory) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return (df.Length > 0 || pm.Length > 0) ? true : false;

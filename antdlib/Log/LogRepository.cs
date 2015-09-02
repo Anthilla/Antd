@@ -41,7 +41,15 @@ namespace antdlib.Log {
                     select l).ToArray();
         }
 
-        public static void TraceEvent(LogModel.EventLevel level, string source, string eventId, string activity, string keyword, string user, 
+        public static LogModel[] GetAllMethods() {
+            var list = DeNSo.Session.New.Get<LogModel>(l => l.Level == LogModel.EventLevel.InvokedMethod).ToList();
+            return (from l in list
+                    where l != null
+                    orderby l.LogTimestamp descending
+                    select l).ToArray();
+        }
+
+        public static void TraceEvent(LogModel.EventLevel level, string source, string eventId, string activity, string keyword, string user,
             string opCode, string reg, string sessionId, string relationId, string message) {
             var l = new LogModel() {
                 Level = level,
@@ -55,6 +63,15 @@ namespace antdlib.Log {
                 SessionID = sessionId,
                 RelationID = relationId,
                 Message = message
+            };
+            DeNSo.Session.New.Set(l);
+        }
+
+        public static void TraceMethod(string keyword, string source) {
+            var l = new LogModel() {
+                Level = LogModel.EventLevel.InvokedMethod,
+                Source = source,
+                Keyword = keyword
             };
             DeNSo.Session.New.Set(l);
         }

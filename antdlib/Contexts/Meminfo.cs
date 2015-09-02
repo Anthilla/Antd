@@ -38,6 +38,7 @@ namespace antdlib {
     public class Meminfo {
 
         public static string GetText() {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/meminfo");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
@@ -45,6 +46,7 @@ namespace antdlib {
         }
 
         public static List<MeminfoModel> GetModel() {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/meminfo");
             var meminfo = ConvertMeminfo(meminfoContent);
@@ -52,6 +54,7 @@ namespace antdlib {
         }
 
         public static List<MeminfoModel> ConvertMeminfo(string meminfoText) {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             List<MeminfoModel> meminfoList = new List<MeminfoModel>();
             string[] rowDivider = new String[] { "\n" };
             string[] cellDivider = new String[] { ": " };

@@ -38,6 +38,7 @@ namespace antdlib.Status {
     public class Uptime {
 
         private static string GetUptime() {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
@@ -47,6 +48,7 @@ namespace antdlib.Status {
         public static string UpTime { get { return GetUptime(); } }
 
         private static string GetLoadAverage() {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
@@ -56,6 +58,7 @@ namespace antdlib.Status {
         public static string LoadAverage { get { return GetLoadAverage(); } }
 
         private static string[] GetLoadAverageValues() {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             UptimeModel uptimes = MapUptimeJson(output);
@@ -65,6 +68,7 @@ namespace antdlib.Status {
         public static string[] LoadAverageValues { get { return GetLoadAverageValues(); } }
 
         private static UptimeModel MapUptimeJson(string _uptimeJson) {
+            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string uptimeJson = _uptimeJson;
             uptimeJson = Regex.Replace(_uptimeJson, "\"", "").Replace("\\n", "\n");
             string[] rowDivider = new String[] { "  " };

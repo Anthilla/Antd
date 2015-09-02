@@ -33,6 +33,7 @@ using System.Linq;
 namespace antdlib.Firewall {
     public class NFTableRepository {
         public static void SaveRuleSet(string table, string type, string hook, string rulesForIp, string rulesForIp6, string rulesForArp,string rulesForBridge) {
+            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var set = new NFTableRuleSet() {
                 _Id = $"{table}-{type}-{hook}",
                 Guid = Guid.NewGuid().ToString(),
@@ -49,11 +50,13 @@ namespace antdlib.Firewall {
         }
 
         public static NFTableRuleSet GetRuleSet(string table, string type, string hook) {
+            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Table == table && t.Type == type && t.Hook == hook).FirstOrDefault();
             return ruleset;
         }
 
         public static NFTableRuleSet[] GetAll() {
+            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>().ToArray();
             return ruleset;
         }

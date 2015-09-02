@@ -114,9 +114,9 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\T2FA\Config.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
-    <Compile Include="CCTable\Boot\CoreParametersConfig.cs" />
-    <Compile Include="CCTable\Boot\DatabaseBoot.cs" />
-    <Compile Include="CCTable\Boot\ParametersConfig.cs" />
+    <Compile Include="Boot\CoreParametersConfig.cs" />
+    <Compile Include="Boot\DatabaseBoot.cs" />
+    <Compile Include="Boot\ParametersConfig.cs" />
     <Compile Include="CCTable\CCTableConf.cs" />
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />

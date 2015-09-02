@@ -96,7 +96,7 @@ namespace Antd {
         }
 
         public static void StartScheduler(bool loadFromDatabase) {
-            JobScheduler.Start(loadFromDatabase);
+            //JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("    scheduler -> loaded");
         }
 

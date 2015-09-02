@@ -37,6 +37,7 @@ namespace antdlib.Users {
     public class SystemUser {
 
         public static IEnumerable<UserModel> GetAll() {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<UserModel>() { };
             if (File.Exists("/etc/shadow")) {
                 var usersString = FileSystem.ReadFile("/etc/shadow");
@@ -50,6 +51,7 @@ namespace antdlib.Users {
         }
 
         private static UserModel MapUser(string userString) {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
             UserModel user = new UserModel() { };
             if (userInfo.Length > 1) {
@@ -69,6 +71,7 @@ namespace antdlib.Users {
         }
 
         private static SystemUserPassword MapPassword(string passwdString) {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray(); ;
             SystemUserPassword passwd = new SystemUserPassword() { };
             if (passwdInfo.Length > 0) {
@@ -80,6 +83,7 @@ namespace antdlib.Users {
         }
 
         public static void CreateUser(string user) {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute("useradd " + user);
         }
     }

@@ -35,6 +35,7 @@ namespace antdlib {
     public class Version {
 
         public static string GetText() {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/version");
             string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
@@ -42,6 +43,7 @@ namespace antdlib {
         }
 
         public static VersionModel GetModel() {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/version");
             var meminfo = ConvertVersion(meminfoContent);
@@ -49,6 +51,7 @@ namespace antdlib {
         }
 
         private static VersionModel ConvertVersion(string versionText) {
+            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             VersionModel version = new VersionModel {
                 key = "",
                 value = versionText
