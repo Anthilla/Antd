@@ -229,6 +229,7 @@ namespace antdsh {
                 WriteLine("Unexpected error while creating the squashfs");
                 return;
             }
+            WriteLine($"squashfs creation of: {squashName}");
             Terminal.Execute("mksquashfs " + src + " " + squashName + " -comp xz -Xbcj x86 -Xdict-size 75%");
         }
 
@@ -323,7 +324,7 @@ namespace antdsh {
         public static void ExtractDownloadedFile() {
             var downloadedFile = global.tmpDir + "/" + global.downloadName;
             if (!File.Exists(downloadedFile)) {
-                WriteLine("A file does not exist!");
+                WriteLine("The file you're looking for does not exist!");
                 return;
             }
             var destination = global.tmpDir + "/" + global.downloadFirstDir;

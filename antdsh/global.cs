@@ -33,7 +33,7 @@ namespace antdsh {
         public static string appsDir { get { return $"{coreRepo}/Apps"; } }
         public static string versionsDir { get { return $"{appsDir}/Anthilla_Antd"; } }
         public static string dir { get { return $"{coreRepo}/DIRS"; } }
-        public static string tmpDir { get { return $"{coreRepo}/tmp"; } }
+        public static string tmpDir { get { return $"{appsDir}/tmp"; } }
         public static string unitsDir { get { return $"{coreRepo}/Units/applicative.target.wants"; } }
         public const string configFile = "antdsh.config";
         public const string antdRunning = "active-version";

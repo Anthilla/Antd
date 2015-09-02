@@ -263,7 +263,7 @@ namespace antdsh {
         public static void UpdateFromUrl() {
             execute.StopServices();
             execute.CleanTmp();
-            var squashName = global.versionsDir + "/" + global.squashStartsWith + DateTime.Now.ToString("yyyyMMdd") + global.squashEndsWith;
+            var squashName = $"{global.versionsDir}/{global.squashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{global.squashEndsWith}";
             execute.MountTmpRam();
             execute.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
             execute.ExtractDownloadedFile();
