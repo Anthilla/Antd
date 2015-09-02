@@ -4,7 +4,7 @@
 
 //namespace Antd.Modules {
 //    public class HookNancyModule : NancyModule {
-//        //todo far ineritare questa classe da tutti gli altri Moduli di Nancy
+//        //trodo far ineritare questa classe da tutti gli altri Moduli di Nancy
 //        private static string url;
 
 //        //public HookNancyModule(string v) {

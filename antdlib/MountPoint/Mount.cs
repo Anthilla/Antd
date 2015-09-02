@@ -181,11 +181,11 @@ namespace antdlib.MountPoint {
         }
 
         public static string SetDIRSPath(string source) {
-            return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/")}";
+            return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
         }
 
         public static string GetDIRSPath(string source) {
-            return source.Replace(Folder.Dirs, "").Replace("DIR", "").Replace("_", "/").Replace("//", "/");
+            return source.Replace(Folder.Dirs, "").Replace("DIR", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
 
         private static string SetLiveCDPath(string source) {

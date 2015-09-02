@@ -73,9 +73,8 @@ namespace antdlib.Boot {
         }
 
         private static void Test() {
-            ConsoleLogger.Log("Test DATABASE");
+            ConsoleLogger.Warn("     dbtest -> start");
             var guid = Guid.NewGuid().ToString();
-            ConsoleLogger.Log(">> write");
             TestClass write = new TestClass {
                 _Id = guid,
                 Date = DateTime.Now,
@@ -83,31 +82,24 @@ namespace antdlib.Boot {
             };
             write.Bar = write.Foo + write.Date.ToString() + write.Foo;
             DeNSo.Session.New.Set(write);
-            ConsoleLogger.Log(">> write done");
             Thread.Sleep(1000);
-            ConsoleLogger.Log(">> read");
             var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            ConsoleLogger.Log(">> read done");
             if (read != null) {
-                ConsoleLogger.Log(">> result: " + JsonConvert.SerializeObject(read));
             }
             else {
-                ConsoleLogger.Warn(">> read failed");
+                ConsoleLogger.Warn("     dbtest -> error while reading");
             }
             Thread.Sleep(1000);
-            ConsoleLogger.Log(">> edit");
             read.Date = DateTime.Now;
             read.Foo = "foo_edit";
             read.Bar = read.Foo + read.Date.ToString() + read.Foo;
             DeNSo.Session.New.Set(read);
             var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            ConsoleLogger.Log(">> read done");
             Thread.Sleep(1000);
             if (edited != null) {
-                ConsoleLogger.Log(">> result: " + JsonConvert.SerializeObject(edited));
             }
             else {
-                ConsoleLogger.Warn(">> read failed");
+                ConsoleLogger.Warn("     dbtest -> error while reading");
             }
         }
     }

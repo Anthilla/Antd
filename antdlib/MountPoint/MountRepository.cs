@@ -34,12 +34,19 @@ using System.Collections.Generic;
 namespace antdlib.MountPoint {
     public class MountRepository {
         public static MountModel[] Get() {
-            var list = new List<MountModel>() { };
-            var dbGet = DeNSo.Session.New.Get<MountModel>().ToArray();
-            foreach (var mountItem in dbGet) {
-                list.Add(mountItem);
+            try {
+                var list = new List<MountModel>() { };
+                var dbGet = DeNSo.Session.New.Get<MountModel>().ToArray();
+                foreach (var mountItem in dbGet) {
+                    list.Add(mountItem);
+                }
+                return list.OrderBy(m => m.MountContext).ToArray();
             }
-            return list.OrderBy(m => m.MountContext).ToArray();
+            catch (Exception ex) {
+                ConsoleLogger.Warn("Unable to do something with the database, look at this:");
+                ConsoleLogger.Warn($"{ex.Message}");
+                return new MountModel[] { };
+            }
         }
 
         public static MountModel Get(string path) {
@@ -59,25 +66,22 @@ namespace antdlib.MountPoint {
         }
 
 
-        public static MountModel Create(string path, MountContext type) {
+        public static MountModel Create(string path, MountContext context) {
             var get = Get(path);
-            if (get == null) {
-                var exMount = Get(path);
-                if (exMount != null) {
-                    return exMount;
-                }
-                var mount = new MountModel() {
-                    _Id = Guid.NewGuid().ToString(),
-                    Guid = Guid.NewGuid().ToString(),
-                    DFPTimestamp = Timestamp.Now,
-                    MountContext = type,
-                    Path = path
-                };
-                DeNSo.Session.New.Set(mount);
-                return mount;
+            var mntContext = (get == null) ? context : get.MountContext;
+            var exMount = Get(path);
+            if (exMount != null) {
+                return exMount;
             }
-            else
-                return get;
+            var mount = new MountModel() {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                DFPTimestamp = Timestamp.Now,
+                MountContext = mntContext,
+                Path = path
+            };
+            DeNSo.Session.New.Set(mount);
+            return mount;
         }
 
         public static void SetAsMounted(string path, string mounted) {

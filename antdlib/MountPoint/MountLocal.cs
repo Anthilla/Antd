@@ -77,9 +77,16 @@ namespace antdlib.MountPoint {
                 }
             }
 
-            //todo togliere elementi della lista che matchano con quelli trovati sopra
+            var preList = list.Where(m => !deny.Contains(m.Path)).OrderBy(m => m.Device).ThenBy(m => m.Path).ToList();
 
-            return list.Where(m => !deny.Contains(m.Path)).OrderBy(m => m.Device).ThenBy(m => m.Path);
+            foreach (var d in deny) {
+                var el = preList.Where(m => m.Path == d).FirstOrDefault();
+                if (el != null) {
+                    preList.Remove(el);
+                }
+            }
+
+            return preList;
         }
 
         public static string GetSquashMount(string device) {
