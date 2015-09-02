@@ -46,7 +46,20 @@ namespace antdlib.MountPoint {
             return DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
         }
 
-        public static MountModel Create(string guid, string timestamp, string path, MountContext type) {
+        public static IEnumerable<MountModel> GetByUnit(string unit) {
+            return DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit));
+        }
+
+        public static string[] GetListByUnit(string unit) {
+            var list = new List<string>() { };
+            foreach (var mnt in DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit))) {
+                list.Add(mnt.Path);
+            }
+            return list.ToArray();
+        }
+
+
+        public static MountModel Create(string path, MountContext type) {
             var get = Get(path);
             if (get == null) {
                 var exMount = Get(path);
@@ -55,8 +68,8 @@ namespace antdlib.MountPoint {
                 }
                 var mount = new MountModel() {
                     _Id = Guid.NewGuid().ToString(),
-                    DFPGuid = guid,
-                    DFPTimestamp = timestamp,
+                    Guid = Guid.NewGuid().ToString(),
+                    DFPTimestamp = Timestamp.Now,
                     MountContext = type,
                     Path = path
                 };
@@ -114,6 +127,26 @@ namespace antdlib.MountPoint {
                 mount.MountStatus = MountStatus.Error;
                 DeNSo.Session.New.Set(mount);
             }
+        }
+
+        public static void AddUnit(string guid, string unit) {
+            var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
+            mount.AssociatedUnits.Add(unit);
+            DeNSo.Session.New.Set(mount);
+        }
+
+        public static void AddUnit(string guid, IEnumerable<string> unit) {
+            var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
+            foreach (var u in unit) {
+                mount.AssociatedUnits.Add(u);
+            }
+            DeNSo.Session.New.Set(mount);
+        }
+
+        public static void RemoveUnit(string guid, string unit) {
+            var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
+            mount.AssociatedUnits.Remove(unit);
+            DeNSo.Session.New.Set(mount);
         }
     }
 }

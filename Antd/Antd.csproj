@@ -603,10 +603,13 @@
     <Content Include="Content\fonts\metroSysIcons.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Scripts\antd.selectize.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Scripts\antd.cctable.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\anthilla.notify.js">
+    <Content Include="Content\Scripts\antd.notify.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Scripts\chart\Chart.min.js">

@@ -37,13 +37,45 @@
 
 @section MainContent {
     <legend id="Mounts">Antd-Managed Mounts</legend>
+
+    <div id="AntdMountdDashboard" style="display:none; padding: 15px; margin-bottom: 20px;" class="border-2-anthilla-gray;" class="border-2-anthilla-gray">
+        <form class="grid" action="/system/mount/unit" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="span4">
+                    <label>mount</label>
+                </div>
+                <div class="span6">
+                    <input name="Mount" type="text" value="" readonly="readonly" style="width: 90%;" />
+                    <input name="Guid" type="hidden" value="" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>unit</label>
+                </div>
+                <div class="span6">
+                    <input name="Unit" id="show-units" type="text" value="" style="width: 90%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span6">
+                    <input type="submit" value="Add" readonly="readonly" style="width: 90%;" class="fg-anthilla-green" />
+                </div>
+            </div>
+        </form>
+    </div>
+
     <table class="table">
         <tbody>
             @foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountRepository.Get()) {
-                <tr data-guid="@mount.DFPGuid" data-timestamp="@mount.DFPTimestamp">
+                <tr data-guid="@mount.Guid" data-timestamp="@mount.DFPTimestamp">
                     <td style="width: 40px;">@mount.MountContext</td>
                     <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDIRSPath(mount.Path)</td>
-                    <td style="width: 20px; text-align: center;"><i class="icon-arrow-right-5 fg-white"></i></td>
+                    <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
+                        <i class="icon-arrow-right-5 fg-white"></i>
+                    </td>
                     <td style="width: 40%;">@mount.Path</td>
                     <td>
                         @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
@@ -63,6 +95,25 @@
                         }
                         @mount.MountStatus
                     </td>
+                    <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
+                        <i data-guid="@mount.Guid" class="show-units-mgmt icon-file fg-anthilla-green"></i>
+                    </td>
+                </tr>
+                <tr data-guid="@mount.Guid" style="display: none; border-bottom: 2px solid #3A3A3A;" class="mount-units">
+                    <td class="bg-anthilla-gray-m" style="border-right: 2px solid #3A3A3A;"></td>
+                    <td colspan="3">
+                        <ul class="fg-white" style="list-style: none;">
+                            @foreach (string unit in mount.AssociatedUnits) {
+                                <li>
+                                    <i class="icon-remove on-left fg-orange" data-role="remove-this-unit" data-guid="@mount.Guid" data-unit="@unit" style="cursor: pointer;"></i>
+                                    @unit
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td colspan="2">
+                        <input type="button" value="Add Units" style="width:90%" data-guid="@mount.Guid" data-mntpth="@mount.Path" data-role="show-dashboard" />
+                    </td>
                 </tr>
             }
         </tbody>
@@ -75,9 +126,9 @@
                 <tr>
                     <td style="width: 100px;">@mount.Type</td>
                     <td>@mount.Device</td>
-                    <td style="width: 20px; text-align: center;"><i class="icon-link fg-white"></i></td>
+                    <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-link fg-white"></i></td>
                     <td style="width: 35%;">@mount.Path</td>
-                    <td style="width: 20px; text-align: center;"><i class="icon-arrow-right-5 fg-white"></i></td>
+                    <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-arrow-right-5 fg-white"></i></td>
                     <td style="width: 35%;">@mount.MountedPath</td>
                     <td style="width: 20px; text-align: center;">
                         @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
@@ -111,19 +162,31 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('.search-field').keyup(function () {
-            var queryString = $(this).val();
-            var table = $('.searchable');
-            var tableBody = table.children('tbody');
-            var row = tableBody.children('tr');
-            row.each(function (index) {
-                var thisRow = $(this);
-                var queriedText = $(this).text();
-                if (queriedText.indexOf(queryString) != -1) {
-                    thisRow.show();
-                }
-                if (queriedText.indexOf(queryString) < 0) {
-                    thisRow.hide();
+        $('i.show-units-mgmt').click(function () {
+            var g = $(this).attr('data-guid');
+            $('tr.mount-units[data-guid="' + g + '"]').toggle();
+        });
+
+        $('input[data-role="show-dashboard"]').click(function () {
+            var g = $(this).attr('data-guid');
+            $('#AntdMountdDashboard').toggle();
+            $('#AntdMountdDashboard').find('input[name="Guid"]').val(g);
+            $('#AntdMountdDashboard').find('input[name="Mount"]').val($(this).attr('data-mntpth'));
+        });
+
+        $('i[data-role="remove-this-unit"]').click(function () {
+            var g = $(this).attr('data-guid');
+            var u = $(this).attr('data-unit');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/system/mount/unit',
+                type: 'DELETE',
+                data: {
+                    Guid: g,
+                    Unit: u
+                },
+                success: function () {
+                    location.reload(true);
                 }
             });
         });

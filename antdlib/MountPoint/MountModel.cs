@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System.Collections.Generic;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,12 +28,11 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 namespace antdlib.MountPoint {
     public class MountModel {
         public string _Id { get; set; }
 
-        public string DFPGuid { get; set; }
+        public string Guid { get; set; }
 
         public string DFPTimestamp { get; set; }
 
@@ -48,10 +49,12 @@ namespace antdlib.MountPoint {
         public string Type { get; set; } = "";
 
         public string Options { get; set; } = "";
+
+        public HashSet<string> AssociatedUnits { get; set; } = new HashSet<string>() { };
     }
 
     public enum MountStatus : byte {
-        Mounted  = 1,
+        Mounted = 1,
         Unmounted = 2,
         MountedTMP = 3,
         DifferentMount = 4,

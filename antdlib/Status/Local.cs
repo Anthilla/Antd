@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.Models;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,8 +28,8 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -45,5 +47,27 @@ namespace antdlib.Status {
         }
 
         public static string SystemVersion { get { return GetSystemVersion(); } }
+
+        private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
+            var list = new List<SystemComponentModel>() { };
+            var activeLinkData = Terminal.Execute($"find {Folder.AntdRepo} -type l | grep active");
+            ConsoleLogger.Warn(activeLinkData);
+            var activeLinks = activeLinkData.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var link in activeLinks) {
+                ConsoleLogger.Warn(link);
+                var linkInfoData = Terminal.Execute($"file {link}");
+                ConsoleLogger.Warn(linkInfoData);
+                var linkInfos = linkInfoData.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var sc = new SystemComponentModel() {
+                    active = linkInfos[0].Replace(":", "").Trim(),
+                    link = linkInfos[1].Replace("symbolic link to", "").Trim()
+                };
+                list.Add(sc);
+            }
+            return list;
+        }
+
+        public static IEnumerable<SystemComponentModel> ActiveSystemComponents { get { return GetActiveSystemComponents(); } }
+
     }
 }

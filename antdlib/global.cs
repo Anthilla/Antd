@@ -73,6 +73,7 @@ namespace antdlib {
         public static string FileRepository { get { return Folder.Root + "/files"; } }
         public static string Networkd { get { return Folder.Root + "/networkd"; } }
         public static string Ssh { get { return Folder.Root + "/ssh"; } }
+        public static string AntdRepo { get { return "/mnt/cdrom"; } }
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }
         public static string LiveCd { get { return "/mnt/livecd"; } }

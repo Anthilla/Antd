@@ -61,6 +61,7 @@
         <thead>
             <tr>
                 <th class="text-left">UNIT</th>
+                <th class="text-left">Associated Mounts</th>
                 <th class="text-left" style="width: 250px;">Status</th>
                 <th class="text-left" style="width: 600px;">&nbsp</th>
             </tr>
@@ -69,6 +70,7 @@
             @foreach (antdlib.Models.UnitModel unit in Model) {
                 <tr>
                     <td>@unit.name </td>
+                    <td>@String.Join(", ", antdlib.MountPoint.MountRepository.GetListByUnit(unit.name)) </td>
                     <td>@unit.status </td>
                     <td>
                         <input type="button" class="bg-anthilla-green unit-start" data-unit="@unit.name" value="Start" />
@@ -82,7 +84,6 @@
     </table>
 
     <script type="text/javascript">
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
         $('input.unit-start').click(function () {
             var p = $(this).attr('data-unit');
             jQuery.support.cors = true;
@@ -142,7 +143,7 @@
                 }
             });
         });
-        //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
         $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');

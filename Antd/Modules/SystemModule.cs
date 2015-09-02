@@ -34,6 +34,9 @@ using Nancy;
 using Nancy.Security;
 using System.Dynamic;
 using antdlib;
+using antdlib.MountPoint;
+using System;
+using System.Linq;
 
 namespace Antd {
 
@@ -73,9 +76,24 @@ namespace Antd {
 
             Get["/mounts"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.MountRunning = Mount.Running;
-                //vmod.MountAntd = Mount.Antd;
                 return View["_page-system-mounts", vmod];
+            };
+
+            Post["/mount/unit"] = x => {
+                var guid = Request.Form.Guid;
+                string unit = Request.Form.Unit;
+                var unitsSplit = unit.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                if (unitsSplit.Length > 0) {
+                    MountRepository.AddUnit(guid, unitsSplit);
+                }
+                return Response.AsRedirect("/system/mounts");
+            };
+
+            Delete["/mount/unit"] = x => {
+                var guid = Request.Form.Guid;
+                var unit = Request.Form.Unit;
+                MountRepository.RemoveUnit(guid, unit);
+                return Response.AsJson(true);
             };
 
             Get["/sysctl"] = x => {

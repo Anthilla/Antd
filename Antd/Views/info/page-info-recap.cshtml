@@ -48,3 +48,20 @@
         </tr>
     </tbody>
 </table>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-left" colspan="3">Active System Components</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (antdlib.Models.SystemComponentModel sc in antdlib.Status.Local.ActiveSystemComponents) {
+            <tr>
+                <td>@sc.active</td>
+                <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-link fg-white"></i></td>
+                <td>@sc.link</td>
+            </tr>
+        }
+    </tbody>
+</table>

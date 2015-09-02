@@ -160,6 +160,7 @@
     <Compile Include="Models\UnitFileModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
+    <Compile Include="Models\SystemComponentModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="MountPoint\MountModel.cs" />

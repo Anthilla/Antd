@@ -66,7 +66,7 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log("    No mounts information found...");
                 ConsoleLogger.Log("    I will load my default values!");
                 for (int i = 0; i < defaultDirectories.Length; i++) {
-                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, defaultDirectories[i], MountContext.Core);
+                    MountRepository.Create(defaultDirectories[i], MountContext.Core);
                 }
             }
             ConsoleLogger.Log("  Checking current mounts and directories status:");
@@ -88,6 +88,15 @@ namespace antdlib.MountPoint {
             for (int i = 0; i < mounts.Length; i++) {
                 CheckMount(mounts[i].Path);
             }
+            ConsoleLogger.Log($"     Restartng associated systemd services:");
+            for (int i = 0; i < mounts.Length; i++) {
+                var service = mounts[i].AssociatedUnits;
+                if (service.Count > 0) {
+                    foreach (var srvc in service) {
+                        Terminal.Execute($"systemctl restart {srvc}");
+                    }
+                }
+            }
         }
 
         public static void CheckCurrentStatus() {
@@ -99,7 +108,7 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log($"      {directories[i]} found, should be mounted under {realPath}");
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
-                    MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, realPath, MountContext.External);
+                    MountRepository.Create(realPath, MountContext.External);
                 }
             }
         }
@@ -115,7 +124,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void Dir(string directory) {
-            MountRepository.Create(Guid.NewGuid().ToString().Substring(0, 8), Timestamp.Now, directory, MountContext.External);
+            MountRepository.Create(directory, MountContext.External);
             var DIR = SetDIRSPath(directory);
             SetBind(DIR, directory);
             Check();

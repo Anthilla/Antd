@@ -32,6 +32,7 @@ using antdlib.Systemd;
 using Nancy;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Antd {
 
@@ -42,6 +43,11 @@ namespace Antd {
             Get["/"] = x => {
                 List<UnitModel> units = Units.All;
                 return View["page-units", units];
+            };
+
+            Get["/list"] = x => {
+                string json = JsonConvert.SerializeObject(Units.All.OrderBy(u => u.name));
+                return json;
             };
 
             Post["/mgmt/enable/{unit}"] = x => {
