@@ -20,9 +20,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib", "antdlib\antdlib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthillaspsh", "ignorethis_anthillaspsh\anthillaspsh.csproj", "{548EBADA-4744-46D4-98FD-4B1561D69FBA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{3F7C6C52-1AAB-4A31-868E-97F4831DD692}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignorethis_misc", "{1BB31C59-D4CC-4640-BE45-B7857FBA22A1}"
 	ProjectSection(SolutionItems) = preProject
-		regex.txt = regex.txt
+		ignorethis_misc\regex.txt = ignorethis_misc\regex.txt
 	EndProjectSection
 EndProject
 Global
