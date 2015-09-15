@@ -48,16 +48,16 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DeNSo.Client.InProcess, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v2.2.0.64\lib\net45\DeNSo.Client.InProcess.dll</HintPath>
+    <Reference Include="DeNSo.v3.Client.InProcess, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
+      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Client.InProcess.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DeNSo.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v2.2.0.64\lib\net45\DeNSo.Core.dll</HintPath>
+    <Reference Include="DeNSo.v3.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
+      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DeNSo.Meta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v2.2.0.64\lib\net45\DeNSo.Meta.dll</HintPath>
+    <Reference Include="DeNSo.v3.Meta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
+      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Meta.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="INIFileParser">
@@ -235,10 +235,6 @@
     <None Include="Svcs\Samba\samba.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Extensions\DeNSo.OperationsLog.dll" />
-    <Content Include="Extensions\DeNSo.OperationsLog.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

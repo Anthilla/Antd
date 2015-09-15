@@ -52,7 +52,7 @@ namespace Antd {
                 string notes = Request.Form.Notes;
                 string inputid = Request.Form.InputID;
                 string inputlocation = Request.Url;
-                CommandRepository.Create(inputid, command, layout, inputlocation, notes);
+                CommandRepository.Create(antdlib.CCTableCommandType.Direct, inputid, command, "", "", layout, inputlocation, notes);
                 return Response.AsRedirect("/command/mgmt");
             };
 

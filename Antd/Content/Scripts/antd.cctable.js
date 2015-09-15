@@ -1,3 +1,34 @@
+$('#CCTAbleSettingShowMoreButton').click(function () {
+    $('#CCTAbleSettingMore').toggle();
+});
+
+$('select[data-role="CommandBooleanSelector"]').windowed();
+
+$('input[data-sumbit-type]').click(function () {
+    var self = $(this);
+    var rowGuid = self.attr('id');
+    var type = self.attr('data-sumbit-type');
+    var newValue = $('input[type="text"]#' + rowGuid).val();
+    console.log(newValue);
+    var boolSelected = $('select#' + rowGuid).find(':selected').val();
+    console.log(boolSelected);
+    jQuery.support.cors = true;
+    $.ajax({
+        url: '/cctable/launch/',
+        type: 'POST',
+        data: {
+            Type: type,
+            RowGuid: rowGuid,
+            NewValue: newValue,
+            BoolSelected: boolSelected
+        },
+        success: function (data) {
+            location.reload(true);
+            return false;
+        }
+    });
+});
+
 $('select[name="InputType"]').windowed({
     change: function (event, selected) {
         $('input[name="CCTableCommand"]').val('');
@@ -24,22 +55,22 @@ $('select[name="FlagOSI"]').windowed();
 
 $('select[name="FlagFunction"]').windowed();
 
-$('#AddInputReference').click(function () {
-    var label = UppercaseAllFirstLetters($('input[name="Label"]').val());
-    label = label.replace(/ /g, '');
-    if (label.length > 0) {
-        var labelReference = '{New' + label + '}';
-        var input = $('.add-to-this');
-        input.val(input.val() + labelReference);
-    }
+$('input#AddInputReference').click(function () {
+    //var label = UppercaseAllFirstLetters($('input[name="Label"]').val());
+    //label = label.replace(/ /g, '');
+    var labelReference = '{Value}';
+    var input = $('textarea[name="CCTableCommandText"]');
+    var readText = input.val();
+    var editText = input.val() + labelReference;
+    input.val(editText.replace(/\s{2,}/g, ' '));
 });
 
-function UppercaseAllFirstLetters(str) {
-    str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
-        return letter.toUpperCase();
-    });
-    return str;
-}
+//function UppercaseAllFirstLetters(str) {
+//    str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+//        return letter.toUpperCase();
+//    });
+//    return str;
+//}
 
 $('input[data-create-input-layout]').click(function () {
     var type = $(this).attr('data-create-input-layout');
@@ -123,7 +154,7 @@ function ShowDashboard() {
     $('#CCTableDashboard').toggle();
 }
 
-$('tr[data-row-role="main"]').click(function () {
+$('i[data-row-role="main"]').click(function () {
     var guid = $(this).attr('data-row-guid');
     $('tr[data-row-role="' + guid + '"]').toggle();
 });

@@ -41,6 +41,13 @@ namespace antdlib {
         Other = 99
     }
 
+    public enum CCTableCommandType : byte {
+        Direct = 1,
+        TextInput = 2,
+        BooleanPair = 3,
+        Other = 99
+    }
+
     public class Label {
         public static string Root { get { return "antd_root"; } }
         public static string Port { get { return "antd_port"; } }

@@ -62,39 +62,39 @@ namespace Antd {
             };
 
             Post["/row"] = x => {
-                string table = (string)Request.Form.TableGuid;
+                string tableGuid = (string)Request.Form.TableGuid;
                 string tableName = (string)Request.Form.TableName;
                 string label = (string)Request.Form.Label;
                 string inputType = (string)Request.Form.InputType.Value;
-                string inputValue = (string)Request.Form.InputLabel;
-                string inputCommand = (string)Request.Form.InputCommand;
+                string inputLabel = (string)Request.Form.InputLabel;
                 string notes = (string)Request.Form.Notes;
                 string osi = (string)Request.Form.FlagOSI.Value;
                 string func = (string)Request.Form.FlagFunction.Value;
-                CCTableRepository.CreateRow(table, tableName, label, inputType, inputValue, inputCommand,
-                    notes, CCTableRepository.GetOsiLevel(osi), CCTableRepository.GetCommandFunction(func));
+                var vOSI = CCTableRepository.GetOsiLevel(osi);
+                var vFUNC = CCTableRepository.GetCommandFunction(func);
 
-                string command;
+                string inputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                string inputLocation = "CCTable" + Request.Form.TableName;
+
+                string command, commandTrue, commandFalse = "";
+                string commandGet = (string)Request.Form.InputCommand;
                 switch (inputType) {
                     case "hidden":
                         command = Request.Form.CCTableCommandNone;
+                        CCTableRepository.CreateRowForDirectCommand(tableGuid, tableName, label, inputLabel, command, notes, vOSI, vFUNC, inputId, inputLocation);
                         break;
                     case "text":
                         command = Request.Form.CCTableCommandText;
+                        CCTableRepository.CreateRowForTextInputCommand(tableGuid, tableName, label, inputLabel, command, commandGet, notes, vOSI, vFUNC, inputId, inputLocation);
                         break;
                     case "checkbox":
-                        //todo: il comando in realtà è doppio, uno per true e uno per false
-                        command = Request.Form.CCTableCommandBoolean;
+                        commandTrue = Request.Form.CCTableCommandBooleanTrue;
+                        commandFalse = Request.Form.CCTableCommandBooleanFalse;
+                        CCTableRepository.CreateRowForBooleanPairCommand(tableGuid, tableName, label, inputLabel, commandTrue, commandFalse, notes, vOSI, vFUNC, inputId, inputLocation);
                         break;
                     default:
-                        command = "echo error during command assignment";
                         break;
                 }
-                ConsoleLogger.Info(command);
-
-                string inputid = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-                string inputlocation = "CCTable" + Request.Form.TableName;
-                CommandRepository.Create(inputid, command, command, inputlocation, notes);
 
                 string context = (string)Request.Form.Context;
                 string redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
@@ -158,20 +158,37 @@ namespace Antd {
                 return Response.AsJson("CCTable Row deleted");
             };
 
-            //todo: IMPORTANTE - questa api lancia un comando
-            //ma è solamente un caso particolare, ovvero se c'è un input:text con un valore dentro
-            //e va a sostituire il valore nel comando da lanciare
-            //bisogna fare anche il comando per:
-            // 1 - hidden (senza valore)
-            // 2a - bool:true (input:check:checked)
-            // 2b - bool:false (input:check:unchecked)
-            //OVVIAMENTE bisgogna aggiustare anche gli script jquery e l'html
-            //ad esempio in input:bool il valore Name è uguale sia per il true che per il false
-            Post["/launch/{inputid}/{value}"] = x => {
-                string inputid = (string)Request.Form.Input;
-                string value = (string)Request.Form.Value;
-                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
-                return Response.AsJson(r);
+            Post["/launch"] = x => {
+                string commandType = (string)Request.Form.Type;
+                string rowGuid = (string)Request.Form.RowGuid;
+                string newValue = (string)Request.Form.NewValue;
+                string boolSelected = (string)Request.Form.BoolSelected;
+
+                var row = CCTableRepository.GetRow(rowGuid);
+
+                switch (commandType) {
+                    case "direct":
+                        Terminal.Execute(row.CommandDirect);
+                        break;
+                    case "text":
+                        Terminal.Execute(row.CommandSet.Replace("{Value}", newValue));
+                        break;
+                    case "bool":
+                        if (boolSelected == "true") {
+                            Terminal.Execute(row.CommandTrue);
+                        }
+                        else if (boolSelected == "false") {
+                            Terminal.Execute(row.CommandFalse);
+                        }
+                        else {
+                            Terminal.Execute("echo COMMAND NOT FOUND");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return Response.AsJson(true);
             };
 
             Post["/row/conf"] = x => {

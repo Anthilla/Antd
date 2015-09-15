@@ -61,6 +61,11 @@ namespace antdlib.CCTable {
             return cc;
         }
 
+        public static CCTableRowModel GetRow(string guid) {
+            var rw = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
+            return rw;
+        }
+
         public static List<CCTableRowModel> GetRows(string guid) {
             var list = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.TableGuid == guid).ToList();
             foreach (var i in list) {
@@ -88,21 +93,71 @@ namespace antdlib.CCTable {
             Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
-        public static void CreateRow(string tableGuid, string tableName, string label, string inputType,
-            string inputLabel, string inputCommand, string notes,
-            CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction) {
+        public static void CreateRowForDirectCommand(string tableGuid, string tableName, string label, string inputLabel, string command, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 NUid = UID.ShortGuid,
                 TableGuid = tableGuid,
                 Label = label,
-                InputType = inputType,
+                InputType = "hidden",
                 InputLabel = inputLabel,
-                InputCommand = inputCommand,
+                CommandDirect = command,
+                CommandType = CCTableCommandType.Direct,
                 Notes = notes,
                 FlagOsi = flagOsi,
-                FlagCommandFunction = flagFunction
+                FlagCommandFunction = flagFunction,
+                CommandInputID = inputID,
+                CommandInputLocation = inputLocation
+            };
+            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            DeNSo.Session.New.Set(model);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+        }
+
+        public static void CreateRowForTextInputCommand(string tableGuid, string tableName, string label,
+string inputLabel, string inputCommandSet, string inputCommandGet, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
+            var model = new CCTableRowModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                NUid = UID.ShortGuid,
+                TableGuid = tableGuid,
+                Label = label,
+                InputType = "text",
+                InputLabel = inputLabel,
+                CommandSet = inputCommandSet,
+                CommandGet = inputCommandGet,
+                CommandType = CCTableCommandType.TextInput,
+                Notes = notes,
+                FlagOsi = flagOsi,
+                FlagCommandFunction = flagFunction,
+                CommandInputID = inputID,
+                CommandInputLocation = inputLocation
+            };
+            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            DeNSo.Session.New.Set(model);
+            Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+        }
+
+        public static void CreateRowForBooleanPairCommand(string tableGuid, string tableName, string label, string inputLabel, string inputCommandTrue, string inputCommandFalse, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
+            var model = new CCTableRowModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                NUid = UID.ShortGuid,
+                TableGuid = tableGuid,
+                Label = label,
+                InputType = "checkbox",
+                InputLabel = inputLabel,
+                CommandTrue = inputCommandTrue,
+                CommandFalse = inputCommandFalse,
+                CommandType = CCTableCommandType.BooleanPair,
+                Notes = notes,
+                FlagOsi = flagOsi,
+                FlagCommandFunction = flagFunction,
+                CommandInputID = inputID,
+                CommandInputLocation = inputLocation
             };
             model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();

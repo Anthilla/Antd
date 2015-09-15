@@ -28,7 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 //using DeNSo.P2P;
-//using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
@@ -40,10 +40,10 @@ namespace antdlib.Boot {
         public static void Start(string[] dbPaths, bool doTest) {
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
-            //DeNSo.Configuration.EnableDataCompression = false; /*DensoV3*/
+            DeNSo.Configuration.EnableDataCompression = false; /*DensoV3*/
             //DeNSo.Configuration.DBCheckTimeSpan = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
-            //DeNSo.Configuration.SaveInterval = new TimeSpan(0, 1, 0); /*DensoV3*/
+            DeNSo.Configuration.SaveInterval = new TimeSpan(0, 1, 0); /*DensoV3*/
             DeNSo.Configuration.EnableOperationsLog = false;
 
             //EventP2PDispatcher.EnableP2PEventMesh();

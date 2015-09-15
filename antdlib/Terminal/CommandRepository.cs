@@ -43,6 +43,12 @@ namespace antdlib.CommandManagement {
 
             public DateTime Date { get; set; }
 
+            public string Command { get; set; } = "";
+
+            public string CommandTrue { get; set; } = "";
+
+            public string CommandFalse { get; set; } = "";
+
             public string File { get; set; }
 
             public string Arguments { get; set; }
@@ -54,6 +60,8 @@ namespace antdlib.CommandManagement {
             public string InputLocation { get; set; }
 
             public string Notes { get; set; }
+
+            public CCTableCommandType CommandType { get; set; }
         }
 
         public static List<CommandInputModel> GetAll() {
@@ -73,16 +81,20 @@ namespace antdlib.CommandManagement {
             return m.File + " " + m.Arguments;
         }
 
-        public static void Create(string inputid, string command, string layout, string inputlocation, string notes) {
+        public static void Create(CCTableCommandType type, string inputid, string command, string commandTrue, string commandFalse, string layout, string inputlocation, string notes) {
             var model = new CommandInputModel {
                 _Id = inputid,
                 Guid = inputid,
                 Date = DateTime.Now,
+                Command = command,
+                CommandTrue = commandTrue,
+                CommandFalse = commandFalse,
                 File = command.GetFirstString(),
                 Arguments = command.GetAllStringsButFirst(),
                 Layout = layout,
                 InputLocation = inputlocation,
-                Notes = notes
+                Notes = notes,
+                CommandType = type
             };
             DeNSo.Session.New.Set(model);
         }
@@ -101,12 +113,14 @@ namespace antdlib.CommandManagement {
 
         public static void Launch(string guid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == guid).FirstOrDefault();
-            if (command != null) Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+            if (command != null)
+                Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
         }
 
         public static string LaunchAndGetOutput(string inputid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
-            if (command != null) return Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+            if (command != null)
+                return Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
             return null;
         }
 

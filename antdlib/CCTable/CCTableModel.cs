@@ -95,7 +95,26 @@ namespace antdlib.CCTable {
 
         public string InputLabel { get; set; }
 
-        public string InputCommand { get; set; }
+        public string InputCommand { get; set; } = "";
+
+        #region Command Attributes
+        public CCTableCommandType CommandType { get; set; }
+
+        public string CommandDirect { get; set; } = "";
+
+        public string CommandSet { get; set; } = "";
+
+        public string CommandGet { get; set; } = "";
+
+        public string CommandTrue { get; set; } = "";
+
+        public string CommandFalse { get; set; } = "";
+
+        public string CommandInputID { get; set; } = "";
+
+        public string CommandInputLocation { get; set; } = "";
+
+        #endregion Command Attributes
 
         public string ValueResult { get; set; }
 
@@ -132,7 +151,7 @@ namespace antdlib.CCTable {
 
     public class CCTableConfModel {
         public string Name { get; set; }
-        
+
         public string Path { get; set; }
 
         public CCTableFlags.ConfType Type { get; set; }
