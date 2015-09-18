@@ -42,7 +42,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                return View["_page-firewall-nft", vmod];
+                return View["_page-firewall", vmod];
             };
 
             Post["/rule"] = x => {
@@ -74,6 +74,11 @@ namespace Antd {
             Post["/apply"] = x => {
                 NFTables.WriteFile();
                 NFTables.Set();
+                return Response.AsJson(true);
+            };
+
+            Post["/restart"] = x => {
+                NFTables.Restart();
                 return Response.AsJson(true);
             };
         }

@@ -146,5 +146,10 @@ namespace antdlib.Firewall {
                 //leggi e splitta eccetera
             }
         }
+
+        public static void Restart() {
+            //todo controlla se "nftables" è il servzio giusto da restartare
+            Terminal.Execute("systemctl restart nftables");
+        }
     }
 }
