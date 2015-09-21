@@ -43,6 +43,8 @@ namespace antdlib.Users {
 
         public string Guid { get; set; }
 
+        public string UID { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -52,6 +54,14 @@ namespace antdlib.Users {
         public string Alias { get; set; }
 
         public SystemUserPassword Password { get; set; }
+
+        public string GroupID { get; set; }
+
+        public string Info { get; set; }
+
+        public string HomeDirectory { get; set; }
+
+        public string LoginShell { get; set; }
 
         public string LastChanged { get; set; }
 
@@ -83,11 +93,11 @@ namespace antdlib.Users {
         public string Email { get; set; }
 
         public Guid Guid { get; set; }
-        
+
         public string Password { get; set; }
 
         public string Salt { get; set; }
-        
+
         public UserType UserType { get; set; }
     }
 }

@@ -41,15 +41,23 @@ namespace antdlib.Users {
 
         private static string FILE = Mount.SetFILESPath(file);
 
+        private static string filePwd = "/etc/passwd";
+
+        private static string FILEPWD = Mount.SetFILESPath(filePwd);
+
         public static void SetReady() {
             Terminal.Execute($"cp {file} {FILE}");
             FileSystem.CopyFile(file, FILE);
             Mount.File(file);
+            Terminal.Execute($"cp {filePwd} {FILEPWD}");
+            FileSystem.CopyFile(filePwd, FILEPWD);
+            Mount.File(filePwd);
         }
 
         private static bool CheckIsActive() {
             var mount = MountRepository.Get(file);
-            return (mount == null) ? false : true;
+            var mountPwd = MountRepository.Get(file);
+            return (mount == null && mountPwd == null) ? false : true;
         }
 
         public static bool IsActive { get { return CheckIsActive(); } }
@@ -57,18 +65,40 @@ namespace antdlib.Users {
         public static IEnumerable<UserModel> GetAll() {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<UserModel>() { };
-            if (File.Exists(file)) {
+            if (File.Exists(file) && File.Exists(filePwd)) {
                 var usersString = FileSystem.ReadFile(file);
                 var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
                 foreach (var user in users) {
                     var mu = MapUser(user);
                     list.Add(mu);
                 }
+                //todo qui
             }
             return list;
         }
 
         private static UserModel MapUser(string userString) {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            UserModel user = new UserModel() { };
+            if (userInfo.Length > 1) {
+                user.Guid = Guid.NewGuid().ToString();
+                user.Alias = userInfo[0];
+                user.Email = null;
+                user.Password = MapPassword(userInfo[1]);
+                user.LastChanged = userInfo[2];
+                user.MinimumNumberOfDays = userInfo[3];
+                user.MaximumNumberOfDays = userInfo[4];
+                user.Warn = userInfo[5];
+                user.Inactive = userInfo[6];
+                user.Expire = userInfo[7];
+                user.UserType = UserType.IsSystemUser;
+            }
+            return user;
+        }
+
+        //todo qui
+        private static UserModel MapUserPasswd(string userString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
             UserModel user = new UserModel() { };
