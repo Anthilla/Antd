@@ -85,5 +85,9 @@ namespace antdlib {
                 File.Copy(newPath, newPath.Replace(source, destination), true);
             }
         }
+
+        public static void CopyFile(string source, string destination) {
+            File.Copy(source, destination, true);
+        }
     }
 }

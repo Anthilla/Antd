@@ -1,0 +1,28 @@
+﻿<legend id="Groups">System Groups</legend>
+<input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+<table class="table searchable">
+    <thead>
+        <tr>
+            <th class="text-left">groupname</th>
+            <th class="text-left">password</th>
+            <th class="text-left">gid</th>
+            <th class="text-left">users</th>
+        </tr>
+    </thead>
+    <tbody id="SysctlBodyTable">
+        @foreach (antdlib.Users.GroupModel group in Model.SystemGroups) {
+            <tr>
+                <td style="text-align: center;">@group.Alias </td>
+                <td style="text-align: center;">@group.Password </td>
+                <td style="text-align: center;">@group.GID </td>
+                <td style="text-align: center;">
+                    <ul class="fg-white" style="list-style: none;">
+                        @foreach(string user in group.UserList) {
+                            <li>@user</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

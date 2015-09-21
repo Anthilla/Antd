@@ -77,6 +77,7 @@ namespace Antd {
 
         public static void SetUsersMount() {
             antdlib.Users.SystemUser.SetReady();
+            antdlib.Users.SystemGroup.SetReady();
             ConsoleLogger.Log("    users mount -> checked");
         }
 

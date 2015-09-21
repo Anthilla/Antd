@@ -27,53 +27,22 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.CCTable;
-using antdlib.Users;
-using Nancy;
-using Nancy.Security;
-using System.Dynamic;
+using System.Collections.Generic;
 
-namespace Antd {
+namespace antdlib.Users {
 
-    public class UsersModule : NancyModule {
+    public class GroupModel {
 
-        public UsersModule()
-            : base("/users") {
-            this.RequiresAuthentication();
+        public string _Id { get; set; }
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.SystemUsers = SystemUser.GetAll();
-                vmod.SystemGroups = SystemGroup.GetAll();
-                vmod.ApplicationUsers = ApplicationUser.GetAll();
+        public string Guid { get; set; }
 
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
-                return View["_page-users", vmod];
-            };
+        public string Alias { get; set; }
 
-            Post["/create"] = x => {
-                string type = Request.Form.UserType.Value;
-                if (type == "app") {
-                    string fname = Request.Form.FirstName;
-                    string lname = Request.Form.LastName;
-                    string passwd = Request.Form.Passwd;
-                    string email = Request.Form.Email;
-                    ApplicationUser.Create(fname, lname, passwd, email);
-                }
-                else if (type == "sys") {
-                    string name = Request.Form.Name;
-                    SystemUser.CreateUser(name);
-                }
-                return Response.AsRedirect("/users");
-            };
+        public string Password { get; set; }
 
-            Post["/create/group"] = x => {
-                string name = Request.Form.Name;
-                SystemGroup.CreateGroup(name);
-                return Response.AsRedirect("/users");
-            };
-        }
+        public string GID { get; set; }
+
+        public List<string> UserList { get; set; } = new List<string>() { };
     }
 }

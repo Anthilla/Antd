@@ -35,9 +35,9 @@ using System.Linq;
 
 namespace antdlib.Users {
 
-    public class SystemUser {
+    public class SystemGroup {
 
-        private static string file = "/etc/shadow";
+        private static string file = "/etc/group";
 
         private static string FILE = Mount.SetFILESPath(file);
 
@@ -54,55 +54,41 @@ namespace antdlib.Users {
 
         public static bool IsActive { get { return CheckIsActive(); } }
 
-        public static IEnumerable<UserModel> GetAll() {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var list = new List<UserModel>() { };
+        public static IEnumerable<GroupModel> GetAll() {
+            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var list = new List<GroupModel>() { };
             if (File.Exists(file)) {
-                var usersString = FileSystem.ReadFile(file);
-                var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
-                foreach (var user in users) {
-                    var mu = MapUser(user);
+                var groupsString = FileSystem.ReadFile(file);
+                var groups = groupsString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+                foreach (var group in groups) {
+                    var mu = MapGroup(group);
                     list.Add(mu);
                 }
             }
             return list;
         }
 
-        private static UserModel MapUser(string userString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
-            UserModel user = new UserModel() { };
-            if (userInfo.Length > 1) {
-                user.Guid = Guid.NewGuid().ToString();
-                user.Alias = userInfo[0];
-                user.Email = null;
-                user.Password = MapPassword(userInfo[1]);
-                user.LastChanged = userInfo[2];
-                user.MinimumNumberOfDays = userInfo[3];
-                user.MaximumNumberOfDays = userInfo[4];
-                user.Warn = userInfo[5];
-                user.Inactive = userInfo[6];
-                user.Expire = userInfo[7];
-                user.UserType = UserType.IsSystemUser;
+        private static GroupModel MapGroup(string groupString) {
+            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var groupInfo = groupString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            GroupModel group = new GroupModel() { };
+            if (groupInfo.Length > 1) {
+                group.Guid = Guid.NewGuid().ToString();
+                group.Alias = groupInfo[0];
+                group.Password = groupInfo[1];
+                group.GID = groupInfo[2];
+                var users = new List<string>() { };
+                if (groupInfo[3].Length > 0) {
+                    users = groupInfo[3].Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+                group.UserList = users;
             }
-            return user;
+            return group;
         }
 
-        private static SystemUserPassword MapPassword(string passwdString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray(); ;
-            SystemUserPassword passwd = new SystemUserPassword() { };
-            if (passwdInfo.Length > 0) {
-                passwd.Type = passwdInfo[0];
-                passwd.Salt = passwdInfo[1];
-                passwd.Result = passwdInfo[2];
-            }
-            return passwd;
-        }
-
-        public static void CreateUser(string user) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            Terminal.Execute("useradd " + user);
+        public static void CreateGroup(string group) {
+            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            Terminal.Execute($"groupadd {group}");
         }
     }
 }

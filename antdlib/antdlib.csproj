@@ -215,7 +215,9 @@
     <Compile Include="Terminal\CommandRepository.cs" />
     <Compile Include="Terminal\Terminal.cs" />
     <Compile Include="Users\ApplicationUser.cs" />
+    <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
+    <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
