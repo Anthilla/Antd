@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.Common;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,14 +28,12 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace antdlib.Svcs.Glusterfs {
     public class GlusterfsConfig {
@@ -151,39 +151,6 @@ namespace antdlib.Svcs.Glusterfs {
                 return volume;
             }
 
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                //else if (value.Length > 5 && value.Contains(",")) {
-                //    return ServiceDataType.StringArray;
-                //}
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
-            }
-
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var volumes = new List<VolumeModel>() { };
@@ -207,8 +174,8 @@ namespace antdlib.Svcs.Glusterfs {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceGlusterfs parameter) {
-                ServiceDataType type = SupposeDataType(parameter.DataValue);
-                var booleanVerbs = SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
@@ -217,36 +184,6 @@ namespace antdlib.Svcs.Glusterfs {
                     BooleanVerbs = booleanVerbs
                 };
                 return data;
-            }
-
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
             }
 
             public static void SaveGlobalConfig(List<ServiceGlusterfs> newParameters) {

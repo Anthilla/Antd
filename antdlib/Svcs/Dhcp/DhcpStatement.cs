@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,39 +35,6 @@ using System.Text.RegularExpressions;
 
 namespace antdlib.Svcs.Dhcp {
     public class DhcpStatement {
-        public static ServiceDataType SupposeDataType(string value) {
-            if (value == "true" || value == "True" ||
-                value == "false" || value == "False" ||
-                value == "yes" || value == "Yes" ||
-                value == "no" || value == "No") {
-                return ServiceDataType.Boolean;
-            }
-            else if (value.Contains(";")) {
-                return ServiceDataType.StringArray;
-            }
-            else {
-                return ServiceDataType.String;
-            }
-        }
-
-        public static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-            if (value == "true" || value == "false") {
-                return new KeyValuePair<string, string>("true", "false");
-            }
-            else if (value == "True" || value == "False") {
-                return new KeyValuePair<string, string>("True", "False");
-            }
-            else if (value == "yes" || value == "no") {
-                return new KeyValuePair<string, string>("yes", "no");
-            }
-            else if (value == "Yes" || value == "No") {
-                return new KeyValuePair<string, string>("Yes", "No");
-            }
-            else {
-                return new KeyValuePair<string, string>("", "");
-            }
-        }
-
         public static IEnumerable<DhcpConfig.LineModel> AssignGlobal(string input) {
             var global = new List<DhcpConfig.LineModel>() { };
             var globalStr = $"(?!range|prefix|zone|host|algor|secret)(^[^#{{}}\\s].*?;)";
@@ -80,8 +48,8 @@ namespace antdlib.Svcs.Dhcp {
                     var ddd = new DhcpConfig.LineModel() {
                         Key = k,
                         Value = v,
-                        Type = SupposeDataType(v),
-                        BooleanVerbs = SupposeBooleanVerbs(v),
+                        Type = Helper.ServiceData.SupposeDataType(v),
+                        BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                         FilePath = ""
                     };
                     global.Add(ddd);
@@ -100,8 +68,8 @@ namespace antdlib.Svcs.Dhcp {
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "include",
                     Value = v,
-                    Type = SupposeDataType(v),
-                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    Type = Helper.ServiceData.SupposeDataType(v),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                     FilePath = ""
                 };
                 include.Add(ddd);
@@ -119,8 +87,8 @@ namespace antdlib.Svcs.Dhcp {
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "prefix6",
                     Value = v,
-                    Type = SupposeDataType(v),
-                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    Type = Helper.ServiceData.SupposeDataType(v),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                     FilePath = ""
                 };
                 prefix6.Add(ddd);
@@ -138,8 +106,8 @@ namespace antdlib.Svcs.Dhcp {
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "range6",
                     Value = v,
-                    Type = SupposeDataType(v),
-                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    Type = Helper.ServiceData.SupposeDataType(v),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                     FilePath = ""
                 };
                 range6.Add(ddd);
@@ -157,8 +125,8 @@ namespace antdlib.Svcs.Dhcp {
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "range",
                     Value = v,
-                    Type = SupposeDataType(v),
-                    BooleanVerbs = SupposeBooleanVerbs(v),
+                    Type = Helper.ServiceData.SupposeDataType(v),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                     FilePath = ""
                 };
                 range.Add(ddd);
@@ -184,8 +152,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -237,8 +205,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -290,8 +258,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -343,8 +311,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -396,8 +364,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -449,8 +417,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -502,8 +470,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -555,8 +523,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -608,8 +576,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);
@@ -661,8 +629,8 @@ namespace antdlib.Svcs.Dhcp {
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
-                            Type = SupposeDataType(v),
-                            BooleanVerbs = SupposeBooleanVerbs(v),
+                            Type = Helper.ServiceData.SupposeDataType(v),
+                            BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(v),
                             FilePath = ""
                         };
                         dataList.Add(ddd);

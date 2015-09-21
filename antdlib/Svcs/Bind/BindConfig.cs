@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.Common;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System;
@@ -315,8 +316,8 @@ namespace antdlib.Svcs.Bind {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceBind parameter) {
-                ServiceDataType type = BindStatement.SupposeDataType(parameter.DataValue);
-                var booleanVerbs = BindStatement.SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,

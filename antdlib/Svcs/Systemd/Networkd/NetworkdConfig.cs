@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.Common;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System;
@@ -207,11 +208,11 @@ namespace antdlib.Svcs.Systemd.Networkd {
                 }
                 else {
                     value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
-                    type = SupposeDataType(value.Trim());
+                    type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 KeyValuePair<string, string> booleanVerbs;
                 if (type == ServiceDataType.Boolean) {
-                    booleanVerbs = SupposeBooleanVerbs(value.Trim());
+                    booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value.Trim());
                 }
                 else {
                     booleanVerbs = new KeyValuePair<string, string>("", "");
@@ -224,39 +225,6 @@ namespace antdlib.Svcs.Systemd.Networkd {
                     BooleanVerbs = booleanVerbs
                 };
                 return model;
-            }
-
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                //else if (value.Length > 5 && value.Contains(",")) {
-                //    return ServiceDataType.StringArray;
-                //}
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
             }
 
             public static void Render() {
@@ -291,8 +259,8 @@ namespace antdlib.Svcs.Systemd.Networkd {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceNetworkd parameter) {
-                ServiceDataType type = SupposeDataType(parameter.DataValue);
-                var booleanVerbs = SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
@@ -301,36 +269,6 @@ namespace antdlib.Svcs.Systemd.Networkd {
                     BooleanVerbs = booleanVerbs
                 };
                 return data;
-            }
-
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
             }
 
             public static void SaveGlobalConfig(List<ServiceNetworkd> newParameters) {
@@ -408,8 +346,8 @@ namespace antdlib.Svcs.Systemd.Networkd {
 
             public static void AddParameterToGlobal(string key, string value) {
                 SetCustomFile();
-                ServiceDataType type = SupposeDataType(value);
-                var booleanVerbs = SupposeBooleanVerbs(value);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
                 var line = new LineModel() {
                     FilePath = $"{DIR}/{antdNetworkdFile}",
                     Key = key,

@@ -125,6 +125,7 @@
     <Compile Include="Common\ConsoleTime.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
+    <Compile Include="Common\Helper.cs" />
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Firewall\NFTableModel.cs" />
@@ -202,7 +203,7 @@
     <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
     <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="Svcs\Squid\SquidConfig.cs" />
-    <Compile Include="Svcs\Ssh\SshConfig.cs" />
+    <Compile Include="Ssh\SshConfig.cs" />
     <Compile Include="Svcs\Syslogng\SyslogngConfig.cs" />
     <Compile Include="Svcs\Systemd\Hostnamectl\HostnamectlConfig.cs" />
     <Compile Include="Svcs\Systemd\Journald\JournaldConfig.cs" />

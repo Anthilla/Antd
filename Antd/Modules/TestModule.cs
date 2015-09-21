@@ -32,6 +32,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using antdlib.Ssh;
 
 namespace Antd {
     public class TMP {
@@ -68,6 +69,11 @@ namespace Antd {
                 foreach (var a in arr) {
                     Console.WriteLine(a);
                 }
+                return View["page-test"];
+            };
+
+            Get["/ssh"] = x => {
+                SSHKeys.Generate();
                 return View["page-test"];
             };
         }

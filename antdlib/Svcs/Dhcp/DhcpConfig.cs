@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.Common;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System.Collections.Generic;
@@ -204,39 +205,6 @@ namespace antdlib.Svcs.Dhcp {
                 return clean;
             }
 
-            private static ServiceDataType SupposeDataType(string value) {
-                if (value == "true" || value == "True" ||
-                    value == "false" || value == "False" ||
-                    value == "yes" || value == "Yes" ||
-                    value == "no" || value == "No") {
-                    return ServiceDataType.Boolean;
-                }
-                //else if (value.Length > 5 && value.Contains(",")) {
-                //    return ServiceDataType.StringArray;
-                //}
-                else {
-                    return ServiceDataType.String;
-                }
-            }
-
-            private static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
-                }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
-            }
-
             public static void Render() {
                 var path = $"{DIR}/{mainFile}";
                 var input = File.ReadAllText(path);
@@ -288,8 +256,8 @@ namespace antdlib.Svcs.Dhcp {
                     FilePath = $"{DIR}/{mainFile}",
                     Key = key,
                     Value = value,
-                    Type = SupposeDataType(value),
-                    BooleanVerbs = SupposeBooleanVerbs(value)
+                    Type = Helper.ServiceData.SupposeDataType(value),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
                 dhcp.Timestamp = Timestamp.Now;
@@ -302,8 +270,8 @@ namespace antdlib.Svcs.Dhcp {
                     FilePath = $"{DIR}/{mainFile}",
                     Key = key,
                     Value = value,
-                    Type = SupposeDataType(value),
-                    BooleanVerbs = SupposeBooleanVerbs(value)
+                    Type = Helper.ServiceData.SupposeDataType(value),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
                 dhcp.Timestamp = Timestamp.Now;
@@ -316,8 +284,8 @@ namespace antdlib.Svcs.Dhcp {
                     FilePath = $"{DIR}/{mainFile}",
                     Key = key,
                     Value = value,
-                    Type = SupposeDataType(value),
-                    BooleanVerbs = SupposeBooleanVerbs(value)
+                    Type = Helper.ServiceData.SupposeDataType(value),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
                 dhcp.Timestamp = Timestamp.Now;
@@ -330,8 +298,8 @@ namespace antdlib.Svcs.Dhcp {
                     FilePath = $"{DIR}/{mainFile}",
                     Key = key,
                     Value = value,
-                    Type = SupposeDataType(value),
-                    BooleanVerbs = SupposeBooleanVerbs(value)
+                    Type = Helper.ServiceData.SupposeDataType(value),
+                    BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
                 dhcp.Timestamp = Timestamp.Now;
@@ -422,8 +390,8 @@ namespace antdlib.Svcs.Dhcp {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceDhcp parameter) {
-                ServiceDataType type = DhcpStatement.SupposeDataType(parameter.DataValue);
-                var booleanVerbs = DhcpStatement.SupposeBooleanVerbs(parameter.DataValue);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,

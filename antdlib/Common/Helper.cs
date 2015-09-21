@@ -27,15 +27,46 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
+using System.Collections.Generic;
 
-namespace antdlib.Ssh {
-    public class SSHKeys {
-        private static string folder = "/mnt/cdrom/DIRS/DIR_cfg_antd_ssh";
+namespace antdlib.Common {
+    public class Helper {
+        public class ServiceData {
+            public static ServiceDataType SupposeDataType(string value) {
+                if (value == "true" || value == "True" ||
+                    value == "false" || value == "False" ||
+                    value == "yes" || value == "Yes" ||
+                    value == "no" || value == "No") {
+                    return ServiceDataType.Boolean;
+                }
+                else if (value.Contains(";")) {
+                    return ServiceDataType.StringArray;
+                }
+                else if (value.Contains("aaa")) {
+                    return ServiceDataType.DataArray;
+                }
+                else {
+                    return ServiceDataType.String;
+                }
+            }
 
-        public static void Generate() {
-            Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            Terminal.Execute("ssh-keygen -t rsa -f " + folder + "/key000t -N " + Guid.NewGuid().ToString());
+            public static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
+                if (value == "true" || value == "false") {
+                    return new KeyValuePair<string, string>("true", "false");
+                }
+                else if (value == "True" || value == "False") {
+                    return new KeyValuePair<string, string>("True", "False");
+                }
+                else if (value == "yes" || value == "no") {
+                    return new KeyValuePair<string, string>("yes", "no");
+                }
+                else if (value == "Yes" || value == "No") {
+                    return new KeyValuePair<string, string>("Yes", "No");
+                }
+                else {
+                    return new KeyValuePair<string, string>("", "");
+                }
+            }
         }
     }
 }
