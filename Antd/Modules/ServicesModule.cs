@@ -368,6 +368,12 @@ namespace Antd {
                 SshConfig.WriteFile.DumpGlobalConfig();
                 return Response.AsRedirect("/services");
             };
+
+            Post["/ssh/addkey"] = x => {
+                string name = Request.Form.NewKeyName;
+                SshConfig.Keys.Generate(name);
+                return Response.AsRedirect("/services");
+            };
             #endregion SSH
         }
     }
