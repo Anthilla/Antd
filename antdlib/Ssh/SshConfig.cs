@@ -35,7 +35,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace antdlib.Svcs.Ssh {
+namespace antdlib.Ssh {
     public class SshConfig {
 
         private static string serviceGuid = "A7A04748-9A03-4B1B-9D0F-BBF738F8C8E9";
@@ -45,8 +45,6 @@ namespace antdlib.Svcs.Ssh {
         private static string DIR = Mount.SetDIRSPath(dir);
 
         private static string mainFile = "sshd_config";
-
-        private static string mainFile2 = "ssh_config";
 
         public static void SetReady() {
             Terminal.Execute($"cp {dir} {DIR}");
@@ -62,6 +60,7 @@ namespace antdlib.Svcs.Ssh {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static void ReloadConfig() {
+            //todo cerca comando
             //Terminal.Execute($"smbcontrol all reload-config");
         }
 
@@ -125,46 +124,36 @@ namespace antdlib.Svcs.Ssh {
                 ServiceDataType type;
                 var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
                 var value = "";
-                //if (line.StartsWith(MapRules.CharComment.ToString())) {
-                //    type = ServiceDataType.Disabled;
-                //}
-                //else if (line.StartsWith(MapRules.CharSectionOpen.ToString())) {
-                //    type = ServiceDataType.Disabled;
-                //}
-                //else {
-                //    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
-                //    type = Helper.ServiceData.SupposeDataType(value.Trim());
-                //}
-                //KeyValuePair<string, string> booleanVerbs;
-                //if (type == ServiceDataType.Boolean) {
-                //    booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value.Trim());
-                //}
-                //else {
-                //    booleanVerbs = new KeyValuePair<string, string>("", "");
-                //}
+                if (line.StartsWith(MapRules.CharComment.ToString())) {
+                    type = ServiceDataType.Disabled;
+                }
+                else {
+                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    type = Helper.ServiceData.SupposeDataType(value.Trim());
+                }
+                KeyValuePair<string, string> booleanVerbs;
+                if (type == ServiceDataType.Boolean) {
+                    booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value.Trim());
+                }
+                else {
+                    booleanVerbs = new KeyValuePair<string, string>("", "");
+                }
                 var model = new LineModel() {
                     FilePath = path,
                     Key = key.Trim(),
                     Value = value.Trim(),
-                    //Type = type,
-                    //BooleanVerbs = booleanVerbs
+                    Type = type,
+                    BooleanVerbs = booleanVerbs
                 };
                 return model;
             }
 
             public static void Render() {
                 var data = new List<LineModel>() { };
-                //foreach (var file in SimpleStructure) {
-                //    if (file.Contains("/share/")) {
-                //        shares.Add(ReadFileShare(file));
-                //    }
-                //    else {
-                //        var lines = ReadFile(file);
-                //        foreach (var line in lines) {
-                //            data.Add(line);
-                //        }
-                //    }
-                //}
+                var lines = ReadFile(mainFile);
+                foreach (var line in lines) {
+                    data.Add(line);
+                }
                 var ssh = new SshModel() {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
@@ -195,91 +184,64 @@ namespace antdlib.Svcs.Ssh {
             }
 
             public static void SaveGlobalConfig(List<ServiceSsh> newParameters) {
-                //var shares = MapFile.Get().Share;
-                //var data = new List<LineModel>() { };
-                //foreach (var parameter in newParameters) {
-                //    data.Add(ConvertData(parameter));
-                //}
-                //var ssh = new SshModel() {
-                //    _Id = serviceGuid,
-                //    Guid = serviceGuid,
-                //    Timestamp = Timestamp.Now,
-                //    Share = shares,
-                //    Data = data
-                //};
-                //DeNSo.Session.New.Set(ssh);
+                var data = new List<LineModel>() { };
+                foreach (var parameter in newParameters) {
+                    data.Add(ConvertData(parameter));
+                }
+                var ssh = new SshModel() {
+                    _Id = serviceGuid,
+                    Guid = serviceGuid,
+                    Timestamp = Timestamp.Now,
+                    Data = data
+                };
+                DeNSo.Session.New.Set(ssh);
             }
 
             public static void DumpGlobalConfig() {
-                //var parameters = MapFile.Get().Data.ToArray();
-                //var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
-                //foreach (var file in filesToClean) {
-                //    CleanFile(file);
-                //}
-                //for (int i = 0; i < parameters.Length; i++) {
-                //    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                //    AppendLine(parameters[i].FilePath, line);
-                //}
+                var parameters = MapFile.Get().Data.ToArray();
+                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
+                foreach (var file in filesToClean) {
+                    CleanFile(file);
+                }
+                for (int i = 0; i < parameters.Length; i++) {
+                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
+                    AppendLine(parameters[i].FilePath, line);
+                }
             }
 
             private static void CleanFile(string path) {
-                //File.WriteAllText(path, "");
+                File.WriteAllText(path, "");
             }
 
             private static void AppendLine(string path, string text) {
-                //File.AppendAllText(path, $"{text}{Environment.NewLine}");
+                File.AppendAllText(path, $"{text}{Environment.NewLine}");
             }
 
             public static void AddParameterToGlobal(string key, string value) {
-                //SetCustomFile();
-                //ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
-                //var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
-                //var line = new LineModel() {
-                //    FilePath = $"{DIR}/{antdSshFile}",
-                //    Key = key,
-                //    Value = value,
-                //    Type = type,
-                //    BooleanVerbs = booleanVerbs
-                //};
-                //var shares = MapFile.Get().Share;
-                //var data = MapFile.Get().Data;
-                //data.Add(line);
-                //var ssh = new SshModel() {
-                //    _Id = serviceGuid,
-                //    Guid = serviceGuid,
-                //    Timestamp = Timestamp.Now,
-                //    Share = shares,
-                //    Data = data
-                //};
-                //DeNSo.Session.New.Set(ssh);
+                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
+                var line = new LineModel() {
+                    FilePath = $"{DIR}/{mainFile}",
+                    Key = key,
+                    Value = value,
+                    Type = type,
+                    BooleanVerbs = booleanVerbs
+                };
+                var data = MapFile.Get().Data;
+                data.Add(line);
+                var ssh = new SshModel() {
+                    _Id = serviceGuid,
+                    Guid = serviceGuid,
+                    Timestamp = Timestamp.Now,
+                    Data = data
+                };
+                DeNSo.Session.New.Set(ssh);
             }
 
-            private static void SetCustomFile() {
-                //var path = $"{DIR}/{antdSshFile}";
-                //if (!File.Exists(path)) {
-                //    File.Create(path);
-                //}
+            public static void RewriteSSHDCONF() {
+                var file = $"{DIR}/{mainFile}";
+                CleanFile(file);
             }
-
-            public static void RewriteSMBCONF() {
-                //var file = $"{DIR}/{mainFile}";
-                //CleanFile(file);
-                //AppendLine(file, "[global]");
-                //AppendLine(file, "");
-                //AppendLine(file, $"{MapRules.CharComment}GLOBAL START");
-                //foreach (var path in GetGlobalPaths()) {
-                //    AppendLine(file, $"{MapRules.VerbInclude} {MapRules.CharKevValueSeparator} {path}");
-                //}
-                //AppendLine(file, $"{MapRules.CharComment}GLOBAL END");
-                //AppendLine(file, "");
-                //AppendLine(file, $"{MapRules.CharComment}SHARE START");
-                //AppendLine(file, $"{MapRules.CharComment}SHARE END");
-            }
-
-            //private static HashSet<dynamic> GetGlobalPaths() {
-                //var share = MapFile.Get().Data.Select(s => s.FilePath).ToHashSet();
-                //return share;
-            //}
         }
     }
 }
