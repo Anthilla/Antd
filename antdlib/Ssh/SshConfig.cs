@@ -243,5 +243,53 @@ namespace antdlib.Ssh {
                 CleanFile(file);
             }
         }
+
+        public class Keys {
+
+            private static string fileStartsWith = "ssh_host_";
+
+            private static string privateEndsWith = "_key";
+
+            private static string publicEndsWith = "_key.pub";
+
+            public class KeyModel {
+                public string _Id { get; set; }
+
+                public string Guid { get; set; }
+
+                public string Timestamp { get; set; }
+
+                public string Name { get; set; }
+
+                public string Content { get; set; }
+
+                public SSHKeyType KeyType { get; set; }
+            }
+
+            public static List<KeyModel> GetAll() {
+                var list = new List<KeyModel>() { };
+                var files = Directory.EnumerateFiles(dir).Where(f => f.Contains(fileStartsWith)).ToArray();
+                foreach (var file in files) {
+                    var type = (file.EndsWith(publicEndsWith) == true) ? SSHKeyType.Public : SSHKeyType.Private;
+                    var k = new KeyModel() {
+                        _Id = Guid.NewGuid().ToString(),
+                        Guid = Guid.NewGuid().ToString(),
+                        Timestamp = Timestamp.Now,
+                        Name = file/*.Replace("", "")*/,
+                        Content = FileSystem.ReadFile(file),
+                        KeyType = type
+                    };
+                    DeNSo.Session.New.Set(k);
+                    list.Add(k);
+                }
+                Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+                return list;
+            }
+
+            public static void Generate(string keyName) {
+                Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+                Terminal.Execute($"ssh-keygen -t rsa -f {dir}/{fileStartsWith}{keyName}{privateEndsWith} -N {Guid.NewGuid().ToString()}");
+            }
+        }
     }
 }

@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.CCTable;
+using antdlib.Ssh;
 using antdlib.Svcs.Bind;
 using antdlib.Svcs.Dhcp;
 using antdlib.Svcs.Samba;
@@ -45,7 +46,7 @@ namespace Antd {
 
         public ServicesModule()
             : base("/services") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
@@ -327,6 +328,47 @@ namespace Antd {
                 return Response.AsRedirect("/services");
             };
             #endregion DHCP
+
+            #region SSH
+            Post["/activate/ssh"] = x => {
+                SshConfig.SetReady();
+                SshConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/refresh/ssh"] = x => {
+                SshConfig.MapFile.Render();
+                return Response.AsJson(true);
+            };
+
+            Post["/reloadconfig/ssh"] = x => {
+                SshConfig.ReloadConfig();
+                return Response.AsJson(true);
+            };
+
+            Post["/update/ssh/{section}"] = x => {
+                //var parameters = this.Bind<List<ServiceSsh>>();
+                //var section = (string)x.section;
+                //if (section == "global") {
+                //    SshConfig.WriteFile.SaveGlobal(parameters);
+                //}
+                //if (section == "prefix6") {
+                //    SshConfig.WriteFile.SavePrefix6(parameters);
+                //}
+                //if (section == "range6") {
+                //    SshConfig.WriteFile.SaveRange6(parameters);
+                //}
+                //if (section == "range") {
+                //    SshConfig.WriteFile.SaveRange(parameters);
+                //}
+                //else {
+                //    SshConfig.WriteFile.SaveConfigFor(section, parameters);
+                //}
+                //Thread.Sleep(1000);
+                SshConfig.WriteFile.DumpGlobalConfig();
+                return Response.AsRedirect("/services");
+            };
+            #endregion SSH
         }
     }
 }

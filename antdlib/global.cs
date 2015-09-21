@@ -48,6 +48,12 @@ namespace antdlib {
         Other = 99
     }
 
+    public enum SSHKeyType : byte {
+        Public = 1,
+        Private = 2,
+        Error = 99
+    }
+
     public class Label {
         public static string Root { get { return "antd_root"; } }
         public static string Port { get { return "antd_port"; } }

@@ -46,45 +46,27 @@
 }
 
 @section MainContent {
-    @*<div style="float: left; width: 15%;">
-            <nav class="sidebar dark">
-                <ul>
-                    <li class="title"><i class="icon-target-2 on-left"></i>Services</li>
-                    <li class="stick"><a href="#"><i class="icon-cog"></i>Bind</a></li>
-                    <li class="stick">
-                        <a href="#" class="dropdown-toggle"><i class="icon-tree-view"></i>Systemd</a>
-                        <ul data-role="dropdown" class="dropdown-menu">
-                            <li><a href="">Subitem 1</a></li>
-                            <li><a href="">Subitem 2</a></li>
-                            <li><a href="">Subitem 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="stick bg-anthilla-green"><a href="#">Thread item</a></li>
-                </ul>
-            </nav>
-        </div>*@
-
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
     }
     @Html.Partial("page-services-bind")
     @Html.Partial("page-services-dhcp")
-    @*@Html.Partial("page-services-glusterfs")
-        @Html.Partial("page-services-libvirt")
-        @Html.Partial("page-services-lxc")
-        @Html.Partial("page-services-nfs")
-        @Html.Partial("page-services-nftable")
-        @Html.Partial("page-services-nginx")
-        @Html.Partial("page-services-ntpd")
-        @Html.Partial("page-services-qemu")*@
+    @*@Html.Partial("page-services-glusterfs")*@
+    @*@Html.Partial("page-services-libvirt")*@
+    @*@Html.Partial("page-services-lxc")*@
+    @*@Html.Partial("page-services-nfs")*@
+    @*@Html.Partial("page-services-nftable")*@
+    @*@Html.Partial("page-services-nginx")*@
+    @*@Html.Partial("page-services-ntpd")*@
+    @*@Html.Partial("page-services-qemu")*@
     @Html.Partial("page-services-samba")
-    @*@Html.Partial("page-services-squid")
-        @Html.Partial("page-services-ssh")
-        @Html.Partial("page-services-syslogng")
-        @Html.Partial("page-services-systemd-hostnamectl")
-        @Html.Partial("page-services-systemd-journald")
-        @Html.Partial("page-services-systemd-networkd")
-        @Html.Partial("page-services-zfs")*@
+    @*@Html.Partial("page-services-squid")*@
+    @Html.Partial("page-services-ssh")
+    @*@Html.Partial("page-services-syslogng")*@
+    @*@Html.Partial("page-services-systemd-hostnamectl")*@
+    @*@Html.Partial("page-services-systemd-journald")*@
+    @*@Html.Partial("page-services-systemd-networkd")*@
+    @*@Html.Partial("page-services-zfs")*@
 }
 
 @section Scripts {
@@ -359,6 +341,78 @@
             });
         });
         //END DHCP
-        
+
+        //START SSH
+        $('#ActivateSsh').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/activate/ssh',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#RefreshSsh').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/refresh/ssh',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ReloadSsh').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/services/reloadconfig/ssh',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ShowSshStructure').mousedown(function () {
+            $('#SshStructure').show();
+        }).mouseup(function () {
+            $('#SshStructure').hide();
+        });;
+
+        $(document).ready(function () {
+            $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+
+        $(document).ready(function () {
+            $('[data-key-form]').each(function (sindexx) {
+                $(this).find('[data-object="key-parameter"]').each(function (index) {
+                    var dataKey = $(this).find('[name="DataKey"]');
+                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                    var dataValue = $(this).find('[name="DataValue"]');
+                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                    var dataFile = $(this).find('[name="DataFilePath"]');
+                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
+                });
+            });
+        });
+
+        $('#AddNewParameterSsh').click(function () {
+            $('#NewParameterSshDashboard').toggle();
+        });
+
+        $('#AddNewKey').click(function () {
+            $('#NewSshKey').toggle();
+        });
+        //END SSH
     </script>
 }

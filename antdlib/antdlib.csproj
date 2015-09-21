@@ -181,7 +181,6 @@
     <Compile Include="Security\RSACore.cs" />
     <Compile Include="Security\RSAKeys.cs" />
     <Compile Include="Security\Token.cs" />
-    <Compile Include="Ssh\Keys.cs" />
     <Compile Include="Ssh\Test.cs" />
     <Compile Include="Status\Local.cs" />
     <Compile Include="Status\Networkd.cs" />

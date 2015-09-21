@@ -71,11 +71,6 @@ namespace Antd {
                 }
                 return View["page-test"];
             };
-
-            Get["/ssh"] = x => {
-                SSHKeys.Generate();
-                return View["page-test"];
-            };
         }
     }
 }
