@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib.MountPoint;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,23 @@ using System.Linq;
 namespace antdlib.Users {
 
     public class SystemUser {
+
+        private static string file = "/etc/shadow";
+
+        private static string FILE = Mount.SetFILESPath(file);
+
+        public static void SetReady() {
+            Terminal.Execute($"cp {file} {FILE}");
+            FileSystem.CopyDirectory(file, FILE);
+            Mount.File(file);
+        }
+
+        private static bool CheckIsActive() {
+            var mount = MountRepository.Get(file);
+            return (mount == null) ? false : true;
+        }
+
+        public static bool IsActive { get { return CheckIsActive(); } }
 
         public static IEnumerable<UserModel> GetAll() {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");

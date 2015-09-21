@@ -134,6 +134,13 @@ namespace antdlib.MountPoint {
             Check();
         }
 
+        public static void File(string file) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            MountRepository.Create(file, MountContext.External);
+            var FILE = SetFILESPath(file);
+            SetBind(FILE, file);
+        }
+
         private static void CheckMount(string directory) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log($">>     check: {directory}");
@@ -192,6 +199,7 @@ namespace antdlib.MountPoint {
         }
 
         public static string GetDIRSPath(string source) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return source.Replace(Folder.Dirs, "").Replace("DIR", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
 
@@ -205,6 +213,16 @@ namespace antdlib.MountPoint {
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return (df.Length > 0 || pm.Length > 0) ? true : false;
+        }
+
+        public static string SetFILESPath(string source) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            return $"{Folder.Dirs}/FILE{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
+        }
+
+        public static string GetFILESPath(string source) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            return source.Replace(Folder.Dirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
     }
 }

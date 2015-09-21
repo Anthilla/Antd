@@ -75,6 +75,11 @@ namespace Antd {
             ConsoleLogger.Log("    mounts -> checked");
         }
 
+        public static void SetUsersMount() {
+            antdlib.Users.SystemUser.SetReady();
+            ConsoleLogger.Log("    users mount -> checked");
+        }
+
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
             ConsoleLogger.Log("    antd core parameters -> loaded");
