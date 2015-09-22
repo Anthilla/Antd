@@ -1,5 +1,4 @@
-﻿
-using antdlib.Collectd;
+﻿@*
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -27,30 +26,32 @@ using antdlib.Collectd;
 ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 ///     20141110
-///-------------------------------------------------------------------------------------
-using antdlib.Log;
-using Nancy;
-using Nancy.Security;
-using System.Dynamic;
+///-------------------------------------------------------------------------------------*@
 
-namespace Antd {
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{Layout = "_layout.cshtml";}
 
-    public class LogModule : NancyModule {
-        public LogModule()
-            : base("/log") {
-            this.RequiresAuthentication();
+@section PageBar {
+    @*@Html.Partial("_log-pagebar")*@
+}
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.LOGS = Logger.GetAllMethods();
-                return View["_page-log", vmod];
-            };
+@section Dashboard {
+    <table>
+        <tbody>
+            @foreach (antdlib.Collectd.CollectdItem collectd in Model.COLLECTD.Data) {
+                <tr>
+                    <td>@collectd.time</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-            Get["/collectd"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.COLLECTD = CollectdRepo.GetLast();
-                return View["_page-log-collectd", vmod];
-            };
-        }
-    }
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('tr>td').not('tr>td:first-child').css('width', '25%');
+            $('tr>td:first-child').css('width', '200px');
+        });
+    </script>
 }

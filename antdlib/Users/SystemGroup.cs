@@ -55,18 +55,25 @@ namespace antdlib.Users {
 
         public static bool IsActive { get { return CheckIsActive(); } }
 
-        public static IEnumerable<GroupModel> GetAll() {
+        public static void ImportGroupsToDatabase() {
             Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var list = new List<GroupModel>() { };
             if (File.Exists(file)) {
                 var groupsString = FileSystem.ReadFile(file);
                 var groups = groupsString.Split(new String[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
                 foreach (var group in groups) {
                     var mu = MapGroup(group);
-                    list.Add(mu);
+                    DeNSo.Session.New.Set(mu);
                 }
             }
-            return list;
+        }
+
+        public static IEnumerable<GroupModel> GetAllFromDatabase() {
+            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var users = DeNSo.Session.New.Get<GroupModel>().ToList();
+            if (users.Count < 1) {
+                ImportGroupsToDatabase();
+            }
+            return users;
         }
 
         private static GroupModel MapGroup(string groupString) {

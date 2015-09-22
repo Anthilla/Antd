@@ -1,5 +1,5 @@
 ﻿
-using antdlib.Collectd;
+using Newtonsoft.Json;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,29 +28,31 @@ using antdlib.Collectd;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib.Log;
-using Nancy;
-using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-    public class LogModule : NancyModule {
-        public LogModule()
-            : base("/log") {
-            this.RequiresAuthentication();
-
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.LOGS = Logger.GetAllMethods();
-                return View["_page-log", vmod];
+namespace antdlib.Collectd {
+    public class CollectdRepo {
+        public static List<CollectdItem> ImportCollectdData(string json) {
+            var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
+            var model = new CollectdDBModel() {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Timestamp = Timestamp.Now
             };
+            model.Data = collectdEntries;
+            DeNSo.Session.New.Set(model);
+            return collectdEntries;
+        }
 
-            Get["/collectd"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.COLLECTD = CollectdRepo.GetLast();
-                return View["_page-log-collectd", vmod];
-            };
+        public static List<CollectdDBModel> GetAllData() {
+            return DeNSo.Session.New.Get<CollectdDBModel>(d => d != null).ToList();
+        }
+
+        public static CollectdDBModel GetLast() {
+            return DeNSo.Session.New.Get<CollectdDBModel>(d => d != null).OrderByDescending(d => d.Timestamp).FirstOrDefault();
         }
     }
 }

@@ -43,8 +43,8 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.SystemUsers = SystemUser.GetAll();
-                vmod.SystemGroups = SystemGroup.GetAll();
+                vmod.SystemUsers = SystemUser.GetAllFromDatabase();
+                vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
                 vmod.ApplicationUsers = ApplicationUser.GetAll();
 
                 vmod.CurrentContext = Request.Path;
@@ -53,18 +53,14 @@ namespace Antd {
                 return View["_page-users", vmod];
             };
 
-            Get["/raw/{args}"] = x => {
-                var args = (string)x.args;
-                switch (args) {
-                    case "app":
-                        return Response.AsJson(ApplicationUser.GetAll());
-                    case "sys":
-                        return Response.AsJson(SystemUser.GetAll());
-                    case "grp":
-                        return Response.AsJson(SystemGroup.GetAll());
-                    default:
-                        return Response.AsJson("hello");
-                }
+            Post["/refresh/users"] = x => {
+                SystemUser.ImportUsersToDatabase();
+                return Response.AsJson(true);
+            };
+
+            Post["/refresh/group"] = x => {
+                SystemGroup.ImportGroupsToDatabase();
+                return Response.AsJson(true);
             };
 
             Post["/create"] = x => {

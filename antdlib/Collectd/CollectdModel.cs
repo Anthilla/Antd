@@ -1,6 +1,4 @@
-﻿
-using antdlib.Collectd;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -28,29 +26,59 @@ using antdlib.Collectd;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib.Log;
-using Nancy;
-using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    public class LogModule : NancyModule {
-        public LogModule()
-            : base("/log") {
-            this.RequiresAuthentication();
+namespace antdlib.Collectd {
+    //JSON format
+    //[
+    //  {
+    //    "values": [197141504, 175136768],
+    //    "dstypes": ["counter", "counter"],
+    //    "dsnames": ["read", "write"],
+    //    "time": 1251533299,
+    //    "interval": 10,
+    //    "host": "leeloo.lan.home.verplant.org",
+    //    "plugin": "disk",
+    //    "plugin_instance": "sda",
+    //    "type": "disk_octets",
+    //    "type_instance": ""
+    //  },
+    //  …
+    //]
+    public class CollectdItem {
+        public long[] values { get; set; }
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.LOGS = Logger.GetAllMethods();
-                return View["_page-log", vmod];
-            };
+        public string[] dstypes { get; set; }
 
-            Get["/collectd"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.COLLECTD = CollectdRepo.GetLast();
-                return View["_page-log-collectd", vmod];
-            };
-        }
+        public string[] dsnames { get; set; }
+
+        public double time { get; set; }
+
+        public double interval { get; set; }
+
+        public string host { get; set; }
+
+        public string plugin { get; set; }
+
+        public string plugin_instance { get; set; }
+
+        public string type { get; set; }
+
+        public string type_instance { get; set; }
+    }
+
+    public class CollectdDBModel {
+        public string _Id { get; set; }
+
+        public string Guid { get; set; }
+
+        public string Timestamp { get; set; }
+
+        public List<CollectdItem> Data { get; set; } = new List<CollectdItem>() { };
     }
 }

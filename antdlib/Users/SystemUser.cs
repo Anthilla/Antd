@@ -85,6 +85,34 @@ namespace antdlib.Users {
             return list;
         }
 
+        public static void ImportUsersToDatabase() {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            if (File.Exists(file) && File.Exists(filePwd)) {
+                var usersString = Terminal.Execute($"cat {file}");
+                var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var passwdUserString = Terminal.Execute($"cat {filePwd}");
+                var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                foreach (var user in users) {
+                    var mu = MapUser(user);
+                    var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
+                    if (pwdstring.Length > 0 && pwdstring != null) {
+                        var mup = AddUserInfoFromPasswd(mu, pwdstring);
+                        mu = mup;
+                    }
+                    DeNSo.Session.New.Set(mu);
+                }
+            }
+        }
+
+        public static IEnumerable<UserModel> GetAllFromDatabase() {
+            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var users = DeNSo.Session.New.Get<UserModel>().ToList();
+            if (users.Count < 1) {
+                ImportUsersToDatabase();
+            }
+            return users;
+        }
+
         private static UserModel MapUser(string userString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var userInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();

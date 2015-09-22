@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using Nancy.IO;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,10 +28,10 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -187,7 +189,7 @@ namespace antdlib {
             if (list.Count() > 0) {
                 var removeThis = list.ToArray()[list.Count() - 1];
                 var t = input;
-                if(removeThis.Length > 0) {
+                if (removeThis.Length > 0) {
                     t = input.Replace(removeThis, "");
                 }
                 output = t.RemoveTextBetween(start, end);
@@ -197,10 +199,16 @@ namespace antdlib {
 
         public static HashSet<dynamic> ToHashSet(this IEnumerable<dynamic> input) {
             var list = new HashSet<dynamic>() { };
-            foreach(var i in input) {
+            foreach (var i in input) {
                 list.Add(i);
             }
             return list;
+        }
+
+        public static string ReadAsString(this RequestStream requestStream) {
+            using (var reader = new StreamReader(requestStream)) {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

@@ -33,6 +33,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using antdlib.Ssh;
+using antdlib;
+using Newtonsoft.Json;
+using antdlib.Collectd;
 
 namespace Antd {
     public class TMP {
@@ -70,6 +73,13 @@ namespace Antd {
                     Console.WriteLine(a);
                 }
                 return View["page-test"];
+            };
+
+            Post["/post-collectd"] = x => {
+                var collectdBody = Request.Body.ReadAsString();
+                var listCollectdLog = CollectdRepo.ImportCollectdData(collectdBody);
+                Console.WriteLine($"{listCollectdLog.Count} collectd entries");
+                return Response.AsJson(true);
             };
         }
     }

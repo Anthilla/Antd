@@ -121,6 +121,8 @@
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
+    <Compile Include="Collectd\CollectdModel.cs" />
+    <Compile Include="Collectd\CollectdRepo.cs" />
     <Compile Include="Common\ConsoleLogger.cs" />
     <Compile Include="Common\ConsoleTime.cs" />
     <Compile Include="Common\Extensions.cs" />
