@@ -46,7 +46,7 @@ namespace Antd {
 
         public ServicesModule()
             : base("/services") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

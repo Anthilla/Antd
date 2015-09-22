@@ -46,11 +46,18 @@ namespace antdlib.Users {
         private static string FILEPWD = Mount.SetFILESPath(filePwd);
 
         public static void SetReady() {
-            Terminal.Execute($"cp {file} {FILE}");
-            FileSystem.CopyFile(file, FILE);
+            //Terminal.Execute($"cp {file} {FILE}");
+            ConsoleLogger.Warn($"Copying files:");
+            if (!File.Exists(FILE)) {
+                ConsoleLogger.Warn($"{file} -> {FILE}:");
+                File.Copy(file, FILE, true);
+            }
             Mount.File(file);
-            Terminal.Execute($"cp {filePwd} {FILEPWD}");
-            FileSystem.CopyFile(filePwd, FILEPWD);
+            //Terminal.Execute($"cp {filePwd} {FILEPWD}");
+            if (!File.Exists(FILEPWD)) {
+                ConsoleLogger.Warn($"{filePwd} -> {FILEPWD}:");
+                File.Copy(filePwd, FILEPWD, true);
+            }
             Mount.File(filePwd);
         }
 
@@ -68,11 +75,17 @@ namespace antdlib.Users {
             if (File.Exists(file) && File.Exists(filePwd)) {
                 var usersString = FileSystem.ReadFile(file);
                 var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+                var passwdUserString = FileSystem.ReadFile(filePwd);
+                var passwdUsers = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
                 foreach (var user in users) {
                     var mu = MapUser(user);
+                    var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
+                    if (pwdstring.Length > 0) {
+                        var mup = AddUserInfoFromPasswd(mu, pwdstring);
+                        mu = mup;
+                    }
                     list.Add(mu);
                 }
-                //todo qui
             }
             return list;
         }
@@ -97,30 +110,23 @@ namespace antdlib.Users {
             return user;
         }
 
-        //todo qui
-        private static UserModel MapUserPasswd(string userString) {
+        private static UserModel AddUserInfoFromPasswd(UserModel user, string userString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
-            UserModel user = new UserModel() { };
-            if (userInfo.Length > 1) {
-                user.Guid = Guid.NewGuid().ToString();
-                user.Alias = userInfo[0];
-                user.Email = null;
-                user.Password = MapPassword(userInfo[1]);
-                user.LastChanged = userInfo[2];
-                user.MinimumNumberOfDays = userInfo[3];
-                user.MaximumNumberOfDays = userInfo[4];
-                user.Warn = userInfo[5];
-                user.Inactive = userInfo[6];
-                user.Expire = userInfo[7];
-                user.UserType = UserType.IsSystemUser;
+            var userPasswdInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            if (userPasswdInfo.Length > 0) {
+                user.UID = userPasswdInfo[2];
+                user.GroupID = userPasswdInfo[3];
+                user.Info = userPasswdInfo[4];
+                user.HomeDirectory = userPasswdInfo[5];
+                user.LoginShell = userPasswdInfo[6];
             }
             return user;
         }
 
         private static SystemUserPassword MapPassword(string passwdString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray(); ;
+            var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray();
+            ;
             SystemUserPassword passwd = new SystemUserPassword() { };
             if (passwdInfo.Length > 0) {
                 passwd.Type = passwdInfo[0];

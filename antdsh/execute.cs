@@ -386,9 +386,7 @@ namespace antdsh {
             var f = Terminal.Execute("df | grep /cfg/antd");
             if (r.Length > 0 || f.Length > 0) {
                 Terminal.Execute("umount " + Folder.Networkd);
-                Terminal.Execute("umount " + Folder.FileRepository);
                 Terminal.Execute("umount " + Folder.Database);
-                Terminal.Execute("umount " + Folder.Config);
                 Terminal.Execute("umount " + Folder.Root);
                 Terminal.Execute("umount /framework/antd");
                 UmountAntd();

@@ -53,7 +53,7 @@ namespace antdlib {
         public string[] path;
 
         public XmlWriter(string[] fileNames) {
-            var applicationRoot = Folder.Config;
+            var applicationRoot = Folder.Root;
             List<string> tmplist = new List<string>() { };
             foreach (string fileName in fileNames) {
                 var p = Path.Combine(applicationRoot, fileName + ".xml");

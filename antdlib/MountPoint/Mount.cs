@@ -36,10 +36,7 @@ namespace antdlib.MountPoint {
 
         private static string[] defaultDirectories = new string[] {
                     Folder.Root,
-                    Folder.Config,
                     Folder.Database,
-                    //Folder.FileRepository,
-                    //Folder.Networkd,
                 };
 
         public static void WorkingDirectories() {
@@ -190,7 +187,14 @@ namespace antdlib.MountPoint {
 
         private static void SetBind(string source, string destination) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            Terminal.Execute($"mount -o bind {source} {destination}");
+            ConsoleLogger.Warn($"Check if {source} is already mounted...");
+            if (IsAlreadyMounted(source) == true) {
+                ConsoleLogger.Warn($"{source} is already mounted!");
+            }
+            else {
+                ConsoleLogger.Warn($"Mounting: {source}");
+                Terminal.Execute($"mount -o bind {source} {destination}");
+            }
         }
 
         public static string SetDIRSPath(string source) {

@@ -81,11 +81,11 @@ namespace antdlib {
 
     public class Folder {
         public static string Root { get { return "/cfg/antd"; } }
-        public static string Config { get { return Folder.Root + "/config"; } }
-        public static string Database { get { return Folder.Root + "/database"; } }
-        public static string FileRepository { get { return Folder.Root + "/files"; } }
+        //public static string Config { get { return "/cfg/antd"; } }
+        public static string Database { get { return "/Data/antd"; } }
+        //public static string FileRepository { get { return Folder.Root + "/files"; } }
         public static string Networkd { get { return Folder.Root + "/networkd"; } }
-        public static string Ssh { get { return Folder.Root + "/ssh"; } }
+        //public static string Ssh { get { return Folder.Root + "/ssh"; } }
         public static string AntdRepo { get { return "/mnt/cdrom"; } }
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }

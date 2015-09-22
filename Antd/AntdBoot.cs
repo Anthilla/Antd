@@ -107,7 +107,7 @@ namespace Antd {
         }
 
         private readonly static string[] WatchDirectories = new string[] {
-            Folder.Config
+            Folder.Root
         };
 
         public static void StartDirectoryWatcher(bool isActive) {

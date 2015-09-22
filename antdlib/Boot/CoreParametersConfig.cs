@@ -53,9 +53,9 @@ namespace antdlib.Boot {
                 xmlWriter.Write(Label.Database, Folder.Database);
             }
 
-            if (xmlWriter.CheckValue(Label.Files) == false) {
-                xmlWriter.Write(Label.Files, Folder.FileRepository);
-            }
+            //if (xmlWriter.CheckValue(Label.Files) == false) {
+            //    xmlWriter.Write(Label.Files, Folder.FileRepository);
+            //}
         }
 
         public static string GetPort() {
@@ -66,9 +66,9 @@ namespace antdlib.Boot {
             return (xmlWriter.CheckValue(Label.Database) == true) ? xmlWriter.ReadValue(Label.Database) : Folder.Database;
         }
 
-        public static string GetFileRepo() {
-            return (xmlWriter.CheckValue(Label.Files) == true) ? xmlWriter.ReadValue(Label.Files) : Folder.FileRepository;
-        }
+        //public static string GetFileRepo() {
+        //    return (xmlWriter.CheckValue(Label.Files) == true) ? xmlWriter.ReadValue(Label.Files) : Folder.FileRepository;
+        //}
 
         public static string GetHostUri() {
             if (xmlWriter.CheckValue(Label.Port) == false) {

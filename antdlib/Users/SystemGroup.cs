@@ -42,8 +42,12 @@ namespace antdlib.Users {
         private static string FILE = Mount.SetFILESPath(file);
 
         public static void SetReady() {
-            Terminal.Execute($"cp {file} {FILE}");
-            FileSystem.CopyFile(file, FILE);
+            //Terminal.Execute($"cp {file} {FILE}");
+            ConsoleLogger.Warn($"{file} -> {FILE}:");
+            if (!File.Exists(FILE)) {
+                ConsoleLogger.Warn($"copying --- {file} -> {FILE}:");
+                File.Copy(file, FILE, true);
+            }
             Mount.File(file);
         }
 

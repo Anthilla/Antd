@@ -67,7 +67,7 @@ namespace antdlib.Firewall {
 
         public static void WriteFile() {
             Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var path = Path.Combine(Folder.Config, fileName);
+            var path = Path.Combine(Folder.Root, fileName);
             if (File.Exists(path)) {
                 File.Delete(path);
             }
@@ -141,7 +141,7 @@ namespace antdlib.Firewall {
 
         public static void ReadFile() {
             Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var path = Path.Combine(Folder.Config, fileName);
+            var path = Path.Combine(Folder.Root, fileName);
             if (File.Exists(path)) {
                 //leggi e splitta eccetera
             }

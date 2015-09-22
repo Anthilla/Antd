@@ -51,7 +51,7 @@ namespace antdlib.Status {
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
             Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            string text = FileSystem.ReadFile(Folder.Config, "antd.sysctl.conf");
+            string text = FileSystem.ReadFile(Folder.Root, "antd.sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
             return sysctls;
@@ -117,8 +117,8 @@ namespace antdlib.Status {
         public static void WriteConfig() {
             Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var parameters = Stock;
-            Directory.CreateDirectory(Folder.Config);
-            string path = Path.Combine(Folder.Config, "antd.sysctl.conf");
+            Directory.CreateDirectory(Folder.Root);
+            string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
@@ -135,7 +135,7 @@ namespace antdlib.Status {
 
         public static void LoadConfig() {
             Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            string path = Path.Combine(Folder.Config, "antd.sysctl.conf");
+            string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
             Terminal.Execute("sysctl -p " + path);
         }
     }
