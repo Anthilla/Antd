@@ -3,7 +3,7 @@ $(document).ready(function () {
     $.when(
         LoadSystemdUnits()
     ).then(
-        console.log('.')
+        //console.log('.')
     );
 });
 

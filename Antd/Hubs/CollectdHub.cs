@@ -1,4 +1,8 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Client;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,63 +30,30 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-/// 
-
-using antdlib;
-using antdlib.Boot;
-using Microsoft.Owin.Hosting;
-using Owin;
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Antd {
+namespace Antd.Hubs {
+    public class CollectdHub : Hub {
+        private readonly string channel = "collectd-data";
 
-    internal static class Program {
+        //public void Connection() {
+        //    Groups.Add(Context.ConnectionId, channel);
+        //}
 
-        private static void Main(string[] args) {
-            var startTime = DateTime.Now;
-            Console.Title = "ANTD";
+        //public void GetWelcomeMessage(string msg) {
+        //    Clients.Group(channel).welcomeMessage($"{Timestamp.Now} - {msg}");
+        //}
 
-            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
-            AntdBoot.SetWorkingDirectories();
-            AntdBoot.SetCoreParameters();
-            AntdBoot.InitAuthentication();
-
-            var uri = CoreParametersConfig.GetHostUri();
-            var stop = new ManualResetEvent(false);
-            Console.CancelKeyPress +=
-                (sender, e) => {
-                    Console.WriteLine("^C");
-                    Environment.Exit(1);
-                    stop.Set();
-                    e.Cancel = true;
-                };
-
-            using (WebApp.Start<Startup>(uri)) {
-                ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log("    server url -> {0}", uri);
-
-                ConsoleLogger.Log("antd is running");
-                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
-                stop.WaitOne();
-            }
+        public void GetPointCoordinates(int x, int y) {
+            Clients.Group(channel).getPointCoordinates(x, y);
         }
-    }
 
-    internal class Startup {
-
-        public void Configuration(IAppBuilder app) {
-            ConsoleLogger.Log("loading core service configuration");
-
-            AntdBoot.StartDatabase();
-            AntdBoot.SetMounts();
-            //AntdBoot.SetUsersMount();
-            AntdBoot.StartSignalR(app, true);
-            AntdBoot.StartNancy(app);
-
-            AntdBoot.StartScheduler(false);
-            AntdBoot.StartDirectoryWatcher(true);
-            AntdBoot.CheckSysctl(false);
-        }
+        //public Task Unsubscribe() {
+        //    return Groups.Remove(Context.ConnectionId, channel);
+        //}
     }
 }

@@ -175,6 +175,7 @@
   <ItemGroup>
     <Compile Include="AntdBoot.cs" />
     <Compile Include="AntdHub.cs" />
+    <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
@@ -583,6 +584,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Scripts\antd.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Scripts\d3.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Scripts\jquery.terminal.min.js">

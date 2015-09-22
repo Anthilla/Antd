@@ -36,6 +36,9 @@ using antdlib.Ssh;
 using antdlib;
 using Newtonsoft.Json;
 using antdlib.Collectd;
+using Antd.Hubs;
+using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNet.SignalR;
 
 namespace Antd {
     public class TMP {
@@ -75,10 +78,30 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Post["/post-collectd"] = x => {
+            Post["/post-collectd/old"] = x => {
                 var collectdBody = Request.Body.ReadAsString();
                 var listCollectdLog = CollectdRepo.ImportCollectdData(collectdBody);
-                Console.WriteLine($"{listCollectdLog.Count} collectd entries");
+                //Console.WriteLine($"{listCollectdLog.Count} collectd entries");
+                return Response.AsJson(true);
+            };
+
+            Post["/post-collectd"] = x => {
+                //ho gli aggiornamenti in formato json
+                var collectdBody = Request.Body.ReadAsString();
+                //devo usare signalr per aggiornare il grafico
+                //passando nuovi dati allo script nella view (es, coordinate x-y)
+                int X = new Random().Next(0, 100);
+                int Y = new Random().Next(0, 100);
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
+                hubContext.Clients.All.getPointCoordinates(X, Y);
+                return Response.AsJson(true);
+            };
+
+            Get["/post-collectd"] = x => {
+                int X = new Random().Next(0, 100);
+                int Y = new Random().Next(0, 100);
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
+                hubContext.Clients.All.getPointCoordinates(X, Y);
                 return Response.AsJson(true);
             };
         }

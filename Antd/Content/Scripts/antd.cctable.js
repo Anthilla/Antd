@@ -308,7 +308,7 @@ $(document).ready(function () {
     $.when(
         LoadEtcConfs()
     ).then(
-        console.log('.')
+        //console.log('.')
     );
 });
 

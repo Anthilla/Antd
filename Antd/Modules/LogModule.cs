@@ -38,7 +38,7 @@ namespace Antd {
     public class LogModule : NancyModule {
         public LogModule()
             : base("/log") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
@@ -48,7 +48,12 @@ namespace Antd {
 
             Get["/collectd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.COLLECTD = CollectdRepo.GetLast();
+                //vmod.COLLECTD = CollectdRepo.GetLast();
+                return View["_page-log-collectd", vmod];
+            };
+
+            Get["/collectd/data"] = x => {
+                dynamic vmod = new ExpandoObject();
                 return View["_page-log-collectd", vmod];
             };
         }
