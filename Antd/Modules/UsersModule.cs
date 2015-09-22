@@ -39,7 +39,7 @@ namespace Antd {
 
         public UsersModule()
             : base("/users") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

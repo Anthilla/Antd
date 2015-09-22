@@ -46,16 +46,11 @@ namespace antdlib.Users {
         private static string FILEPWD = Mount.SetFILESPath(filePwd);
 
         public static void SetReady() {
-            //Terminal.Execute($"cp {file} {FILE}");
-            ConsoleLogger.Warn($"Copying files:");
             if (!File.Exists(FILE)) {
-                ConsoleLogger.Warn($"{file} -> {FILE}:");
                 File.Copy(file, FILE, true);
             }
             Mount.File(file);
-            //Terminal.Execute($"cp {filePwd} {FILEPWD}");
             if (!File.Exists(FILEPWD)) {
-                ConsoleLogger.Warn($"{filePwd} -> {FILEPWD}:");
                 File.Copy(filePwd, FILEPWD, true);
             }
             Mount.File(filePwd);
@@ -73,14 +68,14 @@ namespace antdlib.Users {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<UserModel>() { };
             if (File.Exists(file) && File.Exists(filePwd)) {
-                var usersString = FileSystem.ReadFile(file);
-                var users = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
-                var passwdUserString = FileSystem.ReadFile(filePwd);
-                var passwdUsers = usersString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+                var usersString = Terminal.Execute($"cat {file}");
+                var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var passwdUserString = Terminal.Execute($"cat {filePwd}");
+                var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 foreach (var user in users) {
                     var mu = MapUser(user);
                     var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
-                    if (pwdstring.Length > 0) {
+                    if (pwdstring.Length > 0 && pwdstring != null) {
                         var mup = AddUserInfoFromPasswd(mu, pwdstring);
                         mu = mup;
                     }
@@ -92,9 +87,9 @@ namespace antdlib.Users {
 
         private static UserModel MapUser(string userString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var userInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            var userInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
             UserModel user = new UserModel() { };
-            if (userInfo.Length > 1) {
+            if (userInfo.Length > 8) {
                 user.Guid = Guid.NewGuid().ToString();
                 user.Alias = userInfo[0];
                 user.Email = null;
@@ -112,8 +107,8 @@ namespace antdlib.Users {
 
         private static UserModel AddUserInfoFromPasswd(UserModel user, string userString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var userPasswdInfo = userString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
-            if (userPasswdInfo.Length > 0) {
+            var userPasswdInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
+            if (userPasswdInfo.Length > 6) {
                 user.UID = userPasswdInfo[2];
                 user.GroupID = userPasswdInfo[3];
                 user.Info = userPasswdInfo[4];
@@ -126,9 +121,8 @@ namespace antdlib.Users {
         private static SystemUserPassword MapPassword(string passwdString) {
             Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray();
-            ;
             SystemUserPassword passwd = new SystemUserPassword() { };
-            if (passwdInfo.Length > 0) {
+            if (passwdInfo.Length > 2) {
                 passwd.Type = passwdInfo[0];
                 passwd.Salt = passwdInfo[1];
                 passwd.Result = passwdInfo[2];

@@ -68,39 +68,28 @@ namespace antdlib.MountPoint {
                 }
             }
             ConsoleLogger.Log("  Checking current mounts and directories status:");
-            //todo chk qui
             CheckCurrentStatus();
             var directoryMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.Directory).ToArray();
             var y = (directoryMounts.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"     Mounting {directoryMounts.Length} director{y}:");
-            ConsoleLogger.Warn("START DEBUG");
             for (int i = 0; i < directoryMounts.Length; i++) {
                 var dir = directoryMounts[i].Path.Replace("\\", "");
-                ConsoleLogger.Warn(dir);
                 var DIR = SetDIRSPath(dir);
-                ConsoleLogger.Warn(DIR);
-                ConsoleLogger.Warn($"Create directory {dir}");
                 Directory.CreateDirectory(dir);
-                ConsoleLogger.Warn($"Create directory {DIR}");
                 Directory.CreateDirectory(DIR);
                 ConsoleLogger.Info($"         {DIR} -> {dir}");
                 if (IsAlreadyMounted(dir) == false) {
                     SetBind(DIR, dir);
                 }
             }
-            ConsoleLogger.Warn("END DEBUG");
 
             var fileMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.File).ToArray();
             var s = (fileMounts.Length == 1) ? "" : "s";
             ConsoleLogger.Log($"     Mounting {fileMounts.Length} file{s}:");
-            ConsoleLogger.Warn("START DEBUG");
             for (int i = 0; i < fileMounts.Length; i++) {
                 var file = fileMounts[i].Path.Replace("\\", "");
-                ConsoleLogger.Warn(file);
                 var FILE = SetFILESPath(file);
-                ConsoleLogger.Warn(FILE);
                 if (!System.IO.File.Exists(FILE)) {
-                    ConsoleLogger.Warn($"Create file: {FILE}");
                     System.IO.File.Copy(file, FILE);
                 }
                 ConsoleLogger.Info($"         {FILE} -> {file}");
@@ -108,7 +97,6 @@ namespace antdlib.MountPoint {
                     SetBind(FILE, file);
                 }
             }
-            ConsoleLogger.Warn("END DEBUG");
 
             ConsoleLogger.Log($"     Checking detected directories status:");
             for (int i = 0; i < directoryMounts.Length; i++) {
@@ -227,12 +215,12 @@ namespace antdlib.MountPoint {
 
         private static void SetBind(string source, string destination) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            ConsoleLogger.Warn($"Check if {source} is already mounted...");
-            if (IsAlreadyMounted(source) == true) {
-                ConsoleLogger.Warn($"{source} is already mounted!");
+            ConsoleLogger.Log($"    Check if {source} is already mounted...");
+            if (IsAlreadyMounted(source, destination) == true) {
+                ConsoleLogger.Log($"     {source} is already mounted!");
             }
             else {
-                ConsoleLogger.Warn($"Mounting: {source}");
+                ConsoleLogger.Log($"      Mounting: {source}");
                 Terminal.Execute($"mount -o bind {source} {destination}");
             }
         }
@@ -257,6 +245,15 @@ namespace antdlib.MountPoint {
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return (df.Length > 0 || pm.Length > 0) ? true : false;
+        }
+
+        private static bool IsAlreadyMounted(string source, string destination) {
+            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
+            var Sdf = Terminal.Execute($"df | grep {source}");
+            var Spm = Terminal.Execute($"cat /proc/mounts | grep {source}");
+            var Ddf = Terminal.Execute($"df | grep {destination}");
+            var Dpm = Terminal.Execute($"cat /proc/mounts | grep {destination}");
+            return (Sdf.Length > 0 || Spm.Length > 0 || Ddf.Length > 0 || Dpm.Length > 0) ? true : false;
         }
 
         public static string SetFILESPath(string source) {
