@@ -51,6 +51,8 @@ namespace antdlib.MountPoint {
         public string Options { get; set; } = "";
 
         public HashSet<string> AssociatedUnits { get; set; } = new HashSet<string>() { };
+
+        public MountEntity MountEntity { get; set; }
     }
 
     public enum MountStatus : byte {
@@ -66,6 +68,12 @@ namespace antdlib.MountPoint {
     public enum MountContext : byte {
         Core = 1,
         External = 2,
+        Other = 99
+    }
+
+    public enum MountEntity : byte {
+        Directory = 1,
+        File = 2,
         Other = 99
     }
 }

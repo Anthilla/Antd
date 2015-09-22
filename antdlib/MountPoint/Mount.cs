@@ -64,31 +64,59 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log("    No mounts information found...");
                 ConsoleLogger.Log("    I will load my default values!");
                 for (int i = 0; i < defaultDirectories.Length; i++) {
-                    MountRepository.Create(defaultDirectories[i], MountContext.Core);
+                    MountRepository.Create(defaultDirectories[i], MountContext.Core, MountEntity.Directory);
                 }
             }
             ConsoleLogger.Log("  Checking current mounts and directories status:");
+            //todo chk qui
             CheckCurrentStatus();
-            var mounts = MountRepository.Get();
-            var y = (mounts.Length == 1) ? "y" : "ies";
-            ConsoleLogger.Log($"     Mounting {mounts.Length} director{y}:");
-            for (int i = 0; i < mounts.Length; i++) {
-                var dir = mounts[i].Path.Replace("\\", "");
+            var directoryMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.Directory).ToArray();
+            var y = (directoryMounts.Length == 1) ? "y" : "ies";
+            ConsoleLogger.Log($"     Mounting {directoryMounts.Length} director{y}:");
+            ConsoleLogger.Warn("START DEBUG");
+            for (int i = 0; i < directoryMounts.Length; i++) {
+                var dir = directoryMounts[i].Path.Replace("\\", "");
+                ConsoleLogger.Warn(dir);
                 var DIR = SetDIRSPath(dir);
+                ConsoleLogger.Warn(DIR);
+                ConsoleLogger.Warn($"Create directory {dir}");
                 Directory.CreateDirectory(dir);
+                ConsoleLogger.Warn($"Create directory {DIR}");
                 Directory.CreateDirectory(DIR);
                 ConsoleLogger.Info($"         {DIR} -> {dir}");
                 if (IsAlreadyMounted(dir) == false) {
                     SetBind(DIR, dir);
                 }
             }
+            ConsoleLogger.Warn("END DEBUG");
+
+            var fileMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.File).ToArray();
+            var s = (fileMounts.Length == 1) ? "" : "s";
+            ConsoleLogger.Log($"     Mounting {fileMounts.Length} file{s}:");
+            ConsoleLogger.Warn("START DEBUG");
+            for (int i = 0; i < fileMounts.Length; i++) {
+                var file = fileMounts[i].Path.Replace("\\", "");
+                ConsoleLogger.Warn(file);
+                var FILE = SetFILESPath(file);
+                ConsoleLogger.Warn(FILE);
+                if (!System.IO.File.Exists(FILE)) {
+                    ConsoleLogger.Warn($"Create file: {FILE}");
+                    System.IO.File.Copy(file, FILE);
+                }
+                ConsoleLogger.Info($"         {FILE} -> {file}");
+                if (IsAlreadyMounted(file) == false) {
+                    SetBind(FILE, file);
+                }
+            }
+            ConsoleLogger.Warn("END DEBUG");
+
             ConsoleLogger.Log($"     Checking detected directories status:");
-            for (int i = 0; i < mounts.Length; i++) {
-                CheckMount(mounts[i].Path);
+            for (int i = 0; i < directoryMounts.Length; i++) {
+                CheckMount(directoryMounts[i].Path);
             }
             ConsoleLogger.Log($"     Restartng associated systemd services:");
-            for (int i = 0; i < mounts.Length; i++) {
-                var service = mounts[i].AssociatedUnits;
+            for (int i = 0; i < directoryMounts.Length; i++) {
+                var service = directoryMounts[i].AssociatedUnits;
                 if (service.Count > 0) {
                     foreach (var srvc in service) {
                         Terminal.Execute($"systemctl restart {srvc}");
@@ -107,7 +135,19 @@ namespace antdlib.MountPoint {
                 ConsoleLogger.Log($"      {directories[i]} found, should be mounted under {realPath}");
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
-                    MountRepository.Create(realPath, MountContext.External);
+                    MountRepository.Create(realPath, MountContext.External, MountEntity.Directory);
+                }
+            }
+
+            var files = Directory.EnumerateDirectories(Folder.Dirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            var s = (files.Length == 1) ? "" : "s";
+            ConsoleLogger.Log($"      {files.Length} file{s} found in {Folder.Dirs}");
+            for (int i = 0; i < files.Length; i++) {
+                var realPath = GetFILESPath(files[i]);
+                ConsoleLogger.Log($"      {files[i]} found, should be mounted under {realPath}");
+                var mount = MountRepository.Get(realPath);
+                if (mount == null) {
+                    MountRepository.Create(realPath, MountContext.External, MountEntity.File);
                 }
             }
         }
@@ -125,7 +165,7 @@ namespace antdlib.MountPoint {
 
         public static void Dir(string directory) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            MountRepository.Create(directory, MountContext.External);
+            MountRepository.Create(directory, MountContext.External, MountEntity.Directory);
             var DIR = SetDIRSPath(directory);
             SetBind(DIR, directory);
             Check();
@@ -133,7 +173,7 @@ namespace antdlib.MountPoint {
 
         public static void File(string file) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            MountRepository.Create(file, MountContext.External);
+            MountRepository.Create(file, MountContext.External, MountEntity.File);
             var FILE = SetFILESPath(file);
             SetBind(FILE, file);
         }

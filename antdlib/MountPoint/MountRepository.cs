@@ -70,7 +70,7 @@ namespace antdlib.MountPoint {
         }
 
 
-        public static MountModel Create(string path, MountContext context) {
+        public static MountModel Create(string path, MountContext context, MountEntity entity) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var get = Get(path);
             var mntContext = (get == null) ? context : get.MountContext;
@@ -83,6 +83,7 @@ namespace antdlib.MountPoint {
                 Guid = Guid.NewGuid().ToString(),
                 DFPTimestamp = Timestamp.Now,
                 MountContext = mntContext,
+                MountEntity = entity,
                 Path = path
             };
             DeNSo.Session.New.Set(mount);
