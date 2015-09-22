@@ -60,7 +60,7 @@ namespace antdlib.Users {
             var list = new List<GroupModel>() { };
             if (File.Exists(file)) {
                 var groupsString = FileSystem.ReadFile(file);
-                var groups = groupsString.Split(new String[] { @"\n" }, StringSplitOptions.None).ToArray();
+                var groups = groupsString.Split(new String[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
                 foreach (var group in groups) {
                     var mu = MapGroup(group);
                     list.Add(mu);
@@ -71,9 +71,9 @@ namespace antdlib.Users {
 
         private static GroupModel MapGroup(string groupString) {
             Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
-            var groupInfo = groupString.Split(new String[] { @":" }, StringSplitOptions.None).ToArray();
+            var groupInfo = groupString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
             GroupModel group = new GroupModel() { };
-            if (groupInfo.Length > 1) {
+            if (groupInfo.Length > 3) {
                 group.Guid = Guid.NewGuid().ToString();
                 group.Alias = groupInfo[0];
                 group.Password = groupInfo[1];
