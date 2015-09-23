@@ -69,15 +69,6 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Post["/page"] = x => {
-                var o = (string)Request.Form.Text;
-                var arr = o.Split(new String[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                foreach (var a in arr) {
-                    Console.WriteLine(a);
-                }
-                return View["page-test"];
-            };
-
             Post["/post-collectd/old"] = x => {
                 var collectdBody = Request.Body.ReadAsString();
                 var listCollectdLog = CollectdRepo.ImportCollectdData(collectdBody);
@@ -89,11 +80,8 @@ namespace Antd {
                 //ho gli aggiornamenti in formato json
                 var collectdBody = Request.Body.ReadAsString();
                 //devo usare signalr per aggiornare il grafico
-                //passando nuovi dati allo script nella view (es, coordinate x-y)
-                int X = new Random().Next(0, 100);
-                int Y = new Random().Next(0, 100);
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
-                hubContext.Clients.All.getPointCoordinates(X, Y);
+                hubContext.Clients.All.getCollectdRefresh(collectdBody);
                 return Response.AsJson(true);
             };
 

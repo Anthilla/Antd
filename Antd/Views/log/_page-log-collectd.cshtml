@@ -35,183 +35,216 @@
 }
 
 @section MainContent {
-    <div style="width: 100%; height: 400px;" class="bg-anthilla-gray"></div>
-    <hr />
-    <svg id="visualisation" width="1000" height="500"></svg>
-    <hr />
-    <p id="connection_message"></p>
-    <div id="demo"></div>
-    <input id="add-data" type="button" value="add" />
-    <hr />
-    <ul id="messages" class="fg-white">
-        <li>Data:</li>
-    </ul>
+    <div id="CollectdDataContainer" style="width: 100%; height: 500px; overflow: scroll !important;">
+        <table class="table">
+            <tbody id="CollectdData"></tbody>
+        </table>
+    </div>
+
+    @*<div style="width: 100%; height: 400px;" class="bg-anthilla-gray"></div>
+        <hr />
+        <svg id="visualisation" width="1000" height="500"></svg>
+        <hr />
+        <p id="connection_message"></p>
+        <div id="demo"></div>
+        <input id="add-data" type="button" value="add" />
+        <hr />
+        <ul id="messages" class="fg-white">
+            <li>Data:</li>
+        </ul>*@
 }
 
 @section Scripts {
     <script type="text/javascript">
-        JSONData = [
-  { "id": 3, "created_at": "Sun May 05 2013", "amount": 12000 },
-  { "id": 1, "created_at": "Mon May 13 2013", "amount": 2000 },
-  { "id": 2, "created_at": "Thu Jun 06 2013", "amount": 17000 },
-  { "id": 4, "created_at": "Thu May 09 2013", "amount": 15000 },
-  { "id": 5, "created_at": "Mon Jul 01 2013", "amount": 16000 }
-        ];
 
-        InitChart();
-
-        function InitChart() {
-
-            var lineData = [{
-                'x': 1,
-                'y': 5
-            }, {
-                'x': 20,
-                'y': 20
-            }, {
-                'x': 40,
-                'y': 10
-            }, {
-                'x': 60,
-                'y': 40
-            }, {
-                'x': 80,
-                'y': 5
-            }, {
-                'x': 100,
-                'y': 60
-            }];
-
-            var vis = d3.select("#visualisation"),
-              WIDTH = 1000,
-              HEIGHT = 500,
-              MARGINS = {
-                  top: 20,
-                  right: 20,
-                  bottom: 20,
-                  left: 50
-              },
-              xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function (d) {
-                  return d.x;
-              }),
-                d3.max(lineData, function (d) {
-                    return d.x;
+        $(function () {
+            var connection = $.hubConnection();
+            var proxy = connection.createHubProxy('CollectdHub');
+            connection.start()
+                .done(function () {
+                    console.log('connection done!');
                 })
-              ]),
+                .fail(function () {
+                    console.log('connection failed!');
+                });
 
-              yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function (d) {
-                  return d.y;
-              }),
-                d3.max(lineData, function (d) {
-                    return d.y;
-                })
-              ]),
-
-              xAxis = d3.svg.axis()
-                .scale(xRange)
-                .tickSize(5)
-                .tickSubdivide(true),
-
-              yAxis = d3.svg.axis()
-                .scale(yRange)
-                .tickSize(5)
-                .orient("left")
-                .tickSubdivide(true);
-
-
-            vis.append("svg:g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-              .call(xAxis);
-
-            vis.append("svg:g")
-              .attr("class", "y axis")
-              .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-              .call(yAxis);
-
-            var lineFunc = d3.svg.line()
-            .x(function (d) {
-                return xRange(d.x);
-            })
-            .y(function (d) {
-                return yRange(d.y);
-            })
-            .interpolate('linear');
-
-            vis.append("svg:path")
-              .attr("d", lineFunc(lineData))
-              .attr("stroke", "blue")
-              .attr("stroke-width", 2)
-              .attr("fill", "none");
-
-        }
-
-
-        (function _collectd_() {
-            var data = JSONData.slice()
-            var format = d3.time.format("%a %b %d %Y")
-            var amountFn = function (d) { return d.amount }
-            var dateFn = function (d) { return format.parse(d.created_at) }
-
-            var x = d3.time.scale()
-              .range([10, 280])
-              .domain(d3.extent(data, dateFn))
-
-            var y = d3.scale.linear()
-              .range([180, 10])
-              .domain(d3.extent(data, amountFn))
-
-            var svg = d3.select("#demo").append("svg:svg")
-            .attr("width", 300)
-            .attr("height", 200)
-
-            var refreshGraph = function () {
-                svg.selectAll("circle").data(data).enter()
-                 .append("svg:circle")
-                 .attr("r", 4)
-                 .attr("cx", function (d) { return x(dateFn(d)) })
-                 .attr("cy", function (d) { return y(amountFn(d)) })
-            }
-
-            d3.selectAll("#add-data").on("click", AddRandomValue(1, 1))
-
-            $(function () {
-                var connection = $.hubConnection();
-                var proxy = connection.createHubProxy('CollectdHub');
-                connection.start()
-                    .done(function () {
-                        console.log('connection done!');
-                    })
-                    .fail(function () {
-                        console.log('connection failed!');
-                    });
-
-                proxy.on('getPointCoordinates', function (x, y) {
-                    AddRandomValue(x, y);
-                    $('#messages').append('<li>' + x + ';' + y + '</li>');
+            proxy.on('getCollectdRefresh', function (data) {
+                $.each(data, function (value) {
+                    var container = $('#CollectdData');
+                    var row = '<tr>' +
+                        '<td><p>' + value.type + '-' + value.type_instance + '</p></td>' +
+                        '<td><p>' + value.plugin + '-' + value.plugin_instance + '</p></td>' +
+                        '</tr>';
+                    container.append(row);
                 });
             });
+        });
 
-            function AddRandomValue(sx, sy) {
-                console.log(sx);
-                console.log(sy);
-                var start = d3.min(data, dateFn)
-                var end = d3.max(data, dateFn)
-                var time = start.getTime() + Math.random() * (end.getTime() - start.getTime())
-                var date = new Date(time)
+        //      JSONData = [
+        //{ "id": 3, "created_at": "Sun May 05 2013", "amount": 12000 },
+        //{ "id": 1, "created_at": "Mon May 13 2013", "amount": 2000 },
+        //{ "id": 2, "created_at": "Thu Jun 06 2013", "amount": 17000 },
+        //{ "id": 4, "created_at": "Thu May 09 2013", "amount": 15000 },
+        //{ "id": 5, "created_at": "Mon Jul 01 2013", "amount": 16000 }
+        //      ];
 
-                obj = {
-                    'id': Math.floor(Math.random() * 70),
-                    'amount': Math.floor(1000 + Math.random() * 20001),
-                    'created_at': date.toDateString()
-                }
-                data.push(obj)
-                refreshGraph()
-            }
+        //      InitChart();
 
-            refreshGraph()
+        //      function InitChart() {
 
-        })();
+        //          var lineData = [{
+        //              'x': 1,
+        //              'y': 5
+        //          }, {
+        //              'x': 20,
+        //              'y': 20
+        //          }, {
+        //              'x': 40,
+        //              'y': 10
+        //          }, {
+        //              'x': 60,
+        //              'y': 40
+        //          }, {
+        //              'x': 80,
+        //              'y': 5
+        //          }, {
+        //              'x': 100,
+        //              'y': 60
+        //          }];
+
+        //          var vis = d3.select("#visualisation"),
+        //            WIDTH = 1000,
+        //            HEIGHT = 500,
+        //            MARGINS = {
+        //                top: 20,
+        //                right: 20,
+        //                bottom: 20,
+        //                left: 50
+        //            },
+        //            xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function (d) {
+        //                return d.x;
+        //            }),
+        //              d3.max(lineData, function (d) {
+        //                  return d.x;
+        //              })
+        //            ]),
+
+        //            yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function (d) {
+        //                return d.y;
+        //            }),
+        //              d3.max(lineData, function (d) {
+        //                  return d.y;
+        //              })
+        //            ]),
+
+        //            xAxis = d3.svg.axis()
+        //              .scale(xRange)
+        //              .tickSize(5)
+        //              .tickSubdivide(true),
+
+        //            yAxis = d3.svg.axis()
+        //              .scale(yRange)
+        //              .tickSize(5)
+        //              .orient("left")
+        //              .tickSubdivide(true);
+
+
+        //          vis.append("svg:g")
+        //            .attr("class", "x axis")
+        //            .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+        //            .call(xAxis);
+
+        //          vis.append("svg:g")
+        //            .attr("class", "y axis")
+        //            .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+        //            .call(yAxis);
+
+        //          var lineFunc = d3.svg.line()
+        //          .x(function (d) {
+        //              return xRange(d.x);
+        //          })
+        //          .y(function (d) {
+        //              return yRange(d.y);
+        //          })
+        //          .interpolate('linear');
+
+        //          vis.append("svg:path")
+        //            .attr("d", lineFunc(lineData))
+        //            .attr("stroke", "blue")
+        //            .attr("stroke-width", 2)
+        //            .attr("fill", "none");
+
+        //      }
+
+
+        //      (function _collectd_() {
+        //          var data = JSONData.slice()
+        //          var format = d3.time.format("%a %b %d %Y")
+        //          var amountFn = function (d) { return d.amount }
+        //          var dateFn = function (d) { return format.parse(d.created_at) }
+
+        //          var x = d3.time.scale()
+        //            .range([10, 280])
+        //            .domain(d3.extent(data, dateFn))
+
+        //          var y = d3.scale.linear()
+        //            .range([180, 10])
+        //            .domain(d3.extent(data, amountFn))
+
+        //          var svg = d3.select("#demo").append("svg:svg")
+        //          .attr("width", 300)
+        //          .attr("height", 200)
+
+        //          var refreshGraph = function () {
+        //              svg.selectAll("circle").data(data).enter()
+        //               .append("svg:circle")
+        //               .attr("r", 4)
+        //               .attr("cx", function (d) { return x(dateFn(d)) })
+        //               .attr("cy", function (d) { return y(amountFn(d)) })
+        //          }
+
+        //          d3.selectAll("#add-data").on("click", AddRandomValue(1, 1))
+
+        //          $(function () {
+        //              var connection = $.hubConnection();
+        //              var proxy = connection.createHubProxy('CollectdHub');
+        //              connection.start()
+        //                  .done(function () {
+        //                      console.log('connection done!');
+        //                  })
+        //                  .fail(function () {
+        //                      console.log('connection failed!');
+        //                  });
+
+        //              proxy.on('getPointCoordinates', function (x, y) {
+        //                  AddRandomValue(x, y);
+        //                  $('#messages').append('<li>' + x + ';' + y + '</li>');
+        //              });
+        //          });
+
+        //          function AddRandomValue(sx, sy) {
+        //              console.log(sx);
+        //              console.log(sy);
+        //              var start = d3.min(data, dateFn)
+        //              var end = d3.max(data, dateFn)
+        //              var time = start.getTime() + Math.random() * (end.getTime() - start.getTime())
+        //              var date = new Date(time)
+
+        //              obj = {
+        //                  'id': Math.floor(Math.random() * 70),
+        //                  'amount': Math.floor(1000 + Math.random() * 20001),
+        //                  'created_at': date.toDateString()
+        //              }
+        //              //aggiunge un oggetto all'insieme di dati e refresha il grafico tenendo conto di quel nuovo insieme di dati
+        //              data.push(obj)
+        //              refreshGraph()
+        //          }
+
+        //          refreshGraph()
+
+        //      })();
+
+
 
     </script>
 }
