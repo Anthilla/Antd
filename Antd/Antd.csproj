@@ -233,81 +233,81 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Resources\applicative.target.wants\antd-launcher.service">
+    <Content Include="Resources\applicative.target.wants\antd-launcher.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\antd-prepare.service">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\antd-prepare.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\antdsh-launcher.service">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\antdsh-launcher.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\antdsh-prepare.service">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\antdsh-prepare.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\framework-antd.mount">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\framework-antd.mount">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\framework-antdsh.mount">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\framework-antdsh.mount">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\mnt-cdrom.mount">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\mnt-cdrom.mount">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\applicative.target.wants\sshd-relauncher.service">
+    </Content>
+    <Content Include="Resources\applicative.target.wants\sshd-relauncher.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\dhcpd.leases">
+    </Content>
+    <Content Include="Resources\dhcpd.leases">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\moduli">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\moduli">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\sshd_config">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\sshd_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_config">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_dsa_key">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_dsa_key">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_dsa_key.pub">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_dsa_key.pub">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key.pub">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key.pub">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key.pub">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key.pub">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_rsa_key">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_rsa_key">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\DIR_etc_ssh\ssh_host_rsa_key.pub">
+    </Content>
+    <Content Include="Resources\DIR_etc_ssh\ssh_host_rsa_key.pub">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\FILE_etc_collectd.conf">
+    </Content>
+    <Content Include="Resources\FILE_etc_collectd.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\FILE_etc_systemd_journald.conf">
+    </Content>
+    <Content Include="Resources\FILE_etc_systemd_journald.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\squashfs.sh">
+    </Content>
+    <Content Include="Resources\squashfs.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="NoVnc\Orbitron700.ttf">
+    </Content>
+    <Content Include="NoVnc\Orbitron700.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="NoVnc\Orbitron700.woff">
+    </Content>
+    <Content Include="NoVnc\Orbitron700.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Views\apps\page-apps-list.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -718,16 +718,28 @@
     <Content Include="NoVnc\images\tab.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NoVnc\prova\vnc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NoVnc\prova\vnc_auto.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="NoVnc\vnc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NoVnc\vnc_auto.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\VT100.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\web-socket-js\swfobject.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\web-socket-js\WebSocketMain.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\web-socket-js\web_socket.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\wsirc.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NoVnc\wstelnet.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.selectize.js">
@@ -1007,7 +1019,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NoVnc\web-socket-js-project\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\antdlib\antdlib.csproj">
       <Project>{9d55f357-b584-4f81-a2e7-5cbd9e69789c}</Project>

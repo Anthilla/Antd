@@ -9,8 +9,8 @@
 
 var Base64 = {
     /* Convert data (an array of integers) to a Base64 string. */
-    toBase64Table : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='.split(''),
-    base64Pad     : '=',
+    toBase64Table: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='.split(''),
+    base64Pad: '=',
 
     encode: function (data) {
         "use strict";
@@ -20,7 +20,7 @@ var Base64 = {
         var lengthpad = (length % 3);
         // Convert every three bytes to 4 ascii characters.
 
-        for (var i = 0; i < (length - 2); i += 3) {
+        for (var i = 0; i < (length - 2) ; i += 3) {
             result += toBase64Table[data[i] >> 2];
             result += toBase64Table[((data[i] & 0x03) << 4) + (data[i + 1] >> 4)];
             result += toBase64Table[((data[i + 1] & 0x0f) << 2) + (data[i + 2] >> 6)];
@@ -48,21 +48,21 @@ var Base64 = {
 
     /* Convert Base64 data to a string */
     /* jshint -W013 */
-    toBinaryTable : [
-        -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-        -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-        -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,62, -1,-1,-1,63,
-        52,53,54,55, 56,57,58,59, 60,61,-1,-1, -1, 0,-1,-1,
-        -1, 0, 1, 2,  3, 4, 5, 6,  7, 8, 9,10, 11,12,13,14,
-        15,16,17,18, 19,20,21,22, 23,24,25,-1, -1,-1,-1,-1,
-        -1,26,27,28, 29,30,31,32, 33,34,35,36, 37,38,39,40,
-        41,42,43,44, 45,46,47,48, 49,50,51,-1, -1,-1,-1,-1
+    toBinaryTable: [
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, 0, -1, -1,
+        -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+        -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
     ],
     /* jshint +W013 */
 
     decode: function (data, offset) {
         "use strict";
-        offset = typeof(offset) !== 'undefined' ? offset : 0;
+        offset = typeof (offset) !== 'undefined' ? offset : 0;
         var toBinaryTable = Base64.toBinaryTable;
         var base64Pad = Base64.base64Pad;
         var result, result_length;
@@ -85,7 +85,7 @@ var Base64 = {
                 console.error("Illegal character code " + data.charCodeAt(i) + " at position " + i);
                 continue;
             }
-          
+
             // Collect data into leftdata, update bitcount
             leftdata = (leftdata << 6) | c;
             leftbits += 6;

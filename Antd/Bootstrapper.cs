@@ -52,6 +52,7 @@ namespace Antd {
                 StaticContentConventionBuilder.AddDirectory("Scripts", @"/Scripts/")
                 );
 
+            //per novnc
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("include", @"/NoVnc/")
                 );
@@ -59,10 +60,7 @@ namespace Antd {
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("images", @"/NoVnc/images/")
                 );
-
-            conv.StaticContentsConventions.Add(
-           StaticContentConventionBuilder.AddDirectory("", @"/NoVnc/prova/")
-           );
+            //per novnc
 
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("Fonts", @"/Fonts/")
