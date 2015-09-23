@@ -57,20 +57,21 @@
                 $.each(list, function (i, data) {
                     var container = $('#CollectdData');
                     var row = '<tr><td style="width: 40%;">';
-                    if (data.plugin.length > 0) {
-                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.plugin + '</p>';
+                    if (data.Plugin.length > 0) {
+                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.Plugin + '</p>';
                     }
-                    if (data.plugin_instance.length > 0) {
-                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.plugin_instance + '</p>';
+                    if (data.PluginInstance.length > 0) {
+                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.PluginInstance + '</p>';
                     }
-                    if (data.type.length > 0) {
-                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.type + '</p>';
+                    if (data.Type.length > 0) {
+                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.Type + '</p>';
                     }
-                    if (data.type_instance.length > 0) {
-                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.type_instance + '</p>';
+                    if (data.TypeInstance.length > 0) {
+                        row += '<p style="padding: 4px 10px; margin-right: 5px; display: inline-block !important; " class="bg-anthilla-violet">' + data.TypeInstance + '</p>';
                     }
                     row += '</td>';
-                    row += '<td>' + data.values + '</td>';
+                    row += '<td>' + data.Values + '</td>';
+                    row += '<td style="width: 100px;">' + data.Date + '</td>';
                     row += '</tr>';
                     container.append(row);
                     container.scrollTop = container.scrollHeight;

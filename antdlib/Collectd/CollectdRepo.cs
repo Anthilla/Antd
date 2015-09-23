@@ -35,9 +35,14 @@ using System.Linq;
 
 namespace antdlib.Collectd {
     public class CollectdRepo {
-        public static List<CollectdItem> MapCollectdData(string json) {
+        public static List<CollectdMappedItem> MapCollectdData(string json) {
+            var list = new List<CollectdMappedItem>() { };
             var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
-            return collectdEntries;
+            foreach (var entry in collectdEntries) {
+                var m = MapItem(entry);
+                list.Add(m);
+            }
+            return list;
         }
 
         public static List<CollectdItem> ImportCollectdData(string json) {
@@ -58,6 +63,19 @@ namespace antdlib.Collectd {
 
         public static CollectdDBModel GetLast() {
             return DeNSo.Session.New.Get<CollectdDBModel>(d => d != null).OrderByDescending(d => d.Timestamp).FirstOrDefault();
+        }
+
+        private static CollectdMappedItem MapItem(CollectdItem model) {
+            var map = new CollectdMappedItem() {
+                Host = model.host,
+                Plugin = model.plugin,
+                PluginInstance = model.plugin_instance,
+                Type = model.type,
+                TypeInstance = model.type_instance,
+                Values = model.values
+            };
+            map.Date = Timestamp.ConvertUnixToDateTime(model.time);
+            return map;
         }
     }
 }

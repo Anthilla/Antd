@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using System;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,12 +28,7 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace antdlib.Collectd {
     public class CollectdItem {
@@ -54,6 +51,22 @@ namespace antdlib.Collectd {
         public string type { get; set; }
 
         public string type_instance { get; set; }
+    }
+
+    public class CollectdMappedItem {
+        public string Host { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public string Plugin { get; set; }
+
+        public string PluginInstance { get; set; }
+
+        public string Type { get; set; }
+
+        public string TypeInstance { get; set; }
+
+        public long[] Values { get; set; }
     }
 
     public class CollectdDBModel {

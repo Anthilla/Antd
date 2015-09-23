@@ -1,0 +1,11 @@
+[Unit]
+Description=External Volume Unit, Application: Antdsh Prepare Service
+Requires=local-fs.target sysinit.target
+Before=framework-antdsh.mount
+
+[Service]
+ExecStart=/bin/mkdir -p /framework/antdsh
+
+[Install]
+WantedBy=applicative.target
+

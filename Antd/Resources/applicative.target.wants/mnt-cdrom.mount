@@ -1,0 +1,13 @@
+[Unit]
+Description=Boot Repo Mount as mnt-cdrom convert to RW
+ConditionPathExists=/mnt/cdrom
+Before=local-fs.target sysinit.target framework-antd.mount
+
+[Mount]
+What=LABEL=BootExt
+Where=/mnt/cdrom
+Options=remount,rw,discard,noatime
+
+[Install]
+WantedBy=multi-user.target
+

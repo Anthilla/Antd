@@ -1,0 +1,11 @@
+[Unit]
+Description=Restart SSH
+Requires=local-fs.target sysinit.target
+After=antd-launcher.service
+
+[Service]
+ExecStart=systemctl restart sshd.service
+
+[Install]
+WantedBy=applicative.target
+

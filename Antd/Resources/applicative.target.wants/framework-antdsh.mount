@@ -1,0 +1,11 @@
+[Unit]
+Description=External Volume Unit, Application: DIR_framework_antdsh Mount 
+ConditionPathExists=/framework/antdsh
+
+[Mount]
+What=/mnt/cdrom/Apps/Anthilla_antdsh/active-version
+Where=/framework/antdsh/
+
+[Install]
+WantedBy=applicative.target
+

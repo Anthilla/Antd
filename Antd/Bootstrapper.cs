@@ -31,6 +31,7 @@ using antdlib.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using Nancy.Diagnostics;
 using Nancy.TinyIoc;
 
@@ -42,6 +43,22 @@ namespace Antd {
             base.ConfigureRequestContainer(container, context);
 
             container.Register<IUserMapper, UserDatabase>();
+        }
+
+        protected override void ConfigureConventions(NancyConventions conv) {
+            base.ConfigureConventions(conv);
+
+            conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("Scripts", @"/Scripts/")
+                );
+
+            conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("Fonts", @"/Fonts/")
+                );
+
+            conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("Resources", @"/Resources/")
+                );
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {

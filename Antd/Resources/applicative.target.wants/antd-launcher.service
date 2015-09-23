@@ -1,0 +1,11 @@
+[Unit]
+Description=External Volume Unit, Application: Antd Launcher Service
+Requires=local-fs.target sysinit.target
+After=framework-antd.mount
+
+[Service]
+ExecStart=/usr/bin/mono /framework/antd/Antd.exe
+
+[Install]
+WantedBy=applicative.target
+

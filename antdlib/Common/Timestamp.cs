@@ -28,15 +28,36 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 
 namespace antdlib {
 
     public class Timestamp {
 
-        private static String Get(string format) {
+        private static string Get(string format) {
             return DateTime.Now.ToString(format);
         }
 
-        public static String Now { get { return Get("yyyyMMddHHmmssfff"); } }
+        public static string Now { get { return Get("yyyyMMddHHmmssfff"); } }
+
+        public static DateTime ConvertTimestampToDateTime(string timestamp) {
+            var date = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+            return date;
+        }
+
+        public static string ConvertDateTimeToTimestamp(DateTime date) {
+            return date.ToString("yyyyMMddHHmmssfff");
+        }
+
+        public static DateTime ConvertUnixToDateTime(double timestamp) {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return epoch.AddSeconds(timestamp);
+        }
+
+        public static double ConvertDateTimeToUnix(DateTime date) {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime();
+            var span = (date.ToLocalTime() - epoch);
+            return span.TotalSeconds;
+        }
     }
 }

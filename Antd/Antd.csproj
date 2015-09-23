@@ -232,7 +232,75 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Scripts\jquery-2.1.4.min.map" />
+    <None Include="Resources\applicative.target.wants\antd-launcher.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\antd-prepare.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\antdsh-launcher.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\antdsh-prepare.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\framework-antd.mount">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\framework-antdsh.mount">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\mnt-cdrom.mount">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\applicative.target.wants\sshd-relauncher.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\dhcpd.leases">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\moduli">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\sshd_config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_dsa_key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_dsa_key.pub">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key.pub">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key.pub">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_rsa_key">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\DIR_etc_ssh\ssh_host_rsa_key.pub">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\FILE_etc_collectd.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\FILE_etc_systemd_journald.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\squashfs.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\apps\page-apps-list.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -568,175 +636,175 @@
     <Content Include="Content\fonts\metroSysIcons.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\antd.selectize.js">
+    <Content Include="Scripts\antd.selectize.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\antd.cctable.js">
+    <Content Include="Scripts\antd.cctable.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\antd.notify.js">
+    <Content Include="Scripts\antd.notify.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\chart\Chart.min.js">
+    <Content Include="Scripts\chart\Chart.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\columnize.js">
+    <Content Include="Scripts\columnize.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\antd.js">
+    <Content Include="Scripts\antd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\d3.min.js">
+    <Content Include="Scripts\d3.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.terminal.min.js">
+    <Content Include="Scripts\jquery.terminal.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\js.cookie.js">
+    <Content Include="Scripts\js.cookie.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-accordion.js">
+    <Content Include="Scripts\metrojs\metro-accordion.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-button-set.js">
+    <Content Include="Scripts\metrojs\metro-button-set.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-calendar.js">
+    <Content Include="Scripts\metrojs\metro-calendar.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-carousel.js">
+    <Content Include="Scripts\metrojs\metro-carousel.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-core.js">
+    <Content Include="Scripts\metrojs\metro-core.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-countdown.js">
+    <Content Include="Scripts\metrojs\metro-countdown.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-date-format.js">
+    <Content Include="Scripts\metrojs\metro-date-format.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-datepicker.js">
+    <Content Include="Scripts\metrojs\metro-datepicker.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-dialog.js">
+    <Content Include="Scripts\metrojs\metro-dialog.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-drag-tile.js">
+    <Content Include="Scripts\metrojs\metro-drag-tile.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-dropdown.js">
+    <Content Include="Scripts\metrojs\metro-dropdown.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-fluentmenu.js">
+    <Content Include="Scripts\metrojs\metro-fluentmenu.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-global.js">
+    <Content Include="Scripts\metrojs\metro-global.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-hint.js">
+    <Content Include="Scripts\metrojs\metro-hint.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-initiator.js">
+    <Content Include="Scripts\metrojs\metro-initiator.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-input-control.js">
+    <Content Include="Scripts\metrojs\metro-input-control.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-listview.js">
+    <Content Include="Scripts\metrojs\metro-listview.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-live-tile.js">
+    <Content Include="Scripts\metrojs\metro-live-tile.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-loader.js">
+    <Content Include="Scripts\metrojs\metro-loader.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-locale.js">
+    <Content Include="Scripts\metrojs\metro-locale.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-notify.js">
+    <Content Include="Scripts\metrojs\metro-notify.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-panel.js">
+    <Content Include="Scripts\metrojs\metro-panel.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-plugin-template.js">
+    <Content Include="Scripts\metrojs\metro-plugin-template.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-progressbar.js">
+    <Content Include="Scripts\metrojs\metro-progressbar.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-pull.js">
+    <Content Include="Scripts\metrojs\metro-pull.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-rating.js">
+    <Content Include="Scripts\metrojs\metro-rating.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-scroll.js">
+    <Content Include="Scripts\metrojs\metro-scroll.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-slider.js">
+    <Content Include="Scripts\metrojs\metro-slider.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-stepper.js">
+    <Content Include="Scripts\metrojs\metro-stepper.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-streamer.js">
+    <Content Include="Scripts\metrojs\metro-streamer.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-tab-control.js">
+    <Content Include="Scripts\metrojs\metro-tab-control.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-table.js">
+    <Content Include="Scripts\metrojs\metro-table.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-tile-transform.js">
+    <Content Include="Scripts\metrojs\metro-tile-transform.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-times.js">
+    <Content Include="Scripts\metrojs\metro-times.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-touch-handler.js">
+    <Content Include="Scripts\metrojs\metro-touch-handler.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-treeview.js">
+    <Content Include="Scripts\metrojs\metro-treeview.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metrojs\metro-wizard.js">
+    <Content Include="Scripts\metrojs\metro-wizard.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jqClock.min.js">
+    <Content Include="Scripts\jqClock.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery-ui-1.11.4.min.js">
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.mousewheel.js">
+    <Content Include="Scripts\jquery.mousewheel.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.ptTimeSelect.js">
+    <Content Include="Scripts\jquery.ptTimeSelect.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.signalR-2.2.0.min.js">
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.timepicker.min.js">
+    <Content Include="Scripts\jquery.timepicker.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.widget.min.js">
+    <Content Include="Scripts\jquery.widget.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery.windowed.min.js">
+    <Content Include="Scripts\jquery.windowed.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\metro.min.js">
+    <Content Include="Scripts\metro.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\selectize.min.js">
+    <Content Include="Scripts\selectize.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\vendor\jquery.ui.widget.js">
+    <Content Include="Scripts\vendor\jquery.ui.widget.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Style\antd.css">
@@ -778,17 +846,12 @@
     <Content Include="Content\Style\windowed.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery-2.1.4.intellisense.js">
+    <Content Include="Scripts\jquery-2.1.4.intellisense.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Scripts\jquery-2.1.4.min.js">
+    <Content Include="Scripts\jquery-2.1.4.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\jquery-2.1.4.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.4.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
