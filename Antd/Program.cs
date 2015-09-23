@@ -76,7 +76,7 @@ namespace Antd {
 
             AntdBoot.StartDatabase();
             AntdBoot.SetMounts();
-            //AntdBoot.SetUsersMount();
+            AntdBoot.SetUsersMount();
             AntdBoot.StartSignalR(app, true);
             AntdBoot.StartNancy(app);
 

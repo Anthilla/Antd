@@ -48,12 +48,6 @@ namespace Antd {
 
             Get["/collectd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.COLLECTD = CollectdRepo.GetLast();
-                return View["_page-log-collectd", vmod];
-            };
-
-            Get["/collectd/data"] = x => {
-                dynamic vmod = new ExpandoObject();
                 return View["_page-log-collectd", vmod];
             };
         }

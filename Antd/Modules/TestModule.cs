@@ -69,19 +69,10 @@ namespace Antd {
                 return View["page-test"];
             };
 
-            Post["/post-collectd/old"] = x => {
-                var collectdBody = Request.Body.ReadAsString();
-                var listCollectdLog = CollectdRepo.ImportCollectdData(collectdBody);
-                //Console.WriteLine($"{listCollectdLog.Count} collectd entries");
-                return Response.AsJson(true);
-            };
-
             Post["/post-collectd"] = x => {
-                //ho gli aggiornamenti in formato json
-                var collectdBody = Request.Body.ReadAsString();
-                //devo usare signalr per aggiornare il grafico
+                var list = CollectdRepo.MapCollectdData(Request.Body.ReadAsString());
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
-                hubContext.Clients.All.getCollectdRefresh(collectdBody);
+                hubContext.Clients.All.getCollectdRefresh(list);
                 return Response.AsJson(true);
             };
 

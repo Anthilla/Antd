@@ -35,6 +35,11 @@ using System.Linq;
 
 namespace antdlib.Collectd {
     public class CollectdRepo {
+        public static List<CollectdItem> MapCollectdData(string json) {
+            var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
+            return collectdEntries;
+        }
+
         public static List<CollectdItem> ImportCollectdData(string json) {
             var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
             var model = new CollectdDBModel() {

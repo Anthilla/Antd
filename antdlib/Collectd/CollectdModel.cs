@@ -34,22 +34,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace antdlib.Collectd {
-    //JSON format
-    //[
-    //  {
-    //    "values": [197141504, 175136768],
-    //    "dstypes": ["counter", "counter"],
-    //    "dsnames": ["read", "write"],
-    //    "time": 1251533299,
-    //    "interval": 10,
-    //    "host": "leeloo.lan.home.verplant.org",
-    //    "plugin": "disk",
-    //    "plugin_instance": "sda",
-    //    "type": "disk_octets",
-    //    "type_instance": ""
-    //  },
-    //  …
-    //]
     public class CollectdItem {
         public long[] values { get; set; }
 
