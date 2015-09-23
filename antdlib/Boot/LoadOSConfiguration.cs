@@ -111,5 +111,31 @@ namespace antdlib.Boot {
             }
             Terminal.Execute("systemctl reload sshd.service");
         }
+
+        public static void LoadWPASupplicant() {
+            var fileName = "FILE_etc_wpa_supplicant_wpa_suplicant.conf";
+            var FILE = $"{Folder.Dirs}/{fileName}";
+            if (!File.Exists(FILE)) {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
+                }
+            }
+            else {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
+                }
+            }
+            if (File.Exists($"{FILE}+")) {
+                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
+                    File.Copy($"{FILE}+", FILE, true);
+                }
+                File.Delete($"{FILE}+");
+            }
+            var realFileName = Mount.GetFILESPath(fileName);
+            if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
+                Mount.File(realFileName);
+            }
+            Terminal.Execute("systemctl restart wpa_supplicant.service");
+        }
     }
 }

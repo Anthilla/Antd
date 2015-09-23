@@ -89,6 +89,8 @@ namespace Antd {
             LoadOSConfiguration.LoadCollectd();
             ConsoleLogger.Log("          load journald");
             LoadOSConfiguration.LoadSystemdJournald();
+            ConsoleLogger.Log("          load wpa-supplicant");
+            LoadOSConfiguration.LoadWPASupplicant();
             ConsoleLogger.Log("    os -> checked");
         }
 
