@@ -53,6 +53,18 @@ namespace Antd {
                 );
 
             conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("include", @"/NoVnc/")
+                );
+
+            conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("images", @"/NoVnc/images/")
+                );
+
+            conv.StaticContentsConventions.Add(
+           StaticContentConventionBuilder.AddDirectory("", @"/NoVnc/prova/")
+           );
+
+            conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("Fonts", @"/Fonts/")
                 );
 

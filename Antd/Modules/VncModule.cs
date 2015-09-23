@@ -26,63 +26,24 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-/// 
 
-using antdlib;
-using antdlib.Boot;
-using Microsoft.Owin.Hosting;
-using Owin;
-using System;
-using System.Threading;
+using Nancy;
+using Nancy.Security;
+using System.Dynamic;
 
 namespace Antd {
 
-    internal static class Program {
+    public class VncModule : NancyModule {
 
-        private static void Main(string[] args) {
-            var startTime = DateTime.Now;
-            Console.Title = "ANTD";
+        public VncModule()
+            : base("/vnc") {
+            //this.RequiresAuthentication();
 
-            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
-            AntdBoot.SetWorkingDirectories();
-            AntdBoot.SetCoreParameters();
-            AntdBoot.InitAuthentication();
+            Get["/"] = x => {
+                dynamic vmod = new ExpandoObject();
 
-            var uri = CoreParametersConfig.GetHostUri();
-            var stop = new ManualResetEvent(false);
-            Console.CancelKeyPress +=
-                (sender, e) => {
-                    Console.WriteLine("^C");
-                    Environment.Exit(1);
-                    stop.Set();
-                    e.Cancel = true;
-                };
-
-            using (WebApp.Start<Startup>(uri)) {
-                ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log("    server url -> {0}", uri);
-
-                ConsoleLogger.Log("antd is running");
-                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
-                stop.WaitOne();
-            }
-        }
-    }
-
-    internal class Startup {
-
-        public void Configuration(IAppBuilder app) {
-            ConsoleLogger.Log("loading core service configuration");
-
-            AntdBoot.StartDatabase();
-            AntdBoot.SetMounts();
-            //AntdBoot.SetUsersMount();
-            AntdBoot.StartSignalR(app, true);
-            AntdBoot.StartNancy(app);
-
-            AntdBoot.StartScheduler(false);
-            AntdBoot.StartDirectoryWatcher(true);
-            AntdBoot.CheckSysctl(false);
+                return View["_page-vnc", vmod];
+            };
         }
     }
 }
