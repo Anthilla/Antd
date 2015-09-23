@@ -29,6 +29,7 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace antdlib {
 
@@ -84,6 +85,16 @@ namespace antdlib {
             foreach (string newPath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)) {
                 File.Copy(newPath, newPath.Replace(source, destination), true);
             }
+        }
+
+        public static bool FilesAreEqual(FileInfo first, FileInfo second) {
+            byte[] firstHash = MD5.Create().ComputeHash(first.OpenRead());
+            byte[] secondHash = MD5.Create().ComputeHash(second.OpenRead());
+            for (int i = 0; i < firstHash.Length; i++) {
+                if (firstHash[i] != secondHash[i])
+                    return false;
+            }
+            return true;
         }
     }
 }

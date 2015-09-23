@@ -260,37 +260,7 @@
     <Content Include="Resources\dhcpd.leases">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\DIR_etc_ssh\moduli">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\sshd_config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_dsa_key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_dsa_key.pub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_ecdsa_key.pub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_ed25519_key.pub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_rsa_key">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DIR_etc_ssh\ssh_host_rsa_key.pub">
+    <Content Include="Resources\sshd_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FILE_etc_collectd.conf">

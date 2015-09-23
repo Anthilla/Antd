@@ -67,7 +67,7 @@ namespace Antd {
                 );
 
             conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("Resources", @"/Resources/")
+                StaticContentConventionBuilder.AddDirectory("repo", @"/Resources/")
                 );
         }
 

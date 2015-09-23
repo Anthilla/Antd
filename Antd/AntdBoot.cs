@@ -81,6 +81,17 @@ namespace Antd {
             ConsoleLogger.Log("    users mount -> checked");
         }
 
+        public static void SetOsConfiguration() {
+            ConsoleLogger.Log("    os -> loading configuration");
+            ConsoleLogger.Log("          load /etc/ssh");
+            LoadOSConfiguration.LoadEtcSSH();
+            ConsoleLogger.Log("          load collectd");
+            LoadOSConfiguration.LoadCollectd();
+            ConsoleLogger.Log("          load journald");
+            LoadOSConfiguration.LoadSystemdJournald();
+            ConsoleLogger.Log("    os -> checked");
+        }
+
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
             ConsoleLogger.Log("    antd core parameters -> loaded");
@@ -102,7 +113,7 @@ namespace Antd {
         }
 
         public static void StartScheduler(bool loadFromDatabase) {
-            //JobScheduler.Start(loadFromDatabase);
+            JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("    scheduler -> loaded");
         }
 

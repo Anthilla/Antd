@@ -240,14 +240,14 @@ namespace antdlib.MountPoint {
             return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
         }
 
-        private static bool IsAlreadyMounted(string directory) {
+        public static bool IsAlreadyMounted(string directory) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return (df.Length > 0 || pm.Length > 0) ? true : false;
         }
 
-        private static bool IsAlreadyMounted(string source, string destination) {
+        public static bool IsAlreadyMounted(string source, string destination) {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var Sdf = Terminal.Execute($"df | grep {source}");
             var Spm = Terminal.Execute($"cat /proc/mounts | grep {source}");
