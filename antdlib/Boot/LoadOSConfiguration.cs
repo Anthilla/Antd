@@ -140,6 +140,7 @@ namespace antdlib.Boot {
         }
 
         public static void LoadNetworkAndFirewall() {
+            PreloadNFFiles();
             var netBootType = NetworkConfiguration.BootType;
             if (netBootType == NetworkBootType.Manual) {
                 ConsoleLogger.Log("          load network -> get configuration");
@@ -148,7 +149,6 @@ namespace antdlib.Boot {
             else {
                 ConsoleLogger.Log("          load network -> default configuration");
                 //todo fare metodo anche per default, default == primo avvio
-                //LoadNetworkManual();
             }
         }
 
@@ -200,7 +200,7 @@ namespace antdlib.Boot {
         }
 
         private static void LoadNetworkManual() {
-            PreloadNFFiles();
+            NetworkConfiguration.LoadExistingConfiguration();
         }
     }
 }

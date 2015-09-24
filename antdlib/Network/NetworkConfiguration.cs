@@ -67,41 +67,45 @@ namespace antdlib.Network.Management {
 
         public static NetworkBootType BootType { get { return ReadFileMethod(); } }
 
-        public class NetworkFile {
-            private static string path = $"{Folder.Root}/{Name}";
+        public static void LoadExistingConfiguration() {
+            if (File.Exists(NetworkFile.Name) && File.Exists(FirewallFile.Name)) {
+                Terminal.Execute($"chmod 777 {NetworkFile.Name}");
+                Terminal.Execute($"./{NetworkFile.Name}");
+                Terminal.Execute($"nft -f {FirewallFile.Name}");
+            }
+        }
 
-            public static string Name { get { return "antd.boot.network"; } }
+        public class NetworkFile {
+            public static string Name { get { return $"{Folder.Root}/antd.boot.network"; } }
 
             public static string Content {
                 get {
-                    return (File.Exists(path)) ? FileSystem.ReadFile(path) : "null";
+                    return (File.Exists(Name)) ? FileSystem.ReadFile(Name) : "null";
                 }
             }
 
             public static void Edit(string newText) {
-                if (File.Exists(path)) {
-                    File.Delete(path);
+                if (File.Exists(Name)) {
+                    File.Delete(Name);
                 }
-                FileSystem.WriteFile(path, newText);
+                FileSystem.WriteFile(Name, newText);
             }
         }
 
         public class FirewallFile {
-            private static string path = $"{Folder.Root}/{Name}";
-
-            public static string Name { get { return "antd.boot.firewall"; } }
+            public static string Name { get { return $"{Folder.Root}/antd.boot.firewall"; } }
 
             public static string Content {
                 get {
-                    return (File.Exists(path)) ? FileSystem.ReadFile(path) : "null";
+                    return (File.Exists(Name)) ? FileSystem.ReadFile(Name) : "null";
                 }
             }
 
             public static void Edit(string newText) {
-                if (File.Exists(path)) {
-                    File.Delete(path);
+                if (File.Exists(Name)) {
+                    File.Delete(Name);
                 }
-                FileSystem.WriteFile(path, newText);
+                FileSystem.WriteFile(Name, newText);
             }
         }
     }

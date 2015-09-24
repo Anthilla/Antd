@@ -92,6 +92,7 @@ namespace Antd {
                 NetworkConfiguration.NetworkFile.Edit(networkText);
                 string firewallText = Request.Form.FirewallConfiguration;
                 NetworkConfiguration.FirewallFile.Edit(firewallText);
+                NetworkConfiguration.LoadExistingConfiguration();
                 return Response.AsRedirect("/network");
             };
         }
