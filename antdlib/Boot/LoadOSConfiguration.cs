@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.MountPoint;
+using antdlib.Network.Management;
 using System.IO;
 using System.Net;
 
@@ -136,6 +137,70 @@ namespace antdlib.Boot {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");
+        }
+
+        public static void LoadNetworkAndFirewall() {
+            var netBootType = NetworkConfiguration.BootType;
+            if (netBootType == NetworkBootType.Manual) {
+                ConsoleLogger.Log("          load network -> get configuration");
+                LoadNetworkManual();
+            }
+            else {
+                ConsoleLogger.Log("          load network -> default configuration");
+                //todo fare metodo anche per default, default == primo avvio
+                //LoadNetworkManual();
+            }
+        }
+
+        private static void PreloadNetworkFile() {
+            var fileName = "antd.boot.network";
+            var FILE = $"{Folder.Dirs}/{fileName}";
+            if (!File.Exists(FILE)) {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
+                }
+            }
+            else {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
+                }
+            }
+            if (File.Exists($"{FILE}+")) {
+                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
+                    File.Copy($"{FILE}+", FILE, true);
+                }
+                File.Delete($"{FILE}+");
+            }
+        }
+
+        private static void PreloadFirewallFile() {
+            var fileName = "antd.boot.firewall";
+            var FILE = $"{Folder.Dirs}/{fileName}";
+            if (!File.Exists(FILE)) {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
+                }
+            }
+            else {
+                using (var client = new WebClient()) {
+                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
+                }
+            }
+            if (File.Exists($"{FILE}+")) {
+                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
+                    File.Copy($"{FILE}+", FILE, true);
+                }
+                File.Delete($"{FILE}+");
+            }
+        }
+
+        public static void PreloadNFFiles() {
+            PreloadNetworkFile();
+            PreloadFirewallFile();
+        }
+
+        private static void LoadNetworkManual() {
+            PreloadNFFiles();
         }
     }
 }

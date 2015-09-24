@@ -171,6 +171,7 @@
     <Compile Include="MountPoint\MountLocal.cs" />
     <Compile Include="MountPoint\MountRepository.cs" />
     <Compile Include="MountPoint\DFP.cs" />
+    <Compile Include="Network\NetworkConfiguration.cs" />
     <Compile Include="Network\Network.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

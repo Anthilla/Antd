@@ -54,6 +54,13 @@ namespace antdlib {
         Error = 99
     }
 
+    public enum NetworkBootType : byte {
+        Default = 1,
+        Manual = 2,
+        Networkd = 3,
+        Other = 99
+    }
+
     public class Label {
         public static string Root { get { return "antd_root"; } }
         public static string Port { get { return "antd_port"; } }

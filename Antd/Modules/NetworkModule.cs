@@ -27,6 +27,7 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib;
 using antdlib.CCTable;
 using antdlib.Network.Management;
 using antdlib.Status;
@@ -56,12 +57,42 @@ namespace Antd {
                 string fname = Request.Form.File;
                 string txt = Request.Form.Text;
                 Networkd.CreateCustomUnit(txt, fname);
-                return Response.AsRedirect("/status/networkd");
+                return Response.AsRedirect("/network");
             };
 
             Get["/interface/ipaddr"] = x => {
                 var r = NetworkInterface.All;
                 return Response.AsXml(r);
+            };
+
+            Get["/boot"] = x => {
+                return Response.AsJson(NetworkConfiguration.BootType);
+            };
+
+            Post["/boot"] = x => {
+                string btype = Request.Form.BootType;
+                NetworkBootType type;
+                switch (btype) {
+                    case "manual":
+                        type = NetworkBootType.Manual;
+                        break;
+                    case "networkd":
+                        type = NetworkBootType.Networkd;
+                        break;
+                    default:
+                        type = NetworkBootType.Default;
+                        break;
+                }
+                NetworkConfiguration.WriteFileMethod(type);
+                return Response.AsRedirect("/network");
+            };
+
+            Post["/boot/edit"] = x => {
+                string networkText = Request.Form.NetworkConfiguration;
+                NetworkConfiguration.NetworkFile.Edit(networkText);
+                string firewallText = Request.Form.FirewallConfiguration;
+                NetworkConfiguration.FirewallFile.Edit(firewallText);
+                return Response.AsRedirect("/network");
             };
         }
     }
