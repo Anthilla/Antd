@@ -29,30 +29,13 @@
 
 using antdlib.MountPoint;
 using antdlib.Network.Management;
-using System.IO;
-using System.Net;
 
 namespace antdlib.Boot {
     public class LoadOSConfiguration {
         public static void LoadCollectd() {
             var fileName = "FILE_etc_collectd.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
+            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -63,22 +46,7 @@ namespace antdlib.Boot {
         public static void LoadSystemdJournald() {
             var fileName = "FILE_etc_systemd_journald.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
+            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -87,51 +55,42 @@ namespace antdlib.Boot {
         }
 
         public static void LoadEtcSSH() {
-            var fileName = "sshd_config";
             var dir = "/etc/ssh";
             var DIR = Mount.GetDIRSPath(dir);
-            var FILE = $"{DIR}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
             if (Mount.IsAlreadyMounted(DIR, dir) == false) {
                 Mount.Dir(dir);
             }
+            var fileName = "sshd_config";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "moduli";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_config";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+
+            fileName = "ssh_host_dsa_key";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_dsa_key.pub";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_ecdsa_key";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_ecdsa_key.pub";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_ed25519_key";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_ed25519_key.pub";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_rsa_key";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            fileName = "ssh_host_rsa_key.pub";
+            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+
             Terminal.Execute("systemctl reload sshd.service");
         }
 
         public static void LoadWPASupplicant() {
             var fileName = "FILE_etc_wpa_supplicant_wpa_suplicant.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
+            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -155,43 +114,13 @@ namespace antdlib.Boot {
         private static void PreloadNetworkFile() {
             var fileName = "antd.boot.network";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
+            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
         }
 
         private static void PreloadFirewallFile() {
             var fileName = "antd.boot.firewall";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            if (!File.Exists(FILE)) {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, FILE);
-                }
-            }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile("http://localhost:7777/repo/" + fileName, $"{FILE}+");
-                }
-            }
-            if (File.Exists($"{FILE}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(FILE), new FileInfo($"{FILE}+")) == false) {
-                    File.Copy($"{FILE}+", FILE, true);
-                }
-                File.Delete($"{FILE}+");
-            }
+            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
         }
 
         public static void PreloadNFFiles() {

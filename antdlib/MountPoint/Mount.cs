@@ -155,6 +155,8 @@ namespace antdlib.MountPoint {
             Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             MountRepository.Create(directory, MountContext.External, MountEntity.Directory);
             var DIR = SetDIRSPath(directory);
+            Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(DIR);
             SetBind(DIR, directory);
             Check();
         }

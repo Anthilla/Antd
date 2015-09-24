@@ -29,6 +29,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 
 namespace antdlib {
@@ -95,6 +96,25 @@ namespace antdlib {
                     return false;
             }
             return true;
+        }
+
+        public static void Download(string url, string destination) {
+            if (!File.Exists(destination)) {
+                using (var client = new WebClient()) {
+                    client.DownloadFile(url, destination);
+                }
+            }
+            else {
+                using (var client = new WebClient()) {
+                    client.DownloadFile(url, $"{destination}+");
+                }
+            }
+            if (File.Exists($"{destination}+")) {
+                if (FileSystem.FilesAreEqual(new FileInfo(destination), new FileInfo($"{destination}+")) == false) {
+                    File.Copy($"{destination}+", destination, true);
+                }
+                File.Delete($"{destination}+");
+            }
         }
     }
 }
