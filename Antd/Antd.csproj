@@ -233,32 +233,36 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <Content Include="Resources\dhcpd.leases">
+    <None Include="Resources\dhcpd.leases">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\sshd_config">
+    </None>
+    <None Include="Resources\sshd_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FILE_etc_collectd.conf">
+    </None>
+    <None Include="Resources\FILE_etc_collectd.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FILE_etc_systemd_journald.conf">
+    </None>
+    <None Include="Resources\FILE_etc_systemd_journald.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\squashfs.sh">
+    </None>
+    <None Include="Resources\squashfs.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="NoVnc\Orbitron700.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NoVnc\Orbitron700.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\antd.boot.firewall" />
+    <None Include="Resources\antd.boot.firewall">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\FILE_etc_wpa_supplicant_wpa_suplicant.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\antd.boot.network" />
+    <None Include="Resources\antd.boot.network">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\apps\page-apps-list.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -38,14 +38,16 @@ namespace antdlib {
     public static class ConsoleLogger {
 
         public static void Log(dynamic message, params object[] args) {
-            if (args.Any()) message = String.Format(message, args);
+            if (args.Any())
+                message = String.Format(message, args);
             Console.WriteLine("{0}{1}"
                 , ConsoleTime.GetTime(DateTime.Now)
                 , message);
         }
 
         public static void Info(dynamic message, params object[] args) {
-            if (args.Any()) message = String.Format(message, args);
+            if (args.Any())
+                message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("{0}{1}"
@@ -55,7 +57,8 @@ namespace antdlib {
         }
 
         public static void Success(dynamic message, params object[] args) {
-            if (args.Any()) message = String.Format(message, args);
+            if (args.Any())
+                message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("{0}{1}"
@@ -65,7 +68,8 @@ namespace antdlib {
         }
 
         public static void Warn(dynamic message, params object[] args) {
-            if (args.Any()) message = String.Format(message, args);
+            if (args.Any())
+                message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("{0}Warn: {1}"
@@ -75,7 +79,8 @@ namespace antdlib {
         }
 
         public static void Error(dynamic message, params object[] args) {
-            if (args.Any()) message = String.Format(message, args);
+            if (args.Any())
+                message = String.Format(message, args);
             ConsoleColor currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("{0}Error: {1}"
@@ -83,6 +88,17 @@ namespace antdlib {
                 , message);
             Console.ForegroundColor = currentColor;
             Environment.Exit(-1);
+        }
+
+        public static void Point(string where, string message = "") {
+            //System.Reflection.MethodBase.GetCurrentMethod().Name
+            var currentFG = Console.ForegroundColor;
+            var currentBG = Console.BackgroundColor;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"○○○ {where} ○○○ {message}");
+            Console.ForegroundColor = currentFG;
+            Console.BackgroundColor = currentBG;
         }
     }
 }
