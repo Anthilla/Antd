@@ -19,7 +19,7 @@ ip addr add xx.xx.xx.xx/xx broadcast xx.xx.xx.xx dev ethx
 ``` 
 ip -6 addr add ipv6/64 dev ethx 
 ``` 
-*(should be possible change the netmask for obvious reasons)*
+*(it should be possible to change the netmask for obvious reasons)*
 - Add ipv6 gateway:
 ``` 
 ip -6 route add default via ipv6_gateway dev ethx
@@ -53,7 +53,7 @@ ip addr show ethX
 ``` 
 ip link show
 ``` 
-- Show a interface L1,L2:
+- Show an interface L1,L2:
 ``` 
 ip link show ethX
 ``` 
