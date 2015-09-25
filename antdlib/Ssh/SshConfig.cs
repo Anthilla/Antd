@@ -282,7 +282,6 @@ namespace antdlib.Ssh {
                     DeNSo.Session.New.Set(k);
                     list.Add(k);
                 }
-                Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return list;
             }
 
@@ -291,11 +290,10 @@ namespace antdlib.Ssh {
             }
 
             public static void Generate(string keyName) {
-                Log.Logger.TraceMethod("SSH", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 Terminal.Execute($"ssh-keygen -t rsa -f {dir}/{fileStartsWith}{keyName}{privateEndsWith} -N {Guid.NewGuid().ToString()}");
             }
 
-            public static void SendKey(string host, string keyName, string user = "" ) {
+            public static void SendKey(string host, string keyName, string user = "") {
                 var at = ((user.Length > 0) ? user + "@" : "") + $"{host}";
                 Terminal.Execute($"scp {keyName} {at} ~/.ssh/authorized_keys");
             }

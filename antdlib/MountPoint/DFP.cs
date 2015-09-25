@@ -40,7 +40,6 @@ namespace antdlib.MountPoint {
         /// <param name="directory"></param>
         /// <param name="timestamp"></param>
         public static void Set(string directory, string timestamp) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             try {
                 var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
                 var path = Path.Combine(directory, file);
@@ -62,7 +61,6 @@ namespace antdlib.MountPoint {
         /// <param name="directory"></param>
         /// <returns></returns>
         public static string GetTimestamp(string directory) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             try {
                 ConsoleLogger.Log($"getting DFP for {directory}");
                 if (!Directory.Exists(directory)) {
@@ -88,7 +86,6 @@ namespace antdlib.MountPoint {
         /// </summary>
         /// <param name="directory"></param>
         public static void Delete(string directory) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             try {
                 ConsoleLogger.Log($"deleting DFP for {directory}");
                 var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();

@@ -29,7 +29,6 @@
     ///-------------------------------------------------------------------------------------*@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-@using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
@@ -46,9 +45,6 @@
     }
     @Html.Partial("page-network-setup", Model)
     @Html.Partial("page-network-interface", Model)
-    @Html.Partial("page-network-vpn", Model)
-    @Html.Partial("page-network-routing", Model)
-    @Html.Partial("page-network-d", Model)
 }
 
 @section Scripts {

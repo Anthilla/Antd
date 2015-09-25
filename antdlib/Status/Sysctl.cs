@@ -40,7 +40,6 @@ namespace antdlib.Status {
     public class Sysctl {
 
         private static List<SysctlModel> GetAllSysctls() {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("sysctl --all").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             List<SysctlModel> sysctls = MapSysctlJson(output);
@@ -50,7 +49,6 @@ namespace antdlib.Status {
         public static List<SysctlModel> Running { get { return GetAllSysctls(); } }
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string text = FileSystem.ReadFile(Folder.Root, "antd.sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
@@ -60,7 +58,6 @@ namespace antdlib.Status {
         public static List<SysctlModel> Antd { get { return ReadSysctlCustomFile(); } }
 
         private static List<SysctlModel> ReadSysctlStockFile() {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string text = FileSystem.ReadFile("/etc", "sysctl.conf");
             var output = JsonConvert.SerializeObject(text);
             List<SysctlModel> sysctls = MapSysctlJson(output);
@@ -70,7 +67,6 @@ namespace antdlib.Status {
         public static List<SysctlModel> Stock { get { return ReadSysctlStockFile(); } }
 
         private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string sysctlJson2 = _sysctlJson;
             sysctlJson2 = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
             string sysctlJson = sysctlJson2;
@@ -95,7 +91,6 @@ namespace antdlib.Status {
         }
 
         private static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string[] sysctlJsonCell = _sysctlJsonCell;
             SysctlModel sysctl = new SysctlModel();
             if (sysctlJsonCell.Length > 1) {
@@ -106,7 +101,6 @@ namespace antdlib.Status {
         }
 
         public static string Config(string param, string value) {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             WriteConfig();
@@ -115,7 +109,6 @@ namespace antdlib.Status {
         }
 
         public static void WriteConfig() {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var parameters = Stock;
             Directory.CreateDirectory(Folder.Root);
             string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
@@ -134,7 +127,6 @@ namespace antdlib.Status {
         }
 
         public static void LoadConfig() {
-            Log.Logger.TraceMethod("Machine Status", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
             Terminal.Execute("sysctl -p " + path);
         }

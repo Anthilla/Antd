@@ -38,13 +38,13 @@ namespace antdlib.Systemd {
     public class Units {
 
         private static List<UnitModel> GetAllUnits() {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             if (output != null) {
                 List<UnitModel> units = MapUnitJson(output);
                 units.RemoveAt(units.ToArray().Length - 1);
-                if (units.Any()) units.RemoveAt(0);
+                if (units.Any())
+                    units.RemoveAt(0);
                 return units;
             }
             return null;
@@ -53,7 +53,6 @@ namespace antdlib.Systemd {
         public static List<UnitModel> All { get { return GetAllUnits(); } }
 
         public static List<UnitModel> MapUnitJson(string _unitJson) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string unitJson = _unitJson;
             unitJson = System.Text.RegularExpressions.Regex.Replace(_unitJson, @"\s{2,}", " ").Replace("\"", "");
             string[] rowDivider = new String[] { "\\n" };
@@ -73,7 +72,6 @@ namespace antdlib.Systemd {
         }
 
         public static UnitModel MapUnit(string[] _unitJsonCell) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string[] unitJsonCell = _unitJsonCell;
             UnitModel unit = new UnitModel();
             unit.name = unitJsonCell[0];

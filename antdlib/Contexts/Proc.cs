@@ -38,7 +38,6 @@ namespace antdlib {
     public class Proc {
 
         private static List<ProcModel> GetAllAllProc() {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             List<ProcModel> procs = MapProcJson(output);
@@ -48,12 +47,11 @@ namespace antdlib {
         public static List<ProcModel> AllAll { get { return GetAllAllProc(); } }
 
         private static List<ProcModel> GetAllProc() {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             var list = MapProcJson(output);
             var procs = new List<ProcModel>() { };
-            foreach(var p in list){
+            foreach (var p in list) {
                 if (!p.CMD.Contains('[')) {
                     procs.Add(p);
                 }
@@ -64,7 +62,6 @@ namespace antdlib {
         public static List<ProcModel> All { get { return GetAllProc(); } }
 
         public static List<ProcModel> MapProcJson(string _procJson) {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string procJson = _procJson;
             procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
             string[] rowDivider = new[] { "\\n" };
@@ -73,7 +70,7 @@ namespace antdlib {
             List<ProcModel> procs = new List<ProcModel>() { };
             foreach (string rowJson in procJsonRow) {
                 if (!string.IsNullOrEmpty(rowJson)) {
-                    var cellDivider = new [] { " " };
+                    var cellDivider = new[] { " " };
                     var procJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
                     var proc = MapProc(procJsonCell);
                     procs.Add(proc);
@@ -83,7 +80,6 @@ namespace antdlib {
         }
 
         public static ProcModel MapProc(string[] _procJsonCell) {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string[] procJsonCell = _procJsonCell;
             ProcModel proc = new ProcModel();
             proc.UID = procJsonCell[0];
@@ -105,7 +101,6 @@ namespace antdlib {
         }
 
         public static string GetPID(string service) {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             List<ProcModel> procs = Proc.All;
             var proc = (from p in procs
                         where p.CMD.Contains(service)

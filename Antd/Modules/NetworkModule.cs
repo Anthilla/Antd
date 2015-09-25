@@ -29,7 +29,7 @@
 
 using antdlib;
 using antdlib.CCTable;
-using antdlib.Network.Management;
+using antdlib.Network;
 using antdlib.Status;
 using Nancy;
 using Nancy.Security;
@@ -66,7 +66,7 @@ namespace Antd {
             };
 
             Get["/boot"] = x => {
-                return Response.AsJson(NetworkConfiguration.BootType);
+                return Response.AsJson(NetworkFirstConfiguration.BootType);
             };
 
             Post["/boot"] = x => {
@@ -83,16 +83,16 @@ namespace Antd {
                         type = NetworkBootType.Default;
                         break;
                 }
-                NetworkConfiguration.WriteFileMethod(type);
+                NetworkFirstConfiguration.WriteFileMethod(type);
                 return Response.AsRedirect("/network");
             };
 
             Post["/boot/edit"] = x => {
-                string networkText = Request.Form.NetworkConfiguration;
-                NetworkConfiguration.NetworkFile.Edit(networkText);
+                string networkText = Request.Form.NetworkFirstConfiguration;
+                NetworkFirstConfiguration.NetworkFile.Edit(networkText);
                 string firewallText = Request.Form.FirewallConfiguration;
-                NetworkConfiguration.FirewallFile.Edit(firewallText);
-                NetworkConfiguration.LoadExistingConfiguration();
+                NetworkFirstConfiguration.FirewallFile.Edit(firewallText);
+                NetworkFirstConfiguration.LoadExistingConfiguration();
                 return Response.AsRedirect("/network");
             };
         }

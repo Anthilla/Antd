@@ -113,6 +113,10 @@ namespace antdlib {
         public static string Antd { get { return "http://+:" + Port.Antd + "/"; } }
     }
 
+    public class Url {
+        public static string Antd { get { return "http://localhost:" + Port.Antd + "/"; } }
+    }
+
     public class AssemblyInfo {
 
         private static string GetGuid() {

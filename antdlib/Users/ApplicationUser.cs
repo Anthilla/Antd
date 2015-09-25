@@ -35,17 +35,14 @@ using System.Linq;
 namespace antdlib.Users {
     public class ApplicationUser {
         public static IEnumerable<UserModel> GetAll() {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return DeNSo.Session.New.Get<UserModel>(u => u != null).ToList();
         }
 
         public static UserModel GetByAlias(string alias) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return DeNSo.Session.New.Get<UserModel>(u => u != null && u.Alias == alias).FirstOrDefault();
         }
 
         public static void Create(string fname, string lname, string passwd, string email) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var user = new UserModel() {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -81,7 +78,6 @@ namespace antdlib.Users {
         }
 
         private static SystemUserPassword SetPassword(string passwdString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             SystemUserPassword passwd = new SystemUserPassword() {
                 Type = "",
                 Salt = ""

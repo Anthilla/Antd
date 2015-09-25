@@ -46,7 +46,6 @@ namespace antdlib.Apps {
             for (int i = 0; i < appinfoFiles.Length; i++) {
                 list.Add(MapInfoFile(appinfoFiles[i]));
             }
-            Log.Logger.TraceMethod("AppsManagement", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list.ToArray();
         }
 
@@ -64,7 +63,6 @@ namespace antdlib.Apps {
             if (appinfo.Values.Count() > 0) {
                 appinfo.Name = appinfo.Values.Where(k => k.Key == "name").FirstOrDefault().Value;
             }
-            Log.Logger.TraceMethod("AppsManagement", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return appinfo;
         }
 
@@ -75,7 +73,6 @@ namespace antdlib.Apps {
                     list.Add(kvp.Value);
                 }
             }
-            Log.Logger.TraceMethod("AppsManagement", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return list.ToArray();
         }
     }

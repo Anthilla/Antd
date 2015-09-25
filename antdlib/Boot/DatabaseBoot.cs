@@ -55,13 +55,11 @@ namespace antdlib.Boot {
             if (doTest == true) {
                 Test();
             }
-            Log.Logger.TraceMethod("Boot", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void ShutDown() {
             //EventP2PDispatcher.StopP2PEventMesh();
             DeNSo.Session.ShutDown();
-            Log.Logger.TraceMethod("Boot", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         private static void CheckPaths(string[] dbPaths) {
@@ -72,7 +70,6 @@ namespace antdlib.Boot {
                     ConsoleLogger.Warn("Although john has created this folder, please check that you do not miss anything!");
                 }
             }
-            Log.Logger.TraceMethod("Boot", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         private static void Test() {

@@ -65,7 +65,6 @@ namespace antdlib.Users {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static IEnumerable<UserModel> GetAll() {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<UserModel>() { };
             if (File.Exists(file) && File.Exists(filePwd)) {
                 var usersString = Terminal.Execute($"cat {file}");
@@ -86,7 +85,6 @@ namespace antdlib.Users {
         }
 
         public static void ImportUsersToDatabase() {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             if (File.Exists(file) && File.Exists(filePwd)) {
                 var usersString = Terminal.Execute($"cat {file}");
                 var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -105,7 +103,6 @@ namespace antdlib.Users {
         }
 
         public static IEnumerable<UserModel> GetAllFromDatabase() {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var users = DeNSo.Session.New.Get<UserModel>().ToList();
             if (users.Count < 1) {
                 ImportUsersToDatabase();
@@ -114,7 +111,6 @@ namespace antdlib.Users {
         }
 
         private static UserModel MapUser(string userString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var userInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
             UserModel user = new UserModel() { };
             if (userInfo.Length > 8) {
@@ -134,7 +130,6 @@ namespace antdlib.Users {
         }
 
         private static UserModel AddUserInfoFromPasswd(UserModel user, string userString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var userPasswdInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
             if (userPasswdInfo.Length > 6) {
                 user.UID = userPasswdInfo[2];
@@ -147,7 +142,6 @@ namespace antdlib.Users {
         }
 
         private static SystemUserPassword MapPassword(string passwdString) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray();
             SystemUserPassword passwd = new SystemUserPassword() { };
             if (passwdInfo.Length > 2) {
@@ -159,7 +153,6 @@ namespace antdlib.Users {
         }
 
         public static void CreateUser(string user) {
-            Log.Logger.TraceMethod("Users Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute("useradd " + user);
         }
     }

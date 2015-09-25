@@ -27,7 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.IO;
 
@@ -58,7 +57,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void AllDirectories() {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log("  Checking for saved mounts information:");
             if (MountRepository.Get().Length < 1) {
                 ConsoleLogger.Log("    No mounts information found...");
@@ -114,7 +112,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void CheckCurrentStatus() {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var directories = Directory.EnumerateDirectories(Folder.Dirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             var y = (directories.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"      {directories.Length} director{y} found in {Folder.Dirs}");
@@ -141,7 +138,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void Check() {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mounts = MountRepository.Get();
             if (mounts.Length > 0) {
                 for (int i = 0; i < mounts.Length; i++) {
@@ -152,7 +148,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void Dir(string directory) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             MountRepository.Create(directory, MountContext.External, MountEntity.Directory);
             var DIR = SetDIRSPath(directory);
             Directory.CreateDirectory(directory);
@@ -162,14 +157,12 @@ namespace antdlib.MountPoint {
         }
 
         public static void File(string file) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             MountRepository.Create(file, MountContext.External, MountEntity.File);
             var FILE = SetFILESPath(file);
             SetBind(FILE, file);
         }
 
         private static void CheckMount(string directory) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log($">>     check: {directory}");
             var isMntd = IsAlreadyMounted(directory);
             ConsoleLogger.Log($">>     is {directory} already mounted? {isMntd}");
@@ -216,7 +209,6 @@ namespace antdlib.MountPoint {
         }
 
         private static void SetBind(string source, string destination) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             ConsoleLogger.Log($"    Check if {source} is already mounted...");
             if (IsAlreadyMounted(source, destination) == true) {
                 ConsoleLogger.Log($"     {source} is already mounted!");
@@ -228,29 +220,24 @@ namespace antdlib.MountPoint {
         }
 
         public static string SetDIRSPath(string source) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return $"{Folder.Dirs}/DIR{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
         }
 
         public static string GetDIRSPath(string source) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return source.Replace(Folder.Dirs, "").Replace("DIR", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
 
         private static string SetLiveCDPath(string source) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Path.Combine(Folder.LiveCd, source).Replace("\\", "/");
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var df = Terminal.Execute($"df | grep {directory}");
             var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return (df.Length > 0 || pm.Length > 0) ? true : false;
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var Sdf = Terminal.Execute($"df | grep {source}");
             var Spm = Terminal.Execute($"cat /proc/mounts | grep {source}");
             var Ddf = Terminal.Execute($"df | grep {destination}");
@@ -259,12 +246,10 @@ namespace antdlib.MountPoint {
         }
 
         public static string SetFILESPath(string source) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return $"{Folder.Dirs}/FILE{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
         }
 
         public static string GetFILESPath(string source) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return source.Replace(Folder.Dirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
     }

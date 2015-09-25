@@ -131,7 +131,6 @@ namespace antdlib.CCTable {
                         TextMap = textMap
                     };
                     DeNSo.Session.New.Set(map);
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 }
 
                 public static void AddLine(string guid, int number, DataType type, Tuple<string, string> boolPair = null) {
@@ -145,28 +144,23 @@ namespace antdlib.CCTable {
                     }
                     map.LinesMap.Add(line);
                     DeNSo.Session.New.Set(map);
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 }
 
                 public static FileMapModel GetMapByGuid(string guid) {
                     var map = DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.Guid == guid).FirstOrDefault();
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                     return (map == null) ? null : map;
                 }
 
                 public static FileMapModel GetMapByFilePath(string filePath) {
                     var map = DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.FilePath == filePath).FirstOrDefault();
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                     return (map == null) ? null : map;
                 }
 
                 public static bool CheckMapForFile(string filePath) {
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                     return (GetMapByFilePath(filePath) == null) ? false : true;
                 }
 
                 public static DataType ConvertToDataType(string type) {
-                    Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                     switch (type) {
                         case "boolean":
                             return DataType.Boolean;
@@ -217,7 +211,6 @@ namespace antdlib.CCTable {
             public static void Convert(string filePath) {
                 var mapRules = Mapping.Repository.GetMapByFilePath(filePath);
                 var fileText = FileSystem.ReadFile(filePath);
-                Log.Logger.TraceMethod("CCTable", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
         }
     }

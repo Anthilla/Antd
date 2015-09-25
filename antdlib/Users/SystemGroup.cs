@@ -56,7 +56,6 @@ namespace antdlib.Users {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static void ImportGroupsToDatabase() {
-            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             if (File.Exists(file)) {
                 var groupsString = FileSystem.ReadFile(file);
                 var groups = groupsString.Split(new String[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
@@ -68,7 +67,6 @@ namespace antdlib.Users {
         }
 
         public static IEnumerable<GroupModel> GetAllFromDatabase() {
-            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var users = DeNSo.Session.New.Get<GroupModel>().ToList();
             if (users.Count < 1) {
                 ImportGroupsToDatabase();
@@ -77,7 +75,6 @@ namespace antdlib.Users {
         }
 
         private static GroupModel MapGroup(string groupString) {
-            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var groupInfo = groupString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
             GroupModel group = new GroupModel() { };
             if (groupInfo.Length > 3) {
@@ -95,7 +92,6 @@ namespace antdlib.Users {
         }
 
         public static void CreateGroup(string group) {
-            Log.Logger.TraceMethod("Groups Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute($"groupadd {group}");
         }
     }

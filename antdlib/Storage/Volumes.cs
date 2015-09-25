@@ -97,7 +97,6 @@ namespace antdlib.Storage {
         }
 
         public static void PopulateBlocks() {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -123,7 +122,6 @@ namespace antdlib.Storage {
         }
 
         public static List<Block> BlocksFromDd() {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = DeNSo.Session.New.Get<Block>(b => b != null).OrderBy(n => n.Name).ToList();
             if (list.ToArray().Length < 1) {
                 PopulateBlocks();
@@ -132,7 +130,6 @@ namespace antdlib.Storage {
         }
 
         public static void SaveToDb(Block model) {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             model._Id = Guid.NewGuid().ToString();
             var old = DeNSo.Session.New.Get<Block>(b => b != null && b.Name == model.Name).FirstOrDefault();
             if (old != null) {
@@ -142,7 +139,6 @@ namespace antdlib.Storage {
         }
 
         public static List<string> BlockList() {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var blocks = new List<string>() { };
             var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
@@ -152,17 +148,14 @@ namespace antdlib.Storage {
         }
 
         private static Block GetBlockFromLsblk(string q) {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Lsblk().Where(b => b.Name == q && b != null).FirstOrDefault();
         }
 
         private static Block GetBlockFromBlkid(string q) {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Blkid().Where(b => b.Name == q && b != null).FirstOrDefault();
         }
 
         private static List<Block> Lsblk() {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<Block>() { };
             var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
@@ -182,7 +175,6 @@ namespace antdlib.Storage {
         }
 
         private static List<Block> Blkid() {
-            Log.Logger.TraceMethod("Volumes Info", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<Block>() { };
             var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {

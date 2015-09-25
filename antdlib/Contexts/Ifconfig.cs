@@ -35,7 +35,6 @@ namespace antdlib {
     public class Ifconfig {
 
         public static string GetEther() {
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string dir = "/sys/devices";
             CommandModel find = Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
             if (find.isError()) {

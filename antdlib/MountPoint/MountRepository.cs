@@ -34,7 +34,6 @@ using System.Collections.Generic;
 namespace antdlib.MountPoint {
     public class MountRepository {
         public static MountModel[] Get() {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             try {
                 var list = new List<MountModel>() { };
                 var dbGet = DeNSo.Session.New.Get<MountModel>().ToArray();
@@ -51,17 +50,14 @@ namespace antdlib.MountPoint {
         }
 
         public static MountModel Get(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
         }
 
         public static IEnumerable<MountModel> GetByUnit(string unit) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit));
         }
 
         public static string[] GetListByUnit(string unit) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var list = new List<string>() { };
             foreach (var mnt in DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit))) {
                 list.Add(mnt.Path);
@@ -71,7 +67,6 @@ namespace antdlib.MountPoint {
 
 
         public static MountModel Create(string path, MountContext context, MountEntity entity) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var get = Get(path);
             var mntContext = (get == null) ? context : get.MountContext;
             var exMount = Get(path);
@@ -91,7 +86,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsMounted(string path, string mounted) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.Mounted;
@@ -101,7 +95,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsNotMounted(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.Unmounted;
@@ -110,7 +103,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsTMPMounted(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.MountedTMP;
@@ -119,7 +111,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsMountedReadOnly(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.MountedReadOnly;
@@ -128,7 +119,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsDifferentMounted(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.DifferentMount;
@@ -137,7 +127,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void SetAsError(string path) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount != null) {
                 mount.MountStatus = MountStatus.Error;
@@ -146,14 +135,12 @@ namespace antdlib.MountPoint {
         }
 
         public static void AddUnit(string guid, string unit) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
             mount.AssociatedUnits.Add(unit);
             DeNSo.Session.New.Set(mount);
         }
 
         public static void AddUnit(string guid, IEnumerable<string> unit) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
             foreach (var u in unit) {
                 mount.AssociatedUnits.Add(u);
@@ -162,7 +149,6 @@ namespace antdlib.MountPoint {
         }
 
         public static void RemoveUnit(string guid, string unit) {
-            Log.Logger.TraceMethod("Mounts Management", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
             mount.AssociatedUnits.Remove(unit);
             DeNSo.Session.New.Set(mount);

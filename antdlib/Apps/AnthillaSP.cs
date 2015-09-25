@@ -42,7 +42,6 @@ namespace antdlib.Apps {
                 Units.LaunchAnthillaServer();
             }
             Systemctl.DaemonReload();
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void Start() {
@@ -50,52 +49,42 @@ namespace antdlib.Apps {
             Systemctl.Start(Units.Name.FileName.Mount);
             Systemctl.Start(Units.Name.FileName.LaunchSP);
             Systemctl.Start(Units.Name.FileName.LaunchServer);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void Start(string app) {
             Systemctl.Start(app);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void StartSP() {
             Systemctl.Start(Units.Name.FileName.LaunchSP);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void StartServer() {
             Systemctl.Start(Units.Name.FileName.LaunchServer);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void StopSP() {
             Systemctl.Stop(Units.Name.FileName.LaunchSP);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public static void StopServer() {
             Systemctl.Stop(Units.Name.FileName.LaunchServer);
-            Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
         }
 
         public class Status {
             public static string AnthillaSP() {
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return Systemctl.Status(Units.Name.FileName.LaunchSP).output;
             }
 
             public static string AnthillaServer() {
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return Systemctl.Status(Units.Name.FileName.LaunchServer).output;
             }
 
             public static bool IsActiveAnthillaSP() {
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return (Systemctl.Status(Units.Name.FileName.LaunchSP).output.Contains("Active: active")) ? true : false;
             }
 
             public static bool IsActiveAnthillaServer() {
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return (Systemctl.Status(Units.Name.FileName.LaunchServer).output.Contains("Active: active")) ? true : false;
             }
         }
@@ -111,19 +100,16 @@ namespace antdlib.Apps {
                         result = true;
                     }
                 }
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return result;
             }
 
             public static void CreateSquash() {
                 Terminal.Execute("mksquashfs /mnt/cdrom/Apps/anthillasp /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
 
             public static void MountSquash() {
                 Directory.CreateDirectory("/framework/anthillasp");
                 Terminal.Execute("mount /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
         }
 
@@ -145,7 +131,6 @@ namespace antdlib.Apps {
             }
 
             public static bool CheckFiles() {
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
                 return (File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSP) && File.Exists(Name.LaunchServer)) ? true : false;
             }
 
@@ -165,7 +150,6 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
 
             public static void MountFramework() {
@@ -184,7 +168,6 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
 
             public static void LaunchAnthillaSP() {
@@ -203,7 +186,6 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
 
             public static void LaunchAnthillaServer() {
@@ -222,7 +204,6 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=multi-user.target");
                     }
                 }
-                Log.Logger.TraceMethod("Apps", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             }
         }
 

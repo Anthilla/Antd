@@ -36,7 +36,6 @@ namespace antdlib.Firewall {
         private static string fileName = "FILE_cfg_antd_firewall_nftable.list";
 
         public static void Set() {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             Terminal.Execute($"nft -f {fileName}");
         }
 
@@ -66,7 +65,6 @@ namespace antdlib.Firewall {
         };
 
         public static void WriteFile() {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var path = Path.Combine(Folder.Root, fileName);
             if (File.Exists(path)) {
                 File.Delete(path);
@@ -82,7 +80,6 @@ namespace antdlib.Firewall {
         }
 
         public static void WriteTable(StreamWriter sw, string table, string[] chains, string[] hooks) {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             for (int c = 0; c < chains.Length; c++) {
                 sw.WriteLine($"table {table} {chains[c]} {{");
                 WriteChain(sw, table, chains[c], hooks);
@@ -91,7 +88,6 @@ namespace antdlib.Firewall {
         }
 
         public static void WriteChain(StreamWriter sw, string table, string chain, string[] hooks) {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             for (int h = 0; h < hooks.Length; h++) {
                 var ruleset = NFTableRepository.GetRuleSet(table, chain, hooks[h]);
                 sw.WriteLine($"chain {chain} {hooks[h]} {{");
@@ -107,7 +103,6 @@ namespace antdlib.Firewall {
         }
 
         public static void WriteRules(StreamWriter sw, string table, NFTableRuleSet ruleset) {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             string[] rules;
             switch (table) {
                 case "ip":
@@ -140,7 +135,6 @@ namespace antdlib.Firewall {
         }
 
         public static void ReadFile() {
-            Log.Logger.TraceMethod("NFTables", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             var path = Path.Combine(Folder.Root, fileName);
             if (File.Exists(path)) {
                 //leggi e splitta eccetera

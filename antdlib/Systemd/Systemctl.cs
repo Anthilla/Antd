@@ -34,47 +34,38 @@ namespace antdlib.Systemd {
     public class Systemctl {
 
         public static CommandModel DaemonReload() {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl daemon-reload").ConvertCommandToModel();
         }
 
         public static CommandModel Start(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl start " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Stop(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl stop " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Restart(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl restart " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Reload(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl reload " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Status(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl status " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel IsEnabled(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl is-enabled " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Enable(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl enable " + unit).ConvertCommandToModel();
         }
 
         public static CommandModel Disable(string unit) {
-            Log.Logger.TraceMethod("Systemd", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return Terminal.Execute("systemctl disable " + unit).ConvertCommandToModel();
         }
     }

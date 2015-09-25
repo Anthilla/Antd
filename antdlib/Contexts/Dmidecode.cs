@@ -43,7 +43,6 @@ namespace antdlib {
                 string uuid = array[1];
                 return uuid;
             }
-            Log.Logger.TraceMethod("Contexts", $"{System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.FullName}.{System.Reflection.MethodBase.GetCurrentMethod().Name}");
             return null;
         }
     }

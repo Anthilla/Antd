@@ -28,14 +28,14 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.MountPoint;
-using antdlib.Network.Management;
+using antdlib.Network;
 
 namespace antdlib.Boot {
     public class LoadOSConfiguration {
         public static void LoadCollectd() {
             var fileName = "FILE_etc_collectd.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -46,7 +46,7 @@ namespace antdlib.Boot {
         public static void LoadSystemdJournald() {
             var fileName = "FILE_etc_systemd_journald.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -61,28 +61,28 @@ namespace antdlib.Boot {
                 Mount.Dir(dir);
             }
             var fileName = "sshd_config";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "moduli";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_config";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
 
             fileName = "ssh_host_dsa_key";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_dsa_key.pub";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_ecdsa_key";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_ecdsa_key.pub";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_ed25519_key";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_ed25519_key.pub";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_rsa_key";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "ssh_host_rsa_key.pub";
-            FileSystem.Download("http://localhost:7777/repo/ssh/" + fileName, $"{DIR}/{fileName}");
+            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
 
             Terminal.Execute("systemctl reload sshd.service");
         }
@@ -90,7 +90,7 @@ namespace antdlib.Boot {
         public static void LoadWPASupplicant() {
             var fileName = "FILE_etc_wpa_supplicant_wpa_suplicant.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
             var realFileName = Mount.GetFILESPath(fileName);
             if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
                 Mount.File(realFileName);
@@ -100,7 +100,7 @@ namespace antdlib.Boot {
 
         public static void LoadNetworkAndFirewall() {
             PreloadNFFiles();
-            var netBootType = NetworkConfiguration.BootType;
+            var netBootType = NetworkFirstConfiguration.BootType;
             if (netBootType == NetworkBootType.Manual) {
                 ConsoleLogger.Log("          load network -> get configuration");
                 LoadNetworkManual();
@@ -114,13 +114,13 @@ namespace antdlib.Boot {
         private static void PreloadNetworkFile() {
             var fileName = "antd.boot.network";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
         }
 
         private static void PreloadFirewallFile() {
             var fileName = "antd.boot.firewall";
             var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download("http://localhost:7777/repo/" + fileName, FILE);
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
         }
 
         public static void PreloadNFFiles() {
@@ -129,7 +129,7 @@ namespace antdlib.Boot {
         }
 
         private static void LoadNetworkManual() {
-            NetworkConfiguration.LoadExistingConfiguration();
+            NetworkFirstConfiguration.LoadExistingConfiguration();
         }
     }
 }
