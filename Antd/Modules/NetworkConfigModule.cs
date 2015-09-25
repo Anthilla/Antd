@@ -28,12 +28,9 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib;
-using antdlib.CCTable;
 using antdlib.Network;
-using antdlib.Status;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
 namespace Antd {
 
@@ -41,7 +38,7 @@ namespace Antd {
 
         public NetworkConfigModule()
             : base("/network/config") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             #region IPV4
             Post["/ipv4/add/address"] = x => {
@@ -301,7 +298,7 @@ namespace Antd {
 
             Post["/br/port/prio"] = x => {
                 string bridgeName = Request.Form.Bridge;
-                string port = Request.Form.Path;
+                string port = Request.Form.Port;
                 string prio = Request.Form.Priority;
                 var result = NetworkConfig.Brctl.SetBridgePortPriority(bridgeName, port, prio);
                 return Response.AsJson(result);

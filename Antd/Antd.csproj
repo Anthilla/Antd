@@ -728,6 +728,9 @@
     <Content Include="NoVnc\wstelnet.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\antd.network.config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\antd.selectize.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

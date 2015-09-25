@@ -42,26 +42,28 @@ namespace Antd {
     public class AntdBoot {
 
         public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bootExtData = Terminal.Execute("blkid | grep BootExt");
-            if (bootExtData.Length > 0) {
-                var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
-                var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-                ConsoleLogger.Log("    global repository -> checking");
-                var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
-                if (mountResult.Length > 0) {
-                    if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                        ConsoleLogger.Log("                      is RO -> remounting");
-                        Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+            if (AssemblyInfo.IsUnix) {
+                var bootExtData = Terminal.Execute("blkid | grep BootExt");
+                if (bootExtData.Length > 0) {
+                    var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
+                    var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
+                    ConsoleLogger.Log("    global repository -> checking");
+                    var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
+                    if (mountResult.Length > 0) {
+                        if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+                            ConsoleLogger.Log("                      is RO -> remounting");
+                            Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                        }
+                        else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                            ConsoleLogger.Log("                      is RW -> ok!");
+                        }
                     }
-                    else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                        ConsoleLogger.Log("                      is RW -> ok!");
+                    else {
+                        ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
                     }
+                    ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
+                    ConsoleLogger.Log("    global repository -> checked");
                 }
-                else {
-                    ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
-                }
-                ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
-                ConsoleLogger.Log("    global repository -> checked");
             }
         }
 
@@ -71,29 +73,35 @@ namespace Antd {
         }
 
         public static void SetMounts() {
-            antdlib.MountPoint.Mount.AllDirectories();
-            ConsoleLogger.Log("    mounts -> checked");
+            if (AssemblyInfo.IsUnix) {
+                antdlib.MountPoint.Mount.AllDirectories();
+                ConsoleLogger.Log("    mounts -> checked");
+            }
         }
 
         public static void SetUsersMount() {
-            antdlib.Users.SystemUser.SetReady();
-            antdlib.Users.SystemGroup.SetReady();
-            ConsoleLogger.Log("    users mount -> checked");
+            if (AssemblyInfo.IsUnix) {
+                antdlib.Users.SystemUser.SetReady();
+                antdlib.Users.SystemGroup.SetReady();
+                ConsoleLogger.Log("    users mount -> checked");
+            }
         }
 
         public static void SetOsConfiguration() {
-            ConsoleLogger.Log("    os -> loading configuration");
-            ConsoleLogger.Log("          load /etc/ssh");
-            LoadOSConfiguration.LoadEtcSSH();
-            ConsoleLogger.Log("          load collectd");
-            LoadOSConfiguration.LoadCollectd();
-            ConsoleLogger.Log("          load journald");
-            LoadOSConfiguration.LoadSystemdJournald();
-            ConsoleLogger.Log("          load wpa-supplicant");
-            LoadOSConfiguration.LoadWPASupplicant();
-            ConsoleLogger.Log("          load network");
-            LoadOSConfiguration.LoadNetworkAndFirewall();
-            ConsoleLogger.Log("    os -> checked");
+            if (AssemblyInfo.IsUnix) {
+                ConsoleLogger.Log("    os -> loading configuration");
+                ConsoleLogger.Log("          load /etc/ssh");
+                LoadOSConfiguration.LoadEtcSSH();
+                ConsoleLogger.Log("          load collectd");
+                LoadOSConfiguration.LoadCollectd();
+                ConsoleLogger.Log("          load journald");
+                LoadOSConfiguration.LoadSystemdJournald();
+                ConsoleLogger.Log("          load wpa-supplicant");
+                LoadOSConfiguration.LoadWPASupplicant();
+                ConsoleLogger.Log("          load network");
+                LoadOSConfiguration.LoadNetworkAndFirewall();
+                ConsoleLogger.Log("    os -> checked");
+            }
         }
 
         public static void SetCoreParameters() {
@@ -102,18 +110,22 @@ namespace Antd {
         }
 
         public static void CheckSysctl(bool isActive) {
-            if (isActive) {
-                Sysctl.WriteConfig();
-                Sysctl.LoadConfig();
-                ConsoleLogger.Log("    sysctl -> loaded");
-            }
-            else {
-                ConsoleLogger.Log("    sysctl -> skipped");
+            if (AssemblyInfo.IsUnix) {
+                if (isActive) {
+                    Sysctl.WriteConfig();
+                    Sysctl.LoadConfig();
+                    ConsoleLogger.Log("    sysctl -> loaded");
+                }
+                else {
+                    ConsoleLogger.Log("    sysctl -> skipped");
+                }
             }
         }
 
         public static void StartNetworkd() {
-            Networkd.SetConfiguration();
+            if (AssemblyInfo.IsUnix) {
+                Networkd.SetConfiguration();
+            }
         }
 
         public static void StartScheduler(bool loadFromDatabase) {

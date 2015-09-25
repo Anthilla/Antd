@@ -27,12 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib;
 using antdlib.CCTable;
-using antdlib.Network;
-using antdlib.Status;
 using Nancy;
-using Nancy.Security;
 using System.Dynamic;
 
 namespace Antd {
@@ -41,60 +37,16 @@ namespace Antd {
 
         public NetworkModule()
             : base("/network") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.units = Networkd.ReadUnits();
-                vmod.Interfaces = NetworkInterface.All;
+                //vmod.Interfaces = NetworkInterface.All.Where(i => i.Type == NetworkInterfaceType.Physical);
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-network", vmod];
             };
-
-            Post["/d"] = x => {
-                string fname = Request.Form.File;
-                string txt = Request.Form.Text;
-                Networkd.CreateCustomUnit(txt, fname);
-                return Response.AsRedirect("/network");
-            };
-
-            Get["/interface/ipaddr"] = x => {
-                var r = NetworkInterface.All;
-                return Response.AsXml(r);
-            };
-
-            //Get["/boot"] = x => {
-            //    return Response.AsJson(NetworkFirstConfiguration.BootType);
-            //};
-
-            //Post["/boot"] = x => {
-            //    string btype = Request.Form.BootType;
-            //    NetworkBootType type;
-            //    switch (btype) {
-            //        case "manual":
-            //            type = NetworkBootType.Manual;
-            //            break;
-            //        case "networkd":
-            //            type = NetworkBootType.Networkd;
-            //            break;
-            //        default:
-            //            type = NetworkBootType.Default;
-            //            break;
-            //    }
-            //    NetworkFirstConfiguration.WriteFileMethod(type);
-            //    return Response.AsRedirect("/network");
-            //};
-
-            //Post["/boot/edit"] = x => {
-            //    string networkText = Request.Form.NetworkFirstConfiguration;
-            //    NetworkFirstConfiguration.NetworkFile.Edit(networkText);
-            //    string firewallText = Request.Form.FirewallConfiguration;
-            //    NetworkFirstConfiguration.FirewallFile.Edit(firewallText);
-            //    NetworkFirstConfiguration.LoadExistingConfiguration();
-            //    return Response.AsRedirect("/network");
-            //};
         }
     }
 }

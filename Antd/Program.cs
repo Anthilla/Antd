@@ -43,6 +43,11 @@ namespace Antd {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
+            if (AssemblyInfo.IsUnix == false) {
+                ConsoleLogger.Warn("This application is not running on a Unix OS:");
+                ConsoleLogger.Warn("some functions may be disabled!");
+            }
+
             AntdBoot.CheckIfGlobalRepositoryIsWriteable();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
@@ -59,7 +64,6 @@ namespace Antd {
                 };
 
             using (WebApp.Start<Startup>(uri)) {
-                ConsoleLogger.Log("os configuration");
                 AntdBoot.SetOsConfiguration();
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);

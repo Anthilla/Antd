@@ -42,7 +42,7 @@ namespace antdlib.Users {
         private static string FILE = Mount.SetFILESPath(file);
 
         public static void SetReady() {
-            if (!File.Exists(FILE)) {
+            if (!File.Exists(FILE) && File.Exists(file)) {
                 File.Copy(file, FILE, true);
             }
             Mount.File(file);

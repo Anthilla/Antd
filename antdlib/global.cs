@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 ///-------------------------------------------------------------------------------------
@@ -58,6 +59,13 @@ namespace antdlib {
         Default = 1,
         Manual = 2,
         Networkd = 3,
+        Other = 99
+    }
+
+    public enum NetworkInterfaceType : byte {
+        Physical = 1,
+        Virtual = 2,
+        Fake = 3,
         Other = 99
     }
 
@@ -126,5 +134,11 @@ namespace antdlib {
         }
 
         public static string Guid { get { return GetGuid(); } }
+
+        public static OperatingSystem OS { get { return Environment.OSVersion; } }
+
+        public static PlatformID Platform { get { return Environment.OSVersion.Platform; } }
+
+        public static bool IsUnix { get { return (Platform == PlatformID.Unix); } }
     }
 }

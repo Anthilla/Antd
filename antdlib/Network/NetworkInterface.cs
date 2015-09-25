@@ -36,21 +36,40 @@ using System.IO;
 namespace antdlib.Network {
     public class NetworkInterface {
 
-        private static List<string> GetInterfaceList() {
+        private static NetworkInterfaceType SupposeNetworkInterfaceType(string interfacePath) {
+            if (interfacePath.Contains("virtual")) {
+                return NetworkInterfaceType.Virtual;
+            }
+            else if (interfacePath.Contains("fake")) {
+                return NetworkInterfaceType.Fake;
+            }
+            else {
+                return NetworkInterfaceType.Physical;
+            }
+        }
+
+        private static List<KeyValuePair<string, NetworkInterfaceType>> GetInterfaceList() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = new List<string>() { };
+            var list = new List<KeyValuePair<string, NetworkInterfaceType>>() { };
             foreach (var dir in dirs) {
-                list.Add(Path.GetFileName(dir));
+                var t = SupposeNetworkInterfaceType(dir);
+                var n = Path.GetFileName(dir);
+                var kvp = new KeyValuePair<string, NetworkInterfaceType>(n, t);
+                list.Add(kvp);
             }
             return list;
         }
 
         private static List<NetworkInterfaceModel> MapInterface() {
             var list = new List<NetworkInterfaceModel>() { };
-            foreach (var name in GetInterfaceList()) {
+            foreach (var kvp in GetInterfaceList()) {
+                var name = kvp.Key;
                 var str = Terminal.Execute("ip addr show " + name);
                 var rows = str.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var model = new NetworkInterfaceModel()/* { Data = str }*/;
+                var model = new NetworkInterfaceModel() {
+                    Type = kvp.Value,
+                    Name = name
+                };
                 model.Number = Convert.ToInt32(rows[0].Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]);
                 if (rows.Length == 4) {
                     model.Physical = rows[0];

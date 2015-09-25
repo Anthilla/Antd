@@ -44,20 +44,15 @@
         @Html.Partial("_cctable-main", Model.CCTable)
     }
     @Html.Partial("page-network-setup", Model)
-    @Html.Partial("page-network-interface", Model)
+    @*@Html.Partial("page-network-interface", Model)*@
 }
 
 @section Scripts {
+    <script src="/Scripts/antd.network.config.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('tr>td:first-child').css('width', '200px');
-        });
+        $('#TEST').click(function () {
+            var pippo = ShowInterfaceAddr('eth0');
 
-        $('select[name="BootType"]').windowed({
-            change: function (event, selected) {
-                var selected = $(selected);
-                console.log(selected.val());
-            }
         });
     </script>
 }
