@@ -89,7 +89,7 @@ ip route show
 ip link set ethx up | down
 ``` 
 ### BRCTL:
-- Create/Add brdige name:
+- Create/Add bridge name:
 ``` 
 brctl addbr name
 ``` 
