@@ -5,7 +5,7 @@ $('input#AddNewAddressIPV4').click(function () {
     var funcReference = $(this).attr('id');
     var Range = $('#Value_' + funcReference + 'Range').val();
     var Address = $('#Value_' + funcReference + 'Address').val();
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
         AddNewAddressIPV4(Range, Address, Interface);
     }
@@ -34,7 +34,7 @@ $('input#DeleteAddressIPV4').click(function () {
     var funcReference = $(this).attr('id');
     var Range = $('#Value_' + funcReference + 'Range').val();
     var Address = $('#Value_' + funcReference + 'Address').val();
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
         DeleteAddressIPV4(Range, Address, Interface);
     }
@@ -61,7 +61,7 @@ function DeleteAddressIPV4(range, address, interfaceName) {
 
 $('input#FlushConfigurationIPV4').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Interface.length > 0) {
         FlushConfigurationIPV4(Interface);
     }
@@ -84,9 +84,15 @@ function FlushConfigurationIPV4(interfaceName) {
     });
 }
 
-$('div.nif-header').click(function () {
-    var ifname = $(this).attr('data-nif-name');
-    ShowInterfaceAddr(ifname);
+$('input#ShowInterfaceAddr').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowInterfaceAddr(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
 });
 
 function ShowInterfaceAddr(interfaceName) {
@@ -95,10 +101,21 @@ function ShowInterfaceAddr(interfaceName) {
         url: networkUrl + '/ipv4/address/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            $('div[data-nif-content="' + interfaceName + '"]').find('.nif-info').text(data);
+            $('textarea#ShowInterfaceAddr').show().text(data);
         }
     });
 }
+
+$('input#ShowInterfaceLink').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowInterfaceLink(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function ShowInterfaceLink(interfaceName) {
     jQuery.support.cors = true;
@@ -106,10 +123,21 @@ function ShowInterfaceLink(interfaceName) {
         url: networkUrl + '/ipv4/link/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowInterfaceLink').show().text(data);
         }
     });
 }
+
+$('input#ShowInterfaceStats').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowInterfaceStats(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function ShowInterfaceStats(interfaceName) {
     jQuery.support.cors = true;
@@ -117,7 +145,7 @@ function ShowInterfaceStats(interfaceName) {
         url: networkUrl + '/ipv4/stats/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowInterfaceStats').show().text(data);
         }
     });
 }
@@ -230,20 +258,31 @@ function DeleteRouteIPV4(address, gateway) {
     });
 }
 
+$('input#ShowRoutes').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowRoutes(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function ShowRoutes(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv4/routes/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowRoutes').show().text(data);
         }
     });
 }
 
 $('input#EnableInterface').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Interface.length > 0) {
         EnableInterface(Interface);
     }
@@ -268,7 +307,7 @@ function EnableInterface(interfaceName) {
 
 $('input#DisableInterface').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Interface.length > 0) {
         DisableInterface(Interface);
     }
@@ -293,7 +332,7 @@ function DisableInterface(interfaceName) {
 
 $('input#AddTunnelPointToPointIPV4').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     var Ttl = $('#Value_' + funcReference + 'Ttl').val();
     var Tunnel = $('#Value_' + funcReference + 'Tunnel').val();
     var Address = $('#Value_' + funcReference + 'Address').val();
@@ -324,7 +363,7 @@ function AddTunnelPointToPointIPV4(interfaceName, ttl, foreignTunnel, address) {
 
 $('input#DeleteTunnelPointToPointIPV4').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Interface.length > 0) {
         DeleteTunnelPointToPointIPV4(Interface);
     }
@@ -347,13 +386,24 @@ function DeleteTunnelPointToPointIPV4(interfaceName) {
     });
 }
 
+$('input#ShowTunnelsIPV4').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowTunnelsIPV4(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function ShowTunnelsIPV4(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv4/tunnels/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowTunnelsIPV4').show().text(data);
         }
     });
 }
@@ -361,7 +411,7 @@ function ShowTunnelsIPV4(interfaceName) {
 //IPV6
 $('input#AddNewAddressIPV6').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     var Address = $('#Value_' + funcReference + 'Address').val();
     if (Interface.length > 0 && Address.length > 0) {
         AddNewAddressIPV6(Address, Interface);
@@ -388,7 +438,7 @@ function AddNewAddressIPV6(address, interfaceName) {
 
 $('input#DeleteAddressIPV6').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     var Address = $('#Value_' + funcReference + 'Address').val();
     if (Interface.length > 0 && Address.length > 0) {
         DeleteAddressIPV6(Address, Interface);
@@ -428,20 +478,31 @@ function FlushConfigurationIPV6() {
     });
 }
 
+$('input#ShowNeighborsIPV6').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowNeighborsIPV6(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function ShowNeighborsIPV6(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv6/neigh/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowNeighborsIPV6').show().text(data);
         }
     });
 }
 
 $('input#AddNeighborsIPV6').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     var Address = $('#Value_' + funcReference + 'Address').val();
     var Layer = $('#Value_' + funcReference + 'Layer').val();
     if (Interface.length > 0 && Layer.length > 0 && Address.length > 0) {
@@ -470,7 +531,7 @@ function AddNeighborsIPV6(address, layer, interfaceName) {
 
 $('input#DeleteNeighborsIPV6').click(function () {
     var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-header').attr('data-nif-name');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     var Address = $('#Value_' + funcReference + 'Address').val();
     var Layer = $('#Value_' + funcReference + 'Layer').val();
     if (Interface.length > 0 && Layer.length > 0 && Address.length > 0) {
@@ -605,13 +666,24 @@ function DeleteRouteIPV6Interface(address, interfaceName) {
     });
 }
 
+$('input#ShowTunnelsIPV6').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
+    if (Interface.length > 0) {
+        ShowTunnelsIPV6(Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function ShowTunnelsIPV6(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv6/tunnels/' + interfaceName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowTunnelsIPV6').show().text(data);
         }
     });
 }
