@@ -112,13 +112,13 @@ namespace antdlib.Boot {
         }
 
         private static void PreloadNetworkFile() {
-            var fileName = "antd.boot.network";
+            var fileName = "antd.boot.network.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
             FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
         }
 
         private static void PreloadFirewallFile() {
-            var fileName = "antd.boot.firewall";
+            var fileName = "antd.boot.firewall.conf";
             var FILE = $"{Folder.Dirs}/{fileName}";
             FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
         }

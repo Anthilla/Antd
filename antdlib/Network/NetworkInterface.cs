@@ -27,69 +27,38 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
 namespace antdlib.Network {
     public class NetworkInterface {
-
-        private static NetworkInterfaceType SupposeNetworkInterfaceType(string interfacePath) {
-            if (interfacePath.Contains("virtual")) {
-                return NetworkInterfaceType.Virtual;
-            }
-            else if (interfacePath.Contains("fake")) {
-                return NetworkInterfaceType.Fake;
-            }
-            else {
-                return NetworkInterfaceType.Physical;
-            }
-        }
-
-        private static List<KeyValuePair<string, NetworkInterfaceType>> GetInterfaceList() {
+        private static List<string> GetPhysicalNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = new List<KeyValuePair<string, NetworkInterfaceType>>() { };
+            var list = new List<string>() { };
             foreach (var dir in dirs) {
-                var t = SupposeNetworkInterfaceType(dir);
-                var n = Path.GetFileName(dir);
-                var kvp = new KeyValuePair<string, NetworkInterfaceType>(n, t);
-                list.Add(kvp);
+                var f = Terminal.Execute($"file {dir}");
+                if (!f.Contains("virtual") && !f.Contains("fake")) {
+                    list.Add(Path.GetFileName(dir));
+                }
             }
             return list;
         }
 
-        private static List<NetworkInterfaceModel> MapInterface() {
-            var list = new List<NetworkInterfaceModel>() { };
-            foreach (var kvp in GetInterfaceList()) {
-                var name = kvp.Key;
-                var str = Terminal.Execute("ip addr show " + name);
-                var rows = str.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var model = new NetworkInterfaceModel() {
-                    Type = kvp.Value,
-                    Name = name
-                };
-                model.Number = Convert.ToInt32(rows[0].Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0]);
-                if (rows.Length == 4) {
-                    model.Physical = rows[0];
-                    model.Datalink = rows[1];
-                    model.Network = rows[2] + " " + rows[3];
+        public static List<string> Physical { get { return GetPhysicalNetworkInterfaces(); } }
+
+        private static List<string> GetVirtualNetworkInterfaces() {
+            var dirs = Directory.GetDirectories("/sys/class/net");
+            var list = new List<string>() { };
+            foreach (var dir in dirs) {
+                var f = Terminal.Execute($"file {dir}");
+                if (f.Contains("virtual") || f.Contains("fake")) {
+                    list.Add(Path.GetFileName(dir));
                 }
-                else if (rows.Length == 3) {
-                    model.Physical = rows[0];
-                    model.Datalink = rows[1];
-                    model.Network = rows[2];
-                }
-                else if (rows.Length == 2) {
-                    model.Physical = rows[0];
-                    model.Datalink = rows[1];
-                }
-                list.Add(model);
             }
-            return list.OrderBy(m => m.Number).ToList();
+            return list;
         }
 
-        public static List<NetworkInterfaceModel> All { get { return MapInterface(); } }
+        public static List<string> Virtual { get { return GetVirtualNetworkInterfaces(); } }
+
     }
 }

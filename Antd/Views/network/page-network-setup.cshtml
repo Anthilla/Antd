@@ -1,11 +1,83 @@
 ﻿<legend id="Setup">Setup</legend>
-<div class="panel border-2-anthilla-gray" data-role="panel">
-    <div class="panel-header bg-anthilla-gray fg-white">
-        <i class="icon-cone on-left"></i>  Lorem Ipsum
-    </div>
-    <div class="panel-content" style="display: none;">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+
+<div data-role="tab-control" class="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#if">Interfaces</a></li>
+        <li><a href="#nbrn">Bridges</a></li>
+        <li class="place-right"><a href="#ifv">Virtual Interfaces</a></li>
+    </ul>
+
+    <div class="frames">
+        <div id="if" class="frame" style="display: block;">
+            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Physical) {
+                <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+                    <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
+                        <i class="icon-cone on-left"></i>  @interfaceName
+                    </div>
+                    <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
+                        <label>IPV4 configuration</label>
+                        <div class="grid">
+                            @EditParameterRow("AddNewAddressIPV4", new string[] { "Range", "Address" })
+                            @EditParameterRow("DeleteAddressIPV4", new string[] { "Range", "Address" })
+                            @EditParameterRow("FlushConfigurationIPV4", new string[] { })
+                            @EditParameterRow("AddRouteIPV4", new string[] { "Address", "Gateway" })
+                            @EditParameterRow("DeleteRouteIPV4", new string[] { "Address", "Gateway" })
+                            @EditParameterRow("AddMultipathRoute", new string[] { "Network1", "Network2" })
+                            @EditParameterRow("AddNat", new string[] { "Address", "Via" })
+                            @EditParameterRow("EnableInterface", new string[] { })
+                            @EditParameterRow("DisableInterface", new string[] { })
+                            @EditParameterRow("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
+                            @EditParameterRow("DeleteTunnelPointToPointIPV4", new string[] { })
+                        </div>
+                        <hr class="bg-anthilla-gray border-anthilla-gray" />
+                        <label>IPV6 configuration</label>
+                        <div class="grid">
+                            @EditParameterRow("AddNewAddressIPV6", new string[] { "Address" })
+                            @EditParameterRow("DeleteAddressIPV6", new string[] { "Address" })
+                            @EditParameterRow("FlushConfigurationIPV6", new string[] { })
+                            @EditParameterRow("AddNeighborsIPV6", new string[] { "Address", "Layer" })
+                            @EditParameterRow("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
+                            @EditParameterRow("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                            @EditParameterRow("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                            @EditParameterRow("AddRouteIPV6Interface", new string[] { "Address" })
+                            @EditParameterRow("DeleteRouteIPV6Interface", new string[] { "Address" })
+                        </div>
+                        <hr class="bg-anthilla-gray border-anthilla-gray" />
+                        <div class="nif-info"></div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="nbrn" class="frame" style="display: none;"></div>
+        <div id="ifv" class="frame" style="display: none;">
+            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Virtual) {
+            <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+                <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
+                    <i class="icon-cone on-left"></i>  @interfaceName
+                </div>
+                <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
+                    <div class="nif-info"></div>
+                </div>
+            </div>
+            }
+        </div>
     </div>
 </div>
-<hr />
-<button id="TEST">TEST</button>
+
+@helper EditParameterRow(string functionName, string[] parameters) {
+    <div class="row">
+        <div class="span3">
+            <label>@functionName</label>
+        </div>
+        <div class="span8">
+            @foreach (string param in parameters) {
+                <p style="display: inline-block;">@param</p>
+                <input id="Value_@functionName@param" type="text" style="height: 25px; width: 80%; float: right;">
+                <br style="margin-bottom: 5px;">
+            }
+        </div>
+        <div class="span5">
+            <input id="@functionName" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Apply @functionName" />
+        </div>
+    </div>
+}

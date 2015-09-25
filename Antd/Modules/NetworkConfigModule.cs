@@ -64,20 +64,20 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/ipv4/address"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv4/address/{interfaceName}"] = x => {
+                string interfaceName = x.interfaceName;
                 var result = NetworkConfig.Iproute2.ShowInterfaceAddr(interfaceName);
                 return Response.AsJson(result);
             };
 
-            Get["/ipv4/link"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv4/link/{interfaceName}"] = x => {
+                string interfaceName = x.interfaceName;
                 var result = NetworkConfig.Iproute2.ShowInterfaceLink(interfaceName);
                 return Response.AsJson(result);
             };
 
-            Get["/ipv4/stats"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv4/stats/{interfaceName}"] = x => {
+                string interfaceName = x.interfaceName;
                 var result = NetworkConfig.Iproute2.ShowInterfaceStats(interfaceName);
                 return Response.AsJson(result);
             };
@@ -112,8 +112,8 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/ipv4/routes"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv4/routes/{interfaceName}"] = x => {
+                string interfaceName = x.interfaceName;
                 var result = NetworkConfig.Iproute2.ShowRoutes(interfaceName);
                 return Response.AsJson(result);
             };
@@ -145,8 +145,8 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/ipv4/tunnels"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv4/tunnels/{interfaceName?}"] = x => {
+                string interfaceName = x.interfaceName;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowTunnelsIPV4(interfaceName);
                 return Response.AsJson(result);
@@ -173,8 +173,8 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/ipv6/neigh"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv6/neigh/{interfaceName}"] = x => {
+                string interfaceName = x.interfaceName;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowNeighborsIPV6(interfaceName);
                 return Response.AsJson(result);
@@ -228,8 +228,8 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/ipv6/tunnels"] = x => {
-                string interfaceName = Request.Form.Interface;
+            Get["/ipv6/tunnels/{interfaceName?}"] = x => {
+                string interfaceName = x.interfaceName;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowTunnelsIPV6(interfaceName);
                 return Response.AsJson(result);
@@ -276,14 +276,14 @@ namespace Antd {
                 return Response.AsJson(result);
             };
 
-            Get["/br/macs"] = x => {
-                string bridgeName = Request.Form.Bridge;
+            Get["/br/macs/{bridgeName}"] = x => {
+                string bridgeName = x.bridgeName;
                 var result = NetworkConfig.Brctl.ShowBridgeMACS(bridgeName);
                 return Response.AsJson(result);
             };
 
-            Get["/br/stp"] = x => {
-                string bridgeName = Request.Form.Bridge;
+            Get["/br/stp/{bridgeName}"] = x => {
+                string bridgeName = x.bridgeName;
                 var result = NetworkConfig.Brctl.ShowBridgeSTP(bridgeName);
                 return Response.AsJson(result);
             };

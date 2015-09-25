@@ -42,9 +42,6 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 //vmod.Interfaces = NetworkInterface.All.Where(i => i.Type == NetworkInterfaceType.Physical);
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-network", vmod];
             };
         }

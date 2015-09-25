@@ -44,11 +44,11 @@ namespace antdlib.Network {
                 return Terminal.Execute($"ip addr flush {i}");
             }
 
-            public static string ShowInterfaceAddr(string interfaceName = "") {
+            public static string ShowInterfaceAddr(string interfaceName) {
                 return Terminal.Execute($"ip addr show {interfaceName}");
             }
 
-            public static string ShowInterfaceLink(string interfaceName = "") {
+            public static string ShowInterfaceLink(string interfaceName) {
                 return Terminal.Execute($"ip link show {interfaceName}");
             }
 

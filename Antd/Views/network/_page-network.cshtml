@@ -35,14 +35,7 @@
     @Html.Partial("_network-pagebar")
 }
 
-@section Dashboard {
-    @Html.Partial("_cctable-dashboard", Model.CurrentContext)
-}
-
 @section MainContent {
-    @if (Model.Count > 0) {
-        @Html.Partial("_cctable-main", Model.CCTable)
-    }
     @Html.Partial("page-network-setup", Model)
     @*@Html.Partial("page-network-interface", Model)*@
 }
@@ -50,9 +43,6 @@
 @section Scripts {
     <script src="/Scripts/antd.network.config.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $('#TEST').click(function () {
-            var pippo = ShowInterfaceAddr('eth0');
-
-        });
+ 
     </script>
 }
