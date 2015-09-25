@@ -45,7 +45,7 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.units = Networkd.ReadUnits();
+                //vmod.units = Networkd.ReadUnits();
                 vmod.Interfaces = NetworkInterface.All;
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
@@ -65,36 +65,36 @@ namespace Antd {
                 return Response.AsXml(r);
             };
 
-            Get["/boot"] = x => {
-                return Response.AsJson(NetworkFirstConfiguration.BootType);
-            };
+            //Get["/boot"] = x => {
+            //    return Response.AsJson(NetworkFirstConfiguration.BootType);
+            //};
 
-            Post["/boot"] = x => {
-                string btype = Request.Form.BootType;
-                NetworkBootType type;
-                switch (btype) {
-                    case "manual":
-                        type = NetworkBootType.Manual;
-                        break;
-                    case "networkd":
-                        type = NetworkBootType.Networkd;
-                        break;
-                    default:
-                        type = NetworkBootType.Default;
-                        break;
-                }
-                NetworkFirstConfiguration.WriteFileMethod(type);
-                return Response.AsRedirect("/network");
-            };
+            //Post["/boot"] = x => {
+            //    string btype = Request.Form.BootType;
+            //    NetworkBootType type;
+            //    switch (btype) {
+            //        case "manual":
+            //            type = NetworkBootType.Manual;
+            //            break;
+            //        case "networkd":
+            //            type = NetworkBootType.Networkd;
+            //            break;
+            //        default:
+            //            type = NetworkBootType.Default;
+            //            break;
+            //    }
+            //    NetworkFirstConfiguration.WriteFileMethod(type);
+            //    return Response.AsRedirect("/network");
+            //};
 
-            Post["/boot/edit"] = x => {
-                string networkText = Request.Form.NetworkFirstConfiguration;
-                NetworkFirstConfiguration.NetworkFile.Edit(networkText);
-                string firewallText = Request.Form.FirewallConfiguration;
-                NetworkFirstConfiguration.FirewallFile.Edit(firewallText);
-                NetworkFirstConfiguration.LoadExistingConfiguration();
-                return Response.AsRedirect("/network");
-            };
+            //Post["/boot/edit"] = x => {
+            //    string networkText = Request.Form.NetworkFirstConfiguration;
+            //    NetworkFirstConfiguration.NetworkFile.Edit(networkText);
+            //    string firewallText = Request.Form.FirewallConfiguration;
+            //    NetworkFirstConfiguration.FirewallFile.Edit(firewallText);
+            //    NetworkFirstConfiguration.LoadExistingConfiguration();
+            //    return Response.AsRedirect("/network");
+            //};
         }
     }
 }

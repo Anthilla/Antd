@@ -181,6 +181,7 @@
     <Compile Include="Modules\ConsoleModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
     <Compile Include="Modules\HookNancyModule.cs" />
+    <Compile Include="Modules\NetworkConfigModule.cs" />
     <Compile Include="Modules\ServicesModule.cs" />
     <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\HypervisorModule.cs" />

@@ -27,41 +27,21 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
-
 namespace antdlib.Network {
     public class NetworkConfig {
         public class Iproute2 {
+
             public static string AddNewAddressIPV4(string range, string address, string interfaceName) {
                 return Terminal.Execute($"ip addr add {range} broadcast {address} dev {interfaceName}");
             }
 
-            public static string AddNewAddressIPV6(string interfaceName) {
-                return Terminal.Execute($"ip -6 addr add ipv6/64 dev {interfaceName}");
-            }
-
-            public static string AddIPV6AddGateway(string gateway, string interfaceName) {
-                return Terminal.Execute($"ip -6 route add default via {gateway} dev {interfaceName}");
-            }
-
-            public static string DeleteAddress(string range, string address, string interfaceName) {
+            public static string DeleteAddressIPV4(string range, string address, string interfaceName) {
                 return Terminal.Execute($"ip addr del {range} broadcast {address} dev {interfaceName}");
             }
 
-            public static string FlushConfigurationIPV4() {
-                return Terminal.Execute($"ip -4 addr flush label \"eth *\"");
-            }
-
-            public static string FlushConfigurationIPV4(string interfaceName) {
-                return Terminal.Execute($"ip addr flush dev {interfaceName}");
-            }
-
-            public static string FlushConfigurationIPV6() {
-                return Terminal.Execute($"ip addr flush dynamic");
+            public static string FlushConfigurationIPV4(string interfaceName = null) {
+                var i = (interfaceName == null) ? "label \"eth *\"" : "dev {interfaceName}";
+                return Terminal.Execute($"ip addr flush {i}");
             }
 
             public static string ShowInterfaceAddr(string interfaceName = "") {
@@ -102,8 +82,8 @@ namespace antdlib.Network {
                 }
             }
 
-            public static string ShowRoutes() {
-                return Terminal.Execute($"ip route show");
+            public static string ShowRoutes(string interfaceName = "") {
+                return Terminal.Execute($"ip route show {interfaceName}");
             }
 
             public static string EnableInterface(string interfaceName) {
@@ -111,8 +91,93 @@ namespace antdlib.Network {
             }
 
             public static string DisableInterface(string interfaceName) {
-                return Terminal.Execute($"ip link set {interfaceName} up");
+                return Terminal.Execute($"ip link set {interfaceName} down");
             }
+
+            public static string AddTunnelPointToPointIPV4(string interfaceName, string ttl, string foreignTunnel, string address) {
+                return Terminal.Execute($"ip tunnel add {interfaceName} mode sit ttl {ttl} remote {foreignTunnel} local {address}");
+            }
+
+            public static string DeleteTunnelPointToPointIPV4(string interfaceName) {
+                return Terminal.Execute($"ip tunnel del {interfaceName}");
+            }
+
+            public static string ShowTunnelsIPV4(string interfaceName) {
+                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                return Terminal.Execute($"ip tunnel show {i}");
+            }
+
+            #region IPV6 Related
+            public static string AddNewAddressIPV6(string address, string interfaceName) {
+                return Terminal.Execute($"ip -6 addr add {address} dev {interfaceName}");
+            }
+
+            public static string DeleteAddressIPV6(string address, string interfaceName) {
+                return Terminal.Execute($"ip -6 addr del {address} dev {interfaceName}");
+            }
+
+            public static string ShowRoutesIPV6(string interfaceName = "") {
+                return Terminal.Execute($"ip -6 route show {interfaceName}");
+            }
+
+            public static string FlushConfigurationIPV6() {
+                return Terminal.Execute($"ip addr flush dynamic");
+            }
+
+            public static string ShowNeighborsIPV6(string interfaceName = null) {
+                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                return Terminal.Execute($"ip -6 neigh show {i}");
+            }
+
+            public static string AddNeighborsIPV6(string address, string layerAddress, string interfaceName) {
+                return Terminal.Execute($"ip -6 neigh add {address} lladdr {layerAddress} dev {interfaceName}");
+            }
+
+            public static string DeleteNeighborsIPV6(string address, string layerAddress, string interfaceName) {
+                return Terminal.Execute($"ip -6 neigh del {address} lladdr {layerAddress} dev {interfaceName}");
+            }
+
+            public static string AddRouteIPV6Gateway(string address, string gateway = null) {
+                if (gateway == null) {
+                    return Terminal.Execute($"ip -6 route add default via {address}");
+                }
+                else {
+                    return Terminal.Execute($"ip -6 route add {gateway} via {address}");
+                }
+            }
+
+            public static string DeleteRouteIPV6Gateway(string address, string gateway = null) {
+                if (gateway == null) {
+                    return Terminal.Execute($"ip -6 route del default via {address}");
+                }
+                else {
+                    return Terminal.Execute($"ip -6 route del {gateway} via {address}");
+                }
+            }
+
+            public static string AddRouteIPV6Interface(string interfaceName, string gateway = null) {
+                if (gateway == null) {
+                    return Terminal.Execute($"ip -6 route add default dev {interfaceName}");
+                }
+                else {
+                    return Terminal.Execute($"ip -6 route add {gateway} dev {interfaceName}");
+                }
+            }
+
+            public static string DeleteRouteIPV6Interface(string interfaceName, string gateway = null) {
+                if (gateway == null) {
+                    return Terminal.Execute($"ip -6 route del default dev {interfaceName}");
+                }
+                else {
+                    return Terminal.Execute($"ip -6 route del {gateway} dev {interfaceName}");
+                }
+            }
+
+            public static string ShowTunnelsIPV6(string interfaceName) {
+                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                return Terminal.Execute($"ip -6 tunnel show {i}");
+            }
+            #endregion
         }
 
         public class Brctl {
