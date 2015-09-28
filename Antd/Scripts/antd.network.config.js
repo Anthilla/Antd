@@ -86,7 +86,6 @@ function FlushConfigurationIPV4(interfaceName) {
 
 $('input#ShowInterfaceAddr').click(function () {
     var funcReference = $(this).attr('id');
-    //var funcReference = $(this).attr('id');
     var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Interface.length > 0) {
         ShowInterfaceAddr(Interface);
