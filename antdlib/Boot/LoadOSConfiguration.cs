@@ -98,38 +98,18 @@ namespace antdlib.Boot {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        //public static void LoadNetworkAndFirewall() {
-        //    PreloadNFFiles();
-        //    var netBootType = NetworkFirstConfiguration.BootType;
-        //    if (netBootType == NetworkBootType.Manual) {
-        //        ConsoleLogger.Log("          load network -> get configuration");
-        //        LoadNetworkManual();
-        //    }
-        //    else {
-        //        ConsoleLogger.Log("          load network -> default configuration");
-        //        //todo fare metodo anche per default, default == primo avvio
-        //    }
-        //}
+        public static void LoadNetwork() {
+            NetworkFirstConfiguration.Set();
+        }
 
-        //private static void PreloadNetworkFile() {
-        //    var fileName = "antd.boot.network.conf";
-        //    var FILE = $"{Folder.Dirs}/{fileName}";
-        //    FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
-        //}
+        private static void PreloadFirewallFile() {
+            var fileName = "antd.boot.firewall.conf";
+            var FILE = $"{Folder.Dirs}/{fileName}";
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
+        }
 
-        //private static void PreloadFirewallFile() {
-        //    var fileName = "antd.boot.firewall.conf";
-        //    var FILE = $"{Folder.Dirs}/{fileName}";
-        //    FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
-        //}
-
-        //public static void PreloadNFFiles() {
-        //    PreloadNetworkFile();
-        //    PreloadFirewallFile();
-        //}
-
-        //private static void LoadNetworkManual() {
-        //    NetworkFirstConfiguration.LoadExistingConfiguration();
-        //}
+        public static void LoadFirewall() {
+            PreloadFirewallFile();
+        }
     }
 }

@@ -36,19 +36,23 @@ using System.Linq;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        //private static string fileName = "antd.boot.network.type";
+        private static string fileName = $"{Folder.Root}/antd.boot.network.conf";
 
         /// <summary>
         /// todo fix
         /// </summary>
         /// <returns></returns>
         private static bool CheckNetworkIsConfigured() {
-            return true;
+            if (File.Exists(fileName) && FileSystem.ReadFile(fileName).Length > 0) {
+                return true;
+            }
+            return false;
         }
 
-        public static void SetNetwork() {
+        public static void Set() {
             if (CheckNetworkIsConfigured() == true) {
-                //configura coi parametri esistenti
+                Terminal.Execute($"chmod 777 {fileName}");
+                Terminal.Execute($".{fileName}");
             }
             else {
                 SetNetworkInterfaceUp();
@@ -98,14 +102,27 @@ namespace antdlib.Network {
 
         }
 
+        private static List<string> commands = new List<string>() { };
+
+        private static void WriteConfFile() {
+            if (!File.Exists(fileName) && commands.Count > 0) {
+                var txt = String.Join(Environment.NewLine, commands.ToArray());
+            }
+        }
+
         private static void SetNetworkInterfaceUp() {
             if (DetectActiveNetworkInterfaces().Count > 0) {
                 var selectedNIF = DetectActiveNetworkInterfaces().LastOrDefault();
                 ConsoleLogger.Info($"_> Network will be initialized on: {selectedNIF}");
                 var ip = PickIP();
                 ConsoleLogger.Info($"_> Assigning {ip} to {selectedNIF}");
-                Terminal.Execute($"ip addr add {ip} dev {selectedNIF}");
-                Terminal.Execute($"ip route add default via {selectedNIF}");
+                var cmd1 = $"ip addr add {ip} dev {selectedNIF}";
+                Terminal.Execute(cmd1);
+                commands.Add(cmd1);
+                var cmd2 = $"ip addr add {ip} dev {selectedNIF}";
+                Terminal.Execute(cmd2);
+                commands.Add(cmd2);
+                WriteConfFile();
                 ShowNetworkInfo(selectedNIF, ip);
             }
             else {

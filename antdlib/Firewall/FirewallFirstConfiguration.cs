@@ -32,6 +32,10 @@ using System.IO;
 namespace antdlib.Firewall {
     public class FirewallFirstConfiguration {
 
+        public static void Set() {
+
+        }
+
         public class FirewallFile {
             public static string Name { get { return $"{Folder.Root}/antd.boot.firewall"; } }
 

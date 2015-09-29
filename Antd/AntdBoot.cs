@@ -99,7 +99,9 @@ namespace Antd {
                 ConsoleLogger.Log("          load wpa-supplicant");
                 LoadOSConfiguration.LoadWPASupplicant();
                 ConsoleLogger.Log("          load network");
-                //LoadOSConfiguration.LoadNetworkAndFirewall();
+                LoadOSConfiguration.LoadNetwork();
+                ConsoleLogger.Log("          load firewall");
+                LoadOSConfiguration.LoadFirewall();
                 ConsoleLogger.Log("    os -> checked");
             }
         }
