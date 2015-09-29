@@ -146,6 +146,7 @@
     <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Directories\DirectoryWatcher.cs" />
+    <Compile Include="Install\InstallOperativeSystem.cs" />
     <Compile Include="Log\Dmesg.cs" />
     <Compile Include="Log\LogModel.cs" />
     <Compile Include="Log\LogRepository.cs" />
