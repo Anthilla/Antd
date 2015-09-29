@@ -72,7 +72,7 @@ namespace antdlib.Install {
 
             ConsoleLogger.Info($"configuring partitions");
             ConsoleLogger.Info($"configuring {diskData} partition");
-            var partedOptions1 = $"p{n}n{n}2{n}-512M{n}{n}{n}t{n}2{n}1{n}{n}{n}w{n}";
+            var partedOptions1 = $"mklabel{n}gpt{n}BootExt";
             Terminal.Execute($"echo -e \"{partedOptions1}\" | parted {diskData}");
 
             Terminal.Execute($"mkfs.ext4 {diskData} -L BootExt");
