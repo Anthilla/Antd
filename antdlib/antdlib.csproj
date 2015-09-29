@@ -129,6 +129,7 @@
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />
+    <Compile Include="Firewall\FirewallFirstConfiguration.cs" />
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Firewall\NFTableModel.cs" />

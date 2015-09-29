@@ -30,82 +30,87 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static string fileName = "antd.boot.network.type";
+        //private static string fileName = "antd.boot.network.type";
 
-        private static string filePath = $"{Folder.Root}/{fileName}";
+        /// <summary>
+        /// todo fix
+        /// </summary>
+        /// <returns></returns>
+        private static bool CheckNetworkIsConfigured() {
+            return true;
+        }
 
-        public static void WriteFileMethod(NetworkBootType netBootType) {
-            if (!File.Exists(filePath)) {
-                FileSystem.WriteFile(filePath, JsonConvert.SerializeObject(netBootType));
+        public static void SetNetwork() {
+            if (CheckNetworkIsConfigured() == true) {
+                //configura coi parametri esistenti
             }
             else {
-                ConsoleLogger.Warn($"{filePath} already exists, overwriting existing file!");
-                File.Delete(filePath);
-                FileSystem.WriteFile(filePath, JsonConvert.SerializeObject(netBootType));
+                SetNetworkInterfaceUp();
             }
         }
 
-        private static NetworkBootType ReadFileMethod() {
-            NetworkBootType type = NetworkBootType.Default;
-            if (File.Exists(filePath)) {
-                var t = FileSystem.ReadFile(filePath);
-                if (t.Length > 0) {
-                    try {
-                        type = JsonConvert.DeserializeObject<NetworkBootType>(t);
-                    }
-                    catch (Exception ex) {
-                        ConsoleLogger.Warn($"Exception while Deserializing an object: {ex.Message}");
-                    }
+        private static List<string> DetectAllNetworkInterfaces() {
+            var NIFlist = new List<string>() { };
+            var m = 15;
+            for (int i = 0; i < m; i++) {
+                var r = Terminal.Execute($"ip link set eth{i.ToString()} up");
+                if (r.Length > 0) {
+                    break;
+                }
+                else {
+                    NIFlist.Add(r);
                 }
             }
-            return type;
+            return NIFlist;
         }
 
-        public static NetworkBootType BootType { get { return ReadFileMethod(); } }
-
-        public static void LoadExistingConfiguration() {
-            if (File.Exists(NetworkFile.Name) && File.Exists(FirewallFile.Name)) {
-                Terminal.Execute($"chmod 777 {NetworkFile.Name}");
-                Terminal.Execute($"./{NetworkFile.Name}");
-                Terminal.Execute($"nft -f {FirewallFile.Name}");
+        private static List<string> DetectActiveNetworkInterfaces() {
+            var NIFlist = DetectAllNetworkInterfaces();
+            var nlist = new List<string>() { };
+            foreach (var nif in NIFlist) {
+                var r = Terminal.Execute($"cat /sys/class/net/{nif}/carrier");
+                if (r == "1") {
+                    nlist.Add(nif);
+                }
             }
+            return nlist;
         }
 
-        public class NetworkFile {
-            public static string Name { get { return $"{Folder.Root}/antd.boot.network"; } }
-
-            public static string Content {
-                get {
-                    return (File.Exists(Name)) ? FileSystem.ReadFile(Name) : "null";
-                }
-            }
-
-            public static void Edit(string newText) {
-                if (File.Exists(Name)) {
-                    File.Delete(Name);
-                }
-                FileSystem.WriteFile(Name, newText);
-            }
+        /// <summary>
+        /// todo fix
+        /// </summary>
+        /// <returns></returns>
+        private static string PickIP() {
+            return "10.11.19.1/16";
         }
 
-        public class FirewallFile {
-            public static string Name { get { return $"{Folder.Root}/antd.boot.firewall"; } }
+        /// <summary>
+        /// todo fix
+        /// </summary>
+        /// <returns></returns>
+        private static void ShowNetworkInfo(string nif, string ip) {
 
-            public static string Content {
-                get {
-                    return (File.Exists(Name)) ? FileSystem.ReadFile(Name) : "null";
-                }
+        }
+
+        private static void SetNetworkInterfaceUp() {
+            if (DetectActiveNetworkInterfaces().Count > 0) {
+                var selectedNIF = DetectActiveNetworkInterfaces().LastOrDefault();
+                ConsoleLogger.Info($"_> Network will be initialized on: {selectedNIF}");
+                var ip = PickIP();
+                ConsoleLogger.Info($"_> Assigning {ip} to {selectedNIF}");
+                Terminal.Execute($"ip addr add {ip} dev {selectedNIF}");
+                Terminal.Execute($"ip route add default via {selectedNIF}");
+                ShowNetworkInfo(selectedNIF, ip);
             }
-
-            public static void Edit(string newText) {
-                if (File.Exists(Name)) {
-                    File.Delete(Name);
-                }
-                FileSystem.WriteFile(Name, newText);
+            else {
+                ConsoleLogger.Warn("There's no active network interface,");
+                ConsoleLogger.Warn("a direct action is required on the machine!");
             }
         }
     }
