@@ -1,39 +1,46 @@
 ﻿<legend id="Disks">Disks & Volumes</legend>
 <i id="ReloadVolumes" style="float: right; position: relative; top: -50px; right: 15px; font-size: 20px; margin-bottom: -20px;" class="icon-loop"></i>
-<table class="table">
-    <tbody>
-        @foreach (antdlib.Storage.Volumes.Block blk in Model) { 
-            <tr>
-                <td colspan="2">
-                    <p class="bg-anthilla-green fg-anthilla-gray" style="width: auto; height: 30px; padding:5px 30px; display: inline-block; margin: 5px 7px;">
-                         @blk.Name
-                    </p>
-                    @if (blk.MountPoint != "" || blk.MountPoint == null) {
-                        <p class="fg-anthilla-green bg-anthilla-gray-ml" style="width: auto; height: 30px; padding: 5px 20px; display: inline-block; margin: 5px 7px;"><i class="icon-arrow-right"></i></p>
-                        <p class="bg-anthilla-green fg-anthilla-gray" style="width: auto; height: 30px; padding:5px 30px; display: inline-block; margin: 5px 7px;">
-                            @blk.MountPoint 
-                        </p>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <td style="margin: 5px 15px;">
-                    @if (blk.Size != "" || blk.Size == null) {
-                        <canvas class="disk-size-chart" width="200" height="200" data-size="@blk.Size"></canvas>
-                    }
-                </td>
-                <td>
-                    @if (blk.Label != "" || blk.Label == null) {<label>Label</label> <p>@blk.Label</p>}
-                    @if (blk.UUID != "" || blk.UUID == null) {<label>UUID</label> <p>@blk.UUID</p>}
-                    @if (blk.PartLabel != "" || blk.PartLabel == null) {<label>PartLabel</label> <p>@blk.PartLabel</p>}
-                    @if (blk.PartUUID != "" || blk.PartUUID == null) {<label>PartUUID</label> <p>@blk.PartUUID</p>}
-                    @if (blk.Type != "" || blk.Type == null) {<label>Volume Type</label> <p>@blk.Type</p>}
-                    @if (blk.DiskType != "" || blk.DiskType == null) {<label>Device Type</label> <p>@blk.DiskType</p>}
-                </td>
-            </tr> 
-        }
-    </tbody>
-</table>
+
+@if (antdlib.Install.InstallCheck.IsOSRemovable == true) {
+    <h3 class="fg-anthilla-orange bg-anthilla-gray" style="padding: 10px;">AOS is on a removable disk, select an eligible disk where install permanently AOS</h3>
+}
+
+@foreach (antdlib.Storage.Volumes.Block blk in Model) {
+    <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white nif-header" data-disk-name="@blk.Name">
+            <i class="icon-cone on-left"></i>  @blk.Name
+
+            @ShowInstallButton(blk.Name)
+        </div>
+        <div class="panel-content nif-content" style="display: none;" data-disk-content="@blk.Name">
+            @if (blk.Size != "" || blk.Size == null) {
+                <canvas class="disk-size-chart" width="200" height="200" data-size="@blk.Size"></canvas>
+            }
+            <hr class="bg-anthilla-gray" />
+            <ul>
+                @if (blk.Label != "" || blk.Label == null) {
+                    <li><label>Label</label> <p>@blk.Label</p></li>}
+                @if (blk.UUID != "" || blk.UUID == null) {
+                    <li><label>UUID</label> <p>@blk.UUID</p></li>}
+                @if (blk.PartLabel != "" || blk.PartLabel == null) {
+                    <li><label>PartLabel</label> <p>@blk.PartLabel</p></li>}
+                @if (blk.PartUUID != "" || blk.PartUUID == null) {
+                    <li><label>PartUUID</label> <p>@blk.PartUUID</p></li>}
+                @if (blk.Type != "" || blk.Type == null) {
+                    <li><label>Volume Type</label> <p>@blk.Type</p></li>}
+                @if (blk.DiskType != "" || blk.DiskType == null) {
+                    <li><label>Device Type</label> <p>@blk.DiskType</p></li>}
+            </ul>
+        </div>
+    </div>
+}
+
+@helper ShowInstallButton(string diskName) {
+if (antdlib.Install.InstallCheck.IsDiskEligibleForOS(diskName) && antdlib.Install.InstallCheck.IsOSRemovable == true) {
+        <input id="SelectThisDiskWhereIstallAOS" data-disk-name="@diskName" type="button" value="Install AOS here!" class="bg-anthilla-green" style="padding: 4px 10px; float: left; margin-right: 10px;" />
+}
+}
+
 <script type="text/javascript">
     //var data = [
     //{

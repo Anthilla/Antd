@@ -36,9 +36,11 @@ using System.Threading.Tasks;
 
 namespace antdlib.Install {
     public class InstallCheck {
-        public static bool IsOnUSB() {
-            var deviceName = Terminal.Execute($"lsblk -npl | grep {Folder.Root}").Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-            var diskFile = $"/sys/class/block/{deviceName.Substring(0, deviceName.Length - 1).Replace("dev", "").Replace("/", "")}/removable";
+        private static bool IsOnUSB() {
+            var cmdResult = Terminal.Execute($"lsblk -npl | grep /mnt/cdrom");
+            var deviceName = cmdResult.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var diskName = deviceName.Substring(0, deviceName.Length - 1);
+            var diskFile = $"/sys/class/block/{diskName.Replace("dev", "").Replace("/", "")}/removable";
             if (File.Exists(diskFile)) {
                 var t = FileSystem.ReadFile(diskFile);
                 if (t.Trim() == "1") {
@@ -49,6 +51,35 @@ namespace antdlib.Install {
                 }
             }
             return false;
+        }
+
+        public static bool IsOSRemovable { get { return IsOnUSB(); } }
+
+        public static bool IsDiskEligibleForOS(string disk) {
+            //controllo se c'è abbastanza spazio
+            var diskSizeCmdResult = Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
+            var size = diskSizeCmdResult.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            if (!size.Contains("G")) {
+                //il disco è < 1G
+                var num = Convert.ToInt32(size.Replace("M", ""));
+                if (num < 32) {
+                    //il disco è < 32M
+                    return false;
+                }
+            }
+            //ho controllato se è un disco o una partizione
+            var isPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep \"{disk} \"");
+            if (isPartitionCmdResult.Contains("part") && !isPartitionCmdResult.Contains("disk")) {
+                //è una partizione, e non va bene
+                return false;
+            }
+            //controllo che sia non abbia partizioni
+            var hasPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
+            var results = hasPartitionCmdResult.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
+            if (results > 1) {
+                return false;
+            }
+            return true;
         }
     }
 }
