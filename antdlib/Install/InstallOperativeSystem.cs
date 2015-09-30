@@ -54,9 +54,6 @@ namespace antdlib.Install {
 
         //todo: lista dei dischi, e filtrare se sono vuoti e non-partizionati!
 
-        /// <summary>
-        /// todo, fix parted parameters
-        /// </summary>
         public void CreatePartitionOnDisk() {
             ConsoleLogger.Info($"creating partitions on: {diskname}");
             var n = "\n";
@@ -70,13 +67,11 @@ namespace antdlib.Install {
             Terminal.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {diskname}");
             ConsoleLogger.Info($"                        {diskData} created");
 
-            ConsoleLogger.Info($"configuring partitions");
-            ConsoleLogger.Info($"configuring {diskData} partition");
-            var partedOptions1 = $"mklabel{n}gpt{n}BootExt";
-            Terminal.Execute($"echo -e \"{partedOptions1}\" | parted {diskData}");
+            Terminal.Execute($"parted -a optimal -s {diskname} name 2 \"EFI System Partition\"");
+            Terminal.Execute($"parted -a optimal -s {diskname} name 3 BootExt");
 
             Terminal.Execute($"mkfs.ext4 {diskData} -L BootExt");
-            Terminal.Execute($"mkfs.fat {diskEFI} -n EFI");
+            Terminal.Execute($"mkfs.fat -n EFI {diskEFI}");
 
             ConsoleLogger.Info($"Copying files (this step will take a few minutes)");
             Terminal.Execute($"mount -o discard,noatime,rw {diskData} {tmpDataFolder}");

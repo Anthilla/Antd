@@ -87,6 +87,15 @@ namespace Antd {
             }
         }
 
+        public static void SetOSMount() {
+            if (AssemblyInfo.IsUnix) {
+                Terminal.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware/");
+                Terminal.Execute("mkdir -p /lib64/modules/4.1.5-aufs");
+                Terminal.Execute("mount /mnt/cdrom/Kernel/active-modules /lib64/modules/4.1.5-aufs/");
+                ConsoleLogger.Log("    os mount -> checked");
+            }
+        }
+
         public static void SetOsConfiguration() {
             if (AssemblyInfo.IsUnix) {
                 ConsoleLogger.Log("    os -> loading configuration");

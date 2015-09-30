@@ -29,19 +29,15 @@
 
 using System;
 using System.IO;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
         private static string fileName = $"{Folder.Root}/antd.boot.network.conf";
 
-        /// <summary>
-        /// todo fix
-        /// </summary>
-        /// <returns></returns>
         private static bool CheckNetworkIsConfigured() {
             if (File.Exists(fileName) && FileSystem.ReadFile(fileName).Length > 0) {
                 return true;
@@ -53,6 +49,8 @@ namespace antdlib.Network {
             if (CheckNetworkIsConfigured() == true) {
                 Terminal.Execute($"chmod 777 {fileName}");
                 Terminal.Execute($".{fileName}");
+                //todo: la config c'è già, prendere ip eccetera
+                ShowNetworkInfo("", "");
             }
             else {
                 SetNetworkInterfaceUp();
@@ -86,20 +84,44 @@ namespace antdlib.Network {
             return nlist;
         }
 
-        /// <summary>
-        /// todo fix
-        /// </summary>
-        /// <returns></returns>
-        private static string PickIP() {
-            return "10.11.19.1/16";
+        private static bool IsIPAvailable(string input) {
+            PingReply reply = new Ping().Send(input);
+            if (reply.Status == IPStatus.DestinationHostUnreachable) { return true; }
+            else if (reply.Status == IPStatus.DestinationNetworkUnreachable) { return true; }
+            else if (reply.Status == IPStatus.DestinationPortUnreachable) { return true; }
+            else if (reply.Status == IPStatus.DestinationUnreachable) { return true; }
+            else if (reply.Status == IPStatus.TimedOut) { return true; }
+            else { return false; }
         }
 
-        /// <summary>
-        /// todo fix
-        /// </summary>
-        /// <returns></returns>
-        private static void ShowNetworkInfo(string nif, string ip) {
+        private static string AugmentIPValue(string input) {
+            var octets = input.Split('.').ToIntArray();
+            var octet2 = octets[2];
+            var octet3 = octets[3] + 1;
+            if (octet3 == 255) {
+                octet2 = octets[2] + 1;
+                octet3 = octets[3];
+            }
+            var newOctets = new string[] {
+                octets[0].ToString(),
+                octets[1].ToString(),
+                octet2.ToString(),
+                octet3.ToString()
+            };
+            return String.Join(".", newOctets);
+        }
 
+        private static string GetFirstAvailableIPFrom(string input) {
+            string ip = input;
+            while (IsIPAvailable(ip) == false) {
+                ip = AugmentIPValue(input);
+            }
+            return ip;
+        }
+
+        private static string PickIP() {
+            var ipAddr = GetFirstAvailableIPFrom("169.254.1.1");
+            return $"{ipAddr}/16";
         }
 
         private static List<string> commands = new List<string>() { };
@@ -128,6 +150,39 @@ namespace antdlib.Network {
             else {
                 ConsoleLogger.Warn("There's no active network interface,");
                 ConsoleLogger.Warn("a direct action is required on the machine!");
+            }
+        }
+
+        private static void ShowNetworkInfo(string nif, string ip) {
+            var n = Environment.NewLine;
+            var bluetoothConnectionName = $"{nif}_S{ip.Replace("/", "-")}";
+            ConsoleLogger.Info("Showing network configuration with a bluetooth connection ;)");
+            ConsoleLogger.Info("bt >> set up all wireless connections");
+            Terminal.Execute("rfkill unblock all");
+            var btDirs = Directory.EnumerateDirectories("/var/lib/bluetooth").ToArray();
+            if (btDirs.Length > 0) {
+                ConsoleLogger.Info("bt >> create bt configuration file");
+                var btDir = btDirs.FirstOrDefault();
+                var dirName = Path.GetFullPath(btDir);
+                var fileName = $"{dirName}/settings".Replace("//", "/");
+                if (File.Exists(fileName)) {
+                    File.Delete(fileName);
+                }
+                var fileLines = new string[] {
+                    "[General]",
+                    "Discoverable=true",
+                    $"Alias={bluetoothConnectionName}",
+                };
+                FileSystem.WriteFile(fileName, String.Join(n, fileLines));
+                ConsoleLogger.Info("bt >> restart bluetooth service");
+                Terminal.Execute("systemctl restart bluetooth");
+                ConsoleLogger.Info("bt >> activate bluetooth connection");
+                var btCombo = $"power on{n}discoverable on{n}agent on{n}quit{n}";
+                Terminal.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
+                ConsoleLogger.Info("bt >> done!");
+            }
+            else {
+                ConsoleLogger.Info("bt >> no bluetooth device found!");
             }
         }
     }
