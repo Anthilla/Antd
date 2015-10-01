@@ -29,6 +29,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace antdlib.Network {
     public class NetworkInterface {
@@ -55,10 +56,23 @@ namespace antdlib.Network {
                     list.Add(Path.GetFileName(dir));
                 }
             }
-            return list;
+            return list.Where(s => !s.Contains("bond")).ToList();
         }
 
         public static List<string> Virtual { get { return GetVirtualNetworkInterfaces(); } }
 
+        private static List<string> GetBondNetworkInterfaces() {
+            var dirs = Directory.GetDirectories("/sys/class/net");
+            var list = new List<string>() { };
+            foreach (var dir in dirs) {
+                var f = Terminal.Execute($"file {dir}");
+                if (f.Contains("virtual") || f.Contains("fake")) {
+                    list.Add(Path.GetFileName(dir));
+                }
+            }
+            return list.Where(s => s.Contains("bond")).ToList();
+        }
+
+        public static List<string> Bond { get { return GetBondNetworkInterfaces(); } }
     }
 }

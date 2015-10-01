@@ -5,6 +5,7 @@
         <li class="active"><a href="#if">Interfaces</a></li>
         <li><a href="#nbrn">Bridges</a></li>
         <li class="place-right"><a href="#ifv">Virtual Interfaces</a></li>
+        <li class="place-right"><a href="#bondnif">Bond Interfaces</a></li>
         <li class="place-right"><a href="#nwboot">Config Network @@ Boot</a></li>
     </ul>
 
@@ -13,7 +14,7 @@
             @foreach (string interfaceName in antdlib.Network.NetworkInterface.Physical) {
                 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
                     <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
-                        <i class="icon-cone on-left"></i>  @interfaceName
+                        <i class="icon-cone on-left"></i> @interfaceName
                     </div>
                     <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
                         <label>IPV4 configuration</label>
@@ -80,8 +81,21 @@
             </div>
         </div>
 
-        <div id="ifv" class="frame" style="display: none;">
+        <div id="bondnif" class="frame" style="display: none;">
             @foreach (string interfaceName in antdlib.Network.NetworkInterface.Virtual) {
+                <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+                    <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
+                        <i class="icon-cone on-left"></i>  @interfaceName
+                    </div>
+                    <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
+
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div id="ifv" class="frame" style="display: none;">
+            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Bond) {
                 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
                     <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
                         <i class="icon-cone on-left"></i>  @interfaceName

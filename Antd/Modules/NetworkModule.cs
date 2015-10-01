@@ -43,6 +43,11 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-network", vmod];
             };
+
+            //Get["/test"] = x => {
+            //    dynamic vmod = new ExpandoObject();
+            //    return View["_page-network_test", vmod];
+            //};
         }
     }
 }
