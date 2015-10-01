@@ -36,7 +36,7 @@ using System.Net.NetworkInformation;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static string fileName = $"{Folder.Root}/{AntdFile.NetworkConfig}";
+        private static string fileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
 
         private static bool CheckNetworkIsConfigured() {
             if (File.Exists(fileName) && FileSystem.ReadFile(fileName).Length > 0) {
@@ -54,12 +54,15 @@ namespace antdlib.Network {
                         NetworkConfigRepository.Create(cmd);
                     }
                 }
+                ConsoleLogger.Info("Network config => existing configuration found...");
+                ConsoleLogger.Info("Network config => applying this configuration!");
                 Terminal.Execute($"chmod 777 {fileName}");
                 Terminal.Execute($".{fileName}");
-                //todo: la config c'è già, prendere ip eccetera
-                //ShowNetworkInfo("", "");
+                //todo: ShowNetworkInfo("", "");
             }
             else {
+                ConsoleLogger.Info("Network config => no configuration found...");
+                ConsoleLogger.Info("Network config => applying a default configuration!");
                 SetNetworkInterfaceUp();
             }
         }
@@ -76,6 +79,9 @@ namespace antdlib.Network {
                     NIFlist.Add(r);
                 }
             }
+            foreach(var n in NIFlist) {
+                ConsoleLogger.Point("DetectAllNetworkInterfaces", n);
+            }
             return NIFlist;
         }
 
@@ -87,6 +93,9 @@ namespace antdlib.Network {
                 if (r == "1") {
                     nlist.Add(nif);
                 }
+            }
+            foreach (var n in NIFlist) {
+                ConsoleLogger.Point("DetectActiveNetworkInterfaces", n);
             }
             return nlist;
         }

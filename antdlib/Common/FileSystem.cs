@@ -99,21 +99,24 @@ namespace antdlib {
         }
 
         public static void Download(string url, string destination) {
-            if (!File.Exists(destination)) {
+            try {
+                var nfile = destination;
+                if (File.Exists(destination)) {
+                    nfile = $"{destination}+";
+                }
                 using (var client = new WebClient()) {
-                    client.DownloadFile(url, destination);
+                    client.DownloadFile(url, nfile);
+                }
+                if (File.Exists(nfile)) {
+                    if (FileSystem.FilesAreEqual(new FileInfo(destination), new FileInfo(nfile)) == false) {
+                        File.Copy(nfile, destination, true);
+                    }
+                    File.Delete(nfile);
                 }
             }
-            else {
-                using (var client = new WebClient()) {
-                    client.DownloadFile(url, $"{destination}+");
-                }
-            }
-            if (File.Exists($"{destination}+")) {
-                if (FileSystem.FilesAreEqual(new FileInfo(destination), new FileInfo($"{destination}+")) == false) {
-                    File.Copy($"{destination}+", destination, true);
-                }
-                File.Delete($"{destination}+");
+            catch (Exception ex) {
+                ConsoleLogger.Error($"Unable to dowload from {url}");
+                ConsoleLogger.Error($"{ex.Message}");
             }
         }
     }

@@ -940,7 +940,7 @@ $('input#ShowBridgeMACS').click(function () {
     var funcReference = $(this).attr('id');
     var Bridge = $('#Value_' + funcReference + 'Bridge').val();
     if (Interface.length > 0) {
-        ShowBridgeMACS(Bridge =);
+        ShowBridgeMACS(Bridge);
     }
     else {
         alert('Value cannot be null!');
@@ -962,7 +962,7 @@ $('input#ShowBridgeSTP').click(function () {
     var funcReference = $(this).attr('id');
     var Bridge = $('#Value_' + funcReference + 'Bridge').val();
     if (Interface.length > 0) {
-        ShowBridgeSTP(Bridge =);
+        ShowBridgeSTP(Bridge);
     }
     else {
         alert('Value cannot be null!');
