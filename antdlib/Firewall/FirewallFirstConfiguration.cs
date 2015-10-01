@@ -32,25 +32,23 @@ using System.IO;
 namespace antdlib.Firewall {
     public class FirewallFirstConfiguration {
 
-        public static void Set() {
+        private static string fileName = $"{Folder.Dirs}/{AntdFile.FirewallConfig}";
 
+        private static bool CheckNetworkIsConfigured() {
+            if (File.Exists(fileName)) {
+                return true;
+            }
+            return false;
         }
 
-        public class FirewallFile {
-            public static string Name { get { return $"{Folder.Root}/antd.boot.firewall"; } }
-
-            public static string Content {
-                get {
-                    return (File.Exists(Name)) ? FileSystem.ReadFile(Name) : "null";
-                }
+        public static void Set() {
+            if (CheckNetworkIsConfigured() == false) {
+                ConsoleLogger.Info("Firewall config => no configuration found...");
+                ConsoleLogger.Info("Firewall config => setting files!");
+                FileSystem.WriteFile(fileName, "");
             }
-
-            public static void Edit(string newText) {
-                if (File.Exists(Name)) {
-                    File.Delete(Name);
-                }
-                FileSystem.WriteFile(Name, newText);
-            }
+            ConsoleLogger.Info("Firewall config => restart service!");
+            NFTables.Set(fileName);
         }
     }
 }

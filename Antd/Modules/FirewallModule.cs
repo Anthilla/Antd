@@ -29,7 +29,7 @@
 
 using antdlib.Firewall;
 using Nancy;
-using Nancy.Security;
+//using Nancy.Security;
 using System.Dynamic;
 
 namespace Antd {
@@ -38,7 +38,7 @@ namespace Antd {
 
         public FirewallModule()
             : base("/firewall") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
@@ -71,14 +71,9 @@ namespace Antd {
                 return Response.AsJson(array);
             };
 
-            Post["/apply"] = x => {
+            Post["/export"] = x => {
                 NFTables.WriteFile();
                 NFTables.Set();
-                return Response.AsJson(true);
-            };
-
-            Post["/restart"] = x => {
-                NFTables.Restart();
                 return Response.AsJson(true);
             };
         }

@@ -107,6 +107,8 @@ namespace antdlib {
 
     public class AntdFile {
         public static string NetworkConfig { get { return "antd.boot.network.conf"; } }
+
+        public static string FirewallConfig { get { return "antd.boot.firewall.conf"; } }
     }
 
     public class UID {

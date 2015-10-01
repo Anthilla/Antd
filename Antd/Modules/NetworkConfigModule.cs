@@ -38,7 +38,7 @@ namespace Antd {
 
         public NetworkConfigModule()
             : base("/network/config") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             #region Repository
             Get["/repo/all"] = x => {

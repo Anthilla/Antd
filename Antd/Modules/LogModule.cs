@@ -38,7 +38,7 @@ namespace Antd {
     public class LogModule : NancyModule {
         public LogModule()
             : base("/log") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

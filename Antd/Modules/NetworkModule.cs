@@ -28,7 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using Nancy;
-//using Nancy.Security;
+using Nancy.Security;
 using System.Dynamic;
 
 namespace Antd {
@@ -37,7 +37,7 @@ namespace Antd {
 
         public NetworkModule()
             : base("/network") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

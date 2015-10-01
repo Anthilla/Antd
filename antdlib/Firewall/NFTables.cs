@@ -33,10 +33,14 @@ using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTables {
-        private static string fileName = "FILE_cfg_antd_firewall_nftable.list";
+        private static string fileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
 
         public static void Set() {
             Terminal.Execute($"nft -f {fileName}");
+        }
+
+        public static void Set(string file) {
+            Terminal.Execute($"nft -f {file}");
         }
 
         private static string[] ChainType = new string[] {
@@ -65,11 +69,10 @@ namespace antdlib.Firewall {
         };
 
         public static void WriteFile() {
-            var path = Path.Combine(Folder.Root, fileName);
-            if (File.Exists(path)) {
-                File.Delete(path);
+            if (File.Exists(fileName)) {
+                File.Delete(fileName);
             }
-            using (StreamWriter sw = File.CreateText(path)) {
+            using (StreamWriter sw = File.CreateText(fileName)) {
                 sw.WriteLine("flush ruleset;");
                 sw.WriteLine("");
                 WriteTable(sw, "ip", ChainType, HookType);
@@ -79,7 +82,7 @@ namespace antdlib.Firewall {
             }
         }
 
-        public static void WriteTable(StreamWriter sw, string table, string[] chains, string[] hooks) {
+        private static void WriteTable(StreamWriter sw, string table, string[] chains, string[] hooks) {
             for (int c = 0; c < chains.Length; c++) {
                 sw.WriteLine($"table {table} {chains[c]} {{");
                 WriteChain(sw, table, chains[c], hooks);
@@ -87,7 +90,7 @@ namespace antdlib.Firewall {
             }
         }
 
-        public static void WriteChain(StreamWriter sw, string table, string chain, string[] hooks) {
+        private static void WriteChain(StreamWriter sw, string table, string chain, string[] hooks) {
             for (int h = 0; h < hooks.Length; h++) {
                 var ruleset = NFTableRepository.GetRuleSet(table, chain, hooks[h]);
                 sw.WriteLine($"chain {chain} {hooks[h]} {{");
@@ -102,7 +105,7 @@ namespace antdlib.Firewall {
             }
         }
 
-        public static void WriteRules(StreamWriter sw, string table, NFTableRuleSet ruleset) {
+        private static void WriteRules(StreamWriter sw, string table, NFTableRuleSet ruleset) {
             string[] rules;
             switch (table) {
                 case "ip":
@@ -135,15 +138,9 @@ namespace antdlib.Firewall {
         }
 
         public static void ReadFile() {
-            var path = Path.Combine(Folder.Root, fileName);
-            if (File.Exists(path)) {
-                //leggi e splitta eccetera
+            if (File.Exists(fileName)) {
+                //leggi e splitta
             }
-        }
-
-        public static void Restart() {
-            //todo controlla se "nftables" è il servzio giusto da restartare
-            Terminal.Execute("systemctl restart nftables");
         }
     }
 }
