@@ -50,11 +50,10 @@ namespace antdlib.Install {
             diskEFI = $"{disk}2";
             diskData = $"{disk}3";
             Directory.CreateDirectory(tmpDataFolder);
+            SetDiskAndInstall();
         }
 
-        //todo: lista dei dischi, e filtrare se sono vuoti e non-partizionati!
-
-        public void CreatePartitionOnDisk() {
+        public void SetDiskAndInstall() {
             ConsoleLogger.Info($"creating partitions on: {diskname}");
             var n = "\n";
             var fdiskOptions1 = $"p{n}n{n}1{n}1M{n}{n}{n}t{n}1{n}4{n}{n}{n}w{n}";

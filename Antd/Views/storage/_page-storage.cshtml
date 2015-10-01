@@ -29,7 +29,6 @@
     ///-------------------------------------------------------------------------------------*@
 
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-@using System.Collections.Generic
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
@@ -53,6 +52,23 @@
 
 @section Scripts {
     <script type="text/javascript">
+        $('#SelectThisDiskWhereIstallAOS').click(function () {
+            var diskName = $(this).attr('data-disk-name');
+            if (diskName.length > 0) {
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: '/storage/install',
+                    type: 'POST',
+                    data: {
+                        DiskName: diskName
+                    },
+                    success: function (data) {
+                        location.reload(true);
+                    }
+                });
+            }
+        });
+
         $('#AddRaidPath').click(function () {
             var p = $('#DatabaseRaid').val();
             if (p.length > 0) {

@@ -36,6 +36,7 @@ using Nancy;
 using Owin;
 using System.IO;
 using System.Text.RegularExpressions;
+using antdlib.MountPoint;
 
 namespace Antd {
 
@@ -89,9 +90,21 @@ namespace Antd {
 
         public static void SetOSMount() {
             if (AssemblyInfo.IsUnix) {
-                Terminal.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware/");
-                Terminal.Execute("mkdir -p /lib64/modules/4.1.5-aufs");
-                Terminal.Execute("mount /mnt/cdrom/Kernel/active-modules /lib64/modules/4.1.5-aufs/");
+                var firmware = "/mnt/cdrom/Kernel/active-firmware";
+                var firmwareDir = "/lib64/firmware";
+                if (Mount.IsAlreadyMounted(firmware, firmwareDir) == false) {
+                    Terminal.Execute($"mount {firmware} {firmwareDir}");
+                }
+                var module = "/mnt/cdrom/Kernel/active-modules";
+                var kernelRelease = Terminal.Execute("uname -r").Trim();
+                var linkedRelease = Terminal.Execute($"file {module}").Trim();
+                if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+                    var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                    if (!Directory.Exists(moduleDir)) {
+                        Directory.CreateDirectory(moduleDir);
+                    }
+                    Terminal.Execute($"mount {module} {moduleDir}");
+                }
                 ConsoleLogger.Log("    os mount -> checked");
             }
         }

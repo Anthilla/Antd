@@ -63,7 +63,6 @@ namespace antdsh {
         ///     - active-modules
         /// 04 - e in /mnt/cdrom/System
         ///     - active-system
-        /// todo: cambiare il file name
         /// </summary>
         public static void DownloadNewFiles() {
             var firmwareTmp = $"{global.tmpDir}/firmare";
@@ -130,7 +129,6 @@ namespace antdsh {
 
         /// <summary>
         /// 08 - se ve tutto bene antd si avvia in automatico al riavvio, la prima cosa che fa è create le units di sistema
-        /// todo: quali sono le units?
         /// </summary>
         public static void CreateUnitsForSystem() {
             WriteLine("Setting system units");

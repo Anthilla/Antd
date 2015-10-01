@@ -29,6 +29,7 @@
 
 using antdlib.CCTable;
 using antdlib.Database;
+using antdlib.Install;
 using antdlib.Storage;
 using Nancy;
 using Nancy.Security;
@@ -60,6 +61,11 @@ namespace Antd {
 
             Get["/reload/volumes"] = x => {
                 Volumes.PopulateBlocks();
+                return Response.AsJson(true);
+            };
+
+            Post["/install"] = x => {
+                new InstallOperativeSystem((string)Request.Form.DiskName);
                 return Response.AsJson(true);
             };
         }

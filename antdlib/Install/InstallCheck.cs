@@ -28,11 +28,8 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace antdlib.Install {
     public class InstallCheck {
@@ -56,24 +53,18 @@ namespace antdlib.Install {
         public static bool IsOSRemovable { get { return IsOnUSB(); } }
 
         public static bool IsDiskEligibleForOS(string disk) {
-            //controllo se c'è abbastanza spazio
             var diskSizeCmdResult = Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
             var size = diskSizeCmdResult.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             if (!size.Contains("G")) {
-                //il disco è < 1G
                 var num = Convert.ToInt32(size.Replace("M", ""));
                 if (num < 32) {
-                    //il disco è < 32M
                     return false;
                 }
             }
-            //ho controllato se è un disco o una partizione
             var isPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep \"{disk} \"");
             if (isPartitionCmdResult.Contains("part") && !isPartitionCmdResult.Contains("disk")) {
-                //è una partizione, e non va bene
                 return false;
             }
-            //controllo che sia non abbia partizioni
             var hasPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
             var results = hasPartitionCmdResult.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (results > 1) {
