@@ -1,5 +1,98 @@
 var networkUrl = '/network/config';
 
+//Repository
+$('a[href="#nwboot"]').click(function () {
+    jQuery.support.cors = true;
+    $.ajax({
+        url: networkUrl + '/repo/all',
+        type: 'GET',
+        success: function (data) {
+            $.each(data, function (index, i) {
+                $('#NetworkCommandTable').append(AssembleDataRow(i));
+            });
+            EnableCommand();
+            DisableCommand();
+            DeleteCommand();
+        }
+    });
+});
+
+function AssembleDataRow(data) {
+    var row = '<tr data-guid="' + data.Guid + '">';
+    row += '<td><p>' + data.CommandLine + '</p></td>';
+    if (data.IsEnabled == true) {
+        row += '<td><input type="button" value="Disable" data-role="disable-command" data-guid="' + data.Guid + '" /></td>';
+    }
+    else {
+        row += '<td><input type="button" value="Enable" data-role="enable-command" data-guid="' + data.Guid + '" /></td>';
+    }
+    row += '<td><input type="button" value="Delete" data-role="delete-command" data-guid="' + data.Guid + '" /></td>';
+    row += '</tr>'
+    return row;
+}
+
+function EnableCommand() {
+    $('input[data-role="enable-command"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: networkUrl + '/repo/enable',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+}
+
+function DisableCommand() {
+    $('input[data-role="disable-command"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: networkUrl + '/repo/disable',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+}
+
+function DeleteCommand() {
+    $('input[data-role="delete-command"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: networkUrl + '/repo/delete',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+}
+
+$('#ExportNetworkCommandTable').click(function () {
+    jQuery.support.cors = true;
+    $.ajax({
+        url: networkUrl + '/repo/export',
+        type: 'POST',
+        success: function (data) {
+            location.reload(true);
+        }
+    });
+});
+
 //IPV4
 $('input#AddNewAddressIPV4').click(function () {
     var funcReference = $(this).attr('id');
@@ -689,6 +782,17 @@ function ShowTunnelsIPV6(interfaceName) {
 }
 
 //BRIDGE
+$('input#AddBridgeName').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Bridge.length > 0) {
+        AddBridgeName(Bridge);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function AddBridgeName(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
@@ -703,6 +807,17 @@ function AddBridgeName(bridgeName) {
     });
 }
 
+$('input#DeleteBridgeName').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Bridge.length > 0) {
+        DeleteBridgeName(Bridge);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function DeleteBridgeName(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
@@ -716,6 +831,18 @@ function DeleteBridgeName(bridgeName) {
         }
     });
 }
+
+$('input#AddNetworkInterfaceToBridge').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $('#Value_' + funcReference + 'Interface').val();
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Interface.length > 0 && Bridge.length > 0) {
+        AddNetworkInterfaceToBridge(Bridge, Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function AddNetworkInterfaceToBridge(bridgeName, interfaceName) {
     jQuery.support.cors = true;
@@ -732,6 +859,18 @@ function AddNetworkInterfaceToBridge(bridgeName, interfaceName) {
     });
 }
 
+$('input#DeleteNetworkInterfaceToBridge').click(function () {
+    var funcReference = $(this).attr('id');
+    var Interface = $('#Value_' + funcReference + 'Interface').val();
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Interface.length > 0 && Bridge.length > 0) {
+        DeleteNetworkInterfaceToBridge(Bridge, Interface);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function DeleteNetworkInterfaceToBridge(bridgeName, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
@@ -747,6 +886,17 @@ function DeleteNetworkInterfaceToBridge(bridgeName, interfaceName) {
     });
 }
 
+$('input#EnableStpOnBridge').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Bridge.length > 0) {
+        EnableStpOnBridge(Bridge);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function EnableStpOnBridge(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
@@ -760,6 +910,17 @@ function EnableStpOnBridge(bridgeName) {
         }
     });
 }
+
+$('input#DisableStpOnBridge').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Bridge.length > 0) {
+        DisableStpOnBridge(Bridge);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function DisableStpOnBridge(bridgeName) {
     jQuery.support.cors = true;
@@ -775,16 +936,39 @@ function DisableStpOnBridge(bridgeName) {
     });
 }
 
+$('input#ShowBridgeMACS').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Interface.length > 0) {
+        ShowBridgeMACS(Bridge =);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 function ShowBridgeMACS(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/br/macs/' + bridgeName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowBridgeMACS').show().text(data);
         }
     });
 }
+
+$('input#ShowBridgeSTP').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    if (Interface.length > 0) {
+        ShowBridgeSTP(Bridge =);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
 
 function ShowBridgeSTP(bridgeName) {
     jQuery.support.cors = true;
@@ -792,10 +976,23 @@ function ShowBridgeSTP(bridgeName) {
         url: networkUrl + '/br/stp/' + bridgeName,
         type: 'GET',
         success: function (data) {
-            console.log(data);
+            $('textarea#ShowBridgeSTP').show().text(data);
         }
     });
 }
+
+$('input#SetBridgePathCost').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    var Path = $('#Value_' + funcReference + 'Path').val();
+    var Cost = $('#Value_' + funcReference + 'Cost').val();
+    if (Bridge.length > 0 && Path.length > 0 && Cost.length > 0) {
+        SetBridgePortPriority(Bridge, Path, Cost);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function SetBridgePathCost(bridgeName, path, cost) {
     jQuery.support.cors = true;
@@ -812,6 +1009,19 @@ function SetBridgePathCost(bridgeName, path, cost) {
         }
     });
 }
+
+$('input#SetBridgePortPriority').click(function () {
+    var funcReference = $(this).attr('id');
+    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+    var Port = $('#Value_' + funcReference + 'Port').val();
+    var Priority = $('#Value_' + funcReference + 'Priority').val();
+    if (Bridge.length > 0 && Port.length > 0 && Priority.length > 0) {
+        SetBridgePortPriority(Bridge, Port, Priority);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
 
 function SetBridgePortPriority(bridgeName, port, prio) {
     jQuery.support.cors = true;

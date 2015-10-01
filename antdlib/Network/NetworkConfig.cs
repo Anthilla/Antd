@@ -32,193 +32,271 @@ namespace antdlib.Network {
         public class Iproute2 {
 
             public static string AddNewAddressIPV4(string range, string address, string interfaceName) {
-                return Terminal.Execute($"ip addr add {range} broadcast {address} dev {interfaceName}");
+                var cmd = $"ip addr add {range} broadcast {address} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIPV4(string range, string address, string interfaceName) {
-                return Terminal.Execute($"ip addr del {range} broadcast {address} dev {interfaceName}");
+                var cmd = $"ip addr del {range} broadcast {address} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string FlushConfigurationIPV4(string interfaceName = null) {
                 var i = (interfaceName == null) ? "label \"eth *\"" : "dev {interfaceName}";
-                return Terminal.Execute($"ip addr flush {i}");
+                var cmd = $"ip addr flush {i}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceAddr(string interfaceName) {
-                return Terminal.Execute($"ip addr show {interfaceName}");
+                var cmd = $"ip addr show {interfaceName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceLink(string interfaceName) {
-                return Terminal.Execute($"ip link show {interfaceName}");
+                var cmd = $"ip link show {interfaceName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceStats(string interfaceName) {
-                return Terminal.Execute($"ip -s link ls {interfaceName}");
+                var cmd = $"ip -s link ls {interfaceName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string AddRouteIPV4(string address, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip route add default via {address}");
+                    var cmd = $"ip route add default via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip route add {gateway} via {address}");
+                    var cmd = $"ip route add {gateway} via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string AddMultipathRoute(string net1, string net2) {
-                return Terminal.Execute($"ip route add default scope global nexthop dev {net1} nexthop dev {net2}");
+                var cmd = $"ip route add default scope global nexthop dev {net1} nexthop dev {net2}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNat(string address, string viaAddress) {
-                return Terminal.Execute($"ip route add nat {address} via {viaAddress}");
+                var cmd = $"ip route add nat {address} via {viaAddress}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteRouteIPV4(string address, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip route del default via {address}");
+                    var cmd = $"ip route del default via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip route del {gateway} via {address}");
+                    var cmd = $"ip route del {gateway} via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string ShowRoutes(string interfaceName = "") {
-                return Terminal.Execute($"ip route show {interfaceName}");
+                var cmd = $"ip route show {interfaceName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string EnableInterface(string interfaceName) {
-                return Terminal.Execute($"ip link set {interfaceName} up");
+                var cmd = $"ip link set {interfaceName} up";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DisableInterface(string interfaceName) {
-                return Terminal.Execute($"ip link set {interfaceName} down");
+                var cmd = $"ip link set {interfaceName} down";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddTunnelPointToPointIPV4(string interfaceName, string ttl, string foreignTunnel, string address) {
-                return Terminal.Execute($"ip tunnel add {interfaceName} mode sit ttl {ttl} remote {foreignTunnel} local {address}");
+                var cmd = $"ip tunnel add {interfaceName} mode sit ttl {ttl} remote {foreignTunnel} local {address}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteTunnelPointToPointIPV4(string interfaceName) {
-                return Terminal.Execute($"ip tunnel del {interfaceName}");
+                var cmd = $"ip tunnel del {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowTunnelsIPV4(string interfaceName) {
                 var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
-                return Terminal.Execute($"ip tunnel show {i}");
+                var cmd = $"ip tunnel show {i}";
+                return Terminal.Execute(cmd);
             }
 
             #region IPV6 Related
             public static string AddNewAddressIPV6(string address, string interfaceName) {
-                return Terminal.Execute($"ip -6 addr add {address} dev {interfaceName}");
+                var cmd = $"ip -6 addr add {address} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIPV6(string address, string interfaceName) {
-                return Terminal.Execute($"ip -6 addr del {address} dev {interfaceName}");
+                var cmd = $"ip -6 addr del {address} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowRoutesIPV6(string interfaceName = "") {
-                return Terminal.Execute($"ip -6 route show {interfaceName}");
+                var cmd = $"ip -6 route show {interfaceName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string FlushConfigurationIPV6() {
-                return Terminal.Execute($"ip addr flush dynamic");
+                var cmd = $"ip addr flush dynamic";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowNeighborsIPV6(string interfaceName = null) {
                 var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
-                return Terminal.Execute($"ip -6 neigh show {i}");
+                var cmd = $"ip -6 neigh show {i}";
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNeighborsIPV6(string address, string layerAddress, string interfaceName) {
-                return Terminal.Execute($"ip -6 neigh add {address} lladdr {layerAddress} dev {interfaceName}");
+                var cmd = $"ip -6 neigh add {address} lladdr {layerAddress} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteNeighborsIPV6(string address, string layerAddress, string interfaceName) {
-                return Terminal.Execute($"ip -6 neigh del {address} lladdr {layerAddress} dev {interfaceName}");
+                var cmd = $"ip -6 neigh del {address} lladdr {layerAddress} dev {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddRouteIPV6Gateway(string address, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip -6 route add default via {address}");
+                    var cmd = $"ip -6 route add default via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip -6 route add {gateway} via {address}");
+                    var cmd = $"ip -6 route add {gateway} via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string DeleteRouteIPV6Gateway(string address, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip -6 route del default via {address}");
+                    var cmd = $"ip -6 route del default via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip -6 route del {gateway} via {address}");
+                    var cmd = $"ip -6 route del {gateway} via {address}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string AddRouteIPV6Interface(string interfaceName, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip -6 route add default dev {interfaceName}");
+                    var cmd = $"ip -6 route add default dev {interfaceName}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip -6 route add {gateway} dev {interfaceName}");
+                    var cmd = $"ip -6 route add {gateway} dev {interfaceName}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string DeleteRouteIPV6Interface(string interfaceName, string gateway = null) {
                 if (gateway == null) {
-                    return Terminal.Execute($"ip -6 route del default dev {interfaceName}");
+                    var cmd = $"ip -6 route del default dev {interfaceName}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
-                    return Terminal.Execute($"ip -6 route del {gateway} dev {interfaceName}");
+                    var cmd = $"ip -6 route del {gateway} dev {interfaceName}";
+                    NetworkConfigRepository.Create(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string ShowTunnelsIPV6(string interfaceName) {
                 var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
-                return Terminal.Execute($"ip -6 tunnel show {i}");
+                var cmd = $"ip -6 tunnel show {i}";
+                return Terminal.Execute(cmd);
             }
             #endregion
         }
 
         public class Brctl {
             public static string AddBridgeName(string bridgeName) {
-                return Terminal.Execute($"brctl addbr {bridgeName}");
+                var cmd = $"brctl addbr {bridgeName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteBridgeName(string bridgeName) {
-                return Terminal.Execute($"brctl delbr {bridgeName}");
+                var cmd = $"brctl delbr {bridgeName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
-                return Terminal.Execute($"brctl addif {bridgeName} {interfaceName}");
+                var cmd = $"brctl addif {bridgeName} {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
-                return Terminal.Execute($"brctl delif {bridgeName} {interfaceName}");
+                var cmd = $"brctl delif {bridgeName} {interfaceName}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string EnableStpOnBridge(string bridgeName) {
-                return Terminal.Execute($"brctl stp {bridgeName} on");
+                var cmd = $"brctl stp {bridgeName} on";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DisableStpOnBridge(string bridgeName) {
-                return Terminal.Execute($"brctl stp {bridgeName} off");
+                var cmd = $"brctl stp {bridgeName} off";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowBridgeMACS(string bridgeName) {
-                return Terminal.Execute($"brctl showmacs {bridgeName}");
+                var cmd = $"brctl showmacs {bridgeName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowBridgeSTP(string bridgeName) {
-                return Terminal.Execute($"brctl showstp {bridgeName}");
+                var cmd = $"brctl showstp {bridgeName}";
+                return Terminal.Execute(cmd);
             }
 
             public static string SetBridgePathCost(string bridgeName, string path, string cost) {
-                return Terminal.Execute($"brctl setpathcost {bridgeName} {path} {cost} set path cost");
+                var cmd = $"brctl setpathcost {bridgeName} {path} {cost} set path cost";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string SetBridgePortPriority(string bridgeName, string port, string priority) {
-                return Terminal.Execute($"brctl setportprio {bridgeName} {port} {priority} set port priority");
+                var cmd = $"brctl setportprio {bridgeName} {port} {priority} set port priority";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
         }
     }

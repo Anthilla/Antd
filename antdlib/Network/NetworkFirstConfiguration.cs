@@ -36,7 +36,7 @@ using System.Net.NetworkInformation;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static string fileName = $"{Folder.Root}/antd.boot.network.conf";
+        private static string fileName = $"{Folder.Root}/{AntdFile.NetworkConfig}";
 
         private static bool CheckNetworkIsConfigured() {
             if (File.Exists(fileName) && FileSystem.ReadFile(fileName).Length > 0) {
@@ -47,10 +47,17 @@ namespace antdlib.Network {
 
         public static void Set() {
             if (CheckNetworkIsConfigured() == true) {
+                var fileContent = FileSystem.ReadFile(fileName);
+                if (fileContent.Length > 0) {
+                    var arr = fileContent.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var cmd in arr) {
+                        NetworkConfigRepository.Create(cmd);
+                    }
+                }
                 Terminal.Execute($"chmod 777 {fileName}");
                 Terminal.Execute($".{fileName}");
                 //todo: la config c'è già, prendere ip eccetera
-                ShowNetworkInfo("", "");
+                //ShowNetworkInfo("", "");
             }
             else {
                 SetNetworkInterfaceUp();
@@ -141,7 +148,7 @@ namespace antdlib.Network {
                 var cmd1 = $"ip addr add {ip} dev {selectedNIF}";
                 Terminal.Execute(cmd1);
                 commands.Add(cmd1);
-                var cmd2 = $"ip addr add {ip} dev {selectedNIF}";
+                var cmd2 = $"ip route add default via {ip}";
                 Terminal.Execute(cmd2);
                 commands.Add(cmd2);
                 WriteConfFile();

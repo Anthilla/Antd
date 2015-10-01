@@ -40,6 +40,36 @@ namespace Antd {
             : base("/network/config") {
             //this.RequiresAuthentication();
 
+            #region Repository
+            Get["/repo/all"] = x => {
+                var result = NetworkConfigRepository.GetAll();
+                return Response.AsJson(result);
+            };
+
+            Post["/repo/enable"] = x => {
+                string guid = Request.Form.Guid;
+                NetworkConfigRepository.Enable(guid);
+                return Response.AsJson(true);
+            };
+
+            Post["/repo/disable"] = x => {
+                string guid = Request.Form.Guid;
+                NetworkConfigRepository.Disable(guid);
+                return Response.AsJson(true);
+            };
+
+            Post["/repo/delete"] = x => {
+                string guid = Request.Form.Guid;
+                NetworkConfigRepository.Delete(guid);
+                return Response.AsJson(true);
+            };
+
+            Post["/repo/export"] = x => {
+                NetworkConfigRepository.ExportToFile();
+                return Response.AsJson(true);
+            };
+            #endregion Repository
+
             #region IPV4
             Post["/ipv4/add/address"] = x => {
                 string range = Request.Form.Range;

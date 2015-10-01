@@ -27,8 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.CCTable;
 using Nancy;
+//using Nancy.Security;
 using System.Dynamic;
 
 namespace Antd {
@@ -41,7 +41,6 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                //vmod.Interfaces = NetworkInterface.All.Where(i => i.Type == NetworkInterfaceType.Physical);
                 return View["_page-network", vmod];
             };
         }
