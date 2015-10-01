@@ -76,11 +76,8 @@ namespace antdlib.Network {
                     break;
                 }
                 else {
-                    NIFlist.Add(r);
+                    NIFlist.Add($"eth{i.ToString()}");
                 }
-            }
-            foreach(var n in NIFlist) {
-                ConsoleLogger.Point("DetectAllNetworkInterfaces", n);
             }
             return NIFlist;
         }
@@ -93,9 +90,6 @@ namespace antdlib.Network {
                 if (r == "1") {
                     nlist.Add(nif);
                 }
-            }
-            foreach (var n in NIFlist) {
-                ConsoleLogger.Point("DetectActiveNetworkInterfaces", n);
             }
             return nlist;
         }
