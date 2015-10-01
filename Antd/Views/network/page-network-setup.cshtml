@@ -19,13 +19,13 @@
                         <label>IPV4 configuration</label>
                         <hr class="bg-anthilla-gray border-anthilla-gray" />
                         <div class="grid">
-                            @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Range", "Address" })
-                            @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Range", "Address" })
+                            @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                            @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
                             @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
-                            @EditParameterRowPost("AddRouteIPV4", new string[] { "Address", "Gateway" })
-                            @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Address", "Gateway" })
+                            @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
+                            @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
                             @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
-                            @EditParameterRowPost("AddNat", new string[] { "Address", "Via" })
+                            @*@EditParameterRowPost("AddNat", new string[] { "Address", "Via" })*@
                             @EditParameterRowPost("EnableInterface", new string[] { })
                             @EditParameterRowPost("DisableInterface", new string[] { })
                             @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
@@ -61,80 +61,73 @@
         </div>
 
         <div id="nbrn" class="frame" style="display: none;">
-            <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
-                <div class="panel-header bg-anthilla-gray fg-white brg-header" data-brg-name="">
-                    <i class="icon-cone on-left"></i>
-                </div>
-                <div class="panel-content brg-content" style="display: none;" data-brg-content="">
-                    <label>Bridge Configuration</label>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <div class="grid">
-                        @EditParameterRowPost("AddBridgeName", new string[] { "Bridge" })
-                        @EditParameterRowPost("DeleteBridgeName", new string[] { "Bridge" })
-                        @EditParameterRowPost("AddNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
-                        @EditParameterRowPost("DeleteNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
-                        @EditParameterRowPost("EnableStpOnBridge", new string[] { "Bridge" })
-                        @EditParameterRowPost("DisableStpOnBridge", new string[] { "Bridge" })
-                        @EditParameterRowPost("SetBridgePathCost", new string[] { "Bridge", "Path", "Cost" })
-                        @EditParameterRowPost("SetBridgePortPriority", new string[] { "Bridge", "Port", "Priority" })
-                    </div>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <div class="grid">
-                        @EditParameterRowGet("ShowBridgeMACS", new string[] { })
-                        @EditParameterRowGet("ShowBridgeSTP", new string[] { })
-                    </div>
-                </div>
+            <label>Bridge Configuration</label>
+            <hr class="bg-anthilla-gray border-anthilla-gray" />
+            <div class="grid">
+                @EditParameterRowPost("AddBridgeName", new string[] { "Bridge" })
+                @EditParameterRowPost("DeleteBridgeName", new string[] { "Bridge" })
+                @EditParameterRowPost("AddNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
+                @EditParameterRowPost("DeleteNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
+                @EditParameterRowPost("EnableStpOnBridge", new string[] { "Bridge" })
+                @EditParameterRowPost("DisableStpOnBridge", new string[] { "Bridge" })
+                @EditParameterRowPost("SetBridgePathCost", new string[] { "Bridge", "Path", "Cost" })
+                @EditParameterRowPost("SetBridgePortPriority", new string[] { "Bridge", "Port", "Priority" })
+            </div>
+            <hr class="bg-anthilla-gray border-anthilla-gray" />
+            <div class="grid">
+                @EditParameterRowGet("ShowBridgeMACS", new string[] { })
+                @EditParameterRowGet("ShowBridgeSTP", new string[] { })
             </div>
         </div>
 
         <div id="ifv" class="frame" style="display: none;">
             @foreach (string interfaceName in antdlib.Network.NetworkInterface.Virtual) {
-            <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
-                <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
-                    <i class="icon-cone on-left"></i>  @interfaceName
-                </div>
-                <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
-                    <label>IPV4 configuration</label>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <div class="grid">
-                        @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Range", "Address" })
-                        @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Range", "Address" })
-                        @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
-                        @EditParameterRowPost("AddRouteIPV4", new string[] { "Address", "Gateway" })
-                        @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Address", "Gateway" })
-                        @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
-                        @EditParameterRowPost("AddNat", new string[] { "Address", "Via" })
-                        @EditParameterRowPost("EnableInterface", new string[] { })
-                        @EditParameterRowPost("DisableInterface", new string[] { })
-                        @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
-                        @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
+                <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+                    <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
+                        <i class="icon-cone on-left"></i>  @interfaceName
                     </div>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <label>IPV6 configuration</label>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <div class="grid">
-                        @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
-                        @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
-                        @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
-                        @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
-                        @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
-                        @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                        @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                        @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
-                        @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
-                    </div>
-                    <hr class="bg-anthilla-gray border-anthilla-gray" />
-                    <div class="grid">
-                        @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
-                        @EditParameterRowGet("ShowInterfaceLink", new string[] { })
-                        @EditParameterRowGet("ShowInterfaceStats", new string[] { })
-                        @EditParameterRowGet("ShowRoutes", new string[] { })
+                    <div class="panel-content nif-content" style="display: none;" data-nif-content="@interfaceName">
+                        <label>IPV4 configuration</label>
                         <hr class="bg-anthilla-gray border-anthilla-gray" />
-                        @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
-                        @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                        <div class="grid">
+                            @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                            @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                            @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
+                            @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
+                            @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
+                            @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
+                            @*@EditParameterRowPost("AddNat", new string[] { "Address", "Via" })*@
+                            @EditParameterRowPost("EnableInterface", new string[] { })
+                            @EditParameterRowPost("DisableInterface", new string[] { })
+                            @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
+                            @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
+                        </div>
+                        <hr class="bg-anthilla-gray border-anthilla-gray" />
+                        <label>IPV6 configuration</label>
+                        <hr class="bg-anthilla-gray border-anthilla-gray" />
+                        <div class="grid">
+                            @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
+                            @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
+                            @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
+                            @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
+                            @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
+                            @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                            @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                            @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
+                            @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
+                        </div>
+                        <hr class="bg-anthilla-gray border-anthilla-gray" />
+                        <div class="grid">
+                            @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
+                            @EditParameterRowGet("ShowInterfaceLink", new string[] { })
+                            @EditParameterRowGet("ShowInterfaceStats", new string[] { })
+                            @EditParameterRowGet("ShowRoutes", new string[] { })
+                            <hr class="bg-anthilla-gray border-anthilla-gray" />
+                            @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
+                            @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                        </div>
                     </div>
                 </div>
-            </div>
             }
         </div>
 

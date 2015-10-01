@@ -72,18 +72,20 @@ namespace Antd {
 
             #region IPV4
             Post["/ipv4/add/address"] = x => {
-                string range = Request.Form.Range;
                 string address = Request.Form.Address;
+                string range = Request.Form.Range;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.AddNewAddressIPV4(range, address, interfaceName);
+                string broadcast = Request.Form.Broadcast;
+                var result = NetworkConfig.Iproute2.AddNewAddressIPV4(address, range, interfaceName, broadcast);
                 return Response.AsJson(result);
             };
 
             Post["/ipv4/del/address"] = x => {
-                string range = Request.Form.Range;
                 string address = Request.Form.Address;
+                string range = Request.Form.Range;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.DeleteAddressIPV4(range, address, interfaceName);
+                string broadcast = Request.Form.Broadcast;
+                var result = NetworkConfig.Iproute2.DeleteAddressIPV4(address, range, interfaceName, broadcast);
                 return Response.AsJson(result);
             };
 
@@ -113,10 +115,18 @@ namespace Antd {
             };
 
             Post["/ipv4/add/route"] = x => {
-                string address = Request.Form.Address;
                 string gateway = Request.Form.Gateway;
-                var i = (gateway.Length > 0) ? gateway : null;
-                var result = NetworkConfig.Iproute2.AddRouteIPV4(address, i);
+                string destination = Request.Form.Destination;
+                var i = (destination.Length > 0) ? destination : null;
+                var result = NetworkConfig.Iproute2.AddRouteIPV4(gateway, i);
+                return Response.AsJson(result);
+            };
+
+            Post["/ipv4/del/route"] = x => {
+                string gateway = Request.Form.Gateway;
+                string destination = Request.Form.Destination;
+                var i = (destination.Length > 0) ? destination : null;
+                var result = NetworkConfig.Iproute2.DeleteRouteIPV4(gateway, i);
                 return Response.AsJson(result);
             };
 
@@ -131,14 +141,6 @@ namespace Antd {
                 string address = Request.Form.Address;
                 string via = Request.Form.Via;
                 var result = NetworkConfig.Iproute2.AddNat(address, via);
-                return Response.AsJson(result);
-            };
-
-            Post["/ipv4/del/route"] = x => {
-                string address = Request.Form.Address;
-                string gateway = Request.Form.Gateway;
-                var i = (gateway.Length > 0) ? gateway : null;
-                var result = NetworkConfig.Iproute2.DeleteRouteIPV4(address, i);
                 return Response.AsJson(result);
             };
 

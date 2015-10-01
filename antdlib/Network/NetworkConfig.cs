@@ -31,14 +31,18 @@ namespace antdlib.Network {
     public class NetworkConfig {
         public class Iproute2 {
 
-            public static string AddNewAddressIPV4(string range, string address, string interfaceName) {
-                var cmd = $"ip addr add {range} broadcast {address} dev {interfaceName}";
+            public static string AddNewAddressIPV4(string address, string range, string interfaceName, string broadcast) {
+                var cmd = (broadcast == "") ?
+                    $"ip addr add {address}/{range} dev {interfaceName}" :
+                    $"ip addr add {address}/{range} broadcast {address} dev {interfaceName}";
                 NetworkConfigRepository.Create(cmd);
                 return Terminal.Execute(cmd);
             }
 
-            public static string DeleteAddressIPV4(string range, string address, string interfaceName) {
-                var cmd = $"ip addr del {range} broadcast {address} dev {interfaceName}";
+            public static string DeleteAddressIPV4(string address, string range, string interfaceName, string broadcast) {
+                var cmd = (broadcast == "") ?
+                    $"ip addr del {address}/{range} dev {interfaceName}" :
+                    $"ip addr del {address}/{range} broadcast {address} dev {interfaceName}";
                 NetworkConfigRepository.Create(cmd);
                 return Terminal.Execute(cmd);
             }
@@ -65,17 +69,20 @@ namespace antdlib.Network {
                 return Terminal.Execute(cmd);
             }
 
-            public static string AddRouteIPV4(string address, string gateway = null) {
-                if (gateway == null) {
-                    var cmd = $"ip route add default via {address}";
-                    NetworkConfigRepository.Create(cmd);
-                    return Terminal.Execute(cmd);
-                }
-                else {
-                    var cmd = $"ip route add {gateway} via {address}";
-                    NetworkConfigRepository.Create(cmd);
-                    return Terminal.Execute(cmd);
-                }
+            public static string AddRouteIPV4(string gateway, string destination) {
+                var cmd = (destination == null) ?
+                       $"ip route add default via {gateway}" :
+                       $"ip route add {destination} via {gateway}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
+            }
+
+            public static string DeleteRouteIPV4(string gateway, string destination) {
+                var cmd = (destination == null) ?
+                    $"ip route del default via {gateway}" :
+                    $"ip route del {destination} via {gateway}";
+                NetworkConfigRepository.Create(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddMultipathRoute(string net1, string net2) {
@@ -88,19 +95,6 @@ namespace antdlib.Network {
                 var cmd = $"ip route add nat {address} via {viaAddress}";
                 NetworkConfigRepository.Create(cmd);
                 return Terminal.Execute(cmd);
-            }
-
-            public static string DeleteRouteIPV4(string address, string gateway = null) {
-                if (gateway == null) {
-                    var cmd = $"ip route del default via {address}";
-                    NetworkConfigRepository.Create(cmd);
-                    return Terminal.Execute(cmd);
-                }
-                else {
-                    var cmd = $"ip route del {gateway} via {address}";
-                    NetworkConfigRepository.Create(cmd);
-                    return Terminal.Execute(cmd);
-                }
             }
 
             public static string ShowRoutes(string interfaceName = "") {

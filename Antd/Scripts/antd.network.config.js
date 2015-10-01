@@ -98,16 +98,17 @@ $('input#AddNewAddressIPV4').click(function () {
     var funcReference = $(this).attr('id');
     var Range = $('#Value_' + funcReference + 'Range').val();
     var Address = $('#Value_' + funcReference + 'Address').val();
+    var Broadcast = $('#Value_' + funcReference + 'Broadcast').val();
     var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
-        AddNewAddressIPV4(Range, Address, Interface);
+        AddNewAddressIPV4(Address, Range, Interface, Broadcast);
     }
     else {
         alert('Value cannot be null!');
     }
 });
 
-function AddNewAddressIPV4(range, address, interfaceName) {
+function AddNewAddressIPV4(address, range, interfaceName, broadcast) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv4/add/address',
@@ -115,6 +116,7 @@ function AddNewAddressIPV4(range, address, interfaceName) {
         data: {
             Range: range,
             Address: address,
+            Broadcast: broadcast,
             Interface: interfaceName
         },
         success: function (data) {
@@ -127,16 +129,17 @@ $('input#DeleteAddressIPV4').click(function () {
     var funcReference = $(this).attr('id');
     var Range = $('#Value_' + funcReference + 'Range').val();
     var Address = $('#Value_' + funcReference + 'Address').val();
+    var Broadcast = $('#Value_' + funcReference + 'Broadcast').val();
     var Interface = $(this).parents('.nif-content').attr('data-nif-name');
     if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
-        DeleteAddressIPV4(Range, Address, Interface);
+        DeleteAddressIPV4(Address, Range, Interface, Broadcast);
     }
     else {
         alert('Value cannot be null!');
     }
 });
 
-function DeleteAddressIPV4(range, address, interfaceName) {
+function DeleteAddressIPV4(address, range, interfaceName, broadcast) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv4/del/address',
@@ -144,6 +147,7 @@ function DeleteAddressIPV4(range, address, interfaceName) {
         data: {
             Range: range,
             Address: address,
+            Broadcast: broadcast,
             Interface: interfaceName
         },
         success: function (data) {
@@ -245,24 +249,51 @@ function ShowInterfaceStats(interfaceName) {
 
 $('input#AddRouteIPV4').click(function () {
     var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
     var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    if (Address.length > 0 && Gateway.length > 0) {
-        AddRouteIPV4(Address, Gateway);
+    var Destination = $('#Value_' + funcReference + 'Destination').val();
+    if (Destination.length > 0 && Gateway.length > 0) {
+        AddRouteIPV4(Gateway, Destination);
     }
     else {
         alert('Value cannot be null!');
     }
 });
 
-function AddRouteIPV4(address, gateway) {
+function AddRouteIPV4(gateway, destination) {
     jQuery.support.cors = true;
     $.ajax({
         url: networkUrl + '/ipv4/add/route',
         type: 'POST',
         data: {
-            Address: address,
-            Gateway: gateway
+            Gateway: gateway,
+            destination: destination
+        },
+        success: function (data) {
+            location.reload(true);
+        }
+    });
+}
+
+$('input#DeleteRouteIPV4').click(function () {
+    var funcReference = $(this).attr('id');
+    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
+    var Destination = $('#Value_' + funcReference + 'Destination').val();
+    if (Destination.length > 0 && Gateway.length > 0) {
+        DeleteRouteIPV4(Gateway, Destination);
+    }
+    else {
+        alert('Value cannot be null!');
+    }
+});
+
+function DeleteRouteIPV4(gateway, destination) {
+    jQuery.support.cors = true;
+    $.ajax({
+        url: networkUrl + '/ipv4/del/route',
+        type: 'POST',
+        data: {
+            Gateway: gateway,
+            Destination: destination
         },
         success: function (data) {
             location.reload(true);
@@ -317,33 +348,6 @@ function AddNat(address, via) {
         data: {
             Address: address,
             Via: via
-        },
-        success: function (data) {
-            location.reload(true);
-        }
-    });
-}
-
-$('input#DeleteRouteIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    if (Address.length > 0 && Gateway.length > 0) {
-        DeleteRouteIPV4(Address, Gateway);
-    }
-    else {
-        alert('Value cannot be null!');
-    }
-});
-
-function DeleteRouteIPV4(address, gateway) {
-    jQuery.support.cors = true;
-    $.ajax({
-        url: networkUrl + '/ipv4/del/route',
-        type: 'POST',
-        data: {
-            Address: address,
-            Gateway: gateway
         },
         success: function (data) {
             location.reload(true);
