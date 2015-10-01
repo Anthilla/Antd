@@ -33,7 +33,7 @@ using System.Linq;
 
 namespace antdlib.Firewall {
     public class NFTables {
-        private static string fileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
+        private static string fileName = $"{Folder.Dirs}/{AntdFile.FirewallConfig}";
 
         public static void Set() {
             Terminal.Execute($"nft -f {fileName}");

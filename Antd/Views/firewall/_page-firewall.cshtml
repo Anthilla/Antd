@@ -79,7 +79,6 @@
             <i class="icon-fire on-left"></i>
             NFTable Configuration
             <i id="applyRuleSet" class="icon-upload fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-            <i id="RestartNFTABLE" class="icon-loop fg-anthilla-blu" style="float: right; cursor: pointer !important;"></i>
         </legend>
         <div style="margin-bottom: 55px;">
             <label style="float:left; position: relative; left: 140px;">prerouting</label>
@@ -264,19 +263,7 @@
         $('#applyRuleSet').click(function () {
             jQuery.support.cors = true;
             $.ajax({
-                url: '/firewall/apply',
-                type: 'POST',
-                success: function () {
-                    location.reload(true);
-                    return false;
-                }
-            });
-        });
-
-        $('#RestartNFTABLE').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/firewall/restart',
+                url: '/firewall/export',
                 type: 'POST',
                 success: function () {
                     location.reload(true);
