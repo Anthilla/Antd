@@ -1,8 +1,4 @@
-﻿
-using antdlib;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Client;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -30,30 +26,11 @@ using Microsoft.AspNet.SignalR.Client;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.AspNet.SignalR;
 
 namespace Antd.Hubs {
     public class CollectdHub : Hub {
-        private readonly string channel = "collectd-data";
 
-        //public void Connection() {
-        //    Groups.Add(Context.ConnectionId, channel);
-        //}
-
-        //public void GetWelcomeMessage(string msg) {
-        //    Clients.Group(channel).welcomeMessage($"{Timestamp.Now} - {msg}");
-        //}
-
-        public void GetPointCoordinates(int x, int y) {
-            Clients.Group(channel).getPointCoordinates(x, y);
-        }
-
-        //public Task Unsubscribe() {
-        //    return Groups.Remove(Context.ConnectionId, channel);
-        //}
     }
 }

@@ -175,6 +175,7 @@
   <ItemGroup>
     <Compile Include="AntdBoot.cs" />
     <Compile Include="AntdHub.cs" />
+    <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
