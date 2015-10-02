@@ -39,6 +39,8 @@ using antdlib.Collectd;
 using Antd.Hubs;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR;
+using System.Net.Sockets;
+using System.Net;
 
 namespace Antd {
     public class TMP {

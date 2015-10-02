@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -30,6 +26,11 @@ using System.Runtime.InteropServices;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
 namespace antdlib {
 
     public enum ServiceDataType : byte {
@@ -118,6 +119,7 @@ namespace antdlib {
 
     public class Port {
         public static string Antd { get { return "7777"; } }
+        public static string Websocket { get { return "8888"; } }
     }
 
     public class Uri {
