@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.MountPoint;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -408,13 +409,7 @@ namespace antdlib.Antdsh {
         /// </summary>
         /// <param name="dir"></param>
         public static void Umount(string dir) {
-            var r = Terminal.Execute($"cat /proc/mounts | grep {dir}");
-            if (r.Length > 0 && !r.StartsWith("----")) {
-                Terminal.Execute($"umount {dir}");
-                Umount(dir);
-            }
-            var f = Terminal.Execute($"df | grep {dir}");
-            if (f.Length > 0 && !f.StartsWith("----")) {
+            if (Mount.IsAlreadyMounted(dir)) {
                 Terminal.Execute($"umount {dir}");
                 Umount(dir);
             }

@@ -9,16 +9,17 @@ mkdir -p /mnt/cdrom/Apps/tmp
 mount -t tmpfs tmpfs /mnt/cdrom/Apps/tmp
 
 wget "http://srv.anthilla.com:8081/antdsh-update/update.txt" -O /mnt/cdrom/Apps/tmp/update.txt
-VERSION=$(tail -1 /mnt/cdrom/Apps/tmp/update.txt)
-echo "version found: $VERSION"
-wget "http://srv.anthilla.com:8081/antdsh-update/$VERSION" -O /mnt/cdrom/Apps/Anthilla_antdsh/$VERSION
+SQUASH=$(tail -1 /mnt/cdrom/Apps/tmp/update.txt)
+echo "version found: $SQUASH"
+wget "http://srv.anthilla.com:8081/antdsh-update/$SQUASH" -O "/mnt/cdrom/Apps/Anthilla_antdsh/$SQUASH"
 mkdir -p /framework/antdsh
 mkdir -p /mnt/cdrom/Apps/Anthilla_antdsh
+ls -la /mnt/cdrom/Apps/Anthilla_antdsh
 umount -t tmpfs /mnt/cdrom/Apps/tmp
 rm -fR /mnt/cdrom/Apps/tmp
 
 echo Linking newest version
-ln -s /mnt/cdrom/Apps/Anthilla_antdsh/$VERSION /mnt/cdrom/Apps/Anthilla_antdsh/active-version
+ln -s /mnt/cdrom/Apps/Anthilla_antdsh/$SQUASH /mnt/cdrom/Apps/Anthilla_antdsh/active-version
 
 echo Mounting antdsh
 mount /mnt/cdrom/Apps/Anthilla_antdsh/active-version /framework/antdsh

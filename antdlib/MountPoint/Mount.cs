@@ -232,16 +232,16 @@ namespace antdlib.MountPoint {
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            var df = Terminal.Execute($"df | grep {directory}");
-            var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
+            var df = Terminal.Execute($"df | grep w \"{directory}\"");
+            var pm = Terminal.Execute($"cat /proc/mounts | grep w \"{directory}\"");
             return (df.Length > 0 || pm.Length > 0) ? true : false;
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {
-            var Sdf = Terminal.Execute($"df | grep {source}");
-            var Spm = Terminal.Execute($"cat /proc/mounts | grep {source}");
-            var Ddf = Terminal.Execute($"df | grep {destination}");
-            var Dpm = Terminal.Execute($"cat /proc/mounts | grep {destination}");
+            var Sdf = Terminal.Execute($"df | grep -w \"{source}\"");
+            var Spm = Terminal.Execute($"cat /proc/mounts | grep -w \"{source}\"");
+            var Ddf = Terminal.Execute($"df | grep -w \"{destination}\"");
+            var Dpm = Terminal.Execute($"cat /proc/mounts | grep -w \"{destination}\"");
             return (Sdf.Length > 0 || Spm.Length > 0 || Ddf.Length > 0 || Dpm.Length > 0) ? true : false;
         }
 
