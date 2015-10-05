@@ -35,7 +35,7 @@
 }
 
 @section MainContent {
-    <div id="GaugeGraph" class="border-2-anthilla-gray">
+    <div id="GaugeGraph" class="border-2-anthilla-gray bg-transparent">
         <h3 class="fg-white" style="margin-left: 10px;">label</h3>
     </div>
     <hr class="bg-2-anthilla-gray" />
@@ -79,67 +79,38 @@
 @section Scripts {
     <script src="/Scripts/d3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        // Set Up
         var pi = Math.PI, width = 500, height = 270; var iR = 170; var oR = 110;
         var cur_color = 'limegreen'; var new_color, hold; var max = 180, min = 0, current = 10;
-        var arc = d3.svg.arc().innerRadius(iR).outerRadius(oR).startAngle(-90 * (pi / 180)); // Arc Defaults
-        // Place svg element
+        var arc = d3.svg.arc().innerRadius(iR).outerRadius(oR).startAngle(-90 * (pi / 180));
         var svg = d3.select('#GaugeGraph').append('svg').attr('width', width).attr('height', height)
-          .append('g').attr('transform', 'translate(' + ((width / 2) - 20) + ',' + ((height / 2) + 40) + ')')
-        var background = svg.append('path').datum({ endAngle: 90 * (pi / 180) }).style('fill', '#ddd').attr('d', arc);// Append background arc to svg
-        var foreground = svg.append('path').datum({ endAngle: -90 * (pi / 180) }).style('fill', cur_color).attr('d', arc); // Append foreground arc to svg
-        var max = svg.append('text').attr('transform', 'translate(' + (iR + ((oR - iR) / 2)) + ',15)') // Display Max value
-        .attr('text-anchor', 'middle').text(max) // Set between inner and outer Radius
-        // Display Min value
-        var min = svg.append('text').attr('transform', 'translate(' + -(iR + ((oR - iR) / 2)) + ',15)') // Set between inner and outer Radius
-                    .attr('text-anchor', 'middle').text(min)
-        // Display Current value
-        var current = svg.append('text').attr('transform', 'translate(0,' + -(iR / 4) + ')') // Push up from center 1/4 of innerRadius
-                    .attr('text-anchor', 'middle').style('font-size', '50').text(current)
-        // Update every x seconds
-        setInterval(function () {
-            var num = Math.random() * 180; var numPi = Math.floor(num - 89) * (pi / 180);// Get value
-            if (num >= 121) { new_color = 'red'; } else if (num >= 61) { new_color = 'orange'; } else { new_color = 'limegreen'; } // Get new color
-            current.transition().text(Math.floor(num));// Text transition
-            // Arc Transition
+          .append('g').attr('transform', 'translate(' + ((width / 2) - 40) + ',' + ((height / 2) + 40) + ')')
+        var background = svg.append('path').datum({ endAngle: 90 * (pi / 180) }).style('fill', '#ddd').attr('d', arc);
+        var foreground = svg.append('path').datum({ endAngle: -90 * (pi / 180) }).style('fill', cur_color).attr('d', arc);
+        var max = svg.append('text').attr('transform', 'translate(' + (iR + ((oR - iR) / 2)) + ',15)').attr('text-anchor', 'middle').text(max);
+        var min = svg.append('text').attr('transform', 'translate(' + -(iR + ((oR - iR) / 2)) + ',15)').attr('text-anchor', 'middle').text(min);
+        var current = svg.append('text').attr('transform', 'translate(0,' + -(iR / 4) + ')').attr('text-anchor', 'middle').style('font-size', '75').text(current)
+
+        //setInterval(function () {
+        //    var num = Math.random() * 180; var numPi = Math.floor(num - 89) * (pi / 180);
+        //    if (num >= 121) { new_color = 'red'; } else if (num >= 61) { new_color = 'orange'; } else { new_color = 'limegreen'; }
+        //    current.transition().text(Math.floor(num));
+        //    foreground.transition().duration(750).styleTween('fill', function () { return d3.interpolate(new_color, cur_color); }).call(arcTween, numPi);
+        //    hold = cur_color; cur_color = new_color; new_color = hold;
+        //}, 1500);
+
+        function ResetValue(num) {
+            if (num >= 121) { new_color = 'red'; } else if (num >= 61) { new_color = 'orange'; } else { new_color = 'limegreen'; }
+            current.transition().text(Math.floor(num));
             foreground.transition().duration(750).styleTween('fill', function () { return d3.interpolate(new_color, cur_color); }).call(arcTween, numPi);
-            // Set colors for next transition
             hold = cur_color; cur_color = new_color; new_color = hold;
-        }, 1500); // Repeat every 1.5s
+        }
+
         function arcTween(transition, newAngle) {
             transition.attrTween('d', function (d) {
                 var interpolate = d3.interpolate(d.endAngle, newAngle);
                 return function (t) { d.endAngle = interpolate(t); return arc(d); };
             });
-        } // Update animation
-
-        //Procs
-        //        r: The number of processes waiting for run time.
-        //        b: The number of processes in uninterruptible sleep.
-        //Memory
-        //        swpd: the amount of virtual memory used.
-        //        free: the amount of idle memory.
-        //        buff: the amount of memory used as buffers.
-        //        cache: the amount of memory used as cache.
-        //===========================
-        //        inact: the amount of inactive memory. (-a option)
-        //        active: the amount of active memory. (-a option)
-        //Swap
-        //        si: Amount of memory swapped in from disk (/s).
-        //        so: Amount of memory swapped to disk (/s).
-        //IO
-        //        bi: Blocks received from a block device (blocks/s).
-        //        bo: Blocks sent to a block device (blocks/s).
-        //System
-        //        in: The number of interrupts per second, including the clock.
-        //        cs: The number of context switches per second.
-        //CPU
-        //    These are percentages of total CPU time.
-        //        us: Time spent running non-kernel code. (user time, including nice time)
-        //        sy: Time spent running kernel code. (system time)
-        //        id: Time spent idle. Prior to Linux 2.5.41, this includes IO-wait time.
-        //        wa: Time spent waiting for IO. Prior to Linux 2.5.41, shown as zero.
-        //Timestamp
+        }
 
         $(document).ready(function () {
             jQuery.support.cors = true;
@@ -155,70 +126,18 @@
             connection.start();
 
             proxy.on('getData', function (data) {
-                //console.log(data);
                 var arr = data.trim().split(/ +/);
                 var rowContent = "";
                 $.each(arr, function (i, value) {
                     if (value.length > 0 && value != '') {
                         rowContent += '<td>' + value + '</td>';
+                        //todo check is Number
+                        ResetValue(arr[2]);
                     }
                 });
                 var row = '<tr>' + rowContent + '</tr>';
                 $('#VMSTATS').append(row);
             });
         });
-
-        //var allTimeSeries = {};
-        //var allValueLabels = {};
-
-        //function streamStats() {
-        //   //var ws = new ReconnectingWebSocket('ws://' + location.host + '/');
-        //    var ws = new ReconnectingWebSocket('ws://10.1.3.193:30333/');
-        //    var lineCount;
-        //    var colHeadings;
-
-        //    ws.onopen = function () {
-        //        console.log('connect');
-        //        lineCount = 0;
-        //    };
-
-        //    ws.onclose = function () {
-        //        console.log('disconnect');
-        //    };
-
-        //    ws.onmessage = function (e) {
-        //        console.log(e.data);
-        //        switch (lineCount++) {
-        //            case 0: // ignore first line
-        //                break;
-
-        //            case 1: // column headings
-        //                colHeadings = e.data.trim().split(/ +/);
-        //                break;
-
-        //            default: // subsequent lines
-        //                var colValues = e.data.trim().split(/ +/);
-        //                var stats = {};
-        //                for (var i = 0; i < colHeadings.length; i++) {
-        //                    stats[colHeadings[i]] = parseInt(colValues[i]);
-        //                }
-        //                receiveStats(stats);
-        //        }
-        //    };
-        //}
-
-        //function receiveStats(stats) {
-        //    Object.each(stats, function (name, value) {
-        //        var timeSeries = allTimeSeries[name];
-        //        if (timeSeries) {
-        //            timeSeries.append(Date.now(), value);
-        //            allValueLabels[name].text(value);
-        //        }
-        //    });
-        //}
-
-        //$(function () {
-        //    streamStats();
-        //});
     </script>
 }

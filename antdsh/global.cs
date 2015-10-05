@@ -40,6 +40,11 @@ namespace antdsh {
         public const string downloadName = "antdDownload.zip";
         public const string downloadFirstDir = "antdDownloadFirst";
 
+        public const string remoteRepo = "http://srv.anthilla.com:8081";
+        public const string remoteAntdDir = "antd-update";
+        public const string remoteAntdshDir = "antdsh-update";
+        public const string remoteUpdateInfo = "update.txt";
+
         public const string zipStartsWith = "antd";
         public const string zipEndsWith = ".7z";
         public const string squashStartsWith = "DIR_framework_antd-";

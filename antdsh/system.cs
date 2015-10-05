@@ -66,15 +66,15 @@ namespace antdsh {
         /// </summary>
         public static void DownloadNewFiles() {
             var firmwareTmp = $"{global.tmpDir}/firmare";
-            DownloadFromUrl("/url/download/firmware", $"{firmwareTmp}");
+            FileSystem.Download("/url/download/firmware", $"{firmwareTmp}");
             var initrdTmp = $"{global.tmpDir}/initrd";
-            DownloadFromUrl("/url/download/initrd", $"{initrdTmp}");
+            FileSystem.Download("/url/download/initrd", $"{initrdTmp}");
             var kernelTmp = $"{global.tmpDir}/kernel";
-            DownloadFromUrl("/url/download/kernel", $"{kernelTmp}");
+            FileSystem.Download("/url/download/kernel", $"{kernelTmp}");
             var modulesTmp = $"{global.tmpDir}/modules";
-            DownloadFromUrl("/url/download/modules", $"{modulesTmp}");
+            FileSystem.Download("/url/download/modules", $"{modulesTmp}");
             var systemTmp = $"{global.tmpDir}/system";
-            DownloadFromUrl("/url/download/system", $"{systemTmp}");
+            FileSystem.Download("/url/download/system", $"{systemTmp}");
 
             var firmware = $"{global.system.kernelDir}/firmare";
             var initrd = $"{global.system.kernelDir}/initrd";

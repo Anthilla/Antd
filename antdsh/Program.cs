@@ -42,12 +42,8 @@ namespace antdsh {
             Console.Title = "antdsh";
 
             Boot.CheckIfGlobalRepositoryIsWriteable();
-
-            ///controlla qui
             Directory.CreateDirectory(global.versionsDir);
             Directory.CreateDirectory(global.tmpDir);
-            ///controlla qui
-             
             if (args.Length == 0) {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));
@@ -76,6 +72,7 @@ namespace antdsh {
             else if (command == "restart") { shell.Restart(); }
             else if (command == "status") { shell.Status(); }
             else if (command == "umount-all") { shell.UmountAll(); }
+            else if (command == "update") { shell.UpdateFromPublicRepo(); }
             else if (command == "update-check") { shell.UpdateCheck(); }
             else if (command == "update-launch") { shell.UpdateLaunch(); }
             else if (command == "update-url") { shell.UpdateFromUrl(); }
@@ -103,6 +100,7 @@ namespace antdsh {
             WriteHelp("stop", "stop any running version of antd");
             WriteHelp("restart", "restart antd related systemctl services and mounts");
             WriteHelp("status", "show antd status from systemctl");
+            WriteHelp("update", "update antd from the public repository");
             WriteHelp("umount-all", "umount all antd directories recursively");
             WriteHelp("update-check", "check if a newer version of antd exists on this machine");
             WriteHelp("update-launch", "update antd to the newest version found on this machine");
@@ -114,6 +112,7 @@ namespace antdsh {
             WriteHelp("info", "generic command");
             WriteHelp("history", "show the commands used in this antdsh session");
             WriteHelp("exit", "exit from antdsh");
+            WriteHelp("red-button", "delete permanently all antd(sh)-related files!");
             WriteHelp(" ", "any other command not listed here will be executed on this machine and you will get its return code");
         }
 
@@ -144,22 +143,5 @@ namespace antdsh {
 
             public string command { get; set; }
         }
-
-        //string[] items = { "nought", "one", "two", "three", "four" };
-
-        //var item = items[4];
-
-        //var pad1 = Enumerable.Repeat("", 1);
-        //var pad2 = Enumerable.Repeat("", 2);
-
-        //var padded = pad1.Concat(items);
-        //var next1 = items.Concat(pad1);
-        //var next2 = items.Skip(1).Concat(pad2);
-
-        //var sandwiched =
-        //    padded
-        //        .Zip(next1, (previous, current) => new { previous, current })
-        //        .Zip(next2, (pair, next) => new { pair.previous, pair.current, next })
-        //        .FirstOrDefault(triplet => triplet.current == item);
     }
 }

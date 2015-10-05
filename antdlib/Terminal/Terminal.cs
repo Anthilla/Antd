@@ -40,7 +40,7 @@ namespace antdlib {
 
     public class Terminal {
 
-        public static string Execute(string command) {
+        public static string Execute____OLD(string command) {
             string output = string.Empty;
             string error = string.Empty;
             try {
@@ -60,7 +60,7 @@ namespace antdlib {
             }
         }
 
-        public static string Execute____OLD(string command) {
+        public static string Execute(string command) {
             string output = string.Empty;
             string error = string.Empty;
             Process process = new Process {
@@ -85,7 +85,7 @@ namespace antdlib {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine($"Launcing [{command}] has failed!");
+                Console.WriteLine($"Launching [{command}] has failed!");
                 Console.WriteLine("Error message:");
                 Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");

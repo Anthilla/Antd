@@ -159,21 +159,31 @@ namespace antdsh {
         /// <param name="file"></param>
         public static void ExtractZipTmp(string file) {
             ZipFile.ExtractToDirectory(file.Replace(global.versionsDir, global.tmpDir), file.Replace(global.versionsDir, global.tmpDir).Replace(global.zipEndsWith, ""));
-            //Terminal.Execute("7z x " + file.Replace(global.versionsDir, global.tmpDir));
         }
 
         /// <summary>
         /// ok
         /// </summary>
         public static void MountTmpRam() {
-            Terminal.Execute("mount -t tmpfs tmpfs " + global.tmpDir);
+            Directory.CreateDirectory(global.tmpDir);
+            Terminal.Execute($"mount -t tmpfs tmpfs {global.tmpDir}");
         }
 
         /// <summary>
         /// ok
         /// </summary>
         public static void UmountTmpRam() {
-            Terminal.Execute("umount -t tmpfs " + global.tmpDir);
+            var r = Terminal.Execute($"cat /proc/mounts | grep {global.tmpDir}");
+            if (r.Length > 0 && !r.StartsWith("----")) {
+                Terminal.Execute($"umount -t tmpfs {global.tmpDir}");
+                UmountTmpRam();
+            }
+            var f = Terminal.Execute($"df | grep {global.tmpDir}");
+            if (f.Length > 0 && !f.StartsWith("----")) {
+                Terminal.Execute($"umount -t tmpfs {global.tmpDir}");
+                UmountTmpRam();
+            }
+            return;
         }
 
         /// <summary>
@@ -207,16 +217,17 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void RemoveTmpAll() {
-            var files = Directory.EnumerateFiles(global.tmpDir);
-            foreach (var file in files) {
-                WriteLine("Deleting file {0}", file);
-                File.Delete(file);
-            }
-            var dirs = Directory.EnumerateDirectories(global.tmpDir);
-            foreach (var dir in dirs) {
-                WriteLine("Deleting directory {0}", dir);
-                Directory.Delete(dir, true);
-            }
+            //var files = Directory.EnumerateFiles(global.tmpDir);
+            //foreach (var file in files) {
+            //    WriteLine("Deleting file {0}", file);
+            //    File.Delete(file);
+            //}
+            //var dirs = Directory.EnumerateDirectories(global.tmpDir);
+            //foreach (var dir in dirs) {
+            //    WriteLine("Deleting directory {0}", dir);
+            //    Directory.Delete(dir, true);
+            //}
+            Terminal.Execute($"rm -fR {global.tmpDir}");
         }
 
         /// <summary>
@@ -237,8 +248,8 @@ namespace antdsh {
         /// ok
         /// </summary>
         public static void CleanTmp() {
-            RemoveTmpAll();
             UmountTmpRam();
+            RemoveTmpAll();
         }
 
         /// <summary>
@@ -302,7 +313,7 @@ namespace antdsh {
             WriteLine("Download file from: {0}", url);
             var to = global.tmpDir + "/" + global.downloadName;
             WriteLine("Download file to: {0}", to);
-            Terminal.Execute("wget " + url + " -O " + to);
+            Terminal.Execute("wget " + url + " -o " + to);
             WriteLine("Download complete");
         }
 
@@ -312,10 +323,9 @@ namespace antdsh {
         /// <param name="url"></param>
         public static void DownloadFromUrl(string url, string destination) {
             WriteLine("Download file from: {0}", url);
-            var to = destination;
-            WriteLine("Download file to: {0}", to);
-            Terminal.Execute("wget " + url + " -O " + to);
-            WriteLine("Download complete");
+            WriteLine("Download file to: {0}", destination);
+            Terminal.Execute("wget " + url + " -O " + destination);
+            WriteLine("Download complete!");
         }
 
         /// <summary>
@@ -385,14 +395,31 @@ namespace antdsh {
             var r = Terminal.Execute("cat /proc/mounts | grep /antd");
             var f = Terminal.Execute("df | grep /cfg/antd");
             if (r.Length > 0 || f.Length > 0) {
-                Terminal.Execute("umount " + Folder.Networkd);
-                Terminal.Execute("umount " + Folder.Database);
-                Terminal.Execute("umount " + Folder.Root);
+                Terminal.Execute($"umount {Folder.Root}");
+                Terminal.Execute($"umount {Folder.Database}");
                 Terminal.Execute("umount /framework/antd");
                 UmountAntd();
             }
             else
                 return;
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        /// <param name="dir"></param>
+        public static void Umount(string dir) {
+            var r = Terminal.Execute($"cat /proc/mounts | grep {dir}");
+            if (r.Length > 0 && !r.StartsWith("----")) {
+                Terminal.Execute($"umount {dir}");
+                Umount(dir);
+            }
+            var f = Terminal.Execute($"df | grep {dir}");
+            if (f.Length > 0 && !f.StartsWith("----")) {
+                Terminal.Execute($"umount {dir}");
+                Umount(dir);
+            }
+            return;
         }
 
         /// <summary>
