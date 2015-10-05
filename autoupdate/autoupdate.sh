@@ -1,18 +1,22 @@
 echo Cleaning old files...
-rm -fR /mnt/cdrom/Scripts/Autoupdate/tmp/*
+umount -t tmpfs /mnt/cdrom/Apps/tmp
+rm -fR /mnt/cdrom/Apps/tmp
 rm /mnt/cdrom/Apps/Anthilla_antdsh/active-version
 echo Installing Antd...
-mkdir -p /mnt/cdrom/Scripts/Autoupdate/tmp
-cd /mnt/cdrom/Scripts/Autoupdate/tmp
-wget "https://github.com/Anthilla/Antd/raw/master/autoupdate/DIR_framework_antdsh.squashfs.xz"
+mkdir -p /mnt/cdrom/Apps/tmp
+mount -t tmpfs tmpfs /mnt/cdrom/Apps/tmp
+wget "http://srv.anthilla.com:8081/antdsh-update/update.txt" -O /mnt/cdrom/Apps/tmp/update.txt
+version= tail -1 /mnt/cdrom/Apps/tmp/update.txt
+wget "http://srv.anthilla.com:8081/antdsh-update/update.txt/$version"
 mkdir -p /framework/antdsh
 mkdir -p /mnt/cdrom/Apps/Anthilla_antdsh
-mv /mnt/cdrom/Scripts/Autoupdate/tmp/DIR_framework_antdsh.squashfs.xz /mnt/cdrom/Apps/Anthilla_antdsh/DIR_framework_antdsh.squashfs.xz
+umount -t tmpfs /mnt/cdrom/Apps/tmp
+rm -fR /mnt/cdrom/Apps/tmp
 echo Linking newest version
-ln -s /mnt/cdrom/Apps/Anthilla_antdsh/DIR_framework_antdsh.squashfs.xz /mnt/cdrom/Apps/Anthilla_antdsh/active-version
+ln -s /mnt/cdrom/Apps/Anthilla_antdsh/$version /mnt/cdrom/Apps/Anthilla_antdsh/active-version
 echo Mounting antdsh
 mount /mnt/cdrom/Apps/Anthilla_antdsh/active-version /framework/antdsh
-mono /framework/antdsh/antdsh.exe update-url
+mono /framework/antdsh/antdsh.exe update
 echo Antd Installed
 echo I have to wait some seconds...
 sleep 30
