@@ -1,6 +1,4 @@
-﻿
-using antdlib;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -28,6 +26,9 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using antdlib;
+using antdlib.Boot;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,9 +42,9 @@ namespace antdsh {
             var startTime = DateTime.Now;
             Console.Title = "antdsh";
 
-            Boot.CheckIfGlobalRepositoryIsWriteable();
-            Directory.CreateDirectory(global.versionsDir);
-            Directory.CreateDirectory(global.tmpDir);
+            RepositoryCheck.CheckIfGlobalRepositoryIsWriteable();
+            Directory.CreateDirectory(Folder.AntdVersionsDir);
+            Directory.CreateDirectory(Folder.AntdTmpDir);
             if (args.Length == 0) {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));
@@ -75,7 +76,6 @@ namespace antdsh {
             else if (command == "update") { shell.UpdateFromPublicRepo(); }
             else if (command == "update-check") { shell.UpdateCheck(); }
             else if (command == "update-launch") { shell.UpdateLaunch(); }
-            else if (command == "update-url") { shell.UpdateFromUrl(); }
             else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
             else if (command == "isrunning") { shell.IsRunning(); }
@@ -104,7 +104,6 @@ namespace antdsh {
             WriteHelp("umount-all", "umount all antd directories recursively");
             WriteHelp("update-check", "check if a newer version of antd exists on this machine");
             WriteHelp("update-launch", "update antd to the newest version found on this machine");
-            WriteHelp("update-url", "update antd from an url");
             WriteHelp("update-select", "select a running version from the ones found on this machine");
             WriteHelp("reload-systemctl", "reload systemctl daemon");
             WriteHelp("isrunning", "check whether antd process is active or not");

@@ -95,6 +95,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
@@ -109,11 +111,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Antdsh\Execute.cs" />
+    <Compile Include="Antdsh\SystemSet.cs" />
+    <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\T2FA\Config.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="Boot\Boot.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="Boot\LoadOSConfiguration.cs" />
@@ -133,6 +139,7 @@
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Firewall\NFTableModel.cs" />
+    <Compile Include="enums.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\XmlWriter.cs" />
@@ -241,6 +248,7 @@
     <None Include="Svcs\Samba\samba.command.list" />
     <None Include="Svcs\Samba\samba.json" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

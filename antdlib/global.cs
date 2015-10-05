@@ -33,43 +33,6 @@ using System.Runtime.InteropServices;
 
 namespace antdlib {
 
-    public enum ServiceDataType : byte {
-        Boolean = 1,
-        String = 2,
-        StringArray = 3,
-        DataArray = 4,
-        Section = 97,
-        Disabled = 98,
-        Other = 99
-    }
-
-    public enum CCTableCommandType : byte {
-        Direct = 1,
-        TextInput = 2,
-        BooleanPair = 3,
-        Other = 99
-    }
-
-    public enum SSHKeyType : byte {
-        Public = 1,
-        Private = 2,
-        Error = 99
-    }
-
-    public enum NetworkBootType : byte {
-        Default = 1,
-        Manual = 2,
-        Networkd = 3,
-        Other = 99
-    }
-
-    public enum NetworkInterfaceType : byte {
-        Physical = 1,
-        Virtual = 2,
-        Fake = 3,
-        Other = 99
-    }
-
     public class Label {
         public static string Root { get { return "antd_root"; } }
         public static string Port { get { return "antd_port"; } }
@@ -103,13 +66,25 @@ namespace antdlib {
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }
         public static string LiveCd { get { return "/mnt/livecd"; } }
-        public static string AppsUnits { get { return "/mnt/cdrom/Units/applicative.target.wants"; } }
+        public static string AppsUnits { get { return $"{AntdRepo}/Units/applicative.target.wants"; } }
+        public static string kernelDir { get { return $"{AntdRepo}/Kernel"; } }
+        public static string systemDir { get { return $"{AntdRepo}/System"; } }
+        public static string AntdVersionsDir { get { return $"{Apps}/Anthilla_Antd"; } }
+        public static string AntdshVersionsDir { get { return $"{Apps}/Anthilla_antdsh"; } }
+        public static string AntdTmpDir { get { return $"{Apps}/tmp"; } }
     }
 
     public class AntdFile {
-        public static string NetworkConfig { get { return "antd.boot.network.conf"; } }
-
-        public static string FirewallConfig { get { return "antd.boot.firewall.conf"; } }
+        public const string NetworkConfig = "antd.boot.network.conf";
+        public const string FirewallConfig = "antd.boot.firewall.conf";
+        public const string zipStartsWith = "antd";
+        public const string zipEndsWith = ".7z";
+        public const string squashStartsWith = "DIR_framework_antd-";
+        public const string squashEndsWith = ".squashfs.xz";
+        public const string configFile = "antdsh.config";
+        public const string antdRunning = "active-version";
+        public const string downloadName = "antdDownload.zip";
+        public const string downloadFirstDir = "antdDownloadFirst";
     }
 
     public class UID {
@@ -131,6 +106,7 @@ namespace antdlib {
     }
 
     public class AssemblyInfo {
+        public const string dateFormat = "yyyyMMdd";
 
         private static string GetGuid() {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -145,5 +121,25 @@ namespace antdlib {
         public static PlatformID Platform { get { return Environment.OSVersion.Platform; } }
 
         public static bool IsUnix { get { return (Platform == PlatformID.Unix); } }
+    }
+
+    public class Units {
+
+        public class Name {
+            public static string prepare { get { return "anthillasp-prepare.service"; } }
+            public static string mount { get { return "framework-anthillasp.mount"; } }
+            public static string launch { get { return "anthillasp-launcher.service"; } }
+        }
+
+        public static string prepare { get { return $"{Folder.AppsUnits}/{Name.prepare}"; } }
+        public static string mount { get { return $"{Folder.AppsUnits}/{Name.mount}"; } }
+        public static string launch { get { return $"{Folder.AppsUnits}/{Name.launch}"; } }
+    }
+
+    public class Update {
+        public const string remoteRepo = "http://srv.anthilla.com:8081";
+        public const string remoteAntdDir = "antd-update";
+        public const string remoteAntdshDir = "antdsh-update";
+        public const string remoteUpdateInfo = "update.txt";
     }
 }

@@ -31,8 +31,8 @@ using antdlib;
 
 using System.Text.RegularExpressions;
 
-namespace antdsh {
-    public class Boot {
+namespace antdlib.Boot {
+    public class RepositoryCheck {
         public static void CheckIfGlobalRepositoryIsWriteable() {
             var bootExtData = Terminal.Execute("blkid | grep BootExt");
             if (bootExtData.Length > 0) {

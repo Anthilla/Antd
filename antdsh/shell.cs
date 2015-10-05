@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib;
+using antdlib.Antdsh;
 using System;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace antdsh {
             }
             else {
                 WriteLine("Antd is not running, so we can start it.");
-                WriteLine("Looking for antds in {0}", global.versionsDir);
+                WriteLine("Looking for antds in {0}", Folder.AntdVersionsDir);
                 var newestVersionFound = execute.GetNewestVersion();
                 if (newestVersionFound.Key != null) {
                     execute.LinkVersionToRunning(newestVersionFound.Key);
@@ -227,12 +228,12 @@ namespace antdsh {
                         WriteLine("Updating!");
                         execute.StopServices();
                         execute.CleanTmp();
-                        if (newestVersionFound.Key.Contains(global.squashEndsWith)) {
+                        if (newestVersionFound.Key.Contains(AntdFile.squashEndsWith)) {
                             execute.RemoveLink();
                             execute.LinkVersionToRunning(newestVersionFound.Key);
                         }
-                        else if (newestVersionFound.Key.Contains(global.zipEndsWith)) {
-                            var squashName = global.versionsDir + "/" + global.squashStartsWith + newestVersionFound.Value + global.squashEndsWith;
+                        else if (newestVersionFound.Key.Contains(AntdFile.zipEndsWith)) {
+                            var squashName = Folder.AntdVersionsDir + "/" + AntdFile.squashStartsWith + newestVersionFound.Value + AntdFile.squashEndsWith;
                             execute.MountTmpRam();
                             execute.CopyToTmp(newestVersionFound.Key);
                             execute.ExtractZipTmp(newestVersionFound.Key);
@@ -265,7 +266,7 @@ namespace antdsh {
         public static void UpdateFromUrl() {
             execute.StopServices();
             execute.CleanTmp();
-            var squashName = $"{global.versionsDir}/{global.squashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{global.squashEndsWith}";
+            var squashName = $"{Folder.AntdVersionsDir}/{AntdFile.squashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{AntdFile.squashEndsWith}";
             execute.MountTmpRam();
             execute.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
             execute.ExtractDownloadedFile();
@@ -283,7 +284,7 @@ namespace antdsh {
         }
 
         /// <summary>
-        /// test
+        /// ok
         /// </summary>
         public static void UpdateFromPublicRepo() {
             WriteLine("Update From Public Repo ...");
@@ -296,9 +297,9 @@ namespace antdsh {
             execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
             execute.MountTmpRam();
-            var antdRepoUrl = $"{global.remoteRepo}/{global.remoteAntdDir}";
-            var updateFileUrl = $"{antdRepoUrl}/{global.remoteUpdateInfo}";
-            var updateFile = $"{global.tmpDir}/{global.remoteUpdateInfo}";
+            var antdRepoUrl = $"{Update.remoteRepo}/{Update.remoteAntdDir}";
+            var updateFileUrl = $"{antdRepoUrl}/{Update.remoteUpdateInfo}";
+            var updateFile = $"{Folder.AntdTmpDir}/{Update.remoteUpdateInfo}";
             WriteLine($"   Downloading from: {updateFileUrl}");
             WriteLine($"                 to: {updateFile}");
             execute.DownloadFromUrl(updateFileUrl, updateFile);
@@ -310,10 +311,10 @@ namespace antdsh {
                 WriteLine($"   Download complete!");
             }
             var updateText = FileSystem.ReadFile(updateFile);
-            var squashName = updateText.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(global.remoteUpdateInfo));
+            var squashName = updateText.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
             WriteLine($"   Version found: {squashName}");
             var squashUrl = $"{antdRepoUrl}/{squashName}";
-            var squashFile = $"{global.versionsDir}/{squashName}";
+            var squashFile = $"{Folder.AntdVersionsDir}/{squashName}";
             WriteLine($"   Downloading from: {squashUrl}");
             WriteLine($"                 to: {squashFile}");
             execute.DownloadFromUrl(squashUrl, squashFile);
@@ -329,6 +330,7 @@ namespace antdsh {
             execute.CleanTmp();
             execute.UmountTmpRam();
             execute.RestartSystemctlAntdServices();
+            WriteLine($"   Update complete!");
         }
 
         /// <summary>
@@ -350,12 +352,12 @@ namespace antdsh {
                     WriteLine("Updating!");
                     execute.StopServices();
                     execute.CleanTmp();
-                    if (selectedVersion.Key.Contains(global.squashEndsWith)) {
+                    if (selectedVersion.Key.Contains(AntdFile.squashEndsWith)) {
                         execute.RemoveLink();
                         execute.LinkVersionToRunning(selectedVersion.Key);
                     }
-                    else if (selectedVersion.Key.Contains(global.zipEndsWith)) {
-                        var squashName = global.versionsDir + "/" + global.squashStartsWith + selectedVersion.Value + global.squashEndsWith;
+                    else if (selectedVersion.Key.Contains(AntdFile.zipEndsWith)) {
+                        var squashName = Folder.AntdVersionsDir + "/" + AntdFile.squashStartsWith + selectedVersion.Value + AntdFile.squashEndsWith;
                         execute.MountTmpRam();
                         execute.CopyToTmp(selectedVersion.Key);
                         execute.ExtractZipTmp(selectedVersion.Key);

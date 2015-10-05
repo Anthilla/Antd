@@ -1,5 +1,4 @@
 ﻿
-using antdlib;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -32,10 +31,10 @@ using System;
 using System.IO;
 using System.Linq;
 using static antdlib.Terminal;
-using static antdsh.execute;
+using static antdlib.Antdsh.execute;
 using static System.Console;
 
-namespace antdsh {
+namespace antdlib.Antdsh {
     public class system {
 
         /// <summary>
@@ -65,40 +64,40 @@ namespace antdsh {
         ///     - active-system
         /// </summary>
         public static void DownloadNewFiles() {
-            var firmwareTmp = $"{global.tmpDir}/firmare";
+            var firmwareTmp = $"{Folder.AntdTmpDir}/firmare";
             FileSystem.Download("/url/download/firmware", $"{firmwareTmp}");
-            var initrdTmp = $"{global.tmpDir}/initrd";
+            var initrdTmp = $"{Folder.AntdTmpDir}/initrd";
             FileSystem.Download("/url/download/initrd", $"{initrdTmp}");
-            var kernelTmp = $"{global.tmpDir}/kernel";
+            var kernelTmp = $"{Folder.AntdTmpDir}/kernel";
             FileSystem.Download("/url/download/kernel", $"{kernelTmp}");
-            var modulesTmp = $"{global.tmpDir}/modules";
+            var modulesTmp = $"{Folder.AntdTmpDir}/modules";
             FileSystem.Download("/url/download/modules", $"{modulesTmp}");
-            var systemTmp = $"{global.tmpDir}/system";
+            var systemTmp = $"{Folder.AntdTmpDir}/system";
             FileSystem.Download("/url/download/system", $"{systemTmp}");
 
-            var firmware = $"{global.system.kernelDir}/firmare";
-            var initrd = $"{global.system.kernelDir}/initrd";
-            var kernel = $"{global.system.kernelDir}/kernel";
-            var modules = $"{global.system.kernelDir}/modules";
-            var system = $"{global.system.kernelDir}/system";
+            var firmware = $"{Folder.kernelDir}/firmare";
+            var initrd = $"{Folder.kernelDir}/initrd";
+            var kernel = $"{Folder.kernelDir}/kernel";
+            var modules = $"{Folder.kernelDir}/modules";
+            var system = $"{Folder.kernelDir}/system";
 
-            Execute($"cp {firmwareTmp} {global.system.kernelDir}");
-            Execute($"cp {initrdTmp} {global.system.kernelDir}");
-            Execute($"cp {kernelTmp} {global.system.kernelDir}");
-            Execute($"cp {modulesTmp} {global.system.kernelDir}");
-            Execute($"cp {systemTmp} {global.system.systemDir}");
+            Execute($"cp {firmwareTmp} {Folder.kernelDir}");
+            Execute($"cp {initrdTmp} {Folder.kernelDir}");
+            Execute($"cp {kernelTmp} {Folder.kernelDir}");
+            Execute($"cp {modulesTmp} {Folder.kernelDir}");
+            Execute($"cp {systemTmp} {Folder.systemDir}");
 
-            Execute($"rm {global.system.kernelDir}/active-firmware");
-            Execute($"rm {global.system.kernelDir}/active-initrd");
-            Execute($"rm {global.system.kernelDir}/active-kernel");
-            Execute($"rm {global.system.kernelDir}/active-modules");
-            Execute($"rm {global.system.systemDir}/active-system");
+            Execute($"rm {Folder.kernelDir}/active-firmware");
+            Execute($"rm {Folder.kernelDir}/active-initrd");
+            Execute($"rm {Folder.kernelDir}/active-kernel");
+            Execute($"rm {Folder.kernelDir}/active-modules");
+            Execute($"rm {Folder.systemDir}/active-system");
 
-            Execute($"ln -s {global.system.kernelDir}/firmware {global.system.kernelDir}/active-firmware");
-            Execute($"ln -s {global.system.kernelDir}/initrd {global.system.kernelDir}/active-initrd");
-            Execute($"ln -s {global.system.kernelDir}/kernel {global.system.kernelDir}/active-kernel");
-            Execute($"ln -s {global.system.kernelDir}/modules {global.system.kernelDir}/active-modules");
-            Execute($"ln -s {global.system.systemDir}/system {global.system.systemDir}/active-system");
+            Execute($"ln -s {Folder.kernelDir}/firmware {Folder.kernelDir}/active-firmware");
+            Execute($"ln -s {Folder.kernelDir}/initrd {Folder.kernelDir}/active-initrd");
+            Execute($"ln -s {Folder.kernelDir}/kernel {Folder.kernelDir}/active-kernel");
+            Execute($"ln -s {Folder.kernelDir}/modules {Folder.kernelDir}/active-modules");
+            Execute($"ln -s {Folder.systemDir}/system {Folder.systemDir}/active-system");
 
             CleanTmp();
         }
@@ -143,7 +142,7 @@ namespace antdsh {
         /// </summary>
         public static void SetAndMountDirs() {
             WriteLine("Mounting directories and files: ");
-            var directories = Directory.EnumerateDirectories(global.dir).Where(d => !d.Contains(".ori")).ToArray();
+            var directories = Directory.EnumerateDirectories(Folder.Dirs).Where(d => !d.Contains(".ori")).ToArray();
             for (int i = 0; i < directories.Length; i++) {
                 var path = Path.GetFileName(directories[i]);
                 var newPath = path.Replace("_", "/");
@@ -151,7 +150,7 @@ namespace antdsh {
                 Execute($"mount --bind {directories[i]} {newPath}");
             }
 
-            var files = Directory.EnumerateFiles(global.dir).Where(f => !f.Contains(".ori")).ToArray();
+            var files = Directory.EnumerateFiles(Folder.Dirs).Where(f => !f.Contains(".ori")).ToArray();
             for (int i = 0; i < files.Length; i++) {
                 var path = Path.GetFileName(files[i]);
                 var newPath = path.Replace("_", "/");
@@ -165,11 +164,11 @@ namespace antdsh {
         /// </summary>
         public static void CheckAntd() {
             WriteLine("Checking Antd Units:");
-            WriteLine(Execute($"systemctl status {global.units.name.prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.prepare}"));
             WriteLine("-------");
-            WriteLine(Execute($"systemctl status {global.units.name.prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.prepare}"));
             WriteLine("-------");
-            WriteLine(Execute($"systemctl status {global.units.name.prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.prepare}"));
         }
 
         /// <summary>
@@ -185,7 +184,7 @@ namespace antdsh {
             WriteLine($"{l} active services");
             WriteLine("-------");
             WriteLine("Checking Antd Applicative units:");
-            var units = Directory.EnumerateFiles(global.unitsDir).ToArray();
+            var units = Directory.EnumerateFiles(Folder.AppsUnits).ToArray();
             for (int i = 0; i < units.Length; i++) {
                 WriteLine(Execute($"systemctl status {units[i]}"));
                 WriteLine("-------");
