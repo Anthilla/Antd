@@ -57,8 +57,8 @@ namespace Antd.Modules {
                 vmod.MEMINFO = Meminfo.GetModel();
                 vmod.CPUINFO = Cpuinfo.GetModel();
                 vmod.VERSION = Version.GetModel();
-                vmod.DMIDECODE = Terminal.Execute("dmidecode", "").ConvertCommandToModel();
-                vmod.IFCONFIG = Terminal.Execute("ifconfig", "").ConvertCommandToModel();
+                vmod.DMIDECODE = Terminal.Execute("dmidecode").ConvertCommandToModel();
+                vmod.IFCONFIG = Terminal.Execute("ifconfig").ConvertCommandToModel();
                 vmod.PROCS = Proc.All;
                 return View["_page-info", vmod];
             };

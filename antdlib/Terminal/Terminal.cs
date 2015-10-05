@@ -28,17 +28,39 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.Models;
+using antdlib.Scheduler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace antdlib {
 
     public class Terminal {
 
         public static string Execute(string command) {
+            string output = string.Empty;
+            string error = string.Empty;
+            try {
+                var cmdGuid = Guid.NewGuid().ToString();
+                Job.ScheduleWGuid(cmdGuid, command);
+                Thread.Sleep(20);
+                JobRepository.GetResultByGuid(cmdGuid);
+                return output;
+            }
+            catch (Exception ex) {
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine($"Launching [{command}] with scheduler has failed!");
+                Console.WriteLine("Error message:");
+                Console.WriteLine($"{ex.Message}");
+                Console.WriteLine("-----------------------------------");
+                return error;
+            }
+        }
+
+        public static string Execute____OLD(string command) {
             string output = string.Empty;
             string error = string.Empty;
             Process process = new Process {
@@ -63,7 +85,7 @@ namespace antdlib {
             }
             catch (Exception ex) {
                 Console.WriteLine("-----------------------------------");
-                Console.WriteLine($"{command} has failed");
+                Console.WriteLine($"Launcing [{command}] has failed!");
                 Console.WriteLine("Error message:");
                 Console.WriteLine($"{ex.Message}");
                 Console.WriteLine("-----------------------------------");

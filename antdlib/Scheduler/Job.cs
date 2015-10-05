@@ -37,12 +37,13 @@ namespace antdlib.Scheduler {
 
         public static void Schedule(string jobName, string command) {
             var guid = Guid.NewGuid().ToString();
-            string[] data = new string[] {
-                    command.GetFirstString(),
-                    command.GetAllStringsButFirst()
-                };
-            string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, dataJson);
+            var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, command);
+            Thread.Sleep(20);
+            JobScheduler.LaunchJob<JobList.CommandJob>(guid);
+        }
+
+        public static void ScheduleWGuid(string guid, string command) {
+            var job = JobRepository.SetTaskOneTimeOnly(guid, command);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }

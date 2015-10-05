@@ -27,8 +27,6 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using Newtonsoft.Json;
 using Quartz;
 using System;
 
@@ -37,7 +35,6 @@ namespace antdlib.Scheduler {
     public class JobList {
 
         public class HelloJob : IJob {
-
             public void Execute(IJobExecutionContext context) {
                 Console.WriteLine("Greetings from HelloJob!");
             }
@@ -48,14 +45,10 @@ namespace antdlib.Scheduler {
             public void Execute(IJobExecutionContext context) {
                 JobKey key = context.JobDetail.Key;
                 JobDataMap dataMap = context.JobDetail.JobDataMap;
-                string dataJson = dataMap.GetString("data");
-                string[] data = JsonConvert.DeserializeObject<string[]>(dataJson);
-                string command = data[0];
-                string arguments = data[1];
+                string command = dataMap.GetString("data");
                 string jobId = dataMap.GetString("jobID");
-                CommandModel cmd = Terminal.Execute(command + " " + arguments).ConvertCommandToModel();
-                string output = cmd.output;
-                JobRepository.AddResult(jobId, output);
+                var cmd = Terminal.Execute(command);
+                JobRepository.AddResult(jobId, cmd);
             }
         }
     }

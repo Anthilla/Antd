@@ -60,6 +60,29 @@ namespace antdlib.Scheduler {
             return DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
         }
 
+        public static string GetResultByGuid(string guid) {
+            var results = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid && j != null).Select(j => j.Results).FirstOrDefault();
+            var kvp = results.OrderByDescending(r => r.Key).First();
+            return kvp.Value.ToString();
+        }
+
+        public static JobModel SetTaskOneTimeOnly(string guid, string data) {
+            JobModel task = new JobModel();
+            task._Id = Guid.NewGuid().ToString();
+            task.Guid = guid;
+            task.Alias = guid;
+            task.Data = data;
+            task.isEnabled = false;
+            task.Results = new ExpandoObject() as IDictionary<String, object>;
+            task.TriggerPeriod = TriggerPeriod.IsOneTimeOnly;
+            task.StartHour = DateTime.Now.Hour;
+            task.StartMinute = DateTime.Now.Minute + 1;
+            task.StartTime = new DateTime(2000, 1, 1, task.StartHour, task.StartMinute, 1, 1);
+            task.CronExpression = "";
+            DeNSo.Session.New.Set(task);
+            return task;
+        }
+
         public static JobModel SetTaskOneTimeOnly(string guid, string alias, string data) {
             JobModel task = new JobModel();
             task._Id = Guid.NewGuid().ToString();
