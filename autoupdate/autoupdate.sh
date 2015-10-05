@@ -1,7 +1,9 @@
+
 echo Cleaning old files...
 umount -t tmpfs /mnt/cdrom/Apps/tmp
 rm -fR /mnt/cdrom/Apps/tmp
 rm /mnt/cdrom/Apps/Anthilla_antdsh/active-version
+
 echo Installing Antd...
 mkdir -p /mnt/cdrom/Apps/tmp
 mount -t tmpfs tmpfs /mnt/cdrom/Apps/tmp
@@ -12,12 +14,16 @@ mkdir -p /framework/antdsh
 mkdir -p /mnt/cdrom/Apps/Anthilla_antdsh
 umount -t tmpfs /mnt/cdrom/Apps/tmp
 rm -fR /mnt/cdrom/Apps/tmp
+
 echo Linking newest version
 ln -s /mnt/cdrom/Apps/Anthilla_antdsh/$version /mnt/cdrom/Apps/Anthilla_antdsh/active-version
+
 echo Mounting antdsh
 mount /mnt/cdrom/Apps/Anthilla_antdsh/active-version /framework/antdsh
 mono /framework/antdsh/antdsh.exe update
+
 echo Antd Installed
+
 echo I have to wait some seconds...
 sleep 30
 mono /framework/antdsh/antdsh.exe status
