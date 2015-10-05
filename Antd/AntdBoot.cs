@@ -69,13 +69,15 @@ namespace Antd {
         }
 
         public static void SetWorkingDirectories() {
-            antdlib.MountPoint.Mount.WorkingDirectories();
-            ConsoleLogger.Log("    working directories -> checked");
+            if (AssemblyInfo.IsUnix) {
+                Mount.WorkingDirectories();
+                ConsoleLogger.Log("    working directories -> checked");
+            }
         }
 
         public static void SetMounts() {
             if (AssemblyInfo.IsUnix) {
-                antdlib.MountPoint.Mount.AllDirectories();
+                Mount.AllDirectories();
                 ConsoleLogger.Log("    mounts -> checked");
             }
         }

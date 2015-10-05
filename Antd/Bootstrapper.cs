@@ -69,6 +69,10 @@ namespace Antd {
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("repo", @"/Resources/")
                 );
+
+            conv.StaticContentsConventions.Add(
+                StaticContentConventionBuilder.AddDirectory("repo/ssh", @"/Resources/ssh/")
+                );
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
