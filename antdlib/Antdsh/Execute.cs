@@ -409,7 +409,7 @@ namespace antdlib.Antdsh {
         /// </summary>
         /// <param name="dir"></param>
         public static void Umount(string dir) {
-            if (Mount.IsAlreadyMounted(dir)) {
+            if (Mount.IsAlreadyMounted(dir) == true) {
                 Terminal.Execute($"umount {dir}");
                 Umount(dir);
             }
