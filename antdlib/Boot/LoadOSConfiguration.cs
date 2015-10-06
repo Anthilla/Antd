@@ -29,6 +29,7 @@
 
 using antdlib.MountPoint;
 using antdlib.Network;
+using System.IO;
 
 namespace antdlib.Boot {
     public class LoadOSConfiguration {
@@ -57,9 +58,31 @@ namespace antdlib.Boot {
         public static void LoadEtcSSH() {
             var dir = "/etc/ssh";
             var DIR = Mount.GetDIRSPath(dir);
+            if (!Directory.Exists(DIR)) {
+                ConsoleLogger.Log($"{DIR} does not exist");
+                ConsoleLogger.Log($"Creating {DIR}");
+                Directory.CreateDirectory(DIR);
+                ConsoleLogger.Log($"Downloading ssh files...");
+                DownloadSSHFiles(DIR);
+                ConsoleLogger.Log($"Generating ssh keys...");
+                Terminal.Execute("ssh-keygen -A");
+            }
+            else {
+                ConsoleLogger.Log($"{DIR} exists");
+                if (FileSystem.IsDirNewerThan(dir, DIR) == true) {
+                    ConsoleLogger.Log($"{dir} is newer than {DIR}");
+                    ConsoleLogger.Log($"import {dir} into {DIR}");
+                    Directory.Delete(DIR, true);
+                    FileSystem.CopyDirectory(dir, DIR);
+                }
+            }
             if (Mount.IsAlreadyMounted(DIR, dir) == false) {
                 Mount.Dir(dir);
             }
+            Terminal.Execute("systemctl reload sshd.service");
+        }
+
+        private static void DownloadSSHFiles(string DIR) {
             var fileName = "sshd_config";
             FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
             fileName = "moduli";
@@ -67,24 +90,22 @@ namespace antdlib.Boot {
             fileName = "ssh_config";
             FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
 
-            fileName = "ssh_host_dsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_dsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ecdsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ecdsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ed25519_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ed25519_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_rsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_rsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-
-            Terminal.Execute("systemctl reload sshd.service");
+            //fileName = "ssh_host_dsa_key";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_dsa_key.pub";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_ecdsa_key";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_ecdsa_key.pub";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_ed25519_key";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_ed25519_key.pub";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_rsa_key";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
+            //fileName = "ssh_host_rsa_key.pub";
+            //FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
         }
 
         public static void LoadWPASupplicant() {

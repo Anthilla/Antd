@@ -45,6 +45,10 @@ namespace antdlib.Users {
             if (!File.Exists(FILE) && File.Exists(file)) {
                 File.Copy(file, FILE, true);
             }
+            else if (File.Exists(FILE) && FileSystem.IsNewerThan(file, FILE)) {
+                File.Delete(FILE);
+                File.Copy(file, FILE, true);
+            }
             Mount.File(file);
         }
 

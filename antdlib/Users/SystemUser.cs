@@ -49,8 +49,16 @@ namespace antdlib.Users {
             if (!File.Exists(FILE)) {
                 File.Copy(file, FILE, true);
             }
+            else if (File.Exists(FILE) && FileSystem.IsNewerThan(file, FILE)) {
+                File.Delete(FILE);
+                File.Copy(file, FILE, true);
+            }
             Mount.File(file);
             if (!File.Exists(FILEPWD)) {
+                File.Copy(filePwd, FILEPWD, true);
+            }
+            else if (File.Exists(FILEPWD) && FileSystem.IsNewerThan(filePwd, FILEPWD)) {
+                File.Delete(FILEPWD);
                 File.Copy(filePwd, FILEPWD, true);
             }
             Mount.File(filePwd);

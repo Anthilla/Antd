@@ -119,5 +119,27 @@ namespace antdlib {
                 ConsoleLogger.Error($"{ex.Message}");
             }
         }
+
+        public static bool IsNewerThan(string source, string destination) {
+            var sourceInfo = new FileInfo(source);
+            var destinationInfo = new FileInfo(destination);
+            if (sourceInfo.Exists && destinationInfo.Exists) {
+                if (sourceInfo.LastWriteTime > destinationInfo.LastWriteTime) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool IsDirNewerThan(string source, string destination) {
+            var sourceInfo = new DirectoryInfo(source);
+            var destinationInfo = new DirectoryInfo(destination);
+            if (sourceInfo.Exists && destinationInfo.Exists) {
+                if (sourceInfo.LastWriteTime > destinationInfo.LastWriteTime) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
