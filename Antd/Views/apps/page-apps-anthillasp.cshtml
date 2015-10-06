@@ -2,19 +2,19 @@
 <table class="table hovered">
     <tbody>
         @*@if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == false) {
-            <tr>
-                <td colspan="2">
-                    <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
-                </td>
-            </tr>
-        }
-        @if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == true) {
-            <tr>
-                <td colspan="2">
-                    <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
-                </td>
-            </tr>
-        }*@
+                <tr>
+                    <td colspan="2">
+                        <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
+                    </td>
+                </tr>
+            }
+            @if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == true) {
+                <tr>
+                    <td colspan="2">
+                        <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
+                    </td>
+                </tr>
+            }*@
         <tr id="AnthilaspStatus" style="display: none;">
             <td colspan="2">
                 <p>Anthilla SP is ready, chech its status below:</p>
@@ -25,7 +25,7 @@
                 <label>Anthilla SP</label>
             </td>
             <td>
-                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) { 
+                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) {
                     <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
                 }
                 else {
@@ -35,7 +35,9 @@
         </tr>
         <tr>
             <td colspan="2">
-                @antdlib.Apps.AnthillaSP.Status.AnthillaSP();
+                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: auto;">
+                    @antdlib.Apps.AnthillaSP.Status.AnthillaSP();
+                </textarea>
             </td>
         </tr>
         <tr>
@@ -43,7 +45,7 @@
                 <label>Anthilla Server</label>
             </td>
             <td>
-                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaServer() == false) { 
+                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaServer() == false) {
                     <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
                 }
                 else {
@@ -53,7 +55,9 @@
         </tr>
         <tr>
             <td colspan="2">
-                @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
+                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: auto;">
+                    @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
+                </textarea>
             </td>
         </tr>
     </tbody>

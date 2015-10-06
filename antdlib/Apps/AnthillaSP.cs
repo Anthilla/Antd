@@ -43,6 +43,8 @@ namespace antdlib.Apps {
         public static void SetApp() {
             CreateUnits();
             Thread.Sleep(20);
+            SetDirectories();
+            Thread.Sleep(20);
             Start();
         }
 
@@ -54,6 +56,15 @@ namespace antdlib.Apps {
                 Units.LaunchAnthillaServer();
             }
             Systemctl.DaemonReload();
+        }
+
+        private static void SetDirectories() {
+            foreach (var app in Management.DetectApps()) {
+                var kvpList = app.Values.Where(k => k.Key == "app_path").Select(k => k.Value).ToList();
+                foreach (var dir in kvpList) {
+                    MountPoint.Mount.Dir(dir);
+                }
+            }
         }
 
         public static void Start() {
