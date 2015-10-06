@@ -10,7 +10,7 @@ mkdir -p /framework/antdsh
 
 echo verify Antdsh version
 wget "http://srv.anthilla.com:8081/antdsh-update/update.txt" -O /mnt/cdrom/Apps/tmp/update.txt
-SQUASH=$(tail -1 /mnt/cdrom/Apps/tmp/update.txt)
+SQUASH=$(head -1 /mnt/cdrom/Apps/tmp/update.txt)
 echo "version found: $SQUASH"
 
 echo Download Antdsh

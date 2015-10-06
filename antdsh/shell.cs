@@ -311,7 +311,7 @@ namespace antdsh {
                 WriteLine($"   Download complete!");
             }
             var updateText = FileSystem.ReadFile(updateFile);
-            var squashName = updateText.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
+            var squashName = updateText.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
             WriteLine($"   Version found: {squashName}");
             var squashUrl = $"{antdRepoUrl}/{squashName}";
             var squashFile = $"{Folder.AntdVersionsDir}/{squashName}";
