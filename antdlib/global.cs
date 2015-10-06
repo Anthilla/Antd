@@ -126,9 +126,9 @@ namespace antdlib {
     public class Units {
 
         public class Name {
-            public static string prepare { get { return "anthillasp-prepare.service"; } }
-            public static string mount { get { return "framework-anthillasp.mount"; } }
-            public static string launch { get { return "anthillasp-launcher.service"; } }
+            public static string prepare { get { return "antd-prepare.service"; } }
+            public static string mount { get { return "framework-antd.mount"; } }
+            public static string launch { get { return "antd-launcher.service"; } }
         }
 
         public static string prepare { get { return $"{Folder.AppsUnits}/{Name.prepare}"; } }

@@ -1,6 +1,4 @@
-﻿
-using antdlib;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 ///     All rights reserved.
 ///
@@ -28,6 +26,8 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using antdlib;
 using antdlib.Apps;
 using Nancy;
 using Nancy.Security;
@@ -45,7 +45,6 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 bool b;
                 if (AnthillaSP.Setting.CheckSquash() == false) {
-                    //ViewBag.Message = "No squashfs detected in " + Folder.Apps;
                     b = false;
                 }
                 else {
@@ -119,6 +118,16 @@ namespace Antd {
                 var m = (string)Request.Form.Mount;
                 Terminal.Execute("mount "+ f + " " + m);
                 return Response.AsJson(AnthillaSP.Status.AnthillaServer());
+            };
+
+            Get["/update/antdsh"] = x => {
+                antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
+                return Response.AsJson(true);
+            };
+
+            Post["/update/antdsh"] = x => {
+                antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
+                return Response.AsJson(true);
             };
         }
     }

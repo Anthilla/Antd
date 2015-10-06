@@ -28,11 +28,16 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.Systemd;
+using System;
 using System.IO;
+using System.Linq;
 
 namespace antdlib.Apps {
 
     public class AnthillaSP {
+
+        private static string AnthillaSPAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
+        private static string AnthillaSPFrameworkDir = $"/framework/anthillasp";
 
         public static void CreateUnits() {
             if (AnthillaSP.Units.CheckFiles() == false) {
@@ -92,11 +97,11 @@ namespace antdlib.Apps {
         public class Setting {
 
             public static bool CheckSquash() {
+                Directory.CreateDirectory(AnthillaSPAppDir);
                 var result = false;
-                var lookInto = "/mnt/cdrom/Apps";
-                var filePaths = Directory.GetFiles(lookInto);
+                var filePaths = Directory.EnumerateFiles(Folder.Apps, "*.squashfs.xz*", SearchOption.AllDirectories);
                 foreach (string t in filePaths) {
-                    if (t.Contains("DIR_framework_anthillasp.squashfs.xz")) {
+                    if (t.Contains("anthillasp")) {
                         result = true;
                     }
                 }
@@ -104,12 +109,20 @@ namespace antdlib.Apps {
             }
 
             public static void CreateSquash() {
-                Terminal.Execute("mksquashfs /mnt/cdrom/Apps/anthillasp /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Execute($"mksquashfs {AnthillaSPAppDir}/anthillasp {AnthillaSPAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
-            public static void MountSquash() {
+            public static void MountSquash(string version = null) {
                 Directory.CreateDirectory("/framework/anthillasp");
-                Terminal.Execute("mount /mnt/cdrom/Apps/DIR_framework_anthillasp.squashfs.xz /framework/anthillasp");
+                var squashList = Directory.EnumerateFiles(AnthillaSPAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
+                var newest = "";
+                if (squashList.Count() > 0) {
+                    newest = squashList.OrderByDescending(f => f).LastOrDefault();
+                }
+                var file = (version != null) ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(newest);
+                if (file.Length > 0) {
+                    Terminal.Execute($"mount {AnthillaSPAppDir}/{file} {AnthillaSPFrameworkDir}");
+                }
             }
         }
 
