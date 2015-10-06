@@ -329,6 +329,7 @@ namespace antdsh {
             execute.LinkVersionToRunning(squashName);
             execute.CleanTmp();
             execute.UmountTmpRam();
+            execute.CheckAntdUnits();
             execute.RestartSystemctlAntdServices();
             WriteLine($"   Update complete!");
         }

@@ -31,6 +31,7 @@ using antdlib.Systemd;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace antdlib.Apps {
 
@@ -38,6 +39,12 @@ namespace antdlib.Apps {
 
         private static string AnthillaSPAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
         private static string AnthillaSPFrameworkDir = $"/framework/anthillasp";
+
+        public static void SetApp() {
+            CreateUnits();
+            Thread.Sleep(20);
+            Start();
+        }
 
         public static void CreateUnits() {
             if (AnthillaSP.Units.CheckFiles() == false) {
@@ -51,8 +58,11 @@ namespace antdlib.Apps {
 
         public static void Start() {
             Systemctl.Start(Units.Name.FileName.Prepare);
+            Thread.Sleep(20);
             Systemctl.Start(Units.Name.FileName.Mount);
+            Thread.Sleep(20);
             Systemctl.Start(Units.Name.FileName.LaunchSP);
+            Thread.Sleep(20);
             Systemctl.Start(Units.Name.FileName.LaunchServer);
         }
 
@@ -153,14 +163,14 @@ namespace antdlib.Apps {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Prepare Service");
+                        sw.WriteLine("Requires=local-fs.target sysinit.target");
+                        sw.WriteLine("Before=framework-anthillasp.mount");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/bin/mkdir -p /framework/anthillasp");
-                        sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("Before=framework-anthillasp.mount System.mount");
                         sw.WriteLine("");
                         sw.WriteLine("[Install]");
-                        sw.WriteLine("WantedBy=multi-user.target");
+                        sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
             }
@@ -174,11 +184,11 @@ namespace antdlib.Apps {
                         sw.WriteLine("ConditionPathExists=/framework/anthillasp");
                         sw.WriteLine("");
                         sw.WriteLine("[Mount]");
-                        sw.WriteLine("What=/mnt/cdrom/DIRS/DIR_framework_anthillasp/running");
+                        sw.WriteLine("What=/mnt/cdrom/Apps/Anthilla_AnthillaSP/active-version");
                         sw.WriteLine("Where=/framework/anthillasp/");
                         sw.WriteLine("");
                         sw.WriteLine("[Install]");
-                        sw.WriteLine("WantedBy=multi-user.target");
+                        sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
             }
@@ -189,14 +199,14 @@ namespace antdlib.Apps {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Launcher Service");
-                        sw.WriteLine("");
-                        sw.WriteLine("[Service]");
-                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
                         sw.WriteLine("After=framework-anthillasp.mount");
                         sw.WriteLine("");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
+                        sw.WriteLine("");
                         sw.WriteLine("[Install]");
-                        sw.WriteLine("WantedBy=multi-user.target");
+                        sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
             }
@@ -207,14 +217,14 @@ namespace antdlib.Apps {
                     using (StreamWriter sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaServer Launcher Service");
-                        sw.WriteLine("");
-                        sw.WriteLine("[Service]");
-                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
                         sw.WriteLine("After=framework-anthillasp.mount");
                         sw.WriteLine("");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");
+                        sw.WriteLine("");
                         sw.WriteLine("[Install]");
-                        sw.WriteLine("WantedBy=multi-user.target");
+                        sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
             }

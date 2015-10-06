@@ -1,7 +1,7 @@
 ﻿<legend id="Anthilasp">Anthilla SP</legend>
 <table class="table hovered">
     <tbody>
-        @if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == false) {
+        @*@if (antdlib.Apps.AnthillaSP.Units.CheckFiles() == false) {
             <tr>
                 <td colspan="2">
                     <input type="button" id="SetUnits" class="bg-indigo" value="Set Units" />
@@ -14,7 +14,12 @@
                     <input type="button" id="ApplyUnits" class="bg-indigo" value="Apply Units" />
                 </td>
             </tr>
-        }
+        }*@
+        <tr id="AnthilaspStatus" style="display: none;">
+            <td colspan="2">
+                <p>Anthilla SP is ready, chech its status below:</p>
+            </td>
+        </tr>
         <tr>
             <td>
                 <label>Anthilla SP</label>
@@ -51,64 +56,49 @@
                 @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
             </td>
         </tr>
-        @*        <tr>
-            <td style="width: 250px;"></td>
-            <td colspan="2">
-                <a href="http://localhost:8085/" class="button bg-indigo">Go to AnthillaSP</a>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 250px;"></td>
-            <td colspan="2">
-                <a href="http://localhost:9999/" class="button bg-indigo">Go to AnthillaServer</a>
-            </td>
-        </tr>*@
-        <tr>
-            <td>
-                <label>Application Info</label>
-            </td>
-            <td>
-                <ul class="fg-white">
-                    @foreach (string[] arr in antdlib.Apps.Management.ReadInfoListed("/framework/a")) {
-                        if (arr[0].Contains("path")) { 
-                        <li>@arr[0] -> @arr[1] <i class="icon-loop fg-amber" data-role="show-mount"></i></li>
-                        }
-                        else {
-                        <li>@arr[0] -> @arr[1]</li>
-                        }
-                    }
-                </ul>
-            </td>
-        </tr>
     </tbody>
 </table>
 <hr />
 <script type="text/javascript">
-    $('#SetUnits').click(function (e) {
+    $(document).ready(function (e) {
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/set/anthillasp/',
-            type: 'GET',
+            type: 'POST',
             contentType: "application/json;charset=utf-8",
             success: function (data) {
-                location.reload(true);
+                $('#AnthilaspStatus').show();
+                console.log(data);
                 return false;
             }
         });
     });
 
-    $('#ApplyUnits').click(function (e) {
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/apps/apply/anthillasp/',
-            type: 'GET',
-            contentType: "application/json;charset=utf-8",
-            success: function (data) {
-                location.reload(true);
-                return false;
-            }
-        });
-    });
+    //$('#SetUnits').click(function (e) {
+    //    jQuery.support.cors = true;
+    //    $.ajax({
+    //        url: '/apps/set/anthillasp/',
+    //        type: 'GET',
+    //        contentType: "application/json;charset=utf-8",
+    //        success: function (data) {
+    //            location.reload(true);
+    //            return false;
+    //        }
+    //    });
+    //});
+
+    //$('#ApplyUnits').click(function (e) {
+    //    jQuery.support.cors = true;
+    //    $.ajax({
+    //        url: '/apps/apply/anthillasp/',
+    //        type: 'GET',
+    //        contentType: "application/json;charset=utf-8",
+    //        success: function (data) {
+    //            location.reload(true);
+    //            return false;
+    //        }
+    //    });
+    //});
 
     $('#StartAnthillaSP').click(function (e) {
         jQuery.support.cors = true;

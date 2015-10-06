@@ -129,6 +129,11 @@ namespace Antd {
                 antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
                 return Response.AsJson(true);
             };
+
+            Post["/set/anthillasp"] = x => {
+                AnthillaSP.SetApp();
+                return Response.AsJson("/set/anthillasp");
+            };
         }
     }
 }

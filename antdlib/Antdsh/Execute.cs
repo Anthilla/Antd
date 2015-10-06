@@ -1,5 +1,6 @@
 ﻿
 using antdlib.MountPoint;
+using antdlib.Systemd;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -375,7 +376,6 @@ namespace antdlib.Antdsh {
                 WriteLine("A file does not exist!");
                 return;
             }
-            //var destination = Folder.AntdTmpDir;
             ZipFile.ExtractToDirectory(downloadedZip, Folder.AntdTmpDir);
         }
 
@@ -423,6 +423,97 @@ namespace antdlib.Antdsh {
         public static bool IsAntdRunning() {
             var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
             return (res.Length > 0) ? true : false;
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void CheckAntdUnits() {
+            var unitsToCheck = new string[] {
+                $"{Units.prepare}",
+                $"{Units.mount}",
+                $"{Units.launch}"
+            };
+            foreach(var unit in unitsToCheck) {
+                if (File.Exists(unit)) {
+                    File.Delete(unit);
+                }
+                if (unit == Units.prepare) {
+                    WriteAntdPrepareUnit();
+                }
+                else if (unit == Units.mount) {
+                    WriteAntdMountUnit();
+                }
+                else if (unit == Units.launch) {
+                    WriteAntdLaunchUnit();
+                }
+                else {
+                }
+            }
+            Systemctl.DaemonReload();
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void WriteAntdPrepareUnit() {
+            var path = Units.prepare;
+            if (!File.Exists(path)) {
+                using (StreamWriter sw = File.CreateText(path)) {
+                    sw.WriteLine("[Unit]");
+                    sw.WriteLine("Description=External Volume Unit, Application: Antd Prepare Service");
+                    sw.WriteLine("Requires=local-fs.target sysinit.target");
+                    sw.WriteLine("Before=framework-antd.mount");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Service]");
+                    sw.WriteLine("ExecStart=/bin/mkdir -p /framework/antd");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Install]");
+                    sw.WriteLine("WantedBy=applicative.target");
+                }
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void WriteAntdMountUnit() {
+            var path = Units.mount;
+            if (!File.Exists(path)) {
+                using (StreamWriter sw = File.CreateText(path)) {
+                    sw.WriteLine("[Unit]");
+                    sw.WriteLine("Description=External Volume Unit, Application: DIR_framework_antd Mount ");
+                    sw.WriteLine("ConditionPathExists=/framework/antd");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Mount]");
+                    sw.WriteLine("What=/mnt/cdrom/Apps/Anthilla_Antd/active-version");
+                    sw.WriteLine("Where=/framework/antd/");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Install]");
+                    sw.WriteLine("WantedBy=applicative.target");
+                }
+            }
+        }
+
+        /// <summary>
+        /// ok
+        /// </summary>
+        public static void WriteAntdLaunchUnit() {
+            var path = Units.launch;
+            if (!File.Exists(path)) {
+                using (StreamWriter sw = File.CreateText(path)) {
+                    sw.WriteLine("[Unit]");
+                    sw.WriteLine("Description=External Volume Unit, Application: Antd Launcher Service");
+                    sw.WriteLine("Requires=local-fs.target sysinit.target");
+                    sw.WriteLine("After=framework-antd.mount");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Service]");
+                    sw.WriteLine("ExecStart=/usr/bin/mono /framework/antd/Antd.exe");
+                    sw.WriteLine("");
+                    sw.WriteLine("[Install]");
+                    sw.WriteLine("WantedBy=applicative.target");
+                }
+            }
         }
     }
 }

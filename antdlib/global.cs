@@ -131,9 +131,9 @@ namespace antdlib {
             public static string launch { get { return "antd-launcher.service"; } }
         }
 
-        public static string prepare { get { return $"{Folder.AppsUnits}/{Name.prepare}"; } }
-        public static string mount { get { return $"{Folder.AppsUnits}/{Name.mount}"; } }
-        public static string launch { get { return $"{Folder.AppsUnits}/{Name.launch}"; } }
+        public static string prepare = $"{Folder.AppsUnits}/{Name.prepare}";
+        public static string mount = $"{Folder.AppsUnits}/{Name.mount}";
+        public static string launch = $"{Folder.AppsUnits}/{Name.launch}";
     }
 
     public class Update {
