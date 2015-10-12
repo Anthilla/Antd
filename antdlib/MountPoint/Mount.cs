@@ -65,8 +65,11 @@ namespace antdlib.MountPoint {
                     MountRepository.Create(defaultDirectories[i], MountContext.Core, MountEntity.Directory);
                 }
             }
-            ConsoleLogger.Log("  Checking current mounts and directories status:");
+
+            ConsoleLogger.Log("  Checking existing directories status:");
             CheckCurrentStatus();
+
+            ConsoleLogger.Log("  Mounting directories...");
             var directoryMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.Directory).ToArray();
             var y = (directoryMounts.Length == 1) ? "y" : "ies";
             ConsoleLogger.Log($"     Mounting {directoryMounts.Length} director{y}:");
@@ -81,6 +84,7 @@ namespace antdlib.MountPoint {
                 }
             }
 
+            ConsoleLogger.Log("  Mounting files...");
             var fileMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.File).ToArray();
             var s = (fileMounts.Length == 1) ? "" : "s";
             ConsoleLogger.Log($"     Mounting {fileMounts.Length} file{s}:");

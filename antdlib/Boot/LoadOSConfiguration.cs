@@ -58,6 +58,8 @@ namespace antdlib.Boot {
         public static void LoadEtcSSH() {
             var dir = "/etc/ssh";
             var DIR = Mount.GetDIRSPath(dir);
+            Directory.CreateDirectory(dir);
+            Directory.CreateDirectory(DIR);
             if (Mount.IsAlreadyMounted(DIR, dir) == false) {
                 Mount.Dir(dir);
             }

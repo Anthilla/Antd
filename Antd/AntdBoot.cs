@@ -43,7 +43,7 @@ namespace Antd {
     public class AntdBoot {
 
         public static void CheckIfGlobalRepositoryIsWriteable() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 var bootExtData = Terminal.Execute("blkid | grep BootExt");
                 if (bootExtData.Length > 0) {
                     var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
@@ -69,21 +69,21 @@ namespace Antd {
         }
 
         public static void SetWorkingDirectories() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 Mount.WorkingDirectories();
                 ConsoleLogger.Log("    working directories -> checked");
             }
         }
 
         public static void SetMounts() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 Mount.AllDirectories();
                 ConsoleLogger.Log("    mounts -> checked");
             }
         }
 
-        public static void SetUsersMount() {
-            if (AssemblyInfo.IsUnix) {
+        public static void SetUsersMount(bool isActive) {
+            if (isActive == true && AssemblyInfo.IsUnix == true) {
                 antdlib.Users.SystemUser.SetReady();
                 antdlib.Users.SystemGroup.SetReady();
                 ConsoleLogger.Log("    users mount -> checked");
@@ -91,7 +91,7 @@ namespace Antd {
         }
 
         public static void SetOSMount() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 var firmware = "/mnt/cdrom/Kernel/active-firmware";
                 var firmwareDir = "/lib64/firmware";
                 if (Mount.IsAlreadyMounted(firmware, firmwareDir) == false) {
@@ -112,10 +112,10 @@ namespace Antd {
         }
 
         public static void SetOsConfiguration() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 ConsoleLogger.Log("    os -> loading configuration");
-                ConsoleLogger.Log("          load /etc/ssh");
-                LoadOSConfiguration.LoadEtcSSH();
+                //ConsoleLogger.Log("          load /etc/ssh");
+                //LoadOSConfiguration.LoadEtcSSH();
                 ConsoleLogger.Log("          load collectd");
                 LoadOSConfiguration.LoadCollectd();
                 ConsoleLogger.Log("          load journald");
@@ -126,6 +126,8 @@ namespace Antd {
                 LoadOSConfiguration.LoadNetwork();
                 ConsoleLogger.Log("          load firewall");
                 LoadOSConfiguration.LoadFirewall();
+                ConsoleLogger.Log("          installing websocketd");
+                antdlib.Websocket.Websocketd.Install();
                 ConsoleLogger.Log("    os -> checked");
             }
         }
@@ -136,7 +138,7 @@ namespace Antd {
         }
 
         public static void CheckSysctl(bool isActive) {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 if (isActive) {
                     Sysctl.WriteConfig();
                     Sysctl.LoadConfig();
@@ -149,7 +151,7 @@ namespace Antd {
         }
 
         public static void StartNetworkd() {
-            if (AssemblyInfo.IsUnix) {
+            if (AssemblyInfo.IsUnix == true) {
                 Networkd.SetConfiguration();
             }
         }

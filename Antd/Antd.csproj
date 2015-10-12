@@ -294,6 +294,9 @@
     <None Include="Resources\FILE_etc_wpa_supplicant_wpa_suplicant.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\websocketd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\apps\page-apps-list.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

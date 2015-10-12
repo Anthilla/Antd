@@ -1,4 +1,5 @@
 ﻿
+using antdlib.Models;
 using Nancy.IO;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -39,6 +40,30 @@ using System.Text.RegularExpressions;
 namespace antdlib {
 
     public static class Extensions {
+
+        public static CommandModel ConvertCommandToModel(this String commandOutput) {
+            CommandModel command = new CommandModel {
+                date = DateTime.Now,
+                output = commandOutput,
+                outputTable = TextToList(commandOutput),
+                error = commandOutput,
+                errorTable = TextToList(commandOutput)
+            };
+            return command;
+        }
+
+        public static List<string> TextToList(string text) {
+            List<string> stringList = new List<string>();
+            string[] rowDivider = new String[] { "\n" };
+            string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (string row in rowList) {
+                if (!string.IsNullOrEmpty(row)) {
+                    stringList.Add(row);
+                }
+            }
+
+            return stringList;
+        }
 
         public static Guid ToGuid(this Guid? source) {
             return source ?? Guid.Empty;

@@ -1,4 +1,6 @@
-﻿///-------------------------------------------------------------------------------------
+﻿
+using antdlib.MountPoint;
+///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -26,7 +28,6 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-
 using antdlib.Systemd;
 using System;
 using System.IO;
@@ -59,11 +60,22 @@ namespace antdlib.Apps {
         }
 
         private static void SetDirectories() {
-            foreach (var app in Management.DetectApps()) {
-                var kvpList = app.Values.Where(k => k.Key == "app_path").Select(k => k.Value).ToList();
-                foreach (var dir in kvpList) {
-                    MountPoint.Mount.Dir(dir);
+            var app = Management.DetectApps().Where(a => a.Name == "anthillasp").FirstOrDefault();
+            if (app != null) {
+                var dirs = Management.GetWantedDirectories(app);
+                if (dirs.Length > 0) {
+                    foreach (var dir in dirs) {
+                        Directory.CreateDirectory(dir.Trim());
+                        Directory.CreateDirectory(Mount.SetDIRSPath(dir.Trim()));
+                        Mount.Dir(dir.Trim());
+                    }
                 }
+                else {
+                    Terminal.Execute("touch /mnt/cdrom/DIRS/null_dir_app");
+                }
+            }
+            else {
+                Terminal.Execute("touch /mnt/cdrom/DIRS/null_info_app");
             }
         }
 

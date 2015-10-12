@@ -73,23 +73,29 @@ namespace antdlib.Users {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static IEnumerable<UserModel> GetAll() {
-            var list = new List<UserModel>() { };
-            if (File.Exists(file) && File.Exists(filePwd)) {
-                var usersString = Terminal.Execute($"cat {file}");
-                var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var passwdUserString = Terminal.Execute($"cat {filePwd}");
-                var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                foreach (var user in users) {
-                    var mu = MapUser(user);
-                    var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
-                    if (pwdstring.Length > 0 && pwdstring != null) {
-                        var mup = AddUserInfoFromPasswd(mu, pwdstring);
-                        mu = mup;
+            try {
+                var list = new List<UserModel>() { };
+                if (File.Exists(file) && File.Exists(filePwd)) {
+                    var usersString = Terminal.Execute($"cat {file}");
+                    var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    var passwdUserString = Terminal.Execute($"cat {filePwd}");
+                    var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    foreach (var user in users) {
+                        var mu = MapUser(user);
+                        var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
+                        if (pwdstring.Length > 0 && pwdstring != null) {
+                            var mup = AddUserInfoFromPasswd(mu, pwdstring);
+                            mu = mup;
+                        }
+                        list.Add(mu);
                     }
-                    list.Add(mu);
                 }
+                return list;
             }
-            return list;
+            catch (Exception ex) {
+                ConsoleLogger.Warn("There's something wrong while getting system users...");
+                return new List<UserModel>() { };
+            }
         }
 
         public static void ImportUsersToDatabase() {

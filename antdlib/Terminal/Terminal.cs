@@ -197,32 +197,122 @@ namespace antdlib {
                 return genericOutput;
             }
         }
-    }
 
-    public static class TerminalExtension {
+        public class Screen {
 
-        public static CommandModel ConvertCommandToModel(this String commandOutput) {
-            CommandModel command = new CommandModel {
-                date = DateTime.Now,
-                output = commandOutput,
-                outputTable = TextToList(commandOutput),
-                error = commandOutput,
-                errorTable = TextToList(commandOutput)
-            };
-            return command;
-        }
+            public static string[] GetAll() {
+                var list = new List<string>() { };
+                var results = Terminal.Execute("screen -list").Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                if (results.Count > 2 ) {
+                    results.RemoveAt(results.Count - 1);
+                    results.RemoveAt(0);
+                    foreach (var line in results) {
+                        if (line.Contains("(")) {
+                            var screen = line.RemoveWhiteSpace().Trim().Split(new String[] { "(" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            list.Add(screen);
+                        }
+                    }
+                }
+                return list.ToArray();
+            }
 
-        public static List<string> TextToList(string text) {
-            List<string> stringList = new List<string>();
-            string[] rowDivider = new String[] { "\n" };
-            string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList) {
-                if (!string.IsNullOrEmpty(row)) {
-                    stringList.Add(row);
+            public static string Get(string screenName) {
+                return Terminal.Execute($"screen -list | grep {screenName}").Trim();
+            }
+
+            public static void Wipe() {
+                Terminal.Execute("screen -wipe");
+            }
+
+            public static void Kill(string screenName) {
+                var s = Get(screenName);
+                if (s.Length > 0) {
+                    var proc = s.Split(new String[] { "." }, StringSplitOptions.RemoveEmptyEntries).ToArray().First();
+                    if (proc.Length > 0) {
+                        Terminal.Execute($"kill -9 {proc}");
+                    }
+                }
+                Wipe();
+            }
+
+            public static void KillAll() {
+                foreach (var screen in GetAll()) {
+                    Kill(screen);
                 }
             }
 
-            return stringList;
+            private static string SetScreenName(int num) {
+                var name = $"antd-screen-{num.ToString("D2")}";
+                return (Get(name).Length > 0) ? SetScreenName(num + 1) : name;
+            }
+
+            public static string Execute(string command) {
+                var screend = $"screen -S antd-screen-{SetScreenName(0)} {command}";
+                string output = string.Empty;
+                string error = string.Empty;
+                Process process = new Process {
+                    StartInfo = {
+                    FileName = "bash",
+                    Arguments = $"-c \"{screend}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+                };
+                try {
+                    process.Start();
+                    using (StreamReader streamReader = process.StandardOutput) {
+                        output = streamReader.ReadToEnd();
+                    }
+                    using (StreamReader streamReader = process.StandardError) {
+                        error = streamReader.ReadToEnd();
+                    }
+                    process.WaitForExit();
+                    return output;
+                }
+                catch (Exception ex) {
+                    Console.WriteLine("-----------------------------------");
+                    Console.WriteLine($"Launching [{command}] has failed!");
+                    Console.WriteLine("Error message:");
+                    Console.WriteLine($"{ex.Message}");
+                    Console.WriteLine("-----------------------------------");
+                    return error;
+                }
+            }
+
+            public static string Execute(string command, string dir) {
+                var screend = $"screen -S antd-screen-{SetScreenName(0)} {command}";
+                string output = string.Empty;
+                Process process = new Process {
+                    StartInfo = {
+                    FileName = "bash",
+                    Arguments = $"-c \"{screend}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = dir.ToString()
+                }
+                };
+                try {
+                    process.Start();
+                    using (StreamReader streamReader = process.StandardOutput) {
+                        output = streamReader.ReadToEnd();
+                    }
+                    using (StreamReader streamReader = process.StandardError) {
+                        output = streamReader.ReadToEnd();
+                    }
+                    process.WaitForExit();
+                    return output;
+                }
+                catch (Exception ex) {
+                    Console.WriteLine("-----------------------------------");
+                    Console.WriteLine($"{command} has failed");
+                    Console.WriteLine("Error message:");
+                    Console.WriteLine($"{ex.Message}");
+                    Console.WriteLine("-----------------------------------");
+                    return output;
+                }
+            }
         }
     }
 }
