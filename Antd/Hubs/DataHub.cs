@@ -1,5 +1,4 @@
-﻿using antdlib;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -28,43 +27,8 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 using Microsoft.AspNet.SignalR;
-using System;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Antd.Hubs {
     public class DataHub : Hub {
-    }
-
-    public class DataSocket {
-        public static async Task Propagate() {
-            ClientWebSocket ws = new ClientWebSocket();
-            var uri = new System.Uri("ws://127.0.0.1:30333/");
-            await ws.ConnectAsync(uri, CancellationToken.None);
-            var buffer = new byte[1024];
-            while (true) {
-                var segment = new ArraySegment<byte>(buffer);
-                var result = await ws.ReceiveAsync(segment, CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Close) {
-                    await ws.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "I don't do binary", CancellationToken.None);
-                    ConsoleLogger.Warn("Connection closed: I don't do binary");
-                }
-                int count = result.Count;
-                while (!result.EndOfMessage) {
-                    if (count >= buffer.Length) {
-                        await ws.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "That's too long", CancellationToken.None);
-                        ConsoleLogger.Warn("Connection closed: That's too long");
-                    }
-                    segment = new ArraySegment<byte>(buffer, count, buffer.Length - count);
-                    result = await ws.ReceiveAsync(segment, CancellationToken.None);
-                    count += result.Count;
-                }
-                var message = Encoding.UTF8.GetString(buffer, 0, count);
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<DataHub>();
-                hubContext.Clients.All.getData(message);
-            }
-        }
     }
 }

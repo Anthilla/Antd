@@ -75,9 +75,7 @@ namespace Antd.Hubs {
             Systemctl.Restart(unitName);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary></summary>
         /// <param name="command">
         ///     es: /usr/bin/vmstat -n 1
         ///     ->: /cfg/antd/websocketd/websocketd --port=30333 /usr/bin/vmstat -n 1
