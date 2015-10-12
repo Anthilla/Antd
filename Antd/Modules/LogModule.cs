@@ -58,9 +58,9 @@ namespace Antd {
             };
 
             Post["/websocket/listen", true] = async (x, ct) => {
-                //await Hubs.DataSocket.Propagate();
-                await Websocketd.LaunchCommand("/usr/bin/vmstat -n 1");
-                return Response.AsJson(true);
+                var port = "30303";
+                await Websocketd.LaunchCommand("/usr/bin/vmstat -n 1", port);
+                return Response.AsJson(port);
             };
         }
     }

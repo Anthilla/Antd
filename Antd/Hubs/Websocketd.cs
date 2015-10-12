@@ -61,10 +61,10 @@ namespace Antd.Hubs {
         private static void SetUnit(string port, string command) {
             var unitName = $"ws{port}.service";
             var unitPath = $"{Folder.AppsUnits}/{unitName}";
-            if (!File.Exists(unitName)) {
-                using (StreamWriter sw = File.CreateText(unitName)) {
+            if (!File.Exists(unitPath)) {
+                using (StreamWriter sw = File.CreateText(unitPath)) {
                     sw.WriteLine("[Unit]");
-                    sw.WriteLine("Description=External Volume Unit, Application: Antd Websocketd Service");
+                    sw.WriteLine($"Description=External Volume Unit, Antd Websocketd Service @{port}");
                     sw.WriteLine("");
                     sw.WriteLine("[Service]");
                     sw.WriteLine($"ExecStart={filePath} --port={port} {command}");
@@ -81,8 +81,8 @@ namespace Antd.Hubs {
         ///     ->: /cfg/antd/websocketd/websocketd --port=30333 /usr/bin/vmstat -n 1
         /// </param>
         /// <returns></returns>
-        public static async Task LaunchCommand(string command) {
-            var port = GetFirstPort();
+        public static async Task LaunchCommand(string command, string ws_port = "") {
+            var port = (ws_port.Length > 0) ? ws_port : GetFirstPort();
             SetUnit(port, command);
             ClientWebSocket ws = new ClientWebSocket();
             var uri = new System.Uri($"ws://127.0.0.1:{port}/");
