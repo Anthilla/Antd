@@ -630,12 +630,6 @@
     <Content Include="NoVnc\images\esc.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="NoVnc\images\favicon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NoVnc\images\favicon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="NoVnc\images\fullscreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

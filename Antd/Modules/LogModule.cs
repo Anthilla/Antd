@@ -1,7 +1,4 @@
-﻿
-using Antd.Hubs;
-using antdlib;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -29,6 +26,9 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using Antd.Hubs;
+using antdlib;
 using antdlib.Log;
 using Nancy;
 //using Nancy.Security;
