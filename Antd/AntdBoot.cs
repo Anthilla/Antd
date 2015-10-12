@@ -116,18 +116,18 @@ namespace Antd {
                 ConsoleLogger.Log("    os -> loading configuration");
                 //ConsoleLogger.Log("          load /etc/ssh");
                 //LoadOSConfiguration.LoadEtcSSH();
-                ConsoleLogger.Log("          load collectd");
-                LoadOSConfiguration.LoadCollectd();
+                //ConsoleLogger.Log("          load collectd");
+                //LoadOSConfiguration.LoadCollectd();
                 ConsoleLogger.Log("          load journald");
                 LoadOSConfiguration.LoadSystemdJournald();
-                ConsoleLogger.Log("          load wpa-supplicant");
-                LoadOSConfiguration.LoadWPASupplicant();
+                //ConsoleLogger.Log("          load wpa-supplicant");
+                //LoadOSConfiguration.LoadWPASupplicant();
                 ConsoleLogger.Log("          load network");
                 LoadOSConfiguration.LoadNetwork();
                 ConsoleLogger.Log("          load firewall");
                 LoadOSConfiguration.LoadFirewall();
-                ConsoleLogger.Log("          installing websocketd");
-                antdlib.Websocket.Websocketd.Install();
+                //ConsoleLogger.Log("          installing websocketd");
+                //Hubs.Websocketd.Install();
                 ConsoleLogger.Log("    os -> checked");
             }
         }

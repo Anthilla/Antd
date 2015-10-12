@@ -40,7 +40,6 @@ namespace Antd.Hubs {
 
     public class DataSocket {
         public static async Task Propagate() {
-            //Terminal.Execute("/root/test/web-vmstats-master/websocketd --port=30333 /usr/bin/journalctl &");
             ClientWebSocket ws = new ClientWebSocket();
             var uri = new System.Uri("ws://127.0.0.1:30333/");
             await ws.ConnectAsync(uri, CancellationToken.None);

@@ -115,8 +115,8 @@ namespace antdlib {
                 }
             }
             catch (Exception ex) {
-                ConsoleLogger.Error($"Unable to dowload from {url}");
-                ConsoleLogger.Error($"{ex.Message}");
+                ConsoleLogger.Warn($"Unable to dowload from {url}");
+                ConsoleLogger.Warn($"{ex.Message}");
             }
         }
 

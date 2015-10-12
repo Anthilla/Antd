@@ -87,7 +87,7 @@ namespace antdlib {
                 , ConsoleTime.GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
-            Environment.Exit(-1);
+            //Environment.Exit(-1);
         }
 
         public static void Point(string where, string message = "") {

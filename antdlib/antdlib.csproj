@@ -267,7 +267,6 @@
     <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
-    <Compile Include="Websocket\Websocketd.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

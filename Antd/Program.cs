@@ -48,6 +48,7 @@ namespace Antd {
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
+            ConsoleLogger.Success("Antd_1608");
             AntdBoot.CheckIfGlobalRepositoryIsWriteable();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();

@@ -1,4 +1,5 @@
 ﻿
+using Antd.Hubs;
 using antdlib;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -29,7 +30,6 @@ using antdlib;
 ///     20141110
 ///-------------------------------------------------------------------------------------
 using antdlib.Log;
-using antdlib.Websocket;
 using Nancy;
 //using Nancy.Security;
 using System.Dynamic;
@@ -58,6 +58,7 @@ namespace Antd {
             };
 
             Post["/websocket/listen", true] = async (x, ct) => {
+                //await Hubs.DataSocket.Propagate();
                 await Websocketd.LaunchCommand("/usr/bin/vmstat -n 1");
                 return Response.AsJson(true);
             };

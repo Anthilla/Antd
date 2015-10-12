@@ -34,9 +34,9 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using antdlib.Hubs;
+using antdlib;
 
-namespace antdlib.Websocket {
+namespace Antd.Hubs {
     public class Websocketd {
 
         private static string fileName = "websocketd";
@@ -60,7 +60,7 @@ namespace antdlib.Websocket {
 
         private static void SetUnit(string port, string command) {
             var unitName = $"ws{port}.service";
-            var unitPath = $"{Folder.Websocketd}/{unitName}";
+            var unitPath = $"{Folder.AppsUnits}/{unitName}";
             if (!File.Exists(unitName)) {
                 using (StreamWriter sw = File.CreateText(unitName)) {
                     sw.WriteLine("[Unit]");
