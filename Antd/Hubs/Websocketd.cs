@@ -42,23 +42,12 @@ namespace Antd.Hubs {
         private static string fileName = "websocketd";
         private static string filePath = $"{Folder.Websocketd}/websocketd";
 
-        public static object GlobalHost {
-            get;
-            private set;
-        }
-
-        public static void Install() {
-            if (!File.Exists(filePath)) {
-                FileSystem.Download($"{Url.Antd}repo/{fileName}", filePath);
-            }
-        }
-
         public static string GetFirstPort(long port = 31000) {
             var c = Terminal.Execute($"netstat -anp | grep :{port}");
             return (c.Length > 0) ? GetFirstPort(port + 1) : ((port > 49999) ? "30999" : port.ToString());
         }
 
-        private static void SetUnit(string port, string command) {
+        public static void SetUnit(string port, string command) {
             var unitName = $"ws{port}.service";
             var unitPath = $"{Folder.AppsUnits}/{unitName}";
             if (!File.Exists(unitPath)) {
@@ -81,9 +70,9 @@ namespace Antd.Hubs {
         ///     ->: /cfg/antd/websocketd/websocketd --port=30333 /usr/bin/vmstat -n 1
         /// </param>
         /// <returns></returns>
-        public static async Task LaunchCommand(string command, string ws_port = "") {
+        public static async Task LaunchCommand(/*string command, */string ws_port = "") {
             var port = (ws_port.Length > 0) ? ws_port : GetFirstPort();
-            SetUnit(port, command);
+            //SetUnit(port, command);
             ClientWebSocket ws = new ClientWebSocket();
             var uri = new System.Uri($"ws://127.0.0.1:{port}/");
             await ws.ConnectAsync(uri, CancellationToken.None);

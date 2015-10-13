@@ -118,5 +118,12 @@ namespace antdlib.Boot {
         public static void LoadFirewall() {
             PreloadFirewallFile();
         }
+
+        public static void LoadWebsocketd() {
+            var filePath = $"{Folder.Websocketd}/websocketd";
+            if (!File.Exists(filePath)) {
+                FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
+            }
+        }
     }
 }

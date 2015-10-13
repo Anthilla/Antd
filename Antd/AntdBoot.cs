@@ -127,7 +127,7 @@ namespace Antd {
                 ConsoleLogger.Log("          load firewall");
                 LoadOSConfiguration.LoadFirewall();
                 //ConsoleLogger.Log("          installing websocketd");
-                //Hubs.Websocketd.Install();
+                //LoadOSConfiguration.LoadWebsocketd();
                 ConsoleLogger.Log("    os -> checked");
             }
         }
