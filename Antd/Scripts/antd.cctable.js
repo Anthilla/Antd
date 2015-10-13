@@ -175,17 +175,25 @@ $('input.delete-command').click(function () {
 
 $('input.set-edit-command').click(function () {
     var guid = $(this).attr('data-cmd-guid');
-    var container = $('td[data-row-commands="list"]');
-    var html = container.html();
-    var set = container.find('p[data-command="set"]').text();
-    var get = container.find('p[data-command="get"]').text();
-    var cont = '<label style="display: inline-block;">Associated Command</label>' +
-                '<input data-guid-set="' + guid + '" data-command="set" type="text" value="' + set + '"/>' +
-                '<br />' +
-                '<label style="display: inline-block;">Input Command</label>' +
-                '<input data-guid-get="' + guid + '" data-command="get" type="text" value="' + get + '"/>';
+    var container = $(this).parents('tr').find('td[data-row-commands="list"]')
+    var cont = "";
+    container.find('p[data-command]').each(function (i) {
+        var thisItem = $(this);
+        var text = thisItem.text();
+        var type = thisItem.attr('data-command');
+        cont += '<label style="display: inline-block;">' + type + '</label>' +
+            '<input data-guid-set="' + guid + '" data-command="' + type + '" type="text" value="' + text + '"/>' +
+            '<br />';
+    });
+    //var html = container.html();
+    //var set = container.find('p[data-command="set"]').text();
+    //var get = container.find('p[data-command="get"]').text();
+    //var cont = '<label style="display: inline-block;">Associated Command</label>' +
+    //            '<input data-guid-set="' + guid + '" data-command="set" type="text" value="' + set + '"/>' +
+    //            '<br />' +
+    //            '<label style="display: inline-block;">Input Command</label>' +
+    //            '<input data-guid-get="' + guid + '" data-command="get" type="text" value="' + get + '"/>';
     container.html(cont);
-
     var parent = $(this).parent('td');
     var newButton = '<input data-cmd-guid="' + guid + '" type="button" value="Update" class="bg-anthilla-violet edit-command" style="width: 100% !important"/>';
     parent.html(newButton);

@@ -64,6 +64,7 @@ namespace antdlib.Boot {
                 return (xmlWriter.CheckValue(Label.Port) == true) ? xmlWriter.ReadValue(Label.Port) : Port.Antd;
             }
             catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
                 return "7777";
             }
         }
@@ -73,7 +74,8 @@ namespace antdlib.Boot {
                 return (xmlWriter.CheckValue(Label.Database) == true) ? xmlWriter.ReadValue(Label.Database) : Folder.Database;
             }
             catch (Exception ex) {
-                return "/Data/antd";
+                ConsoleLogger.Warn(ex.Message);
+                return Folder.Database;
             }
         }
 
@@ -92,6 +94,7 @@ namespace antdlib.Boot {
                 }
             }
             catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
                 return "http://+:7777/";
             }
         }
