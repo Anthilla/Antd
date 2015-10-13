@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: auto;">
+                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: 250px;">
                     @antdlib.Apps.AnthillaSP.Status.AnthillaSP();
                 </textarea>
             </td>
@@ -55,7 +55,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: auto;">
+                <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: 250px;">
                     @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
                 </textarea>
             </td>
@@ -108,12 +108,10 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/start/sp/',
-            type: 'GET',
-            contentType: "application/json;charset=utf-8",
+            type: 'POST',
             success: function (data) {
                 alert(data);
                 location.reload(true);
-                return false;
             }
         });
     });
@@ -122,12 +120,10 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/start/server/',
-            type: 'GET',
-            contentType: "application/json;charset=utf-8",
+            type: 'POST',
             success: function (data) {
                 alert(data);
                 location.reload(true);
-                return false;
             }
         });
     });
@@ -136,12 +132,10 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/stop/sp/',
-            type: 'GET',
-            contentType: "application/json;charset=utf-8",
+            type: 'POST',
             success: function (data) {
                 alert(data);
                 location.reload(true);
-                return false;
             }
         });
     });
@@ -150,12 +144,10 @@
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/stop/server/',
-            type: 'GET',
-            contentType: "application/json;charset=utf-8",
+            type: 'POST',
             success: function (data) {
                 alert(data);
                 location.reload(true);
-                return false;
             }
         });
     });

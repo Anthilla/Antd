@@ -78,6 +78,32 @@ namespace Antd {
                 hubContext.Clients.All.getPointCoordinates(X, Y);
                 return Response.AsJson(true);
             };
+
+            Get["/test/{val}"] = x => {
+                string v = x.val;
+                var c = v.GetBytes().ToHex();
+                var max = c.Length;
+                var l = 8;
+                string r;
+                if (max == l) {
+                    r = c;
+                }
+                else if (max > l) {
+                    r = c.Substring(max - (l + 1), 8);
+                }
+                else if (max < l) {
+                    var diff = l - max;
+                    r = "0";
+                    for (int i = 0; i < diff; i++) {
+                        r += "0";
+                    }
+                    r += c;
+                }
+                else {
+                    r = "01011010";
+                }
+                return Response.AsJson(r);
+            };
         }
     }
 }

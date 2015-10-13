@@ -60,7 +60,7 @@ namespace antdlib {
 
     public class Folder {
         public static string Root { get { return "/cfg/antd"; } }
-        public static string Database { get { return "/Data/antd"; } }
+        public static string Database { get { return Folder.Root + "/database"; } }
         public static string Networkd { get { return Folder.Root + "/networkd"; } }
         public static string Websocketd { get { return Folder.Root + "/websocketd"; } }
         public static string AntdRepo { get { return "/mnt/cdrom"; } }

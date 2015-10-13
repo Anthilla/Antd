@@ -85,24 +85,24 @@ namespace Antd {
                 }
             };
 
-            Get["/start/sp"] = x => {
+            Post["/start/sp"] = x => {
                 AnthillaSP.StartSP();
-                return Response.AsJson("AnthillaSP process started");
+                return Response.AsJson("sp process started");
             };
 
-            Get["/start/server"] = x => {
+            Post["/start/server"] = x => {
                 AnthillaSP.StartServer();
-                return Response.AsJson("AnthillaSP process started");
+                return Response.AsJson("server process started");
             };
 
-            Get["/stop/sp"] = x => {
+            Post["/stop/sp"] = x => {
                 AnthillaSP.StopSP();
-                return Response.AsJson("AnthillaSP process stopped");
+                return Response.AsJson("sp process stopped");
             };
 
-            Get["/stop/server"] = x => {
+            Post["/stop/server"] = x => {
                 AnthillaSP.StopServer();
-                return Response.AsJson("AnthillaSP process stopped");
+                return Response.AsJson("server process stopped");
             };
 
             Get["/status/sp"] = x => {

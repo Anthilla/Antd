@@ -36,7 +36,6 @@ namespace antdlib.MountPoint {
 
         private static string[] defaultDirectories = new string[] {
                     Folder.Root,
-                    Folder.Database,
                 };
 
         public static void WorkingDirectories() {
