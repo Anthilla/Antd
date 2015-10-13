@@ -89,7 +89,9 @@
         $(function () {
             var connection = $.hubConnection();
             var proxy = connection.createHubProxy('DataHub');
-            connection.start();
+            connection.start({
+                transport: ['longPolling', 'foreverFrame', 'serverSentEvents']
+            });
 
             proxy.on('getData', function (data) {
                 var arr = data.trim().split(/ +/);
@@ -105,5 +107,9 @@
                 $('#VMSTATS').append(row);
             });
         });
+
+        //$.connection.hub.start({
+        //    transport: ['longPolling', 'foreverFrame', 'serverSentEvents']
+        //}).done(function () {
     </script>
 }

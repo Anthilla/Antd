@@ -197,9 +197,9 @@ namespace Antd {
             }
         }
 
-        public static void StartSignalR(IAppBuilder app, bool isActive) {
+        public static void StartSignalR(IAppBuilder app, bool detailedErrors, bool isActive) {
             if (isActive) {
-                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = false };
+                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
                 app.MapSignalR(hubConfiguration);
                 ConsoleLogger.Log("    signalR -> loaded");
             }

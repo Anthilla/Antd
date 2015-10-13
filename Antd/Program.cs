@@ -86,7 +86,7 @@ namespace Antd {
             AntdBoot.SetMounts();
             AntdBoot.SetUsersMount(false);
             AntdBoot.SetOSMount();
-            AntdBoot.StartSignalR(app, true);
+            AntdBoot.StartSignalR(app, true, true);
             AntdBoot.StartNancy(app);
 
             AntdBoot.StartScheduler(false);

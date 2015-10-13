@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using antdlib;
 using antdlib.Collectd;
 using Microsoft.AspNet.SignalR;
-using antdlib.Hubs;
+using Antd.Hubs;
 
 namespace Antd {
     public class TMP {
