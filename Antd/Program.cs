@@ -48,7 +48,7 @@ namespace Antd {
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
-            ConsoleLogger.Success("Antd_1608");
+            //ConsoleLogger.Success("Antd_1608");
             AntdBoot.CheckIfGlobalRepositoryIsWriteable();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
@@ -90,7 +90,7 @@ namespace Antd {
             AntdBoot.StartNancy(app);
 
             AntdBoot.StartScheduler(false);
-            AntdBoot.StartDirectoryWatcher(true);
+            AntdBoot.StartDirectoryWatcher(false);
             AntdBoot.CheckSysctl(false);
         }
     }

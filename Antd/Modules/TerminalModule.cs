@@ -30,6 +30,7 @@ using antdlib;
 ///-------------------------------------------------------------------------------------
 using Nancy;
 using Nancy.Security;
+using System;
 using System.IO;
 
 namespace Antd {
@@ -47,7 +48,6 @@ namespace Antd {
             Post["/"] = x => {
                 string cmd = Request.Form.Command;
                 string result = (Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
-                FileSystem.WriteFile("/mnt/cdrom/pippo.txt", result);
                 return Response.AsJson(result);
             };
 
@@ -78,6 +78,14 @@ namespace Antd {
                 else {
                     result = "0";
                 }
+                return Response.AsJson(result);
+            };
+
+            Post["/api"] = x => {
+                string cmd = Request.Form.Command;
+                string directory = Request.Form.Directory;
+                var cmds = cmd.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                string result = (directory == "") ? Terminal.MultiLine.Execute(cmds) : Terminal.MultiLine.Execute(cmds, directory);
                 return Response.AsJson(result);
             };
         }
