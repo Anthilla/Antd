@@ -363,7 +363,7 @@
     <None Include="Views\system\page-system-authentication.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\system\page-system-generalOLD.cshtml">
+    <None Include="Views\system\page-system-general.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\users\page-users-dashboard.cshtml">
@@ -477,7 +477,7 @@
     <None Include="Views\system\_page-system-mounts.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Views\system\page-system-general.cshtml">
+    <None Include="Views\system\page-system-generalTEST.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\system\_page-system.cshtml">

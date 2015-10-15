@@ -73,7 +73,7 @@ namespace Antd {
                             return Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
                         }
                         else {
-                            NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
+                            NancyCookie cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                             return this.LoginAndRedirect(Guid.Parse(validationGuid.ToGuid().ToString()), DateTime.Now.AddHours(100)).WithCookie(cookie);
                         }
                     }
@@ -101,7 +101,7 @@ namespace Antd {
                         Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
                     }
 
-                    NancyCookie cookie = new NancyCookie("session", validationGuid.ToGuid().ToString());
+                    NancyCookie cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                     //return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
                     return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
                 }
@@ -151,7 +151,7 @@ namespace Antd {
                     return Context.GetRedirect("~/login");
                 }
                 else {
-                    NancyCookie cookie = new NancyCookie("session", session);
+                    NancyCookie cookie = new NancyCookie("antd-session", session);
                     return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
                 }
             };

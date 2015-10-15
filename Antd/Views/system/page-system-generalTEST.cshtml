@@ -1,0 +1,36 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;">
+    <legend><i class="icon-wrench on-left"></i> Global</legend>
+    <table class="table">
+        <tbody>
+            <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
+                <td style="width: 200px;">
+                    <label>@row.Label</label>
+                </td>
+                <td style="width: 560px !important">
+                    @if (row.CommandType == antdlib.CCTableCommandType.Direct) {
+                        <input id="@row.Guid" data-sumbit-type="direct" type="button" value="Launch" class="bg-anthilla-green" style="width: 100% !important; color: #464646; float: left;" />
+                    }
+                    else if (row.CommandType == antdlib.CCTableCommandType.TextInput) {
+                        <input id="@row.Guid" type="text" data-role="CommandInputTextData" style="width: 60%; height: 25px;" />
+                            <input id="@row.Guid" data-sumbit-type="text" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
+                    }
+                    else if (row.CommandType == antdlib.CCTableCommandType.BooleanPair) {
+                        <select id="@row.Guid" data-role="CommandBooleanSelector">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                            <input id="@row.Guid" data-sumbit-type="bool" type="button" value="Apply" class="bg-anthilla-green" style="width: 67% !important; color: #464646; float: right;" />
+                    }
+                </td>
+                <td colspan="2" style="width: 300px">
+                    <textarea style="width: 100%; height: 100%; background-color: #464646; border: 0;" class="fg-white">
+                        @Html.Raw(antdlib.Terminal.Execute(row.CommandGet))
+                    </textarea>
+                </td>
+                <td>
+                    <p>@row.Notes</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
