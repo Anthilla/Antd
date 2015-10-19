@@ -106,15 +106,15 @@ namespace Antd {
                 return Response.AsJson(r);
             };
 
-            Get["/syst"] = x => {
-                ManagementClass c = new ManagementClass("Win32_Service");
-                foreach (ManagementObject o in c.GetInstances()) {
-                    Console.WriteLine("Service Name = {0} " +
-                        "ProcessId = {1} Instance Path = {2}",
-                        o["Name"], o["ProcessId"], o.Path);
-                }
-                return Response.AsJson(true);
-            };
+            //Get["/syst"] = x => {
+            //    ManagementClass c = new ManagementClass("Win32_Service");
+            //    foreach (ManagementObject o in c.GetInstances()) {
+            //        Console.WriteLine("Service Name = {0} " +
+            //            "ProcessId = {1} Instance Path = {2}",
+            //            o["Name"], o["ProcessId"], o.Path);
+            //    }
+            //    return Response.AsJson(true);
+            //};
         }
     }
 }
