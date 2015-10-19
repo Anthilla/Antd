@@ -67,7 +67,7 @@ namespace antdlib.Boot {
                 if (!Directory.Exists(path)) {
                     Directory.CreateDirectory(path);
                     ConsoleLogger.Warn("You are trying to write your database in {0}, but this dir does'nt exist!", path);
-                    ConsoleLogger.Warn("Although john has created this folder, please check that you do not miss anything!");
+                    ConsoleLogger.Warn("Although Antd has created this folder, please check that you do not miss anything!");
                 }
             }
         }

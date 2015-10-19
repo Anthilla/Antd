@@ -34,6 +34,7 @@ using antdlib;
 using antdlib.Collectd;
 using Microsoft.AspNet.SignalR;
 using Antd.Hubs;
+using System.Management;
 
 namespace Antd {
     public class TMP {
@@ -103,6 +104,16 @@ namespace Antd {
                     r = "01011010";
                 }
                 return Response.AsJson(r);
+            };
+
+            Get["/syst"] = x => {
+                ManagementClass c = new ManagementClass("Win32_Service");
+                foreach (ManagementObject o in c.GetInstances()) {
+                    Console.WriteLine("Service Name = {0} " +
+                        "ProcessId = {1} Instance Path = {2}",
+                        o["Name"], o["ProcessId"], o.Path);
+                }
+                return Response.AsJson(true);
             };
         }
     }
