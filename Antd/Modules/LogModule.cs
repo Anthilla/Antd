@@ -59,8 +59,21 @@ namespace Antd {
 
             Post["/websocket/listen", true] = async (x, ct) => {
                 var port = Websocketd.GetFirstPort();
-                Websocketd.SetUnit(port, "/usr/bin/vmstat -n 1");
-                await Websocketd.LaunchCommand(port);
+                Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
+                System.Threading.Thread.Sleep(20);
+                await Websocketd.SetWebsocket(port);
+                return Response.AsJson(port);
+            };
+
+            Get["/journalctl"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["_page-log-journalctl", vmod];
+            };
+
+            Post["/journalctl/listen", true] = async (x, ct) => {
+                var port = Websocketd.GetFirstPort();
+                Websocketd.SetUnit(port, "todo");
+                await Websocketd.LaunchCommandToJournalctl(port);
                 return Response.AsJson(port);
             };
         }

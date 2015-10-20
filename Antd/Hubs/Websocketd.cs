@@ -38,9 +38,8 @@ using antdlib;
 
 namespace Antd.Hubs {
     public class Websocketd {
-
         private static string fileName = "websocketd";
-        private static string filePath = $"{Folder.Websocketd}/websocketd";
+        private static string filePath = $"{Folder.Root}/websocketd";
 
         public static string GetFirstPort(long port = 31000) {
             var c = Terminal.Execute($"netstat -anp | grep :{port}");
@@ -49,7 +48,7 @@ namespace Antd.Hubs {
 
         public static void SetUnit(string port, string command) {
             var unitName = $"ws{port}.service";
-            var unitPath = $"{Folder.AppsUnits}/{unitName}";
+            var unitPath = $"{Folder.Websocketd}/{unitName}";
             if (!File.Exists(unitPath)) {
                 using (StreamWriter sw = File.CreateText(unitPath)) {
                     sw.WriteLine("[Unit]");
@@ -64,15 +63,20 @@ namespace Antd.Hubs {
             Systemctl.Restart(unitName);
         }
 
+        public static void SetCMD(string port, string command) {
+            var cmd = $"{filePath} --port={port} {command}";
+            ConsoleLogger.Point($"cmd is {cmd}");
+            Terminal.Background.Execute(cmd);
+        }
+
         /// <summary></summary>
         /// <param name="command">
         ///     es: /usr/bin/vmstat -n 1
         ///     ->: /cfg/antd/websocketd/websocketd --port=30333 /usr/bin/vmstat -n 1
         /// </param>
         /// <returns></returns>
-        public static async Task LaunchCommand(/*string command, */string ws_port = "") {
-            var port = (ws_port.Length > 0) ? ws_port : GetFirstPort();
-            //SetUnit(port, command);
+        public static async Task SetWebsocket(string p = "") {
+            var port = (p.Length > 0) ? p : GetFirstPort();
             ClientWebSocket ws = new ClientWebSocket();
             var uri = new System.Uri($"ws://127.0.0.1:{port}/");
             await ws.ConnectAsync(uri, CancellationToken.None);
@@ -94,9 +98,37 @@ namespace Antd.Hubs {
                     result = await ws.ReceiveAsync(segment, CancellationToken.None);
                     count += result.Count;
                 }
-                var message = Encoding.UTF8.GetString(buffer, 0, count);
-                var hubContext = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<DataHub>();
-                hubContext.Clients.All.getData(message);
+                var MESSAGE = Encoding.UTF8.GetString(buffer, 0, count);
+                Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<DataHub>().Clients.All.getWebsocketd(MESSAGE);
+            }
+        }
+
+        public static async Task LaunchCommandToJournalctl(string command) {
+            var port = GetFirstPort();
+            SetUnit(port, command);
+            ClientWebSocket ws = new ClientWebSocket();
+            var uri = new System.Uri($"ws://127.0.0.1:{port}/");
+            await ws.ConnectAsync(uri, CancellationToken.None);
+            var buffer = new byte[1024];
+            while (true) {
+                var segment = new ArraySegment<byte>(buffer);
+                var result = await ws.ReceiveAsync(segment, CancellationToken.None);
+                if (result.MessageType == WebSocketMessageType.Close) {
+                    await ws.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "I don't do binary", CancellationToken.None);
+                    ConsoleLogger.Warn("Connection closed: I don't do binary");
+                }
+                int count = result.Count;
+                while (!result.EndOfMessage) {
+                    if (count >= buffer.Length) {
+                        await ws.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "That's too long", CancellationToken.None);
+                        ConsoleLogger.Warn("Connection closed: That's too long");
+                    }
+                    segment = new ArraySegment<byte>(buffer, count, buffer.Length - count);
+                    result = await ws.ReceiveAsync(segment, CancellationToken.None);
+                    count += result.Count;
+                }
+                var MESSAGE = Encoding.UTF8.GetString(buffer, 0, count);
+                Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<DataHub>().Clients.All.getJournalctl(MESSAGE);
             }
         }
     }

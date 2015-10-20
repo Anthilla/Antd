@@ -35,7 +35,7 @@
 }
 
 @section MainContent {
-    <style type="text/css">
+    @*<style type="text/css">
         .axis path,
         .axis line {
             fill: none;
@@ -54,7 +54,7 @@
     <input type="button" value="random" />
     <br />
     <svg id="visualisation" width="1000" height="350"></svg>
-    <hr />
+    <hr />*@
     <table class="table">
         @*<thead>
             <tr>
@@ -205,7 +205,7 @@
             var connection = $.hubConnection();
             var proxy = connection.createHubProxy('DataHub');
             connection.start();
-            proxy.on('getData', function (data) {
+            proxy.on('getWebsocketd', function (data) {
                 var arr = data.trim().split(/ +/);
                 var rowContent = "";
                 $.each(arr, function (i, value) {

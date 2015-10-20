@@ -313,5 +313,57 @@ namespace antdlib {
                 return output;
             }
         }
+
+        public class Background {
+
+            public static void Execute(string command) {
+                if (AssemblyInfo.IsUnix == true) {
+                    Process process = new Process {
+                        StartInfo = {
+                            FileName = "bash",
+                            Arguments = $"-c \"{command} &\"",
+                            RedirectStandardOutput = true,
+                             RedirectStandardError = true,
+                            UseShellExecute = false
+                        }
+                    };
+                    try {
+                        process.Start();
+                    }
+                    catch (Exception ex) {
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine($"Launching [{command}] has failed!");
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine($"{ex.Message}");
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+            }
+
+            public static void Execute(string command, string dir) {
+                if (AssemblyInfo.IsUnix == true) {
+                    Process process = new Process {
+                        StartInfo = {
+                            FileName = "bash",
+                            Arguments = $"-c \"{command} &\"",
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            UseShellExecute = false,
+                            WorkingDirectory = dir.ToString()
+                        }
+                    };
+                    try {
+                        process.Start();
+                    }
+                    catch (Exception ex) {
+                        Console.WriteLine("-----------------------------------");
+                        Console.WriteLine($"Launching [{command}] has failed!");
+                        Console.WriteLine("Error message:");
+                        Console.WriteLine($"{ex.Message}");
+                        Console.WriteLine("-----------------------------------");
+                    }
+                }
+            }
+        }
     }
 }

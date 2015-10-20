@@ -120,9 +120,11 @@ namespace antdlib.Boot {
         }
 
         public static void LoadWebsocketd() {
-            var filePath = $"{Folder.Websocketd}/websocketd";
+            var filePath = $"{Folder.Root}/websocketd";
             if (!File.Exists(filePath)) {
+                ConsoleLogger.Info("Downloading websocketd");
                 FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
+                Terminal.Execute($"chmod 777 {filePath}");
             }
         }
     }

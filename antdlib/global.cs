@@ -62,7 +62,8 @@ namespace antdlib {
         public static string Root { get { return "/cfg/antd"; } }
         public static string Database { get { return Folder.Root + "/database"; } }
         public static string Networkd { get { return Folder.Root + "/networkd"; } }
-        public static string Websocketd { get { return Folder.Root + "/websocketd"; } }
+        //todo: as soon as there's systemd managed websocketd.target change this value v
+        public static string Websocketd { get { return AppsUnits; } }
         public static string AntdRepo { get { return "/mnt/cdrom"; } }
         public static string Apps { get { return "/mnt/cdrom/Apps"; } }
         public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }

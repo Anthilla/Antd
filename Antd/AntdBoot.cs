@@ -108,6 +108,7 @@ namespace Antd {
                     Terminal.Execute($"mount {module} {moduleDir}");
                 }
                 ConsoleLogger.Log("    os mount -> checked");
+                antdlib.Systemd.Systemctl.Restart("systemd-modules-load.service");
             }
         }
 
@@ -126,8 +127,8 @@ namespace Antd {
                 LoadOSConfiguration.LoadNetwork();
                 ConsoleLogger.Log("          load firewall");
                 LoadOSConfiguration.LoadFirewall();
-                //ConsoleLogger.Log("          installing websocketd");
-                //LoadOSConfiguration.LoadWebsocketd();
+                ConsoleLogger.Log("          installing websocketd");
+                LoadOSConfiguration.LoadWebsocketd();
                 ConsoleLogger.Log("    os -> checked");
             }
         }
