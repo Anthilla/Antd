@@ -50,7 +50,7 @@ namespace antdlib.Apps {
         }
 
         public static void CreateUnits() {
-            if (AnthillaSP.Units.CheckFiles() == false) {
+            if (Units.CheckFiles() == false) {
                 Units.SetAnthillaSP();
                 Units.MountFramework();
                 Units.LaunchAnthillaSP();
@@ -89,9 +89,9 @@ namespace antdlib.Apps {
             Systemctl.Start(Units.Name.FileName.LaunchServer);
         }
 
-        public static void Start(string app) {
-            Systemctl.Start(app);
-        }
+        //public static void Start(string app) {
+        //    Systemctl.Start(app);
+        //}
 
         public static void StartSP() {
             Systemctl.Start(Units.Name.FileName.LaunchSP);
@@ -196,6 +196,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
+                Systemctl.DaemonReload();
             }
 
             public static void MountFramework() {
@@ -214,6 +215,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
+                Systemctl.DaemonReload();
             }
 
             public static void LaunchAnthillaSP() {
@@ -232,6 +234,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
+                Systemctl.DaemonReload();
             }
 
             public static void LaunchAnthillaServer() {
@@ -250,6 +253,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("WantedBy=applicative.target");
                     }
                 }
+                Systemctl.DaemonReload();
             }
         }
 

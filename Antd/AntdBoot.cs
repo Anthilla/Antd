@@ -37,6 +37,7 @@ using Owin;
 using System.IO;
 using System.Text.RegularExpressions;
 using antdlib.MountPoint;
+using antdlib.Apps;
 
 namespace Antd {
 
@@ -244,6 +245,9 @@ namespace Antd {
                         }
                     }
                 }
+                System.Threading.Thread.Sleep(10);
+                AnthillaSP.SetApp();
             }
         }
+    }
 }

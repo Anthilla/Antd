@@ -78,39 +78,12 @@
         });
     });
 
-    //$('#SetUnits').click(function (e) {
-    //    jQuery.support.cors = true;
-    //    $.ajax({
-    //        url: '/apps/set/anthillasp/',
-    //        type: 'GET',
-    //        contentType: "application/json;charset=utf-8",
-    //        success: function (data) {
-    //            location.reload(true);
-    //            return false;
-    //        }
-    //    });
-    //});
-
-    //$('#ApplyUnits').click(function (e) {
-    //    jQuery.support.cors = true;
-    //    $.ajax({
-    //        url: '/apps/apply/anthillasp/',
-    //        type: 'GET',
-    //        contentType: "application/json;charset=utf-8",
-    //        success: function (data) {
-    //            location.reload(true);
-    //            return false;
-    //        }
-    //    });
-    //});
-
     $('#StartAnthillaSP').click(function (e) {
         jQuery.support.cors = true;
         $.ajax({
             url: '/apps/start/sp/',
             type: 'POST',
             success: function (data) {
-                alert(data);
                 location.reload(true);
             }
         });
@@ -122,7 +95,6 @@
             url: '/apps/start/server/',
             type: 'POST',
             success: function (data) {
-                alert(data);
                 location.reload(true);
             }
         });
@@ -134,7 +106,6 @@
             url: '/apps/stop/sp/',
             type: 'POST',
             success: function (data) {
-                alert(data);
                 location.reload(true);
             }
         });
@@ -146,7 +117,6 @@
             url: '/apps/stop/server/',
             type: 'POST',
             success: function (data) {
-                alert(data);
                 location.reload(true);
             }
         });
