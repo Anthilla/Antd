@@ -59,8 +59,8 @@ namespace Antd {
 
             Post["/websocket/listen", true] = async (x, ct) => {
                 var port = Websocketd.GetFirstPort();
-                Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
-                System.Threading.Thread.Sleep(20);
+                ////Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
+                ////System.Threading.Thread.Sleep(20);
                 await Websocketd.SetWebsocket(port);
                 return Response.AsJson(port);
             };

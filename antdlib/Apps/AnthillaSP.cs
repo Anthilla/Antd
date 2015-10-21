@@ -71,11 +71,11 @@ namespace antdlib.Apps {
                     }
                 }
                 else {
-                    Terminal.Execute("touch /mnt/cdrom/DIRS/null_dir_app");
+                    ConsoleLogger.Warn("no app directory found");
                 }
             }
             else {
-                Terminal.Execute("touch /mnt/cdrom/DIRS/null_info_app");
+                ConsoleLogger.Warn("no appinfo detected");
             }
         }
 

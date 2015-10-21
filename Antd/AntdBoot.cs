@@ -230,5 +230,20 @@ namespace Antd {
                 antdlib.Auth.T2FA.Config.Disable();
             }
         }
-    }
+
+        public static void LaunchApps() {
+            if (AssemblyInfo.IsUnix == true) {
+                var apps = antdlib.Apps.Management.DetectApps();
+                if (apps.Length > 0) {
+                    foreach (var app in apps) {
+                        var dirs = antdlib.Apps.Management.GetWantedDirectories(app);
+                        if (dirs.Length > 0) {
+                            foreach (var dir in dirs) {
+                                Mount.Dir(dir);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 }

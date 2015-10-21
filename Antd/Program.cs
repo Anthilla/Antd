@@ -66,6 +66,7 @@ namespace Antd {
 
             using (WebApp.Start<Startup>(uri)) {
                 AntdBoot.SetOsConfiguration();
+                AntdBoot.LaunchApps();
 
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
