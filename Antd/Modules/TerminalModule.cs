@@ -88,6 +88,17 @@ namespace Antd {
                 string result = (directory == "") ? Terminal.MultiLine.Execute(cmds) : Terminal.MultiLine.Execute(cmds, directory);
                 return Response.AsJson(result);
             };
+
+            Post["/direct/get"] = x => {
+                string cmd = Request.Form.Command;
+                return Response.AsJson(Terminal.Execute(cmd));
+            };
+
+            Post["/direct/post"] = x => {
+                string cmd = Request.Form.Command;
+                Terminal.Execute(cmd);
+                return Response.AsJson(true);
+            };
         }
     }
 }

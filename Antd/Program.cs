@@ -30,9 +30,11 @@
 
 using antdlib;
 using antdlib.Boot;
+using antdlib.Config;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
+using System.IO;
 using System.Threading;
 
 namespace Antd {
@@ -44,7 +46,7 @@ namespace Antd {
             Console.Title = "ANTD";
 
             if (AssemblyInfo.IsUnix == false) {
-                ConsoleLogger.Warn("This application is not running on a Unix OS:");
+                ConsoleLogger.Warn("This application is not running on an Unix OS:");
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
@@ -67,6 +69,9 @@ namespace Antd {
             using (WebApp.Start<Startup>(uri)) {
                 AntdBoot.SetOsConfiguration();
                 AntdBoot.LaunchApps();
+                AntdBoot.ReloadSSH();
+                Directory.CreateDirectory(Folder.Config);
+                ConfigManagement.ApplyForAll();
 
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);
@@ -82,14 +87,12 @@ namespace Antd {
 
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading core service configuration");
-
             AntdBoot.StartDatabase();
             AntdBoot.SetMounts();
             AntdBoot.SetUsersMount(false);
             AntdBoot.SetOSMount();
             AntdBoot.StartSignalR(app, true, true);
             AntdBoot.StartNancy(app);
-
             AntdBoot.StartScheduler(false);
             AntdBoot.StartDirectoryWatcher(false);
             AntdBoot.CheckSysctl(false);

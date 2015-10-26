@@ -53,9 +53,6 @@ namespace antdlib.Boot {
                 if (xmlWriter.CheckValue(Label.Database) == false) {
                     xmlWriter.Write(Label.Database, Folder.Database);
                 }
-                //if (xmlWriter.CheckValue(Label.Files) == false) {
-                //    xmlWriter.Write(Label.Files, Folder.FileRepository);
-                //}
             }
         }
 

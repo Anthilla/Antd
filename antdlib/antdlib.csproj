@@ -64,6 +64,9 @@
       <HintPath>..\packages\ini-parser.2.2.2\lib\net20\INIFileParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="library.u2f">
+      <HintPath>..\inogrethis_libraries\library.u2f.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.1.2.13\lib\net45\MailKit.dll</HintPath>
       <Private>True</Private>
@@ -134,6 +137,7 @@
     <Compile Include="Apps\Manage.cs" />
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\T2FA\Config.cs" />
+    <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Boot\Boot.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
@@ -152,6 +156,7 @@
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />
+    <Compile Include="Config\ConfigManagement.cs" />
     <Compile Include="Firewall\FirewallFirstConfiguration.cs" />
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
@@ -182,6 +187,7 @@
     <Compile Include="Models\ConfigFileModel.cs" />
     <Compile Include="Models\CpuinfoModel.cs" />
     <Compile Include="Models\DirItemModel.cs" />
+    <Compile Include="Models\GlobalUserModel.cs" />
     <Compile Include="Models\MeminfoModel.cs" />
     <Compile Include="Models\MountModel.cs" />
     <Compile Include="Models\NetworkdModel.cs" />

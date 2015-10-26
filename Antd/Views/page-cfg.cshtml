@@ -1,0 +1,155 @@
+﻿@*
+    ///-------------------------------------------------------------------------------------
+    ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    ///     All rights reserved.
+    ///
+    ///     Redistribution and use in source and binary forms, with or without
+    ///     modification, are permitted provided that the following conditions are met:
+    ///         * Redistributions of source code must retain the above copyright
+    ///           notice, this list of conditions and the following disclaimer.
+    ///         * Redistributions in binary form must reproduce the above copyright
+    ///           notice, this list of conditions and the following disclaimer in the
+    ///           documentation and/or other materials provided with the distribution.
+    ///         * Neither the name of the Anthilla S.r.l. nor the
+    ///           names of its contributors may be used to endorse or promote products
+    ///           derived from this software without specific prior written permission.
+    ///
+    ///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    ///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    ///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    ///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    ///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    ///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    ///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    ///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    ///
+    ///     20141110
+    ///-------------------------------------------------------------------------------------*@
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{Layout = "_layout.cshtml";}
+
+@section PageBar {
+    <style type="text/css">
+        #Config-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    @Html.Partial("_services-pagebar")
+}
+
+@section Dashboard {
+    <div id="CFGDashboard" class="border-2-anthilla-gray">
+        <form class="grid" action="/cfg" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="span4">
+                    <label>Context</label>
+                </div>
+                <div class="span6">
+                    <input name="Context" type="text" value="" style="width: 90%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>File</label>
+                </div>
+                <div class="span6">
+                    <input name="File" type="text" value="" style="width: 90%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Content</label>
+                </div>
+                <div class="span6">
+                    <textarea name="Content" class="bg-anthilla-gray border-2-anthilla-green" style="width: 90%;"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span6">
+                    <input type="Submit" value="Create" style="width: 90%;" class="fg-anthilla-green" />
+                </div>
+            </div>
+        </form>
+    </div>
+}
+
+@section MainContent {
+    <table class="table">
+        <tbody>
+            <tr>
+                <td colspan="3">
+                    <p data-role="reload-all-cfg" class="button bg-anthilla-green" style="float: right;">Reload ALL</p>
+                </td>
+            </tr>
+            @foreach (string configContexts in antdlib.Config.ConfigManagement.Contexts) {
+                <tr>
+                    <td><label>@configContexts</label></td>
+                    <td></td>
+                    <td style="width:100px;">
+                        <p data-role="reload-config" data-context="@configContexts" class="button bg-anthilla-green">Reload</p>
+                    </td>
+                </tr>
+                @foreach (string file in antdlib.Config.ConfigManagement.GetContextFiles(configContexts)) {
+                    <tr>
+                        <td></td>
+                        <td>@file</td>
+                        <td><p data-role="show-config-file" data-context="@configContexts" data-file="@file" class="button bg-anthilla-green">Show config</p></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $('p[data-role="show-config-file"]').click(function () {
+            var thisContext = $(this).attr('data-context');
+            var thisFile = $(this).attr('data-file');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/cfg/getcontent',
+                type: 'GET',
+                success: function (data) {
+                    var container = $('#CFGDashboard');
+                    container.find('input[name="Context"]').val(thisContext);
+                    container.find('input[name="File"]').val(thisFile);
+                    container.find('textarea').val(data);
+                }
+            });
+        });
+
+        $('p[data-role="reload-config"]').click(function () {
+            var thisContext = $(this).attr('data-context');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/cfg/reload',
+                type: 'POST',
+                data: {
+                    Context: thisContext
+                },
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('p[data-role="reload-all-cfg"]').click(function () {
+            var thisContext = $(this).attr('data-context');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/cfg/reloadall',
+                type: 'POST',
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
+        });
+    </script>
+}

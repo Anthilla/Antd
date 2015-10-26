@@ -70,6 +70,9 @@
       <HintPath>..\packages\ini-parser.2.2.2\lib\net20\INIFileParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="library.u2f">
+      <HintPath>..\inogrethis_libraries\library.u2f.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.1.2.13\lib\net45\MailKit.dll</HintPath>
       <Private>True</Private>
@@ -182,10 +185,13 @@
     <Compile Include="Hubs\Websocketd.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
+    <Compile Include="Modules\ConfModule.cs" />
     <Compile Include="Modules\ConsoleModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
+    <Compile Include="Modules\AuthenticationModule.cs" />
     <Compile Include="Modules\NetworkConfigModule.cs" />
     <Compile Include="Modules\ServicesModule.cs" />
+    <Compile Include="Modules\TokenMgmtModule.cs" />
     <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\HypervisorModule.cs" />
     <Compile Include="Modules\VncModule.cs" />
@@ -279,6 +285,9 @@
     <None Include="Views\firewall\_page-firewall.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Views\login-authentication.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\login-token.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -301,6 +310,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\network\page-network-setupOLD.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-cfg.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-tknmgmt.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\services\page-services-zfs.cshtml">

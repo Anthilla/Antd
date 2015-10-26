@@ -54,9 +54,10 @@ namespace antdlib.Install {
 
         public static bool IsDiskEligibleForOS(string disk) {
             var diskSizeCmdResult = Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
-            var size = diskSizeCmdResult.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            var size = diskSizeCmdResult.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             if (!size.Contains("G")) {
-                var num = Convert.ToInt32(size.Replace("M", ""));
+                //var num = Convert.ToInt32(size.Replace("M", ""));
+                var num = Convert.ToInt32(string.Join("", size.Where(Char.IsDigit)));
                 if (num < 32) {
                     return false;
                 }
@@ -66,7 +67,7 @@ namespace antdlib.Install {
                 return false;
             }
             var hasPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
-            var results = hasPartitionCmdResult.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
+            var results = hasPartitionCmdResult.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (results > 1) {
                 return false;
             }

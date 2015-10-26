@@ -103,13 +103,14 @@ namespace Antd {
                 var linkedRelease = Terminal.Execute($"file {module}").Trim();
                 if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                     var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                    if (!Directory.Exists(moduleDir)) {
-                        Directory.CreateDirectory(moduleDir);
-                    }
+                    //todo rimuovere poi la riga qui sotto
+                    Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
+                    ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
+                    Directory.CreateDirectory(moduleDir);
                     Terminal.Execute($"mount {module} {moduleDir}");
                 }
                 ConsoleLogger.Log("    os mount -> checked");
-                antdlib.Systemd.Systemctl.Restart("systemd-modules-load.service");
+                Terminal.Execute($"systemctl restart systemd-modules-load.service");
             }
         }
 
@@ -234,10 +235,10 @@ namespace Antd {
 
         public static void LaunchApps() {
             if (AssemblyInfo.IsUnix == true) {
-                var apps = antdlib.Apps.Management.DetectApps();
+                var apps = Management.DetectApps();
                 if (apps.Length > 0) {
                     foreach (var app in apps) {
-                        var dirs = antdlib.Apps.Management.GetWantedDirectories(app);
+                        var dirs = Management.GetWantedDirectories(app);
                         if (dirs.Length > 0) {
                             foreach (var dir in dirs) {
                                 Mount.Dir(dir);
@@ -248,6 +249,10 @@ namespace Antd {
                 System.Threading.Thread.Sleep(10);
                 AnthillaSP.SetApp();
             }
+        }
+
+        public static void ReloadSSH() {
+            Terminal.Execute("systemctl restart sshd.service");
         }
     }
 }

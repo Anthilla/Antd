@@ -9,8 +9,9 @@
     <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white nif-header" data-disk-name="@blk.Name">
             <i class="icon-cone on-left"></i>  @blk.Name
-
-            @ShowInstallButton(blk.Name)
+            @if (antdlib.Install.InstallCheck.IsDiskEligibleForOS(blk.Name.ToString()) && antdlib.Install.InstallCheck.IsOSRemovable == true) {
+                @ShowInstallButton(blk.Name)
+            }
         </div>
         <div class="panel-content nif-content" style="display: none;" data-disk-content="@blk.Name">
             @if (blk.Size != "" || blk.Size == null) {
@@ -36,9 +37,9 @@
 }
 
 @helper ShowInstallButton(string diskName) {
-if (antdlib.Install.InstallCheck.IsDiskEligibleForOS(diskName) && antdlib.Install.InstallCheck.IsOSRemovable == true) {
-        <input id="SelectThisDiskWhereIstallAOS" data-disk-name="@diskName" type="button" value="Install AOS here!" class="bg-anthilla-green" style="padding: 4px 10px; float: left; margin-right: 10px;" />
-}
+    <input id="SelectThisDiskWhereIstallAOS"
+           data-disk-name="@diskName" type="button" value="Install AOS here!"
+           class="bg-anthilla-green" style="padding: 4px 10px; float: left; margin-right: 10px;" />
 }
 
 <script type="text/javascript">

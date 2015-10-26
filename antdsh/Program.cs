@@ -79,11 +79,12 @@ namespace antdsh {
             else if (command == "update-select") { shell.UpdateSelect(); }
             else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
             else if (command == "isrunning") { shell.IsRunning(); }
+            else if (command.StartsWith("config ")) { shell.ApplyConfig(command); }
             else if (command == "clean-tmp") { shell.CleanTmp(); }
             else if (command == "info") { shell.Info(); }
             else if (command == "history") { PrintHistory(); }
             else if (command == "exit") { shell.Exit(); }
-            else if (command == "red-button") { DestroyCreatedFiles(); }
+            //else if (command == "red-button") { DestroyCreatedFiles(); }
             else if (command == "") { return; }
             else { shell.Execute(command); }
         }

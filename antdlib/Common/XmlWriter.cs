@@ -36,16 +36,12 @@ using System.Xml.Linq;
 namespace antdlib {
 
     public class param {
-
         public string key { get; set; }
-
         public string value { get; set; }
     }
 
     public class section {
-
         public string sectionName { get; set; }
-
         public param param { get; set; }
     }
 
