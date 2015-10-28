@@ -289,7 +289,7 @@ namespace antdlib.Svcs.Syslogng {
 
             public static void DumpGlobalConfig() {
                 var parameters = MapFile.Get().Data.ToArray();
-                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
+                var filesToClean = parameters.Select(p => p.FilePath).ToDynamicHashSet();
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
@@ -394,12 +394,12 @@ namespace antdlib.Svcs.Syslogng {
             }
 
             private static HashSet<dynamic> GetGlobalPaths() {
-                var share = MapFile.Get().Data.Select(s => s.FilePath).ToHashSet();
+                var share = MapFile.Get().Data.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 
             private static HashSet<dynamic> GetSharePaths() {
-                var share = MapFile.Get().Share.Select(s => s.FilePath).ToHashSet();
+                var share = MapFile.Get().Share.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 

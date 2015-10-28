@@ -222,8 +222,28 @@ namespace antdlib {
             return output;
         }
 
-        public static HashSet<dynamic> ToHashSet(this IEnumerable<dynamic> input) {
+        public static string ReplaceAllTextBetweenWith(this string input, char start, char end, string replacement) {
+            string memReplace = input;
+            var regex = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = regex.Matches(input);
+            if (matches.Count > 0) {
+                for (int i = 0; i < matches.Count; i++) {
+                    memReplace = memReplace.Replace(matches[i].Value, replacement);
+                }
+            }
+            return memReplace;
+        }
+
+        public static HashSet<dynamic> ToDynamicHashSet(this IEnumerable<dynamic> input) {
             var list = new HashSet<dynamic>() { };
+            foreach (var i in input) {
+                list.Add(i);
+            }
+            return list;
+        }
+
+        public static HashSet<string> ToStringHashSet(this IEnumerable<string> input) {
+            var list = new HashSet<string>() { };
             foreach (var i in input) {
                 list.Add(i);
             }

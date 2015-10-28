@@ -26,11 +26,11 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-/// 
 
 using antdlib;
 using antdlib.Boot;
 using antdlib.Config;
+//using antdlib.Network;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
@@ -69,9 +69,11 @@ namespace Antd {
             using (WebApp.Start<Startup>(uri)) {
                 AntdBoot.SetOsConfiguration();
                 AntdBoot.LaunchApps();
-                AntdBoot.ReloadSSH();
+                //AntdBoot.ReloadSSH();
+                AntdBoot.CheckResolvd();
                 Directory.CreateDirectory(Folder.Config);
-                ConfigManagement.ApplyForAll();
+                Console.WriteLine("Checking existing Config...");
+                ConfigManagement.ExecuteAll();
 
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server url -> {0}", uri);

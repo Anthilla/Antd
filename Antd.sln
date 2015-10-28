@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A079F4
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antd.Specs", "Antd.Specs\Antd.Specs.csproj", "{0733E590-700E-47EA-8122-33E658E9D11E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdsh", "antdsh\antdsh.csproj", "{7CF66D02-57A3-4E6F-9994-160809C8A2E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib", "antdlib\antdlib.csproj", "{9D55F357-B584-4F81-A2E7-5CBD9E69789C}"
@@ -35,10 +33,6 @@ Global
 		{7294764B-234D-43E7-9F67-9CA79E9FDA34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7294764B-234D-43E7-9F67-9CA79E9FDA34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7294764B-234D-43E7-9F67-9CA79E9FDA34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0733E590-700E-47EA-8122-33E658E9D11E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0733E590-700E-47EA-8122-33E658E9D11E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0733E590-700E-47EA-8122-33E658E9D11E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0733E590-700E-47EA-8122-33E658E9D11E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CF66D02-57A3-4E6F-9994-160809C8A2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7CF66D02-57A3-4E6F-9994-160809C8A2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CF66D02-57A3-4E6F-9994-160809C8A2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU

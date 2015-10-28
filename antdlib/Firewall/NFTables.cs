@@ -1,6 +1,4 @@
-﻿
-using System;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -28,6 +26,8 @@ using System;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Linq;
 
@@ -66,6 +66,13 @@ namespace antdlib.Firewall {
             "input",
             "forward",
             "output"
+        };
+
+        private static string[] TableType = new string[] {
+            "ip",
+            "ip6",
+            "arp",
+            "bridge"
         };
 
         public static void WriteFile() {

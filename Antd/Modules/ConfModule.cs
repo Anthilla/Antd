@@ -1,6 +1,5 @@
 ﻿
-using antdlib;
-using antdlib.Config;
+using Antd.ViewHelpers;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -29,44 +28,111 @@ using antdlib.Config;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+using antdlib;
+using antdlib.Config;
 using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Security;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
 
 namespace Antd {
-
     public class ConfModule : NancyModule {
-
         public ConfModule()
             : base("/cfg") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
-                return View["page-cfg"];
+                dynamic vmod = new ExpandoObject();
+                vmod.ValueBundle = ConfigManagement.GetValuesBundle();
+                vmod.CommandBundle = ConfigManagement.GetCommandsBundle().ToArray();
+                return View["page-cfg", vmod];
             };
 
-            Post["/"] = x => {
-                var Context = (string)Request.Form.Context;
-                var File = (string)Request.Form.File;
-                var Content = (string)Request.Form.Content;
-                ConfigManagement.SaveConfiguration(Context, File, Content.Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
+            Post["/addvalue"] = x => {
+                var tag = (string)Request.Form.Tag;
+                var key = (string)Request.Form.Key;
+                var value = (string)Request.Form.Value;
+                if (key.Length > 0) {
+                    ConfigManagement.AddValuesBundle(tag, key, value);
+                }
+                else {
+                    ConfigManagement.AddValuesBundle(tag, value);
+                }
                 return Response.AsRedirect("/cfg");
             };
 
-            Get["/getcontent"] = x => {
-                return View["page-cfg"];
+            Post["/delvalue"] = x => {
+                var tag = (string)Request.Form.Tag;
+                var key = (string)Request.Form.Key;
+                var value = (string)Request.Form.Value;
+                ConfigManagement.DeleteValuesBundle(tag, key, value);
+                return Response.AsRedirect("/cfg");
             };
 
-            Post["/reload"] = x => {
-                var Context = (string)Request.Form.Context;
-                ConfigManagement.ApplyConfigForContext(Context);
+            Get["/tags"] = x => {
+                var data = ConfigManagement.GetTagsBundleValue();
+                var map = SelectizerMapModel.MapRawTagOfValueBundle(data);
+                return Response.AsJson(map);
+            };
+
+            Post["/addcommand"] = x => {
+                var command = (string)Request.Form.Command;
+                if (command.Length > 0) {
+                    ConfigManagement.AddCommandsBundle(command);
+                }
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/delcommand"] = x => {
+                var guid = (string)Request.Form.Guid;
+                ConfigManagement.DeleteCommandsBundle(guid);
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/enablecommand"] = x => {
+                var guid = (string)Request.Form.Guid;
+                ConfigManagement.EnableCommand(guid);
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/disablecommand"] = x => {
+                var guid = (string)Request.Form.Guid;
+                ConfigManagement.DisableCommand(guid);
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/reindex"] = x => {
+                var guid = (string)Request.Form.Guid;
+                var index = (string)Request.Form.Index;
+                var guids = guid.Split(',');
+                var indexes = index.Split(',');
+                for (int i = 0; i < guids.Length; i++) {
+                    ConfigManagement.AssignIndexToCommandsBundle(guids[i], indexes[i]);
+                }
+                return Response.AsRedirect("/cfg");
+            };
+
+            Get["/getenabled"] = x => {
+                var data = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == true);
+                Console.WriteLine(data.Count());
+                return Response.AsJson(data);
+            };
+
+            Get["/layouts"] = x => {
+                var data = ConfigManagement.GetCommandsBundleLayout();
+                var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
+                return Response.AsJson(map);
+            };
+
+            Post["/export"] = x => {
+                ConfigManagement.Export.ExportConfigurationToFile();
                 return Response.AsJson(true);
             };
 
-            Post["/reloadall"] = x => {
-                ConfigManagement.ApplyForAll();
-                return Response.AsJson(true);
-            };
         }
     }
 }

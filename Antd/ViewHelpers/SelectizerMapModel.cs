@@ -27,30 +27,32 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-namespace antdlib.Firewall {
-    public class NFTableRuleSet {
-        public string _Id { get; set; }
+using System.Collections.Generic;
 
-        public string Guid { get; set; }
+namespace Antd.ViewHelpers {
+    public class SelectizerMapModel {
+        public static IEnumerable<RawTagOfValueBundle> MapRawTagOfValueBundle(IEnumerable<string> tagValues) {
+            var list = new List<RawTagOfValueBundle>() { };
+            foreach (var v in tagValues) {
+                list.Add(new RawTagOfValueBundle() { name = v });
+            }
+            return list;
+        }
 
-        public string Table { get; set; }
+        public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<antdlib.Config.ConfigManagement.CommandsBundleLayout> commands) {
+            var list = new List<RawCommandBundleLayout>() { };
+            foreach (var c in commands) {
+                list.Add(new RawCommandBundleLayout() { name = c.CommandLayout });
+            }
+            return list;
+        }
+    }
 
-        public string Type { get; set; }
+    public class RawTagOfValueBundle {
+        public string name { get; set; }
+    }
 
-        public string Hook { get; set; }
-
-        public int Priority { get; set; } = 0;
-
-        public string Rules { get; set; } = "";
-
-        public string RulesForIp { get; set; } = "";
-
-        public string RulesForArp { get; set; } = "";
-
-        public string RulesForIp6 { get; set; } = "";
-
-        public string RulesForBridge { get; set; } = "";
-
-        public string RulesForInet { get; set; } = "";
+    public class RawCommandBundleLayout {
+        public string name { get; set; }
     }
 }

@@ -127,9 +127,14 @@ namespace antdlib.MountPoint {
                 if (mount == null) {
                     MountRepository.Create(realPath, MountContext.External, MountEntity.Directory);
                 }
+                ConsoleLogger.Log($"      Further check on {realPath}...");
+                if (!Directory.Exists(realPath)) {
+                    ConsoleLogger.Log($"      {realPath} does not exists, copying content from {directories[i]}");
+                    FileSystem.CopyDirectory(directories[i], realPath);
+                }
             }
 
-            var files = Directory.EnumerateDirectories(Folder.Dirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            var files = Directory.EnumerateFiles(Folder.Dirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             var s = (files.Length == 1) ? "" : "s";
             ConsoleLogger.Log($"      {files.Length} file{s} found in {Folder.Dirs}");
             for (int i = 0; i < files.Length; i++) {
@@ -138,6 +143,11 @@ namespace antdlib.MountPoint {
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
                     MountRepository.Create(realPath, MountContext.External, MountEntity.File);
+                }
+                ConsoleLogger.Log($"      Further check on {realPath}...");
+                if (!System.IO.File.Exists(realPath)) {
+                    ConsoleLogger.Log($"      {realPath} does not exists, copying content from {files[i]}");
+                    System.IO.File.Copy(files[i], realPath);
                 }
             }
         }
@@ -260,6 +270,27 @@ namespace antdlib.MountPoint {
 
         public static string GetFILESPath(string source) {
             return source.Replace(Folder.Dirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
+        }
+
+        private static int umount1Retry = 0;
+        public static void Umount(string directory) {
+            if (IsAlreadyMounted(directory) == true && umount1Retry < 5) {
+                Terminal.Execute($"umount {directory}");
+                umount1Retry = umount1Retry + 1;
+                Umount(directory);
+            }
+            umount1Retry = 0;
+        }
+
+        private static int umount2Retry = 0;
+        public static void Umount(string source, string destination) {
+            if (IsAlreadyMounted(source, destination) == true && umount1Retry < 5) {
+                Terminal.Execute($"umount {source}");
+                Terminal.Execute($"umount {destination}");
+                umount2Retry = umount2Retry + 1;
+                Umount(source, destination);
+            }
+            umount1Retry = 0;
         }
     }
 }

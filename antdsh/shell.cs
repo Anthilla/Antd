@@ -430,21 +430,5 @@ namespace antdsh {
             WriteLine(Terminal.Execute(command));
             return;
         }
-
-        /// <summary>
-        /// ok
-        /// </summary>
-        public static void ApplyConfig(string command) {
-            var context = command.Split(' ').Last();
-            WriteLine($"Configuring {context}");
-            if (context == "all") {
-                antdlib.Config.ConfigManagement.ApplyForAll();
-            }
-            else {
-                antdlib.Config.ConfigManagement.ApplyConfigForContext(context);
-            }
-            WriteLine($"{context} configuration done...");
-            return;
-        }
     }
 }

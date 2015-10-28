@@ -238,6 +238,7 @@
     <None Include="Content\fonts\metroSysIcons.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="ViewHelpers\SelectizerMapModel.cs" />
     <Compile Include="ViewHelpers\StatusSysctl.cs" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
@@ -313,6 +314,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-cfg.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-cfg-old.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-tknmgmt.cshtml">

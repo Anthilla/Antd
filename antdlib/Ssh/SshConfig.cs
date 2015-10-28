@@ -199,7 +199,7 @@ namespace antdlib.Ssh {
 
             public static void DumpGlobalConfig() {
                 var parameters = MapFile.Get().Data.ToArray();
-                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
+                var filesToClean = parameters.Select(p => p.FilePath).ToDynamicHashSet();
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }

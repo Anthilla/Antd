@@ -2,9 +2,7 @@
 $(document).ready(function () {
     $.when(
         LoadSystemdUnits()
-    ).then(
-        //console.log('.')
-    );
+    ).then();
 });
 
 function Callback(callback, url) {
@@ -70,6 +68,76 @@ function LoadSystemdUnits() {
         systemdUnitsSelectizer.load(function (callback) {
             Callback(callback, this.settings.remoteUrl);
             $('#show-units').hide();
+        });
+    }
+}
+
+var $valueBundleTagSelectizer = $('#valueBundleTag').selectize({
+    maxItems: 1,
+    createOnBlur: true,
+    delimiter: ',',
+    persist: false,
+    create: function (input) {
+        return {
+            value: input,
+            name: input,
+            text: input
+        }
+    },
+    sortField: {
+        field: 'name',
+        direction: 'asc'
+    },
+    valueField: 'name',
+    labelField: 'name',
+    searchField: 'name',
+    render: { option: SelectizerOptions.render },
+    remoteUrl: '/cfg/tags',
+    load: SelectizerOptions.load,
+    sortField: 'name'
+});
+
+function LoadSystemdUnits() {
+    if ($('#valueBundleTag').size() > 0) {
+        var valueBundleTagSelectizer = $valueBundleTagSelectizer[0].selectize;
+        valueBundleTagSelectizer.load(function (callback) {
+            Callback(callback, this.settings.remoteUrl);
+            $('#valueBundleTag').hide();
+        });
+    }
+}
+
+var $commandBundleLayoutSelectizer = $('#commandBundleLayout').selectize({
+    maxItems: 1,
+    createOnBlur: true,
+    delimiter: ',',
+    persist: false,
+    create: function (input) {
+        return {
+            value: input,
+            name: input,
+            text: input
+        }
+    },
+    sortField: {
+        field: 'name',
+        direction: 'asc'
+    },
+    valueField: 'name',
+    labelField: 'name',
+    searchField: 'name',
+    render: { option: SelectizerOptions.render },
+    remoteUrl: '/cfg/layouts',
+    load: SelectizerOptions.load,
+    sortField: 'name'
+});
+
+function LoadSystemdUnits() {
+    if ($('#commandBundleLayout').size() > 0) {
+        var commandBundleLayoutSelectizer = $commandBundleLayoutSelectizer[0].selectize;
+        commandBundleLayoutSelectizer.load(function (callback) {
+            Callback(callback, this.settings.remoteUrl);
+            $('#commandBundleLayout').hide();
         });
     }
 }
