@@ -160,7 +160,6 @@
     <Compile Include="Firewall\FirewallFirstConfiguration.cs" />
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
-    <Compile Include="Firewall\NFTableModel.cs" />
     <Compile Include="enums.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Common\Timestamp.cs" />

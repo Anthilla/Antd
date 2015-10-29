@@ -283,6 +283,9 @@
     <None Include="Views\apps\_apps-pagebar.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Views\firewall\_page-firewall-old.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\firewall\_page-firewall.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -719,6 +722,9 @@
     </Content>
     <Content Include="NoVnc\wstelnet.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.config.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.network.config.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

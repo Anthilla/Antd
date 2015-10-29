@@ -29,51 +29,46 @@
 
 using antdlib.Firewall;
 using Nancy;
+using System.Collections.Generic;
 //using Nancy.Security;
 using System.Dynamic;
+using System.Linq;
 
 namespace Antd {
-
     public class FirewallModule : NancyModule {
-
         public FirewallModule()
             : base("/firewall") {
             //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.NFTCommands = NFTables.GetNFTCommandsBundle().ToArray();
                 return View["_page-firewall", vmod];
             };
 
-            Post["/rule"] = x => {
-                var table = (string)Request.Form.Table;
-                var type = (string)Request.Form.Type;
-                var hook = (string)Request.Form.Hook;
-                var rulesForIp = (string)Request.Form.RuleIp;
-                var rulesForIp6 = (string)Request.Form.RuleIp6;
-                var rulesForArp = (string)Request.Form.RuleArp;
-                var rulesForBridge = (string)Request.Form.RuleBridge;
-                NFTableRepository.SaveRuleSet(table, type, hook, rulesForIp, rulesForIp6, rulesForArp, rulesForBridge);
+            Post["/addrule"] = x => {
+                var command = (string)Request.Form.Command;
+                var rule = (string)Request.Form.Rule;
+                NFTables.AddNFTRule(command, rule);
                 return Response.AsRedirect("/firewall");
             };
 
-            Get["/rule/{table}/{type}/{hook}"] = x => {
-                string table = x.table;
-                string type = x.type;
-                string hook = x.hook;
-                var rules = NFTableRepository.GetRuleSet(table, type, hook);
-                var array = new string[] {
-                    (rules == null)? "" : rules.RulesForIp,
-                    (rules == null)? "" : rules.RulesForIp6,
-                    (rules == null)? "" : rules.RulesForArp,
-                    (rules == null)? "" : rules.RulesForBridge
-                };
-                return Response.AsJson(array);
+            Post["/stoprule"] = x => {
+                var guid = (string)Request.Form.Guid;
+                NFTables.DeleteNFTRule(guid);
+                return Response.AsRedirect("/firewall");
+            };
+
+            Get["/getrule/{table}/{chain}/{hook}"] = x => {
+                var table = x.table;
+                var chain = x.chain;
+                var hook = x.hook;
+                List<string> data = NFTables.GetRulesFromCommand(table, chain, hook);
+                return Response.AsJson(data);
             };
 
             Post["/export"] = x => {
-                NFTables.WriteFile();
-                NFTables.Set();
+                NFTables.Export.WriteFile();
                 return Response.AsJson(true);
             };
         }

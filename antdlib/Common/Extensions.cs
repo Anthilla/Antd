@@ -99,6 +99,17 @@ namespace antdlib {
             }
         }
 
+        public static string GetAllStringsButLast(this String str, char div) {
+            var arr = str.Split(div);
+            var arr2 = arr.SubArray(0, arr.Length - 1);
+            if (arr2.Length > 1) {
+                return string.Join(div.ToString(), arr.ToArray());
+            }
+            else {
+                return String.Empty;
+            }
+        }
+
         public static string UppercaseAllFirstLetters(this String str) {
             var arr = str.Split(' ');
             var newList = new List<string>() { };
@@ -254,6 +265,12 @@ namespace antdlib {
             using (var reader = new StreamReader(requestStream)) {
                 return reader.ReadToEnd();
             }
+        }
+
+        public static T[] SubArray<T>(this T[] data, int index, int length) {
+            T[] result = new T[length];
+            Array.Copy(data, index, result, 0, length);
+            return result;
         }
     }
 }

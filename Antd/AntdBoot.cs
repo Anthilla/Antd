@@ -253,56 +253,28 @@ namespace Antd {
         }
 
         public static void ReloadSSH() {
-            //stop
-            ConsoleLogger.Log("ssh> stop service");
+            ConsoleLogger.Log("ssh> stop sshd");
             Terminal.Execute("systemctl stop sshd.service");
-
-            //controllo se cis ono dei ffile in /etc/ssh
-            ConsoleLogger.Log("ssh> check keys..");
             var dir = "/etc/ssh";
             var DIR = Mount.GetDIRSPath(dir);
-            var checkFiles = Directory.EnumerateFiles(dir);
-            if (checkFiles.Count() < 1) {
-                ConsoleLogger.Log("ssh> 0 keys found");
-                //se non ci sono file
-                //usa comando per creare chiavi ssh
-                Terminal.Execute("ssh-keygen -A");
-                ConsoleLogger.Log("ssh> new keys created");
-                Directory.CreateDirectory(DIR);
-                //controlllo che DIR sia vuota
-                ConsoleLogger.Log("ssh> check for stored keys");
-                var checkFilesinDIR = Directory.EnumerateFiles(dir);
-                if (checkFiles.Count() < 1) {
-                    //copia il contenuto della cartella in DIR (?)
-                    ConsoleLogger.Log("ssh> 0 stored keys found");
-                    ConsoleLogger.Log("ssh> storing keys...");
-                    Terminal.Execute($"cp {dir}/* {DIR}/");
-                }
-            }
-            else {
-                ConsoleLogger.Log("ssh> keys found");
-                ConsoleLogger.Log("ssh> removing existing ks");
-                //se ci sono i file li cancella
-                Terminal.Execute($"rm -fR {dir}/*");
-            }
-            //a questo punto la situazione è che ho le chiavi in DIR e non in etcssh
-            //controlla se è gia montato
-            ConsoleLogger.Log("ssh> check ssh dir is mount");
-            var chkMount = Mount.IsAlreadyMounted(dir, DIR);
-            if (chkMount == true) {
-                //smonta tutto
-                ConsoleLogger.Log("ssh> is mount: umount");
+            ConsoleLogger.Log("ssh> set directories");
+            Terminal.Execute($"mkdir -p {dir}");
+            Terminal.Execute($"mkdir -p {DIR}");
+            if (Mount.IsAlreadyMounted(dir, DIR) == true) {
+                ConsoleLogger.Log("ssh> umount");
                 Mount.Umount(dir, DIR);
             }
-
-            //prendere la cartella dove ci sono le chiavi standard
-            //monta -o bind nella cartella etc/ssh
-            ConsoleLogger.Log("ssh> mount dir with new keys");
-            Mount.Dir(dir);
-            //restart sshd
-            ConsoleLogger.Log("ssh> start service");
-            Terminal.Execute("systemctl start sshd.service");
-            //Terminal.Execute("systemctl restart sshd.service");
+            ConsoleLogger.Log("ssh> removing old keys");
+            Terminal.Execute($"rm -fR {dir}/*");
+            ConsoleLogger.Log("ssh> mount");
+            Terminal.Execute($"mount -o bind {dir} {DIR}");
+            ConsoleLogger.Log("ssh> check keys");
+            if (Directory.EnumerateFiles(DIR).Count() < 1) {
+                ConsoleLogger.Log("ssh> generate keys");
+                Terminal.Execute("ssh-keygen -A");
+            }
+            ConsoleLogger.Log("ssh> restart sshd");
+            Terminal.Execute("systemctl restart sshd.service");
         }
 
         public static void CheckResolvd() {

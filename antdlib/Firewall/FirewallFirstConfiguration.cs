@@ -42,13 +42,7 @@ namespace antdlib.Firewall {
         }
 
         public static void Set() {
-            if (CheckNetworkIsConfigured() == false) {
-                ConsoleLogger.Info("Firewall config => no configuration found...");
-                ConsoleLogger.Info("Firewall config => setting files!");
-                FileSystem.WriteFile(fileName, "");
-            }
-            ConsoleLogger.Info("Firewall config => restart service!");
-            NFTables.Set(fileName);
+
         }
     }
 }

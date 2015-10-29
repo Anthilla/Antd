@@ -1,5 +1,5 @@
 ﻿
-using System;
+
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,34 +28,12 @@ using System;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using System.Linq;
 
 namespace antdlib.Firewall {
-    public class NFTableRepository {
-        public static void SaveRuleSet(string table, string type, string hook, string rulesForIp, string rulesForIp6, string rulesForArp, string rulesForBridge) {
-            var set = new NFTableRuleSet() {
-                _Id = $"{table}-{type}-{hook}",
-                Guid = Guid.NewGuid().ToString(),
-                Table = table,
-                Type = type,
-                Hook = hook,
-                Priority = 0
-            };
-            set.RulesForIp = rulesForIp;
-            set.RulesForIp6 = rulesForIp6;
-            set.RulesForArp = rulesForArp;
-            set.RulesForBridge = rulesForBridge;
-            DeNSo.Session.New.Set(set);
-        }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-        public static NFTableRuleSet GetRuleSet(string table, string type, string hook) {
-            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>(t => t.Table == table && t.Type == type && t.Hook == hook).FirstOrDefault();
-            return ruleset;
-        }
 
-        public static NFTableRuleSet[] GetAll() {
-            var ruleset = DeNSo.Session.New.Get<NFTableRuleSet>().ToArray();
-            return ruleset;
-        }
-    }
+
 }

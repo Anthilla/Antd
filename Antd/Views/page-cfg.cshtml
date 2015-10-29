@@ -46,7 +46,7 @@
             </div>
             <div class="element-divider"></div>
 
-            <a data-role="export-conf" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            <a data-role="export-conf" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="cursor:pointer; padding-top: 11px;">
                 Export Configuration
             </a>
 
@@ -80,7 +80,11 @@
                     <td>@val.Tag</td>
                     <td>@val.Value</td>
                     <td>@val.Key</td>
-                    <td><p data-role="delete-value" data-tag="@val.Tag" data-key="@val.Key" data-value="@val.Value" class="bg-anthilla-orange button">X</p></td>
+                    <td>
+                        @if (val.IsDefault == false) {
+                        <i data-role="delete-value" data-tag="@val.Tag" data-key="@val.Key" data-value="@val.Value" class="icon-remove fg-orange"></i>
+                            }
+                    </td>
                 </tr>
                 }
             </tbody>
@@ -96,8 +100,12 @@
         </ul>
         <p id="Tip" style="padding-left: 10px; display: none;">Tip: write {tag:index}</p>
         <div style="width: 800px; min-height: 250px; padding-right: 10px;" class="bg-anthilla-gray fg-white border-2-anthilla-gray-m" id="MegaContainer">
-            <form id="ValueBundleDashboard" action="/cfg/reindex" method="POST" enctype="multipart/form-data">
+            <form id="CommandBundleDashboard2" action="/cfg/reindex" method="POST" enctype="multipart/form-data">
                 <ul id="sortable" style="list-style: none;" class="fg-white">
+                    <li class="border-2-anthilla-gray bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+                        <i data-role="show-all-command" class="icon-eye fg-white" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
+                        <i data-role="missing-value-notif" class="icon-warning fg-orange blinking" style="display: none;float:right; margin-right: 10px;"></i>
+                    </li>
                     @for (int i = 0; i < Model.CommandBundle.Length; i++) {
                         @if (Model.CommandBundle[i].IsEnabled == true) {
                             <li class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
@@ -112,6 +120,7 @@
 
                                 <i data-role="remove-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-remove fg-orange" style="cursor:pointer ;float:right;"></i>
                                 <i data-role="disable-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-checkmark fg-lightBlue" style="cursor:pointer ; float:right; margin-right: 10px;"></i>
+                                <i data-role="play-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-lpay fg-indigo" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
                                 <i data-role="show-command" class="icon-eye fg-white" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
                             </li>
                         }
@@ -128,6 +137,7 @@
 
                                 <i data-role="remove-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-remove fg-orange" style="cursor:pointer ;float:right;"></i>
                                 <i data-role="enable-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-blocked fg-lightRed" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
+                                <i data-role="play-command" data-guid="@Model.CommandBundle[i].Guid" class="icon-lpay fg-indigo" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
                                 <i data-role="show-command" class="icon-eye fg-white" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
                             </li>
                         }
@@ -141,77 +151,6 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('i[data-role="show-command"]').mousedown(function () {
-            var container = $(this).parents('li');
-            container.find('[data-role="command-saved"]').hide();
-            container.find('[data-role="command-exd"]').show();
-        });
-
-        $('i[data-role="show-command"]').mouseup(function () {
-            var container = $(this).parents('li');
-            container.find('[data-role="command-saved"]').show();
-            container.find('[data-role="command-exd"]').hide();
-        });
-
-        function SelectLayoutToEdit() {
-            $('[data-role="query-result"]').dblclick(function () {
-                $('input[data-role="command-place"]').val($(this).text());
-            });
-        }
-
-        $('input[data-role="command-place"]').keyup(function () {
-            var thisValue = $(this).val();
-            if (thisValue.length > 0) {
-                jQuery.support.cors = true;
-                $.ajax({
-                    url: '/cfg/layouts',
-                    type: 'GET',
-                    success: function (layoutJson) {
-                        var results = [];
-                        $.each(layoutJson, function (i, item) {
-                            if (item.name.indexOf(thisValue) == 0) {
-                                results.push(item.name);
-                                //return false;
-                            }
-                        });
-                        if (results.length > 0) {
-                            DisplayResults(results);
-                        }
-                        else {
-                            CleanResults();
-                            HideDisplayer();
-                        }
-                    }
-                });
-            }
-            else {
-                CleanResults();
-                HideDisplayer();
-            }
-        });
-
-        function ShowDisplayer() {
-            $('#ResultsContainer').show();
-        }
-
-        function HideDisplayer() {
-            $('#ResultsContainer').hide();
-        }
-
-        function DisplayResults(objectsToDisplay) {
-            ShowDisplayer();
-            CleanResults();
-            $.each(objectsToDisplay, function (i, item) {
-                $('#ResultsContainer').append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin-right: 2px;">' + item + '</li>');
-                SelectLayoutToEdit();
-            });
-        }
-
-        function CleanResults() {
-            var container = $('#ResultsContainer');
-            container.html('');
-        }
-
         $('a[data-role="export-conf"]').click(function (event) {
             var g = $(this).attr('data-guid');
             jQuery.support.cors = true;
@@ -224,73 +163,7 @@
             });
         });
 
-        $("#sortable").sortable({
-            stop: function (event, ui) {
-                RefreshCommandIndexes();
-            }
-        }).disableSelection();
-
-        $(document).on('click', 'body', function () {
-            RefreshCommandIndexes();
-        });
-
-        $(document).ready(function () {
-            $('#valueBundleTag').hide();
-        });
-
-        function RefreshCommandIndexes() {
-            $('input[name=Index]').each(function (index) {
-                $(this).val('');
-                $(this).val(index);
-            });
-        }
-
-        $('i[data-role="remove-command"]').click(function (event) {
-            var g = $(this).attr('data-guid');
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/cfg/delcommand',
-                type: 'POST',
-                data: {
-                    Guid: g
-                },
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('i[data-role="disable-command"]').click(function (event) {
-            var g = $(this).attr('data-guid');
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/cfg/disablecommand',
-                type: 'POST',
-                data: {
-                    Guid: g
-                },
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('i[data-role="enable-command"]').click(function (event) {
-            var g = $(this).attr('data-guid');
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/cfg/enablecommand',
-                type: 'POST',
-                data: {
-                    Guid: g
-                },
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('p[data-role="delete-value"]').click(function () {
+        $('i[data-role="delete-value"]').click(function () {
             var t = $(this).attr('data-tag');
             var k = $(this).attr('data-key');
             var v = $(this).attr('data-value');
@@ -308,14 +181,5 @@
                 }
             });
         });
-
-        $('input[data-role="command-place"]').focusin(function () {
-            $('#Tip').show();
-        });
-
-        $('input[data-role="command-place"]').focusout(function () {
-            $('#Tip').hide();
-        });
-
     </script>
 }

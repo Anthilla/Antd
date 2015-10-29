@@ -46,6 +46,9 @@ namespace Antd {
             Console.Title = "ANTD";
 
             if (AssemblyInfo.IsUnix == false) {
+                Directory.CreateDirectory("/cfg/antd");
+                Directory.CreateDirectory("/cfg/antd/database");
+                Directory.CreateDirectory("/mnt/cdrom/DIRS");
                 ConsoleLogger.Warn("This application is not running on an Unix OS:");
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
@@ -69,7 +72,7 @@ namespace Antd {
             using (WebApp.Start<Startup>(uri)) {
                 AntdBoot.SetOsConfiguration();
                 AntdBoot.LaunchApps();
-                //AntdBoot.ReloadSSH();
+                AntdBoot.ReloadSSH();
                 AntdBoot.CheckResolvd();
                 Directory.CreateDirectory(Folder.Config);
                 Console.WriteLine("Checking existing Config...");

@@ -30,6 +30,7 @@
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
+using System;
 
 namespace antdlib.MountPoint {
     public class Mount {
@@ -129,8 +130,15 @@ namespace antdlib.MountPoint {
                 }
                 ConsoleLogger.Log($"      Further check on {realPath}...");
                 if (!Directory.Exists(realPath)) {
-                    ConsoleLogger.Log($"      {realPath} does not exists, copying content from {directories[i]}");
-                    FileSystem.CopyDirectory(directories[i], realPath);
+                    try {
+                        ConsoleLogger.Log($"      {realPath} does not exists, copying content from {directories[i]}");
+                        Terminal.Execute($"mkdir -p {directories[i]}");
+                        Terminal.Execute($"mkdir -p {realPath}");
+                        Terminal.Execute($"cp {directories[i]} {realPath}");
+                        //FileSystem.CopyDirectory(directories[i], realPath);
+                    }
+                    catch (Exception) {
+                    }
                 }
             }
 
@@ -146,8 +154,17 @@ namespace antdlib.MountPoint {
                 }
                 ConsoleLogger.Log($"      Further check on {realPath}...");
                 if (!System.IO.File.Exists(realPath)) {
-                    ConsoleLogger.Log($"      {realPath} does not exists, copying content from {files[i]}");
-                    System.IO.File.Copy(files[i], realPath);
+                    try {
+                        ConsoleLogger.Log($"      {realPath} does not exists, copying content from {files[i]}");
+                        var path = files[i].GetAllStringsButLast('/');
+                        var PATH = realPath.GetAllStringsButLast('/');
+                        Terminal.Execute($"mkdir -p {path}");
+                        Terminal.Execute($"mkdir -p {PATH}");
+                        Terminal.Execute($"cp {files[i]} {realPath}");
+                        //System.IO.File.Copy(files[i], realPath);
+                    }
+                    catch (Exception) {
+                    }
                 }
             }
         }

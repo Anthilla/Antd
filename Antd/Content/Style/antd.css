@@ -1327,3 +1327,11 @@ input:disabled,
 .metro.notify-container .notify .content {
     background-color: transparent !important;
 }
+
+.blinking {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0.0; }
+}

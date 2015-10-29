@@ -105,6 +105,12 @@ namespace Antd {
                 return Response.AsRedirect("/cfg");
             };
 
+            Post["/launchcommand"] = x => {
+                var guid = (string)Request.Form.Guid;
+                ConfigManagement.LaunchCommand(guid);
+                return Response.AsRedirect("/cfg");
+            };
+
             Post["/reindex"] = x => {
                 var guid = (string)Request.Form.Guid;
                 var index = (string)Request.Form.Index;

@@ -40,7 +40,8 @@ namespace antdlib.Config {
             public string Tag { get; set; }
             public string Key { get; set; }
             public string Value { get; set; }
-            public string RegexTag { get { return $"{{{Tag}:{Key}}}"; } }
+            public string RegexTag { get { return $"[{Tag}:{Key}]"; } }
+            public bool IsDefault { get; set; } = true;
         }
 
         public class CommandsBundle {
@@ -94,6 +95,7 @@ namespace antdlib.Config {
             if (getmodel == null && tag.Length > 0 && k.Length > 0 && v.Length > 0) {
                 var model = new ValuesBundle() {
                     _Id = Guid.NewGuid().ToString(),
+                    IsDefault = false,
                     Tag = tag.ToLower(),
                     Key = k,
                     Value = v
@@ -111,6 +113,7 @@ namespace antdlib.Config {
             if (getmodel == null && tag.Length > 0 && v.Length > 0) {
                 var model = new ValuesBundle() {
                     _Id = Guid.NewGuid().ToString(),
+                    IsDefault = false,
                     Tag = tag.ToLower(),
                     Key = IncreaseTagValuesBundleKey(tag),
                     Value = v
@@ -175,15 +178,31 @@ namespace antdlib.Config {
         }
 
         public static void EnableCommand(string guid) {
-            var getmodel = GetCommandsBundle().Where(vv => vv.Guid == guid).FirstOrDefault();
-            getmodel.IsEnabled = true;
-            DeNSo.Session.New.Set(getmodel);
+            try {
+                var getmodel = GetCommandsBundle().Where(vv => vv.Guid == guid).FirstOrDefault();
+                getmodel.IsEnabled = true;
+                DeNSo.Session.New.Set(getmodel);
+            }
+            catch (Exception) { }
         }
 
         public static void DisableCommand(string guid) {
-            var getmodel = GetCommandsBundle().Where(vv => vv.Guid == guid).FirstOrDefault();
-            getmodel.IsEnabled = false;
-            DeNSo.Session.New.Set(getmodel);
+            try {
+                var getmodel = GetCommandsBundle().Where(vv => vv.Guid == guid).FirstOrDefault();
+                getmodel.IsEnabled = false;
+                DeNSo.Session.New.Set(getmodel);
+            }
+            catch (Exception) { }
+        }
+
+        public static void LaunchCommand(string guid) {
+            try {
+                var getmodel = GetCommandsBundle().Where(vv => vv.Guid == guid).FirstOrDefault();
+                if (getmodel != null) {
+                    Terminal.Execute(SupposeCommandReplacement(getmodel.Command));
+                }
+            }
+            catch (Exception) { }
         }
 
         public static void DeleteCommandsBundle(string guid) {
@@ -194,20 +213,26 @@ namespace antdlib.Config {
         }
 
         public static string SupposeCommandReplacement(string command) {
+            var valueNotFound = "[valueNOTfound]";
             string memCommamnd = command;
-            var matches = new Regex("{(.*?)}").Matches(command);
+            var matches = new Regex("\\[(.*?)\\]").Matches(memCommamnd);
             if (matches.Count > 0) {
                 for (int i = 0; i < matches.Count; i++) {
-                    var taginfo = matches[i].Value.Replace("{", "").Replace("}", "").Trim().Split(':');
-                    var value = GetValuesBundleValue(taginfo[0], taginfo[1]);
-                    var stringToReplace = $"{{{string.Join(":", taginfo)}}}";
-                    if (value == null) {
-                        memCommamnd = memCommamnd.Replace(stringToReplace, "[valueNOTfound]");
-                    }
-                    else {
-                        memCommamnd = memCommamnd.Replace(stringToReplace, value);
+                    if (matches[i].Value != valueNotFound) {
+                        var taginfo = matches[i].Value.Replace("[", "").Replace("]", "").Trim().Split(':');
+                        var value = GetValuesBundleValue(taginfo[0], taginfo[1]);
+                        var stringToReplace = $"[{string.Join(":", taginfo)}]";
+                        if (value == null) {
+                            memCommamnd = memCommamnd.Replace(stringToReplace, "[valueNOTfound]");
+                        }
+                        else {
+                            memCommamnd = memCommamnd.Replace(stringToReplace, value);
+                        }
                     }
                 }
+            }
+            if (memCommamnd.Contains("[") && memCommamnd.Contains(":") && memCommamnd.Contains("]")) {
+                memCommamnd = SupposeCommandReplacement(memCommamnd);
             }
             return memCommamnd;
         }
@@ -222,7 +247,7 @@ namespace antdlib.Config {
             private static string configFolder = Folder.Config;
 
             private static IEnumerable<string> GetConfigurationFileNames() {
-                return Directory.EnumerateFiles(configFolder, "*.export", SearchOption.TopDirectoryOnly).Select(f => Path.GetFileName(f));
+                return Directory.EnumerateFiles(configFolder, "*configuration.export", SearchOption.TopDirectoryOnly).Select(f => Path.GetFileName(f));
             }
 
             private static string GetLastFileName() {
@@ -240,116 +265,65 @@ namespace antdlib.Config {
                 var linesToWrite = GetEnabledCommandsBundle().Select(c => SupposeCommandReplacement(c.Command));
                 File.WriteAllLines(Path.Combine(configFolder, GetLastFileName()), linesToWrite);
             }
-
         }
 
         public class Default {
-            private static IEnumerable<ValuesBundle> DefaultNFTTableType() {
+            public static IEnumerable<ValuesBundle> DefaultValuesBundle() {
                 return new List<ValuesBundle> {
-                    new ValuesBundle() { Tag = "nft-tables", Key = "0", Value = "ip" },
-                    new ValuesBundle() { Tag = "nft-tables", Key = "1", Value = "ip6" },
-                    new ValuesBundle() { Tag = "nft-tables", Key = "2", Value = "arp" },
-                    new ValuesBundle() { Tag = "nft-tables", Key = "3", Value = "bridge" },
-                };
-            }
+                    new ValuesBundle() { Tag = "nft-table-func", Key = "0", Value = "add table" },
+                    new ValuesBundle() { Tag = "nft-table-func", Key = "1", Value = "delete table" },
+                    new ValuesBundle() { Tag = "nft-table-func", Key = "2", Value = "-a list table" },
+                    new ValuesBundle() { Tag = "nft-table-func", Key = "3", Value = "flush table" },
 
-            private static IEnumerable<ValuesBundle> DefaultNFTChainType() {
-                return new List<ValuesBundle> {
-                    new ValuesBundle() { Tag = "nft-chains", Key = "0", Value = "filter" },
-                    new ValuesBundle() { Tag = "nft-chains", Key = "1", Value = "route" },
-                    new ValuesBundle() { Tag = "nft-chains", Key = "2", Value = "nat" },
-                };
-            }
+                    new ValuesBundle() { Tag = "nft-table-family", Key = "0", Value = "ip" },
+                    new ValuesBundle() { Tag = "nft-table-family", Key = "1", Value = "ip6" },
+                    new ValuesBundle() { Tag = "nft-table-family", Key = "2", Value = "arp" },
+                    new ValuesBundle() { Tag = "nft-table-family", Key = "3", Value = "bridge" },
 
-            private static IEnumerable<ValuesBundle> DefaultNFTHookType() {
-                return new List<ValuesBundle> {
-                    new ValuesBundle() { Tag = "nft-hooks", Key = "0", Value = "prerouting" },
-                    new ValuesBundle() { Tag = "nft-hooks", Key = "1", Value = "input" },
-                    new ValuesBundle() { Tag = "nft-hooks", Key = "2", Value = "forward" },
-                    new ValuesBundle() { Tag = "nft-hooks", Key = "3", Value = "output" },
-                    new ValuesBundle() { Tag = "nft-hooks", Key = "4", Value = "postrouting" },
-                };
-            }
+                    new ValuesBundle() { Tag = "nft-table-name", Key = "0", Value = "filter" },
+                    new ValuesBundle() { Tag = "nft-table-name", Key = "1", Value = "route" },
+                    new ValuesBundle() { Tag = "nft-table-name", Key = "2", Value = "nat" },
 
-            private static IEnumerable<ValuesBundle> DefaultNFTHookTypeForArp() {
-                return new List<ValuesBundle> {
-                    new ValuesBundle() { Tag = "nft-arp-hooks", Key = "0", Value = "input" },
-                    new ValuesBundle() { Tag = "nft-arp-hooks", Key = "1", Value = "output" },
-                };
-            }
+                    new ValuesBundle() { Tag = "nft-chain-func", Key = "0", Value = "add chain" },
+                    new ValuesBundle() { Tag = "nft-chain-func", Key = "1", Value = "delete chain" },
+                    new ValuesBundle() { Tag = "nft-chain-func", Key = "3", Value = "flush chain" },
 
-            private static IEnumerable<ValuesBundle> DefaultNFTHookTypeForBridge() {
-                return new List<ValuesBundle> {
-                    new ValuesBundle() { Tag = "nft-bridge-hooks", Key = "0", Value = "input" },
-                    new ValuesBundle() { Tag = "nft-bridge-hooks", Key = "1", Value = "forward" },
-                    new ValuesBundle() { Tag = "nft-bridge-hooks", Key = "2", Value = "output" },
-                };
-            }
+                    new ValuesBundle() { Tag = "nft-chain-type", Key = "0", Value = "filter" },
+                    new ValuesBundle() { Tag = "nft-chain-type", Key = "1", Value = "route" },
+                    new ValuesBundle() { Tag = "nft-chain-type", Key = "2", Value = "nat" },
 
-            private static IEnumerable<ValuesBundle> DefaultNFTRuleStatements() {
-                return new List<ValuesBundle> {
+                    new ValuesBundle() { Tag = "nft-chain-priority", Key = "0", Value = "0" },
+
+                    new ValuesBundle() { Tag = "nft-chain-hook", Key = "0", Value = "prerouting" },
+                    new ValuesBundle() { Tag = "nft-chain-hook", Key = "1", Value = "input" },
+                    new ValuesBundle() { Tag = "nft-chain-hook", Key = "2", Value = "forward" },
+                    new ValuesBundle() { Tag = "nft-chain-hook", Key = "3", Value = "output" },
+                    new ValuesBundle() { Tag = "nft-chain-hook", Key = "4", Value = "postrouting" },
+
+                    new ValuesBundle() { Tag = "nft-rule-func", Key = "0", Value = "add rule" },
+                    new ValuesBundle() { Tag = "nft-rule-func", Key = "1", Value = "delete rule" },
+                    new ValuesBundle() { Tag = "nft-rule-func", Key = "3", Value = "insert rule" },
+
                     new ValuesBundle() { Tag = "nft-rule-verbs", Key = "0", Value = "accept" },
                     new ValuesBundle() { Tag = "nft-rule-verbs", Key = "1", Value = "drop" },
                     new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "reject" },
-                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "queue" },
-                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "continue" },
-                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "reject" },
-                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "jump" },
-                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "2", Value = "goto" },
+                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "3", Value = "queue" },
+                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "4", Value = "continue" },
+                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "5", Value = "jump" },
+                    new ValuesBundle() { Tag = "nft-rule-verbs", Key = "6", Value = "goto" },
+
+                    new ValuesBundle() { Tag = "nft-rule", Key = "0", Value = "" },
                 };
             }
 
-            public static IEnumerable<ValuesBundle> DefaultValuesBundle() {
-                //todo concat con tutte le liste di default
-                return DefaultNFTTableType()
-                    .Concat(DefaultNFTChainType())
-                    .Concat(DefaultNFTHookType())
-                    .Concat(DefaultNFTHookTypeForArp())
-                    .Concat(DefaultNFTHookTypeForBridge())
-                    .Concat(DefaultNFTRuleStatements())
-                    ;
-            }
-
-            private static string tag = "{tag:x}";
+            private static string tag = "[tag:x]";
 
             public static IEnumerable<CommandsBundleLayout> DefaultCommandsBundle() {
                 return new List<CommandsBundleLayout>() {
                     new CommandsBundleLayout() { CommandLayout = $"hostnamectl {tag}" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft add table ip {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add table ip6 {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add table arp {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add table bridge {tag}" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft -a list table ip {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft -a list table ip6 {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft -a list table arp {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft -a list table bridge {tag}" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete table ip {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete table ip6 {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete table arp {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete table bridge {tag}" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft add chain ip {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add chain ip6 {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add chain arp {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add chain bridge {tag} {tag} (??)" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete chain ip {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete chain ip6 {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete chain arp {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete chain bridge {tag} {tag}" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft add rule ip {tag} {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add rule ip6 {tag} {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add rule arp {tag} {tag} {tag} (??)" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft add rule bridge {tag} {tag} {tag} (??)" },
-
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete rule ip {tag} {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete rule ip6 {tag} {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete rule arp {tag} {tag} {tag}" },
-                    new CommandsBundleLayout() { CommandLayout = $"nft delete rule bridge {tag} {tag} {tag}" },
+                    new CommandsBundleLayout() { CommandLayout = "nft [nft-table-func:x] [nft-table-family:x] [nft-table-name:x]" },
+                    new CommandsBundleLayout() { CommandLayout = "nft [nft-chain-func:x] [nft-table-family:x] [nft-table-name:x] [nft-chain-hook:x] { type [nft-chain-type:x] hook [nft-chain-hook:x] priority [nft-chain-priority:0] \\; }" },
+                    new CommandsBundleLayout() { CommandLayout = $"nft [nft-rule-func:x] [nft-table-family:x] [nft-chain-hook:x] [nft-rule:0]" },
                 };
             }
         }
