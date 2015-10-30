@@ -27,18 +27,18 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System;
+using System.Dynamic;
+using System.Linq;
+using antdlib;
 using antdlib.CCTable;
+using antdlib.MountPoint;
 using antdlib.Status;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
-using antdlib;
-using antdlib.MountPoint;
-using System;
-using System.Linq;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class SystemModule : NancyModule {
 
@@ -82,7 +82,7 @@ namespace Antd {
             Post["/mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 string unit = Request.Form.Unit;
-                var unitsSplit = unit.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var unitsSplit = unit.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 if (unitsSplit.Length > 0) {
                     MountRepository.AddUnit(guid, unitsSplit);
                 }
@@ -98,7 +98,7 @@ namespace Antd {
 
             Get["/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Sysctl = VHStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
+                vmod.Sysctl = VhStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["_page-system-sysctl", vmod];
             };
 

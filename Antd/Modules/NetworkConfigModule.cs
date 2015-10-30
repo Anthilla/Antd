@@ -27,12 +27,11 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib;
 using antdlib.Network;
 using Nancy;
 using Nancy.Security;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class NetworkConfigModule : NancyModule {
 
@@ -179,7 +178,6 @@ namespace Antd {
 
             Get["/ipv4/tunnels/{interfaceName?}"] = x => {
                 string interfaceName = x.interfaceName;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowTunnelsIPV4(interfaceName);
                 return Response.AsJson(result);
             };
@@ -207,7 +205,6 @@ namespace Antd {
 
             Get["/ipv6/neigh/{interfaceName}"] = x => {
                 string interfaceName = x.interfaceName;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowNeighborsIPV6(interfaceName);
                 return Response.AsJson(result);
             };
@@ -262,7 +259,6 @@ namespace Antd {
 
             Get["/ipv6/tunnels/{interfaceName?}"] = x => {
                 string interfaceName = x.interfaceName;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.ShowTunnelsIPV6(interfaceName);
                 return Response.AsJson(result);
             };

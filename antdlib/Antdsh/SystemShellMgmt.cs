@@ -1,5 +1,4 @@
-﻿
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -30,12 +29,13 @@
 using System;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 using static antdlib.Terminal;
 using static antdlib.Antdsh.Execute;
 using static System.Console;
 
 namespace antdlib.Antdsh {
-    public class system {
+    public class SystemShellMgmt {
 
         /// <summary>
         /// 01 - recupero il volume su cui è montato BootExt

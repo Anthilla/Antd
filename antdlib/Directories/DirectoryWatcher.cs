@@ -27,29 +27,30 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Log;
 using System.IO;
+using antdlib.Common;
+using antdlib.Log;
 
-namespace antdlib {
+namespace antdlib.Directories {
 
     public class DirectoryWatcher {
-        private string path;
+        private readonly string _path;
 
-        public DirectoryWatcher(string _path) {
-            path = _path;
+        public DirectoryWatcher(string path) {
+            _path = path;
         }
 
         public void Watch() {
-            FileSystemWatcher watcher = new FileSystemWatcher(path) {
+            var watcher = new FileSystemWatcher(_path) {
                 NotifyFilter =
                     NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName |
                     NotifyFilters.DirectoryName,
                 IncludeSubdirectories = true
             };
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnChanged);
-            watcher.Deleted += new FileSystemEventHandler(OnChanged);
-            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            watcher.Changed += OnChanged;
+            watcher.Created += (OnChanged);
+            watcher.Deleted += (OnChanged);
+            watcher.Renamed += (OnRenamed);
             watcher.EnableRaisingEvents = true;
         }
 
@@ -64,10 +65,8 @@ namespace antdlib {
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
-            var o = e.OldName;
-            var n = e.Name;
             Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath, e.OldName);
-            ConsoleLogger.Log(Timestamp.Now + " File: {0} renamed to {1}", o, n);
+            ConsoleLogger.Log(Timestamp.Now + " File: {0} renamed to {1}", e.OldName, e.Name);
         }
     }
 }

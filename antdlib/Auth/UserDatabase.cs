@@ -35,28 +35,27 @@ using Nancy.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Auth {
 
     public class UserIdentity : IUserIdentity {
-
         public string UserName { get; set; }
-
         public UserType UserType { get; set; }
-
         public IEnumerable<string> Claims { get; set; }
     }
 
     public class UserDatabase : IUserMapper {
 
-        private static HashSet<AuthUser> USERS() {
-            HashSet<AuthUser> userList = new HashSet<AuthUser>() { };
-            userList.Add(new AuthUser() {
-                Name = "master",
-                Password = "master",
-                UserType = UserType.Master,
-                Guid = new Guid("00000000-0000-0000-0000-000000000500")
-            });
+        private static HashSet<AuthUser> Users() {
+            var userList = new HashSet<AuthUser> {
+                new AuthUser {
+                    Name = "master",
+                    Password = "master",
+                    UserType = UserType.Master,
+                    Guid = new Guid("00000000-0000-0000-0000-000000000500")
+                }
+            };
             var sysUsers = SystemUser.GetAll();
             var appUsers = ApplicationUser.GetAll();
             userList.UnionWith(Map(sysUsers));
@@ -65,75 +64,69 @@ namespace antdlib.Auth {
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
-            var UserRecord = USERS().FirstOrDefault(u => u.Guid == identifier);
-            return UserRecord == null
+            var userRecord = Users().FirstOrDefault(u => u.Guid == identifier);
+            return userRecord == null
                        ? null
-                       : new UserIdentity { UserName = UserRecord.Name };
+                       : new UserIdentity { UserName = userRecord.Name };
         }
 
         public static string GetUserEmail(Guid identifier) {
-            var user = USERS().FirstOrDefault(u => u.Guid == identifier);
-            return (user == null) ? null : user.Email;
+            var user = Users().FirstOrDefault(u => u.Guid == identifier);
+            return user?.Email;
         }
 
         public static Guid? ValidateUser(string username, string password) {
-            var user = USERS().FirstOrDefault(u => u.Name == username);
+            var user = Users().FirstOrDefault(u => u.Name == username);
             if (user == null) {
                 return null;
             }
             var type = user.UserType;
             switch (type) {
                 case UserType.Master:
-                    if (CheckMasterPassword(password) == true) {
+                    if (CheckMasterPassword(password)) {
                         return user.Guid;
                     }
-                    else {
-                        return null;
-                    }
+                    return null;
                 case UserType.IsApplicationUser:
-                    if (CheckApplicationPassword(password, user.Password) == true) {
+                    if (CheckApplicationPassword(password, user.Password)) {
                         return user.Guid;
                     }
-                    else {
-                        return null;
-                    }
+                    return null;
                 case UserType.IsSystemUser:
-                    if (CheckSystemPassword(password, user.Password, user.Salt) == true) {
+                    if (CheckSystemPassword(password, user.Password, user.Salt)) {
                         return user.Guid;
                     }
-                    else {
-                        return null;
-                    }
+                    return null;
                 default:
                     return null;
             }
         }
 
-        private static HashSet<AuthUser> Map(IEnumerable<UserModel> users) {
-            HashSet<AuthUser> list = new HashSet<AuthUser>() { };
-            foreach (UserModel user in users) {
-                var au = new AuthUser() {
-                    Name = user.Alias,
-                    Password = user.Password.Result,
-                    Salt = user.Password.Salt,
-                    UserType = user.UserType
-                };
-                au.Guid = Guid.Parse(user.Guid);
+        private static IEnumerable<AuthUser> Map(IEnumerable<UserModel> users) {
+            var list = new HashSet<AuthUser>();
+            foreach (var au in users.Select(user => new AuthUser {
+                Name = user.Alias,
+                Password = user.Password.Result,
+                Salt = user.Password.Salt,
+                UserType = user.UserType,
+                Guid = Guid.Parse(user.Guid)
+            }))
+            {
                 list.Add(au);
             }
             return list;
         }
 
         private static bool CheckMasterPassword(string input) {
-            return (input == "master") ? true : false;
+            return (input == "master");
         }
 
         private static bool CheckApplicationPassword(string input, string passwd) {
-            return (Cryptography.Hash256(input).ToHex() == passwd) ? true : false;
+            return (Cryptography.Hash256(input).ToHex() == passwd);
         }
 
         private static bool CheckSystemPassword(string input, string passwd, string salt) {
-            return (Cryptography.Hash256Terminal(input, salt) == passwd) ? true : false;
+            return (Cryptography.Hash256Terminal(input, salt) == passwd);
         }
     }
 }

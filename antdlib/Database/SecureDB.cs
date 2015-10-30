@@ -5,26 +5,12 @@ using System.Linq;
 
 namespace antdlib.Database {
     public class SecureDb {
-        /// <summary>
-        /// Usage:
-        /// in your database method use this line
-        ///     SecureDB.*Action*<*type*>(*model*);
-        /// where *Action* could be any of the "CRUD" methods listed below in this class (eg Get, GetBy, Create, Edit, Delete)
-        /// where *type* is the type of *model*, this will define the "table" of database where your info will be saved
-        /// where *model* could be any of your custom model, altready initialized, with the info you want to save
-        /// </summary>
-
         public static IEnumerable<T> Get<T>() where T : SecureEntity, new() {
             using (var session = Session.New) {
                 try {
                     var encryptedResult = session.Get<T>(t => t.Status != EntityStatus.Delete);
                     session.Dispose();
-                    var result = new List<T>();
-                    foreach (var encrypted in encryptedResult) {
-                        T item = Encryption.XDecrypt<T>(encrypted.Dump, encrypted.EntityKey, encrypted.EntityVector);
-                        result.Add(item);
-                    }
-                    return result;
+                    return encryptedResult.Select(encrypted => Encryption.XDecrypt<T>(encrypted.Dump, encrypted.EntityKey, encrypted.EntityVector)).ToList();
                 }
                 catch (Exception) {
                     return null;
@@ -37,12 +23,7 @@ namespace antdlib.Database {
                 try {
                     var encryptedResult = session.Get<T>(t => t.Status != EntityStatus.Delete).Where(predicate);
                     session.Dispose();
-                    var result = new List<T>();
-                    foreach (var encrypted in encryptedResult) {
-                        T item = Encryption.XDecrypt<T>(encrypted.Dump, encrypted.EntityKey, encrypted.EntityVector);
-                        result.Add(item);
-                    }
-                    return result;
+                    return encryptedResult.Select(encrypted => Encryption.XDecrypt<T>(encrypted.Dump, encrypted.EntityKey, encrypted.EntityVector)).ToList();
                 }
                 catch (Exception) {
                     return null;
@@ -55,7 +36,7 @@ namespace antdlib.Database {
                 try {
                     var result = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == id).FirstOrDefault();
                     session.Dispose();
-                    return Encryption.XDecrypt<T>(result.Dump, result.EntityKey, result.EntityVector);
+                    return result != null ? Encryption.XDecrypt<T>(result.Dump, result.EntityKey, result.EntityVector) : null;
                 }
                 catch (Exception) {
                     return null;
@@ -68,7 +49,7 @@ namespace antdlib.Database {
                 try {
                     var result = session.Get<T>(t => t.Status != EntityStatus.Delete).Where(predicate).FirstOrDefault();
                     session.Dispose();
-                    return Encryption.XDecrypt<T>(result.Dump, result.EntityKey, result.EntityVector);
+                    return result != null ? Encryption.XDecrypt<T>(result.Dump, result.EntityKey, result.EntityVector) : null;
                 }
                 catch (Exception) {
                     return null;
@@ -86,9 +67,10 @@ namespace antdlib.Database {
                     check = null;
                 }
                 if (type != null && check == null) {
-                    var secureType = new T();
-                    secureType.EntityKey = Encryption.RandomKey;
-                    secureType.EntityVector = Encryption.RandomVector;
+                    var secureType = new T {
+                        EntityKey = Encryption.RandomKey,
+                        EntityVector = Encryption.RandomVector
+                    };
                     secureType.Dump = Encryption.XEncrypt(type, secureType.EntityKey, secureType.EntityVector);
                     session.Set(secureType);
                 }
@@ -97,73 +79,45 @@ namespace antdlib.Database {
         }
 
         public static void Create<T>(IEnumerable<T> types) where T : SecureEntity, new() {
-            using (var session = Session.New) {
-                foreach (T type in types) {
-                    var check = session.Get<T>(t => t.Status != EntityStatus.Delete && t == type).FirstOrDefault();
-                    if (type != null && check == null) {
-                        var secureType = new T();
-                        secureType.EntityKey = Encryption.RandomKey;
-                        secureType.EntityVector = Encryption.RandomVector;
-                        secureType.Dump = Encryption.XEncrypt(type, secureType.EntityKey, secureType.EntityVector);
-                        session.Set(secureType);
-                    }
-                    session.Dispose();
-                }
+            foreach (var type in types) {
+                Create(type);
             }
         }
 
         public static void Edit<T>(T type) where T : SecureEntity, new() {
-            if (type != null) {
-                using (var session = Session.New) {
-                    var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
+            if (type == null)
+                return;
+            using (var session = Session.New) {
+                var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
+                if (existing != null) {
                     existing._Id = EntityStatus.Delete.ToString();
                     existing.Timestamp = EntityStatus.Delete.ToString();
                     existing.Status = EntityStatus.Delete;
                     session.Set(existing);
-                    type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                    type.Status = EntityStatus.New;
-                    var secureType = new T();
-                    secureType.EntityKey = Encryption.RandomKey;
-                    secureType.EntityVector = Encryption.RandomVector;
-                    secureType.Dump = Encryption.XEncrypt(type, secureType.EntityKey, secureType.EntityVector);
-                    session.Set(secureType);
-                    session.Dispose();
                 }
+                type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                type.Status = EntityStatus.New;
+                var secureType = new T {
+                    EntityKey = Encryption.RandomKey,
+                    EntityVector = Encryption.RandomVector
+                };
+                secureType.Dump = Encryption.XEncrypt(type, secureType.EntityKey, secureType.EntityVector);
+                session.Set(secureType);
+                session.Dispose();
             }
         }
 
         public static void Edit<T>(IEnumerable<T> types) where T : SecureEntity, new() {
-            foreach (T type in types) {
-                if (type != null) {
-                    using (var session = Session.New) {
-                        var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
-                        if (existing == null) {
-                            throw new ArgumentNullException();
-                        }
-                        existing._Id = EntityStatus.Delete.ToString();
-                        existing.Timestamp = EntityStatus.Delete.ToString();
-                        existing.Status = EntityStatus.Delete;
-                        session.Set(existing);
-                        type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        type.Status = EntityStatus.New;
-                        var secureType = new T() {
-                            EntityKey = Encryption.RandomKey,
-                            EntityVector = Encryption.RandomVector,
-                        };
-                        secureType.Dump = Encryption.XEncrypt(type, secureType.EntityKey, secureType.EntityVector);
-                        session.Set(secureType);
-                        session.Dispose();
-                    }
-                }
+            foreach (var type in types) {
+                Edit(type);
             }
         }
 
         public static void Delete<T>(string id) where T : SecureEntity, new() {
             using (var session = Session.New) {
                 var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == id).FirstOrDefault();
-                if (existing == null) {
-                    throw new ArgumentNullException();
-                }
+                if (existing == null)
+                    return;
                 existing._Id = EntityStatus.Delete.ToString();
                 existing.Timestamp = EntityStatus.Delete.ToString();
                 existing.Status = EntityStatus.Delete;
@@ -174,17 +128,7 @@ namespace antdlib.Database {
 
         public static void Delete<T>(IEnumerable<string> ids) where T : SecureEntity, new() {
             foreach (var id in ids) {
-                using (var session = Session.New) {
-                    var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == id).FirstOrDefault();
-                    if (existing == null) {
-                        throw new ArgumentNullException();
-                    }
-                    existing._Id = EntityStatus.Delete.ToString();
-                    existing.Timestamp = EntityStatus.Delete.ToString();
-                    existing.Status = EntityStatus.Delete;
-                    session.Set(existing);
-                    session.Dispose();
-                }
+                Delete<T>(id);
             }
         }
     }

@@ -1,5 +1,7 @@
-﻿
-using antdlib;
+﻿using antdlib;
+using antdlib.Common;
+using Nancy;
+using Nancy.Security;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,10 +30,8 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using Nancy;
-using Nancy.Security;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class ConsoleModule : NancyModule {
 
@@ -39,13 +39,11 @@ namespace Antd {
             : base("/console") {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
-                return View["page-console"];
-            };
+            Get["/"] = x => View["page-console"];
 
             Post["/"] = x => {
-                string file = (string)Request.Form.File;
-                string args = (string)Request.Form.Arguments;
+                var file = (string)Request.Form.File;
+                var args = (string)Request.Form.Arguments;
                 var command = Terminal.Execute(file + " "+ args).ConvertCommandToModel();
                 return View["page-console", command];
             };

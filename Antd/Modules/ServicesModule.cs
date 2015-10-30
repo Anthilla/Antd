@@ -27,6 +27,9 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Threading;
 using antdlib.CCTable;
 using antdlib.Ssh;
 using antdlib.Svcs.Bind;
@@ -36,14 +39,9 @@ using antdlib.ViewBinds;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Threading;
 
-namespace Antd {
-
+namespace Antd.Modules {
     public class ServicesModule : NancyModule {
-
         public ServicesModule()
             : base("/services") {
             this.RequiresAuthentication();

@@ -1,19 +1,16 @@
 ﻿using antdlib.Models;
-using antdlib.Security;
 using library.u2f;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using DeNSo;
 
 namespace antdlib.Auth {
 
     public class TokenAuthentication {
         public static IEnumerable<GlobalUserModel> Show() {
-            return DeNSo.Session.New.Get<GlobalUserModel>();
+            return Session.New.Get<GlobalUserModel>();
         }
 
         /// <summary>
@@ -25,22 +22,20 @@ namespace antdlib.Auth {
         ///     TValue è il valore dell'identità
         /// </param>
         public static void RegisterUser(string guid, HashSet<KeyValuePair<string, string>> values) {
-            var i = DeNSo.Session.New.Get<GlobalUserModel>(_ => _.GlobalUID == guid).FirstOrDefault();
-            if (i == null) {
-                i = new GlobalUserModel() { _Id = Guid.NewGuid().ToString(), GlobalUID = Guid.NewGuid().ToString() };
-            }
+            var i = Session.New.Get<GlobalUserModel>(_ => _.GlobalUID == guid).FirstOrDefault() ??
+                    new GlobalUserModel() { _Id = Guid.NewGuid().ToString(), GlobalUID = Guid.NewGuid().ToString() };
             i.Identities = i.Identities.Union(values);
-            DeNSo.Session.New.Set(i);
+            Session.New.Set(i);
         }
 
-        public static void AssignOTPToken(string guid, string tokenID) {
-            var otpKVP = new KeyValuePair<string, string>("otptoken", tokenID.Substring(0, 12));
-            RegisterUser(guid, new HashSet<KeyValuePair<string, string>>() { otpKVP });
+        public static void AssignOtpToken(string guid, string tokenId) {
+            var otpKvp = new KeyValuePair<string, string>("otptoken", tokenId.Substring(0, 12));
+            RegisterUser(guid, new HashSet<KeyValuePair<string, string>> { otpKvp });
         }
 
         public static void DeleteRelation(string guid) {
-            var i = DeNSo.Session.New.Get<GlobalUserModel>(_ => _.GlobalUID == guid).FirstOrDefault();
-            DeNSo.Session.New.Delete(i);
+            var i = Session.New.Get<GlobalUserModel>(_ => _.GlobalUID == guid).FirstOrDefault();
+            Session.New.Delete(i);
         }
 
         /// <summary>
@@ -50,41 +45,19 @@ namespace antdlib.Auth {
         /// <param name="identity"></param>
         /// <returns></returns>
         public static string CheckIdentity(string identity) {
-            var i = DeNSo.Session.New.Get<GlobalUserModel>().Where(g => g.Identities.Select(_ => _.Value).ToList().Contains(identity)).First();
-            return (i == null) ? null : i.GlobalUID;
+            var i = Session.New.Get<GlobalUserModel>().First(g => g.Identities.Select(_ => _.Value).ToList().Contains(identity));
+            return i?.GlobalUID;
         }
 
         private static bool ValidateUserIdentity(string username, string password) {
-            var authenticationUrl = "http://127.0.0.1/wsapi/u2fval/";
-            var request = (HttpWebRequest)WebRequest.Create(authenticationUrl);
+            var request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1/wsapi/u2fval/");
             request.Method = "GET";
             request.UseDefaultCredentials = false;
             request.PreAuthenticate = true;
             request.Credentials = new NetworkCredential(username, password);
             var response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK) {
-                return true;
-            }
-            return false;
+            return response.StatusCode == HttpStatusCode.OK;
         }
-
-        //private static bool ValidateToken(string username, string otp) {
-        //    var user = Show().Where(u => u.username == username).First();
-        //    if (otp.Length < 12) {
-        //        return false;
-        //    }
-        //    if (user == null) {
-        //        return false;
-        //    }
-        //    else {
-        //        if (user.tokenID != otp.Substring(0, 12)) {
-        //            return false;
-        //        }
-        //        else {
-        //            return true;
-        //        }
-        //    }
-        //}
 
         private static bool ConfirmTokenValidity(string otp) {
             try {
@@ -92,12 +65,7 @@ namespace antdlib.Auth {
                     return false;
                 }
                 var answer = new U2FRequest("25311", "5hQfQbHQGLIauepG9Sa5LQAMGYk=").Validate(otp);
-                if (answer.IsSignatureValid == false && answer.IsValid == false) {
-                    return false;
-                }
-                else {
-                    return true;
-                }
+                return answer.IsSignatureValid || answer.IsValid;
             }
             catch (Exception) {
                 return false;
@@ -105,13 +73,10 @@ namespace antdlib.Auth {
         }
 
         public static bool Validate(string username, string password, string otp) {
-            var _validateUserIdentity = ValidateUserIdentity(username, password);
-            var _validateToken = CheckIdentity(otp);
-            var _confirmTokenValidity = ConfirmTokenValidity(otp);
-            if (_validateUserIdentity == true && _confirmTokenValidity == true) {
-                return true;
-            }
-            return false;
+            var validateUserIdentity = ValidateUserIdentity(username, password);
+            var confirmTokenValidity = ConfirmTokenValidity(otp);
+            var validateToken = CheckIdentity(otp);
+            return validateUserIdentity && confirmTokenValidity && !string.IsNullOrEmpty(validateToken);
         }
     }
 }

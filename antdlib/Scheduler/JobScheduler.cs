@@ -31,6 +31,7 @@ using Quartz;
 using Quartz.Impl;
 using System;
 using System.Collections.Generic;
+using antdlib.Common;
 
 namespace antdlib.Scheduler {
 

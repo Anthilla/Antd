@@ -27,14 +27,14 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Firewall;
-using Nancy;
 using System.Collections.Generic;
-//using Nancy.Security;
 using System.Dynamic;
 using System.Linq;
+using antdlib.Firewall;
+using Nancy;
+//using Nancy.Security;
 
-namespace Antd {
+namespace Antd.Modules {
     public class FirewallModule : NancyModule {
         public FirewallModule()
             : base("/firewall") {
@@ -42,20 +42,20 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.NFTCommands = NFTables.GetNFTCommandsBundle().ToArray();
+                vmod.NFTCommands = NfTables.GetNftCommandsBundle().ToArray();
                 return View["_page-firewall", vmod];
             };
 
             Post["/addrule"] = x => {
                 var command = (string)Request.Form.Command;
                 var rule = (string)Request.Form.Rule;
-                NFTables.AddNFTRule(command, rule);
+                NfTables.AddNftRule(command, rule);
                 return Response.AsRedirect("/firewall");
             };
 
             Post["/stoprule"] = x => {
                 var guid = (string)Request.Form.Guid;
-                NFTables.DeleteNFTRule(guid);
+                NfTables.DeleteNftRule(guid);
                 return Response.AsRedirect("/firewall");
             };
 
@@ -63,12 +63,12 @@ namespace Antd {
                 var table = x.table;
                 var chain = x.chain;
                 var hook = x.hook;
-                List<string> data = NFTables.GetRulesFromCommand(table, chain, hook);
+                List<string> data = NfTables.GetRulesFromCommand(table, chain, hook);
                 return Response.AsJson(data);
             };
 
             Post["/export"] = x => {
-                NFTables.Export.WriteFile();
+                NfTables.Export.WriteFile();
                 return Response.AsJson(true);
             };
         }

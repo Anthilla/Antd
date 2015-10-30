@@ -27,14 +27,14 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.CCTable;
 using antdlib.Install;
 using antdlib.Storage;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class StorageModule : NancyModule {
 
@@ -45,7 +45,6 @@ namespace Antd {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.VolumesInfo = Volumes.BlocksFromDd();
-
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;

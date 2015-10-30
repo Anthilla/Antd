@@ -68,14 +68,14 @@
     }
     <nav class="breadcrumbs mini">
         <ul>
-            @foreach (string dir in Model.parents) {
+            @foreach (string dir in Model.Parents) {
                 <li><a href="@MakeUrl(dir)">@MakeLabel(dir)</a></li>
             }
         </ul>
     </nav>
 
     <ul style="list-style: none !important;">
-        @foreach (antdlib.Models.DirItemModel el in Model.children2) {
+        @foreach (antdlib.Models.DirItemModel el in Model.Children2) {
             if (el.isFile == true) {
             <li>
                 <p><i class="icon-file on-left"></i>@el.path</p>

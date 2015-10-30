@@ -10,10 +10,10 @@
     <tbody id="SysctlBodyTable">
         @foreach (antdlib.Users.GroupModel group in Model.SystemGroups) {
             <tr>
-                <td style="text-align: center;">@group.GID - @group.Alias </td>
+                <td style="text-align: center;">@group.Gid - @group.Alias </td>
                 <td style="text-align: center;">
                     <ul class="fg-white" style="list-style: none;">
-                        @foreach(string user in group.UserList) {
+                        @foreach (string user in group.UserList) {
                             <li>@user</li>
                         }
                     </ul>

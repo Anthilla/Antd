@@ -30,75 +30,81 @@
 using System;
 using System.Linq;
 
-namespace antdlib {
+namespace antdlib.Common {
 
     /// <summary>
     /// Simple console Logger
     /// </summary>
     public static class ConsoleLogger {
+        private static string GetTime(DateTime dt) {
+            var str = "[";
+            str += dt.ToString("MM/dd/yy");
+            str += " ";
+            str += dt.ToString("H:mm:ss");
+            str += "] ";
+            return str;
+        }
 
         public static void Log(dynamic message, params object[] args) {
             if (args.Any())
-                message = String.Format(message, args);
+                message = string.Format(message, args);
             Console.WriteLine("{0}{1}"
-                , ConsoleTime.GetTime(DateTime.Now)
+                , GetTime(DateTime.Now)
                 , message);
         }
 
         public static void Info(dynamic message, params object[] args) {
             if (args.Any())
-                message = String.Format(message, args);
-            ConsoleColor currentColor = Console.ForegroundColor;
+                message = string.Format(message, args);
+            var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("{0}{1}"
-                , ConsoleTime.GetTime(DateTime.Now)
+                , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
         }
 
         public static void Success(dynamic message, params object[] args) {
             if (args.Any())
-                message = String.Format(message, args);
-            ConsoleColor currentColor = Console.ForegroundColor;
+                message = string.Format(message, args);
+            var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("{0}{1}"
-                , ConsoleTime.GetTime(DateTime.Now)
+                , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
         }
 
         public static void Warn(dynamic message, params object[] args) {
             if (args.Any())
-                message = String.Format(message, args);
-            ConsoleColor currentColor = Console.ForegroundColor;
+                message = string.Format(message, args);
+            var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("{0}Warn: {1}"
-                , ConsoleTime.GetTime(DateTime.Now)
+                , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
         }
 
         public static void Error(dynamic message, params object[] args) {
             if (args.Any())
-                message = String.Format(message, args);
-            ConsoleColor currentColor = Console.ForegroundColor;
+                message = string.Format(message, args);
+            var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("{0}Error: {1}"
-                , ConsoleTime.GetTime(DateTime.Now)
+                , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
-            //Environment.Exit(-1);
         }
 
         public static void Point(string where, string message = "") {
-            //System.Reflection.MethodBase.GetCurrentMethod().Name
-            var currentFG = Console.ForegroundColor;
-            var currentBG = Console.BackgroundColor;
+            var currentFg = Console.ForegroundColor;
+            var currentBg = Console.BackgroundColor;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"○○○ {where} ○○○ {message}");
-            Console.ForegroundColor = currentFG;
-            Console.BackgroundColor = currentBG;
+            Console.ForegroundColor = currentFg;
+            Console.BackgroundColor = currentBg;
         }
     }
 }

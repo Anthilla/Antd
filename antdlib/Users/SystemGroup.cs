@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Users {
 
@@ -82,9 +83,10 @@ namespace antdlib.Users {
                 Guid = Guid.NewGuid().ToString(),
                 Alias = groupInfo[0],
                 Password = groupInfo[1],
-                GID = groupInfo[2]
+                Gid = groupInfo[2]
             };
-            if (groupInfo[3].Length <= 0) return groupObject;
+            if (groupInfo[3].Length <= 0)
+                return groupObject;
             var users = groupInfo[3].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
             groupObject.UserList = users;
             return groupObject;

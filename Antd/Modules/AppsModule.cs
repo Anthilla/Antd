@@ -30,6 +30,7 @@
 using System.Dynamic;
 using antdlib;
 using antdlib.Apps;
+using antdlib.Common;
 using Nancy;
 using Nancy.Security;
 
@@ -43,74 +44,67 @@ namespace Antd.Modules {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                bool b;
-                if (AnthillaSP.Setting.CheckSquash() == false) {
-                    b = false;
-                }
-                else {
-                    b = true;
-                }
-                vmod.AppExists = b;
+                vmod.AppExists = AnthillaSp.Setting.CheckSquash();
                 return View["_page-apps", vmod];
             };
 
             Get["/set/anthillasp"] = x => {
-                if (AnthillaSP.Units.CheckFiles() == false) {
-                    AnthillaSP.CreateUnits();
+                if (AnthillaSp.Units.CheckFiles() == false) {
+                    AnthillaSp.CreateUnits();
                 }
-                AnthillaSP.Start();
+                AnthillaSp.Start();
                 return Response.AsJson(true);
             };
 
             Get["/apply/anthillasp"] = x => {
-                AnthillaSP.Start();
+                AnthillaSp.Start();
                 return Response.AsJson(true);
             };
 
             Get["/launch"] = x => {
                 ConsoleLogger.Log(">> App >> AnthillaSP");
                 ConsoleLogger.Log(">> Check squashfs");
-                if (AnthillaSP.Setting.CheckSquash() == false) {
+                if (AnthillaSp.Setting.CheckSquash() == false) {
                     ConsoleLogger.Warn(">> Squashfs does not exist!");
                     return Response.AsJson(false);
                 }
                 ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
-                AnthillaSP.Setting.MountSquash();
+                AnthillaSp.Setting.MountSquash();
                 ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                AnthillaSP.CreateUnits();
-                AnthillaSP.Start();
+                AnthillaSp.CreateUnits();
+                AnthillaSp.Start();
                 return Response.AsJson(true);
             };
 
             Post["/start/sp"] = x => {
-                AnthillaSP.StartSp();
+                AnthillaSp.StartSp();
                 return Response.AsJson("sp process started");
             };
 
             Post["/start/server"] = x => {
-                AnthillaSP.StartServer();
+                AnthillaSp.StartServer();
                 return Response.AsJson("server process started");
             };
 
             Post["/stop/sp"] = x => {
-                AnthillaSP.StopSp();
+                AnthillaSp.StopSp();
                 return Response.AsJson("sp process stopped");
             };
 
             Post["/stop/server"] = x => {
-                AnthillaSP.StopServer();
+                AnthillaSp.StopServer();
                 return Response.AsJson("server process stopped");
             };
 
-            Get["/status/sp"] = x => Response.AsJson(AnthillaSP.Status.AnthillaSp());
+            Get["/status/sp"] = x => Response.AsJson(AnthillaSp.Status.AnthillaSp());
 
-            Get["/status/server"] = x => Response.AsJson(AnthillaSP.Status.AnthillaServer());
+            Get["/status/server"] = x => Response.AsJson(AnthillaSp.Status.AnthillaServer());
 
             Post["/mount"] = x => {
                 var f = (string)Request.Form.Folder;
                 var m = (string)Request.Form.Mount;
                 Terminal.Execute("mount " + f + " " + m);
-                return Response.AsJson(AnthillaSP.Status.AnthillaServer());
+                return Response.AsJson(AnthillaSp.Status.AnthillaServer());
             };
 
             Get["/update/antdsh"] = x => {
@@ -124,7 +118,7 @@ namespace Antd.Modules {
             };
 
             Post["/set/anthillasp"] = x => {
-                AnthillaSP.SetApp();
+                AnthillaSp.SetApp();
                 return Response.AsJson("/set/anthillasp");
             };
         }

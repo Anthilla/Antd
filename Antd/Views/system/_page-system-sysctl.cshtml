@@ -49,14 +49,14 @@
         </thead>
         <tbody id="SysctlBodyTable">
             @foreach (Antd.ViewHelpers.StatusSysctlViewModel value in Model.Sysctl) {
-                @if (value.runningValue.ToCharArray().Length < 15) {
+                @if (value.RunningValue.ToCharArray().Length < 15) {
 <tr>
                     <td style="text-align: right;">
-                        <label>@value.label </label>
+                        <label>@value.Label </label>
                     </td>
-                    <td style="text-align: center;">@value.stockValue </td>
-                    <td style="text-align: center;">@value.runningValue </td>
-                    <td style="text-align: center;">@value.antdValue
+                    <td style="text-align: center;">@value.StockValue </td>
+                    <td style="text-align: center;">@value.RunningValue </td>
+                    <td style="text-align: center;">@value.AntdValue
                 </td>
                 </tr>
                 }

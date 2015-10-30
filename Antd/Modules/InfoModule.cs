@@ -28,11 +28,12 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib.Models;
 using antdlib.Status;
 using Nancy;
 using Nancy.Security;
 using System.Dynamic;
+using antdlib.Common;
+using antdlib.Contexts;
 
 namespace Antd.Modules {
 
@@ -63,17 +64,13 @@ namespace Antd.Modules {
                 return View["_page-info", vmod];
             };
 
-            Get["/loadaverage"] = x => {
-                return Response.AsJson(Uptime.LoadAverage);
-            };
+            Get["/loadaverage"] = x => Response.AsJson(Uptime.LoadAverage);
 
-            Get["/disk"] = x => {
-                return Response.AsJson(Uptime.LoadAverage);
-            };
+            Get["/disk"] = x => Response.AsJson(Uptime.LoadAverage);
 
             Post["/killproc"] = x => {
-                string pid = (string)Request.Form.data;
-                CommandModel command = Terminal.Execute("kill " + pid).ConvertCommandToModel();
+                var pid = (string)Request.Form.data;
+                Terminal.Execute("kill " + pid).ConvertCommandToModel();
                 return Response.AsRedirect("/procs");
             };
         }

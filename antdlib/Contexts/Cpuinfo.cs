@@ -27,45 +27,37 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
+using antdlib.Models;
+using Newtonsoft.Json;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Cpuinfo {
 
         public static string GetText() {
-            string meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+            var meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
+            return JsonConvert.SerializeObject(meminfoContent);
         }
 
         public static List<CpuinfoModel> GetModel() {
-            string meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
-            var meminfo = ConvertCpuinfo(meminfoContent);
-            return meminfo;
+            var meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
+            return ConvertCpuinfo(meminfoContent);
         }
 
         private static List<CpuinfoModel> ConvertCpuinfo(string cpuinfoText) {
-            List<CpuinfoModel> cpuinfoList = new List<CpuinfoModel>();
-            string[] rowDivider = new String[] { "\n" };
-            string[] cellDivider = new String[] { ": " };
-            string[] rowList = cpuinfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList) {
-                if (!string.IsNullOrEmpty(row)) {
-                    string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    CpuinfoModel cpuinfo = new CpuinfoModel();
-                    cpuinfo.key = cellList[0];
-                    cpuinfo.value = (cellList.Length > 1) ? cellList[1] : "";
-                    cpuinfoList.Add(cpuinfo);
-                }
-            }
-            return cpuinfoList;
+            var rowList = cpuinfoText.Split(new[] { "\n" }, StringSplitOptions.None).ToArray();
+            return (from row in rowList
+                    where !string.IsNullOrEmpty(row)
+                    select row.Split(new[] { ": " }, StringSplitOptions.None).ToArray()
+                into cellList
+                    select new CpuinfoModel {
+                        key = cellList[0],
+                        value = (cellList.Length > 1) ? cellList[1] : ""
+                    }).ToList();
         }
     }
 }

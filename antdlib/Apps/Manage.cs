@@ -31,49 +31,37 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Apps {
     public class Management {
         public class AppInfo {
             public string Name { get; set; }
-
-            public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>() { };
+            public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>();
         }
 
         public static AppInfo[] DetectApps() {
-            var list = new List<AppInfo>() { };
+            var list = new List<AppInfo>();
             var appinfoFiles = Directory.EnumerateFiles("/framework", "*.appinfo", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < appinfoFiles.Length; i++) {
-                list.Add(MapInfoFile(appinfoFiles[i]));
-            }
+            list.AddRange(appinfoFiles.Select(MapInfoFile));
             return list.ToArray();
         }
 
         private static AppInfo MapInfoFile(string path) {
             var text = FileSystem.ReadFile(path);
-            var rows = text.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = text.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var appinfo = new AppInfo();
-            foreach (var row in rows) {
-                var pair = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                if (pair.Length > 1) {
-                    var kvp = new KeyValuePair<string, string>(pair[0], pair[1]);
-                    appinfo.Values.Add(kvp);
-                }
+            foreach (var kvp in from row in rows select row.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray() into pair where pair.Length > 1 select new KeyValuePair<string, string>(pair[0], pair[1])) {
+                appinfo.Values.Add(kvp);
             }
-            if (appinfo.Values.Count() > 0) {
-                appinfo.Name = appinfo.Values.Where(k => k.Key == "name").FirstOrDefault().Value;
+            if (appinfo.Values.Any()) {
+                appinfo.Name = appinfo.Values.FirstOrDefault(k => k.Key == "name").Value;
             }
             return appinfo;
         }
 
         public static string[] GetWantedDirectories(AppInfo appinfo) {
-            var list = new List<string>() { };
-            foreach (var kvp in appinfo.Values) {
-                if (kvp.Key == "app_path") {
-                    list.Add(kvp.Value);
-                }
-            }
-            return list.ToArray();
+            return (from kvp in appinfo.Values where kvp.Key == "app_path" select kvp.Value).ToArray();
         }
     }
 }

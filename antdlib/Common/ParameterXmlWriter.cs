@@ -27,65 +27,59 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace antdlib {
-
-    public class param {
-        public string key { get; set; }
-        public string value { get; set; }
+namespace antdlib.Common {
+    public class Param {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 
-    public class section {
-        public string sectionName { get; set; }
-        public param param { get; set; }
+    public class Section {
+        public string SectionName { get; set; }
+        public Param Param { get; set; }
     }
 
-    public class XmlWriter {
-        public string[] path;
+    public class ParameterXmlWriter {
+        private readonly string[] _path;
 
-        public XmlWriter(string[] fileNames) {
+        public ParameterXmlWriter(string[] fileNames) {
             var applicationRoot = Folder.Root;
-            List<string> tmplist = new List<string>() { };
-            foreach (string fileName in fileNames) {
-                var p = Path.Combine(applicationRoot, fileName + ".xml");
-                tmplist.Add(Path.Combine(applicationRoot, fileName + ".xml"));
-            }
-            path = tmplist.ToArray();
+            var tmplist = new List<string>();
+            tmplist.AddRange(from fileName in fileNames let p = Path.Combine(applicationRoot, fileName + ".xml") select Path.Combine(applicationRoot, fileName + ".xml"));
+            _path = tmplist.ToArray();
         }
 
         public void Write(string key, string value) {
-            string sectionName = "antd.config";
-            List<param> tList;
-            param tItem;
-            List<section> readList = ReadAll();
-            List<param> paramList = new List<param>();
+            List<Param> tList;
+            Param tItem;
+            var readList = ReadAll();
+            var paramList = new List<Param>();
             if (readList != null) {
-                paramList.AddRange(from sect in readList 
-                                   where sect.param != null 
-                                   select sect.param);
+                paramList.AddRange(from sect in readList
+                                   where sect.Param != null
+                                   select sect.Param);
             }
 
             var oldItem = (from i in paramList
-                           where i.key == key
+                           where i.Key == key
                            select i).FirstOrDefault();
             if (oldItem == null) {
-                param item = new param {
-                    key = key,
-                    value = value
+                var item = new Param {
+                    Key = key,
+                    Value = value
                 };
                 tItem = item;
             }
             else {
                 tItem = oldItem;
-                tItem.value = value;
+                tItem.Value = value;
             }
             if (paramList.ToArray().Length < 1) {
-                List<param> list = new List<param> {tItem};
+                var list = new List<Param> { tItem };
                 tList = list;
             }
             else {
@@ -94,32 +88,33 @@ namespace antdlib {
                 tList = paramList;
             }
 
-            XDocument document = new XDocument(
+            var document = new XDocument(
                 new XDeclaration("1.0", "utf-8", "yes"),
-                new XElement("section", new XAttribute("section", sectionName),
+                new XElement("section", new XAttribute("section", "antd.config"),
                             from el in tList
                             select new XElement("param",
-                            new XAttribute("key", el.key),
-                            new XAttribute("value", el.value)
+                            new XAttribute("key", el.Key),
+                            new XAttribute("value", el.Value)
             )));
-            foreach (string p in path) {
+            foreach (var p in _path) {
                 document.Save(p);
             }
         }
 
-        public List<section> ReadAll() {
-            if (!File.Exists(path[0])) {
+        public List<Section> ReadAll() {
+            if (!File.Exists(_path[0])) {
                 return null;
             }
-            XElement xelement = XElement.Load(path[0]);
-            IEnumerable<XElement> parameters = xelement.Elements();
-
-            List<section> list =
+            var xelement = XElement.Load(_path[0]);
+            var parameters = xelement.Elements();
+            var list =
                 (from elem in parameters
-                 select new section {
-                     sectionName = xelement.Attribute("section").Value.ToString(),
-                     param = new param { key = elem.Attribute("key").Value.ToString()
-                                       , value = elem.Attribute("value").Value.ToString() },
+                 select new Section {
+                     SectionName = xelement.Attribute("section").Value,
+                     Param = new Param {
+                         Key = elem.Attribute("key").Value,
+                         Value = elem.Attribute("value").Value
+                     },
                  }
                 ).ToList();
 
@@ -127,24 +122,21 @@ namespace antdlib {
         }
 
         public string ReadValue(string key) {
-            List<section> list = ReadAll();
+            var list = ReadAll();
             if (list == null) {
                 return null;
             }
-            List<param> parList = (from p in list 
-                                   where p.param != null 
-                                   select p.param).ToList();
-            param param = (from v in parList
-                           where v.key == key
-                           select v).FirstOrDefault();
-            if (param == null) {
-                return null;
-            }
-            return param.value;
+            var parList = (from p in list
+                           where p.Param != null
+                           select p.Param).ToList();
+            var param = (from v in parList
+                         where v.Key == key
+                         select v).FirstOrDefault();
+            return param?.Value;
         }
 
         public bool CheckValue(string key) {
-            string getValue = ReadValue(key);
+            var getValue = ReadValue(key);
             return getValue != null;
         }
     }

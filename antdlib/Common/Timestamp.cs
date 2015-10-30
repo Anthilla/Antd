@@ -30,7 +30,7 @@
 using System;
 using System.Globalization;
 
-namespace antdlib {
+namespace antdlib.Common {
 
     public class Timestamp {
 
@@ -38,7 +38,7 @@ namespace antdlib {
             return DateTime.Now.ToString(format);
         }
 
-        public static string Now { get { return Get("yyyyMMddHHmmssfff"); } }
+        public static string Now => Get("yyyyMMddHHmmssfff");
 
         public static DateTime ConvertTimestampToDateTime(string timestamp) {
             var date = DateTime.ParseExact(timestamp, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);

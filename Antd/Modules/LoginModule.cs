@@ -1,5 +1,12 @@
-﻿
-using antdlib;
+﻿using System;
+using System.Dynamic;
+using antdlib.Auth;
+using antdlib.Auth.T2FA;
+using antdlib.Common;
+using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Cookies;
+using Nancy.Extensions;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,16 +35,8 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib.Auth;
-using antdlib.Auth.T2FA;
-using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Cookies;
-using Nancy.Extensions;
-using System;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class LoginModule : NancyModule {
 
@@ -55,56 +54,31 @@ namespace Antd {
             Post["/login"] = x => {
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
-
-                Guid? validationGuid = UserDatabase.ValidateUser(username, password);
-
+                var validationGuid = UserDatabase.ValidateUser(username, password);
+                NancyCookie cookie;
                 if (Config.IsEnabled == false) {
                     if (validationGuid == null) {
                         return Context.GetRedirect("~/login");
                     }
-                    else {
-
-                        DateTime? expiry = DateTime.Now.AddHours(12);
-                        if (Request.Form.RememberMe.HasValue) {
-                            expiry = DateTime.Now.AddDays(3);
-                        }
-
-                        if (validationGuid == null) {
-                            return Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
-                        }
-                        else {
-                            NancyCookie cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                            return this.LoginAndRedirect(Guid.Parse(validationGuid.ToGuid().ToString()), DateTime.Now.AddHours(100)).WithCookie(cookie);
-                        }
-                    }
+                    cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
+                    return this.LoginAndRedirect(Guid.Parse(validationGuid.ToGuid().ToString()), DateTime.Now.AddHours(100)).WithCookie(cookie);
                 }
-
                 if (validationGuid == null) {
                     //return Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
                     return Context.GetRedirect("~/login");
                 }
-                else {
-                    string email;
-                    var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
-                    var requestEmail = (string)Request.Form.Email;
-                    if (validationEmail == null && requestEmail == "") {
-                        email = null;
-                        return Response.AsRedirect("/login/auth/" + username + "/" + password);
-                    }
-                    else if (validationEmail != null) {
-                        email = validationEmail;
-                    }
-                    else {
-                        email = requestEmail;
-                    }
-                    if (email != null) {
-                        Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
-                    }
-
-                    NancyCookie cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                    //return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
-                    return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
+                var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
+                var requestEmail = (string)Request.Form.Email;
+                if (validationEmail == null && requestEmail == "") {
+                    return Response.AsRedirect("/login/auth/" + username + "/" + password);
                 }
+                var email = validationEmail ?? requestEmail;
+                if (email != null) {
+                    Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
+                }
+                cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
+                //return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
+                return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
             };
 
             Get["/logout"] = x => {
@@ -134,11 +108,9 @@ namespace Antd {
                 var token = (string)Request.Form.Token;
                 var session = (string)Request.Form.Session;
                 var validation = Authentication.Confirm(session, token);
-
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
-                Guid? validationGuid = UserDatabase.ValidateUser(username, password);
-
+                var validationGuid = UserDatabase.ValidateUser(username, password);
                 DateTime? expiry = DateTime.Now.AddHours(100);
                 if (Request.Form.RememberMe.HasValue) {
                     expiry = DateTime.Now.AddHours(8);
@@ -147,27 +119,18 @@ namespace Antd {
                 if (validation == false) {
                     return Context.GetRedirect("~/login");
                 }
-                else if (validationGuid == null) {
+                if (validationGuid == null) {
                     return Context.GetRedirect("~/login");
                 }
-                else {
-                    NancyCookie cookie = new NancyCookie("antd-session", session);
-                    return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
-                }
+                var cookie = new NancyCookie("antd-session", session);
+                return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
             };
 
             Post["/login/verify"] = x => {
-                bool response;
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
-                Guid? validationGuid = UserDatabase.ValidateUser(username, password);
-
-                if (validationGuid == null) {
-                    response = false;
-                }
-                else {
-                    response = true;
-                }
+                var validationGuid = UserDatabase.ValidateUser(username, password);
+                var response = validationGuid != null;
                 return Response.AsJson(response);
             };
         }

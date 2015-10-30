@@ -1,5 +1,9 @@
-﻿
-using antdlib;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+using library.u2f;
+using Nancy;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,29 +32,21 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using library.u2f;
-using Nancy;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class AuthenticationModule : NancyModule {
         public class TempUser {
             public string Username { get; set; }
             public byte[] Password { get; set; }
-            public string TokenID { get; set; }
+            public string TokenId { get; set; }
         }
 
-        private IDictionary<string, TempUser> _users = new Dictionary<string, TempUser>();
+        private readonly IDictionary<string, TempUser> _users = new Dictionary<string, TempUser>();
 
         public AuthenticationModule() {
 
-            Get["/authenticate"] = x => {
-                return View["login-authentication"];
-            };
+            Get["/authenticate"] = x => View["login-authentication"];
 
             Post["/register"] = x => {
                 var username = (string)Request.Form.Username;
@@ -61,15 +57,13 @@ namespace Antd {
                     if (answer.IsSignatureValid == false && answer.IsValid == false) {
                         return HttpStatusCode.Forbidden;
                     }
-                    else {
-                        var _user = new TempUser() {
-                            Username = username,
-                            Password = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password)),
-                            TokenID = token.Substring(0, 12),
-                        };
-                        _users.Add(_user.Username, _user);
-                        return HttpStatusCode.OK;
-                    }
+                    var user = new TempUser {
+                        Username = username,
+                        Password = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password)),
+                        TokenId = token.Substring(0, 12),
+                    };
+                    _users.Add(user.Username, user);
+                    return HttpStatusCode.OK;
                 }
                 catch (Exception) {
                     return HttpStatusCode.ImATeapot;
@@ -83,37 +77,27 @@ namespace Antd {
                 if (_users.Count < 1) {
                     return "Error: user not valid.";
                 }
-                else {
-                        var _user = _users[username];
-                    if (_user == null) {
-                        return "Error: user not valid.";
+                var user = _users[username];
+                if (user == null) {
+                    return "Error: user not valid.";
+                }
+                var passwordHashing = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
+                if (Encoding.ASCII.GetString(passwordHashing) != Encoding.ASCII.GetString(user.Password)) {
+                    return "Error: password not valid.";
+                }
+                var tokenId = token.Substring(0, 12);
+                if (tokenId != user.TokenId) {
+                    return "Error: token not valid.";
+                }
+                try {
+                    var answer = new U2FRequest("25311", "5hQfQbHQGLIauepG9Sa5LQAMGYk=").Validate(token);
+                    if (answer.IsSignatureValid == false && answer.IsValid == false) {
+                        return HttpStatusCode.Forbidden;
                     }
-                    else {
-                        var passwordHashing = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
-                        if (Encoding.ASCII.GetString(passwordHashing) != Encoding.ASCII.GetString(_user.Password)) {
-                            return "Error: password not valid.";
-                        }
-                        else {
-                            var tokenID = token.Substring(0, 12);
-                            if (tokenID != _user.TokenID) {
-                                return "Error: token not valid.";
-                            }
-                            else {
-                                try {
-                                    var answer = new U2FRequest("25311", "5hQfQbHQGLIauepG9Sa5LQAMGYk=").Validate(token);
-                                    if (answer.IsSignatureValid == false && answer.IsValid == false) {
-                                        return HttpStatusCode.Forbidden;
-                                    }
-                                    else {
-                                        return HttpStatusCode.OK;
-                                    }
-                                }
-                                catch (Exception) {
-                                    return HttpStatusCode.ImATeapot;
-                                }
-                            }
-                        }
-                    }
+                    return HttpStatusCode.OK;
+                }
+                catch (Exception) {
+                    return HttpStatusCode.ImATeapot;
                 }
             };
         }

@@ -20,7 +20,7 @@ namespace antdlib.Database {
             return Hash256("3DB23244-884E-4CF9-8E10-82E6E7C20F5A");
         }
 
-        public static byte[] CoreKey { get { return GetCoreKey(); } }
+        public static byte[] CoreKey => GetCoreKey();
 
         private static byte[] GetCoreVector() {
             var coreVector = new byte[16];
@@ -28,7 +28,7 @@ namespace antdlib.Database {
             return coreVector;
         }
 
-        public static byte[] CoreVector { get { return GetCoreVector(); } }
+        public static byte[] CoreVector => GetCoreVector();
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace antdlib.Database {
             return Hash256(Guid.NewGuid().ToString());
         }
 
-        public static byte[] RandomKey { get { return CreateRandomKey(); } }
+        public static byte[] RandomKey => CreateRandomKey();
 
         private static byte[] CreateRandomVector() {
             var coreVector = new byte[16];
@@ -45,7 +45,8 @@ namespace antdlib.Database {
             return coreVector;
         }
 
-        public static byte[] RandomVector { get { return CreateRandomVector(); } }
+        public static byte[] RandomVector => CreateRandomVector();
+
         #endregion
 
         private static byte[] _encrypt(byte[] data, byte[] key, byte[] vector) {
@@ -124,13 +125,13 @@ namespace antdlib.Database {
 
         public static T XDecrypt<T>(byte[] dataToDecrypt) {
             var decryptedObject = _decrypt(dataToDecrypt, CoreKey, CoreVector);
-            string value = Encoding.ASCII.GetString(decryptedObject);
+            var value = Encoding.ASCII.GetString(decryptedObject);
             return JsonConvert.DeserializeObject<T>(value);
         }
 
         public static T XDecrypt<T>(byte[] dataToDecrypt, byte[] key, byte[] vector) {
             var decryptedObject = _decrypt(dataToDecrypt, key, vector);
-            string value = Encoding.ASCII.GetString(decryptedObject);
+            var value = Encoding.ASCII.GetString(decryptedObject);
             return JsonConvert.DeserializeObject<T>(value);
         }
     }

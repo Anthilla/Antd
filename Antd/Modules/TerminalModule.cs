@@ -1,5 +1,8 @@
-﻿
+﻿using System;
+using System.IO;
 using antdlib;
+using Nancy;
+using Nancy.Security;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 ///     All rights reserved.
@@ -28,12 +31,8 @@ using antdlib;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using Nancy;
-using Nancy.Security;
-using System;
-using System.IO;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class TerminalModule : NancyModule {
 
@@ -41,15 +40,9 @@ namespace Antd {
             : base("/terminal") {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
-                return View["page-terminal"];
-            };
+            Get["/"] = x => View["page-terminal"];
 
-            Post["/"] = x => {
-                string cmd = Request.Form.Command;
-                string result = (Request.Form.Directory == "") ? Terminal.Execute(cmd) : Terminal.Execute(cmd, this.Request.Form.Directory);
-                return Response.AsJson(result);
-            };
+            Post["/"] = x => Response.AsJson((string)((Request.Form.Directory == "") ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
 
             Post["/directory"] = x => {
                 string directory = Request.Form.Directory;
@@ -64,10 +57,12 @@ namespace Antd {
             };
 
             Post["/directory/parent"] = x => {
-                string directory = Request.Form.Directory;
                 string result;
-                if (Directory.Exists(directory)) {
-                    var parent = Directory.GetParent(directory);
+                if (!Directory.Exists((string)Request.Form.Directory)) {
+                    result = "0";
+                }
+                else {
+                    var parent = Directory.GetParent((string)Request.Form.Directory);
                     if (Directory.Exists(parent.FullName)) {
                         result = parent.FullName + " > ";
                     }
@@ -75,30 +70,18 @@ namespace Antd {
                         result = "0";
                     }
                 }
-                else {
-                    result = "0";
-                }
                 return Response.AsJson(result);
             };
 
             Post["/api"] = x => {
-                string cmd = Request.Form.Command;
-                string directory = Request.Form.Directory;
-                var cmds = cmd.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                string result = (directory == "") ? Terminal.MultiLine.Execute(cmds) : Terminal.MultiLine.Execute(cmds, directory);
+                var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var result = (Request.Form.Directory == "") ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
-            Post["/direct/get"] = x => {
-                string cmd = Request.Form.Command;
-                return Response.AsJson(Terminal.Execute(cmd));
-            };
+            Post["/direct/get"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
 
-            Post["/direct/post"] = x => {
-                string cmd = Request.Form.Command;
-                Terminal.Execute(cmd);
-                return Response.AsJson(true);
-            };
+            Post["/direct/post"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
         }
     }
 }

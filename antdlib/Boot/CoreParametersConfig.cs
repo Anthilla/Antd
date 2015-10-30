@@ -1,8 +1,4 @@
-﻿
-using antdlib;
-using System;
-using System.IO;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -31,34 +27,38 @@ using System.IO;
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using antdlib.Common;
+
 namespace antdlib.Boot {
 
     public class CoreParametersConfig {
-        private static string coreFileName = "antdConfig";
-        private static string[] _files = new string[] {
-                coreFileName + "Current",
-                coreFileName + "001",
-                coreFileName + "002"
+        private static readonly string CoreFileName = "antdConfig";
+        private static readonly string[] Files = {
+                CoreFileName + "Current",
+                CoreFileName + "001",
+                CoreFileName + "002"
             };
 
-        public static XmlWriter xmlWriter = new XmlWriter(_files);
+        public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
 
         public static void WriteDefaults() {
-            if (File.Exists(_files[0])) {
-                xmlWriter.Write(Label.Root, Folder.Root);
-                xmlWriter.ReadValue(Label.Root);
-                if (xmlWriter.CheckValue(Label.Port) == false) {
-                    xmlWriter.Write(Label.Port, Port.Antd);
-                }
-                if (xmlWriter.CheckValue(Label.Database) == false) {
-                    xmlWriter.Write(Label.Database, Folder.Database);
-                }
+            if (!File.Exists(Files[0]))
+                return;
+            Writer.Write(Label.Root, Folder.Root);
+            Writer.ReadValue(Label.Root);
+            if (Writer.CheckValue(Label.Port) == false) {
+                Writer.Write(Label.Port, Port.Antd);
+            }
+            if (Writer.CheckValue(Label.Database) == false) {
+                Writer.Write(Label.Database, Folder.Database);
             }
         }
 
         public static string GetPort() {
             try {
-                return (xmlWriter.CheckValue(Label.Port) == true) ? xmlWriter.ReadValue(Label.Port) : Port.Antd;
+                return (Writer.CheckValue(Label.Port)) ? Writer.ReadValue(Label.Port) : Port.Antd;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -68,7 +68,7 @@ namespace antdlib.Boot {
 
         public static string GetDb() {
             try {
-                return (xmlWriter.CheckValue(Label.Database) == true) ? xmlWriter.ReadValue(Label.Database) : Folder.Database;
+                return (Writer.CheckValue(Label.Database)) ? Writer.ReadValue(Label.Database) : Folder.Database;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -76,19 +76,12 @@ namespace antdlib.Boot {
             }
         }
 
-        //public static string GetFileRepo() {
-        //    return (xmlWriter.CheckValue(Label.Files) == true) ? xmlWriter.ReadValue(Label.Files) : Folder.FileRepository;
-        //}
-
         public static string GetHostUri() {
             try {
-                if (xmlWriter.CheckValue(Label.Port) == false) {
+                if (Writer.CheckValue(Label.Port) == false) {
                     return Uri.Antd;
                 }
-                else {
-                    var port = xmlWriter.ReadValue(Label.Port);
-                    return "http://+:" + port + "/";
-                }
+                return "http://+:" + Writer.ReadValue(Label.Port) + "/";
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);

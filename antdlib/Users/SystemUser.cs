@@ -30,94 +30,98 @@
 using antdlib.MountPoint;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Users {
-
     public class SystemUser {
-
         public class Config {
+            private static string UnixHashPassword(string password, string salt) {
+                return Terminal.Execute($"mkpasswd -m sha-512 {password} -s \"{salt}\"");
+            }
 
-
+            public static void ResetPasswordForUser(string user, string password) {
+                var salt = Guid.NewGuid().ToString();
+                var hashedPassword = UnixHashPassword(password, salt);
+                if (hashedPassword.Length <= 0)
+                    return;
+                Terminal.Execute($"usermod -p {hashedPassword} LOGIN(?)");
+            }
         }
 
-        private static string file = "/etc/shadow";
-
-        private static string FILE = Mount.SetFilesPath(file);
-
-        private static string filePwd = "/etc/passwd";
-
-        private static string FILEPWD = Mount.SetFilesPath(filePwd);
+        private const string File = "/etc/shadow";
+        private static readonly string MntFile = Mount.SetFilesPath(File);
+        private const string FilePwd = "/etc/passwd";
+        private static readonly string MntFilePwd = Mount.SetFilesPath(FilePwd);
 
         public static void SetReady() {
-            if (!File.Exists(FILE)) {
-                File.Copy(file, FILE, true);
+            if (!System.IO.File.Exists(MntFile)) {
+                System.IO.File.Copy(File, MntFile, true);
             }
-            else if (File.Exists(FILE) && FileSystem.IsNewerThan(file, FILE)) {
-                File.Delete(FILE);
-                File.Copy(file, FILE, true);
+            else if (System.IO.File.Exists(MntFile) && FileSystem.IsNewerThan(File, MntFile)) {
+                System.IO.File.Delete(MntFile);
+                System.IO.File.Copy(File, MntFile, true);
             }
-            Mount.File(file);
-            if (!File.Exists(FILEPWD)) {
-                File.Copy(filePwd, FILEPWD, true);
+            Mount.File(File);
+            if (!System.IO.File.Exists(MntFilePwd)) {
+                System.IO.File.Copy(FilePwd, MntFilePwd, true);
             }
-            else if (File.Exists(FILEPWD) && FileSystem.IsNewerThan(filePwd, FILEPWD)) {
-                File.Delete(FILEPWD);
-                File.Copy(filePwd, FILEPWD, true);
+            else if (System.IO.File.Exists(MntFilePwd) && FileSystem.IsNewerThan(FilePwd, MntFilePwd)) {
+                System.IO.File.Delete(MntFilePwd);
+                System.IO.File.Copy(FilePwd, MntFilePwd, true);
             }
-            Mount.File(filePwd);
+            Mount.File(FilePwd);
         }
 
         private static bool CheckIsActive() {
-            var mount = MountRepository.Get(file);
-            var mountPwd = MountRepository.Get(file);
-            return (mount == null && mountPwd == null) ? false : true;
+            var mount = MountRepository.Get(File);
+            var mountPwd = MountRepository.Get(File);
+            return (mount != null || mountPwd != null);
         }
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
         public static IEnumerable<UserModel> GetAll() {
             try {
-                var list = new List<UserModel>() { };
-                if (File.Exists(file) && File.Exists(filePwd)) {
-                    var usersString = Terminal.Execute($"cat {file}");
-                    var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    var passwdUserString = Terminal.Execute($"cat {filePwd}");
-                    var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    foreach (var user in users) {
-                        var mu = MapUser(user);
-                        var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
-                        if (pwdstring.Length > 0 && pwdstring != null) {
-                            var mup = AddUserInfoFromPasswd(mu, pwdstring);
-                            mu = mup;
-                        }
-                        list.Add(mu);
+                var list = new List<UserModel>();
+                if (!System.IO.File.Exists(File) || !System.IO.File.Exists(FilePwd))
+                    return list;
+                var usersString = Terminal.Execute($"cat {File}");
+                var users = usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var passwdUserString = Terminal.Execute($"cat {FilePwd}");
+                var passwdUsers = passwdUserString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                foreach (var user in users) {
+                    var mu = MapUser(user);
+                    var pwdstring = passwdUsers.FirstOrDefault(s => s.Contains(mu.Alias));
+                    if (!string.IsNullOrEmpty(pwdstring)) {
+                        var mup = AddUserInfoFromPasswd(mu, pwdstring);
+                        mu = mup;
                     }
+                    list.Add(mu);
                 }
                 return list;
             }
             catch (Exception) {
                 ConsoleLogger.Warn("There's something wrong while getting system users...");
-                return new List<UserModel>() { };
+                return new List<UserModel>();
             }
         }
 
         public static void ImportUsersToDatabase() {
-            if (File.Exists(file) && File.Exists(filePwd)) {
-                var usersString = Terminal.Execute($"cat {file}");
-                var users = usersString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var passwdUserString = Terminal.Execute($"cat {filePwd}");
-                var passwdUsers = passwdUserString.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                foreach (var user in users) {
-                    var mu = MapUser(user);
-                    var pwdstring = passwdUsers.Where(s => s.Contains(mu.Alias)).FirstOrDefault();
-                    if (pwdstring.Length > 0 && pwdstring != null) {
-                        var mup = AddUserInfoFromPasswd(mu, pwdstring);
-                        mu = mup;
-                    }
-                    DeNSo.Session.New.Set(mu);
+            if (!System.IO.File.Exists(File) || !System.IO.File.Exists(FilePwd))
+                return;
+            var usersString = Terminal.Execute($"cat {File}");
+            var users = usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var passwdUserString = Terminal.Execute($"cat {FilePwd}");
+            var passwdUsers = passwdUserString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            foreach (var user in users) {
+                var mu = MapUser(user);
+                var pwdstring = passwdUsers.FirstOrDefault(s => s.Contains(mu.Alias));
+                if (!string.IsNullOrEmpty(pwdstring)) {
+                    var mup = AddUserInfoFromPasswd(mu, pwdstring);
+                    mu = mup;
                 }
+                DeNSo.Session.New.Set(mu);
             }
         }
 
@@ -130,44 +134,44 @@ namespace antdlib.Users {
         }
 
         private static UserModel MapUser(string userString) {
-            var userInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
-            UserModel user = new UserModel() { };
-            if (userInfo.Length > 8) {
-                user.Guid = Guid.NewGuid().ToString();
-                user.Alias = userInfo[0];
-                user.Email = null;
-                user.Password = MapPassword(userInfo[1]);
-                user.LastChanged = userInfo[2];
-                user.MinimumNumberOfDays = userInfo[3];
-                user.MaximumNumberOfDays = userInfo[4];
-                user.Warn = userInfo[5];
-                user.Inactive = userInfo[6];
-                user.Expire = userInfo[7];
-                user.UserType = UserType.IsSystemUser;
-            }
+            var userInfo = userString.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
+            var user = new UserModel();
+            if (userInfo.Length <= 8)
+                return user;
+            user.Guid = Guid.NewGuid().ToString();
+            user.Alias = userInfo[0];
+            user.Email = null;
+            user.Password = MapPassword(userInfo[1]);
+            user.LastChanged = userInfo[2];
+            user.MinimumNumberOfDays = userInfo[3];
+            user.MaximumNumberOfDays = userInfo[4];
+            user.Warn = userInfo[5];
+            user.Inactive = userInfo[6];
+            user.Expire = userInfo[7];
+            user.UserType = UserType.IsSystemUser;
             return user;
         }
 
         private static UserModel AddUserInfoFromPasswd(UserModel user, string userString) {
-            var userPasswdInfo = userString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
-            if (userPasswdInfo.Length > 6) {
-                user.UID = userPasswdInfo[2];
-                user.GroupID = userPasswdInfo[3];
-                user.Info = userPasswdInfo[4];
-                user.HomeDirectory = userPasswdInfo[5];
-                user.LoginShell = userPasswdInfo[6];
-            }
+            var userPasswdInfo = userString.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
+            if (userPasswdInfo.Length <= 6)
+                return user;
+            user.Uid = userPasswdInfo[2];
+            user.GroupId = userPasswdInfo[3];
+            user.Info = userPasswdInfo[4];
+            user.HomeDirectory = userPasswdInfo[5];
+            user.LoginShell = userPasswdInfo[6];
             return user;
         }
 
         private static SystemUserPassword MapPassword(string passwdString) {
-            var passwdInfo = passwdString.Split(new String[] { @"$" }, StringSplitOptions.None).ToArray();
-            SystemUserPassword passwd = new SystemUserPassword() { };
-            if (passwdInfo.Length > 2) {
-                passwd.Type = passwdInfo[0];
-                passwd.Salt = passwdInfo[1];
-                passwd.Result = passwdInfo[2];
-            }
+            var passwdInfo = passwdString.Split(new[] { @"$" }, StringSplitOptions.None).ToArray();
+            var passwd = new SystemUserPassword();
+            if (passwdInfo.Length <= 2)
+                return passwd;
+            passwd.Type = passwdInfo[0];
+            passwd.Salt = passwdInfo[1];
+            passwd.Result = passwdInfo[2];
             return passwd;
         }
 

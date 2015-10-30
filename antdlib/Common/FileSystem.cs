@@ -29,50 +29,45 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 
-namespace antdlib {
+namespace antdlib.Common {
 
     public static class FileSystem {
 
         /// <summary>
         /// If file exists return content else return empty string
         /// </summary>
-        /// <param name="directory">file location</param>
-        /// <param name="filename"></param>
         /// <returns></returns>
         public static string ReadFile(string path) {
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
             }
-            else {
-                ConsoleLogger.Warn("Path '{0}' doesn't exist", path);
-                return String.Empty;
-            }
+            ConsoleLogger.Warn("Path '{0}' doesn't exist", path);
+            return string.Empty;
         }
 
         public static string ReadFile(string directory, string filename) {
-            string path = Path.Combine(directory, filename);
+            var path = Path.Combine(directory, filename);
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
             }
-            else {
-                ConsoleLogger.Warn("File {0} doesn't exist in {1}", filename, directory);
-                return String.Empty;
-            }
+            ConsoleLogger.Warn("File {0} doesn't exist in {1}", filename, directory);
+            return string.Empty;
         }
 
         public static void WriteFile(string path, string content) {
-            using (StreamWriter sw = File.CreateText(path)) {
+            using (var sw = File.CreateText(path)) {
                 sw.Write(content);
             }
         }
 
         public static void WriteFile(string directory, string filename, string content) {
             Directory.CreateDirectory(directory);
-            string path = Path.Combine(directory, filename);
-            using (StreamWriter sw = File.CreateText(path)) {
+            var path = Path.Combine(directory, filename);
+            using (var sw = File.CreateText(path)) {
                 sw.Write(content);
             }
         }
@@ -80,22 +75,18 @@ namespace antdlib {
         public static void CopyDirectory(string source, string destination) {
             Directory.CreateDirectory(source);
             Directory.CreateDirectory(destination);
-            foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)) {
+            foreach (var dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)) {
                 Directory.CreateDirectory(dirPath.Replace(source, destination));
             }
-            foreach (string newPath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)) {
+            foreach (var newPath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)) {
                 File.Copy(newPath, newPath.Replace(source, destination), true);
             }
         }
 
         public static bool FilesAreEqual(FileInfo first, FileInfo second) {
-            byte[] firstHash = MD5.Create().ComputeHash(first.OpenRead());
-            byte[] secondHash = MD5.Create().ComputeHash(second.OpenRead());
-            for (int i = 0; i < firstHash.Length; i++) {
-                if (firstHash[i] != secondHash[i])
-                    return false;
-            }
-            return true;
+            var firstHash = MD5.Create().ComputeHash(first.OpenRead());
+            var secondHash = MD5.Create().ComputeHash(second.OpenRead());
+            return !firstHash.Where((t, i) => t != secondHash[i]).Any();
         }
 
         public static void Download(string url, string destination) {
@@ -107,12 +98,12 @@ namespace antdlib {
                 using (var client = new WebClient()) {
                     client.DownloadFile(url, nfile);
                 }
-                if (File.Exists(nfile)) {
-                    if (FileSystem.FilesAreEqual(new FileInfo(destination), new FileInfo(nfile)) == false) {
-                        File.Copy(nfile, destination, true);
-                    }
-                    File.Delete(nfile);
+                if (!File.Exists(nfile))
+                    return;
+                if (FilesAreEqual(new FileInfo(destination), new FileInfo(nfile)) == false) {
+                    File.Copy(nfile, destination, true);
                 }
+                File.Delete(nfile);
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn($"Unable to dowload from {url}");
@@ -123,23 +114,17 @@ namespace antdlib {
         public static bool IsNewerThan(string source, string destination) {
             var sourceInfo = new FileInfo(source);
             var destinationInfo = new FileInfo(destination);
-            if (sourceInfo.Exists && destinationInfo.Exists) {
-                if (sourceInfo.LastWriteTime > destinationInfo.LastWriteTime) {
-                    return false;
-                }
-            }
-            return true;
+            if (!sourceInfo.Exists || !destinationInfo.Exists)
+                return true;
+            return sourceInfo.LastWriteTime <= destinationInfo.LastWriteTime;
         }
 
         public static bool IsDirNewerThan(string source, string destination) {
             var sourceInfo = new DirectoryInfo(source);
             var destinationInfo = new DirectoryInfo(destination);
-            if (sourceInfo.Exists && destinationInfo.Exists) {
-                if (sourceInfo.LastWriteTime > destinationInfo.LastWriteTime) {
-                    return false;
-                }
-            }
-            return true;
+            if (!sourceInfo.Exists || !destinationInfo.Exists)
+                return true;
+            return sourceInfo.LastWriteTime <= destinationInfo.LastWriteTime;
         }
     }
 }

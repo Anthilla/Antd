@@ -33,22 +33,15 @@ using System.Collections.Generic;
 namespace Antd.ViewHelpers {
 
     public class DirectoryViewModel {
-
-        public IEnumerable<string> parents { get; set; }
-
-        public IEnumerable<string> children { get; set; }
-
-        public IEnumerable<DirItemModel> children2 { get; set; }
+        public IEnumerable<string> Parents { get; set; }
+        public IEnumerable<string> Children { get; set; }
+        public IEnumerable<DirItemModel> Children2 { get; set; }
     }
 
     public class StatusSysctlViewModel {
-
-        public string label { get; set; }
-
-        public string stockValue { get; set; }
-
-        public string runningValue { get; set; }
-
-        public string antdValue { get; set; }
+        public string Label { get; set; }
+        public string StockValue { get; set; }
+        public string RunningValue { get; set; }
+        public string AntdValue { get; set; }
     }
 }

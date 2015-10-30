@@ -27,39 +27,40 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
+using antdlib.Models;
+using Newtonsoft.Json;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Meminfo {
 
         public static string GetText() {
-            string meminfoContent = "";
+            var meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/meminfo");
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
+            var meminfoJson = JsonConvert.SerializeObject(meminfoContent);
             return meminfoJson;
         }
 
         public static List<MeminfoModel> GetModel() {
-            string meminfoContent = "";
+            var meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/meminfo");
             var meminfo = ConvertMeminfo(meminfoContent);
             return meminfo;
         }
 
         public static List<MeminfoModel> ConvertMeminfo(string meminfoText) {
-            List<MeminfoModel> meminfoList = new List<MeminfoModel>();
-            string[] rowDivider = new String[] { "\n" };
-            string[] cellDivider = new String[] { ": " };
-            string[] rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList) {
+            var meminfoList = new List<MeminfoModel>();
+            var rowDivider = new String[] { "\n" };
+            var cellDivider = new String[] { ": " };
+            var rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
+            foreach (var row in rowList) {
                 if (!string.IsNullOrEmpty(row)) {
-                    string[] cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    MeminfoModel meminfo = new MeminfoModel {
+                    var cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
+                    var meminfo = new MeminfoModel {
                         key = cellList[0],
                         value = cellList[1]
                     };

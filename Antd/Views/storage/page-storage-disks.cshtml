@@ -1,7 +1,7 @@
 ﻿<legend id="Disks">Disks & Volumes</legend>
 <i id="ReloadVolumes" style="float: right; position: relative; top: -50px; right: 15px; font-size: 20px; margin-bottom: -20px;" class="icon-loop"></i>
 
-@if (antdlib.Install.InstallCheck.IsOSRemovable == true) {
+@if (antdlib.Install.InstallCheck.IsOsRemovable == true) {
     <h3 class="fg-anthilla-orange bg-anthilla-gray" style="padding: 10px;">AOS is on a removable disk, select an eligible disk where install permanently AOS</h3>
 }
 
@@ -9,7 +9,7 @@
     <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white nif-header" data-disk-name="@blk.Name">
             <i class="icon-cone on-left"></i>  @blk.Name
-            @if (antdlib.Install.InstallCheck.IsDiskEligibleForOS(blk.Name.ToString()) && antdlib.Install.InstallCheck.IsOSRemovable == true) {
+            @if (antdlib.Install.InstallCheck.IsDiskEligibleForOs(blk.Name.ToString()) && antdlib.Install.InstallCheck.IsOsRemovable == true) {
                 @ShowInstallButton(blk.Name)
             }
         </div>

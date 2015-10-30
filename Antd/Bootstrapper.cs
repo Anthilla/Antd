@@ -41,35 +41,26 @@ namespace Antd {
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context) {
             base.ConfigureRequestContainer(container, context);
-
             container.Register<IUserMapper, UserDatabase>();
         }
 
         protected override void ConfigureConventions(NancyConventions conv) {
             base.ConfigureConventions(conv);
-
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("Scripts", @"/Scripts/")
                 );
-
-            //per novnc
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("include", @"/NoVnc/")
                 );
-
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("images", @"/NoVnc/images/")
                 );
-            //per novnc
-
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("Fonts", @"/Fonts/")
                 );
-
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("repo", @"/Resources/")
                 );
-
             conv.StaticContentsConventions.Add(
                 StaticContentConventionBuilder.AddDirectory("repo/ssh", @"/Resources/ssh/")
                 );
@@ -81,12 +72,9 @@ namespace Antd {
                     RedirectUrl = "~/login",
                     UserMapper = requestContainer.Resolve<IUserMapper>(),
                 };
-
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
         }
 
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration {
-            get { return new DiagnosticsConfiguration { Password = "@Nancy12e3" }; }
-        }
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = "@Nancy12e3" };
     }
 }

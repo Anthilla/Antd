@@ -30,17 +30,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Dmidecode {
 
         public static string GetUUID(List<string> inputTable) {
-            string row = (from i in inputTable
+            var row = (from i in inputTable
                           where i.Contains("UUID:")
                           select i).FirstOrDefault();
             if (row != null) {
                 var array = row.Split(new[] { ' ' }, 2);
-                string uuid = array[1];
+                var uuid = array[1];
                 return uuid;
             }
             return null;

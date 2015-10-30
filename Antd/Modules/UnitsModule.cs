@@ -27,15 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
+using System.Linq;
 using antdlib.Systemd;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class UnitsModule : NancyModule {
 
@@ -44,62 +42,54 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                List<UnitModel> units = Units.All;
+                var units = Units.All;
                 return View["page-units", units];
             };
 
             Get["/list"] = x => {
-                string json = JsonConvert.SerializeObject(Units.All.OrderBy(u => u.name));
-                return json;
+                return JsonConvert.SerializeObject(Units.All.OrderBy(u => u.name));
             };
 
             Post["/mgmt/enable/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Enable(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Enable(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Post["/mgmt/disable/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Disable(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Disable(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Post["/mgmt/start/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Start(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Start(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Post["/mgmt/stop/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Stop(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Stop(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Post["/mgmt/restart/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Restart(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Restart(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Post["/mgmt/reload/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Reload(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Reload(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
 
             Get["/mgmt/status/{unit}"] = x => {
                 string unit = x.unit;
-                CommandModel r = Systemctl.Status(unit);
-                string json = JsonConvert.SerializeObject(r.outputTable);
-                return json;
+                var r = Systemctl.Status(unit);
+                return JsonConvert.SerializeObject(r.outputTable);
             };
         }
     }

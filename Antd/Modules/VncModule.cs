@@ -27,11 +27,11 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class VncModule : NancyModule {
 
@@ -41,7 +41,6 @@ namespace Antd {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-
                 return View["_page-vnc", vmod];
             };
         }

@@ -27,29 +27,30 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using antdlib.Common;
 using antdlib.Models;
 using Newtonsoft.Json;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Version {
 
         public static string GetText() {
-            string meminfoContent = "";
+            var meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/version");
-            string meminfoJson = JsonConvert.SerializeObject(meminfoContent);
+            var meminfoJson = JsonConvert.SerializeObject(meminfoContent);
             return meminfoJson;
         }
 
         public static VersionModel GetModel() {
-            string meminfoContent = "";
+            var meminfoContent = "";
             meminfoContent = FileSystem.ReadFile("/proc/version");
             var meminfo = ConvertVersion(meminfoContent);
             return meminfo;
         }
 
         private static VersionModel ConvertVersion(string versionText) {
-            VersionModel version = new VersionModel {
+            var version = new VersionModel {
                 key = "",
                 value = versionText
             };

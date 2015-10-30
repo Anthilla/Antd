@@ -31,6 +31,7 @@ using antdlib.Security;
 using MailKit;
 using MailKit.Net.Imap;
 using System;
+using antdlib.Common;
 
 namespace antdlib.Mail {
     public class IMAP {
@@ -46,7 +47,7 @@ namespace antdlib.Mail {
                 coreFileName + "002"
             };
 
-            public static XmlWriter xmlWriter = new XmlWriter(_files);
+            public static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
 
             public static void SetUrl(string value) {
                 xmlWriter.Write(Label.IMAP.Url, value);

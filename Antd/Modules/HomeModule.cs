@@ -30,16 +30,11 @@
 using Nancy;
 using Nancy.Security;
 
-namespace Antd {
-
+namespace Antd.Modules {
     public class HomeModule : NancyModule {
-
         public HomeModule() {
             this.RequiresAuthentication();
-
-            Get["/"] = x => {
-                return Response.AsRedirect("/system");
-            };
+            Get["/"] = x => Response.AsRedirect("/system");
         }
     }
 }

@@ -27,14 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using Antd.Hubs;
-using antdlib;
+using System.Dynamic;
 using antdlib.Log;
+using Antd.Hubs;
 using Nancy;
 //using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class LogModule : NancyModule {
         public LogModule()

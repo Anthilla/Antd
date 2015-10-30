@@ -25,7 +25,7 @@
                 <label>Anthilla SP</label>
             </td>
             <td>
-                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSp() == false) {
+                @if (antdlib.Apps.AnthillaSp.Status.IsActiveAnthillaSp() == false) {
                     <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
                 }
                 else {
@@ -36,7 +36,7 @@
         <tr>
             <td colspan="2">
                 <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: 250px;">
-                    @antdlib.Apps.AnthillaSP.Status.AnthillaSp();
+                    @antdlib.Apps.AnthillaSp.Status.AnthillaSp();
                 </textarea>
             </td>
         </tr>
@@ -45,7 +45,7 @@
                 <label>Anthilla Server</label>
             </td>
             <td>
-                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaServer() == false) {
+                @if (antdlib.Apps.AnthillaSp.Status.IsActiveAnthillaServer() == false) {
                     <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
                 }
                 else {
@@ -56,7 +56,7 @@
         <tr>
             <td colspan="2">
                 <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: 250px;">
-                    @antdlib.Apps.AnthillaSP.Status.AnthillaServer();
+                    @antdlib.Apps.AnthillaSp.Status.AnthillaServer();
                 </textarea>
             </td>
         </tr>

@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.CCTable {
     public class CCTableConf {
@@ -43,7 +44,6 @@ namespace antdlib.CCTable {
         }
 
         public class Mapping {
-
             /// <summary>
             /// Char* = definisce un carattere speciale
             /// Permits* = definisce se il file permette un certo comportamento
@@ -51,46 +51,30 @@ namespace antdlib.CCTable {
             /// </summary>
             public class TextMapModel {
                 public char CharComment { get; set; } = ' ';
-
-                public bool PermitsInclude { get; set; } = false;
-
+                public bool PermitsInclude { get; set; }
                 public string VerbInclude { get; set; } = "";
-
-                public bool PermitsSection { get; set; } = false;
-
+                public bool PermitsSection { get; set; }
                 public char CharSectionOpen { get; set; } = ' ';
-
                 public char CharSectionClose { get; set; } = ' ';
-
                 public char CharKevValueSeparator { get; set; } = ' ';
-
-                public bool PermitsBlock { get; set; } = false;
-
+                public bool PermitsBlock { get; set; }
                 public char CharBlockOpen { get; set; } = ' ';
-
                 public char CharBlockClose { get; set; } = ' ';
-
                 public char CharEndOfLine { get; set; } = ' ';
             }
 
             public class LineMapModel {
                 public int Number { get; set; }
-
                 public DataType Type { get; set; }
-
                 public Tuple<string, string> BooleanPair { get; set; }
             }
 
             public class FileMapModel {
                 public string _Id { get; set; }
-
                 public string Guid { get; set; }
-
                 public string FilePath { get; set; }
-
                 public TextMapModel TextMap { get; set; }
-
-                public List<LineMapModel> LinesMap { get; set; } = new List<LineMapModel>() { };
+                public List<LineMapModel> LinesMap { get; set; } = new List<LineMapModel>();
             }
 
             public class Repository {
@@ -103,26 +87,26 @@ namespace antdlib.CCTable {
                     char dataSeparator,
                     bool hasBlock, char blockOpen, char blockClose,
                     char endOfLine) {
-                    var textMap = new TextMapModel() {
+                    var textMap = new TextMapModel {
                         CharComment = comment,
                         CharKevValueSeparator = dataSeparator,
                         CharEndOfLine = endOfLine
                     };
-                    if (hasInclude == true) {
+                    if (hasInclude) {
                         textMap.PermitsInclude = true;
                         textMap.VerbInclude = include;
                     }
-                    if (hasSection == true) {
+                    if (hasSection) {
                         textMap.PermitsSection = true;
                         textMap.CharSectionOpen = sectionOpen;
                         textMap.CharSectionClose = sectionClose;
                     }
-                    if (hasBlock == true) {
+                    if (hasBlock) {
                         textMap.PermitsBlock = true;
                         textMap.CharBlockOpen = blockOpen;
                         textMap.CharBlockClose = blockClose;
                     }
-                    var map = new FileMapModel() {
+                    var map = new FileMapModel {
                         _Id = Guid.NewGuid().ToString(),
                         Guid = guid,
                         FilePath = filePath,
@@ -133,29 +117,29 @@ namespace antdlib.CCTable {
 
                 public static void AddLine(string guid, int number, DataType type, Tuple<string, string> boolPair = null) {
                     var map = DeNSo.Session.New.Get<FileMapModel>(m => m.Guid == guid).FirstOrDefault();
-                    var line = new LineMapModel() {
+                    var line = new LineMapModel {
                         Number = number,
                         Type = type
                     };
                     if (type == DataType.Boolean && boolPair != null) {
                         line.BooleanPair = boolPair;
                     }
+                    if (map == null)
+                        return;
                     map.LinesMap.Add(line);
                     DeNSo.Session.New.Set(map);
                 }
 
                 public static FileMapModel GetMapByGuid(string guid) {
-                    var map = DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.Guid == guid).FirstOrDefault();
-                    return (map == null) ? null : map;
+                    return DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.Guid == guid).FirstOrDefault();
                 }
 
                 public static FileMapModel GetMapByFilePath(string filePath) {
-                    var map = DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.FilePath == filePath).FirstOrDefault();
-                    return (map == null) ? null : map;
+                    return DeNSo.Session.New.Get<FileMapModel>(m => m != null && m.FilePath == filePath).FirstOrDefault();
                 }
 
                 public static bool CheckMapForFile(string filePath) {
-                    return (GetMapByFilePath(filePath) == null) ? false : true;
+                    return (GetMapByFilePath(filePath) != null);
                 }
 
                 public static DataType ConvertToDataType(string type) {
@@ -178,37 +162,28 @@ namespace antdlib.CCTable {
         public class Reading {
             public class KeyValueTypeModel {
                 public string Key { get; set; }
-
                 public string Value { get; set; }
-
                 public DataType Type { get; set; }
             }
 
             public class BlockModel {
                 public string Name { get; set; } = "";
-
-                public List<KeyValueTypeModel> KeyValueList { get; set; } = new List<KeyValueTypeModel>() { };
+                public List<KeyValueTypeModel> KeyValueList { get; set; } = new List<KeyValueTypeModel>();
             }
 
             public class ConfModel {
                 public string _Id { get; set; }
-
                 public string Guid { get; set; }
-
                 public string FilePath { get; set; }
-
-                public List<string> IncludeList { get; set; } = new List<string>() { };
-
-                public List<string> SectionList { get; set; } = new List<string>() { };
-
-                public List<KeyValueTypeModel> KeyValueList { get; set; } = new List<KeyValueTypeModel>() { };
-
-                public List<BlockModel> BlockList { get; set; } = new List<BlockModel>() { };
+                public List<string> IncludeList { get; set; } = new List<string>();
+                public List<string> SectionList { get; set; } = new List<string>();
+                public List<KeyValueTypeModel> KeyValueList { get; set; } = new List<KeyValueTypeModel>();
+                public List<BlockModel> BlockList { get; set; } = new List<BlockModel>();
             }
 
             public static void Convert(string filePath) {
-                var mapRules = Mapping.Repository.GetMapByFilePath(filePath);
-                var fileText = FileSystem.ReadFile(filePath);
+                Mapping.Repository.GetMapByFilePath(filePath);
+                FileSystem.ReadFile(filePath);
             }
         }
     }

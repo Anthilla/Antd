@@ -27,12 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.CommandManagement;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class CommandModule : NancyModule {
 
@@ -58,7 +58,7 @@ namespace Antd {
 
             Post["/launch/{guid}"] = x => {
                 string guid = x.guid;
-                string result = CommandRepository.LaunchAndGetOutput(guid);
+                var result = CommandRepository.LaunchAndGetOutput(guid);
                 return Response.AsJson(result);
             };
 

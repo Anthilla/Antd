@@ -32,46 +32,44 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Firewall {
-    public class NFTables {
-        public static IEnumerable<ConfigManagement.CommandsBundle> GetNFTCommandsBundle() {
+    public class NfTables {
+        public static IEnumerable<ConfigManagement.CommandsBundle> GetNftCommandsBundle() {
             return ConfigManagement.GetCommandsBundle().Where(_ => _.Command.StartsWith("nft"));
         }
 
         public static List<string> GetRulesFromCommand(string table, string chain, string hook) {
-            var list = new List<string>() { };
+            var list = new List<string>();
             var query = $"nft add rule {table} {chain} {hook}";
-            foreach (var commandFound in GetNFTCommandsBundle().Where(_ => _.Command.Contains(query))) {
-                var rule = commandFound.Command.Replace(query, "").Trim();
-                list.Add(rule);
-            }
+            list.AddRange(GetNftCommandsBundle().Where(_ => _.Command.Contains(query)).Select(commandFound => commandFound.Command.Replace(query, "").Trim()));
             return list;
         }
 
-        public static void AddNFTRule(string prefix, string rule) {
+        public static void AddNftRule(string prefix, string rule) {
             ConfigManagement.AddCommandsBundle($"{prefix} {rule}");
             if (rule.Length > 0) {
                 Terminal.Execute($"{prefix} {rule}");
             }
         }
 
-        public static void DeleteNFTRule(string guid) {
+        public static void DeleteNftRule(string guid) {
             var command = ConfigManagement.GetCommandsBundle().Where(_ => _.Guid == guid).Select(_ => _.Command).FirstOrDefault();
-            if (command.Length > 0) {
-                var chain = command.Split(' ')[4];
-                var hook = command.Split(' ')[5];
-                var checkTables = Terminal.Execute($"nft list table {chain} -a | grep \"{command}\"");
-                if (checkTables.Length > 0) {
-                    var handle = checkTables.Split(' ').Last();
-                    Terminal.Execute($"nft delete rule {chain} {hook} handle {handle}");
-                }
-                ConfigManagement.DeleteCommandsBundle(guid);
+            if (command == null || command.Length <= 0)
+                return;
+            var chain = command.Split(' ')[4];
+            var hook = command.Split(' ')[5];
+            var checkTables = Terminal.Execute($"nft list table {chain} -a | grep \"{command}\"");
+            if (checkTables.Length > 0) {
+                var handle = checkTables.Split(' ').Last();
+                Terminal.Execute($"nft delete rule {chain} {hook} handle {handle}");
             }
+            ConfigManagement.DeleteCommandsBundle(guid);
         }
 
         public class Export {
-            public class NFTableRuleModel {
+            public class NfTableRuleModel {
                 public string _Id { get; set; }
                 public string Guid { get; set; }
                 public string Table { get; set; }
@@ -80,83 +78,72 @@ namespace antdlib.Firewall {
                 public string Rule { get; set; }
             }
 
-            private static string configFolder = Folder.Config;
-
             private static IEnumerable<string> GetConfigurationFileNames() {
-                return Directory.EnumerateFiles(configFolder, "*firewall.export", SearchOption.TopDirectoryOnly).Select(f => Path.GetFileName(f));
+                return Directory.EnumerateFiles(Folder.Config, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName);
             }
 
             private static string GetLastFileName() {
-                if (GetConfigurationFileNames().Count() > 0) {
-                    var lastFile = GetConfigurationFileNames().Last();
-                    var num = Convert.ToInt32(lastFile.Split('_')[0]);
-                    return $"{(num + 1).ToString()}_antd_firewall.export";
-                }
-                else {
+                if (!GetConfigurationFileNames().Any())
                     return "0_antd_firewall.export";
-                }
+                var lastFile = GetConfigurationFileNames().Last();
+                var num = Convert.ToInt32(lastFile.Split('_')[0]);
+                return $"{(num + 1)}_antd_firewall.export";
             }
 
-            private static string[] ChainType = new string[] { "filter", "route", "nat" };
-            private static string[] HookType = new string[] { "prerouting", "input", "forward", "output", "postrouting" };
-            private static string[] HookTypeForArp = new string[] { "input", "output" };
-            private static string[] HookTypeForBridge = new string[] { "input", "forward", "output" };
-            private static string[] TableType = new string[] { "ip", "ip6", "arp", "bridge" };
+            private static readonly string[] ChainType = { "filter", "route", "nat" };
+            private static readonly string[] HookType = { "prerouting", "input", "forward", "output", "postrouting" };
+            private static readonly string[] TableType = { "ip", "ip6", "arp", "bridge" };
 
             public static void WriteFile() {
-                FlushDB();
+                FlushDb();
                 SaveRules();
-                using (StreamWriter sw = File.CreateText(Path.Combine(configFolder, GetLastFileName()))) {
+                using (var sw = File.CreateText(Path.Combine(Folder.Config, GetLastFileName()))) {
                     sw.WriteLine("flush ruleset;");
                     sw.WriteLine("");
-                    for (int t = 0; t < TableType.Length; t++) {
-                        for (int c = 0; c < ChainType.Length; c++) {
-                            for (int h = 0; h < HookType.Length; h++) {
-                                var ruleset = GetRules(TableType[t], ChainType[c], HookType[h]);
-                                if (ruleset.Count() > 0) {
-                                    sw.WriteLine($"table {TableType[t]} {ChainType[c]} {{");
-                                    sw.WriteLine($"    chain {ChainType[c]} {HookType[h]} {{");
-                                    sw.WriteLine($"        type {ChainType[c]} {HookType[h]} priority 0;");
-                                    foreach (var rule in ruleset) {
-                                        sw.WriteLine($"        {rule};");
-                                    }
-                                    sw.WriteLine("    }");
-                                    sw.WriteLine("}");
+                    foreach (var t3 in TableType) {
+                        foreach (var t2 in ChainType) {
+                            foreach (var t1 in HookType) {
+                                var ruleset = GetRules(t3, t2, t1);
+                                if (!ruleset.Any())
+                                    continue;
+                                sw.WriteLine($"table {t3} {t2} {{");
+                                sw.WriteLine($"    chain {t2} {t1} {{");
+                                sw.WriteLine($"        type {t2} {t1} priority 0;");
+                                foreach (var rule in ruleset) {
+                                    sw.WriteLine($"        {rule};");
                                 }
+                                sw.WriteLine("    }");
+                                sw.WriteLine("}");
                             }
                         }
                     }
                 }
             }
 
-            private static IEnumerable<NFTableRuleModel> GetAll() {
-                return DeNSo.Session.New.Get<NFTableRuleModel>();
+            private static IEnumerable<NfTableRuleModel> GetAll() {
+                return DeNSo.Session.New.Get<NfTableRuleModel>();
             }
 
-            private static void FlushDB() {
+            private static void FlushDb() {
                 foreach (var rule in GetAll()) {
                     DeNSo.Session.New.Delete(rule);
                 }
             }
 
             private static IEnumerable<string> GetRules(string table, string type, string hook) {
-                return DeNSo.Session.New.Get<NFTableRuleModel>().Where(_ => _.Table == table && _.Type == type && _.Hook == hook).Select(_ => _.Rule);
+                return DeNSo.Session.New.Get<NfTableRuleModel>().Where(_ => _.Table == table && _.Type == type && _.Hook == hook).Select(_ => _.Rule);
             }
 
             private static void SaveRules() {
                 var q = "nft add rule";
-                var commands = GetNFTCommandsBundle().Where(_ => _.Command.StartsWith(q));
-                foreach (var command in commands) {
-                    var c = command.Command.Replace(q, "").Trim();
-                    var a = c.Split(' ');
-                    if (a.Length > 3) {
-                        SaveRule(a[0], a[1], a[2], string.Join(" ", a.SubArray(3, (a.Length) - 3)));
-                    }
+                var commands = GetNftCommandsBundle().Where(_ => _.Command.StartsWith(q));
+                foreach (var a in commands.Select(command => command.Command.Replace(q, "").Trim()).Select(c => c.Split(' ')).Where(a => a.Length > 3)) {
+                    SaveRule(a[0], a[1], a[2], string.Join(" ", a.SubArray(3, (a.Length) - 3)));
                 }
             }
 
             private static void SaveRule(string table, string type, string hook, string rule) {
-                var set = new NFTableRuleModel() {
+                var set = new NfTableRuleModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     Table = table,

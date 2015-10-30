@@ -36,6 +36,8 @@ using antdlib;
 using antdlib.Apps;
 using antdlib.Auth.T2FA;
 using antdlib.Boot;
+using antdlib.Common;
+using antdlib.Directories;
 using antdlib.MountPoint;
 using antdlib.Scheduler;
 using antdlib.Status;
@@ -246,7 +248,7 @@ namespace Antd {
                 }
             }
             Thread.Sleep(10);
-            AnthillaSP.SetApp();
+            AnthillaSp.SetApp();
         }
 
         public static void ReloadSsh() {

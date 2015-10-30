@@ -27,27 +27,28 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
+using antdlib.Models;
+using Newtonsoft.Json;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Proc {
 
         private static List<ProcModel> GetAllAllProc() {
-            CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
+            var command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
-            List<ProcModel> procs = MapProcJson(output);
+            var procs = MapProcJson(output);
             return procs;
         }
 
         public static List<ProcModel> AllAll { get { return GetAllAllProc(); } }
 
         private static List<ProcModel> GetAllProc() {
-            CommandModel command = Terminal.Execute("ps -aef").ConvertCommandToModel();
+            var command = Terminal.Execute("ps -aef").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             var list = MapProcJson(output);
             var procs = new List<ProcModel>() { };
@@ -62,13 +63,13 @@ namespace antdlib {
         public static List<ProcModel> All { get { return GetAllProc(); } }
 
         public static List<ProcModel> MapProcJson(string _procJson) {
-            string procJson = _procJson;
+            var procJson = _procJson;
             procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
-            string[] rowDivider = new[] { "\\n" };
-            string[] procJsonRow = new string[] { };
+            var rowDivider = new[] { "\\n" };
+            var procJsonRow = new string[] { };
             procJsonRow = procJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<ProcModel> procs = new List<ProcModel>() { };
-            foreach (string rowJson in procJsonRow) {
+            var procs = new List<ProcModel>() { };
+            foreach (var rowJson in procJsonRow) {
                 if (!string.IsNullOrEmpty(rowJson)) {
                     var cellDivider = new[] { " " };
                     var procJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
@@ -80,8 +81,8 @@ namespace antdlib {
         }
 
         public static ProcModel MapProc(string[] _procJsonCell) {
-            string[] procJsonCell = _procJsonCell;
-            ProcModel proc = new ProcModel();
+            var procJsonCell = _procJsonCell;
+            var proc = new ProcModel();
             proc.UID = procJsonCell[0];
             proc.PID = procJsonCell[1];
             proc.PPID = procJsonCell[2];
@@ -101,7 +102,7 @@ namespace antdlib {
         }
 
         public static string GetPID(string service) {
-            List<ProcModel> procs = Proc.All;
+            var procs = Proc.All;
             var proc = (from p in procs
                         where p.CMD.Contains(service)
                         select p).FirstOrDefault();

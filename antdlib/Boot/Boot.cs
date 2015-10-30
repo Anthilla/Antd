@@ -30,31 +30,31 @@ using antdlib;
 ///-------------------------------------------------------------------------------------
 
 using System.Text.RegularExpressions;
+using antdlib.Common;
 
 namespace antdlib.Boot {
     public class RepositoryCheck {
         public static void CheckIfGlobalRepositoryIsWriteable() {
             var bootExtData = Terminal.Execute("blkid | grep BootExt");
-            if (bootExtData.Length > 0) {
-                var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
-                var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-                ConsoleLogger.Log("    global repository -> checking");
-                var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
-                if (mountResult.Length > 0) {
-                    if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                        ConsoleLogger.Log("                      is RO -> remounting");
-                        Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
-                    }
-                    else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                        ConsoleLogger.Log("                      is RW -> ok!");
-                    }
+            if (bootExtData.Length <= 0) return;
+            var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
+            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
+            ConsoleLogger.Log("    global repository -> checking");
+            var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
+            if (mountResult.Length > 0) {
+                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+                    ConsoleLogger.Log("                      is RO -> remounting");
+                    Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
-                else {
-                    ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
+                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                    ConsoleLogger.Log("                      is RW -> ok!");
                 }
-                ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
-                ConsoleLogger.Log("    global repository -> checked");
             }
+            else {
+                ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
+            }
+            ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Log("    global repository -> checked");
         }
     }
 }

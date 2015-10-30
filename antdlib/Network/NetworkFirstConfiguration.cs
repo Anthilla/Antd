@@ -32,6 +32,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using antdlib.Common;
 
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {

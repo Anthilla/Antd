@@ -27,13 +27,15 @@
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
+
+using System.Linq;
 using antdlib;
+using antdlib.Directories;
+using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
-using Antd.ViewHelpers;
-using System.Linq;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class DirectoryModule : NancyModule {
 
@@ -42,24 +44,24 @@ namespace Antd {
             this.RequiresAuthentication();
 
             Get["/tree/{path*}"] = x => {
-                string p = (x.path == null) ? "/" : x.path;
-                DirectoryViewModel dirs = new DirectoryViewModel();
-                dirs.parents = new DirectoryLister(p, false).ParentList.Reverse();
-                dirs.children2 = new DirectoryLister(p, false).FullList2;
+                string p = x.path ?? "/";
+                var dirs = new DirectoryViewModel {
+                    Parents = new DirectoryLister(p, false).ParentList.Reverse(),
+                    Children2 = new DirectoryLister(p, false).FullList2
+                };
                 return View["page-dir", dirs];
             };
 
             Get["/tree/{path?}"] = x => {
                 string p = (x.path == null) ? "/" : "/" + x.path;
-                DirectoryViewModel dirs = new DirectoryViewModel();
-                dirs.parents = new DirectoryLister(p, false).ParentList.Reverse();
-                dirs.children2 = new DirectoryLister(p, false).FullList2;
+                var dirs = new DirectoryViewModel {
+                    Parents = new DirectoryLister(p, false).ParentList.Reverse(),
+                    Children2 = new DirectoryLister(p, false).FullList2
+                };
                 return View["page-dir", dirs];
             };
 
-            Get["/directory/watch/"] = x => {
-                return View["page-directories-watch"];
-            };
+            Get["/directory/watch/"] = x => View["page-directories-watch"];
         }
     }
 }

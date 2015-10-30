@@ -30,19 +30,12 @@
 using System.Collections.Generic;
 
 namespace antdlib.Users {
-
     public class GroupModel {
-
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
         public string Alias { get; set; }
-
         public string Password { get; set; }
-
-        public string GID { get; set; }
-
-        public List<string> UserList { get; set; } = new List<string>() { };
+        public string Gid { get; set; }
+        public List<string> UserList { get; set; } = new List<string>();
     }
 }

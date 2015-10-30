@@ -30,6 +30,7 @@
 using antdlib.Systemd;
 using System.Collections.Generic;
 using System.IO;
+using antdlib.Common;
 
 namespace antdlib.Status {
 
@@ -42,7 +43,7 @@ namespace antdlib.Status {
                 coreFileName + "002"
             };
 
-        private static XmlWriter xmlWriter = new XmlWriter(_files);
+        private static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
 
         public static void SetConfiguration() {
             var check = CheckConfiguration();

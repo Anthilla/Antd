@@ -39,33 +39,28 @@ namespace antdlib.Common {
                     value == "no" || value == "No") {
                     return ServiceDataType.Boolean;
                 }
-                else if (value.Contains(";")) {
+                if (value.Contains(";")) {
                     return ServiceDataType.StringArray;
                 }
-                else if (value.Contains("aaa")) {
-                    return ServiceDataType.DataArray;
-                }
-                else {
-                    return ServiceDataType.String;
-                }
+                return value.Contains("aaa") ? ServiceDataType.DataArray : ServiceDataType.String;
             }
 
             public static KeyValuePair<string, string> SupposeBooleanVerbs(string value) {
-                if (value == "true" || value == "false") {
-                    return new KeyValuePair<string, string>("true", "false");
+                switch (value) {
+                    case "true":
+                    case "false":
+                        return new KeyValuePair<string, string>("true", "false");
+                    case "True":
+                    case "False":
+                        return new KeyValuePair<string, string>("True", "False");
+                    case "yes":
+                    case "no":
+                        return new KeyValuePair<string, string>("yes", "no");
+                    case "Yes":
+                    case "No":
+                        return new KeyValuePair<string, string>("Yes", "No");
                 }
-                else if (value == "True" || value == "False") {
-                    return new KeyValuePair<string, string>("True", "False");
-                }
-                else if (value == "yes" || value == "no") {
-                    return new KeyValuePair<string, string>("yes", "no");
-                }
-                else if (value == "Yes" || value == "No") {
-                    return new KeyValuePair<string, string>("Yes", "No");
-                }
-                else {
-                    return new KeyValuePair<string, string>("", "");
-                }
+                return new KeyValuePair<string, string>("", "");
             }
         }
     }

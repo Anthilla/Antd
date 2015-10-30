@@ -87,54 +87,32 @@ namespace antdlib.Database {
         }
 
         public static void Create<T>(IEnumerable<T> types) where T : Entity, new() {
-            using (var session = Session.New) {
-                foreach (var type in types) {
-                    var check = session.Get<T>(t => t.Status != EntityStatus.Delete && t == type).FirstOrDefault();
-                    if (type != null && check == null) {
-                        session.Set(type);
-                    }
-                    session.Dispose();
-                }
+            foreach (var type in types) {
+                Create(type);
             }
         }
 
         public static void Edit<T>(T type) where T : Entity, new() {
-            if (type != null) {
-                using (var session = Session.New) {
-                    var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
-                    if (existing == null) {
-                        throw new ArgumentNullException();
-                    }
-                    existing._Id = EntityStatus.Delete.ToString();
-                    existing.Timestamp = EntityStatus.Delete.ToString();
-                    existing.Status = EntityStatus.Delete;
-                    session.Set(existing);
-                    type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                    type.Status = EntityStatus.New;
-                    session.Set(type);
-                    session.Dispose();
-                }
+            if (type == null)
+                return;
+            using (var session = Session.New) {
+                var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
+                if (existing == null)
+                    return;
+                existing._Id = EntityStatus.Delete.ToString();
+                existing.Timestamp = EntityStatus.Delete.ToString();
+                existing.Status = EntityStatus.Delete;
+                session.Set(existing);
+                type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                type.Status = EntityStatus.New;
+                session.Set(type);
+                session.Dispose();
             }
         }
 
         public static void Edit<T>(IEnumerable<T> types) where T : Entity, new() {
-            foreach (T type in types) {
-                if (type != null) {
-                    using (var session = Session.New) {
-                        var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == type._Id).FirstOrDefault();
-                        if (existing == null) {
-                            throw new ArgumentNullException();
-                        }
-                        existing._Id = EntityStatus.Delete.ToString();
-                        existing.Timestamp = EntityStatus.Delete.ToString();
-                        existing.Status = EntityStatus.Delete;
-                        session.Set(existing);
-                        type.Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        type.Status = EntityStatus.New;
-                        session.Set(type);
-                        session.Dispose();
-                    }
-                }
+            foreach (var type in types) {
+                Edit(type);
             }
         }
 
@@ -154,17 +132,7 @@ namespace antdlib.Database {
 
         public static void Delete<T>(IEnumerable<string> ids) where T : Entity, new() {
             foreach (var id in ids) {
-                using (var session = Session.New) {
-                    var existing = session.Get<T>(t => t.Status != EntityStatus.Delete && t._Id == id).FirstOrDefault();
-                    if (existing == null) {
-                        throw new ArgumentNullException();
-                    }
-                    existing._Id = EntityStatus.Delete.ToString();
-                    existing.Timestamp = EntityStatus.Delete.ToString();
-                    existing.Status = EntityStatus.Delete;
-                    session.Set(existing);
-                    session.Dispose();
-                }
+                Delete<T>(id);
             }
         }
     }

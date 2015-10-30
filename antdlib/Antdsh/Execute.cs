@@ -1,5 +1,4 @@
-﻿
-using antdlib.MountPoint;
+﻿using antdlib.MountPoint;
 using antdlib.Systemd;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -143,7 +142,7 @@ namespace antdlib.Antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        public static string RunningPath { get { return Path.Combine(Folder.AntdVersionsDir, AntdFile.antdRunning); } }
+        public static string RunningPath => Path.Combine(Folder.AntdVersionsDir, AntdFile.antdRunning);
 
         /// <summary>
         /// ok
@@ -235,7 +234,7 @@ namespace antdlib.Antdsh {
         /// </summary>
         /// <param name="squashName"></param>
         public static void CreateSquash(string squashName) {
-            var src = Directory.EnumerateDirectories(Folder.AntdTmpDir).Where(d => d.Contains("antd")).FirstOrDefault();
+            var src = Directory.EnumerateDirectories(Folder.AntdTmpDir).FirstOrDefault(d => d.Contains("antd"));
             if (src == null) {
                 WriteLine("Unexpected error while creating the squashfs");
                 return;

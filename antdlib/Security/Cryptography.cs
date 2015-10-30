@@ -31,6 +31,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using antdlib.Common;
 
 namespace antdlib.Security {
 
@@ -46,33 +47,27 @@ namespace antdlib.Security {
 
         //Core Key&Vector
         public static byte[] CoreKey() {
-            byte[] hashCore = Hash256(LocalKey());
-            return hashCore;
+            return Hash256(LocalKey());
         }
 
         public static byte[] CoreVector() {
-            byte[] hashCore = Hash256(LocalVector());
-            byte[] coreVector = new byte[16];
-            Array.Copy((Array)hashCore, 0, (Array)coreVector, 0, coreVector.Length);
+            var coreVector = new byte[16];
+            Array.Copy(Hash256(LocalVector()), 0, coreVector, 0, coreVector.Length);
             return coreVector;
         }
 
         #region Random
 
         public static byte[] CreateRandomKey() {
-            string key = Guid.NewGuid().ToString();
-            byte[] kkk = encryptBytes(key, CoreKey(), CoreVector());
-            byte[] hashCore = Hash256(kkk.GetString());
+            var hashCore = Hash256(EncryptBytes(Guid.NewGuid().ToString(), CoreKey(), CoreVector()).GetString());
             return hashCore;
         }
 
         private static byte[] RandomKey { get { var x = CreateRandomKey(); return x; } }
 
         public static byte[] CreateRandomVector() {
-            string vector = Guid.NewGuid().ToString();
-            byte[] hashCore = Hash256(vector);
-            byte[] coreVector = new byte[16];
-            Array.Copy((Array)hashCore, 0, (Array)coreVector, 0, coreVector.Length);
+            var coreVector = new byte[16];
+            Array.Copy(Hash256(Guid.NewGuid().ToString()), 0, coreVector, 0, coreVector.Length);
             return coreVector;
         }
 
@@ -81,66 +76,60 @@ namespace antdlib.Security {
         #endregion Random
 
         public static byte[] GenerateKey(string key) {
-            byte[] hashCore = Hash256(key);
-            byte[] newArray = new byte[32];
+            var hashCore = Hash256(key);
+            var newArray = new byte[32];
             Array.Copy(hashCore, newArray, newArray.Length);
             return newArray;
         }
 
         public static byte[] GenerateVector(string vector) {
-            byte[] hashCore = Hash256(vector);
-            byte[] newArray = new byte[16];
+            var hashCore = Hash256(vector);
+            var newArray = new byte[16];
             Array.Copy(hashCore, newArray, newArray.Length);
             return newArray;
         }
 
-        private static byte[] encryptBytes(String textValue, byte[] key, byte[] vector) {
-            if (textValue != null || textValue != "") {
-                RijndaelManaged crypt = new RijndaelManaged();
-                ICryptoTransform encryptor = crypt.CreateEncryptor(key, vector);
-                byte[] dataValueBytes = textValue.GetBytes();
-                using (MemoryStream memoryStream = new MemoryStream()) {
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write)) {
-                        cryptoStream.Write(dataValueBytes, 0, dataValueBytes.Length);
-                        cryptoStream.FlushFinalBlock();
-                        memoryStream.Position = 0;
-                        byte[] transformedBytes = new byte[memoryStream.Length];
-                        memoryStream.Read(transformedBytes, 0, transformedBytes.Length);
-                        return transformedBytes;
-                    }
+        private static byte[] EncryptBytes(string textValue, byte[] key, byte[] vector) {
+            var crypt = new RijndaelManaged();
+            var encryptor = crypt.CreateEncryptor(key, vector);
+            var dataValueBytes = textValue.GetBytes();
+            using (var memoryStream = new MemoryStream()) {
+                using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write)) {
+                    cryptoStream.Write(dataValueBytes, 0, dataValueBytes.Length);
+                    cryptoStream.FlushFinalBlock();
+                    memoryStream.Position = 0;
+                    var transformedBytes = new byte[memoryStream.Length];
+                    memoryStream.Read(transformedBytes, 0, transformedBytes.Length);
+                    return transformedBytes;
                 }
             }
-            else
-                return new byte[] { };
         }
 
-        private static string decryptBytes(byte[] dataValue, byte[] key, byte[] vector) {
-            if (dataValue != null) {
-                RijndaelManaged crypt = new RijndaelManaged();
-                ICryptoTransform decryptor = crypt.CreateDecryptor(key, vector);
-                using (MemoryStream memoryStream = new MemoryStream()) {
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Write)) {
-                        cryptoStream.Write(dataValue, 0, dataValue.Length);
-                        cryptoStream.FlushFinalBlock();
-                        memoryStream.Position = 0;
-                        byte[] transformedBytes = new byte[memoryStream.Length];
-                        memoryStream.Read(transformedBytes, 0, transformedBytes.Length);
-                        string arr = transformedBytes.GetString();
-                        return arr;
-                    }
+        private static string DecryptBytes(byte[] dataValue, byte[] key, byte[] vector) {
+            if (dataValue == null)
+                return string.Empty;
+            var crypt = new RijndaelManaged();
+            var decryptor = crypt.CreateDecryptor(key, vector);
+            using (var memoryStream = new MemoryStream()) {
+                using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Write)) {
+                    cryptoStream.Write(dataValue, 0, dataValue.Length);
+                    cryptoStream.FlushFinalBlock();
+                    memoryStream.Position = 0;
+                    var transformedBytes = new byte[memoryStream.Length];
+                    memoryStream.Read(transformedBytes, 0, transformedBytes.Length);
+                    var arr = transformedBytes.GetString();
+                    return arr;
                 }
             }
-            else
-                return String.Empty;
         }
 
         public static byte[] Encrypt(string value, byte[] key, byte[] vector) {
-            byte[] dataToEncrypt = encryptBytes(value, key, vector);
+            var dataToEncrypt = EncryptBytes(value, key, vector);
             return dataToEncrypt;
         }
 
         public static string Decrypt(byte[] value, byte[] key, byte[] vector) {
-            string dataToDecrypt = decryptBytes(value, key, vector);
+            var dataToDecrypt = DecryptBytes(value, key, vector);
             return dataToDecrypt;
         }
 

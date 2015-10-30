@@ -1,5 +1,7 @@
-﻿using antdlib;
+﻿using System.Dynamic;
 using antdlib.Auth;
+using Nancy;
+using Nancy.Security;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 ///     All rights reserved.
@@ -28,16 +30,9 @@ using antdlib.Auth;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using Nancy;
-using Nancy.Security;
-using System;
-using System.Dynamic;
-using System.IO;
 
-namespace Antd {
-
+namespace Antd.Modules {
     public class TokenMgmtModule : NancyModule {
-
         public TokenMgmtModule()
             : base("/tkn") {
             this.RequiresAuthentication();
@@ -51,7 +46,7 @@ namespace Antd {
             Post["/"] = x => {
                 string u = Request.Form.Username;
                 string t = Request.Form.Token;
-                TokenAuthentication.AssignOTPToken(u, t);
+                TokenAuthentication.AssignOtpToken(u, t);
                 return Response.AsJson(true);
             };
 
@@ -66,7 +61,7 @@ namespace Antd {
                 string p = Request.Form.Password;
                 string t = Request.Form.Token;
                 var v = TokenAuthentication.Validate(u, p, t);
-                return (v == true) ? HttpStatusCode.OK : HttpStatusCode.Forbidden;
+                return v ? HttpStatusCode.OK : HttpStatusCode.Forbidden;
             };
         }
     }

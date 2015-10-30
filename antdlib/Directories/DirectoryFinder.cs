@@ -30,23 +30,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
-namespace antdlib {
+namespace antdlib.Directories {
 
     public class DirectoryFinder {
-        private HashSet<string> result = new HashSet<string>() { };
+        public HashSet<string> List { get; } = new HashSet<string>();
 
-        public DirectoryFinder(string _path, string _pattern) {
-            Find(_path, _pattern, true);
+        public DirectoryFinder(string path, string pattern) {
+            Find(path, pattern, true);
         }
 
-        private void Find(string _path, string _pattern, bool getSubDir) {
+        private void Find(string path, string pattern, bool getSubDir) {
             string[] files = null;
             string[] subDirs = null;
             string[] foundDirs = null;
 
             try {
-                files = Directory.GetFiles(_path, _pattern);
+                files = Directory.GetFiles(path, pattern);
             }
             catch (UnauthorizedAccessException e) {
                 Console.WriteLine(e.Message);
@@ -55,14 +56,14 @@ namespace antdlib {
                 Console.WriteLine(e.Message);
             }
             if (files != null) {
-                foreach (string f in files) {
-                    result.Add(Path.GetFullPath(f));
+                foreach (var f in files) {
+                    List.Add(Path.GetFullPath(f));
                 }
             }
 
             try {
-                subDirs = Directory.GetDirectories(_path);
-                foundDirs = Directory.GetDirectories(_path, _pattern);
+                subDirs = Directory.GetDirectories(path);
+                foundDirs = Directory.GetDirectories(path, pattern);
             }
             catch (UnauthorizedAccessException e) {
                 Console.WriteLine(e.Message);
@@ -71,22 +72,14 @@ namespace antdlib {
                 Console.WriteLine(e.Message);
             }
             if (foundDirs != null) {
-                foreach (string fd in foundDirs) {
-                    result.Add(Path.GetFullPath(fd));
+                foreach (var fd in foundDirs) {
+                    List.Add(Path.GetFullPath(fd));
                 }
             }
-            if (subDirs != null) {
-                foreach (string d in subDirs) {
-                    if (getSubDir == true) {
-                        Find(d, _pattern, true);
-                    }
-                }
-            }
-        }
-
-        public HashSet<string> List {
-            get {
-                return result;
+            if (subDirs == null)
+                return;
+            foreach (var d in subDirs.Where(d => getSubDir)) {
+                Find(d, pattern, true);
             }
         }
     }

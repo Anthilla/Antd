@@ -27,13 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.CCTable;
 using antdlib.Users;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class UsersModule : NancyModule {
 
@@ -46,7 +46,6 @@ namespace Antd {
                 vmod.SystemUsers = SystemUser.GetAllFromDatabase();
                 vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
                 vmod.ApplicationUsers = ApplicationUser.GetAll();
-
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
@@ -65,16 +64,18 @@ namespace Antd {
 
             Post["/create"] = x => {
                 string type = Request.Form.UserType.Value;
-                if (type == "app") {
-                    string fname = Request.Form.FirstName;
-                    string lname = Request.Form.LastName;
-                    string passwd = Request.Form.Passwd;
-                    string email = Request.Form.Email;
-                    ApplicationUser.Create(fname, lname, passwd, email);
-                }
-                else if (type == "sys") {
-                    string name = Request.Form.Name;
-                    SystemUser.CreateUser(name);
+                switch (type) {
+                    case "app":
+                        string fname = Request.Form.FirstName;
+                        string lname = Request.Form.LastName;
+                        string passwd = Request.Form.Passwd;
+                        string email = Request.Form.Email;
+                        ApplicationUser.Create(fname, lname, passwd, email);
+                        break;
+                    case "sys":
+                        string name = Request.Form.Name;
+                        SystemUser.CreateUser(name);
+                        break;
                 }
                 return Response.AsRedirect("/users");
             };

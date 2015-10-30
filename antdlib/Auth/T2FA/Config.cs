@@ -28,29 +28,29 @@
 ///-------------------------------------------------------------------------------------
 
 using System;
+using antdlib.Common;
 
 namespace antdlib.Auth.T2FA {
     public class Config {
-
-        private static string coreFileName = "authConfig";
-        private static string[] _files = new string[] {
-                coreFileName + "Current",
-                coreFileName + "001",
-                coreFileName + "002"
+        private static string _coreFileName = "authConfig";
+        private static readonly string[] Files = {
+                _coreFileName + "Current",
+                _coreFileName + "001",
+                _coreFileName + "002"
             };
 
-        public static XmlWriter xmlWriter = new XmlWriter(_files);
+        private static readonly ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
 
         public static void Enable() {
-            xmlWriter.Write(Label.Auth.IsEnabled, true.ToString());
+            XmlWriter.Write(Label.Auth.IsEnabled, true.ToString());
         }
 
         public static void Disable() {
-            xmlWriter.Write(Label.Auth.IsEnabled, false.ToString());
+            XmlWriter.Write(Label.Auth.IsEnabled, false.ToString());
         }
 
-        public static bool IsEnabled { get { return Convert.ToBoolean(xmlWriter.ReadValue(Label.Auth.IsEnabled)); } }
+        public static bool IsEnabled => Convert.ToBoolean(XmlWriter.ReadValue(Label.Auth.IsEnabled));
 
-        public static bool ValueExists { get { return (xmlWriter.ReadValue(Label.Auth.IsEnabled) == null)? false: true; } }
+        public static bool ValueExists => (XmlWriter.ReadValue(Label.Auth.IsEnabled) != null);
     }
 }

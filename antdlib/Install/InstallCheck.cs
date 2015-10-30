@@ -30,34 +30,37 @@
 using System;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Install {
     public class InstallCheck {
-        private static bool IsOnUSB() {
-            var cmdResult = Terminal.Execute($"lsblk -npl | grep /mnt/cdrom");
-            var deviceName = cmdResult.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        private static bool IsOnUsb() {
+            var cmdResult = Terminal.Execute("lsblk -npl | grep /mnt/cdrom");
+            var deviceName = cmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            if (deviceName == null)
+                throw new ArgumentNullException(nameof(deviceName));
             var diskName = deviceName.Substring(0, deviceName.Length - 1);
             var diskFile = $"/sys/class/block/{diskName.Replace("dev", "").Replace("/", "")}/removable";
-            if (File.Exists(diskFile)) {
-                var t = FileSystem.ReadFile(diskFile);
-                if (t.Trim() == "1") {
+            if (!File.Exists(diskFile))
+                return false;
+            var t = FileSystem.ReadFile(diskFile);
+            switch (t.Trim()) {
+                case "1":
                     return true;
-                }
-                else if (t.Trim() == "0") {
+                case "0":
                     return false;
-                }
             }
             return false;
         }
 
-        public static bool IsOSRemovable { get { return IsOnUSB(); } }
+        public static bool IsOsRemovable => IsOnUsb();
 
-        public static bool IsDiskEligibleForOS(string disk) {
+        public static bool IsDiskEligibleForOs(string disk) {
             var diskSizeCmdResult = Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
-            var size = diskSizeCmdResult.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-            if (!size.Contains("G")) {
+            var size = diskSizeCmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            if (size != null && !size.Contains("G")) {
                 //var num = Convert.ToInt32(size.Replace("M", ""));
-                var num = Convert.ToInt32(string.Join("", size.Where(Char.IsDigit)));
+                var num = Convert.ToInt32(string.Join("", size.Where(char.IsDigit)));
                 if (num < 32) {
                     return false;
                 }
@@ -67,11 +70,8 @@ namespace antdlib.Install {
                 return false;
             }
             var hasPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
-            var results = hasPartitionCmdResult.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
-            if (results > 1) {
-                return false;
-            }
-            return true;
+            var results = hasPartitionCmdResult.Split(new [] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
+            return results <= 1;
         }
     }
 }

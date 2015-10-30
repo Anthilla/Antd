@@ -55,7 +55,7 @@ namespace antdlib.Auth.T2FA {
 
         public static bool Confirm(string session, string value) {
             var savedToken = TokenRepository.Fetch(session);
-            return (value == savedToken) ? true : false;
+            return (value == savedToken);
         }
     }
 }

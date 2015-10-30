@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Antdsh\Execute.cs" />
-    <Compile Include="Antdsh\system.cs" />
+    <Compile Include="Antdsh\SystemShellMgmt.cs" />
     <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
@@ -144,7 +144,6 @@
     <Compile Include="Boot\DatabaseBoot.cs" />
     <Compile Include="Boot\LoadOSConfiguration.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
-    <Compile Include="CCTable\CCTableImport.cs" />
     <Compile Include="CCTable\CCTableConf.cs" />
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
@@ -152,7 +151,6 @@
     <Compile Include="Collectd\CollectdModel.cs" />
     <Compile Include="Collectd\CollectdRepo.cs" />
     <Compile Include="Common\ConsoleLogger.cs" />
-    <Compile Include="Common\ConsoleTime.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />
@@ -163,13 +161,11 @@
     <Compile Include="Database\EntityStatus.cs" />
     <Compile Include="Database\SecureDB.cs" />
     <Compile Include="Database\SecureEntity.cs" />
-    <Compile Include="Firewall\FirewallFirstConfiguration.cs" />
-    <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="enums.cs" />
     <Compile Include="global.cs" />
     <Compile Include="Common\Timestamp.cs" />
-    <Compile Include="Common\XmlWriter.cs" />
+    <Compile Include="Common\ParameterXmlWriter.cs" />
     <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />

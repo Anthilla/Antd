@@ -28,6 +28,7 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.Boot;
+using antdlib.Common;
 using antdlib.Security;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -46,7 +47,7 @@ namespace antdlib.Mail {
                 coreFileName + "002"
             };
 
-            public static XmlWriter xmlWriter = new XmlWriter(_files);
+            public static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
 
             public static void SetUrl(string value) {
                 xmlWriter.Write(Label.SMTP.Url, value);

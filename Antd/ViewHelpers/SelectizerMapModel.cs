@@ -28,22 +28,19 @@
 ///-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Antd.ViewHelpers {
     public class SelectizerMapModel {
         public static IEnumerable<RawTagOfValueBundle> MapRawTagOfValueBundle(IEnumerable<string> tagValues) {
-            var list = new List<RawTagOfValueBundle>() { };
-            foreach (var v in tagValues) {
-                list.Add(new RawTagOfValueBundle() { name = v });
-            }
+            var list = new List<RawTagOfValueBundle>();
+            list.AddRange(tagValues.Select(v => new RawTagOfValueBundle { name = v }));
             return list;
         }
 
         public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<antdlib.Config.ConfigManagement.CommandsBundleLayout> commands) {
-            var list = new List<RawCommandBundleLayout>() { };
-            foreach (var c in commands) {
-                list.Add(new RawCommandBundleLayout() { name = c.CommandLayout });
-            }
+            var list = new List<RawCommandBundleLayout>();
+            list.AddRange(commands.Select(c => new RawCommandBundleLayout { name = c.CommandLayout }));
             return list;
         }
     }

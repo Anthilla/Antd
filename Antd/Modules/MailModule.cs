@@ -27,13 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.CCTable;
 using antdlib.Mail;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class MailModule : NancyModule {
 

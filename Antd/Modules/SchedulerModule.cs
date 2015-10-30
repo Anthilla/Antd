@@ -27,12 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.Scheduler;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class SchedulerModule : NancyModule {
 
@@ -47,19 +47,17 @@ namespace Antd {
             };
 
             Post["/now"] = x => {
-                var _alias = (string)Request.Form.Alias;
-                var _command = (string)Request.Form.Command;
-                Job.Schedule(_alias, _command);
-                dynamic model = new ExpandoObject();
+                var alias = (string)Request.Form.Alias;
+                var command = (string)Request.Form.Command;
+                Job.Schedule(alias, command);
                 return Response.AsRedirect("/scheduler");
             };
 
             Post["/cron"] = x => {
-                var _alias = (string)Request.Form.Alias;
-                var _command = (string)Request.Form.Command;
-                var _cron = (string)Request.Form.CronResult;
-                Job.Schedule(_alias, _command, _cron);
-                dynamic model = new ExpandoObject();
+                var alias = (string)Request.Form.Alias;
+                var command = (string)Request.Form.Command;
+                var cron = (string)Request.Form.CronResult;
+                Job.Schedule(alias, command, cron);
                 return Response.AsRedirect("/scheduler");
             };
 

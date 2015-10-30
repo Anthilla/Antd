@@ -27,14 +27,12 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
-
+namespace Antd.Modules {
     public class NetworkModule : NancyModule {
-
         public NetworkModule()
             : base("/network") {
             this.RequiresAuthentication();
@@ -43,11 +41,6 @@ namespace Antd {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-network", vmod];
             };
-
-            //Get["/test"] = x => {
-            //    dynamic vmod = new ExpandoObject();
-            //    return View["_page-network_test", vmod];
-            //};
         }
     }
 }

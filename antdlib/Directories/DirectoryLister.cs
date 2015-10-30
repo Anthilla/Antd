@@ -27,31 +27,29 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
+using antdlib.Models;
 
-namespace antdlib {
+namespace antdlib.Directories {
 
     public class DirectoryLister {
-        private DirectoryInfo root;
+        private readonly DirectoryInfo _root;
 
-        public DirectoryLister(string _path, bool getSubDir) {
-            root = new DirectoryInfo(_path);
-            WalkDirectoryTree(root, getSubDir);
-            UpwalkDirectoryTree(root);
+        public DirectoryLister(string path, bool getSubDir) {
+            _root = new DirectoryInfo(path);
+            WalkDirectoryTree(_root, getSubDir);
+            UpwalkDirectoryTree(_root);
         }
 
-        #region parents
-
-        private HashSet<string> _parents = new HashSet<string>() { };
+        public HashSet<string> ParentList { get; } = new HashSet<string>();
 
         private void UpwalkDirectoryTree(DirectoryInfo root) {
             try {
-                _parents.Add(root.FullName);
-                DirectoryInfo parent = Directory.GetParent(root.FullName);
+                ParentList.Add(root.FullName);
+                var parent = Directory.GetParent(root.FullName);
                 UpwalkDirectoryTree(parent);
             }
             catch (Exception e) {
@@ -59,23 +57,12 @@ namespace antdlib {
             }
         }
 
-        public HashSet<string> ParentList {
-            get {
-                return _parents;
-            }
-        }
+        public HashSet<string> FullList { get; } = new HashSet<string>();
 
-        #endregion parents
-
-        #region tree
-
-        private HashSet<string> _tree = new HashSet<string>() { };
-
-        private HashSet<DirItemModel> _tree2 = new HashSet<DirItemModel>() { };
+        public HashSet<DirItemModel> FullList2 { get; } = new HashSet<DirItemModel>();
 
         private void WalkDirectoryTree(DirectoryInfo root, bool getSubDir) {
             FileInfo[] files = null;
-            DirectoryInfo[] subDirs = null;
             try {
                 files = root.GetFiles("*.*");
             }
@@ -85,47 +72,32 @@ namespace antdlib {
             catch (DirectoryNotFoundException e) {
                 Console.WriteLine(e.Message);
             }
-            if (files != null) {
-                foreach (FileInfo fi in files) {
-                    _tree2.Add(new DirItemModel() {
-                        isFile = true,
-                        path = fi.FullName,
-                        name = Path.GetFileName(fi.FullName)
-                    });
-                    _tree.Add(fi.FullName);
+            if (files == null)
+                return;
+            foreach (var fi in files) {
+                FullList2.Add(new DirItemModel {
+                    isFile = true,
+                    path = fi.FullName,
+                    name = Path.GetFileName(fi.FullName)
+                });
+                FullList.Add(fi.FullName);
+            }
+            var subDirs = root.GetDirectories();
+            foreach (var dirInfo in subDirs) {
+                FullList2.Add(new DirItemModel {
+                    isFile = false,
+                    path = dirInfo.FullName,
+                    name = Path.GetDirectoryName(dirInfo.FullName)
+                });
+                FullList.Add(dirInfo.FullName);
+                if (getSubDir) {
+                    WalkDirectoryTree(dirInfo, true);
                 }
-                subDirs = root.GetDirectories();
-                foreach (DirectoryInfo dirInfo in subDirs) {
-                    _tree2.Add(new DirItemModel() {
-                        isFile = false,
-                        path = dirInfo.FullName,
-                        name = Path.GetDirectoryName(dirInfo.FullName)
-                    });
-                    _tree.Add(dirInfo.FullName);
-                    if (getSubDir == true) {
-                        WalkDirectoryTree(dirInfo, true);
-                    }
-                }
             }
         }
 
-        public HashSet<string> FullList {
-            get {
-                return _tree;
-            }
-        }
-
-        public HashSet<DirItemModel> FullList2 {
-            get {
-                return _tree2;
-            }
-        }
-
-        #endregion tree
-
-        public DirectorySecurity GetFileACL() {
-            var acc = root.GetAccessControl();
-            return acc;
+        public DirectorySecurity GetFileAcl() {
+            return _root.GetAccessControl();
         }
     }
 }

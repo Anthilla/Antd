@@ -28,93 +28,17 @@
 ///-------------------------------------------------------------------------------------
 
 using Nancy;
-using System;
-using System.Collections.Generic;
-using antdlib;
-using antdlib.Collectd;
-using Microsoft.AspNet.SignalR;
-using Antd.Hubs;
-using System.Management;
 
-namespace Antd {
-    public class TMP {
-        public string _Id { get; set; }
-        public string guid { get; set; }
-        public List<int> list { get; set; }
-        public string name { get; set; }
-        public DateTime date { get; set; }
-    }
-
+namespace Antd.Modules {
     public class TestModule : NancyModule {
-
         public TestModule()
             : base("/test") {
 
-            Before += y => {
-                return null;
-            };
+            Before += y => null;
 
-            After += y => {
-            };
+            Get["Test page", "/"] = x => Response.AsText("Hello World!");
 
-            Get["Test page", "/"] = x => {
-                return Response.AsText("Hello World!");
-            };
-
-            Get["/page"] = x => {
-                return View["page-test"];
-            };
-
-            Post["/post-collectd"] = x => {
-                var list = CollectdRepo.MapCollectdData(Request.Body.ReadAsString());
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
-                hubContext.Clients.All.getCollectdRefresh(list);
-                return Response.AsJson(true);
-            };
-
-            Get["/post-collectd"] = x => {
-                int X = new Random().Next(0, 100);
-                int Y = new Random().Next(0, 100);
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<CollectdHub>();
-                hubContext.Clients.All.getPointCoordinates(X, Y);
-                return Response.AsJson(true);
-            };
-
-            Get["/test/{val}"] = x => {
-                string v = x.val;
-                var c = v.GetBytes().ToHex();
-                var max = c.Length;
-                var l = 8;
-                string r;
-                if (max == l) {
-                    r = c;
-                }
-                else if (max > l) {
-                    r = c.Substring(max - (l + 1), 8);
-                }
-                else if (max < l) {
-                    var diff = l - max;
-                    r = "0";
-                    for (int i = 0; i < diff; i++) {
-                        r += "0";
-                    }
-                    r += c;
-                }
-                else {
-                    r = "01011010";
-                }
-                return Response.AsJson(r);
-            };
-
-            //Get["/syst"] = x => {
-            //    ManagementClass c = new ManagementClass("Win32_Service");
-            //    foreach (ManagementObject o in c.GetInstances()) {
-            //        Console.WriteLine("Service Name = {0} " +
-            //            "ProcessId = {1} Instance Path = {2}",
-            //            o["Name"], o["ProcessId"], o.Path);
-            //    }
-            //    return Response.AsJson(true);
-            //};
+            Get["/page"] = x => View["page-test"];
         }
     }
 }

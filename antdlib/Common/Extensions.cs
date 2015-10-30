@@ -1,6 +1,12 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using antdlib.Models;
 using Nancy.IO;
+using Newtonsoft.Json;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -29,20 +35,15 @@ using Nancy.IO;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
-namespace antdlib {
+namespace antdlib.Common {
 
     public static class Extensions {
 
-        public static CommandModel ConvertCommandToModel(this String commandOutput) {
-            CommandModel command = new CommandModel {
+        public static CommandModel ConvertCommandToModel(this string commandOutput) {
+            if (commandOutput == null)
+                throw new ArgumentNullException(nameof(commandOutput));
+            var command = new CommandModel {
                 date = DateTime.Now,
                 output = commandOutput,
                 outputTable = TextToList(commandOutput),
@@ -53,200 +54,159 @@ namespace antdlib {
         }
 
         public static List<string> TextToList(string text) {
-            List<string> stringList = new List<string>();
-            string[] rowDivider = new String[] { "\n" };
-            string[] rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (string row in rowList) {
-                if (!string.IsNullOrEmpty(row)) {
-                    stringList.Add(row);
-                }
-            }
-
-            return stringList;
+            var rowDivider = new[] { "\n" };
+            var rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
+            return rowList.Where(row => !string.IsNullOrEmpty(row)).ToList();
         }
 
         public static Guid ToGuid(this Guid? source) {
             return source ?? Guid.Empty;
         }
 
-        public static string GetFirstString(this String str) {
+        public static string GetFirstString(this string str) {
             var arr = str.Split(' ');
-            return arr.Length > 0 ? arr[0] : String.Empty;
+            return arr.Length > 0 ? arr[0] : string.Empty;
         }
 
-        public static string GetFirstString(this String str, char div) {
+        public static string GetFirstString(this string str, char div) {
             var arr = str.Split(div);
-            return arr.Length > 0 ? arr[0] : String.Empty;
+            return arr.Length > 0 ? arr[0] : string.Empty;
         }
 
-        public static string GetAllStringsButFirst(this String str) {
+        public static string GetAllStringsButFirst(this string str) {
             var arr = str.Split(' ');
-            if (arr.Length > 1) {
-                return string.Join(" ", arr.Skip(1).ToArray());
-            }
-            else {
-                return String.Empty;
-            }
+            return arr.Length > 1 ? string.Join(" ", arr.Skip(1).ToArray()) : string.Empty;
         }
 
-        public static string GetAllStringsButFirst(this String str, char div) {
+        public static string GetAllStringsButFirst(this string str, char div) {
             var arr = str.Split(div).Skip(1).ToArray();
-            if (arr.Length > 1) {
-                return string.Join(" ", arr);
-            }
-            else {
-                return String.Empty;
-            }
+            return arr.Length > 1 ? string.Join(" ", arr) : string.Empty;
         }
 
-        public static string GetAllStringsButLast(this String str, char div) {
+        public static string GetAllStringsButLast(this string str, char div) {
             var arr = str.Split(div);
             var arr2 = arr.SubArray(0, arr.Length - 1);
-            if (arr2.Length > 1) {
-                return string.Join(div.ToString(), arr.ToArray());
-            }
-            else {
-                return String.Empty;
-            }
+            return arr2.Length > 1 ? string.Join(div.ToString(), arr.ToArray()) : string.Empty;
         }
 
-        public static string UppercaseAllFirstLetters(this String str) {
+        public static string UppercaseAllFirstLetters(this string str) {
             var arr = str.Split(' ');
-            var newList = new List<string>() { };
+            var newList = new List<string>();
             newList.AddRange(arr.Select(a => a.UppercaseFirstLetter()));
             return string.Join(" ", newList.ToArray());
         }
 
-        public static string UppercaseAllFirstLetters(this String str, char div) {
+        public static string UppercaseAllFirstLetters(this string str, char div) {
             var arr = str.Split(' ');
-            var newList = new List<string>() { };
+            var newList = new List<string>();
             newList.AddRange(arr.Select(a => a.UppercaseFirstLetter()));
             return string.Join(div.ToString(), newList.ToArray());
         }
 
-        public static string UppercaseFirstLetter(this String str) {
+        public static string UppercaseFirstLetter(this string str) {
             if (string.IsNullOrEmpty(str)) {
                 return string.Empty;
             }
             return char.ToUpper(str[0]) + str.Substring(1);
         }
 
-        public static string RemoveWhiteSpace(this String str) {
+        public static string RemoveWhiteSpace(this string str) {
             return str.Replace(" ", "");
         }
 
-        public static string AsJson(this Object str) {
+        public static string AsJson(this object str) {
             return JsonConvert.SerializeObject(str);
         }
 
-        public static int[] ToIntArray(this String[] arr) {
-            var ilist = new List<int>() { };
-            foreach (var s in arr) {
-                ilist.Add(Convert.ToInt32(s));
-            }
-            return ilist.ToArray();
+        public static int[] ToIntArray(this string[] arr) {
+            return arr.Select(s => Convert.ToInt32(s)).ToArray();
         }
 
-        private static string ToHex(this String value) {
-            char[] chars = value.ToCharArray();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in chars) {
-                stringBuilder.Append(((Int16)c).ToString(""));
+        public static string ToHex(this string value) {
+            var chars = value.ToCharArray();
+            var stringBuilder = new StringBuilder();
+            foreach (var c in chars) {
+                stringBuilder.Append(((short)c).ToString(""));
             }
-            string hexed = stringBuilder.ToString();
-            return hexed;
+            return stringBuilder.ToString();
         }
 
-        public static string ToHex(this Byte[] bytes) {
-            string value = GetString(bytes);
-            char[] chars = value.ToCharArray();
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (char c in chars) {
-                stringBuilder.Append(((Int16)c).ToString(""));
+        public static string ToHex(this byte[] bytes) {
+            var value = GetString(bytes);
+            var chars = value.ToCharArray();
+            var stringBuilder = new StringBuilder();
+            foreach (var c in chars) {
+                stringBuilder.Append(((short)c).ToString(""));
             }
-            string hexed = stringBuilder.ToString();
-            return hexed;
+            return stringBuilder.ToString();
         }
 
         public static byte[] GetBytes(this String str) {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
+            var bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        public static string GetString(this Byte[] bytes) {
-            char[] chars = new char[bytes.Length / sizeof(char)];
+        public static string GetString(this byte[] bytes) {
+            var chars = new char[bytes.Length / sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
         public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, char end) {
-            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
-            MatchCollection matches = r.Matches(input);
-            foreach (Match match in matches) {
-                yield return match.Groups[1].Value;
-            }
+            var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
         }
 
         public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, string end) {
-            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
-            MatchCollection matches = r.Matches(input);
-            foreach (Match match in matches) {
-                yield return match.Groups[1].Value;
-            }
+            var r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
         }
 
         public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, string end) {
-            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end));
-            MatchCollection matches = r.Matches(input);
-            foreach (Match match in matches) {
-                yield return match.Groups[1].Value;
-            }
+            var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
         }
 
         public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, char end) {
-            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end.ToString()));
-            MatchCollection matches = r.Matches(input);
-            foreach (Match match in matches) {
-                yield return match.Groups[1].Value;
-            }
+            var r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
         }
 
         public static string RemoveTextBetween(this string input, char start, char end) {
-            Regex r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
             var matches = r.Matches(input);
-            var list = new List<string>();
-            foreach (Match match in matches) {
-                if (match.Groups[1].Value.Length > 0) {
-                    list.Add(match.Groups[1].Value);
-                }
+            var list = (from Match match in matches where match.Groups[1].Value.Length > 0 select match.Groups[1].Value).ToList();
+            var output = input;
+            if (list.Count <= 0)
+                return output;
+            var removeThis = list.ToArray()[list.Count - 1];
+            var t = input;
+            if (removeThis.Length > 0) {
+                t = input.Replace(removeThis, "");
             }
-            string output = input;
-            if (list.Count() > 0) {
-                var removeThis = list.ToArray()[list.Count() - 1];
-                var t = input;
-                if (removeThis.Length > 0) {
-                    t = input.Replace(removeThis, "");
-                }
-                output = t.RemoveTextBetween(start, end);
-            }
+            output = t.RemoveTextBetween(start, end);
             return output;
         }
 
         public static string ReplaceAllTextBetweenWith(this string input, char start, char end, string replacement) {
-            string memReplace = input;
+            var memReplace = input;
             var regex = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
             var matches = regex.Matches(input);
-            if (matches.Count > 0) {
-                for (int i = 0; i < matches.Count; i++) {
-                    memReplace = memReplace.Replace(matches[i].Value, replacement);
-                }
+            if (matches.Count <= 0)
+                return memReplace;
+            for (var i = 0; i < matches.Count; i++) {
+                memReplace = memReplace.Replace(matches[i].Value, replacement);
             }
             return memReplace;
         }
 
         public static HashSet<dynamic> ToDynamicHashSet(this IEnumerable<dynamic> input) {
-            var list = new HashSet<dynamic>() { };
+            var list = new HashSet<dynamic>();
             foreach (var i in input) {
                 list.Add(i);
             }
@@ -254,7 +214,7 @@ namespace antdlib {
         }
 
         public static HashSet<string> ToStringHashSet(this IEnumerable<string> input) {
-            var list = new HashSet<string>() { };
+            var list = new HashSet<string>();
             foreach (var i in input) {
                 list.Add(i);
             }
@@ -268,7 +228,7 @@ namespace antdlib {
         }
 
         public static T[] SubArray<T>(this T[] data, int index, int length) {
-            T[] result = new T[length];
+            var result = new T[length];
             Array.Copy(data, index, result, 0, length);
             return result;
         }

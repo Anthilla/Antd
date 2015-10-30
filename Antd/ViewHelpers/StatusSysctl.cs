@@ -33,11 +33,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd.ViewHelpers {
-
-    public class VHStatus {
-
+    public class VhStatus {
         public static List<StatusSysctlViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
-            HashSet<string> paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { };
+            var paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (SysctlModel data in stockData) {
                 paramNames.Add(data.param);
             }
@@ -47,28 +45,23 @@ namespace Antd.ViewHelpers {
             foreach (SysctlModel data in antdData) {
                 paramNames.Add(data.param);
             }
-            List<StatusSysctlViewModel> list = new List<StatusSysctlViewModel>() { };
-            foreach (string par in paramNames) {
-                var model = new StatusSysctlViewModel();
-                model.label = par;
-
+            var list = new List<StatusSysctlViewModel>();
+            foreach (var par in paramNames) {
+                var model = new StatusSysctlViewModel { Label = par };
                 var stockValue = (from s in stockData
                                   where s.param == par
                                   select s.value).FirstOrDefault();
-                model.stockValue = stockValue ?? "";
-
+                model.StockValue = stockValue ?? "";
                 var runningValue = (from s in runningData
                                     where s.param == par
                                     select s.value).FirstOrDefault();
-                model.runningValue = runningValue ?? "";
-
+                model.RunningValue = runningValue ?? "";
                 var antdValue = (from s in antdData
                                  where s.param == par
                                  select s.value).FirstOrDefault();
-                model.antdValue = antdValue ?? "";
+                model.AntdValue = antdValue ?? "";
                 list.Add(model);
             }
-
             return list;
         }
     }

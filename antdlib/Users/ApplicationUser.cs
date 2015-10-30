@@ -31,6 +31,7 @@ using antdlib.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Users {
     public class ApplicationUser {
@@ -43,46 +44,44 @@ namespace antdlib.Users {
         }
 
         public static void Create(string fname, string lname, string passwd, string email) {
-            var user = new UserModel() {
+            var user = new UserModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 FirstName = fname,
                 LastName = lname,
                 Email = email,
-                UserType = UserType.IsApplicationUser
+                UserType = UserType.IsApplicationUser,
+                Alias = SetUserAlias(fname, lname).ToLower(),
+                Password = SetPassword(passwd)
             };
-            user.Alias = SetUserAlias(fname, lname).ToLower();
-            user.Password = SetPassword(passwd);
             DeNSo.Session.New.Set(user);
         }
 
         private static string SetUserAlias(string firstName, string lastName) {
-            string first = firstName.Replace(" ", "").Substring(0, 3);
-            string last = lastName.Replace(" ", "").Substring(0, 3);
-            string stringAlias = last + first;
-            string tryAlias = stringAlias + "01";
-            UserModel isUser = GetByAlias(tryAlias);
+            var first = firstName.Replace(" ", "").Substring(0, 3);
+            var last = lastName.Replace(" ", "").Substring(0, 3);
+            var stringAlias = last + first;
+            var tryAlias = stringAlias + "01";
+            var isUser = GetByAlias(tryAlias);
             if (isUser == null) {
                 return tryAlias;
             }
-            else {
-                var table = GetAll();
-                string[] existingAlias = (from c in table
-                                          where c.Alias.Contains(stringAlias)
-                                          orderby c.Alias ascending
-                                          select c.Alias).ToArray();
-                string lastAlias = existingAlias[existingAlias.Length - 1];
-                string newNumber = (Convert.ToInt32(lastAlias.Substring(6, 2)) + 1).ToString("D2");
-                return stringAlias + newNumber;
-            }
+            var table = GetAll();
+            var existingAlias = (from c in table
+                                 where c.Alias.Contains(stringAlias)
+                                 orderby c.Alias ascending
+                                 select c.Alias).ToArray();
+            var lastAlias = existingAlias[existingAlias.Length - 1];
+            var newNumber = (Convert.ToInt32(lastAlias.Substring(6, 2)) + 1).ToString("D2");
+            return stringAlias + newNumber;
         }
 
         private static SystemUserPassword SetPassword(string passwdString) {
-            SystemUserPassword passwd = new SystemUserPassword() {
+            var passwd = new SystemUserPassword {
                 Type = "",
-                Salt = ""
+                Salt = "",
+                Result = Cryptography.Hash256(passwdString).ToHex()
             };
-            passwd.Result = Cryptography.Hash256(passwdString).ToHex();
             return passwd;
         }
     }

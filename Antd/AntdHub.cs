@@ -35,18 +35,17 @@ namespace Antd {
 
     public class AntdHub : Hub {
 
-        public void SubscribeChannelSRV(string collectionName) {
+        public void SubscribeChannelSrv(string collectionName) {
             Groups.Add(Context.ConnectionId, collectionName).Wait();
         }
 
-        public Task UnsubscribeChannelSRV(string collectionName) {
+        public Task UnsubscribeChannelSrv(string collectionName) {
             return Groups.Remove(Context.ConnectionId, collectionName);
         }
 
         public void Publish(string collectionName, string message) {
-            string computedMessage = "Il Back End riceve: " + message;
-            Clients.Group(collectionName).flush(computedMessage);
-            Console.WriteLine(computedMessage);
+            Clients.Group(collectionName).flush("Il Back End riceve: " + message);
+            Console.WriteLine("Il Back End riceve: " + message);
         }
     }
 }

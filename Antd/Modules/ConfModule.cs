@@ -1,5 +1,8 @@
-﻿
+﻿using System.Dynamic;
+using System.Linq;
+using antdlib.Config;
 using Antd.ViewHelpers;
+using Nancy;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -28,18 +31,8 @@ using Antd.ViewHelpers;
 ///
 ///     20141110
 ///-------------------------------------------------------------------------------------
-using antdlib;
-using antdlib.Config;
-using Nancy;
-using Nancy.ModelBinding;
-using Nancy.Security;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
 
-namespace Antd {
+namespace Antd.Modules {
     public class ConfModule : NancyModule {
         public ConfModule()
             : base("/cfg") {
@@ -116,15 +109,14 @@ namespace Antd {
                 var index = (string)Request.Form.Index;
                 var guids = guid.Split(',');
                 var indexes = index.Split(',');
-                for (int i = 0; i < guids.Length; i++) {
+                for (var i = 0; i < guids.Length; i++) {
                     ConfigManagement.AssignIndexToCommandsBundle(guids[i], indexes[i]);
                 }
                 return Response.AsRedirect("/cfg");
             };
 
             Get["/getenabled"] = x => {
-                var data = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == true);
-                Console.WriteLine(data.Count());
+                var data = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled);
                 return Response.AsJson(data);
             };
 

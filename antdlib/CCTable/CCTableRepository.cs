@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.CCTable {
     public class CCTableRepository {
@@ -54,7 +55,9 @@ namespace antdlib.CCTable {
 
         public static CCTableModel GetByGuid(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
-            cc.Content = GetRows(cc.Guid);
+            if (cc != null) {
+                cc.Content = GetRows(cc.Guid);
+            }
             return cc;
         }
 
@@ -66,13 +69,14 @@ namespace antdlib.CCTable {
         public static List<CCTableRowModel> GetRows(string guid) {
             var list = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.TableGuid == guid).ToList();
             foreach (var i in list) {
-                if (i.InputCommand != null) {
-                    var f = i.InputCommand.GetFirstString();
-                    var a = i.InputCommand.GetAllStringsButFirst();
-                    var b = "";
-                    var c = a != null || a != "" ? a : b;
-                    i.ValueResult = Terminal.Execute(f + " " + c);
-                }
+                if (i.InputCommand == null)
+                    continue;
+                var f = i.InputCommand.GetFirstString();
+                var a = i.InputCommand.GetAllStringsButFirst();
+                if (a == null)
+                    throw new ArgumentNullException(nameof(a));
+                var c = a;
+                i.ValueResult = Terminal.Execute(f + " " + c);
             }
             return list;
         }
@@ -82,13 +86,13 @@ namespace antdlib.CCTable {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 Alias = alias.UppercaseAllFirstLetters(),
-                Context = context
+                Context = context,
+                Type = GetTableType(type)
             };
-            model.Type = GetTableType(type);
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRowForDirectCommand(string tableGuid, string tableName, string label, string inputLabel, string command, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
+        public static void CreateRowForDirectCommand(string tableGuid, string tableName, string label, string inputLabel, string command, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputId, string inputLocation) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -102,16 +106,16 @@ namespace antdlib.CCTable {
                 Notes = notes,
                 FlagOsi = flagOsi,
                 FlagCommandFunction = flagFunction,
-                CommandInputID = inputID,
+                CommandInputId = inputId,
                 CommandInputLocation = inputLocation
             };
-            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 
         public static void CreateRowForTextInputCommand(string tableGuid, string tableName, string label,
-string inputLabel, string inputCommandSet, string inputCommandGet, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
+string inputLabel, string inputCommandSet, string inputCommandGet, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputId, string inputLocation) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -126,15 +130,15 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
                 Notes = notes,
                 FlagOsi = flagOsi,
                 FlagCommandFunction = flagFunction,
-                CommandInputID = inputID,
+                CommandInputId = inputId,
                 CommandInputLocation = inputLocation
             };
-            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 
-        public static void CreateRowForBooleanPairCommand(string tableGuid, string tableName, string label, string inputLabel, string inputCommandTrue, string inputCommandFalse, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputID, string inputLocation) {
+        public static void CreateRowForBooleanPairCommand(string tableGuid, string tableName, string label, string inputLabel, string inputCommandTrue, string inputCommandFalse, string notes, CCTableFlags.OsiLevel flagOsi, CCTableFlags.CommandFunction flagFunction, string inputId, string inputLocation) {
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -149,11 +153,11 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
                 Notes = notes,
                 FlagOsi = flagOsi,
                 FlagCommandFunction = flagFunction,
-                CommandInputID = inputID,
+                CommandInputId = inputId,
                 CommandInputLocation = inputLocation
             };
-            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 
@@ -166,12 +170,12 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
                 Label = label,
                 InputCommand = inputCommand,
                 ValueResult = result,
-                MapRules = new List<CCTableRowMap>() { },
-                HasMap = false
+                MapRules = new List<CCTableRowMap>(),
+                HasMap = false,
+                ValueResultArray = result.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()
             };
-            model.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            model.HtmlInputID = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
-            model.HtmlSumbitID = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+            model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
             DeNSo.Session.New.Set(model);
         }
 
@@ -224,16 +228,13 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         }
 
         public static CCTableConfModel[] GetEtcConfs(string directory) {
-            var list = new List<CCTableConfModel>() { };
+            var list = new List<CCTableConfModel>();
             var confs = Directory.EnumerateFiles(directory, "*.conf", SearchOption.AllDirectories).Where(f => !f.Contains("portage")).ToArray();
-            foreach (var conf in confs) {
-                var m = new CCTableConfModel() {
-                    Name = conf.Replace("\\", "/"),
-                    Path = conf.Replace("\\", "/"),
-                    Type = CCTableFlags.ConfType.File
-                };
-                list.Add(m);
-            }
+            list.AddRange(confs.Select(conf => new CCTableConfModel {
+                Name = conf.Replace("\\", "/"),
+                Path = conf.Replace("\\", "/"),
+                Type = CCTableFlags.ConfType.File
+            }));
             return list.ToArray();
         }
 
@@ -249,53 +250,52 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
 
         public static void EditTableRow(string guid, string command) {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
-            var i = row.HtmlInputID;
+            if (row == null)
+                return;
+            var i = row.HtmlInputId;
             CommandRepository.Edit(i, command);
         }
 
         public static void Refresh(string guid) {
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
-            var command = row.InputCommand;
-            var result = Terminal.Execute(command);
-            row.ValueResult = result;
-            row.ValueResultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            if (row != null) {
+                var command = row.InputCommand;
+                var result = Terminal.Execute(command);
+                row.ValueResult = result;
+                row.ValueResultArray = result.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            }
             DeNSo.Session.New.Set(row);
         }
 
         public static void SaveMapData(string rowGuid, string labelArray, string indexArray) {
             var r = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == rowGuid).FirstOrDefault();
-            var labelArraySplit = labelArray.Split(new String[] { "," }, StringSplitOptions.None).ToArray();
-            var indexArraySplit = indexArray.Split(new String[] { "," }, StringSplitOptions.None).ToArray();
-            for (int i = 0; i < labelArraySplit.Length; i++) {
-                var map = new CCTableRowMap();
-                map.MapLabel = labelArraySplit[i];
-                map.MapIndex = indexArraySplit[i].Split(new String[] { ";" }, StringSplitOptions.None).ToArray().ToIntArray();
-                r.MapRules.Add(map);
+            var labelArraySplit = labelArray.Split(new[] { "," }, StringSplitOptions.None);
+            var indexArraySplit = indexArray.Split(new[] { "," }, StringSplitOptions.None);
+            for (var i = 0; i < labelArraySplit.Length; i++) {
+                var map = new CCTableRowMap {
+                    MapLabel = labelArraySplit[i],
+                    MapIndex = indexArraySplit[i].Split(new[] { ";" }, StringSplitOptions.None).ToIntArray()
+                };
+                r?.MapRules.Add(map);
             }
+            if (r == null)
+                return;
             r.HasMap = true;
             DeNSo.Session.New.Set(r);
         }
 
-        public static List<CCTableRowMapped> MapData(string[] result, List<CCTableRowMap> mapList) {
-            //var resultArray = result.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+        public static IEnumerable<CCTableRowMapped> MapData(string[] result, List<CCTableRowMap> mapList) {
             var resultArray = result;
-            var x = new List<CCTableRowMapped>() { };
-            foreach (var map in mapList) {
-                string z = "";
-                foreach (var i in map.MapIndex) {
-                    z += resultArray[i] + " ";
-                }
-                var y = new CCTableRowMapped();
-                y.Key = map.MapLabel;
-                y.Value = z;
-                x.Add(y);
-            }
-            return x;
+            return (from map in mapList
+                    let z = map.MapIndex.Aggregate("", (current, i) => current + (resultArray[i] + " "))
+                    select new CCTableRowMapped {
+                        Key = map.MapLabel,
+                        Value = z
+                    });
         }
 
         public static CCTableFlags.CommandFunction GetCommandFunction(string src) {
-            int n = Convert.ToInt32(src);
-            switch (n) {
+            switch (Convert.ToInt32(src)) {
                 case 0:
                     return CCTableFlags.CommandFunction.Stable;
                 case 1:
@@ -306,8 +306,7 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         }
 
         public static CCTableFlags.OsiLevel GetOsiLevel(string src) {
-            int n = Convert.ToInt32(src);
-            switch (n) {
+            switch (Convert.ToInt32(src)) {
                 case 1:
                     return CCTableFlags.OsiLevel.Physical;
                 case 2:
@@ -328,8 +327,7 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         }
 
         public static CCTableFlags.TableType GetTableType(string src) {
-            int n = Convert.ToInt32(src);
-            switch (n) {
+            switch (Convert.ToInt32(src)) {
                 case 1:
                     return CCTableFlags.TableType.Settings;
                 case 2:

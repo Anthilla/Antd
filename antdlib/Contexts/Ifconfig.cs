@@ -27,25 +27,26 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Models;
 using System.Linq;
+using antdlib.Common;
+using antdlib.Models;
 
-namespace antdlib {
+namespace antdlib.Contexts {
 
     public class Ifconfig {
 
         public static string GetEther() {
-            string dir = "/sys/devices";
-            CommandModel find = Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
+            var dir = "/sys/devices";
+            var find = Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
             if (find.isError()) {
                 return find.error;
             }
             else {
-                string row = (from i in find.outputTable
+                var row = (from i in find.outputTable
                               where i.Contains("eth")
                               select i).FirstOrDefault();
                 if (row != null) {
-                    CommandModel cat = Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
+                    var cat = Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
                     return cat.outputTable.FirstOrDefault();
                 }
             }

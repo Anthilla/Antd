@@ -1,5 +1,4 @@
-﻿
-using antdlib.MountPoint;
+﻿using antdlib.MountPoint;
 ///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
@@ -34,12 +33,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using antdlib.Common;
+using antdlib.Contexts;
 
 namespace antdlib.Apps {
 
-    public class AnthillaSP {
+    public class AnthillaSp {
 
-        private static string _anthillaSpAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
+        private static readonly string AnthillaSpAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
         private static string _anthillaSpFrameworkDir = "/framework/anthillasp";
 
         public static void SetApp() {
@@ -81,13 +82,13 @@ namespace antdlib.Apps {
         }
 
         public static void Start() {
-            Systemctl.Start(Units.Name.FileName.Prepare);
+            Systemctl.Start("anthillasp-prepare.service");
             Thread.Sleep(20);
-            Systemctl.Start(Units.Name.FileName.Mount);
+            Systemctl.Start("framework-anthillasp.mount");
             Thread.Sleep(20);
-            Systemctl.Start(Units.Name.FileName.LaunchSp);
+            Systemctl.Start("anthillasp-launcher.service");
             Thread.Sleep(20);
-            Systemctl.Start(Units.Name.FileName.LaunchServer);
+            Systemctl.Start("anthillaserver-launcher.service");
         }
 
         //public static void Start(string app) {
@@ -95,71 +96,64 @@ namespace antdlib.Apps {
         //}
 
         public static void StartSp() {
-            Systemctl.Start(Units.Name.FileName.LaunchSp);
+            Systemctl.Start("anthillasp-launcher.service");
         }
 
         public static void StartServer() {
-            Systemctl.Start(Units.Name.FileName.LaunchServer);
+            Systemctl.Start("anthillaserver-launcher.service");
         }
 
         public static void StopSp() {
-            Systemctl.Stop(Units.Name.FileName.LaunchSp);
+            Systemctl.Stop("anthillasp-launcher.service");
         }
 
         public static void StopServer() {
-            Systemctl.Stop(Units.Name.FileName.LaunchServer);
+            Systemctl.Stop("anthillaserver-launcher.service");
         }
 
         public class Status {
             public static string AnthillaSp() {
-                return Systemctl.Status(Units.Name.FileName.LaunchSp).output;
+                return Systemctl.Status("anthillasp-launcher.service").output;
             }
 
             public static string AnthillaServer() {
-                return Systemctl.Status(Units.Name.FileName.LaunchServer).output;
+                return Systemctl.Status("anthillaserver-launcher.service").output;
             }
 
             public static bool IsActiveAnthillaSp() {
-                return (Systemctl.Status(Units.Name.FileName.LaunchSp).output.Contains("Active: active"));
+                return (Systemctl.Status("anthillasp-launcher.service").output.Contains("Active: active"));
             }
 
             public static bool IsActiveAnthillaServer() {
-                return (Systemctl.Status(Units.Name.FileName.LaunchServer).output.Contains("Active: active"));
+                return (Systemctl.Status("anthillaserver-launcher.service").output.Contains("Active: active"));
             }
         }
 
         public class Setting {
 
             public static bool CheckSquash() {
-                Directory.CreateDirectory(_anthillaSpAppDir);
+                Directory.CreateDirectory(AnthillaSpAppDir);
                 var filePaths = Directory.EnumerateFiles(Folder.Apps, "*.squashfs.xz*", SearchOption.AllDirectories);
                 return filePaths.Any(t => t.Contains("anthillasp"));
             }
 
             public static void CreateSquash() {
-                Terminal.Execute($"mksquashfs {_anthillaSpAppDir}/anthillasp {_anthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash(string version = null) {
                 Directory.CreateDirectory("/framework/anthillasp");
-                var squashList = Directory.EnumerateFiles(_anthillaSpAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
+                var squashList = Directory.EnumerateFiles(AnthillaSpAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
                 var enumerable = squashList as IList<string> ?? squashList.ToList();
                 var file = (version != null && enumerable.Any()) ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(enumerable.OrderByDescending(f => f).LastOrDefault());
                 if (string.IsNullOrEmpty(file))
                     return;
-                Terminal.Execute($"mount {_anthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
+                Terminal.Execute($"mount {AnthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
             }
         }
 
         public class Units {
             public class Name {
-                public class FileName {
-                    public static string Prepare => "anthillasp-prepare.service";
-                    public static string Mount => "framework-anthillasp.mount";
-                    public static string LaunchSp => "anthillasp-launcher.service";
-                    public static string LaunchServer => "anthillaserver-launcher.service";
-                }
-
                 public static string Prepare => Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service");
                 public static string Mount => Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount");
                 public static string LaunchSp => Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service");

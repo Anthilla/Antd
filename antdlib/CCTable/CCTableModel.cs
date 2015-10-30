@@ -64,96 +64,61 @@ namespace antdlib.CCTable {
 
     public class CCTableModel {
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
         public string Alias { get; set; }
-
         public string Context { get; set; }
-
         public CCTableFlags.TableType Type { get; set; }
-
         public List<CCTableRowModel> Content { get; set; }
-
         public List<CCTableRowModel> DataViewContent { get; set; }
     }
 
     public class CCTableRowModel {
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
         public string TableGuid { get; set; }
-
         public string NUid { get; set; }
-
         public string Label { get; set; }
-
         public string File { get; set; }
-
         public string InputType { get; set; }
-
         public string InputLabel { get; set; }
-
         public string InputCommand { get; set; } = "";
 
         #region Command Attributes
         public CCTableCommandType CommandType { get; set; }
-
         public string CommandDirect { get; set; } = "";
-
         public string CommandSet { get; set; } = "";
-
         public string CommandGet { get; set; } = "";
-
         public string CommandTrue { get; set; } = "";
-
         public string CommandFalse { get; set; } = "";
-
-        public string CommandInputID { get; set; } = "";
-
+        public string CommandInputId { get; set; } = "";
         public string CommandInputLocation { get; set; } = "";
-
         #endregion Command Attributes
 
         public string ValueResult { get; set; }
-
         public string[] ValueResultArray { get; set; }
-
         public string Notes { get; set; }
-
-        public string HtmlInputID { get; set; }
-
-        public string HtmlSumbitID { get; set; }
-
+        public string HtmlInputId { get; set; }
+        public string HtmlSumbitId { get; set; }
         public CCTableFlags.OsiLevel FlagOsi { get; set; }
-
         public CCTableFlags.CommandFunction FlagCommandFunction { get; set; }
-
         public CCTableFlags.ConfType ConfType { get; set; }
-
         public List<CCTableRowMap> MapRules { get; set; }
-
         public bool HasMap { get; set; }
     }
 
     public class CCTableRowMap {
         public string MapLabel { get; set; }
-
         public int[] MapIndex { get; set; }
     }
 
     public class CCTableRowMapped {
         public string Key { get; set; }
-
         public string Value { get; set; }
     }
 
     public class CCTableConfModel {
         public string Name { get; set; }
-
         public string Path { get; set; }
-
         public CCTableFlags.ConfType Type { get; set; }
     }
 }

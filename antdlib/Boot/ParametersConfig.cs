@@ -28,17 +28,17 @@
 ///-------------------------------------------------------------------------------------
 
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace antdlib.Boot {
 
     public class ParametersConfig : CoreParametersConfig {
 
         public static void Write(string key, string value) {
-            var readValue = xmlWriter.ReadValue(key);
+            var readValue = Writer.ReadValue(key);
             if (readValue == null) {
-                var arr = new string[] { value };
-                xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
+                var arr = new[] { value };
+                Writer.Write(key, JsonConvert.SerializeObject(arr));
             }
             else {
                 AddValue(key, value);
@@ -46,23 +46,20 @@ namespace antdlib.Boot {
         }
 
         private static void AddValue(string key, string value) {
-            var readValue = xmlWriter.ReadValue(key);
-            string[] arr = JsonConvert.DeserializeObject<string[]>(readValue);
-            var list = new List<string>();
-            foreach (string s in arr) {
-                list.Add(s);
-            }
+            var readValue = Writer.ReadValue(key);
+            var arr = JsonConvert.DeserializeObject<string[]>(readValue);
+            var list = arr.ToList();
             list.Add(value);
-            xmlWriter.Write(key, JsonConvert.SerializeObject(list.ToArray()));
+            Writer.Write(key, JsonConvert.SerializeObject(list.ToArray()));
         }
 
         public static string Read(string key) {
-            return xmlWriter.ReadValue(key);
+            return Writer.ReadValue(key);
         }
 
         public static void Edit(string key, string value) {
-            var arr = new string[] { value };
-            xmlWriter.Write(key, JsonConvert.SerializeObject(arr));
+            var arr = new[] { value };
+            Writer.Write(key, JsonConvert.SerializeObject(arr));
         }
     }
 }
