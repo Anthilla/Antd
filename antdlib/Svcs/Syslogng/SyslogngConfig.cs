@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Syslogng {
 
         private static string dir = "/etc/syslogng";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "smb.conf";
 

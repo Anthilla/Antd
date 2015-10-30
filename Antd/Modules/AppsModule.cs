@@ -27,13 +27,13 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib;
 using antdlib.Apps;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
 
-namespace Antd {
+namespace Antd.Modules {
 
     public class AppsModule : NancyModule {
 
@@ -70,23 +70,20 @@ namespace Antd {
             Get["/launch"] = x => {
                 ConsoleLogger.Log(">> App >> AnthillaSP");
                 ConsoleLogger.Log(">> Check squashfs");
-                var b = AnthillaSP.Setting.CheckSquash();
-                if (b == false) {
+                if (AnthillaSP.Setting.CheckSquash() == false) {
                     ConsoleLogger.Warn(">> Squashfs does not exist!");
-                    return Response.AsJson(b);
+                    return Response.AsJson(false);
                 }
-                else {
-                    ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
-                    AnthillaSP.Setting.MountSquash();
-                    ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                    AnthillaSP.CreateUnits();
-                    AnthillaSP.Start();
-                    return Response.AsJson(true);
-                }
+                ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
+                AnthillaSP.Setting.MountSquash();
+                ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
+                AnthillaSP.CreateUnits();
+                AnthillaSP.Start();
+                return Response.AsJson(true);
             };
 
             Post["/start/sp"] = x => {
-                AnthillaSP.StartSP();
+                AnthillaSP.StartSp();
                 return Response.AsJson("sp process started");
             };
 
@@ -96,7 +93,7 @@ namespace Antd {
             };
 
             Post["/stop/sp"] = x => {
-                AnthillaSP.StopSP();
+                AnthillaSP.StopSp();
                 return Response.AsJson("sp process stopped");
             };
 
@@ -105,18 +102,14 @@ namespace Antd {
                 return Response.AsJson("server process stopped");
             };
 
-            Get["/status/sp"] = x => {
-                return Response.AsJson(AnthillaSP.Status.AnthillaSP());
-            };
+            Get["/status/sp"] = x => Response.AsJson(AnthillaSP.Status.AnthillaSp());
 
-            Get["/status/server"] = x => {
-                return Response.AsJson(AnthillaSP.Status.AnthillaServer());
-            };
+            Get["/status/server"] = x => Response.AsJson(AnthillaSP.Status.AnthillaServer());
 
             Post["/mount"] = x => {
                 var f = (string)Request.Form.Folder;
                 var m = (string)Request.Form.Mount;
-                Terminal.Execute("mount "+ f + " " + m);
+                Terminal.Execute("mount " + f + " " + m);
                 return Response.AsJson(AnthillaSP.Status.AnthillaServer());
             };
 

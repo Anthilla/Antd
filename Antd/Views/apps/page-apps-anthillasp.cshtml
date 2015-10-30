@@ -25,7 +25,7 @@
                 <label>Anthilla SP</label>
             </td>
             <td>
-                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSP() == false) {
+                @if (antdlib.Apps.AnthillaSP.Status.IsActiveAnthillaSp() == false) {
                     <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
                 }
                 else {
@@ -36,7 +36,7 @@
         <tr>
             <td colspan="2">
                 <textarea class="bg-anthilla-gray-m border-2-anthilla-gray fg-white" style="width: 90%; height: 250px;">
-                    @antdlib.Apps.AnthillaSP.Status.AnthillaSP();
+                    @antdlib.Apps.AnthillaSP.Status.AnthillaSp();
                 </textarea>
             </td>
         </tr>

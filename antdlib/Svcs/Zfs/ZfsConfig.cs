@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Zfs {
 
         private static string dir = "/etc/zfs";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "smb.conf";
 

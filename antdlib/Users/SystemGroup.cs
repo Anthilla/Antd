@@ -37,36 +37,34 @@ namespace antdlib.Users {
 
     public class SystemGroup {
 
-        private static string file = "/etc/group";
+        private static string _file = "/etc/group";
 
-        private static string FILE = Mount.SetFILESPath(file);
+        private static string _mntFile = Mount.SetFilesPath(_file);
 
         public static void SetReady() {
-            if (!File.Exists(FILE) && File.Exists(file)) {
-                File.Copy(file, FILE, true);
+            if (!File.Exists(_mntFile) && File.Exists(_file)) {
+                File.Copy(_file, _mntFile, true);
             }
-            else if (File.Exists(FILE) && FileSystem.IsNewerThan(file, FILE)) {
-                File.Delete(FILE);
-                File.Copy(file, FILE, true);
+            else if (File.Exists(_mntFile) && FileSystem.IsNewerThan(_file, _mntFile)) {
+                File.Delete(_mntFile);
+                File.Copy(_file, _mntFile, true);
             }
-            Mount.File(file);
+            Mount.File(_file);
         }
 
         private static bool CheckIsActive() {
-            var mount = MountRepository.Get(file);
-            return (mount == null) ? false : true;
+            return (MountRepository.Get(_file) != null);
         }
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
         public static void ImportGroupsToDatabase() {
-            if (File.Exists(file)) {
-                var groupsString = FileSystem.ReadFile(file);
-                var groups = groupsString.Split(new String[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
-                foreach (var group in groups) {
-                    var mu = MapGroup(group);
-                    DeNSo.Session.New.Set(mu);
-                }
+            if (!File.Exists(_file))
+                return;
+            var groupsString = FileSystem.ReadFile(_file);
+            var groups = groupsString.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
+            foreach (var mu in groups.Select(MapGroup)) {
+                DeNSo.Session.New.Set(mu);
             }
         }
 
@@ -79,20 +77,17 @@ namespace antdlib.Users {
         }
 
         private static GroupModel MapGroup(string groupString) {
-            var groupInfo = groupString.Split(new String[] { ":" }, StringSplitOptions.None).ToArray();
-            GroupModel group = new GroupModel() { };
-            if (groupInfo.Length > 3) {
-                group.Guid = Guid.NewGuid().ToString();
-                group.Alias = groupInfo[0];
-                group.Password = groupInfo[1];
-                group.GID = groupInfo[2];
-                var users = new List<string>() { };
-                if (groupInfo[3].Length > 0) {
-                    users = groupInfo[3].Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                }
-                group.UserList = users;
-            }
-            return group;
+            var groupInfo = groupString.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
+            var groupObject = new GroupModel {
+                Guid = Guid.NewGuid().ToString(),
+                Alias = groupInfo[0],
+                Password = groupInfo[1],
+                GID = groupInfo[2]
+            };
+            if (groupInfo[3].Length <= 0) return groupObject;
+            var users = groupInfo[3].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            groupObject.UserList = users;
+            return groupObject;
         }
 
         public static void CreateGroup(string group) {

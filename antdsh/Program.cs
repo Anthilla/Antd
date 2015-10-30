@@ -35,62 +35,95 @@ using System.IO;
 
 namespace antdsh {
     class Program {
-        static string command;
-        static HashSet<cmd> commandList = new HashSet<cmd>() { };
+        static string _command;
+        static HashSet<Cmd> _commandList = new HashSet<Cmd>();
 
-        static void Main(string[] args) {
-            var startTime = DateTime.Now;
-            Console.Title = "antdsh";
-
-            RepositoryCheck.CheckIfGlobalRepositoryIsWriteable();
-            Directory.CreateDirectory(Folder.AntdVersionsDir);
-            Directory.CreateDirectory(Folder.AntdTmpDir);
-            if (args.Length == 0) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(" > ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("antdsh");
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(" > ");
-                Console.ResetColor();
-                command = Console.ReadLine();
-                if (command != "") { AddCommand(command); }
-                Command(command.Trim());
-                Main(args);
-            }
-            else {
+        private static void Main(string[] args) {
+            while (true) {
+                Console.Title = "antdsh";
+                RepositoryCheck.CheckIfGlobalRepositoryIsWriteable();
+                Directory.CreateDirectory(Folder.AntdVersionsDir);
+                Directory.CreateDirectory(Folder.AntdTmpDir);
+                if (args.Length == 0) {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(" > ");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("antdsh");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(" > ");
+                    Console.ResetColor();
+                    _command = Console.ReadLine();
+                    if (_command != "") {
+                        AddCommand(_command);
+                    }
+                    if (_command != null)
+                        Command(_command.Trim());
+                    continue;
+                }
                 Command(args[0]);
-                shell.Exit();
+                Shell.Exit();
+                break;
             }
         }
 
         static void Command(string command) {
-            if (command == "help") { Help(); }
-            else if (command == "start") { shell.Start(); }
-            else if (command == "stop") { shell.Stop(); }
-            else if (command == "restart") { shell.Restart(); }
-            else if (command == "status") { shell.Status(); }
-            else if (command == "umount-all") { shell.UmountAll(); }
-            else if (command == "update") { shell.UpdateFromPublicRepo(); }
-            else if (command == "update-check") { shell.UpdateCheck(); }
-            else if (command == "update-launch") { shell.UpdateLaunch(); }
-            else if (command == "update-select") { shell.UpdateSelect(); }
-            else if (command == "reload-systemctl") { shell.ReloadSystemctl(); }
-            else if (command == "isrunning") { shell.IsRunning(); }
-            else if (command == "clean-tmp") { shell.CleanTmp(); }
-            else if (command == "info") { shell.Info(); }
-            else if (command == "history") { PrintHistory(); }
-            else if (command == "exit") { shell.Exit(); }
-            //else if (command == "red-button") { DestroyCreatedFiles(); }
-            else if (command == "") { return; }
-            else { shell.Execute(command); }
-        }
-
-        static void DestroyCreatedFiles() {
-            Terminal.Execute("rm -fR /cfg/*");
-            Terminal.Execute("rm -fR /mnt/cdrom/DIRS/*");
+            switch (command) {
+                case "help":
+                    Help();
+                    break;
+                case "start":
+                    Shell.Start();
+                    break;
+                case "stop":
+                    Shell.Stop();
+                    break;
+                case "restart":
+                    Shell.Restart();
+                    break;
+                case "status":
+                    Shell.Status();
+                    break;
+                case "umount-all":
+                    Shell.UmountAll();
+                    break;
+                case "update":
+                    Shell.UpdateFromPublicRepo();
+                    break;
+                case "update-check":
+                    Shell.UpdateCheck();
+                    break;
+                case "update-launch":
+                    Shell.UpdateLaunch();
+                    break;
+                case "update-select":
+                    Shell.UpdateSelect();
+                    break;
+                case "reload-systemctl":
+                    Shell.ReloadSystemctl();
+                    break;
+                case "isrunning":
+                    Shell.IsRunning();
+                    break;
+                case "clean-tmp":
+                    Shell.CleanTmp();
+                    break;
+                case "info":
+                    Shell.Info();
+                    break;
+                case "history":
+                    PrintHistory();
+                    break;
+                case "exit":
+                    Shell.Exit();
+                    break;
+                case "":
+                    return;
+                default:
+                    Shell.Execute(command);
+                    break;
+            }
         }
 
         static void Help() {
@@ -121,26 +154,24 @@ namespace antdsh {
         }
 
         static void AddCommand(string command) {
-            if (command != "history") {
-                var cmd = new cmd() {
-                    timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                    command = command
-                };
-                commandList.Add(cmd);
-            }
+            if (command == "history")
+                return;
+            var cmd = new Cmd {
+                Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                Command = command
+            };
+            _commandList.Add(cmd);
         }
 
         static void PrintHistory() {
-            foreach (var cmd in commandList) {
-                Console.WriteLine(cmd.command);
+            foreach (var cmd in _commandList) {
+                Console.WriteLine(cmd.Command);
             }
-            return;
         }
 
-        public class cmd {
-            public string timestamp { get; set; }
-
-            public string command { get; set; }
+        public class Cmd {
+            public string Timestamp { get; set; }
+            public string Command { get; set; }
         }
     }
 }

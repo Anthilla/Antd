@@ -41,47 +41,43 @@ namespace antdlib.Antdsh {
         public static void UpdateFromPublicRepo() {
             WriteLine("Update From Public Repo ...");
             WriteLine("   Stopping services");
-            execute.StopServices();
+            Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
-            execute.Umount(Folder.Root);
-            execute.Umount(Folder.Database);
-            execute.Umount("/framework/antdsh");
-            execute.CleanTmp();
+            Execute.Umount(Folder.Root);
+            Execute.Umount(Folder.Database);
+            Execute.Umount("/framework/antdsh");
+            Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
-            execute.MountTmpRam();
+            Execute.MountTmpRam();
             var antdshRepoUrl = $"{Update.remoteRepo}/{Update.remoteAntdshDir}";
             var updateFileUrl = $"{antdshRepoUrl}/{Update.remoteUpdateInfo}";
             var updateFile = $"{Folder.AntdTmpDir}/{Update.remoteUpdateInfo}";
             WriteLine($"   Downloading from: {updateFileUrl}");
             WriteLine($"                 to: {updateFile}");
-            execute.DownloadFromUrl(updateFileUrl, updateFile);
+            Execute.DownloadFromUrl(updateFileUrl, updateFile);
             if (!File.Exists(updateFile)) {
-                WriteLine($"   Download failed!");
+                WriteLine("   Download failed!");
                 return;
             }
-            else {
-                WriteLine($"   Download complete!");
-            }
+            WriteLine("   Download complete!");
             var updateText = FileSystem.ReadFile(updateFile);
-            var squashName = updateText.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
+            var squashName = updateText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
             WriteLine($"   Version found: {squashName}");
             var squashUrl = $"{antdshRepoUrl}/{squashName}";
             var squashFile = $"{Folder.AntdshVersionsDir}/{squashName}";
             WriteLine($"   Downloading from: {squashUrl}");
             WriteLine($"                 to: {squashFile}");
-            execute.DownloadFromUrl(squashUrl, squashFile);
+            Execute.DownloadFromUrl(squashUrl, squashFile);
             if (!File.Exists(squashFile)) {
-                WriteLine($"   Download failed!");
+                WriteLine("   Download failed!");
                 return;
             }
-            else {
-                WriteLine($"   Download complete!");
-            }
-            execute.RemoveLink();
-            execute.LinkVersionToRunning(squashName);
-            execute.CleanTmp();
-            execute.UmountTmpRam();
-            WriteLine($"   Update complete!");
+            WriteLine("   Download complete!");
+            Execute.RemoveLink();
+            Execute.LinkVersionToRunning(squashName);
+            Execute.CleanTmp();
+            Execute.UmountTmpRam();
+            WriteLine("   Update complete!");
         }
     }
 }

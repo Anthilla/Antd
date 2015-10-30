@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Antdsh\Execute.cs" />
-    <Compile Include="Antdsh\SystemSet.cs" />
+    <Compile Include="Antdsh\system.cs" />
     <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
@@ -157,6 +157,12 @@
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Config\ConfigManagement.cs" />
+    <Compile Include="Database\DatabaseEncryption.cs" />
+    <Compile Include="Database\DB.cs" />
+    <Compile Include="Database\Entity.cs" />
+    <Compile Include="Database\EntityStatus.cs" />
+    <Compile Include="Database\SecureDB.cs" />
+    <Compile Include="Database\SecureEntity.cs" />
     <Compile Include="Firewall\FirewallFirstConfiguration.cs" />
     <Compile Include="Firewall\NFTableRepository.cs" />
     <Compile Include="Firewall\NFTables.cs" />
@@ -170,7 +176,6 @@
     <Compile Include="Contexts\Meminfo.cs" />
     <Compile Include="Contexts\Proc.cs" />
     <Compile Include="Contexts\Version.cs" />
-    <Compile Include="Database\AntdDatabase.cs" />
     <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Directories\DirectoryWatcher.cs" />

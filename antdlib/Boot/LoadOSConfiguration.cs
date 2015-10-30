@@ -32,13 +32,13 @@ using antdlib.Network;
 using System.IO;
 
 namespace antdlib.Boot {
-    public class LoadOSConfiguration {
+    public class LoadOsConfiguration {
         public static void LoadCollectd() {
             var fileName = "FILE_etc_collectd.conf";
-            var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
-            var realFileName = Mount.GetFILESPath(fileName);
-            if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
+            var file = $"{Folder.Dirs}/{fileName}";
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", file);
+            var realFileName = Mount.GetFilesPath(fileName);
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart collectd.service");
@@ -46,60 +46,21 @@ namespace antdlib.Boot {
 
         public static void LoadSystemdJournald() {
             var fileName = "FILE_etc_systemd_journald.conf";
-            var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
-            var realFileName = Mount.GetFILESPath(fileName);
-            if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
+            var file = $"{Folder.Dirs}/{fileName}";
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", file);
+            var realFileName = Mount.GetFilesPath(fileName);
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart systemd-journald.service");
         }
 
-        public static void LoadEtcSSH() {
-            var dir = "/etc/ssh";
-            var DIR = Mount.GetDIRSPath(dir);
-            Directory.CreateDirectory(dir);
-            Directory.CreateDirectory(DIR);
-            if (Mount.IsAlreadyMounted(DIR, dir) == false) {
-                Mount.Dir(dir);
-            }
-            var fileName = "sshd_config";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "moduli";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_config";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-
-            fileName = "ssh_host_dsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_dsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ecdsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ecdsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ed25519_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_ed25519_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_rsa_key";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-            fileName = "ssh_host_rsa_key.pub";
-            FileSystem.Download($"{Url.Antd}repo/ssh/{fileName}", $"{DIR}/{fileName}");
-
-            if (!File.Exists($"{dir}/sshd_config")) {
-                ConsoleLogger.Warn("NON ESISTE UN FILE!!!");
-                return;
-            }
-            Terminal.Execute("systemctl reload sshd.service");
-        }
-
-        public static void LoadWPASupplicant() {
+        public static void LoadWpaSupplicant() {
             var fileName = "FILE_etc_wpa_supplicant_wpa_suplicant.conf";
-            var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
-            var realFileName = Mount.GetFILESPath(fileName);
-            if (Mount.IsAlreadyMounted(FILE, realFileName) == false) {
+            var file = $"{Folder.Dirs}/{fileName}";
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", file);
+            var realFileName = Mount.GetFilesPath(fileName);
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");
@@ -111,8 +72,8 @@ namespace antdlib.Boot {
 
         private static void PreloadFirewallFile() {
             var fileName = "antd.boot.firewall.conf";
-            var FILE = $"{Folder.Dirs}/{fileName}";
-            FileSystem.Download($"{Url.Antd}repo/{fileName}", FILE);
+            var file = $"{Folder.Dirs}/{fileName}";
+            FileSystem.Download($"{Url.Antd}repo/{fileName}", file);
         }
 
         public static void LoadFirewall() {
@@ -121,11 +82,10 @@ namespace antdlib.Boot {
 
         public static void LoadWebsocketd() {
             var filePath = $"{Folder.Root}/websocketd";
-            if (!File.Exists(filePath)) {
-                ConsoleLogger.Info("Downloading websocketd");
-                FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
-                Terminal.Execute($"chmod 777 {filePath}");
-            }
+            if (File.Exists(filePath)) return;
+            ConsoleLogger.Info("Downloading websocketd");
+            FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
+            Terminal.Execute($"chmod 777 {filePath}");
         }
     }
 }

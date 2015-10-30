@@ -30,6 +30,7 @@ using antdlib.MountPoint;
 ///-------------------------------------------------------------------------------------
 using antdlib.Systemd;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -38,8 +39,8 @@ namespace antdlib.Apps {
 
     public class AnthillaSP {
 
-        private static string AnthillaSPAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
-        private static string AnthillaSPFrameworkDir = $"/framework/anthillasp";
+        private static string _anthillaSpAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
+        private static string _anthillaSpFrameworkDir = "/framework/anthillasp";
 
         public static void SetApp() {
             CreateUnits();
@@ -51,31 +52,31 @@ namespace antdlib.Apps {
 
         public static void CreateUnits() {
             if (Units.CheckFiles() == false) {
-                Units.SetAnthillaSP();
+                Units.SetAnthillaSp();
                 Units.MountFramework();
-                Units.LaunchAnthillaSP();
+                Units.LaunchAnthillaSp();
                 Units.LaunchAnthillaServer();
             }
             Systemctl.DaemonReload();
         }
 
         private static void SetDirectories() {
-            var app = Management.DetectApps().Where(a => a.Name == "anthillasp").FirstOrDefault();
-            if (app != null) {
+            var app = Management.DetectApps().FirstOrDefault(a => a.Name == "anthillasp");
+            if (app == null) {
+                ConsoleLogger.Warn("no appinfo detected");
+            }
+            else {
                 var dirs = Management.GetWantedDirectories(app);
-                if (dirs.Length > 0) {
+                if (dirs.Length <= 0) {
+                    ConsoleLogger.Warn("no app directory found");
+                }
+                else {
                     foreach (var dir in dirs) {
                         Directory.CreateDirectory(dir.Trim());
-                        Directory.CreateDirectory(Mount.SetDIRSPath(dir.Trim()));
+                        Directory.CreateDirectory(Mount.SetDirsPath(dir.Trim()));
                         Mount.Dir(dir.Trim());
                     }
                 }
-                else {
-                    ConsoleLogger.Warn("no app directory found");
-                }
-            }
-            else {
-                ConsoleLogger.Warn("no appinfo detected");
             }
         }
 
@@ -84,7 +85,7 @@ namespace antdlib.Apps {
             Thread.Sleep(20);
             Systemctl.Start(Units.Name.FileName.Mount);
             Thread.Sleep(20);
-            Systemctl.Start(Units.Name.FileName.LaunchSP);
+            Systemctl.Start(Units.Name.FileName.LaunchSp);
             Thread.Sleep(20);
             Systemctl.Start(Units.Name.FileName.LaunchServer);
         }
@@ -93,16 +94,16 @@ namespace antdlib.Apps {
         //    Systemctl.Start(app);
         //}
 
-        public static void StartSP() {
-            Systemctl.Start(Units.Name.FileName.LaunchSP);
+        public static void StartSp() {
+            Systemctl.Start(Units.Name.FileName.LaunchSp);
         }
 
         public static void StartServer() {
             Systemctl.Start(Units.Name.FileName.LaunchServer);
         }
 
-        public static void StopSP() {
-            Systemctl.Stop(Units.Name.FileName.LaunchSP);
+        public static void StopSp() {
+            Systemctl.Stop(Units.Name.FileName.LaunchSp);
         }
 
         public static void StopServer() {
@@ -110,80 +111,69 @@ namespace antdlib.Apps {
         }
 
         public class Status {
-            public static string AnthillaSP() {
-                return Systemctl.Status(Units.Name.FileName.LaunchSP).output;
+            public static string AnthillaSp() {
+                return Systemctl.Status(Units.Name.FileName.LaunchSp).output;
             }
 
             public static string AnthillaServer() {
                 return Systemctl.Status(Units.Name.FileName.LaunchServer).output;
             }
 
-            public static bool IsActiveAnthillaSP() {
-                return (Systemctl.Status(Units.Name.FileName.LaunchSP).output.Contains("Active: active")) ? true : false;
+            public static bool IsActiveAnthillaSp() {
+                return (Systemctl.Status(Units.Name.FileName.LaunchSp).output.Contains("Active: active"));
             }
 
             public static bool IsActiveAnthillaServer() {
-                return (Systemctl.Status(Units.Name.FileName.LaunchServer).output.Contains("Active: active")) ? true : false;
+                return (Systemctl.Status(Units.Name.FileName.LaunchServer).output.Contains("Active: active"));
             }
         }
 
         public class Setting {
 
             public static bool CheckSquash() {
-                Directory.CreateDirectory(AnthillaSPAppDir);
-                var result = false;
+                Directory.CreateDirectory(_anthillaSpAppDir);
                 var filePaths = Directory.EnumerateFiles(Folder.Apps, "*.squashfs.xz*", SearchOption.AllDirectories);
-                foreach (string t in filePaths) {
-                    if (t.Contains("anthillasp")) {
-                        result = true;
-                    }
-                }
-                return result;
+                return filePaths.Any(t => t.Contains("anthillasp"));
             }
 
             public static void CreateSquash() {
-                Terminal.Execute($"mksquashfs {AnthillaSPAppDir}/anthillasp {AnthillaSPAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Execute($"mksquashfs {_anthillaSpAppDir}/anthillasp {_anthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash(string version = null) {
                 Directory.CreateDirectory("/framework/anthillasp");
-                var squashList = Directory.EnumerateFiles(AnthillaSPAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
-                var newest = "";
-                if (squashList.Count() > 0) {
-                    newest = squashList.OrderByDescending(f => f).LastOrDefault();
-                }
-                var file = (version != null) ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(newest);
-                if (file.Length > 0) {
-                    Terminal.Execute($"mount {AnthillaSPAppDir}/{file} {AnthillaSPFrameworkDir}");
-                }
+                var squashList = Directory.EnumerateFiles(_anthillaSpAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
+                var enumerable = squashList as IList<string> ?? squashList.ToList();
+                var file = (version != null && enumerable.Any()) ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(enumerable.OrderByDescending(f => f).LastOrDefault());
+                if (string.IsNullOrEmpty(file))
+                    return;
+                Terminal.Execute($"mount {_anthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
             }
         }
 
         public class Units {
-
             public class Name {
-
                 public class FileName {
-                    public static string Prepare { get { return "anthillasp-prepare.service"; } }
-                    public static string Mount { get { return "framework-anthillasp.mount"; } }
-                    public static string LaunchSP { get { return "anthillasp-launcher.service"; } }
-                    public static string LaunchServer { get { return "anthillaserver-launcher.service"; } }
+                    public static string Prepare => "anthillasp-prepare.service";
+                    public static string Mount => "framework-anthillasp.mount";
+                    public static string LaunchSp => "anthillasp-launcher.service";
+                    public static string LaunchServer => "anthillaserver-launcher.service";
                 }
 
-                public static string Prepare { get { return Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service"); } }
-                public static string Mount { get { return Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount"); } }
-                public static string LaunchSP { get { return Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service"); } }
-                public static string LaunchServer { get { return Path.Combine(Folder.AppsUnits, "anthillaserver-launcher.service"); } }
+                public static string Prepare => Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service");
+                public static string Mount => Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount");
+                public static string LaunchSp => Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service");
+                public static string LaunchServer => Path.Combine(Folder.AppsUnits, "anthillaserver-launcher.service");
             }
 
             public static bool CheckFiles() {
-                return (File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSP) && File.Exists(Name.LaunchServer)) ? true : false;
+                return (File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSp) && File.Exists(Name.LaunchServer));
             }
 
-            public static void SetAnthillaSP() {
+            public static void SetAnthillaSp() {
                 var path = Name.Prepare;
                 if (!File.Exists(path)) {
-                    using (StreamWriter sw = File.CreateText(path)) {
+                    using (var sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Prepare Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
@@ -202,7 +192,7 @@ namespace antdlib.Apps {
             public static void MountFramework() {
                 var path = Name.Mount;
                 if (!File.Exists(path)) {
-                    using (StreamWriter sw = File.CreateText(path)) {
+                    using (var sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: DIR_framework_anthillasp Mount ");
                         sw.WriteLine("ConditionPathExists=/framework/anthillasp");
@@ -218,10 +208,10 @@ namespace antdlib.Apps {
                 Systemctl.DaemonReload();
             }
 
-            public static void LaunchAnthillaSP() {
-                var path = Name.LaunchSP;
+            public static void LaunchAnthillaSp() {
+                var path = Name.LaunchSp;
                 if (!File.Exists(path)) {
-                    using (StreamWriter sw = File.CreateText(path)) {
+                    using (var sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
@@ -240,7 +230,7 @@ namespace antdlib.Apps {
             public static void LaunchAnthillaServer() {
                 var path = Name.LaunchServer;
                 if (!File.Exists(path)) {
-                    using (StreamWriter sw = File.CreateText(path)) {
+                    using (var sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaServer Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
@@ -257,8 +247,8 @@ namespace antdlib.Apps {
             }
         }
 
-        public static string AnthillaServerPID { get { return Proc.GetPID("AnthillaServer.exe"); } }
+        public static string AnthillaServerPid => Proc.GetPID("AnthillaServer.exe");
 
-        public static string AnthillaSPPID { get { return Proc.GetPID("AnthillaSP.exe"); } }
+        public static string AnthillaSppid => Proc.GetPID("AnthillaSP.exe");
     }
 }

@@ -37,7 +37,7 @@ using System.Linq;
 using static System.Console;
 
 namespace antdlib.Antdsh {
-    public class execute {
+    public class Execute {
         /// <summary>
         /// ok
         /// </summary>
@@ -52,10 +52,9 @@ namespace antdlib.Antdsh {
         /// </summary>
         public static void CheckRunningExists() {
             var running = Terminal.Execute("ls -la " + Folder.AntdVersionsDir + " | grep " + AntdFile.antdRunning);
-            if (!running.Contains(AntdFile.antdRunning)) {
-                WriteLine("There's no running version of antd.");
+            if (running.Contains(AntdFile.antdRunning))
                 return;
-            }
+            WriteLine("There's no running version of antd.");
         }
 
         /// <summary>
@@ -65,13 +64,14 @@ namespace antdlib.Antdsh {
         public static KeyValuePair<string, string> GetNewestVersion() {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Folder.AntdVersionsDir, "*.*");
-            var zips = files.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
+            var enumerable = files as string[] ?? files.ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = files.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
@@ -116,7 +116,7 @@ namespace antdlib.Antdsh {
                 WriteLine("There's no running version of antd.");
                 return null;
             }
-            var version = Terminal.Execute("file " + RunningPath).Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
+            var version = Terminal.Execute("file " + RunningPath).Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
             WriteLine("Running version detected: {0}", version);
             return version;
         }
@@ -124,7 +124,6 @@ namespace antdlib.Antdsh {
         /// <summary>
         /// ok
         /// </summary>
-        /// <param name="linkedVersionName"></param>
         /// <returns></returns>
         public static KeyValuePair<string, string> SetVersionKeyValuePair(string versionName) {
             return new KeyValuePair<string, string>(
@@ -174,17 +173,17 @@ namespace antdlib.Antdsh {
         /// ok
         /// </summary>
         public static void UmountTmpRam() {
-            var r = Terminal.Execute($"cat /proc/mounts | grep {Folder.AntdTmpDir}");
-            if (r.Length > 0 && !r.StartsWith("----")) {
+            while (true) {
+                var r = Terminal.Execute($"cat /proc/mounts | grep {Folder.AntdTmpDir}");
+                if (r.Length > 0 && !r.StartsWith("----")) {
+                    Terminal.Execute($"umount -t tmpfs {Folder.AntdTmpDir}");
+                    UmountTmpRam();
+                }
+                var f = Terminal.Execute($"df | grep {Folder.AntdTmpDir}");
+                if (f.Length <= 0 || f.StartsWith("----"))
+                    return;
                 Terminal.Execute($"umount -t tmpfs {Folder.AntdTmpDir}");
-                UmountTmpRam();
             }
-            var f = Terminal.Execute($"df | grep {Folder.AntdTmpDir}");
-            if (f.Length > 0 && !f.StartsWith("----")) {
-                Terminal.Execute($"umount -t tmpfs {Folder.AntdTmpDir}");
-                UmountTmpRam();
-            }
-            return;
         }
 
         /// <summary>
@@ -259,24 +258,23 @@ namespace antdlib.Antdsh {
         public static void PrintVersions() {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Folder.AntdVersionsDir, "*.*");
-            var zips = files.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
+            var enumerable = files as string[] ?? files.ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = files.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
                 }
             }
-            var versionsOrdered = new KeyValuePair<string, string>[] { };
-            if (versions.ToArray().Length > 0) {
-                versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
-                foreach (var version in versions) {
-                    WriteLine("   {0}    -    {1}", version.Key, version.Value);
-                }
+            if (versions.ToArray().Length <= 0)
+                return;
+            foreach (var version in versions) {
+                WriteLine("   {0}    -    {1}", version.Key, version.Value);
             }
         }
 
@@ -287,13 +285,14 @@ namespace antdlib.Antdsh {
         public static KeyValuePair<string, string> GetVersionByNumber(string number) {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Folder.AntdVersionsDir, "*.*");
-            var zips = files.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
+            var enumerable = files as string[] ?? files.ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(AntdFile.zipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = files.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.squashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
@@ -301,7 +300,7 @@ namespace antdlib.Antdsh {
             }
             var newestVersionFound = new KeyValuePair<string, string>(null, null);
             if (versions.ToArray().Length > 0) {
-                newestVersionFound = versions.Where(v => v.Value == number).FirstOrDefault();
+                newestVersionFound = versions.FirstOrDefault(v => v.Value == number);
             }
             return newestVersionFound;
         }
@@ -322,6 +321,7 @@ namespace antdlib.Antdsh {
         /// ok
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="destination"></param>
         public static void DownloadFromUrl(string url, string destination) {
             WriteLine("Download file from: {0}", url);
             WriteLine("Download file to: {0}", destination);
@@ -364,7 +364,8 @@ namespace antdlib.Antdsh {
             WriteLine("Trying to pick: {0}", fileToPick);
             var destination = Folder.AntdTmpDir + "/" + Path.GetFileName(fileToPick);
             WriteLine("and moving it here: {0}", destination);
-            File.Move(fileToPick, destination);
+            if (fileToPick != null)
+                File.Move(fileToPick, destination);
         }
 
         /// <summary>
@@ -392,16 +393,15 @@ namespace antdlib.Antdsh {
         /// ok
         /// </summary>
         public static void UmountAntd() {
-            var r = Terminal.Execute("cat /proc/mounts | grep /antd");
-            var f = Terminal.Execute("df | grep /cfg/antd");
-            if (r.Length > 0 || f.Length > 0) {
+            while (true) {
+                var r = Terminal.Execute("cat /proc/mounts | grep /antd");
+                var f = Terminal.Execute("df | grep /cfg/antd");
+                if (r.Length <= 0 && f.Length <= 0)
+                    return;
                 Terminal.Execute($"umount {Folder.Root}");
                 Terminal.Execute($"umount {Folder.Database}");
                 Terminal.Execute("umount /framework/antd");
-                UmountAntd();
             }
-            else
-                return;
         }
 
         /// <summary>
@@ -409,11 +409,11 @@ namespace antdlib.Antdsh {
         /// </summary>
         /// <param name="dir"></param>
         public static void Umount(string dir) {
-            if (Mount.IsAlreadyMounted(dir) == true) {
+            while (true) {
+                if (Mount.IsAlreadyMounted(dir) != true)
+                    return;
                 Terminal.Execute($"umount {dir}");
-                Umount(dir);
             }
-            return;
         }
 
         /// <summary>
@@ -422,19 +422,19 @@ namespace antdlib.Antdsh {
         /// <returns></returns>
         public static bool IsAntdRunning() {
             var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
-            return (res.Length > 0) ? true : false;
+            return (res.Length > 0);
         }
 
         /// <summary>
         /// ok
         /// </summary>
         public static void CheckAntdUnits() {
-            var unitsToCheck = new string[] {
+            var unitsToCheck = new[] {
                 $"{Units.prepare}",
                 $"{Units.mount}",
                 $"{Units.launch}"
             };
-            foreach(var unit in unitsToCheck) {
+            foreach (var unit in unitsToCheck) {
                 if (File.Exists(unit)) {
                     File.Delete(unit);
                 }
@@ -446,8 +446,6 @@ namespace antdlib.Antdsh {
                 }
                 else if (unit == Units.launch) {
                     WriteAntdLaunchUnit();
-                }
-                else {
                 }
             }
             Systemctl.DaemonReload();

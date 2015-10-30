@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Systemd.Networkd {
 
         private static string dir = "/etc/networkd";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "smb.conf";
 

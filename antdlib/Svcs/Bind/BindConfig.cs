@@ -42,15 +42,15 @@ namespace antdlib.Svcs.Bind {
 
         private static string dir = "/etc/bind";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string dyn = "/etc/bind/dyn";
 
-        private static string DYN = Mount.SetDIRSPath(dyn);
+        private static string DYN = Mount.SetDirsPath(dyn);
 
         private static string master = "/etc/bind/master";
 
-        private static string MASTER = Mount.SetDIRSPath(master);
+        private static string MASTER = Mount.SetDirsPath(master);
 
         private static string mainFile = "named.conf";
 

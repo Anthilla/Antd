@@ -41,7 +41,7 @@ namespace antdlib.Svcs.Dhcp {
 
         private static string dir = "/etc/dhcp";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "dhcpd.conf";
 

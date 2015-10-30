@@ -41,7 +41,7 @@ namespace Antd {
 
     internal static class Program {
 
-        private static void Main(string[] args) {
+        private static void Main() {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
 
@@ -72,7 +72,7 @@ namespace Antd {
             using (WebApp.Start<Startup>(uri)) {
                 AntdBoot.SetOsConfiguration();
                 AntdBoot.LaunchApps();
-                AntdBoot.ReloadSSH();
+                AntdBoot.ReloadSsh();
                 AntdBoot.CheckResolvd();
                 Directory.CreateDirectory(Folder.Config);
                 Console.WriteLine("Checking existing Config...");
@@ -95,7 +95,7 @@ namespace Antd {
             AntdBoot.StartDatabase();
             AntdBoot.SetMounts();
             AntdBoot.SetUsersMount(false);
-            AntdBoot.SetOSMount();
+            AntdBoot.SetOsMount();
             AntdBoot.StartSignalR(app, true, true);
             AntdBoot.StartNancy(app);
             AntdBoot.StartScheduler(false);

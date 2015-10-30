@@ -72,7 +72,7 @@
             @foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountRepository.Get()) {
                 <tr data-guid="@mount.Guid" data-timestamp="@mount.DFPTimestamp">
                     <td style="width: 40px;">@mount.MountContext</td>
-                    <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDIRSPath(mount.Path)</td>
+                    <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDirsPath(mount.Path)</td>
                     <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
                         <i class="icon-arrow-right-5 fg-white"></i>
                     </td>

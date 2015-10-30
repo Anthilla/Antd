@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Nfs {
 
         private static string dir = "/etc/nfs";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "smb.conf";
 

@@ -38,26 +38,25 @@ using System.Linq;
 namespace antdlib.Ssh {
     public class SshConfig {
 
-        private static string serviceGuid = "A7A04748-9A03-4B1B-9D0F-BBF738F8C8E9";
+        private static string _serviceGuid = "A7A04748-9A03-4B1B-9D0F-BBF738F8C8E9";
 
-        private static string dir = "/etc/ssh";
+        private static string _dir = "/etc/ssh";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string _mntDir = Mount.SetDirsPath(_dir);
 
-        private static string mainFile = "sshd_config";
+        private static string _mainFile = "sshd_config";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {dir} {DIR}");
-            FileSystem.CopyDirectory(dir, DIR);
-            Mount.Dir(dir);
+            Terminal.Execute($"cp {_dir} {_mntDir}");
+            FileSystem.CopyDirectory(_dir, _mntDir);
+            Mount.Dir(_dir);
         }
 
         private static bool CheckIsActive() {
-            var mount = MountRepository.Get(dir);
-            return (mount == null) ? false : true;
+            return (MountRepository.Get(_dir) != null);
         }
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
             //todo cerca comando
@@ -65,11 +64,11 @@ namespace antdlib.Ssh {
         }
 
         public class MapRules {
-            public static char CharComment { get { return '#'; } }
+            public static char CharComment => '#';
 
-            public static char CharKevValueSeparator { get { return ' '; } }
+            public static char CharKevValueSeparator => ' ';
 
-            public static char CharEndOfLine { get { return '\n'; } }
+            public static char CharEndOfLine => '\n';
         }
 
         public class LineModel {
@@ -109,18 +108,11 @@ namespace antdlib.Ssh {
             private static IEnumerable<LineModel> ReadFile(string path) {
                 var text = FileSystem.ReadFile(path);
                 var lines = text.Split(MapRules.CharEndOfLine);
-                var list = new List<LineModel>() { };
-                foreach (var line in lines) {
-                    if (line != "" && !line.StartsWith("include")) {
-                        var cleanLine = CleanLine(line);
-                        list.Add(ReadLine(path, cleanLine));
-                    }
-                }
-                return list;
+                return (from line in lines where line != "" && !line.StartsWith("include") select CleanLine(line) into cleanLine select ReadLine(path, cleanLine)).ToList();
             }
 
             private static LineModel ReadLine(string path, string line) {
-                var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var keyValuePair = line.Split(new[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
                 var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
                 var value = "";
@@ -131,14 +123,8 @@ namespace antdlib.Ssh {
                     value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
-                KeyValuePair<string, string> booleanVerbs;
-                if (type == ServiceDataType.Boolean) {
-                    booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value.Trim());
-                }
-                else {
-                    booleanVerbs = new KeyValuePair<string, string>("", "");
-                }
-                var model = new LineModel() {
+                var booleanVerbs = type == ServiceDataType.Boolean ? Helper.ServiceData.SupposeBooleanVerbs(value.Trim()) : new KeyValuePair<string, string>("", "");
+                var model = new LineModel {
                     FilePath = path,
                     Key = key.Trim(),
                     Value = value.Trim(),
@@ -149,14 +135,11 @@ namespace antdlib.Ssh {
             }
 
             public static void Render() {
-                var data = new List<LineModel>() { };
-                var lines = ReadFile(mainFile);
-                foreach (var line in lines) {
-                    data.Add(line);
-                }
-                var ssh = new SshModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                var lines = ReadFile(_mainFile);
+                var data = lines.ToList();
+                var ssh = new SshModel {
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
@@ -164,16 +147,16 @@ namespace antdlib.Ssh {
             }
 
             public static SshModel Get() {
-                var ssh = DeNSo.Session.New.Get<SshModel>(s => s.Guid == serviceGuid).FirstOrDefault();
+                var ssh = DeNSo.Session.New.Get<SshModel>(s => s.Guid == _serviceGuid).FirstOrDefault();
                 return ssh;
             }
         }
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceSsh parameter) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
-                var data = new LineModel() {
+                var data = new LineModel {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
                     Value = parameter.DataValue,
@@ -184,13 +167,10 @@ namespace antdlib.Ssh {
             }
 
             public static void SaveGlobalConfig(List<ServiceSsh> newParameters) {
-                var data = new List<LineModel>() { };
-                foreach (var parameter in newParameters) {
-                    data.Add(ConvertData(parameter));
-                }
-                var ssh = new SshModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                var data = newParameters.Select(ConvertData).ToList();
+                var ssh = new SshModel {
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
@@ -221,7 +201,7 @@ namespace antdlib.Ssh {
                 ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
                 var line = new LineModel() {
-                    FilePath = $"{DIR}/{mainFile}",
+                    FilePath = $"{_mntDir}/{_mainFile}",
                     Key = key,
                     Value = value,
                     Type = type,
@@ -230,16 +210,16 @@ namespace antdlib.Ssh {
                 var data = MapFile.Get().Data;
                 data.Add(line);
                 var ssh = new SshModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
                 DeNSo.Session.New.Set(ssh);
             }
 
-            public static void RewriteSSHDCONF() {
-                var file = $"{DIR}/{mainFile}";
+            public static void RewriteSshdconf() {
+                var file = $"{_mntDir}/{_mainFile}";
                 CleanFile(file);
             }
         }
@@ -267,18 +247,18 @@ namespace antdlib.Ssh {
             }
 
             public static List<KeyModel> GetAll() {
-                var list = new List<KeyModel>() { };
-                var files = Directory.EnumerateFiles(dir).Where(f => f.Contains(fileStartsWith)).ToArray();
-                foreach (var file in files) {
-                    var type = (file.EndsWith(publicEndsWith) == true) ? SSHKeyType.Public : SSHKeyType.Private;
-                    var k = new KeyModel() {
-                        _Id = Guid.NewGuid().ToString(),
-                        Guid = Guid.NewGuid().ToString(),
-                        Timestamp = Timestamp.Now,
-                        Name = file/*.Replace("", "")*/,
-                        Content = FileSystem.ReadFile(file),
-                        KeyType = type
-                    };
+                var list = new List<KeyModel>();
+                var files = Directory.EnumerateFiles(_dir).Where(f => f.Contains(fileStartsWith)).ToArray();
+                foreach (var k in from file in files
+                                  let type = file.EndsWith(publicEndsWith) ? SSHKeyType.Public : SSHKeyType.Private
+                                  select new KeyModel {
+                                      _Id = Guid.NewGuid().ToString(),
+                                      Guid = Guid.NewGuid().ToString(),
+                                      Timestamp = Timestamp.Now,
+                                      Name = file/*.Replace("", "")*/,
+                                      Content = FileSystem.ReadFile(file),
+                                      KeyType = type
+                                  }) {
                     DeNSo.Session.New.Set(k);
                     list.Add(k);
                 }
@@ -290,7 +270,7 @@ namespace antdlib.Ssh {
             }
 
             public static void Generate(string keyName) {
-                Terminal.Execute($"ssh-keygen -t rsa -f {dir}/{fileStartsWith}{keyName}{privateEndsWith} -N {Guid.NewGuid().ToString()}");
+                Terminal.Execute($"ssh-keygen -t rsa -f {_dir}/{fileStartsWith}{keyName}{privateEndsWith} -N {Guid.NewGuid()}");
             }
 
             public static void SendKey(string host, string keyName, string user = "") {

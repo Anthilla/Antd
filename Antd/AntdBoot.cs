@@ -27,25 +27,29 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Scheduler;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using antdlib;
-using antdlib.Status;
+using antdlib.Apps;
+using antdlib.Auth.T2FA;
 using antdlib.Boot;
+using antdlib.MountPoint;
+using antdlib.Scheduler;
+using antdlib.Status;
+using antdlib.Users;
 using Microsoft.AspNet.SignalR;
 using Nancy;
 using Owin;
-using System.IO;
-using System.Text.RegularExpressions;
-using antdlib.MountPoint;
-using antdlib.Apps;
-using System.Linq;
 
 namespace Antd {
 
     public class AntdBoot {
 
         public static void CheckIfGlobalRepositoryIsWriteable() {
-            if (AssemblyInfo.IsUnix == true) {
+            if (AssemblyInfo.IsUnix) {
                 var bootExtData = Terminal.Execute("blkid | grep BootExt");
                 if (bootExtData.Length > 0) {
                     var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
@@ -71,69 +75,67 @@ namespace Antd {
         }
 
         public static void SetWorkingDirectories() {
-            if (AssemblyInfo.IsUnix == true) {
-                Mount.WorkingDirectories();
-                ConsoleLogger.Log("    working directories -> checked");
-            }
+            if (!AssemblyInfo.IsUnix)
+                return;
+            Mount.WorkingDirectories();
+            ConsoleLogger.Log("    working directories -> checked");
         }
 
         public static void SetMounts() {
-            if (AssemblyInfo.IsUnix == true) {
-                Mount.AllDirectories();
-                ConsoleLogger.Log("    mounts -> checked");
-            }
+            if (!AssemblyInfo.IsUnix)
+                return;
+            Mount.AllDirectories();
+            ConsoleLogger.Log("    mounts -> checked");
         }
 
         public static void SetUsersMount(bool isActive) {
-            if (isActive == true && AssemblyInfo.IsUnix == true) {
-                antdlib.Users.SystemUser.SetReady();
-                antdlib.Users.SystemGroup.SetReady();
-                ConsoleLogger.Log("    users mount -> checked");
-            }
+            if (!isActive || !AssemblyInfo.IsUnix)
+                return;
+            SystemUser.SetReady();
+            SystemGroup.SetReady();
+            ConsoleLogger.Log("    users mount -> checked");
         }
 
-        public static void SetOSMount() {
-            if (AssemblyInfo.IsUnix == true) {
-                var firmware = "/mnt/cdrom/Kernel/active-firmware";
-                var firmwareDir = "/lib64/firmware";
-                if (Mount.IsAlreadyMounted(firmware, firmwareDir) == false) {
-                    Terminal.Execute($"mount {firmware} {firmwareDir}");
-                }
-                var module = "/mnt/cdrom/Kernel/active-modules";
-                var kernelRelease = Terminal.Execute("uname -r").Trim();
-                var linkedRelease = Terminal.Execute($"file {module}").Trim();
-                if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
-                    var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                    //todo rimuovere poi la riga qui sotto
-                    Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
-                    ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
-                    Directory.CreateDirectory(moduleDir);
-                    Terminal.Execute($"mount {module} {moduleDir}");
-                }
-                ConsoleLogger.Log("    os mount -> checked");
-                Terminal.Execute($"systemctl restart systemd-modules-load.service");
+        public static void SetOsMount() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            var firmware = "/mnt/cdrom/Kernel/active-firmware";
+            var firmwareDir = "/lib64/firmware";
+            if (Mount.IsAlreadyMounted(firmware, firmwareDir) == false) {
+                Terminal.Execute($"mount {firmware} {firmwareDir}");
             }
+            const string module = "/mnt/cdrom/Kernel/active-modules";
+            var kernelRelease = Terminal.Execute("uname -r").Trim();
+            var linkedRelease = Terminal.Execute($"file {module}").Trim();
+            if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+                var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                //todo rimuovere poi la riga qui sotto
+                Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
+                ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
+                Directory.CreateDirectory(moduleDir);
+                Terminal.Execute($"mount {module} {moduleDir}");
+            }
+            ConsoleLogger.Log("    os mount -> checked");
+            Terminal.Execute("systemctl restart systemd-modules-load.service");
         }
 
         public static void SetOsConfiguration() {
-            if (AssemblyInfo.IsUnix == true) {
-                ConsoleLogger.Log("    os -> loading configuration");
-                //ConsoleLogger.Log("          load /etc/ssh");
-                //LoadOSConfiguration.LoadEtcSSH();
-                //ConsoleLogger.Log("          load collectd");
-                //LoadOSConfiguration.LoadCollectd();
-                ConsoleLogger.Log("          load journald");
-                LoadOSConfiguration.LoadSystemdJournald();
-                //ConsoleLogger.Log("          load wpa-supplicant");
-                //LoadOSConfiguration.LoadWPASupplicant();
-                ConsoleLogger.Log("          load network");
-                LoadOSConfiguration.LoadNetwork();
-                ConsoleLogger.Log("          load firewall");
-                LoadOSConfiguration.LoadFirewall();
-                ConsoleLogger.Log("          installing websocketd");
-                LoadOSConfiguration.LoadWebsocketd();
-                ConsoleLogger.Log("    os -> checked");
-            }
+            if (!AssemblyInfo.IsUnix)
+                return;
+            ConsoleLogger.Log("    os -> loading configuration");
+            //ConsoleLogger.Log("          load collectd");
+            //LoadOSConfiguration.LoadCollectd();
+            ConsoleLogger.Log("          load journald");
+            LoadOsConfiguration.LoadSystemdJournald();
+            //ConsoleLogger.Log("          load wpa-supplicant");
+            //LoadOSConfiguration.LoadWPASupplicant();
+            ConsoleLogger.Log("          load network");
+            LoadOsConfiguration.LoadNetwork();
+            ConsoleLogger.Log("          load firewall");
+            LoadOsConfiguration.LoadFirewall();
+            ConsoleLogger.Log("          installing websocketd");
+            LoadOsConfiguration.LoadWebsocketd();
+            ConsoleLogger.Log("    os -> checked");
         }
 
         public static void SetCoreParameters() {
@@ -142,20 +144,20 @@ namespace Antd {
         }
 
         public static void CheckSysctl(bool isActive) {
-            if (AssemblyInfo.IsUnix == true) {
-                if (isActive) {
-                    Sysctl.WriteConfig();
-                    Sysctl.LoadConfig();
-                    ConsoleLogger.Log("    sysctl -> loaded");
-                }
-                else {
-                    ConsoleLogger.Log("    sysctl -> skipped");
-                }
+            if (!AssemblyInfo.IsUnix)
+                return;
+            if (isActive) {
+                Sysctl.WriteConfig();
+                Sysctl.LoadConfig();
+                ConsoleLogger.Log("    sysctl -> loaded");
+            }
+            else {
+                ConsoleLogger.Log("    sysctl -> skipped");
             }
         }
 
         public static void StartNetworkd() {
-            if (AssemblyInfo.IsUnix == true) {
+            if (AssemblyInfo.IsUnix) {
                 Networkd.SetConfiguration();
             }
         }
@@ -165,14 +167,14 @@ namespace Antd {
             ConsoleLogger.Log("    scheduler -> loaded");
         }
 
-        private readonly static string[] WatchDirectories = new string[] {
+        private readonly static string[] WatchDirectories = {
             Folder.Root
         };
 
         public static void StartDirectoryWatcher(bool isActive) {
             if (isActive) {
                 ConsoleLogger.Log("    directory watcher -> enabled");
-                foreach (string folder in WatchDirectories) {
+                foreach (var folder in WatchDirectories) {
                     if (Directory.Exists(folder)) {
                         new DirectoryWatcher(folder).Watch();
                         ConsoleLogger.Log("    directory watcher -> enabled for {0}", folder);
@@ -229,60 +231,45 @@ namespace Antd {
 
         public static void InitAuthentication() {
             ConsoleLogger.Log("    authentication -> initialize");
-            if (antdlib.Auth.T2FA.Config.ValueExists == false) {
-                antdlib.Auth.T2FA.Config.Disable();
+            if (Config.ValueExists == false) {
+                Config.Disable();
             }
         }
 
         public static void LaunchApps() {
-            if (AssemblyInfo.IsUnix == true) {
-                var apps = Management.DetectApps();
-                if (apps.Length > 0) {
-                    foreach (var app in apps) {
-                        var dirs = Management.GetWantedDirectories(app);
-                        if (dirs.Length > 0) {
-                            foreach (var dir in dirs) {
-                                Mount.Dir(dir);
-                            }
-                        }
-                    }
+            if (!AssemblyInfo.IsUnix)
+                return;
+            var apps = Management.DetectApps();
+            if (apps.Length > 0) {
+                foreach (var dir in from app in apps select Management.GetWantedDirectories(app) into dirs where dirs.Length > 0 from dir in dirs select dir) {
+                    Mount.Dir(dir);
                 }
-                System.Threading.Thread.Sleep(10);
-                AnthillaSP.SetApp();
             }
+            Thread.Sleep(10);
+            AnthillaSP.SetApp();
         }
 
-        public static void ReloadSSH() {
-            ConsoleLogger.Log("ssh> stop sshd");
-            Terminal.Execute("systemctl stop sshd.service");
-            var dir = "/etc/ssh";
-            var DIR = Mount.GetDIRSPath(dir);
+        public static void ReloadSsh() {
+            const string dir = "/etc/ssh";
+            var mntDir = Mount.SetDirsPath(dir);
+            if (mntDir == null)
+                throw new ArgumentNullException(nameof(mntDir));
             ConsoleLogger.Log("ssh> set directories");
-            Terminal.Execute($"mkdir -p {dir}");
-            Terminal.Execute($"mkdir -p {DIR}");
-            if (Mount.IsAlreadyMounted(dir, DIR) == true) {
-                ConsoleLogger.Log("ssh> umount");
-                Mount.Umount(dir, DIR);
+            if (!Directory.Exists(mntDir)) {
+                Terminal.Execute($"cp -fR {dir} {mntDir}");
             }
-            ConsoleLogger.Log("ssh> removing old keys");
-            Terminal.Execute($"rm -fR {dir}/*");
-            ConsoleLogger.Log("ssh> mount");
-            Terminal.Execute($"mount -o bind {dir} {DIR}");
-            ConsoleLogger.Log("ssh> check keys");
-            if (Directory.EnumerateFiles(DIR).Count() < 1) {
-                ConsoleLogger.Log("ssh> generate keys");
-                Terminal.Execute("ssh-keygen -A");
-            }
-            ConsoleLogger.Log("ssh> restart sshd");
+            Mount.Umount(dir);
+            Mount.Dir(dir);
+            Terminal.Execute("ssh-keygen -A");
             Terminal.Execute("systemctl restart sshd.service");
         }
 
         public static void CheckResolvd() {
-            var resolvfile = "/etc/resolv.conf";
-            if (!File.Exists(resolvfile)) {
-                if (File.ReadAllText(resolvfile).Length < 1) {
-                    FileSystem.WriteFile(resolvfile, "nameserver 8.8.8.8");
-                }
+            const string resolvfile = "/etc/resolv.conf";
+            if (File.Exists(resolvfile))
+                return;
+            if (File.ReadAllText(resolvfile).Length < 1) {
+                FileSystem.WriteFile(resolvfile, "nameserver 8.8.8.8");
             }
         }
     }

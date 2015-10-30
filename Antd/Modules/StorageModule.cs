@@ -28,7 +28,6 @@
 ///-------------------------------------------------------------------------------------
 
 using antdlib.CCTable;
-using antdlib.Database;
 using antdlib.Install;
 using antdlib.Storage;
 using Nancy;
@@ -51,12 +50,6 @@ namespace Antd {
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-storage", vmod];
-            };
-
-            Get["/database/raid/{path*}"] = x => {
-                string path = x.path;
-                AntdDatabase.AddRaidPath(path);
-                return Response.AsJson(true);
             };
 
             Get["/reload/volumes"] = x => {

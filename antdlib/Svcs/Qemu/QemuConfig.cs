@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Qemu {
 
         private static string dir = "/etc/qemu";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "smb.conf";
 

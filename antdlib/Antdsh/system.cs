@@ -31,7 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using static antdlib.Terminal;
-using static antdlib.Antdsh.execute;
+using static antdlib.Antdsh.Execute;
 using static System.Console;
 
 namespace antdlib.Antdsh {
@@ -44,13 +44,13 @@ namespace antdlib.Antdsh {
         public static bool ChechDiskSpace() {
             WriteLine("Checking Disk Space");
             var blkid = Execute("blkid | grep /dev/sda | grep BootExt");
-            var volume = blkid.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
+            var volume = blkid.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
             var available = Execute($"df -k {volume} | sed -e 1d|head -3").
-                Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
+                Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
             var availableInt = Convert.ToInt32(available);
             var msg = (availableInt > 0) ? "There's enought disk space for the update" : "Not enough free disk space, try to remove something...";
             WriteLine($"{msg}");
-            return (availableInt > 0) ? true : false;
+            return (availableInt > 0);
         }
 
         /// <summary>
@@ -74,12 +74,6 @@ namespace antdlib.Antdsh {
             FileSystem.Download("/url/download/modules", $"{modulesTmp}");
             var systemTmp = $"{Folder.AntdTmpDir}/system";
             FileSystem.Download("/url/download/system", $"{systemTmp}");
-
-            var firmware = $"{Folder.kernelDir}/firmare";
-            var initrd = $"{Folder.kernelDir}/initrd";
-            var kernel = $"{Folder.kernelDir}/kernel";
-            var modules = $"{Folder.kernelDir}/modules";
-            var system = $"{Folder.kernelDir}/system";
 
             Execute($"cp {firmwareTmp} {Folder.kernelDir}");
             Execute($"cp {initrdTmp} {Folder.kernelDir}");
@@ -122,7 +116,7 @@ namespace antdlib.Antdsh {
         /// 07 - il sistema è stato aggiornato (forse) e riavviato con i nuovi file: controlla lo status
         /// </summary>
         public static void VerifyUpdate() {
-            var versionInfo = Execute("uname -a").Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[2];
+            var versionInfo = Execute("uname -a").Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[2];
             WriteLine($"This aos version is: {versionInfo}");
         }
 
@@ -133,7 +127,7 @@ namespace antdlib.Antdsh {
             WriteLine("Setting system units");
 
             WriteLine("Reload daemon now...");
-            Terminal.Execute("systemctl daemon-reload");
+            Execute("systemctl daemon-reload");
         }
 
         /// <summary>
@@ -142,20 +136,24 @@ namespace antdlib.Antdsh {
         /// </summary>
         public static void SetAndMountDirs() {
             WriteLine("Mounting directories and files: ");
-            var directories = Directory.EnumerateDirectories(Folder.Dirs).Where(d => !d.Contains(".ori")).ToArray();
-            for (int i = 0; i < directories.Length; i++) {
-                var path = Path.GetFileName(directories[i]);
+            var directories = Directory.EnumerateDirectories(Folder.Dirs).Where(d => !d.Contains(".ori"));
+            foreach (var t in directories) {
+                var path = Path.GetFileName(t);
+                if (path == null)
+                    continue;
                 var newPath = path.Replace("_", "/");
-                WriteLine($"{directories[i]} mounted on {newPath}");
-                Execute($"mount --bind {directories[i]} {newPath}");
+                WriteLine($"{t} mounted on {newPath}");
+                Execute($"mount --bind {t} {newPath}");
             }
 
-            var files = Directory.EnumerateFiles(Folder.Dirs).Where(f => !f.Contains(".ori")).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                var path = Path.GetFileName(files[i]);
+            var files = Directory.EnumerateFiles(Folder.Dirs).Where(f => !f.Contains(".ori"));
+            foreach (var t in files) {
+                var path = Path.GetFileName(t);
+                if (path == null)
+                    continue;
                 var newPath = path.Replace("_", "/");
-                WriteLine($"{files[i]} mounted on {newPath}");
-                Execute($"mount --bind {files[i]} {newPath}");
+                WriteLine($"{t} mounted on {newPath}");
+                Execute($"mount --bind {t} {newPath}");
             }
         }
 
@@ -176,17 +174,17 @@ namespace antdlib.Antdsh {
         /// </summary>
         public static void CheckSystemctl() {
             WriteLine("Checking Systemct services:");
-            var l = Execute("systemctl -a | grep dead").Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
+            var l = Execute("systemctl -a | grep dead").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
             WriteLine($"{l} dead services");
-            l = Execute("systemctl -a | grep inactive").Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
+            l = Execute("systemctl -a | grep inactive").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
             WriteLine($"{l} inactive services");
-            l = Execute("systemctl -a | grep ' active'").Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
+            l = Execute("systemctl -a | grep ' active'").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
             WriteLine($"{l} active services");
             WriteLine("-------");
             WriteLine("Checking Antd Applicative units:");
             var units = Directory.EnumerateFiles(Folder.AppsUnits).ToArray();
-            for (int i = 0; i < units.Length; i++) {
-                WriteLine(Execute($"systemctl status {units[i]}"));
+            foreach (var t in units) {
+                WriteLine(Execute($"systemctl status {t}"));
                 WriteLine("-------");
             }
         }

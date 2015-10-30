@@ -38,87 +38,83 @@ using System.Linq;
 namespace antdlib.Svcs.Libvirt {
     public class LibvirtConfig {
 
-        private static string serviceGuid = "0F7E663B-7445-492D-B674-B50ACDC1D5B3";
+        private static string _serviceGuid = "0F7E663B-7445-492D-B674-B50ACDC1D5B3";
 
-        private static string dir = "/etc/libvirt";
+        private static string _dir = "/etc/libvirt";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string _mntDir = Mount.SetDirsPath(_dir);
 
-        private static string mainFile = "smb.conf";
+        private static string _mainFile = "smb.conf";
 
-        private static string antdLibvirtFile = "antd.libvirt.conf";
+        private static string _antdLibvirtFile = "antd.libvirt.conf";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {dir} {DIR}");
-            FileSystem.CopyDirectory(dir, DIR);
-            Mount.Dir(dir);
+            Terminal.Execute($"cp {_dir} {_mntDir}");
+            FileSystem.CopyDirectory(_dir, _mntDir);
+            Mount.Dir(_dir);
         }
 
         private static bool CheckIsActive() {
-            var mount = MountRepository.Get(dir);
-            return (mount == null) ? false : true;
+            var mount = MountRepository.Get(_dir);
+            return (mount != null);
         }
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Terminal.Execute($"smbcontrol all reload-config");
+            Terminal.Execute("smbcontrol all reload-config");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
-            var list = new List<KeyValuePair<string, List<string>>>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    var dump = new List<string>() { };
-                    foreach (var line in lines) {
-                        dump.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                    list.Add(new KeyValuePair<string, List<string>>(files[i].Replace("\\", "/"), dump));
-                }
+            var list = new List<KeyValuePair<string, List<string>>>();
+            var files = Directory.EnumerateFiles(_mntDir, "*.conf", SearchOption.AllDirectories).ToArray();
+            foreach (string t in files) {
+                if (!File.ReadLines(t).Any(line => line.Contains("include")))
+                    continue;
+                var lines = File.ReadLines(t).Where(line => line.Contains("include")).ToList();
+                var dump = new List<string>();
+                dump.AddRange(lines.Select(line => line.Split('=')[1].Trim().Replace(_dir, _mntDir)));
+                list.Add(new KeyValuePair<string, List<string>>(t.Replace("\\", "/"), dump));
             }
-            if (list.Count() < 1) {
-                list.Add(new KeyValuePair<string, List<string>>($"{DIR}/{mainFile}", new List<string>() { }));
+            if (list.Count < 1) {
+                list.Add(new KeyValuePair<string, List<string>>($"{_mntDir}/{_mainFile}", new List<string>()));
             }
             return list;
         }
 
-        public static List<KeyValuePair<string, List<string>>> Structure { get { return GetServiceStructure(); } }
+        public static List<KeyValuePair<string, List<string>>> Structure => GetServiceStructure();
 
         private static List<string> GetServiceSimpleStructure() {
-            var list = new List<string>() { };
-            var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
-                if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
-                    var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    foreach (var line in lines) {
-                        list.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
-                    }
-                }
+            var list = new List<string>();
+            var files = Directory.EnumerateFiles(_mntDir, "*.conf", SearchOption.AllDirectories).ToArray();
+            foreach (string t in files) {
+                if (!File.ReadLines(t).Any(line => line.Contains("include")))
+                    continue;
+                var lines = File.ReadLines(t).Where(line => line.Contains("include")).ToList();
+                list.AddRange(lines.Select(line => line.Split('=')[1].Trim().Replace(_dir, _mntDir)));
             }
-            if (list.Count() < 1) {
-                list.Add($"{DIR}/{mainFile}");
+            if (list.Count < 1) {
+                list.Add($"{_mntDir}/{_mainFile}");
             }
             return list;
         }
 
-        public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
+        public static List<string> SimpleStructure => GetServiceSimpleStructure();
 
         public class MapRules {
-            public static char CharComment { get { return ';'; } }
+            public static char CharComment => ';';
 
-            public static string VerbInclude { get { return "include"; } }
+            public static string VerbInclude => "include";
 
-            public static char CharKevValueSeparator { get { return '='; } }
+            public static char CharKevValueSeparator => '=';
 
-            public static char CharValueArraySeparator { get { return ','; } }
+            public static char CharValueArraySeparator => ',';
 
-            public static char CharEndOfLine { get { return '\n'; } }
+            public static char CharEndOfLine => '\n';
 
-            public static char CharSectionOpen { get { return '['; } }
+            public static char CharSectionOpen => '[';
 
-            public static char CharSectionClose { get { return ']'; } }
+            public static char CharSectionClose => ']';
         }
 
         public class LineModel {
@@ -138,7 +134,7 @@ namespace antdlib.Svcs.Libvirt {
 
             public string Name { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
         }
 
         public class LibvirtModel {
@@ -148,9 +144,9 @@ namespace antdlib.Svcs.Libvirt {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
 
-            public List<ShareModel> Share { get; set; } = new List<ShareModel>() { };
+            public List<ShareModel> Share { get; set; } = new List<ShareModel>();
         }
 
         public class MapFile {
@@ -158,29 +154,22 @@ namespace antdlib.Svcs.Libvirt {
             private static string CleanLine(string line) {
                 var removeTab = line.Replace("\t", " ");
                 var clean = removeTab;
-                if (removeTab.Contains(MapRules.CharComment) && !line.StartsWith(MapRules.CharComment.ToString())) {
-                    var splitAtComment = removeTab.Split(MapRules.CharComment);
-                    clean = splitAtComment[0].Trim();
-                }
+                if (!removeTab.Contains(MapRules.CharComment) || line.StartsWith(MapRules.CharComment.ToString()))
+                    return clean;
+                var splitAtComment = removeTab.Split(MapRules.CharComment);
+                clean = splitAtComment[0].Trim();
                 return clean;
             }
 
             private static IEnumerable<LineModel> ReadFile(string path) {
                 var text = FileSystem.ReadFile(path);
                 var lines = text.Split(MapRules.CharEndOfLine);
-                var list = new List<LineModel>() { };
-                foreach (var line in lines) {
-                    if (line != "" && !line.StartsWith("include")) {
-                        var cleanLine = CleanLine(line);
-                        list.Add(ReadLine(path, cleanLine));
-                    }
-                }
-                return list;
+                return (from line in lines where line != "" && !line.StartsWith("include") select CleanLine(line) into cleanLine select ReadLine(path, cleanLine)).ToList();
             }
 
             private static ShareModel ReadFileShare(string path) {
-                var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
-                var model = new ShareModel() {
+                var shareName = GetShareName(path) ?? "";
+                var model = new ShareModel {
                     FilePath = path,
                     Name = shareName
                 };
@@ -196,7 +185,7 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             private static LineModel ReadLine(string path, string line) {
-                var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var keyValuePair = line.Split(new[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
                 var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
                 var value = "";
@@ -210,14 +199,8 @@ namespace antdlib.Svcs.Libvirt {
                     value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
-                KeyValuePair<string, string> booleanVerbs;
-                if (type == ServiceDataType.Boolean) {
-                    booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value.Trim());
-                }
-                else {
-                    booleanVerbs = new KeyValuePair<string, string>("", "");
-                }
-                var model = new LineModel() {
+                var booleanVerbs = type == ServiceDataType.Boolean ? Helper.ServiceData.SupposeBooleanVerbs(value.Trim()) : new KeyValuePair<string, string>("", "");
+                var model = new LineModel {
                     FilePath = path,
                     Key = key.Trim(),
                     Value = value.Trim(),
@@ -228,8 +211,8 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             public static void Render() {
-                var shares = new List<ShareModel>() { };
-                var data = new List<LineModel>() { };
+                var shares = new List<ShareModel>();
+                var data = new List<LineModel>();
                 foreach (var file in SimpleStructure) {
                     if (file.Contains("/share/")) {
                         shares.Add(ReadFileShare(file));
@@ -242,8 +225,8 @@ namespace antdlib.Svcs.Libvirt {
                     }
                 }
                 var libvirt = new LibvirtModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
@@ -252,16 +235,16 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             public static LibvirtModel Get() {
-                var libvirt = DeNSo.Session.New.Get<LibvirtModel>(s => s.Guid == serviceGuid).FirstOrDefault();
+                var libvirt = DeNSo.Session.New.Get<LibvirtModel>(s => s.Guid == _serviceGuid).FirstOrDefault();
                 return libvirt;
             }
         }
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceLibvirt parameter) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
-                var data = new LineModel() {
+                var data = new LineModel {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
                     Value = parameter.DataValue,
@@ -273,13 +256,11 @@ namespace antdlib.Svcs.Libvirt {
 
             public static void SaveGlobalConfig(List<ServiceLibvirt> newParameters) {
                 var shares = MapFile.Get().Share;
-                var data = new List<LineModel>() { };
-                foreach (var parameter in newParameters) {
-                    data.Add(ConvertData(parameter));
-                }
-                var libvirt = new LibvirtModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                var data = new List<LineModel>();
+                data.AddRange(newParameters.Select(ConvertData));
+                var libvirt = new LibvirtModel {
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
@@ -293,9 +274,9 @@ namespace antdlib.Svcs.Libvirt {
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
+                foreach (var t in parameters) {
+                    var line = $"{t.Key} {MapRules.CharKevValueSeparator} {t.Value}";
+                    AppendLine(t.FilePath, line);
                 }
             }
 
@@ -310,21 +291,19 @@ namespace antdlib.Svcs.Libvirt {
             public static void SaveShareConfig(string fileName, string name, string queryName, List<ServiceLibvirt> newParameters) {
                 var data = MapFile.Get().Data;
                 var shares = MapFile.Get().Share;
-                var oldShare = shares.Where(o => o.Name == queryName).FirstOrDefault();
+                var oldShare = shares.FirstOrDefault(o => o.Name == queryName);
                 shares.Remove(oldShare);
-                var shareData = new List<LineModel>() { };
-                foreach (var parameter in newParameters) {
-                    shareData.Add(ConvertData(parameter));
-                }
+                var shareData = new List<LineModel>();
+                shareData.AddRange(newParameters.Select(ConvertData));
                 var newShare = new ShareModel() {
                     FilePath = fileName,
                     Name = name,
                     Data = shareData
                 };
                 shares.Add(newShare);
-                var libvirt = new LibvirtModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                var libvirt = new LibvirtModel {
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
@@ -333,14 +312,16 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             public static void DumpShare(string shareName) {
-                var share = MapFile.Get().Share.Where(s => s.Name == shareName).FirstOrDefault();
+                var share = MapFile.Get().Share.FirstOrDefault(s => s.Name == shareName);
+                if (share == null)
+                    return;
                 var parameters = share.Data.ToArray();
                 var file = share.FilePath;
                 CleanFile(file);
                 AppendLine(file, $"{MapRules.CharSectionOpen}{share.Name}{MapRules.CharSectionClose}");
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
+                foreach (var t in parameters) {
+                    var line = $"{t.Key} {MapRules.CharKevValueSeparator} {t.Value}";
+                    AppendLine(t.FilePath, line);
                 }
             }
 
@@ -349,7 +330,7 @@ namespace antdlib.Svcs.Libvirt {
                 ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
                 var line = new LineModel() {
-                    FilePath = $"{DIR}/{antdLibvirtFile}",
+                    FilePath = $"{_mntDir}/{_antdLibvirtFile}",
                     Key = key,
                     Value = value,
                     Type = type,
@@ -358,9 +339,9 @@ namespace antdlib.Svcs.Libvirt {
                 var shares = MapFile.Get().Share;
                 var data = MapFile.Get().Data;
                 data.Add(line);
-                var libvirt = new LibvirtModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                var libvirt = new LibvirtModel {
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
@@ -369,14 +350,14 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             private static void SetCustomFile() {
-                var path = $"{DIR}/{antdLibvirtFile}";
+                var path = $"{_mntDir}/{_antdLibvirtFile}";
                 if (!File.Exists(path)) {
                     File.Create(path);
                 }
             }
 
-            public static void RewriteSMBCONF() {
-                var file = $"{DIR}/{mainFile}";
+            public static void RewriteSmbconf() {
+                var file = $"{_mntDir}/{_mainFile}";
                 CleanFile(file);
                 AppendLine(file, "[global]");
                 AppendLine(file, "");
@@ -393,29 +374,29 @@ namespace antdlib.Svcs.Libvirt {
                 AppendLine(file, $"{MapRules.CharComment}SHARE END");
             }
 
-            private static HashSet<dynamic> GetGlobalPaths() {
+            private static IEnumerable<dynamic> GetGlobalPaths() {
                 var share = MapFile.Get().Data.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 
-            private static HashSet<dynamic> GetSharePaths() {
+            private static IEnumerable<dynamic> GetSharePaths() {
                 var share = MapFile.Get().Share.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 
             public static void AddShare(string name, string directory) {
                 SetShareFile(name);
-                var shareData = new List<LineModel>() { };
-                var defaultParameter00 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                var shareData = new List<LineModel>();
+                var defaultParameter00 = new LineModel {
+                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
                     Key = "path",
                     Value = directory,
                     Type = ServiceDataType.String,
-                    BooleanVerbs = new KeyValuePair<string, string>("", "") 
+                    BooleanVerbs = new KeyValuePair<string, string>("", "")
                 };
                 shareData.Add(defaultParameter00);
                 var defaultParameter01 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
                     Key = "browseable",
                     Value = "yes",
                     Type = ServiceDataType.Boolean,
@@ -423,7 +404,7 @@ namespace antdlib.Svcs.Libvirt {
                 };
                 shareData.Add(defaultParameter01);
                 var sh = new ShareModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
                     Name = name,
                     Data = shareData
                 };
@@ -431,8 +412,8 @@ namespace antdlib.Svcs.Libvirt {
                 var data = MapFile.Get().Data;
                 shares.Add(sh);
                 var libvirt = new LibvirtModel() {
-                    _Id = serviceGuid,
-                    Guid = serviceGuid,
+                    _Id = _serviceGuid,
+                    Guid = _serviceGuid,
                     Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
@@ -441,7 +422,7 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             private static void SetShareFile(string shareName) {
-                var sharePath = $"{DIR}/share/{shareName.Replace(" ", "_")}.conf";
+                var sharePath = $"{_mntDir}/share/{shareName.Replace(" ", "_")}.conf";
                 if (!File.Exists(sharePath)) {
                     File.Create(sharePath);
                 }

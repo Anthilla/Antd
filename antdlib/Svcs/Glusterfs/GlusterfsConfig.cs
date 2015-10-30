@@ -42,7 +42,7 @@ namespace antdlib.Svcs.Glusterfs {
 
         private static string dir = "/etc/glusterfs";
 
-        private static string DIR = Mount.SetDIRSPath(dir);
+        private static string DIR = Mount.SetDirsPath(dir);
 
         private static string mainFile = "glusterd.vol";
 

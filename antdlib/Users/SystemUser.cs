@@ -37,13 +37,18 @@ namespace antdlib.Users {
 
     public class SystemUser {
 
+        public class Config {
+
+
+        }
+
         private static string file = "/etc/shadow";
 
-        private static string FILE = Mount.SetFILESPath(file);
+        private static string FILE = Mount.SetFilesPath(file);
 
         private static string filePwd = "/etc/passwd";
 
-        private static string FILEPWD = Mount.SetFILESPath(filePwd);
+        private static string FILEPWD = Mount.SetFilesPath(filePwd);
 
         public static void SetReady() {
             if (!File.Exists(FILE)) {
@@ -92,7 +97,7 @@ namespace antdlib.Users {
                 }
                 return list;
             }
-            catch (Exception ex) {
+            catch (Exception) {
                 ConsoleLogger.Warn("There's something wrong while getting system users...");
                 return new List<UserModel>() { };
             }
