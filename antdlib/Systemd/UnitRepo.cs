@@ -31,15 +31,13 @@ using antdlib.Models;
 using System.Linq;
 
 namespace antdlib.Systemd {
-
     public class UnitRepo {
-
         public static UnitFileModel GetInfo(string name) {
             return DeNSo.Session.New.Get<UnitFileModel>(u => u.description == name).FirstOrDefault();
         }
 
         public static void SetInfo(string guid, string[] args) {
-            UnitFileModel unit = new UnitFileModel() {
+            var unit = new UnitFileModel {
                 _Id = guid,
                 description = args[0],
                 timeOutStartSec = "0",

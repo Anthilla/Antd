@@ -39,35 +39,23 @@ namespace antdlib.Contexts {
     public class Meminfo {
 
         public static string GetText() {
-            var meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/meminfo");
-            var meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+            return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/meminfo"));
         }
 
         public static List<MeminfoModel> GetModel() {
-            var meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/meminfo");
-            var meminfo = ConvertMeminfo(meminfoContent);
-            return meminfo;
+            return ConvertMeminfo(FileSystem.ReadFile("/proc/meminfo"));
         }
 
         public static List<MeminfoModel> ConvertMeminfo(string meminfoText) {
-            var meminfoList = new List<MeminfoModel>();
-            var rowDivider = new String[] { "\n" };
-            var cellDivider = new String[] { ": " };
-            var rowList = meminfoText.Split(rowDivider, StringSplitOptions.None).ToArray();
-            foreach (var row in rowList) {
-                if (!string.IsNullOrEmpty(row)) {
-                    var cellList = row.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    var meminfo = new MeminfoModel {
+            var rowList = meminfoText.Split(new[] { "\n" }, StringSplitOptions.None).ToArray();
+            return (from row in rowList
+                    where !string.IsNullOrEmpty(row)
+                    select row.Split(new[] { ": " }, StringSplitOptions.None).ToArray()
+                into cellList
+                    select new MeminfoModel {
                         key = cellList[0],
                         value = cellList[1]
-                    };
-                    meminfoList.Add(meminfo);
-                }
-            }
-            return meminfoList;
+                    }).ToList();
         }
     }
 }

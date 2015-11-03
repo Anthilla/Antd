@@ -37,22 +37,16 @@ namespace antdlib.SystemConfig {
     public class Timezone {
 
         private static List<string> GetTimezoneList() {
-            var list = new List<string>() { };
+            var list = new List<string>();
             var output = Terminal.Execute("timedatectl", "list-timezones");
-            if (!string.IsNullOrEmpty(output)) {
-                var outputString = Regex.Replace(output, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-                string[] rowDivider = new String[] { "\n" };
-                string[] outputArray = new string[] { };
-                outputArray = outputString.Split(rowDivider, StringSplitOptions.None).ToArray();
-                foreach (string s in outputArray) {
-                    if (!string.IsNullOrEmpty(s)) {
-                        list.Add(s);
-                    }
-                }
-            }
+            if (string.IsNullOrEmpty(output))
+                return list;
+            var outputString = Regex.Replace(output, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+            var outputArray = outputString.Split(new[] { "\n" }, StringSplitOptions.None).ToArray();
+            list.AddRange(outputArray.Where(s => !string.IsNullOrEmpty(s)));
             return list;
         }
 
-        public static List<string> List { get { return GetTimezoneList(); } }
+        public static List<string> List => GetTimezoneList();
     }
 }

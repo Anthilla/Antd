@@ -31,19 +31,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace antdlib.Contexts {
-
     public class Dmidecode {
-
-        public static string GetUUID(List<string> inputTable) {
+        public static string GetUuid(List<string> inputTable) {
             var row = (from i in inputTable
                           where i.Contains("UUID:")
                           select i).FirstOrDefault();
-            if (row != null) {
-                var array = row.Split(new[] { ' ' }, 2);
-                var uuid = array[1];
-                return uuid;
-            }
-            return null;
+            if (row == null) return null;
+            var array = row.Split(new[] { ' ' }, 2);
+            var uuid = array[1];
+            return uuid;
         }
     }
 }

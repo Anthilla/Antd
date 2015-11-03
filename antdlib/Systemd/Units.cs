@@ -39,43 +39,29 @@ namespace antdlib.Systemd {
     public class Units {
 
         private static List<UnitModel> GetAllUnits() {
-            CommandModel command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
+            var command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
-            if (output != null) {
-                List<UnitModel> units = MapUnitJson(output);
-                units.RemoveAt(units.ToArray().Length - 1);
-                if (units.Any())
-                    units.RemoveAt(0);
-                return units;
-            }
-            return null;
-        }
-
-        public static List<UnitModel> All { get { return GetAllUnits(); } }
-
-        public static List<UnitModel> MapUnitJson(string _unitJson) {
-            string unitJson = _unitJson;
-            unitJson = System.Text.RegularExpressions.Regex.Replace(_unitJson, @"\s{2,}", " ").Replace("\"", "");
-            string[] rowDivider = new String[] { "\\n" };
-            string[] unitJsonRow = new string[] { };
-            unitJsonRow = unitJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<UnitModel> units = new List<UnitModel>() { };
-            foreach (string rowJson in unitJsonRow) {
-                if (!string.IsNullOrEmpty(rowJson)) {
-                    string[] unitJsonCell = new string[] { };
-                    string[] cellDivider = new String[] { " " };
-                    unitJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    UnitModel unit = MapUnit(unitJsonCell);
-                    units.Add(unit);
-                }
-            }
+            if (output == null)
+                return null;
+            var units = MapUnitJson(output);
+            units.RemoveAt(units.ToArray().Length - 1);
+            if (units.Any())
+                units.RemoveAt(0);
             return units;
         }
 
-        public static UnitModel MapUnit(string[] _unitJsonCell) {
-            string[] unitJsonCell = _unitJsonCell;
-            UnitModel unit = new UnitModel();
-            unit.name = unitJsonCell[0];
+        public static List<UnitModel> All => GetAllUnits();
+
+        public static List<UnitModel> MapUnitJson(string unitJson) {
+            unitJson = System.Text.RegularExpressions.Regex.Replace(unitJson, @"\s{2,}", " ").Replace("\"", "");
+            var unitJsonRow = unitJson.Split(new[] { "\\n" }, StringSplitOptions.None).ToArray();
+            var units = new List<UnitModel>();
+            units.AddRange(from rowJson in unitJsonRow where !string.IsNullOrEmpty(rowJson) select rowJson.Split(new[] { " " }, StringSplitOptions.None).ToArray() into unitJsonCell select MapUnit(new string[] { }));
+            return units;
+        }
+
+        public static UnitModel MapUnit(string[] unitJsonCell) {
+            var unit = new UnitModel { name = unitJsonCell[0] };
             if (unitJsonCell.Length > 1 && unitJsonCell[1] != null) {
                 unit.status = unitJsonCell[1];
             }

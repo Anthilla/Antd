@@ -27,69 +27,48 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Boot;
 using antdlib.Common;
-using antdlib.Security;
 using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace antdlib.Mail {
-    public class SMTP {
+    public class Smtp {
 
         public class Settings {
-            private static byte[] key = Cryptography.CoreKey();
-            private static byte[] vector = Cryptography.CoreVector();
-
-            private static string coreFileName = "smtpConfig";
-            private static string[] _files = new string[] {
-                coreFileName + "Current",
-                coreFileName + "001",
-                coreFileName + "002"
+            private static readonly string CoreFileName = "smtpConfig";
+            private static readonly string[] Files = {
+                CoreFileName + "Current",
+                CoreFileName + "001",
+                CoreFileName + "002"
             };
 
-            public static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
+            public static ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
 
             public static void SetUrl(string value) {
-                xmlWriter.Write(Label.SMTP.Url, value);
+                XmlWriter.Write(Label.SMTP.Url, value);
             }
 
-            public static string Url {
-                get {
-                    return (xmlWriter.ReadValue(Label.SMTP.Url) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Url);
-                }
-            }
+            public static string Url => XmlWriter.ReadValue(Label.SMTP.Url) ?? "";
 
             public static void SetPort(string value) {
-                xmlWriter.Write(Label.SMTP.Port, value);
+                XmlWriter.Write(Label.SMTP.Port, value);
             }
 
-            public static string Port {
-                get {
-                    return (xmlWriter.ReadValue(Label.SMTP.Port) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Port);
-                }
-            }
+            public static string Port => XmlWriter.ReadValue(Label.SMTP.Port) ?? "";
 
             public static void SetAccount(string value) {
-                xmlWriter.Write(Label.SMTP.Account, value);
+                XmlWriter.Write(Label.SMTP.Account, value);
             }
 
-            public static string Account {
-                get {
-                    return (xmlWriter.ReadValue(Label.SMTP.Account) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Account);
-                }
-            }
+            public static string Account => XmlWriter.ReadValue(Label.SMTP.Account) ?? "";
 
             public static void SetPassword(string value) {
-                xmlWriter.Write(Label.SMTP.Password, value);
+                XmlWriter.Write(Label.SMTP.Password, value);
             }
 
-            public static string Password {
-                get {
-                    return (xmlWriter.ReadValue(Label.SMTP.Password) == null) ? "" : xmlWriter.ReadValue(Label.SMTP.Password);
-                }
-            }
+            public static string Password => XmlWriter.ReadValue(Label.SMTP.Password) ?? "";
 
-            public static bool ConfigExists { get { return (xmlWriter.ReadValue(Label.SMTP.Url) == null) ? false : true; } }
+            public static bool ConfigExists => (XmlWriter.ReadValue(Label.SMTP.Url) != null);
         }
 
         public static void Send() {
@@ -102,10 +81,7 @@ namespace antdlib.Mail {
             };
             using (var client = new SmtpClient()) {
                 client.Connect("smtp.gmail.com", 587, false);
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                // Note: only needed if the SMTP server requires authentication
                 client.Authenticate("account name", "password");
                 client.Send(message);
                 client.Disconnect(true);

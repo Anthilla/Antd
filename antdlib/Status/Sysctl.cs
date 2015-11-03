@@ -41,95 +41,67 @@ namespace antdlib.Status {
     public class Sysctl {
 
         private static List<SysctlModel> GetAllSysctls() {
-            CommandModel command = Terminal.Execute("sysctl --all").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            List<SysctlModel> sysctls = MapSysctlJson(output);
-            return sysctls;
+            var output = JsonConvert.SerializeObject(Terminal.Execute("sysctl --all").ConvertCommandToModel().output);
+            return MapSysctlJson(output);
         }
 
-        public static List<SysctlModel> Running { get { return GetAllSysctls(); } }
+        public static List<SysctlModel> Running => GetAllSysctls();
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
-            string text = FileSystem.ReadFile(Folder.Root, "antd.sysctl.conf");
-            var output = JsonConvert.SerializeObject(text);
-            List<SysctlModel> sysctls = MapSysctlJson(output);
-            return sysctls;
+            var output = JsonConvert.SerializeObject(FileSystem.ReadFile(Folder.Root, "antd.sysctl.conf"));
+            return MapSysctlJson(output);
         }
 
-        public static List<SysctlModel> Antd { get { return ReadSysctlCustomFile(); } }
+        public static List<SysctlModel> Antd => ReadSysctlCustomFile();
 
         private static List<SysctlModel> ReadSysctlStockFile() {
-            string text = FileSystem.ReadFile("/etc", "sysctl.conf");
-            var output = JsonConvert.SerializeObject(text);
-            List<SysctlModel> sysctls = MapSysctlJson(output);
-            return sysctls;
+            var output = JsonConvert.SerializeObject(FileSystem.ReadFile("/etc", "sysctl.conf"));
+            return MapSysctlJson(output);
         }
 
-        public static List<SysctlModel> Stock { get { return ReadSysctlStockFile(); } }
+        public static List<SysctlModel> Stock => ReadSysctlStockFile();
 
         private static List<SysctlModel> MapSysctlJson(string _sysctlJson) {
-            string sysctlJson2 = _sysctlJson;
-            sysctlJson2 = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
-            string sysctlJson = sysctlJson2;
-            sysctlJson = Regex.Replace(sysctlJson2, @"\\t", " ");
-            string[] rowDivider = new String[] { "\n" };
-            string[] sysctlJsonRow = new string[] { };
-            sysctlJsonRow = sysctlJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            List<SysctlModel> sysctls = new List<SysctlModel>() { };
-            foreach (string rowJson in sysctlJsonRow) {
-                if (rowJson != null && rowJson != "") {
-                    var fCh = rowJson.ToArray()[0];
-                    if (fCh != '#') {
-                        string[] sysctlJsonCell = new string[] { };
-                        string[] cellDivider = new String[] { " = " };
-                        sysctlJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                        SysctlModel sysctl = MapSysctl(sysctlJsonCell);
-                        sysctls.Add(sysctl);
-                    }
-                }
-            }
-            return sysctls;
+            var sysctlJson2 = Regex.Replace(_sysctlJson, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");
+            var sysctlJson = Regex.Replace(sysctlJson2, @"\\t", " ");
+            var rowDivider = new[] { "\n" };
+            var sysctlJsonRow = sysctlJson.Split(rowDivider, StringSplitOptions.None).ToArray();
+            return (from rowJson in sysctlJsonRow where !string.IsNullOrEmpty(rowJson) let fCh = rowJson.ToArray()[0] where fCh != '#' let sysctlJsonCell = new string[] { } let cellDivider = new[] { " = " } select rowJson.Split(cellDivider, StringSplitOptions.None).ToArray() into sysctlJsonCell select MapSysctl(sysctlJsonCell)).ToList();
         }
 
-        private static SysctlModel MapSysctl(string[] _sysctlJsonCell) {
-            string[] sysctlJsonCell = _sysctlJsonCell;
-            SysctlModel sysctl = new SysctlModel();
-            if (sysctlJsonCell.Length > 1) {
-                sysctl.param = sysctlJsonCell[0];
-                sysctl.value = sysctlJsonCell[1];
-            }
+        private static SysctlModel MapSysctl(string[] sysctlJsonCell) {
+            var sysctl = new SysctlModel();
+            if (sysctlJsonCell.Length <= 1)
+                return sysctl;
+            sysctl.param = sysctlJsonCell[0];
+            sysctl.value = sysctlJsonCell[1];
             return sysctl;
         }
 
         public static string Config(string param, string value) {
-            CommandModel command = Terminal.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
             WriteConfig();
             LoadConfig();
-            return output;
+            return JsonConvert.SerializeObject(Terminal.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel().output);
         }
 
         public static void WriteConfig() {
-            var parameters = Stock;
             Directory.CreateDirectory(Folder.Root);
-            string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
+            var path = Path.Combine(Folder.Root, "antd.sysctl.conf");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
-            using (StreamWriter sw = File.CreateText(path)) {
+            using (var sw = File.CreateText(path)) {
                 sw.WriteLine("# " + path);
                 sw.WriteLine("# Custom Configuration for Antd");
-                foreach (SysctlModel p in parameters) {
+                foreach (var p in Stock) {
                     sw.WriteLine(p.param + " = " + p.value);
                 }
-                //sw.WriteLine("vm.swappiness = 61");
                 sw.WriteLine("");
             }
         }
 
         public static void LoadConfig() {
-            string path = Path.Combine(Folder.Root, "antd.sysctl.conf");
-            Terminal.Execute("sysctl -p " + path);
+            Terminal.Execute("sysctl -p " + Path.Combine(Folder.Root, "antd.sysctl.conf"));
         }
     }
 }

@@ -177,10 +177,8 @@
     <Compile Include="Directories\DirectoryWatcher.cs" />
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
-    <Compile Include="Log\Dmesg.cs" />
     <Compile Include="Log\LogModel.cs" />
     <Compile Include="Log\LogRepository.cs" />
-    <Compile Include="Log\Syslog.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />
@@ -189,7 +187,6 @@
     <Compile Include="Models\DirItemModel.cs" />
     <Compile Include="Models\GlobalUserModel.cs" />
     <Compile Include="Models\MeminfoModel.cs" />
-    <Compile Include="Models\MountModel.cs" />
     <Compile Include="Models\NetworkdModel.cs" />
     <Compile Include="Models\NetworkInfoModel.cs" />
     <Compile Include="Models\NetworkInterfaceModel.cs" />

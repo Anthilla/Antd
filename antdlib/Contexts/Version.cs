@@ -32,21 +32,13 @@ using antdlib.Models;
 using Newtonsoft.Json;
 
 namespace antdlib.Contexts {
-
     public class Version {
-
         public static string GetText() {
-            var meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/version");
-            var meminfoJson = JsonConvert.SerializeObject(meminfoContent);
-            return meminfoJson;
+            return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/version"));
         }
 
         public static VersionModel GetModel() {
-            var meminfoContent = "";
-            meminfoContent = FileSystem.ReadFile("/proc/version");
-            var meminfo = ConvertVersion(meminfoContent);
-            return meminfo;
+            return ConvertVersion(FileSystem.ReadFile("/proc/version"));
         }
 
         private static VersionModel ConvertVersion(string versionText) {

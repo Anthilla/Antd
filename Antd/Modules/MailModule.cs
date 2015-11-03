@@ -47,41 +47,41 @@ namespace Antd.Modules {
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 dynamic smtp = new ExpandoObject();
-                smtp.Url = SMTP.Settings.Url;
-                smtp.Port = SMTP.Settings.Port;
-                smtp.Account = SMTP.Settings.Account;
-                smtp.Password = SMTP.Settings.Password;
+                smtp.Url = Smtp.Settings.Url;
+                smtp.Port = Smtp.Settings.Port;
+                smtp.Account = Smtp.Settings.Account;
+                smtp.Password = Smtp.Settings.Password;
                 vmod.SMTP = smtp;
                 dynamic imap = new ExpandoObject();
-                imap.Url = IMAP.Settings.Url;
-                imap.Port = IMAP.Settings.Port;
-                imap.Account = IMAP.Settings.Account;
-                imap.Password = IMAP.Settings.Password;
+                imap.Url = Imap.Settings.Url;
+                imap.Port = Imap.Settings.Port;
+                imap.Account = Imap.Settings.Account;
+                imap.Password = Imap.Settings.Password;
                 vmod.IMAP = imap;
                 return View["_page-mail", vmod];
             };
 
             Post["/smtp/config"] = x => {
                 string url = Request.Form.Url;
-                SMTP.Settings.SetUrl(url);
+                Smtp.Settings.SetUrl(url);
                 string port = Request.Form.Port;
-                SMTP.Settings.SetPort(port);
+                Smtp.Settings.SetPort(port);
                 string account = Request.Form.Account;
-                SMTP.Settings.SetAccount(account);
+                Smtp.Settings.SetAccount(account);
                 string passwd = Request.Form.Password;
-                SMTP.Settings.SetPassword(passwd);
+                Smtp.Settings.SetPassword(passwd);
                 return Response.AsRedirect("/mail");
             };
 
             Post["/imap/config"] = x => {
                 string url = Request.Form.Url;
-                IMAP.Settings.SetUrl(url);
+                Imap.Settings.SetUrl(url);
                 string port = Request.Form.Port;
-                IMAP.Settings.SetPort(port);
+                Imap.Settings.SetPort(port);
                 string account = Request.Form.Account;
-                IMAP.Settings.SetAccount(account);
+                Imap.Settings.SetAccount(account);
                 string passwd = Request.Form.Password;
-                IMAP.Settings.SetPassword(passwd);
+                Imap.Settings.SetPassword(passwd);
                 return Response.AsRedirect("/mail");
             };
         }

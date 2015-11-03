@@ -241,8 +241,8 @@ namespace antdlib.Apps {
             }
         }
 
-        public static string AnthillaServerPid => Proc.GetPID("AnthillaServer.exe");
+        public static string AnthillaServerPid => Proc.GetPid("AnthillaServer.exe");
 
-        public static string AnthillaSppid => Proc.GetPID("AnthillaSP.exe");
+        public static string AnthillaSppid => Proc.GetPid("AnthillaSP.exe");
     }
 }

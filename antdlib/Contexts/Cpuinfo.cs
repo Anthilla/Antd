@@ -35,17 +35,13 @@ using antdlib.Models;
 using Newtonsoft.Json;
 
 namespace antdlib.Contexts {
-
     public class Cpuinfo {
-
         public static string GetText() {
-            var meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
-            return JsonConvert.SerializeObject(meminfoContent);
+            return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/cpuinfo"));
         }
 
         public static List<CpuinfoModel> GetModel() {
-            var meminfoContent = FileSystem.ReadFile("/proc/cpuinfo");
-            return ConvertCpuinfo(meminfoContent);
+            return ConvertCpuinfo(FileSystem.ReadFile("/proc/cpuinfo"));
         }
 
         private static List<CpuinfoModel> ConvertCpuinfo(string cpuinfoText) {

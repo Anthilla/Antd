@@ -45,9 +45,9 @@ namespace antdlib.Auth.T2FA {
                 Text = @"Here's your token: " + token.Value
             };
             using (var client = new SmtpClient()) {
-                client.Connect(SMTP.Settings.Url, Convert.ToInt32(SMTP.Settings.Port), false);
+                client.Connect(Smtp.Settings.Url, Convert.ToInt32(Smtp.Settings.Port), false);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate(SMTP.Settings.Account, SMTP.Settings.Password);
+                client.Authenticate(Smtp.Settings.Account, Smtp.Settings.Password);
                 client.Send(message);
                 client.Disconnect(true);
             }

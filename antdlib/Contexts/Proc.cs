@@ -31,102 +31,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.Common;
-using antdlib.Models;
 using Newtonsoft.Json;
 
 namespace antdlib.Contexts {
-
     public class Proc {
-
         private static List<ProcModel> GetAllAllProc() {
-            var command = Terminal.Execute("ps -aef").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            var procs = MapProcJson(output);
-            return procs;
+            return MapProcJson(JsonConvert.SerializeObject(Terminal.Execute("ps -aef").ConvertCommandToModel().output));
         }
 
-        public static List<ProcModel> AllAll { get { return GetAllAllProc(); } }
+        public static List<ProcModel> AllAll => GetAllAllProc();
 
         private static List<ProcModel> GetAllProc() {
-            var command = Terminal.Execute("ps -aef").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            var list = MapProcJson(output);
-            var procs = new List<ProcModel>() { };
-            foreach (var p in list) {
-                if (!p.CMD.Contains('[')) {
-                    procs.Add(p);
-                }
-            }
+            var list = MapProcJson(JsonConvert.SerializeObject(Terminal.Execute("ps -aef").ConvertCommandToModel().output));
+            var procs = new List<ProcModel>();
+            procs.AddRange(list.Where(p => !p.Cmd.Contains('[')));
             return procs;
         }
 
-        public static List<ProcModel> All { get { return GetAllProc(); } }
+        public static List<ProcModel> All => GetAllProc();
 
-        public static List<ProcModel> MapProcJson(string _procJson) {
-            var procJson = _procJson;
-            procJson = System.Text.RegularExpressions.Regex.Replace(_procJson, @"\s{2,}", " ").Replace("\"", "");
-            var rowDivider = new[] { "\\n" };
-            var procJsonRow = new string[] { };
-            procJsonRow = procJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            var procs = new List<ProcModel>() { };
-            foreach (var rowJson in procJsonRow) {
-                if (!string.IsNullOrEmpty(rowJson)) {
-                    var cellDivider = new[] { " " };
-                    var procJsonCell = rowJson.Split(cellDivider, StringSplitOptions.None).ToArray();
-                    var proc = MapProc(procJsonCell);
-                    procs.Add(proc);
-                }
-            }
-            return procs;
+        public static List<ProcModel> MapProcJson(string procJson) {
+            return (from rowJson in new string[] { } where !string.IsNullOrEmpty(rowJson) let cellDivider = new[] { " " } select rowJson.Split(cellDivider, StringSplitOptions.None).ToArray() into procJsonCell select MapProc(procJsonCell)).ToList();
         }
 
-        public static ProcModel MapProc(string[] _procJsonCell) {
-            var procJsonCell = _procJsonCell;
-            var proc = new ProcModel();
-            proc.UID = procJsonCell[0];
-            proc.PID = procJsonCell[1];
-            proc.PPID = procJsonCell[2];
-            proc.C = procJsonCell[3];
-            proc.STIME = procJsonCell[4];
-            proc.TTY = procJsonCell[5];
+        public static ProcModel MapProc(string[] procJsonCell) {
+            var proc = new ProcModel {
+                Uid = procJsonCell[0],
+                Pid = procJsonCell[1],
+                Ppid = procJsonCell[2],
+                C = procJsonCell[3],
+                Stime = procJsonCell[4],
+                Tty = procJsonCell[5]
+            };
             if (procJsonCell.Length > 6) {
-                proc.TIME = procJsonCell[6];
+                proc.Time = procJsonCell[6];
             }
             if (procJsonCell.Length > 8) {
-                proc.CMD = procJsonCell[7] + " " + procJsonCell[8];
+                proc.Cmd = procJsonCell[7] + " " + procJsonCell[8];
             }
             else if (procJsonCell.Length > 7) {
-                proc.CMD = procJsonCell[7];
+                proc.Cmd = procJsonCell[7];
             }
             return proc;
         }
 
-        public static string GetPID(string service) {
-            var procs = Proc.All;
+        public static string GetPid(string service) {
+            var procs = All;
             var proc = (from p in procs
-                        where p.CMD.Contains(service)
+                        where p.Cmd.Contains(service)
                         select p).FirstOrDefault();
-            return proc != null ? proc.PID : null;
+            return proc?.Pid;
         }
     }
 
     public class ProcModel {
-
-        //UID PID PPID C STIME TTY TIME CMD
-        public string UID { get; set; }
-
-        public string PID { get; set; }
-
-        public string PPID { get; set; }
-
+        public string Uid { get; set; }
+        public string Pid { get; set; }
+        public string Ppid { get; set; }
         public string C { get; set; }
-
-        public string STIME { get; set; }
-
-        public string TTY { get; set; }
-
-        public string TIME { get; set; }
-
-        public string CMD { get; set; }
+        public string Stime { get; set; }
+        public string Tty { get; set; }
+        public string Time { get; set; }
+        public string Cmd { get; set; }
     }
 }

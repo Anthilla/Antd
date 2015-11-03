@@ -51,24 +51,24 @@ namespace antdlib.Log {
 
         public static void TraceEvent(LogModel.EventLevel level, string source, string eventId, string activity, string keyword, string user,
             string opCode, string reg, string sessionId, string relationId, string message) {
-            var l = new LogModel() {
+            var l = new LogModel {
                 Level = level,
                 Source = source,
-                EventID = eventId,
+                EventId = eventId,
                 Activity = activity,
                 Keyword = keyword,
                 User = user,
                 OperativeCode = opCode,
                 Reg = reg,
-                SessionID = sessionId,
-                RelationID = relationId,
+                SessionId = sessionId,
+                RelationId = relationId,
                 Message = message
             };
             DeNSo.Session.New.Set(l);
         }
 
         public static void TraceMethod(string keyword, string source) {
-            var l = new LogModel() {
+            var l = new LogModel {
                 Level = LogModel.EventLevel.InvokedMethod,
                 Source = source,
                 Keyword = keyword
@@ -77,7 +77,7 @@ namespace antdlib.Log {
         }
 
         public static void TraceFileChange(string mode, string file) {
-            var l = new LogModel() {
+            var l = new LogModel {
                 Mode = mode,
                 File = file
             };
@@ -85,7 +85,7 @@ namespace antdlib.Log {
         }
 
         public static void TraceFileChange(string mode, string file, string oldfile) {
-            var l = new LogModel() {
+            var l = new LogModel {
                 Mode = mode,
                 File = file,
                 Oldfile = oldfile

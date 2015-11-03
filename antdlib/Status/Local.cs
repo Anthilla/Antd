@@ -1,6 +1,4 @@
-﻿
-using antdlib.Models;
-///-------------------------------------------------------------------------------------
+﻿///-------------------------------------------------------------------------------------
 ///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 ///     All rights reserved.
 ///
@@ -29,6 +27,7 @@ using antdlib.Models;
 ///     20141110
 ///-------------------------------------------------------------------------------------
 using System;
+using antdlib.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -37,28 +36,26 @@ using antdlib.Common;
 namespace antdlib.Status {
     public class Local {
         private static string GetSystemVersion() {
-            var version = "";
             var sq = Terminal.Execute("losetup | grep /dev/loop0");
-            var sqSplt = sq.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            if (sqSplt.Length > 1) {
-                var file = sqSplt[sqSplt.Length - 1];
-                version = new Regex("_.+_").Matches(file)[0].Value.Replace("_", "");
-            }
-            return version;
+            var sqSplt = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            if (sqSplt.Length <= 1)
+                return "";
+            var file = sqSplt[sqSplt.Length - 1];
+            return new Regex("_.+_").Matches(file)[0].Value.Replace("_", "");
         }
 
-        public static string SystemVersion { get { return GetSystemVersion(); } }
+        public static string SystemVersion => GetSystemVersion();
 
         private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
-            var list = new List<SystemComponentModel>() { };
+            var list = new List<SystemComponentModel>();
             var activeLinkData = Terminal.Execute($"find {Folder.AntdRepo} -type l | grep active");
             ConsoleLogger.Warn(activeLinkData);
-            var activeLinks = activeLinkData.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var link in activeLinks) {
                 ConsoleLogger.Warn(link);
                 var linkInfoData = Terminal.Execute($"file {link}");
                 ConsoleLogger.Warn(linkInfoData);
-                var linkInfos = linkInfoData.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var linkInfos = linkInfoData.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var sc = new SystemComponentModel() {
                     active = linkInfos[0].Replace(":", "").Trim(),
                     link = linkInfos[1].Replace("symbolic link to", "").Trim()
@@ -68,7 +65,6 @@ namespace antdlib.Status {
             return list;
         }
 
-        public static IEnumerable<SystemComponentModel> ActiveSystemComponents { get { return GetActiveSystemComponents(); } }
-
+        public static IEnumerable<SystemComponentModel> ActiveSystemComponents => GetActiveSystemComponents();
     }
 }

@@ -27,84 +27,61 @@
 ///     20141110
 ///-------------------------------------------------------------------------------------
 
-using antdlib.Security;
 using MailKit;
 using MailKit.Net.Imap;
 using System;
 using antdlib.Common;
 
 namespace antdlib.Mail {
-    public class IMAP {
+    public class Imap {
 
         public class Settings {
-            private static byte[] key = Cryptography.CoreKey();
-            private static byte[] vector = Cryptography.CoreVector();
-
-            private static string coreFileName = "imapConfig";
-            private static string[] _files = new string[] {
-                coreFileName + "Current",
-                coreFileName + "001",
-                coreFileName + "002"
+            private static readonly string CoreFileName = "imapConfig";
+            private static readonly string[] Files = {
+                CoreFileName + "Current",
+                CoreFileName + "001",
+                CoreFileName + "002"
             };
 
-            public static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
+            public static ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
 
             public static void SetUrl(string value) {
-                xmlWriter.Write(Label.IMAP.Url, value);
+                XmlWriter.Write(Label.IMAP.Url, value);
             }
 
-            public static string Url {
-                get {
-                    return (xmlWriter.ReadValue(Label.IMAP.Url) == null) ? "" : xmlWriter.ReadValue(Label.IMAP.Url);
-                }
-            }
+            public static string Url => XmlWriter.ReadValue(Label.IMAP.Url) ?? "";
 
             public static void SetPort(string value) {
-                xmlWriter.Write(Label.IMAP.Port, value);
+                XmlWriter.Write(Label.IMAP.Port, value);
             }
 
-            public static string Port {
-                get {
-                    return (xmlWriter.ReadValue(Label.IMAP.Port) == null) ? "" : xmlWriter.ReadValue(Label.IMAP.Port);
-                }
-            }
+            public static string Port => XmlWriter.ReadValue(Label.IMAP.Port) ?? "";
 
             public static void SetAccount(string value) {
-                xmlWriter.Write(Label.IMAP.Account, value);
+                XmlWriter.Write(Label.IMAP.Account, value);
             }
 
-            public static string Account {
-                get {
-                    return (xmlWriter.ReadValue(Label.IMAP.Account) == null) ? "" : xmlWriter.ReadValue(Label.IMAP.Account);
-                }
-            }
+            public static string Account => XmlWriter.ReadValue(Label.IMAP.Account) ?? "";
 
             public static void SetPassword(string value) {
-                xmlWriter.Write(Label.IMAP.Password, value);
+                XmlWriter.Write(Label.IMAP.Password, value);
             }
 
-            public static string Password {
-                get {
-                    return (xmlWriter.ReadValue(Label.IMAP.Password) == null) ? "" : xmlWriter.ReadValue(Label.IMAP.Password);
-                }
-            }
+            public static string Password => XmlWriter.ReadValue(Label.IMAP.Password) ?? "";
 
-            public static bool ConfigExists { get { return (xmlWriter.ReadValue(Label.IMAP.Url) == null) ? false : true; } }
+            public static bool ConfigExists => (XmlWriter.ReadValue(Label.IMAP.Url) != null);
         }
 
         public static void Get() {
             using (var client = new ImapClient()) {
                 client.Connect("imap.gmail.com", 993, true);
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
                 client.Authenticate("account name", "password");
-                // The Inbox folder is always available on all IMAP servers...
                 var inbox = client.Inbox;
                 inbox.Open(FolderAccess.ReadOnly);
                 Console.WriteLine("Total messages: {0}", inbox.Count);
                 Console.WriteLine("Recent messages: {0}", inbox.Recent);
-                for (int i = 0; i < inbox.Count; i++) {
+                for (var i = 0; i < inbox.Count; i++) {
                     var message = inbox.GetMessage(i);
                     Console.WriteLine("Subject: {0}", message.Subject);
                 }

@@ -278,6 +278,14 @@ namespace antdlib.MountPoint {
             return result2.Replace("\\", "/").Replace("//", "/");
         }
 
+        public static string SetFilesPath(string source) {
+            return $"{Folder.Dirs}/FILE{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
+        }
+
+        public static string GetFilesPath(string source) {
+            return source.Replace(Folder.Dirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
+        }
+
         public static bool IsAlreadyMounted(string directory) {
             var df = Terminal.Execute($"df | grep w \"{directory}\"");
             var pm = Terminal.Execute($"cat /proc/mounts | grep w \"{directory}\"");
@@ -290,14 +298,6 @@ namespace antdlib.MountPoint {
             var ddf = Terminal.Execute($"df | grep -w \"{destination}\"");
             var dpm = Terminal.Execute($"cat /proc/mounts | grep -w \"{destination}\"");
             return (sdf.Length > 0 || spm.Length > 0 || ddf.Length > 0 || dpm.Length > 0);
-        }
-
-        public static string SetFilesPath(string source) {
-            return $"{Folder.Dirs}/FILE{source.Replace("/", "_").Replace("\\", "/").Replace("__", "_")}";
-        }
-
-        public static string GetFilesPath(string source) {
-            return source.Replace(Folder.Dirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
 
         private static int _umount1Retry;

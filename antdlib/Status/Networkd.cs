@@ -30,27 +30,25 @@
 using antdlib.Systemd;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using antdlib.Common;
 
 namespace antdlib.Status {
 
     public class Networkd {
-        private static string coreFileName = "antdConfig";
+        private const string CoreFileName = "antdConfig";
 
-        private static string[] _files = new string[] {
-                coreFileName + "Current",
-                coreFileName + "001",
-                coreFileName + "002"
+        private static readonly string[] Files = {
+                CoreFileName + "Current",
+                CoreFileName + "001",
+                CoreFileName + "002"
             };
 
-        private static ParameterXmlWriter xmlWriter = new ParameterXmlWriter(_files);
+        private static readonly ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
 
         public static void SetConfiguration() {
             var check = CheckConfiguration();
-            if (check == true) {
-                //il file esiste
-                //la configurazione esiste
-                // -> applica la configurazione
+            if (check) {
                 EnableRequiredServices();
                 MountNetworkdDir();
                 CreateFirstUnit();
@@ -59,9 +57,6 @@ namespace antdlib.Status {
                 ConsoleLogger.Log("    networkd -> loaded");
             }
             else {
-                //il file NON esiste
-                //la configurazione NON esiste
-                // -> NON applica la configurazione
                 ConsoleLogger.Warn("----------------------------------+");
                 ConsoleLogger.Warn("networkd -> not configured yet    |");
                 ConsoleLogger.Warn("----------------------------------+");
@@ -69,7 +64,7 @@ namespace antdlib.Status {
         }
 
         private static bool CheckConfiguration() {
-            return xmlWriter.CheckValue("networkd");
+            return XmlWriter.CheckValue("networkd");
         }
 
         private static void EnableRequiredServices() {
@@ -83,9 +78,8 @@ namespace antdlib.Status {
             Terminal.Execute("mount --bind /etc/systemd/network " + Folder.Networkd);
         }
 
-        private static string RestartNetworkdDir() {
-            var r = Systemctl.Restart("systemd-networkd");
-            return r.output;
+        private static void RestartNetworkdDir() {
+            Systemctl.Restart("systemd-networkd");
         }
 
         private static string StatusNetworkdDir() {
@@ -94,29 +88,33 @@ namespace antdlib.Status {
         }
 
         private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
-                                      string networkDHCP, string networkDNS, string networkBridge, string networkIPForward,
+                                      string networkDhcp, string networkDns, string networkBridge, string networkIpForward,
                                       string addressAddress, string routeGateway) {
-            string path = Path.Combine(Folder.Networkd, filename + ".network");
-            //if (File.Exists(path)) {
-            //    File.Delete(path);
-            //}
-            using (StreamWriter sw = File.CreateText(path)) {
+            var path = Path.Combine(Folder.Networkd, filename + ".network");
+            using (var sw = File.CreateText(path)) {
                 sw.WriteLine("[Match]");
                 sw.WriteLine("Name=" + matchName);
                 if (matchHost != "") { sw.WriteLine("Host=" + matchHost); }
                 if (matchVirtualization != "") { sw.WriteLine("Virtualization=" + matchVirtualization); }
                 sw.WriteLine("");
                 sw.WriteLine("[Network]");
-                if (networkDHCP != "") sw.WriteLine("DHCP=" + networkDHCP);
-                if (networkDNS != "") sw.WriteLine("DNS=" + networkDNS);
-                if (networkBridge != "") sw.WriteLine("Bridge=" + networkBridge);
-                if (networkIPForward != "") sw.WriteLine("IPForward=" + networkIPForward);
+                if (networkDhcp != "")
+                    sw.WriteLine("DHCP=" + networkDhcp);
+                if (networkDns != "")
+                    sw.WriteLine("DNS=" + networkDns);
+                if (networkBridge != "")
+                    sw.WriteLine("Bridge=" + networkBridge);
+                if (networkIpForward != "")
+                    sw.WriteLine("IPForward=" + networkIpForward);
                 sw.WriteLine("");
                 sw.WriteLine("[Address]");
                 sw.WriteLine("Address=" + addressAddress);
-                if (routeGateway != "") sw.WriteLine("");
-                if (routeGateway != "") sw.WriteLine("[Route]");
-                if (routeGateway != "") sw.WriteLine("Gateway=" + routeGateway);
+                if (routeGateway != "")
+                    sw.WriteLine("");
+                if (routeGateway != "")
+                    sw.WriteLine("[Route]");
+                if (routeGateway != "")
+                    sw.WriteLine("Gateway=" + routeGateway);
                 sw.WriteLine("");
             }
         }
@@ -126,46 +124,27 @@ namespace antdlib.Status {
         }
 
         public static string ReadAntdUnit() {
-            string path = Path.Combine(Folder.Networkd, "antd.network");
-            string text;
-            if (!File.Exists(path)) {
-                text = "Unit file doesn't exist!";
-            }
-            else {
-                text = File.ReadAllText(path);
-            }
-            return text;
+            var path = Path.Combine(Folder.Networkd, "antd.network");
+            return !File.Exists(path) ? "Unit file doesn't exist!" : File.ReadAllText(path);
         }
 
         public static List<string> ReadUnits() {
-            List<string> list = new List<string>() { };
+            var list = new List<string>();
             var dirContainer = Folder.Networkd;
             if (Directory.Exists(dirContainer)) {
-                string[] dirs = Directory.GetFiles(Folder.Networkd);
-                foreach (string file in dirs) {
-                    string path = Path.Combine(Folder.Networkd, file);
-                    string text;
-                    if (!File.Exists(path)) {
-                        text = "Unit file does not exist!";
-                    }
-                    else {
-                        text = File.ReadAllText(path);
-                    }
-                    list.Add(text);
-                }
+                var dirs = Directory.GetFiles(Folder.Networkd);
+                list.AddRange(dirs.Select(file => Path.Combine(Folder.Networkd, file)).Select(path => !File.Exists(path) ? "Unit file does not exist!" : File.ReadAllText(path)));
                 return list;
             }
-            else {
-                return list;
-            }
+            return list;
         }
 
         public static void CreateCustomUnit(string text, string fname) {
-            string path = Path.Combine(Folder.Networkd, fname + ".network");
+            var path = Path.Combine(Folder.Networkd, fname + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
-            using (StreamWriter sw = File.CreateText(path)) {
+            using (var sw = File.CreateText(path)) {
                 sw.Write(text);
             }
         }

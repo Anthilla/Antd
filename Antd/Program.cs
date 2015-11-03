@@ -39,9 +39,7 @@ using System.Threading;
 using antdlib.Common;
 
 namespace Antd {
-
     internal static class Program {
-
         private static void Main() {
             var startTime = DateTime.Now;
             Console.Title = "ANTD";
@@ -54,7 +52,6 @@ namespace Antd {
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
-            //ConsoleLogger.Success("Antd_1608");
             AntdBoot.CheckIfGlobalRepositoryIsWriteable();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
@@ -74,6 +71,7 @@ namespace Antd {
                 AntdBoot.SetOsConfiguration();
                 AntdBoot.LaunchApps();
                 AntdBoot.ReloadSsh();
+                AntdBoot.ReloadUsers();
                 AntdBoot.CheckResolvd();
                 Directory.CreateDirectory(Folder.Config);
                 Console.WriteLine("Checking existing Config...");
@@ -90,7 +88,6 @@ namespace Antd {
     }
 
     internal class Startup {
-
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading core service configuration");
             AntdBoot.StartDatabase();

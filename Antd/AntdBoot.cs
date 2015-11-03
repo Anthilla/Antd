@@ -1,34 +1,4 @@
-﻿///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
-
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -47,33 +17,39 @@ using Nancy;
 using Owin;
 
 namespace Antd {
-
     public class AntdBoot {
+        private static readonly string[] WatchDirectories =
+        {
+            Folder.Root
+        };
 
         public static void CheckIfGlobalRepositoryIsWriteable() {
-            if (AssemblyInfo.IsUnix) {
-                var bootExtData = Terminal.Execute("blkid | grep BootExt");
-                if (bootExtData.Length > 0) {
-                    var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
-                    var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-                    ConsoleLogger.Log("    global repository -> checking");
-                    var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
-                    if (mountResult.Length > 0) {
-                        if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                            ConsoleLogger.Log("                      is RO -> remounting");
-                            Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
-                        }
-                        else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                            ConsoleLogger.Log("                      is RW -> ok!");
-                        }
-                    }
-                    else {
-                        ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
-                    }
-                    ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
-                    ConsoleLogger.Log("    global repository -> checked");
+            if (!AssemblyInfo.IsUnix)
+                return;
+            var bootExtData = Terminal.Execute("blkid | grep BootExt");
+            if (bootExtData.Length <= 0)
+                return;
+            var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
+            var bootExtUid =
+                new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "")
+                    .Replace("\"", "")
+                    .Trim();
+            ConsoleLogger.Log("    global repository -> checking");
+            var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
+            if (mountResult.Length > 0) {
+                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+                    ConsoleLogger.Log("                      is RO -> remounting");
+                    Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                }
+                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                    ConsoleLogger.Log("                      is RW -> ok!");
                 }
             }
+            else {
+                ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
+            }
+            ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Log("    global repository -> checked");
         }
 
         public static void SetWorkingDirectories() {
@@ -101,10 +77,8 @@ namespace Antd {
         public static void SetOsMount() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            var firmware = "/mnt/cdrom/Kernel/active-firmware";
-            var firmwareDir = "/lib64/firmware";
-            if (Mount.IsAlreadyMounted(firmware, firmwareDir) == false) {
-                Terminal.Execute($"mount {firmware} {firmwareDir}");
+            if (Mount.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Terminal.Execute("uname -r").Trim();
@@ -168,10 +142,6 @@ namespace Antd {
             JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("    scheduler -> loaded");
         }
-
-        private readonly static string[] WatchDirectories = {
-            Folder.Root
-        };
 
         public static void StartDirectoryWatcher(bool isActive) {
             if (isActive) {
@@ -243,7 +213,14 @@ namespace Antd {
                 return;
             var apps = Management.DetectApps();
             if (apps.Length > 0) {
-                foreach (var dir in from app in apps select Management.GetWantedDirectories(app) into dirs where dirs.Length > 0 from dir in dirs select dir) {
+                foreach (
+                    var dir in
+                        from app in apps
+                        select Management.GetWantedDirectories(app)
+                        into dirs
+                        where dirs.Length > 0
+                        from dir in dirs
+                        select dir) {
                     Mount.Dir(dir);
                 }
             }
@@ -254,8 +231,6 @@ namespace Antd {
         public static void ReloadSsh() {
             const string dir = "/etc/ssh";
             var mntDir = Mount.SetDirsPath(dir);
-            if (mntDir == null)
-                throw new ArgumentNullException(nameof(mntDir));
             ConsoleLogger.Log("ssh> set directories");
             if (!Directory.Exists(mntDir)) {
                 Terminal.Execute($"cp -fR {dir} {mntDir}");
@@ -266,6 +241,10 @@ namespace Antd {
             Terminal.Execute("systemctl restart sshd.service");
         }
 
+        public static void ReloadUsers() {
+            SystemUser.Config.ResetPasswordForUser("root", "AnthillaDev2015");
+        }
+
         public static void CheckResolvd() {
             const string resolvfile = "/etc/resolv.conf";
             if (File.Exists(resolvfile))
@@ -273,6 +252,14 @@ namespace Antd {
             if (File.ReadAllText(resolvfile).Length < 1) {
                 FileSystem.WriteFile(resolvfile, "nameserver 8.8.8.8");
             }
+        }
+
+        public static void DownloadDefaultRepoFiles() {
+            var dir = $"{Folder.Config}/database";
+            Directory.CreateDirectory(dir);
+            FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
+            FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");
+            FileSystem.Download("http://standards-oui.ieee.org/oui.txt", $"{dir}/oui.txt");
         }
     }
 }

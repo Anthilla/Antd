@@ -6,7 +6,7 @@
                 <label>2FA-Token Authentication </label>
             </td>
             <td>
-                @if (antdlib.Mail.SMTP.Settings.ConfigExists == false) { 
+                @if (antdlib.Mail.Smtp.Settings.ConfigExists == false) { 
                     <p>SMTP is not configured yet, before enabling 2FA-Token Authentication you have to configure SMTP</p>
                 }
                 else if (Model.AuthStatus == true) {

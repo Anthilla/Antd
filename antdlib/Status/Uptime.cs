@@ -39,45 +39,35 @@ namespace antdlib.Status {
     public class Uptime {
 
         private static string GetUptime() {
-            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            UptimeModel uptimes = MapUptimeJson(output);
-            return uptimes.uptime;
+            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            return MapUptimeJson(output).uptime;
         }
 
-        public static string UpTime { get { return GetUptime(); } }
+        public static string UpTime => GetUptime();
 
         private static string GetLoadAverage() {
-            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            UptimeModel uptimes = MapUptimeJson(output);
-            return uptimes.loadAverage;
+            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            return MapUptimeJson(output).loadAverage;
         }
 
-        public static string LoadAverage { get { return GetLoadAverage(); } }
+        public static string LoadAverage => GetLoadAverage();
 
         private static string[] GetLoadAverageValues() {
-            CommandModel command = Terminal.Execute("uptime").ConvertCommandToModel();
-            var output = JsonConvert.SerializeObject(command.output);
-            UptimeModel uptimes = MapUptimeJson(output);
-            return uptimes.loadAverageValues;
+            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            return MapUptimeJson(output).loadAverageValues;
         }
 
-        public static string[] LoadAverageValues { get { return GetLoadAverageValues(); } }
+        public static string[] LoadAverageValues => GetLoadAverageValues();
 
-        private static UptimeModel MapUptimeJson(string _uptimeJson) {
-            string uptimeJson = _uptimeJson;
-            uptimeJson = Regex.Replace(_uptimeJson, "\"", "").Replace("\\n", "\n");
-            string[] rowDivider = new String[] { "  " };
-            string[] uptimeJsonRow = new string[] { };
-            uptimeJsonRow = uptimeJson.Split(rowDivider, StringSplitOptions.None).ToArray();
-            UptimeModel model = new UptimeModel();
+        private static UptimeModel MapUptimeJson(string inUptimeJson) {
+            var uptimeJson = Regex.Replace(inUptimeJson, "\"", "").Replace("\\n", "\n");
+            var uptimeJsonRow = uptimeJson.Split(new[] { "  " }, StringSplitOptions.None).ToArray();
+            var model = new UptimeModel();
             if (uptimeJsonRow.Length == 3) {
                 model.uptime = uptimeJsonRow[0];
                 model.users = uptimeJsonRow[1];
                 model.loadAverage = uptimeJsonRow[2];
-                string[] values = new string[] { };
-                values = uptimeJsonRow[2].Split(new String[] { ", " }, StringSplitOptions.None).ToArray();
+                var values = uptimeJsonRow[2].Split(new[] { ", " }, StringSplitOptions.None).ToArray();
                 model.loadAverageValues = values;
             }
             else {
