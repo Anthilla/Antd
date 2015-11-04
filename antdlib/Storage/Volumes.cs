@@ -44,7 +44,7 @@ namespace antdlib.Storage {
 
             public string Type { get; set; }
 
-            public string UUID { get; set; }
+            public string Uuid { get; set; }
 
             public string SecType { get; set; }
 
@@ -52,7 +52,7 @@ namespace antdlib.Storage {
 
             public string PartLabel { get; set; }
 
-            public string PartUUID { get; set; }
+            public string PartUuid { get; set; }
 
             public string Maj { get; set; }
 
@@ -75,47 +75,48 @@ namespace antdlib.Storage {
             }
         }
 
-        public class GET {
-            public static string[] ByID() {
-                return Terminal.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+        public class Get {
+            public static string[] ById() {
+                return Terminal.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Terminal.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
         }
 
         public static void PopulateBlocks() {
-            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
-                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var blk = new Block();
-                blk.Name = cells[0];
-                blk.Maj = cells[1];
-                blk.Min = cells[1];
-                blk.Rm = cells[2];
-                blk.Size = cells[3];
-                blk.Ro = cells[4];
-                blk.DiskType = cells[5];
-                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
+                var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block {
+                    Name = cells[0],
+                    Maj = cells[1],
+                    Min = cells[1],
+                    Rm = cells[2],
+                    Size = cells[3],
+                    Ro = cells[4],
+                    DiskType = cells[5],
+                    MountPoint = (cells.Length > 6) ? cells[6] : ""
+                };
                 var fromBlkid = GetBlockFromBlkid(blk.Name);
                 if (fromBlkid != null) {
                     blk.Label = fromBlkid.Label;
-                    blk.UUID = fromBlkid.UUID;
+                    blk.Uuid = fromBlkid.Uuid;
                     blk.PartLabel = fromBlkid.PartLabel;
-                    blk.PartUUID = fromBlkid.PartUUID;
+                    blk.PartUuid = fromBlkid.PartUuid;
                     blk.Type = fromBlkid.Type;
                 }
                 SaveToDb(blk);
@@ -140,71 +141,54 @@ namespace antdlib.Storage {
         }
 
         public static List<string> BlockList() {
-            var blocks = new List<string>() { };
-            var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var row in rows) {
-                blocks.Add(row);
-            }
+            var blocks = new List<string>();
+            var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            blocks.AddRange(rows);
             return blocks;
         }
 
-        private static Block GetBlockFromLsblk(string q) {
-            return Lsblk().Where(b => b.Name == q && b != null).FirstOrDefault();
-        }
+        //private static Block GetBlockFromLsblk(string q) {
+        //    return Lsblk().FirstOrDefault(b => b.Name == q);
+        //}
 
         private static Block GetBlockFromBlkid(string q) {
-            return Blkid().Where(b => b.Name == q && b != null).FirstOrDefault();
+            return Blkid().FirstOrDefault(b => b.Name == q);
         }
 
-        private static List<Block> Lsblk() {
-            var list = new List<Block>() { };
-            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var row in rows) {
-                var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var blk = new Block();
-                blk.Name = cells[0];
-                blk.Maj = cells[1];
-                blk.Min = cells[1];
-                blk.Rm = cells[2];
-                blk.Size = cells[3];
-                blk.Ro = cells[4];
-                blk.DiskType = cells[5];
-                blk.MountPoint = (cells.Length > 6) ? cells[6] : "";
-                list.Add(blk);
-            }
-            return list;
+        private static IEnumerable<Block> Lsblk() {
+            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            return rows.Select(row => row.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToArray()).Select(cells => new Block {
+                Name = cells[0], Maj = cells[1], Min = cells[1], Rm = cells[2], Size = cells[3], Ro = cells[4], DiskType = cells[5], MountPoint = (cells.Length > 6) ? cells[6] : ""
+            }).ToList();
         }
 
-        private static List<Block> Blkid() {
-            var list = new List<Block>() { };
-            var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+        private static IEnumerable<Block> Blkid() {
+            var list = new List<Block>();
+            var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
-                var cells = row.Split(new String[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var blk = new Block();
-                blk.Name = cells[0];
-                blk.Attributes = cells[1];
+                var cells = row.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var blk = new Block {
+                    Name = cells[0],
+                    Attributes = cells[1]
+                };
                 var attrs = cells[1].Split(' ').ToArray();
                 blk.Type = AssignValue("TYPE=", attrs);
-                blk.UUID = AssignValue("UUID=", attrs);
+                blk.Uuid = AssignValue("UUID=", attrs);
                 blk.SecType = AssignValue("SEC_TYPE=", attrs);
                 blk.Label = AssignValue("LABEL=", attrs);
                 blk.PartLabel = AssignValue("PARTLABEL=", attrs);
-                blk.PartUUID = AssignValue("PARTUUID=", attrs);
+                blk.PartUuid = AssignValue("PARTUUID=", attrs);
                 list.Add(blk);
             }
             return list;
         }
 
-        private static string AssignValue(string label, string[] arr) {
-            return GetValue(arr.Where(a => a.Contains(label)).FirstOrDefault());
-        }
+        private static string AssignValue(string label, IEnumerable<string> arr) => GetValue(arr.FirstOrDefault(a => a.Contains(label)));
 
         private static string GetValue(string input) {
-            if (input != null) {
-                var val = input.Split('=').ToArray()[1];
-                return val.Substring(1, val.Length - 2);
-            }
-            return "";
+            if (input == null) return "";
+            var val = input.Split('=').ToArray()[1];
+            return val.Substring(1, val.Length - 2);
         }
     }
 }
