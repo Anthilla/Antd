@@ -31,6 +31,7 @@ namespace antdlib.Users {
             [Key]
             public string _Id { get; set; } = Guid.NewGuid().ToString();
             public string MasterGuid { get; set; }
+            public string MasterUsername { get; set; }
             public bool IsEnabled { get; set; }
             public IEnumerable<Claim> Claims { get; set; }
 
@@ -44,25 +45,30 @@ namespace antdlib.Users {
 
         public class Repository {
             public static IEnumerable<UserEntityModel> GetAll() {
-                return Session.New.Get<UserEntityModel>();
+                return Session.New.Get<UserEntityModel>().OrderBy(_ => _.MasterUsername);
             }
 
             public static IEnumerable<UserEntityModel> GetAllEnabled() {
-                return Session.New.Get<UserEntityModel>().Where(_ => _.IsEnabled);
+                return Session.New.Get<UserEntityModel>().OrderBy(_ => _.MasterUsername).Where(_ => _.IsEnabled);
             }
 
             public static IEnumerable<UserEntityModel> GetAllDisabled() {
-                return Session.New.Get<UserEntityModel>().Where(_ => _.IsEnabled == false);
+                return Session.New.Get<UserEntityModel>().OrderBy(_ => _.MasterUsername).Where(_ => _.IsEnabled == false);
             }
 
             public static UserEntityModel GetByUserIdentity(string userIdentity) {
                 return Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.Claims.Any(c => c.Type == ClaimType.UserIdentity && c.Value == userIdentity));
             }
 
-            public static void Create(string guid) {
+            public static string GenerateGuid() {
+                return Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper();
+            }
+
+            public static void Create(string guid, string username) {
                 var user = new UserEntityModel {
                     MasterGuid = guid,
                     IsEnabled = true,
+                    MasterUsername = username,
                     Claims = new List<UserEntityModel.Claim>()
                 };
                 Session.New.Set(user);

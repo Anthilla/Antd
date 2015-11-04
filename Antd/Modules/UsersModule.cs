@@ -97,18 +97,19 @@ namespace Antd.Modules {
             };
 
             Post["/identity"] = x => {
-                string guid = Request.Form.Guid;
-                UserEntity.Repository.Create(guid);
+                var guid = UserEntity.Repository.GenerateGuid();
                 string userIdentity = Request.Form.UserEntity;
-                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "defaultIdentity", userIdentity);
                 string userPassword = Request.Form.UserPassword;
-                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserPassword, "defaultPassword", userPassword);
+                UserEntity.Repository.Create(guid, userIdentity);
+                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "antd-master-id", guid);
+                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "antd-master-identity", userIdentity);
+                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserPassword, "antd-master-password", userPassword);
                 return Response.AsRedirect("/users");
             };
 
             Post["/identity/addclaim"] = x => {
                 string userGuid = Request.Form.Userguid;
-                string type = Request.Form.Type;
+                string type = Request.Form.Type.Value;
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
                 UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), key, val);
