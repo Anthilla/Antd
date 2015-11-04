@@ -57,7 +57,7 @@ namespace Antd.Modules {
             };
 
             Post["/install"] = x => {
-                new InstallOperativeSystem((string)Request.Form.DiskName);
+                new InstallOperativeSystem((string)Request.Form.DiskName).SetDiskAndInstall();
                 return Response.AsJson(true);
             };
         }
