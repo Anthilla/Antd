@@ -113,6 +113,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -177,8 +178,7 @@
     <Compile Include="Directories\DirectoryWatcher.cs" />
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
-    <Compile Include="Log\LogModel.cs" />
-    <Compile Include="Log\LogRepository.cs" />
+    <Compile Include="Log\Logger.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />

@@ -28,32 +28,59 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using antdlib.Common;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace antdlib.Log {
+
+    public enum EventLevel : byte {
+        ApiRequest = 0,
+        InvokedMethod = 1,
+        Error = 99
+    }
+
     public class LogModel {
-        public enum EventLevel : byte {
-            ApiRequest = 0,
-            InvokedMethod = 1,
-            Error = 99
-        }
+        [Key]
         public string _Id { get; } = Guid.NewGuid().ToString();
         public string LogGuid { get; } = Guid.NewGuid().ToString();
-        public string AntdUid { get; } = AssemblyInfo.Guid;
-        public string LogTimestamp { get; set; } = Timestamp.Now;
+        public DateTime DateTime { get; set; }
         public EventLevel Level { get; set; }
-        public string Source { get; set; } = "";
-        public string EventId { get; set; } = "";
-        public string Activity { get; set; } = "";
-        public string Keyword { get; set; } = "";
-        public string User { get; set; } = "";
-        public string OperativeCode { get; set; } = "";
-        public string Reg { get; set; } = "";
-        public string SessionId { get; set; } = "";
-        public string RelationId { get; set; } = "";
-        public string Message { get; set; } = "";
-        public string Mode { get; set; } = "";
-        public string File { get; set; } = "";
-        public string Oldfile { get; set; } = "";
+        public string User { get; set; }
+        public string Session { get; set; }
+        public string AnthillaId { get; set; }
+        public string EventId { get; set; }
+        public string EventName { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class Logger {
+
+        public IEnumerable<LogModel> LogTable = DeNSo.Session.New.Get<LogModel>().OrderBy(_ => _.DateTime);
+
+        public IEnumerable<LogModel> GetAll() {
+            return LogTable;
+        }
+
+        public LogModel GetById(string id) {
+            return DeNSo.Session.New.Get<LogModel>(c => c.LogGuid == id).FirstOrDefault();
+        }
+
+        public static void Trace(string user, string eventName, EventLevel level, string message) {
+            try {
+                var logItem = new LogModel {
+                    DateTime = DateTime.Now,
+                    User = user,
+                    Session = "",
+                    AnthillaId = "",
+                    Level = level,
+                    EventId = Guid.NewGuid().ToString(),
+                    EventName = eventName,
+                    Message = message
+                };
+                DeNSo.Session.New.Set(logItem);
+            }
+            catch (Exception) { }
+        }
     }
 }
