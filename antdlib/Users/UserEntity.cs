@@ -2,12 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using antdlib.Common;
-using antdlib.MountPoint;
 using DeNSo;
 
 namespace antdlib.Users {
     public class UserEntity {
+
+        public static ClaimType ConvertClaimType(string claimString) {
+            switch (claimString) {
+                case "identity":
+                    return ClaimType.UserIdentity;
+                case "password":
+                    return ClaimType.UserPassword;
+                case "token":
+                    return ClaimType.UserToken;
+                default:
+                    return ClaimType.Other;
+            }
+        }
 
         public enum ClaimType : byte {
             UserIdentity = 1,

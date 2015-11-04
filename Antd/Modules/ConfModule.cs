@@ -1,9 +1,4 @@
-﻿using System.Dynamic;
-using System.Linq;
-using antdlib.Config;
-using Antd.ViewHelpers;
-using Nancy;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,11 +27,18 @@ using Nancy;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Dynamic;
+using System.Linq;
+using antdlib.Config;
+using Antd.ViewHelpers;
+using Nancy;
+using Nancy.Security;
+
 namespace Antd.Modules {
     public class ConfModule : NancyModule {
         public ConfModule()
             : base("/cfg") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

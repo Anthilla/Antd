@@ -1,0 +1,14 @@
+﻿<legend id="Entity">User Entity</legend>
+<input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
+<table class="table searchable">
+    <tbody id="SysctlBodyTable">
+        @foreach (antdlib.Users.UserEntity.Model user in Model.UserEntities) {
+            @foreach (var claim in user.Claims) {
+                <tr data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" data-type="@claim.Type">
+                    <td>@claim.Key</td>
+                    <td>@claim.Value </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

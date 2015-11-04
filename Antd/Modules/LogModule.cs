@@ -31,14 +31,14 @@ using System.Dynamic;
 using antdlib.Log;
 using Antd.Hubs;
 using Nancy;
-//using Nancy.Security;
+using Nancy.Security;
 
 namespace Antd.Modules {
 
     public class LogModule : NancyModule {
         public LogModule()
             : base("/log") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();

@@ -31,18 +31,17 @@ using System.Dynamic;
 using antdlib.CCTable;
 using antdlib.Users;
 using Nancy;
-using Nancy.Security;
+//using Nancy.Security;
 
 namespace Antd.Modules {
-
     public class UsersModule : NancyModule {
-
         public UsersModule()
             : base("/users") {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.UserEntities = UserEntity.Repository.GetAll();
                 vmod.SystemUsers = SystemUser.GetAllFromDatabase();
                 vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
                 vmod.ApplicationUsers = ApplicationUser.GetAll();
@@ -89,6 +88,38 @@ namespace Antd.Modules {
                 string pwd = Request.Form.UserPassword;
                 SystemUser.Map.MapUser(user, pwd);
                 return Response.AsRedirect("/users");
+            };
+
+            Get["/identity"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.Users = UserEntity.Repository.GetAll();
+                return View["_page-users", vmod];
+            };
+
+            Post["/identity"] = x => {
+                string guid = Request.Form.Guid;
+                UserEntity.Repository.Create(guid);
+                string userIdentity = Request.Form.UserEntity;
+                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "defaultIdentity", userIdentity);
+                string userPassword = Request.Form.UserPassword;
+                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserPassword, "defaultPassword", userPassword);
+                return Response.AsRedirect("/users/identity");
+            };
+
+            Post["/identity/addclaim"] = x => {
+                string userGuid = Request.Form.Userguid;
+                string type = Request.Form.Type;
+                string key = Request.Form.Key;
+                string val = Request.Form.Value;
+                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), key, val);
+                return Response.AsRedirect("/users/identity");
+            };
+
+            Post["/identity/delclaim"] = x => {
+                string userGuid = Request.Form.Userguid;
+                string guid = Request.Form.Guid;
+                UserEntity.Repository.RemoveClaim(userGuid, guid);
+                return Response.AsRedirect("/users/identity");
             };
         }
     }

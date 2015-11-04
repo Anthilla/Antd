@@ -32,13 +32,13 @@ using System.Dynamic;
 using System.Linq;
 using antdlib.Firewall;
 using Nancy;
-//using Nancy.Security;
+using Nancy.Security;
 
 namespace Antd.Modules {
     public class FirewallModule : NancyModule {
         public FirewallModule()
             : base("/firewall") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
