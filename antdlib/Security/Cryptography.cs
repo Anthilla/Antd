@@ -139,7 +139,7 @@ namespace antdlib.Security {
         }
 
         public static string Hash256Terminal(string inputString, string salt) {
-            return Terminal.Execute("mkpasswd -m sha-512 " + inputString + " -s \"" + salt + "\"");
+            return Terminal.Terminal.Execute("mkpasswd -m sha-512 " + inputString + " -s \"" + salt + "\"");
         }
     }
 }

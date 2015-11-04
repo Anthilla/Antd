@@ -35,14 +35,14 @@ namespace antdlib.Network {
     public class NetworkInterface {
         private static List<string> GetPhysicalNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            return (from dir in dirs let f = Terminal.Execute($"file {dir}") where !f.Contains("virtual") && !f.Contains("fake") select Path.GetFileName(dir)).ToList();
+            return (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where !f.Contains("virtual") && !f.Contains("fake") select Path.GetFileName(dir)).ToList();
         }
 
         public static List<string> Physical => GetPhysicalNetworkInterfaces();
 
         private static List<string> GetVirtualNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = (from dir in dirs let f = Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
+            var list = (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
             return list.Where(s => !s.Contains("bond")).ToList();
         }
 
@@ -50,7 +50,7 @@ namespace antdlib.Network {
 
         private static List<string> GetBondNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = (from dir in dirs let f = Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
+            var list = (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
             return list.Where(s => s.Contains("bond")).ToList();
         }
 

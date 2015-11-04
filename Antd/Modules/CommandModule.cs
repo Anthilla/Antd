@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Dynamic;
-using antdlib.CommandManagement;
+using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
 

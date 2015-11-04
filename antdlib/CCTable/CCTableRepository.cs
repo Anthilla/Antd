@@ -27,12 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.CommandManagement;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
+using antdlib.Terminal;
 
 namespace antdlib.CCTable {
     public class CCTableRepository {
@@ -76,7 +76,7 @@ namespace antdlib.CCTable {
                 if (a == null)
                     throw new ArgumentNullException(nameof(a));
                 var c = a;
-                i.ValueResult = Terminal.Execute(f + " " + c);
+                i.ValueResult = Terminal.Terminal.Execute(f + " " + c);
             }
             return list;
         }
@@ -205,13 +205,13 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         }
 
         private static void SetConfFile(string source, string destination) {
-            Terminal.Execute($"cp {source} {destination}");
+            Terminal.Terminal.Execute($"cp {source} {destination}");
             File.Copy(source, destination, true);
-            Terminal.Execute($"mount --bind {source} {destination}");
+            Terminal.Terminal.Execute($"mount --bind {source} {destination}");
         }
 
         private static void SetConfDirectory(string source, string destination) {
-            Terminal.Execute($"cp {source} {destination}");
+            Terminal.Terminal.Execute($"cp {source} {destination}");
             FileSystem.CopyDirectory(source, destination);
             MountPoint.Mount.Dir(source);
         }
@@ -260,7 +260,7 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
             var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             if (row != null) {
                 var command = row.InputCommand;
-                var result = Terminal.Execute(command);
+                var result = Terminal.Terminal.Execute(command);
                 row.ValueResult = result;
                 row.ValueResultArray = result.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }

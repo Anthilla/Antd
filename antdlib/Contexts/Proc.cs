@@ -36,13 +36,13 @@ using Newtonsoft.Json;
 namespace antdlib.Contexts {
     public class Proc {
         private static List<ProcModel> GetAllAllProc() {
-            return MapProcJson(JsonConvert.SerializeObject(Terminal.Execute("ps -aef").ConvertCommandToModel().output));
+            return MapProcJson(JsonConvert.SerializeObject(Terminal.Terminal.Execute("ps -aef").ConvertCommandToModel().output));
         }
 
         public static List<ProcModel> AllAll => GetAllAllProc();
 
         private static List<ProcModel> GetAllProc() {
-            var list = MapProcJson(JsonConvert.SerializeObject(Terminal.Execute("ps -aef").ConvertCommandToModel().output));
+            var list = MapProcJson(JsonConvert.SerializeObject(Terminal.Terminal.Execute("ps -aef").ConvertCommandToModel().output));
             var procs = new List<ProcModel>();
             procs.AddRange(list.Where(p => !p.Cmd.Contains('[')));
             return procs;

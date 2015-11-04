@@ -38,7 +38,7 @@ namespace antdlib.SystemConfig {
 
         private static List<string> GetTimezoneList() {
             var list = new List<string>();
-            var output = Terminal.Execute("timedatectl", "list-timezones");
+            var output = Terminal.Terminal.Execute("timedatectl", "list-timezones");
             if (string.IsNullOrEmpty(output))
                 return list;
             var outputString = Regex.Replace(output, @"\s{2,}", " ").Replace("\"", "").Replace("\\n", "\n");

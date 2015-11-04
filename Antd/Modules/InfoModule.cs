@@ -34,6 +34,7 @@ using Nancy.Security;
 using System.Dynamic;
 using antdlib.Common;
 using antdlib.Contexts;
+using antdlib.Terminal;
 
 namespace Antd.Modules {
 

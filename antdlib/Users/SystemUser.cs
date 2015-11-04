@@ -44,10 +44,10 @@ namespace antdlib.Users {
                 var list = new List<UserModel>();
                 if (!System.IO.File.Exists(File) || !System.IO.File.Exists(FilePwd))
                     return list;
-                var usersString = Terminal.Execute($"cat {File}");
+                var usersString = Terminal.Terminal.Execute($"cat {File}");
                 var users =
                     usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var passwdUserString = Terminal.Execute($"cat {FilePwd}");
+                var passwdUserString = Terminal.Terminal.Execute($"cat {FilePwd}");
                 var passwdUsers =
                     passwdUserString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 foreach (var user in users) {
@@ -70,9 +70,9 @@ namespace antdlib.Users {
         public static void ImportUsersToDatabase() {
             if (!System.IO.File.Exists(File) || !System.IO.File.Exists(FilePwd))
                 return;
-            var usersString = Terminal.Execute($"cat {File}");
+            var usersString = Terminal.Terminal.Execute($"cat {File}");
             var users = usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            var passwdUserString = Terminal.Execute($"cat {FilePwd}");
+            var passwdUserString = Terminal.Terminal.Execute($"cat {FilePwd}");
             var passwdUsers =
                 passwdUserString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var user in users) {
@@ -137,12 +137,12 @@ namespace antdlib.Users {
         }
 
         public static void CreateUser(string user) {
-            Terminal.Execute("useradd " + user);
+            Terminal.Terminal.Execute("useradd " + user);
         }
 
         public class Config {
             public static void ResetPasswordForUser(string user, string password) {
-                Terminal.Execute($"usermod -p '{password.Trim()}' {user}");
+                Terminal.Terminal.Execute($"usermod -p '{password.Trim()}' {user}");
             }
 
             public static void ResetPasswordForUserStoredInDb() {
@@ -161,7 +161,7 @@ namespace antdlib.Users {
                 var model = new SystemUserModel {
                     Guid = Guid.NewGuid().ToString(),
                     Alias = userAlias,
-                    Password = Terminal.Execute($"mkpasswd -m sha-512 {password}")
+                    Password = Terminal.Terminal.Execute($"mkpasswd -m sha-512 {password}")
                 };
                 Session.New.Set(model);
             }
@@ -171,7 +171,7 @@ namespace antdlib.Users {
                 if (model == null)
                     return;
                 model.Alias = userAlias;
-                model.Password = Terminal.Execute($"mkpasswd -m sha-512 {password}");
+                model.Password = Terminal.Terminal.Execute($"mkpasswd -m sha-512 {password}");
                 Session.New.Set(model);
             }
 

@@ -36,6 +36,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using antdlib;
 using antdlib.Common;
+using antdlib.Terminal;
 
 namespace Antd.Hubs {
     public class Websocketd {

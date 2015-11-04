@@ -12,6 +12,7 @@ using antdlib.Directories;
 using antdlib.MountPoint;
 using antdlib.Scheduler;
 using antdlib.Status;
+using antdlib.Terminal;
 using antdlib.Users;
 using Microsoft.AspNet.SignalR;
 using Nancy;

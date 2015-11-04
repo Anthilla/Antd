@@ -39,21 +39,21 @@ namespace antdlib.Status {
     public class Uptime {
 
         private static string GetUptime() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            var output = JsonConvert.SerializeObject(Terminal.Terminal.Execute("uptime").ConvertCommandToModel().output);
             return MapUptimeJson(output).uptime;
         }
 
         public static string UpTime => GetUptime();
 
         private static string GetLoadAverage() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            var output = JsonConvert.SerializeObject(Terminal.Terminal.Execute("uptime").ConvertCommandToModel().output);
             return MapUptimeJson(output).loadAverage;
         }
 
         public static string LoadAverage => GetLoadAverage();
 
         private static string[] GetLoadAverageValues() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
+            var output = JsonConvert.SerializeObject(Terminal.Terminal.Execute("uptime").ConvertCommandToModel().output);
             return MapUptimeJson(output).loadAverageValues;
         }
 

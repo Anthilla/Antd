@@ -49,7 +49,7 @@ namespace antdlib.Svcs.Syslogng {
         private static string antdSyslogngFile = "antd.syslogng.conf";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {dir} {DIR}");
+            Terminal.Terminal.Execute($"cp {dir} {DIR}");
             FileSystem.CopyDirectory(dir, DIR);
             Mount.Dir(dir);
         }
@@ -62,7 +62,7 @@ namespace antdlib.Svcs.Syslogng {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static void ReloadConfig() {
-            Terminal.Execute($"smbcontrol all reload-config");
+            Terminal.Terminal.Execute($"smbcontrol all reload-config");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {

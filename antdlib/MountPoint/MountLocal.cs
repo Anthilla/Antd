@@ -91,7 +91,7 @@ namespace antdlib.MountPoint {
         }
 
         public static string GetSquashMount(string device) {
-            var sq = Terminal.Execute($"losetup | grep {device}");
+            var sq = Terminal.Terminal.Execute($"losetup | grep {device}");
             if (sq.Length > 0) {
                 var data = sq.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var src = "";

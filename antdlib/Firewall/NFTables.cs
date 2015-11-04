@@ -50,7 +50,7 @@ namespace antdlib.Firewall {
         public static void AddNftRule(string prefix, string rule) {
             ConfigManagement.AddCommandsBundle($"{prefix} {rule}");
             if (rule.Length > 0) {
-                Terminal.Execute($"{prefix} {rule}");
+                Terminal.Terminal.Execute($"{prefix} {rule}");
             }
         }
 
@@ -60,10 +60,10 @@ namespace antdlib.Firewall {
                 return;
             var chain = command.Split(' ')[4];
             var hook = command.Split(' ')[5];
-            var checkTables = Terminal.Execute($"nft list table {chain} -a | grep \"{command}\"");
+            var checkTables = Terminal.Terminal.Execute($"nft list table {chain} -a | grep \"{command}\"");
             if (checkTables.Length > 0) {
                 var handle = checkTables.Split(' ').Last();
-                Terminal.Execute($"nft delete rule {chain} {hook} handle {handle}");
+                Terminal.Terminal.Execute($"nft delete rule {chain} {hook} handle {handle}");
             }
             ConfigManagement.DeleteCommandsBundle(guid);
         }

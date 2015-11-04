@@ -102,8 +102,8 @@ namespace antdlib.MountPoint {
                     continue;
                 var path = file.GetAllStringsButLast('/');
                 var mntPath = mntFile.GetAllStringsButLast('/');
-                Terminal.Execute($"mkdir -p {path}");
-                Terminal.Execute($"mkdir -p {mntPath}");
+                Terminal.Terminal.Execute($"mkdir -p {path}");
+                Terminal.Terminal.Execute($"mkdir -p {mntPath}");
                 if (!System.IO.File.Exists(file)) {
                     System.IO.File.Copy(mntFile, file);
                 }
@@ -123,7 +123,7 @@ namespace antdlib.MountPoint {
                 if (service.Count <= 0)
                     continue;
                 foreach (var srvc in service) {
-                    Terminal.Execute($"systemctl restart {srvc}");
+                    Terminal.Terminal.Execute($"systemctl restart {srvc}");
                 }
             }
         }
@@ -144,9 +144,9 @@ namespace antdlib.MountPoint {
                     continue;
                 try {
                     ConsoleLogger.Log($"      {realPath} does not exists, copying content from {t}");
-                    Terminal.Execute($"mkdir -p {t}");
-                    Terminal.Execute($"mkdir -p {realPath}");
-                    Terminal.Execute($"cp {t} {realPath}");
+                    Terminal.Terminal.Execute($"mkdir -p {t}");
+                    Terminal.Terminal.Execute($"mkdir -p {realPath}");
+                    Terminal.Terminal.Execute($"cp {t} {realPath}");
                     //FileSystem.CopyDirectory(directories[i], realPath);
                 }
                 catch (Exception ex) {
@@ -171,9 +171,9 @@ namespace antdlib.MountPoint {
                     ConsoleLogger.Log($"      {realPath} does not exists, copying content from {t}");
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
-                    Terminal.Execute($"mkdir -p {path}");
-                    Terminal.Execute($"mkdir -p {mntPath}");
-                    Terminal.Execute($"cp {t} {realPath}");
+                    Terminal.Terminal.Execute($"mkdir -p {path}");
+                    Terminal.Terminal.Execute($"mkdir -p {mntPath}");
+                    Terminal.Terminal.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -259,7 +259,7 @@ namespace antdlib.MountPoint {
             }
             else {
                 ConsoleLogger.Log($"      Mounting: {source}");
-                Terminal.Execute($"mount -o bind {source} {destination}");
+                Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
             }
         }
 
@@ -284,23 +284,23 @@ namespace antdlib.MountPoint {
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            var df = Terminal.Execute($"df | grep w \"{directory}\"");
-            var pm = Terminal.Execute($"cat /proc/mounts | grep w \"{directory}\"");
+            var df = Terminal.Terminal.Execute($"df | grep w \"{directory}\"");
+            var pm = Terminal.Terminal.Execute($"cat /proc/mounts | grep w \"{directory}\"");
             return (df.Length > 0 || pm.Length > 0);
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {
-            var sdf = Terminal.Execute($"df | grep -w \"{source}\"");
-            var spm = Terminal.Execute($"cat /proc/mounts | grep -w \"{source}\"");
-            var ddf = Terminal.Execute($"df | grep -w \"{destination}\"");
-            var dpm = Terminal.Execute($"cat /proc/mounts | grep -w \"{destination}\"");
+            var sdf = Terminal.Terminal.Execute($"df | grep -w \"{source}\"");
+            var spm = Terminal.Terminal.Execute($"cat /proc/mounts | grep -w \"{source}\"");
+            var ddf = Terminal.Terminal.Execute($"df | grep -w \"{destination}\"");
+            var dpm = Terminal.Terminal.Execute($"cat /proc/mounts | grep -w \"{destination}\"");
             return (sdf.Length > 0 || spm.Length > 0 || ddf.Length > 0 || dpm.Length > 0);
         }
 
         private static int _umount1Retry;
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
-                Terminal.Execute($"umount {directory}");
+                Terminal.Terminal.Execute($"umount {directory}");
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
             }
@@ -310,8 +310,8 @@ namespace antdlib.MountPoint {
         private static int _umount2Retry;
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
-                Terminal.Execute($"umount {source}");
-                Terminal.Execute($"umount {destination}");
+                Terminal.Terminal.Execute($"umount {source}");
+                Terminal.Terminal.Execute($"umount {destination}");
                 _umount2Retry = _umount2Retry + 1;
                 Umount(source, destination);
             }

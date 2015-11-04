@@ -34,6 +34,7 @@ using antdlib;
 using antdlib.CCTable;
 using antdlib.MountPoint;
 using antdlib.Status;
+using antdlib.Terminal;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;

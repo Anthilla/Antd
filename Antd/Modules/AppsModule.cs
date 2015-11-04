@@ -31,6 +31,7 @@ using System.Dynamic;
 using antdlib;
 using antdlib.Apps;
 using antdlib.Common;
+using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
 

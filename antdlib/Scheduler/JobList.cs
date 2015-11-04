@@ -47,7 +47,7 @@ namespace antdlib.Scheduler {
                 var dataMap = context.JobDetail.JobDataMap;
                 var command = dataMap.GetString("data");
                 var jobId = dataMap.GetString("jobID");
-                var cmd = Terminal.Execute(command);
+                var cmd = Terminal.Terminal.Execute(command);
                 JobRepository.AddResult(jobId, cmd);
             }
         }

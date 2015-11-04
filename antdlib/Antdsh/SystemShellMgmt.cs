@@ -30,7 +30,7 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
-using static antdlib.Terminal;
+using static antdlib.Terminal.Terminal;
 using static antdlib.Antdsh.Execute;
 using static System.Console;
 
