@@ -60,12 +60,12 @@ namespace antdlib.Directories {
             //tell to signalr
             //distingui r/rw/eccetera
             //recupera IDseriale della macchina
-            Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath);
+            //Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath);
             ConsoleLogger.Log("Directory Watcher >> File: {0} {1} ", e.FullPath, e.ChangeType);
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
-            Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath, e.OldName);
+            //Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath, e.OldName);
             ConsoleLogger.Log(Timestamp.Now + " File: {0} renamed to {1}", e.OldName, e.Name);
         }
     }

@@ -29,6 +29,7 @@
 
 using System;
 using System.Linq;
+using antdlib.Log;
 
 namespace antdlib.Common {
 
@@ -51,6 +52,7 @@ namespace antdlib.Common {
             Console.WriteLine("{0}{1}"
                 , GetTime(DateTime.Now)
                 , message);
+            Logger.Trace("", "", EventLevel.Info, message);
         }
 
         public static void Info(dynamic message, params object[] args) {
@@ -62,6 +64,7 @@ namespace antdlib.Common {
                 , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
+            Logger.Trace("", "", EventLevel.Info, message);
         }
 
         public static void Success(dynamic message, params object[] args) {
@@ -73,6 +76,7 @@ namespace antdlib.Common {
                 , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
+            Logger.Trace("", "", EventLevel.Info, message);
         }
 
         public static void Warn(dynamic message, params object[] args) {
@@ -84,6 +88,7 @@ namespace antdlib.Common {
                 , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
+            Logger.Trace("", "", EventLevel.Warn, message);
         }
 
         public static void Error(dynamic message, params object[] args) {
@@ -95,6 +100,7 @@ namespace antdlib.Common {
                 , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
+            Logger.Trace("", "", EventLevel.Error, message);
         }
 
         public static void Point(string where, string message = "") {
@@ -105,6 +111,7 @@ namespace antdlib.Common {
             Console.WriteLine($"○○○ {where} ○○○ {message}");
             Console.ForegroundColor = currentFg;
             Console.BackgroundColor = currentBg;
+            Logger.Trace("", "", EventLevel.Info, message);
         }
     }
 }

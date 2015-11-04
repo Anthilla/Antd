@@ -35,9 +35,11 @@ using System.Linq;
 namespace antdlib.Log {
 
     public enum EventLevel : byte {
-        ApiRequest = 0,
-        InvokedMethod = 1,
-        Error = 99
+        Info = 0,
+        Warn = 1,
+        Error = 2,
+        ApiRequest = 98,
+        InvokedMethod = 99
     }
 
     public class LogModel {
@@ -56,10 +58,8 @@ namespace antdlib.Log {
 
     public class Logger {
 
-        public IEnumerable<LogModel> LogTable = DeNSo.Session.New.Get<LogModel>().OrderBy(_ => _.DateTime);
-
-        public IEnumerable<LogModel> GetAll() {
-            return LogTable;
+        public static IEnumerable<LogModel> GetAll() {
+            return DeNSo.Session.New.Get<LogModel>().OrderBy(_ => _.DateTime);
         }
 
         public LogModel GetById(string id) {
