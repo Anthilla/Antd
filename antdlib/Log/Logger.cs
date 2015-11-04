@@ -59,7 +59,7 @@ namespace antdlib.Log {
     public class Logger {
 
         public static IEnumerable<LogModel> GetAll() {
-            return DeNSo.Session.New.Get<LogModel>().OrderBy(_ => _.DateTime);
+            return DeNSo.Session.New.Get<LogModel>().OrderByDescending(_ => _.DateTime);
         }
 
         public LogModel GetById(string id) {

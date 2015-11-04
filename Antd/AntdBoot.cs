@@ -233,6 +233,8 @@ namespace Antd {
         }
 
         public static void ReloadSsh() {
+            if (!AssemblyInfo.IsUnix)
+                return;
             const string dir = "/etc/ssh";
             var mntDir = Mount.SetDirsPath(dir);
             ConsoleLogger.Log("ssh> set directories");
@@ -246,10 +248,14 @@ namespace Antd {
         }
 
         public static void ReloadUsers() {
+            if (!AssemblyInfo.IsUnix)
+                return;
             SystemUser.Config.ResetPasswordForUserStoredInDb();
         }
 
         public static void CheckResolvd() {
+            if (!AssemblyInfo.IsUnix)
+                return;
             const string resolvfile = "/etc/resolv.conf";
             if (File.Exists(resolvfile))
                 return;
@@ -259,6 +265,8 @@ namespace Antd {
         }
 
         public static void DownloadDefaultRepoFiles() {
+            if (!AssemblyInfo.IsUnix)
+                return;
             var dir = $"{Folder.Config}/database";
             Directory.CreateDirectory(dir);
             FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
@@ -267,6 +275,8 @@ namespace Antd {
         }
 
         public static void SetBootConfiguration() {
+            if (!AssemblyInfo.IsUnix)
+                return;
             if (ConfigManagement.Exists) {
                 ConfigManagement.ExecuteAll();
             }
