@@ -37,23 +37,20 @@ using antdlib.Common;
 namespace antdlib.Collectd {
     public class CollectdRepo {
         public static List<CollectdMappedItem> MapCollectdData(string json) {
-            var list = new List<CollectdMappedItem>() { };
+            var list = new List<CollectdMappedItem>();
             var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
-            foreach (var entry in collectdEntries) {
-                var m = MapItem(entry);
-                list.Add(m);
-            }
+            list.AddRange(collectdEntries.Select(MapItem));
             return list;
         }
 
         public static List<CollectdItem> ImportCollectdData(string json) {
             var collectdEntries = JsonConvert.DeserializeObject<List<CollectdItem>>(json);
-            var model = new CollectdDBModel() {
+            var model = new CollectdDBModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
-                Timestamp = Timestamp.Now
+                Timestamp = Timestamp.Now,
+                Data = collectdEntries
             };
-            model.Data = collectdEntries;
             DeNSo.Session.New.Set(model);
             return collectdEntries;
         }
@@ -67,15 +64,15 @@ namespace antdlib.Collectd {
         }
 
         private static CollectdMappedItem MapItem(CollectdItem model) {
-            var map = new CollectdMappedItem() {
+            var map = new CollectdMappedItem {
                 Host = model.host,
                 Plugin = model.plugin,
                 PluginInstance = model.plugin_instance,
                 Type = model.type,
                 TypeInstance = model.type_instance,
-                Values = model.values
+                Values = model.values,
+                Date = Timestamp.ConvertUnixToDateTime(model.time)
             };
-            map.Date = Timestamp.ConvertUnixToDateTime(model.time);
             return map;
         }
     }

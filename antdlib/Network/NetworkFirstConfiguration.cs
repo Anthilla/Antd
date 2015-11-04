@@ -37,28 +37,28 @@ using antdlib.Common;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static string fileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
+        private static readonly string FileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
 
         private static bool CheckNetworkIsConfigured() {
-            if (File.Exists(fileName) && FileSystem.ReadFile(fileName).Length > 0) {
+            if (File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0) {
                 return true;
             }
             return false;
         }
 
         public static void Set() {
-            if (CheckNetworkIsConfigured() == true) {
-                var fileContent = FileSystem.ReadFile(fileName);
+            if (CheckNetworkIsConfigured()) {
+                var fileContent = FileSystem.ReadFile(FileName);
                 if (fileContent.Length > 0) {
-                    var arr = fileContent.Split(new String[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    var arr = fileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     foreach (var cmd in arr) {
                         NetworkConfigRepository.Create(cmd);
                     }
                 }
                 ConsoleLogger.Info("Network config => existing configuration found...");
                 ConsoleLogger.Info("Network config => applying this configuration!");
-                Terminal.Execute($"chmod 777 {fileName}");
-                Terminal.Execute($".{fileName}");
+                Terminal.Execute($"chmod 777 {FileName}");
+                Terminal.Execute($".{FileName}");
                 //todo: ShowNetworkInfo("", "");
             }
             else {
@@ -69,43 +69,33 @@ namespace antdlib.Network {
         }
 
         private static List<string> DetectAllNetworkInterfaces() {
-            var NIFlist = new List<string>() { };
+            var niFlist = new List<string>();
             var m = 15;
-            for (int i = 0; i < m; i++) {
-                var r = Terminal.Execute($"ip link set eth{i.ToString()} up");
+            for (var i = 0; i < m; i++) {
+                var r = Terminal.Execute($"ip link set eth{i} up");
                 if (r.Length > 0) {
                     break;
                 }
-                else {
-                    NIFlist.Add($"eth{i.ToString()}");
-                }
+                niFlist.Add($"eth{i}");
             }
-            return NIFlist;
+            return niFlist;
         }
 
         private static List<string> DetectActiveNetworkInterfaces() {
-            var NIFlist = DetectAllNetworkInterfaces();
-            var nlist = new List<string>() { };
-            foreach (var nif in NIFlist) {
-                var r = Terminal.Execute($"cat /sys/class/net/{nif}/carrier");
-                if (r == "1") {
-                    nlist.Add(nif);
-                }
-            }
-            return nlist;
+            var niFlist = DetectAllNetworkInterfaces();
+            return (from nif in niFlist let r = Terminal.Execute($"cat /sys/class/net/{nif}/carrier") where r == "1" select nif).ToList();
         }
 
-        private static bool IsIPAvailable(string input) {
-            PingReply reply = new Ping().Send(input);
-            if (reply.Status == IPStatus.DestinationHostUnreachable) { return true; }
-            else if (reply.Status == IPStatus.DestinationNetworkUnreachable) { return true; }
-            else if (reply.Status == IPStatus.DestinationPortUnreachable) { return true; }
-            else if (reply.Status == IPStatus.DestinationUnreachable) { return true; }
-            else if (reply.Status == IPStatus.TimedOut) { return true; }
-            else { return false; }
+        private static bool IsIpAvailable(string input) {
+            var reply = new Ping().Send(input);
+            if (reply != null && reply.Status == IPStatus.DestinationHostUnreachable) { return true; }
+            if (reply != null && reply.Status == IPStatus.DestinationNetworkUnreachable) { return true; }
+            if (reply != null && reply.Status == IPStatus.DestinationPortUnreachable) { return true; }
+            if (reply != null && reply.Status == IPStatus.DestinationUnreachable) { return true; }
+            return reply != null && reply.Status == IPStatus.TimedOut;
         }
 
-        private static string AugmentIPValue(string input) {
+        private static string AugmentIpValue(string input) {
             var octets = input.Split('.').ToIntArray();
             var octet2 = octets[2];
             var octet3 = octets[3] + 1;
@@ -113,50 +103,50 @@ namespace antdlib.Network {
                 octet2 = octets[2] + 1;
                 octet3 = octets[3];
             }
-            var newOctets = new string[] {
+            var newOctets = new[] {
                 octets[0].ToString(),
                 octets[1].ToString(),
                 octet2.ToString(),
                 octet3.ToString()
             };
-            return String.Join(".", newOctets);
+            return string.Join(".", newOctets);
         }
 
-        private static string GetFirstAvailableIPFrom(string input) {
-            string ip = input;
-            while (IsIPAvailable(ip) == false) {
-                ip = AugmentIPValue(input);
+        private static string GetFirstAvailableIpFrom(string input) {
+            var ip = input;
+            while (IsIpAvailable(ip) == false) {
+                ip = AugmentIpValue(input);
             }
             return ip;
         }
 
-        private static string PickIP() {
-            var ipAddr = GetFirstAvailableIPFrom("169.254.1.1");
+        private static string PickIp() {
+            var ipAddr = GetFirstAvailableIpFrom("169.254.1.1");
             return $"{ipAddr}/16";
         }
 
-        private static List<string> commands = new List<string>() { };
+        private static readonly List<string> Commands = new List<string>();
 
-        private static void WriteConfFile() {
-            if (!File.Exists(fileName) && commands.Count > 0) {
-                var txt = String.Join(Environment.NewLine, commands.ToArray());
-            }
-        }
+        //private static void WriteConfFile() {
+        //    if (!File.Exists(fileName) && Commands.Count > 0) {
+        //        string.Join(Environment.NewLine, Commands.ToArray());
+        //    }
+        //}
 
         private static void SetNetworkInterfaceUp() {
             if (DetectActiveNetworkInterfaces().Count > 0) {
-                var selectedNIF = DetectActiveNetworkInterfaces().LastOrDefault();
-                ConsoleLogger.Info($"_> Network will be initialized on: {selectedNIF}");
-                var ip = PickIP();
-                ConsoleLogger.Info($"_> Assigning {ip} to {selectedNIF}");
-                var cmd1 = $"ip addr add {ip} dev {selectedNIF}";
+                var selectedNif = DetectActiveNetworkInterfaces().LastOrDefault();
+                ConsoleLogger.Info($"_> Network will be initialized on: {selectedNif}");
+                var ip = PickIp();
+                ConsoleLogger.Info($"_> Assigning {ip} to {selectedNif}");
+                var cmd1 = $"ip addr add {ip} dev {selectedNif}";
                 Terminal.Execute(cmd1);
-                commands.Add(cmd1);
+                Commands.Add(cmd1);
                 var cmd2 = $"ip route add default via {ip}";
                 Terminal.Execute(cmd2);
-                commands.Add(cmd2);
-                WriteConfFile();
-                ShowNetworkInfo(selectedNIF, ip);
+                Commands.Add(cmd2);
+                //WriteConfFile();
+                ShowNetworkInfo(selectedNif, ip);
             }
             else {
                 ConsoleLogger.Warn("There's no active network interface,");
@@ -174,17 +164,19 @@ namespace antdlib.Network {
             if (btDirs.Length > 0) {
                 ConsoleLogger.Info("bt >> create bt configuration file");
                 var btDir = btDirs.FirstOrDefault();
-                var dirName = Path.GetFullPath(btDir);
-                var fileName = $"{dirName}/settings".Replace("//", "/");
-                if (File.Exists(fileName)) {
-                    File.Delete(fileName);
+                if (btDir != null) {
+                    var dirName = Path.GetFullPath(btDir);
+                    var replace = $"{dirName}/settings".Replace("//", "/");
+                    if (File.Exists(replace)) {
+                        File.Delete(replace);
+                    }
+                    var fileLines = new[] {
+                        "[General]",
+                        "Discoverable=true",
+                        $"Alias={bluetoothConnectionName}"
+                    };
+                    FileSystem.WriteFile(replace, string.Join(n, fileLines));
                 }
-                var fileLines = new string[] {
-                    "[General]",
-                    "Discoverable=true",
-                    $"Alias={bluetoothConnectionName}",
-                };
-                FileSystem.WriteFile(fileName, String.Join(n, fileLines));
                 ConsoleLogger.Info("bt >> restart bluetooth service");
                 Terminal.Execute("systemctl restart bluetooth");
                 ConsoleLogger.Info("bt >> activate bluetooth connection");

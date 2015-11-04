@@ -75,7 +75,7 @@ namespace Antd.Modules {
                 string range = Request.Form.Range;
                 string interfaceName = Request.Form.Interface;
                 string broadcast = Request.Form.Broadcast;
-                var result = NetworkConfig.Iproute2.AddNewAddressIPV4(address, range, interfaceName, broadcast);
+                var result = NetworkConfig.Iproute2.AddNewAddressIpv4(address, range, interfaceName, broadcast);
                 return Response.AsJson(result);
             };
 
@@ -84,14 +84,14 @@ namespace Antd.Modules {
                 string range = Request.Form.Range;
                 string interfaceName = Request.Form.Interface;
                 string broadcast = Request.Form.Broadcast;
-                var result = NetworkConfig.Iproute2.DeleteAddressIPV4(address, range, interfaceName, broadcast);
+                var result = NetworkConfig.Iproute2.DeleteAddressIpv4(address, range, interfaceName, broadcast);
                 return Response.AsJson(result);
             };
 
             Post["/ipv4/flush"] = x => {
                 string interfaceName = Request.Form.Interface;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
-                var result = NetworkConfig.Iproute2.FlushConfigurationIPV4(i);
+                var result = NetworkConfig.Iproute2.FlushConfigurationIpv4(i);
                 return Response.AsJson(result);
             };
 
@@ -117,7 +117,7 @@ namespace Antd.Modules {
                 string gateway = Request.Form.Gateway;
                 string destination = Request.Form.Destination;
                 var i = (destination.Length > 0) ? destination : null;
-                var result = NetworkConfig.Iproute2.AddRouteIPV4(gateway, i);
+                var result = NetworkConfig.Iproute2.AddRouteIpv4(gateway, i);
                 return Response.AsJson(result);
             };
 
@@ -125,7 +125,7 @@ namespace Antd.Modules {
                 string gateway = Request.Form.Gateway;
                 string destination = Request.Form.Destination;
                 var i = (destination.Length > 0) ? destination : null;
-                var result = NetworkConfig.Iproute2.DeleteRouteIPV4(gateway, i);
+                var result = NetworkConfig.Iproute2.DeleteRouteIpv4(gateway, i);
                 return Response.AsJson(result);
             };
 
@@ -166,19 +166,19 @@ namespace Antd.Modules {
                 string ttl = Request.Form.Ttl;
                 string foreignTunnel = Request.Form.Tunnel;
                 string address = Request.Form.Address;
-                var result = NetworkConfig.Iproute2.AddTunnelPointToPointIPV4(interfaceName, ttl, foreignTunnel, address);
+                var result = NetworkConfig.Iproute2.AddTunnelPointToPointIpv4(interfaceName, ttl, foreignTunnel, address);
                 return Response.AsJson(result);
             };
 
             Post["/ipv4/del/tunnel"] = x => {
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.DeleteTunnelPointToPointIPV4(interfaceName);
+                var result = NetworkConfig.Iproute2.DeleteTunnelPointToPointIpv4(interfaceName);
                 return Response.AsJson(result);
             };
 
             Get["/ipv4/tunnels/{interfaceName?}"] = x => {
                 string interfaceName = x.interfaceName;
-                var result = NetworkConfig.Iproute2.ShowTunnelsIPV4(interfaceName);
+                var result = NetworkConfig.Iproute2.ShowTunnelsIpv4(interfaceName);
                 return Response.AsJson(result);
             };
             #endregion
@@ -187,25 +187,25 @@ namespace Antd.Modules {
             Post["/ipv6/add/address"] = x => {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.AddNewAddressIPV6(address, interfaceName);
+                var result = NetworkConfig.Iproute2.AddNewAddressIpv6(address, interfaceName);
                 return Response.AsJson(result);
             };
 
             Post["/ipv6/del/address"] = x => {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.DeleteAddressIPV6(address, interfaceName);
+                var result = NetworkConfig.Iproute2.DeleteAddressIpv6(address, interfaceName);
                 return Response.AsJson(result);
             };
 
             Post["/ipv6/flush"] = x => {
-                var result = NetworkConfig.Iproute2.FlushConfigurationIPV6();
+                var result = NetworkConfig.Iproute2.FlushConfigurationIpv6();
                 return Response.AsJson(result);
             };
 
             Get["/ipv6/neigh/{interfaceName}"] = x => {
                 string interfaceName = x.interfaceName;
-                var result = NetworkConfig.Iproute2.ShowNeighborsIPV6(interfaceName);
+                var result = NetworkConfig.Iproute2.ShowNeighborsIpv6(interfaceName);
                 return Response.AsJson(result);
             };
 
@@ -213,7 +213,7 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string layer = Request.Form.Layer;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.AddNeighborsIPV6(address, layer, interfaceName);
+                var result = NetworkConfig.Iproute2.AddNeighborsIpv6(address, layer, interfaceName);
                 return Response.AsJson(result);
             };
 
@@ -221,7 +221,7 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string layer = Request.Form.Layer;
                 string interfaceName = Request.Form.Interface;
-                var result = NetworkConfig.Iproute2.DeleteNeighborsIPV6(address, layer, interfaceName);
+                var result = NetworkConfig.Iproute2.DeleteNeighborsIpv6(address, layer, interfaceName);
                 return Response.AsJson(result);
             };
 
@@ -229,7 +229,7 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string gateway = Request.Form.Gateway;
                 var g = (gateway.Length > 0) ? gateway : null;
-                var result = NetworkConfig.Iproute2.AddRouteIPV6Gateway(address, g);
+                var result = NetworkConfig.Iproute2.AddRouteIpv6Gateway(address, g);
                 return Response.AsJson(result);
             };
 
@@ -237,7 +237,7 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string gateway = Request.Form.Gateway;
                 var g = (gateway.Length > 0) ? gateway : null;
-                var result = NetworkConfig.Iproute2.DeleteRouteIPV6Gateway(address, g);
+                var result = NetworkConfig.Iproute2.DeleteRouteIpv6Gateway(address, g);
                 return Response.AsJson(result);
             };
 
@@ -245,7 +245,7 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
-                var result = NetworkConfig.Iproute2.AddRouteIPV6Interface(address, i);
+                var result = NetworkConfig.Iproute2.AddRouteIpv6Interface(address, i);
                 return Response.AsJson(result);
             };
 
@@ -253,13 +253,13 @@ namespace Antd.Modules {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
                 var i = (interfaceName.Length > 0) ? interfaceName : null;
-                var result = NetworkConfig.Iproute2.DeleteRouteIPV6Interface(address, i);
+                var result = NetworkConfig.Iproute2.DeleteRouteIpv6Interface(address, i);
                 return Response.AsJson(result);
             };
 
             Get["/ipv6/tunnels/{interfaceName?}"] = x => {
                 string interfaceName = x.interfaceName;
-                var result = NetworkConfig.Iproute2.ShowTunnelsIPV6(interfaceName);
+                var result = NetworkConfig.Iproute2.ShowTunnelsIpv6(interfaceName);
                 return Response.AsJson(result);
             };
 
@@ -306,13 +306,13 @@ namespace Antd.Modules {
 
             Get["/br/macs/{bridgeName}"] = x => {
                 string bridgeName = x.bridgeName;
-                var result = NetworkConfig.Brctl.ShowBridgeMACS(bridgeName);
+                var result = NetworkConfig.Brctl.ShowBridgeMacs(bridgeName);
                 return Response.AsJson(result);
             };
 
             Get["/br/stp/{bridgeName}"] = x => {
                 string bridgeName = x.bridgeName;
-                var result = NetworkConfig.Brctl.ShowBridgeSTP(bridgeName);
+                var result = NetworkConfig.Brctl.ShowBridgeStp(bridgeName);
                 return Response.AsJson(result);
             };
 

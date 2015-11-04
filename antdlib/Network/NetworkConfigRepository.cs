@@ -45,21 +45,14 @@ namespace antdlib.Network {
             public string CommandLine { get; set; }
         }
 
-        public static List<Model> GetAll() {
-            var get = DeNSo.Session.New.Get<Model>(m => m != null).ToList();
-            return (get == null) ? new List<Model>() { } : get;
-        }
+        public static List<Model> GetAll() => DeNSo.Session.New.Get<Model>(m => m != null).ToList();
 
-        public static Model GetByGuid(string guid) {
-            return GetAll().Where(m => m.Guid == guid).FirstOrDefault();
-        }
+        public static Model GetByGuid(string guid) => GetAll().FirstOrDefault(m => m.Guid == guid);
 
-        public static List<Model> GetByString(string q) {
-            return GetAll().Where(m => m.CommandLine.Contains(q)).ToList();
-        }
+        public static List<Model> GetByString(string q) => GetAll().Where(m => m.CommandLine.Contains(q)).ToList();
 
         public static void Create(string command) {
-            var model = new Model() {
+            var model = new Model {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 CommandLine = command
@@ -85,13 +78,12 @@ namespace antdlib.Network {
         }
 
         public static void ExportToFile() {
-            var commands = GetAll().Where(m => m.IsEnabled == true).ToArray();
-            if (commands.Length > 0) {
-                if (File.Exists(AntdFile.NetworkConfig)) {
-                    File.Delete(AntdFile.NetworkConfig);
-                }
-                FileSystem.WriteFile(AntdFile.NetworkConfig, String.Join(Environment.NewLine, commands.Select(m => m.CommandLine)));
+            var commands = GetAll().Where(m => m.IsEnabled).ToArray();
+            if (commands.Length <= 0) return;
+            if (File.Exists(AntdFile.NetworkConfig)) {
+                File.Delete(AntdFile.NetworkConfig);
             }
+            FileSystem.WriteFile(AntdFile.NetworkConfig, string.Join(Environment.NewLine, commands.Select(m => m.CommandLine)));
         }
     }
 }

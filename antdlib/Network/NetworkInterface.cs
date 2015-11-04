@@ -35,44 +35,25 @@ namespace antdlib.Network {
     public class NetworkInterface {
         private static List<string> GetPhysicalNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = new List<string>() { };
-            foreach (var dir in dirs) {
-                var f = Terminal.Execute($"file {dir}");
-                if (!f.Contains("virtual") && !f.Contains("fake")) {
-                    list.Add(Path.GetFileName(dir));
-                }
-            }
-            return list;
+            return (from dir in dirs let f = Terminal.Execute($"file {dir}") where !f.Contains("virtual") && !f.Contains("fake") select Path.GetFileName(dir)).ToList();
         }
 
-        public static List<string> Physical { get { return GetPhysicalNetworkInterfaces(); } }
+        public static List<string> Physical => GetPhysicalNetworkInterfaces();
 
         private static List<string> GetVirtualNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = new List<string>() { };
-            foreach (var dir in dirs) {
-                var f = Terminal.Execute($"file {dir}");
-                if (f.Contains("virtual") || f.Contains("fake")) {
-                    list.Add(Path.GetFileName(dir));
-                }
-            }
+            var list = (from dir in dirs let f = Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
             return list.Where(s => !s.Contains("bond")).ToList();
         }
 
-        public static List<string> Virtual { get { return GetVirtualNetworkInterfaces(); } }
+        public static List<string> Virtual => GetVirtualNetworkInterfaces();
 
         private static List<string> GetBondNetworkInterfaces() {
             var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = new List<string>() { };
-            foreach (var dir in dirs) {
-                var f = Terminal.Execute($"file {dir}");
-                if (f.Contains("virtual") || f.Contains("fake")) {
-                    list.Add(Path.GetFileName(dir));
-                }
-            }
+            var list = (from dir in dirs let f = Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
             return list.Where(s => s.Contains("bond")).ToList();
         }
 
-        public static List<string> Bond { get { return GetBondNetworkInterfaces(); } }
+        public static List<string> Bond => GetBondNetworkInterfaces();
     }
 }

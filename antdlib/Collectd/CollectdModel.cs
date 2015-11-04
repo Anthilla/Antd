@@ -76,6 +76,6 @@ namespace antdlib.Collectd {
 
         public string Timestamp { get; set; }
 
-        public List<CollectdItem> Data { get; set; } = new List<CollectdItem>() { };
+        public List<CollectdItem> Data { get; set; } = new List<CollectdItem>();
     }
 }

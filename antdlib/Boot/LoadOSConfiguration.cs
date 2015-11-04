@@ -64,10 +64,6 @@ namespace antdlib.Boot {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        public static void LoadNetwork() {
-            NetworkFirstConfiguration.Set();
-        }
-
         public static void LoadFirewall() {
             var file = $"{Folder.Dirs}/{"antd.boot.firewall.conf"}";
             FileSystem.Download($"{Url.Antd}repo/{"antd.boot.firewall.conf"}", file);
