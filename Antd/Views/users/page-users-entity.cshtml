@@ -1,9 +1,16 @@
 ﻿<legend id="Entity">User Entity</legend>
+<form id="UserMapSysDashboard" action="/users/identity" method="POST" enctype="multipart/form-data">
+    <input name="UserEntity" type="text" class="bg-anthilla-gray">
+    <br/>
+    <input name="UserPassword" type="text" class="bg-anthilla-gray">
+    <input type="submit" class="bg-anthilla-green" value="ADD">
+</form>
+<hr/>
 <input type="text" class="search-field" style="position: relative; margin-bottom: 15px; height: 30px; width: 100%; padding-left: 5px;" placeholder="Search">
 <table class="table searchable">
     <tbody id="SysctlBodyTable">
-        @foreach (antdlib.Users.UserEntity.Model user in Model.UserEntities) {
-            @foreach (var claim in user.Claims) {
+        @foreach (antdlib.Users.UserEntity.UserEntityModel user in Model.UserEntities) {
+            foreach (antdlib.Users.UserEntity.UserEntityModel.Claim claim in user.Claims) {
                 <tr data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" data-type="@claim.Type">
                     <td>@claim.Key</td>
                     <td>@claim.Value </td>

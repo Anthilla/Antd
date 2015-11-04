@@ -103,7 +103,7 @@ namespace Antd.Modules {
                 UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "defaultIdentity", userIdentity);
                 string userPassword = Request.Form.UserPassword;
                 UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserPassword, "defaultPassword", userPassword);
-                return Response.AsRedirect("/users/identity");
+                return Response.AsRedirect("/users");
             };
 
             Post["/identity/addclaim"] = x => {
@@ -112,14 +112,14 @@ namespace Antd.Modules {
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
                 UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), key, val);
-                return Response.AsRedirect("/users/identity");
+                return Response.AsRedirect("/users");
             };
 
             Post["/identity/delclaim"] = x => {
                 string userGuid = Request.Form.Userguid;
                 string guid = Request.Form.Guid;
                 UserEntity.Repository.RemoveClaim(userGuid, guid);
-                return Response.AsRedirect("/users/identity");
+                return Response.AsRedirect("/users");
             };
         }
     }
