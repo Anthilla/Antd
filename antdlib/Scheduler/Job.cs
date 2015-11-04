@@ -38,32 +38,32 @@ namespace antdlib.Scheduler {
 
         public static void Schedule(string jobName, string command) {
             var guid = Guid.NewGuid().ToString();
-            var job = JobRepository.SetTaskOneTimeOnly(guid, jobName, command);
+            JobRepository.SetTaskOneTimeOnly(guid, jobName, command);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
 
         public static void ScheduleWGuid(string guid, string command) {
-            var job = JobRepository.SetTaskOneTimeOnly(guid, command);
+            JobRepository.SetTaskOneTimeOnly(guid, command);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
 
         public static void Schedule(string jobName, string command, string cron) {
             var guid = Guid.NewGuid().ToString();
-            string[] data = new string[] {
+            var data = new [] {
                     command.GetFirstString(),
                     command.GetAllStringsButFirst()
                 };
-            string dataJson = JsonConvert.SerializeObject(data);
-            var job = JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
+            var dataJson = JsonConvert.SerializeObject(data);
+            JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
 
         public static void ReSchedule(string guid) {
             var task = JobRepository.GetByGuid(guid);
-            var job = JobRepository.SetTaskOneTimeOnly(guid, task.Alias, task.Data);
+            JobRepository.SetTaskOneTimeOnly(guid, task.Alias, task.Data);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
     }

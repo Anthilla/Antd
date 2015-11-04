@@ -54,7 +54,7 @@ namespace antdlib.Scheduler {
 
         public string Data { get; set; }
 
-        public bool isEnabled { get; set; }
+        public bool IsEnabled { get; set; }
 
         public TriggerPeriod TriggerPeriod { get; set; }
 

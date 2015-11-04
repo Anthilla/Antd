@@ -30,39 +30,36 @@
 using Quartz;
 using Quartz.Impl;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using antdlib.Common;
 
 namespace antdlib.Scheduler {
 
     public class JobScheduler {
-        private static IScheduler __scheduler = StdSchedulerFactory.GetDefaultScheduler();
+        private static readonly IScheduler Scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
-        public static void Start(bool _recoverTasks) {
-            if (_recoverTasks == false) {
-                __scheduler.Start();
+        public static void Start(bool recoverTasks) {
+            if (recoverTasks == false) {
+                Scheduler.Start();
             }
             else {
-                __scheduler.Start();
-                List<JobModel> taskList = JobRepository.GetEnabled();
+                Scheduler.Start();
+                var taskList = JobRepository.GetEnabled();
                 ConsoleLogger.Log("{0} job(s) scheduled", taskList.ToArray().Length);
-                if (taskList.ToArray().Length > 0) {
-                    foreach (JobModel task in taskList) {
-                        if (task != null) {
-                            LaunchJob<JobList.CommandJob>(task.Guid);
-                        }
-                    }
+                if (taskList.ToArray().Length <= 0) return;
+                foreach (var task in taskList.Where(task => task != null)) {
+                    LaunchJob<JobList.CommandJob>(task.Guid);
                 }
             }
         }
 
         public static void Stop() {
-            __scheduler.Shutdown();
+            Scheduler.Shutdown();
         }
 
         public static void Test() {
-            var cron = "0/20 * * * * ?";
-            IJobDetail task = JobBuilder.Create<JobList.HelloJob>()
+            const string cron = "0/20 * * * * ?";
+            var task = JobBuilder.Create<JobList.HelloJob>()
                 .WithIdentity("test", Guid.NewGuid().ToString())
                 .UsingJobData("jobID", "yo")
                 .Build();
@@ -73,131 +70,89 @@ namespace antdlib.Scheduler {
 
             var i = trigger.WithSchedule(CronScheduleBuilder.CronSchedule(cron)).Build();
 
-            __scheduler.ScheduleJob(task, i);
+            Scheduler.ScheduleJob(task, i);
             Start(false);
         }
 
         public static void LaunchJob<T>(string guid) where T : IJob {
-            var _task = JobRepository.GetByGuid(guid);
-            IJobDetail task = JobBuilder.Create<T>()
-                .WithIdentity(_task.Alias, Guid.NewGuid().ToString())
-                .UsingJobData("data", _task.Data)
-                .UsingJobData("jobID", _task.Guid)
+            var task = JobRepository.GetByGuid(guid);
+            var dbtask = JobBuilder.Create<T>()
+                .WithIdentity(task.Alias, Guid.NewGuid().ToString())
+                .UsingJobData("data", task.Data)
+                .UsingJobData("jobID", task.Guid)
                 .Build();
             ITrigger trigger;
-            switch (_task.TriggerPeriod) {
+            switch (task.TriggerPeriod) {
                 case TriggerPeriod.IsOneTimeOnly:
-                    trigger = DefineOneTimeOnlyTrigger(_task.Alias, _task.StartTime);
+                    trigger = DefineOneTimeOnlyTrigger(task.Alias, task.StartTime);
                     break;
                 case TriggerPeriod.IsCron:
-                    trigger = DefineCronTrigger(_task.Alias, _task.StartTime, _task.CronExpression);
+                    trigger = DefineCronTrigger(task.Alias, task.StartTime, task.CronExpression);
                     break;
                 case TriggerPeriod.WithInterval:
-                    trigger = DefineIntervalTrigger(_task.Alias, _task.StartTime, _task.IntervalType, _task.IntervalSpan, _task.Count);
+                    trigger = DefineIntervalTrigger(task.Alias, task.StartTime, task.IntervalType, task.IntervalSpan, task.Count);
+                    break;
+                case TriggerPeriod.Other:
+                    trigger = DefineDefaultTrigger(task.Alias);
                     break;
                 default:
-                    trigger = DefineDefaultTrigger(_task.Alias);
+                    trigger = DefineDefaultTrigger(task.Alias);
                     break;
             }
-            __scheduler.ScheduleJob(task, trigger);
+            Scheduler.ScheduleJob(dbtask, trigger);
         }
 
-        private static ITrigger DefineDefaultTrigger(string _identity) {
-            ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
+        private static ITrigger DefineDefaultTrigger(string identity) {
+            var oneTimeOnlyTrigger = TriggerBuilder.Create()
+                .WithIdentity(identity, Guid.NewGuid().ToString())
                 .StartAt(DateTime.Now.AddMinutes(1))
                 .Build();
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineOneTimeOnlyTrigger(string _identity, DateTime _startTime) {
-            ITrigger oneTimeOnlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(_startTime)
+        private static ITrigger DefineOneTimeOnlyTrigger(string identity, DateTime startTime) {
+            var oneTimeOnlyTrigger = TriggerBuilder.Create()
+                .WithIdentity(identity, Guid.NewGuid().ToString())
+                .StartAt(startTime)
                 .Build();
             return oneTimeOnlyTrigger;
         }
 
-        private static ITrigger DefineCronTrigger(string _identity, DateTime _startTime, string _cronEx) {
-            ITrigger monthlyTrigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString())
-                .StartAt(_startTime)
-                .WithSchedule(CronScheduleBuilder.CronSchedule(_cronEx))
+        private static ITrigger DefineCronTrigger(string identity, DateTime startTime, string cronEx) {
+            var monthlyTrigger = TriggerBuilder.Create()
+                .WithIdentity(identity, Guid.NewGuid().ToString())
+                .StartAt(startTime)
+                .WithSchedule(CronScheduleBuilder.CronSchedule(cronEx))
                 .Build();
             return monthlyTrigger;
         }
 
-        private static ITrigger DefineIntervalTrigger(string _identity, DateTime _startTime, IntervalType _intervalType, int span, int count) {
-            ITrigger trigger;
-            var _trigger = TriggerBuilder.Create()
-                .WithIdentity(_identity, Guid.NewGuid().ToString());
-            _trigger.StartAt(_startTime);
-            switch (_intervalType) {
+        private static ITrigger DefineIntervalTrigger(string identity, DateTime startTime, IntervalType intervalType, int span, int count) {
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity(identity, Guid.NewGuid().ToString());
+            trigger.StartAt(startTime);
+            switch (intervalType) {
                 case IntervalType.Hourly:
-                    if (count == 0) {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForever(span));
-                    }
-                    else {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatHourlyForTotalCount(count, span));
-
-                    }
+                    trigger.WithSchedule(count == 0
+                        ? SimpleScheduleBuilder.RepeatHourlyForever(span)
+                        : SimpleScheduleBuilder.RepeatHourlyForTotalCount(count, span));
                     break;
                 case IntervalType.Minutely:
-                    if (count == 0) {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForever(span));
-                    }
-                    else {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatMinutelyForTotalCount(count, span));
-
-                    }
+                    trigger.WithSchedule(count == 0
+                        ? SimpleScheduleBuilder.RepeatMinutelyForever(span)
+                        : SimpleScheduleBuilder.RepeatMinutelyForTotalCount(count, span));
                     break;
                 case IntervalType.Secondly:
-                    if (count == 0) {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForever(span));
-                    }
-                    else {
-                        _trigger.WithSchedule(SimpleScheduleBuilder.RepeatSecondlyForTotalCount(count, span));
-
-                    }
+                    trigger.WithSchedule(count == 0
+                        ? SimpleScheduleBuilder.RepeatSecondlyForever(span)
+                        : SimpleScheduleBuilder.RepeatSecondlyForTotalCount(count, span));
+                    break;
+                case IntervalType.None:
                     break;
                 default:
                     break;
             }
-            trigger = _trigger.Build();
-            return trigger;
+            return trigger.Build();
         }
-
-        //private static ITrigger DefineDailyTrigger(TriggerModel setting, string _identity) {
-        //    ITrigger dailyTrigger = TriggerBuilder.Create()
-        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
-        //        .StartAt(setting.StartTime)
-        //        .WithSimpleSchedule(x => x.WithInterval(TimeSpan.FromDays(setting.TimeSpan)))
-        //        .EndAt(setting.EndTime)
-        //        .Build();
-        //    return dailyTrigger;
-        //}
-
-        //private static ITrigger DefineWeeklyTrigger(TriggerModel setting, string _identity) {
-        //    int _weeklyHour = setting.StartTime.Hour;
-        //    int _weeklyMinute = setting.StartTime.Minute;
-        //    ITrigger weeklyTrigger = TriggerBuilder.Create()
-        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
-        //        .StartAt(setting.StartTime)
-        //        .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(setting.DayOfTheWeek, _weeklyHour, _weeklyMinute))
-        //        .EndAt(setting.EndTime)
-        //        .Build();
-        //    return weeklyTrigger;
-        //}
-
-        //private static ITrigger DefineMonthlyTrigger(TriggerModel setting, string _identity) {
-        //    //string _cronExpression = "0 0/2 8-17 * * ?";
-        //    ITrigger monthlyTrigger = TriggerBuilder.Create()
-        //        .WithIdentity(_identity, Guid.NewGuid().ToString())
-        //        .StartAt(setting.StartTime)
-        //        .WithCronSchedule(setting.CronExpression)
-        //        .EndAt(setting.EndTime)
-        //        .Build();
-        //    return monthlyTrigger;
-        //}
     }
 }

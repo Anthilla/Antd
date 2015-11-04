@@ -65,7 +65,7 @@
 
 @section Dashboard {
     @functions{
-        public string[] DaysOfTheWeek = new string[] {
+        public string[] DaysOfTheWeek = {
             "Monday",
 	        "Tuesday",
 	        "Wednesday",
@@ -75,7 +75,7 @@
 	        "Sunday"
         };
 
-        public string[] MonthsOfTheYear = new string[] {
+        public string[] MonthsOfTheYear = {
             "January",
             "February",
             "March",
@@ -366,10 +366,10 @@
                         </li>
                     </ul>
                     <hr />
-                    @if (job.isEnabled == true && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
+                    @if (job.IsEnabled == true && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                         <p class="button bg-yellow" data-action="disable" data-guid="@job.Guid" style="color: black !important;">Status: Enabled</p>
                     }
-                    @if (job.isEnabled == false && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
+                    @if (job.IsEnabled == false && job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsCron) {
                         <p class="button bg-yellow" data-action="enable" data-guid="@job.Guid" style="color: black !important;">Status: Disabled</p>
                     }
                     @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsOneTimeOnly) {
