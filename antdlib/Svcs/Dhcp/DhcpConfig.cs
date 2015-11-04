@@ -1,33 +1,33 @@
 ﻿
 using antdlib.Common;
-///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//-------------------------------------------------------------------------------------
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System.Collections.Generic;
@@ -52,84 +52,83 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         private static bool CheckIsActive() {
-            var mount = MountRepository.Get(dir);
-            return (mount == null) ? false : true;
+            return (MountRepository.Get(dir) != null);
         }
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
-        /// <summary>
-        /// todo prendere comando giusto
-        /// </summary>
+        // <summary>
+        // todo prendere comando giusto
+        // </summary>
         public static void ReloadConfig() {
             //Terminal.Execute($"smbcontrol all reload-config");
         }
 
         public class MapRules {
-            public static char CharCommentConf { get { return '#'; } }
+            public static char CharCommentConf => '#';
 
-            public static string CharCommentConfAlt { get { return "//"; } }
+            public static string CharCommentConfAlt => "//";
 
-            public static char CharCommentZone { get { return ';'; } }
+            public static char CharCommentZone => ';';
 
-            public static string VerbInclude { get { return "include"; } }
+            public static string VerbInclude => "include";
 
-            public static string VerbIncludeZone { get { return "zone"; } }
+            public static string VerbIncludeZone => "zone";
 
-            public static char CharOrigin { get { return '$'; } }
+            public static char CharOrigin => '$';
 
-            public static string VerbOrigin { get { return "$ORIGIN"; } }
+            public static string VerbOrigin => "$ORIGIN";
 
-            public static char CharKevValueSeparator { get { return ' '; } }
+            public static char CharKevValueSeparator => ' ';
 
-            public static char CharValueArraySeparator { get { return ','; } }
+            public static char CharValueArraySeparator => ',';
 
-            public static char CharEndOfLine { get { return '\n'; } }
+            public static char CharEndOfLine => '\n';
 
-            public static char CharSectionOpen { get { return '['; } }
+            public static char CharSectionOpen => '[';
 
-            public static char CharSectionClose { get { return ']'; } }
+            public static char CharSectionClose => ']';
 
-            public static char CharBlockOpen { get { return '{'; } }
+            public static char CharBlockOpen => '{';
 
-            public static char CharBlockClose { get { return '}'; } }
+            public static char CharBlockClose => '}';
 
-            public static char CharZoneOpen { get { return '('; } }
+            public static char CharZoneOpen => '(';
 
-            public static char CharZoneClose { get { return ')'; } }
+            public static char CharZoneClose => ')';
 
-            public static char CharEndOfLineValue { get { return ';'; } }
+            public static char CharEndOfLineValue => ';';
 
             public class Statement {
-                public static string Key { get { return "key"; } }
+                public static string Key => "key";
 
-                public static string Zone { get { return "zone"; } }
+                public static string Zone => "zone";
 
-                public static string Subnet { get { return "subnet"; } }
+                public static string Subnet => "subnet";
 
-                public static string Host { get { return "host"; } }
+                public static string Host => "host";
 
-                public static string Class { get { return "class"; } }
+                public static string Class => "class";
 
-                public static string Sublass { get { return "subclass"; } }
+                public static string Sublass => "subclass";
 
-                public static string Failover { get { return "failover"; } }
+                public static string Failover => "failover";
 
-                public static string Logging { get { return "logging"; } }
+                public static string Logging => "logging";
 
-                public static string Include { get { return "include"; } }
+                public static string Include => "include";
 
-                public static string Prefix6 { get { return "prefix6"; } }
+                public static string Prefix6 => "prefix6";
 
-                public static string Range6 { get { return "range6"; } }
+                public static string Range6 => "range6";
 
-                public static string Range { get { return "range"; } }
+                public static string Range => "range";
 
-                public static string Subnet6 { get { return "subnet6"; } }
+                public static string Subnet6 => "subnet6";
 
-                public static string SharedNetwork { get { return "shared-network"; } }
+                public static string SharedNetwork => "shared-network";
 
-                public static string Group { get { return "group"; } }
+                public static string Group => "group";
             }
         }
 
@@ -152,7 +151,7 @@ namespace antdlib.Svcs.Dhcp {
 
             public string StringDefinition { get; set; } = "";
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
         }
 
         public class DhcpModel {
@@ -162,35 +161,35 @@ namespace antdlib.Svcs.Dhcp {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> DhcpGlobal { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpGlobal { get; set; } = new List<LineModel>();
 
-            public List<LineModel> DhcpInclude { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpInclude { get; set; } = new List<LineModel>();
 
-            public List<OptionModel> DhcpKey { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpKey { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpSubnet { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubnet { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpHost { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpHost { get; set; } = new List<OptionModel>();
 
-            public List<LineModel> DhcpPrefix6 { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpPrefix6 { get; set; } = new List<LineModel>();
 
-            public List<LineModel> DhcpRange6 { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpRange6 { get; set; } = new List<LineModel>();
 
-            public List<LineModel> DhcpRange { get; set; } = new List<LineModel>() { };
+            public List<LineModel> DhcpRange { get; set; } = new List<LineModel>();
 
-            public List<OptionModel> DhcpSubnet6 { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubnet6 { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpFailover { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpFailover { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpLogging { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpLogging { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpSharedNetwork { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSharedNetwork { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpGroup { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpGroup { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpClass { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpClass { get; set; } = new List<OptionModel>();
 
-            public List<OptionModel> DhcpSubclass { get; set; } = new List<OptionModel>() { };
+            public List<OptionModel> DhcpSubclass { get; set; } = new List<OptionModel>();
         }
 
         public class MapFile {
@@ -405,13 +404,13 @@ namespace antdlib.Svcs.Dhcp {
             public static void SaveConfigFor(string section, List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     if (parameter.DataKey.Length > 0) {
                         data.Add(ConvertData(parameter));
                     }
                 }
-                var options = new List<OptionModel>() { };
+                var options = new List<OptionModel>();
                 var option = new OptionModel() {
                     Name = section,
                     Data = data
@@ -433,7 +432,7 @@ namespace antdlib.Svcs.Dhcp {
             public static void SaveGlobal(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     if (parameter.DataKey.Length > 0) {
                         var a = new LineModel() {
@@ -452,7 +451,7 @@ namespace antdlib.Svcs.Dhcp {
             public static void SavePrefix6(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     if (parameter.DataKey.Length > 0) {
                         var a = new LineModel() {
@@ -471,7 +470,7 @@ namespace antdlib.Svcs.Dhcp {
             public static void SaveRange6(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     if (parameter.DataKey.Length > 0) {
                         var a = new LineModel() {
@@ -490,7 +489,7 @@ namespace antdlib.Svcs.Dhcp {
             public static void SaveRange(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
                 dhcp.Timestamp = Timestamp.Now;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     if (parameter.DataKey.Length > 0) {
                         var a = new LineModel() {
@@ -553,7 +552,7 @@ namespace antdlib.Svcs.Dhcp {
             }
 
             private static void WriteSimpleSection(string filePath, List<LineModel> lines) {
-                var linesToAppend = new List<string>() { };
+                var linesToAppend = new List<string>();
                 foreach (var line in lines) {
                     if (line.Type == ServiceDataType.StringArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
@@ -571,7 +570,7 @@ namespace antdlib.Svcs.Dhcp {
             }
 
             private static void WriteMutipleSection(string section, string name, string filePath, List<LineModel> lines) {
-                var linesToAppend = new List<string>() { };
+                var linesToAppend = new List<string>();
                 var nametowrite = "";
                 if (section == "zone") {
                     nametowrite = $" \"{name}\" ";

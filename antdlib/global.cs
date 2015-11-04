@@ -1,31 +1,31 @@
-﻿///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//-------------------------------------------------------------------------------------
 
 using System;
 using System.Reflection;
@@ -34,47 +34,47 @@ using System.Runtime.InteropServices;
 namespace antdlib {
 
     public class Label {
-        public static string Root { get { return "antd_root"; } }
-        public static string Port { get { return "antd_port"; } }
-        public static string Database { get { return "antd_database"; } }
-        public static string Files { get { return "antd_files"; } }
+        public static string Root => "antd_root";
+        public static string Port => "antd_port";
+        public static string Database => "antd_database";
+        public static string Files => "antd_files";
 
         public class SMTP {
-            public static string Url { get { return "smtp_url"; } }
-            public static string Port { get { return "smtp_port"; } }
-            public static string Account { get { return "smtp_account"; } }
-            public static string Password { get { return "smtp_password"; } }
+            public static string Url => "smtp_url";
+            public static string Port => "smtp_port";
+            public static string Account => "smtp_account";
+            public static string Password => "smtp_password";
         }
 
         public class IMAP {
-            public static string Url { get { return "imap_url"; } }
-            public static string Port { get { return "imap_port"; } }
-            public static string Account { get { return "imap_account"; } }
-            public static string Password { get { return "imap_password"; } }
+            public static string Url => "imap_url";
+            public static string Port => "imap_port";
+            public static string Account => "imap_account";
+            public static string Password => "imap_password";
         }
 
         public class Auth {
-            public static string IsEnabled { get { return "isenabled"; } }
+            public static string IsEnabled => "isenabled";
         }
     }
 
     public class Folder {
-        public static string Root { get { return "/cfg/antd"; } }
-        public static string Database { get { return Folder.Root + "/database"; } }
-        public static string Networkd { get { return Folder.Root + "/networkd"; } }
+        public static string Root => "/cfg/antd";
+        public static string Database => Root + "/database";
+        public static string Networkd => Root + "/networkd";
         //todo: as soon as there's systemd managed websocketd.target change this value v
-        public static string Websocketd { get { return AppsUnits; } }
-        public static string AntdRepo { get { return "/mnt/cdrom"; } }
-        public static string Apps { get { return "/mnt/cdrom/Apps"; } }
-        public static string Dirs { get { return "/mnt/cdrom/DIRS"; } }
-        public static string Config { get { return "/mnt/cdrom/Config"; } }
-        public static string LiveCd { get { return "/mnt/livecd"; } }
-        public static string AppsUnits { get { return $"{AntdRepo}/Units/applicative.target.wants"; } }
-        public static string kernelDir { get { return $"{AntdRepo}/Kernel"; } }
-        public static string systemDir { get { return $"{AntdRepo}/System"; } }
-        public static string AntdVersionsDir { get { return $"{Apps}/Anthilla_Antd"; } }
-        public static string AntdshVersionsDir { get { return $"{Apps}/Anthilla_antdsh"; } }
-        public static string AntdTmpDir { get { return $"{Apps}/tmp"; } }
+        public static string Websocketd => AppsUnits;
+        public static string AntdRepo => "/mnt/cdrom";
+        public static string Apps => "/mnt/cdrom/Apps";
+        public static string Dirs => "/mnt/cdrom/DIRS";
+        public static string Config => "/mnt/cdrom/Config";
+        public static string LiveCd => "/mnt/livecd";
+        public static string AppsUnits => $"{AntdRepo}/Units/applicative.target.wants";
+        public static string kernelDir => $"{AntdRepo}/Kernel";
+        public static string systemDir => $"{AntdRepo}/System";
+        public static string AntdVersionsDir => $"{Apps}/Anthilla_Antd";
+        public static string AntdshVersionsDir => $"{Apps}/Anthilla_antdsh";
+        public static string AntdTmpDir => $"{Apps}/tmp";
     }
 
     public class AntdFile {
@@ -91,21 +91,21 @@ namespace antdlib {
     }
 
     public class UID {
-        public static string Guid { get { return System.Guid.NewGuid().ToString(); } }
-        public static string ShortGuid { get { return System.Guid.NewGuid().ToString().Substring(0, 8); } }
+        public static string Guid => System.Guid.NewGuid().ToString();
+        public static string ShortGuid => System.Guid.NewGuid().ToString().Substring(0, 8);
     }
 
     public class Port {
-        public static string Antd { get { return "7777"; } }
-        public static string Websocket { get { return "8888"; } }
+        public static string Antd => "7777";
+        public static string Websocket => "8888";
     }
 
     public class Uri {
-        public static string Antd { get { return "http://+:" + Port.Antd + "/"; } }
+        public static string Antd => "http://+:" + Port.Antd + "/";
     }
 
     public class Url {
-        public static string Antd { get { return "http://localhost:" + Port.Antd + "/"; } }
+        public static string Antd => "http://localhost:" + Port.Antd + "/";
     }
 
     public class AssemblyInfo {
@@ -117,21 +117,21 @@ namespace antdlib {
             return attribute.Value;
         }
 
-        public static string Guid { get { return GetGuid(); } }
+        public static string Guid => GetGuid();
 
-        public static OperatingSystem OS { get { return Environment.OSVersion; } }
+        public static OperatingSystem OS => Environment.OSVersion;
 
-        public static PlatformID Platform { get { return Environment.OSVersion.Platform; } }
+        public static PlatformID Platform => Environment.OSVersion.Platform;
 
-        public static bool IsUnix { get { return (Platform == PlatformID.Unix); } }
+        public static bool IsUnix => (Platform == PlatformID.Unix);
     }
 
     public class Units {
 
         public class Name {
-            public static string prepare { get { return "antd-prepare.service"; } }
-            public static string mount { get { return "framework-antd.mount"; } }
-            public static string launch { get { return "antd-launcher.service"; } }
+            public static string prepare => "app-antd-01-prepare.service";
+            public static string mount => "app-antd-02-mount.service";
+            public static string launch => "app-antd-03-launcher.service";
         }
 
         public static string prepare = $"{Folder.AppsUnits}/{Name.prepare}";

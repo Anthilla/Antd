@@ -142,10 +142,44 @@ namespace antdlib.Users {
 
         public class Config {
             public static void ResetPasswordForUser(string user, string password) {
-                var hashedPassword = Terminal.Execute($"mkpasswd -m sha-512 {password}");
-                if (hashedPassword.Length <= 0)
+                Terminal.Execute($"usermod -p '{password.Trim()}' {user}");
+            }
+
+            public static void ResetPasswordForUserStoredInDb() {
+                foreach (var user in Map.GetMappedUsers()) {
+                    ResetPasswordForUser(user.Alias, user.Password);
+                }
+            }
+        }
+
+        public class Map {
+            public static IEnumerable<SystemUserModel> GetMappedUsers() {
+                return Session.New.Get<SystemUserModel>();
+            }
+
+            public static void MapUser(string userAlias, string password) {
+                var model = new SystemUserModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    Alias = userAlias,
+                    Password = Terminal.Execute($"mkpasswd -m sha-512 {password}")
+                };
+                Session.New.Set(model);
+            }
+
+            public static void EditMapUser(string guid, string userAlias, string password) {
+                var model = Session.New.Get<SystemUserModel>(_ => _.Guid == guid).FirstOrDefault();
+                if (model == null)
                     return;
-                Terminal.Execute($"usermod -p '{hashedPassword.Trim()}' {user}");
+                model.Alias = userAlias;
+                model.Password = Terminal.Execute($"mkpasswd -m sha-512 {password}");
+                Session.New.Set(model);
+            }
+
+            public static void DeleteMapUser(string guid) {
+                var model = Session.New.Get<SystemUserModel>(_ => _.Guid == guid).FirstOrDefault();
+                if (model == null)
+                    return;
+                Session.New.Delete(model);
             }
         }
     }

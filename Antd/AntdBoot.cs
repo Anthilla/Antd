@@ -7,6 +7,7 @@ using antdlib.Apps;
 using antdlib.Auth.T2FA;
 using antdlib.Boot;
 using antdlib.Common;
+using antdlib.Config;
 using antdlib.Directories;
 using antdlib.MountPoint;
 using antdlib.Scheduler;
@@ -18,11 +19,6 @@ using Owin;
 
 namespace Antd {
     public class AntdBoot {
-        private static readonly string[] WatchDirectories =
-        {
-            Folder.Root
-        };
-
         public static void CheckIfGlobalRepositoryIsWriteable() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -95,23 +91,30 @@ namespace Antd {
             Terminal.Execute("systemctl restart systemd-modules-load.service");
         }
 
-        public static void SetOsConfiguration() {
+        public static void SetWebsocketd() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            ConsoleLogger.Log("    os -> loading configuration");
+            //ConsoleLogger.Log("    os -> loading configuration");
             //ConsoleLogger.Log("          load collectd");
             //LoadOSConfiguration.LoadCollectd();
-            ConsoleLogger.Log("          load journald");
-            LoadOsConfiguration.LoadSystemdJournald();
+            //ConsoleLogger.Log("          load journald");
+            //LoadOsConfiguration.LoadSystemdJournald();
             //ConsoleLogger.Log("          load wpa-supplicant");
             //LoadOSConfiguration.LoadWPASupplicant();
-            ConsoleLogger.Log("          load network");
-            LoadOsConfiguration.LoadNetwork();
-            ConsoleLogger.Log("          load firewall");
-            LoadOsConfiguration.LoadFirewall();
+            //ConsoleLogger.Log("          load network");
+            //LoadOsConfiguration.LoadNetwork();
+            //ConsoleLogger.Log("          load firewall");
+            //LoadOsConfiguration.LoadFirewall();
             ConsoleLogger.Log("          installing websocketd");
             LoadOsConfiguration.LoadWebsocketd();
-            ConsoleLogger.Log("    os -> checked");
+            //ConsoleLogger.Log("    os -> checked");
+        }
+
+        public static void SetSystemdJournald() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            ConsoleLogger.Log("          load journald");
+            LoadOsConfiguration.LoadSystemdJournald();
         }
 
         public static void SetCoreParameters() {
@@ -143,10 +146,10 @@ namespace Antd {
             ConsoleLogger.Log("    scheduler -> loaded");
         }
 
-        public static void StartDirectoryWatcher(bool isActive) {
-            if (isActive) {
+        public static void StartDirectoryWatcher(string[] watchDirectories, bool isActive) {
+            if (isActive && watchDirectories.Length > 0) {
                 ConsoleLogger.Log("    directory watcher -> enabled");
-                foreach (var folder in WatchDirectories) {
+                foreach (var folder in watchDirectories) {
                     if (Directory.Exists(folder)) {
                         new DirectoryWatcher(folder).Watch();
                         ConsoleLogger.Log("    directory watcher -> enabled for {0}", folder);
@@ -163,6 +166,7 @@ namespace Antd {
 
         public static void StartDatabase() {
             var applicationDatabasePath = CoreParametersConfig.GetDb();
+            Directory.CreateDirectory(applicationDatabasePath);
             ConsoleLogger.Log("root info -> application database path: {0}", applicationDatabasePath);
             if (Directory.Exists(applicationDatabasePath)) {
                 var databases = new[] { applicationDatabasePath };
@@ -242,7 +246,7 @@ namespace Antd {
         }
 
         public static void ReloadUsers() {
-            SystemUser.Config.ResetPasswordForUser("root", "AnthillaDev2015");
+            SystemUser.Config.ResetPasswordForUserStoredInDb();
         }
 
         public static void CheckResolvd() {
@@ -260,6 +264,13 @@ namespace Antd {
             FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
             FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");
             FileSystem.Download("http://standards-oui.ieee.org/oui.txt", $"{dir}/oui.txt");
+        }
+
+        public static void SetBootConfiguration() {
+            if (ConfigManagement.Exists) {
+                ConfigManagement.ExecuteAll();
+            }
+            ConfigManagement.FromFile.ApplyForAll();
         }
     }
 }

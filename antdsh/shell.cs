@@ -1,31 +1,31 @@
-﻿///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//-------------------------------------------------------------------------------------
 
 using antdlib;
 using System;
@@ -37,9 +37,6 @@ using static System.Console;
 namespace antdsh {
     public class Shell {
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Start() {
             if (antdlib.Antdsh.Execute.IsAntdRunning()) {
                 WriteLine("Cannot start antd becaust it's already running!");
@@ -69,9 +66,6 @@ namespace antdsh {
 
         private static int _startCount;
 
-        /// <summary>
-        /// ok
-        /// </summary>
         private static void StartLoop(string versionToRun) {
             while (true) {
                 _startCount++;
@@ -96,9 +90,6 @@ namespace antdsh {
             }
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Stop() {
             WriteLine("Checking whether antd is running or not...");
             if (antdlib.Antdsh.Execute.IsAntdRunning() == false) {
@@ -120,9 +111,6 @@ namespace antdsh {
 
         private static int _stopCount;
 
-        /// <summary>
-        /// ok
-        /// </summary>
         private static void StopLoop() {
             while (true) {
                 _stopCount++;
@@ -146,9 +134,6 @@ namespace antdsh {
             }
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Restart() {
             WriteLine("Checking whether antd is running or not...");
             if (antdlib.Antdsh.Execute.IsAntdRunning() == false) {
@@ -160,32 +145,23 @@ namespace antdsh {
             }
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Status() {
             var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
             if (res.Length == 0) {
                 WriteLine("No antd process found.");
-                WriteLine(Terminal.Execute("systemctl status antd-launcher.service"));
+                WriteLine(Terminal.Execute("systemctl status app-antd-03-launcher.service"));
             }
             else {
                 WriteLine(res);
-                WriteLine(Terminal.Execute("systemctl status antd-launcher.service"));
+                WriteLine(Terminal.Execute("systemctl status app-antd-03-launcher.service"));
             }
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UmountAll() {
             WriteLine("Unmounting all antd-related directories...");
             antdlib.Antdsh.Execute.UmountAntd();
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UpdateCheck() {
             var linkedVersionName = antdlib.Antdsh.Execute.GetRunningVersion();
             if (linkedVersionName == null)
@@ -208,9 +184,6 @@ namespace antdsh {
             WriteLine("There's nothing to update.");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UpdateLaunch() {
             var linkedVersionName = antdlib.Antdsh.Execute.GetRunningVersion();
             if (linkedVersionName == null)
@@ -257,9 +230,6 @@ namespace antdsh {
             WriteLine("There's nothing to update.");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UpdateFromUrl() {
             antdlib.Antdsh.Execute.StopServices();
             antdlib.Antdsh.Execute.CleanTmp();
@@ -280,16 +250,12 @@ namespace antdsh {
             antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UpdateFromPublicRepo() {
             WriteLine("Update From Public Repo ...");
             WriteLine("   Stopping services");
             antdlib.Antdsh.Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
             antdlib.Antdsh.Execute.Umount(Folder.Root);
-            antdlib.Antdsh.Execute.Umount(Folder.Database);
             antdlib.Antdsh.Execute.Umount("/framework/antd");
             antdlib.Antdsh.Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
@@ -322,14 +288,10 @@ namespace antdsh {
             antdlib.Antdsh.Execute.LinkVersionToRunning(squashName);
             antdlib.Antdsh.Execute.CleanTmp();
             antdlib.Antdsh.Execute.UmountTmpRam();
-            antdlib.Antdsh.Execute.CheckAntdUnits();
             antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
             WriteLine($"   Update complete!");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void UpdateSelect() {
             var linkedVersionName = antdlib.Antdsh.Execute.GetRunningVersion();
             if (linkedVersionName == null)
@@ -370,46 +332,28 @@ namespace antdsh {
             antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void ReloadSystemctl() {
             Terminal.Execute("systemctl daemon-reload");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void IsRunning() {
             WriteLine(antdlib.Antdsh.Execute.IsAntdRunning() ? "Yes, is running." : "No.");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void CleanTmp() {
             WriteLine("Cleaning tmp.");
             antdlib.Antdsh.Execute.CleanTmp();
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Info() {
             WriteLine("This is a shell for antd :)");
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Exit() {
             WriteLine("Bye bye");
             Environment.Exit(1);
         }
 
-        /// <summary>
-        /// ok
-        /// </summary>
         public static void Execute(string command) {
             WriteLine($"Executing external command: {command}");
             WriteLine(Terminal.Execute(command));

@@ -1,32 +1,32 @@
 ﻿using antdlib.MountPoint;
-///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//-------------------------------------------------------------------------------------
 using antdlib.Systemd;
 using System;
 using System.Collections.Generic;
@@ -82,50 +82,54 @@ namespace antdlib.Apps {
         }
 
         public static void Start() {
-            Systemctl.Start("anthillasp-prepare.service");
-            Thread.Sleep(20);
-            Systemctl.Start("framework-anthillasp.mount");
-            Thread.Sleep(20);
-            Systemctl.Start("anthillasp-launcher.service");
-            Thread.Sleep(20);
-            Systemctl.Start("anthillaserver-launcher.service");
+            if (!Systemctl.Status("app-anthillasp-01-prepare.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-01-prepare.service");
+            }
+
+            if (!Systemctl.Status("app-anthillasp-02-mount.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-02-mount.service");
+            }
+
+            if (!Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-03-srv-launcher.service");
+            }
+
+            if (!Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-04-wui-launcher.service");
+            }
         }
 
-        //public static void Start(string app) {
-        //    Systemctl.Start(app);
-        //}
-
         public static void StartSp() {
-            Systemctl.Start("anthillasp-launcher.service");
+            Systemctl.Start("app-anthillasp-04-wui-launcher.service");
         }
 
         public static void StartServer() {
-            Systemctl.Start("anthillaserver-launcher.service");
+            Systemctl.Start("app-anthillasp-03-srv-launcher.service");
         }
 
         public static void StopSp() {
-            Systemctl.Stop("anthillasp-launcher.service");
+            Systemctl.Stop("app-anthillasp-04-wui-launcher.service");
         }
 
         public static void StopServer() {
-            Systemctl.Stop("anthillaserver-launcher.service");
+            Systemctl.Stop("app-anthillasp-03-srv-launcher.service");
         }
 
         public class Status {
             public static string AnthillaSp() {
-                return Systemctl.Status("anthillasp-launcher.service").output;
+                return Systemctl.Status("app-anthillasp-04-wui-launcher.service").output;
             }
 
             public static string AnthillaServer() {
-                return Systemctl.Status("anthillaserver-launcher.service").output;
+                return Systemctl.Status("app-anthillasp-03-srv-launcher.service").output;
             }
 
             public static bool IsActiveAnthillaSp() {
-                return (Systemctl.Status("anthillasp-launcher.service").output.Contains("Active: active"));
+                return (Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active"));
             }
 
             public static bool IsActiveAnthillaServer() {
-                return (Systemctl.Status("anthillaserver-launcher.service").output.Contains("Active: active"));
+                return (Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active"));
             }
         }
 
@@ -154,10 +158,10 @@ namespace antdlib.Apps {
 
         public class Units {
             public class Name {
-                public static string Prepare => Path.Combine(Folder.AppsUnits, "anthillasp-prepare.service");
-                public static string Mount => Path.Combine(Folder.AppsUnits, "framework-anthillasp.mount");
-                public static string LaunchSp => Path.Combine(Folder.AppsUnits, "anthillasp-launcher.service");
-                public static string LaunchServer => Path.Combine(Folder.AppsUnits, "anthillaserver-launcher.service");
+                public static string Prepare => Path.Combine(Folder.AppsUnits, "app-anthillasp-01-prepare.service");
+                public static string Mount => Path.Combine(Folder.AppsUnits, "app-anthillasp-02-mount.service");
+                public static string LaunchSp => Path.Combine(Folder.AppsUnits, "app-anthillasp-04-wui-launcher.service");
+                public static string LaunchServer => Path.Combine(Folder.AppsUnits, "app-anthillasp-03-srv-launcher.service");
             }
 
             public static bool CheckFiles() {
@@ -171,7 +175,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Prepare Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("Before=framework-anthillasp.mount");
+                        sw.WriteLine("Before=app-anthillasp-02-mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/bin/mkdir -p /framework/anthillasp");
@@ -209,7 +213,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("After=framework-anthillasp.mount");
+                        sw.WriteLine("After=app-anthillasp-02-mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
@@ -228,7 +232,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaServer Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("After=framework-anthillasp.mount");
+                        sw.WriteLine("After=app-anthillasp-02-mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");

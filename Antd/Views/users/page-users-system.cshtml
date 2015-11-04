@@ -26,3 +26,21 @@
         }
     </tbody>
 </table>
+<hr />
+<form id="UserMapSysDashboard" action="/cfgusers/sysmap/create" method="POST" enctype="multipart/form-data">
+    <input name="UserAlias" type="text" class="bg-anthilla-gray">
+    <br />
+    <input name="UserPassword" type="text" class="bg-anthilla-gray">
+    <input type="submit" class="bg-anthilla-green" value="ADD">
+</form>
+<table class="table ">
+    <tbody id="UserMapSysBodyTable">
+        @foreach (antdlib.Users.SystemUserModel user in antdlib.Users.SystemUser.Map.GetMappedUsers()) {
+            <tr>
+                <td>@user.Alias </td>
+                <td>@user.Password </td>
+                <td> </td>
+            </tr>
+        }
+    </tbody>
+</table>

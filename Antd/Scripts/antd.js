@@ -87,7 +87,7 @@ $('#Enable2FA').click(function () {
     });
 });
 
-///command management
+//command management
 $('#CmdMgmtButton').click(function () {
     $('#CommandManagementForm').toggle();
 });
@@ -150,7 +150,7 @@ function AddInputIDReference(self, main, layout) {
     main.focus();
 }
 
-/////////////////////
+//////////////
 
 $('i[data-role="show-mount"]').click(function () {
     var self = $(this);
@@ -180,7 +180,7 @@ function InitSubmitMount() {
         });
     });
 }
-////////////////cookiecookiecookie///////////////////////////////////
+///////////cookiecookiecookie////////////////////////
 $('#LockInput').click(function () {
     var value = cookie.get('_input');
     if (value == 'disabled') {

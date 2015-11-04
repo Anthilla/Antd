@@ -1,31 +1,31 @@
-﻿///-------------------------------------------------------------------------------------
-///     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-///     All rights reserved.
-///
-///     Redistribution and use in source and binary forms, with or without
-///     modification, are permitted provided that the following conditions are met:
-///         * Redistributions of source code must retain the above copyright
-///           notice, this list of conditions and the following disclaimer.
-///         * Redistributions in binary form must reproduce the above copyright
-///           notice, this list of conditions and the following disclaimer in the
-///           documentation and/or other materials provided with the distribution.
-///         * Neither the name of the Anthilla S.r.l. nor the
-///           names of its contributors may be used to endorse or promote products
-///           derived from this software without specific prior written permission.
-///
-///     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-///     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-///     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-///     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-///     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-///     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-///     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-///     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-///     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-///     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-///
-///     20141110
-///-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//-------------------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -148,22 +148,22 @@ namespace antdlib.Config {
 
         public static void AddCommandsBundle(string command) {
             var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Command == command);
-            if (getmodel == null && command.Length > 0) {
-                var model = new CommandsBundle {
-                    _Id = Guid.NewGuid().ToString(),
-                    Guid = Guid.NewGuid().ToString(),
-                    Index = "0",
-                    Command = command
-                };
-                DeNSo.Session.New.Set(model);
-                AddCommandsBundleLayout(command);
-            }
+            if (getmodel != null || command.Length <= 0) return;
+            var model = new CommandsBundle {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Index = "0",
+                Command = command
+            };
+            DeNSo.Session.New.Set(model);
+            AddCommandsBundleLayout(command);
         }
 
         public static void AddCommandsBundleLayout(string command) {
             var commandLayout = command.ReplaceAllTextBetweenWith('{', '}', "{tag:x}");
             var getmodel = GetCommandsBundleLayout().FirstOrDefault(vv => vv.CommandLayout == commandLayout);
-            if (getmodel != null || command.Length <= 0) return;
+            if (getmodel != null || command.Length <= 0)
+                return;
             var model = new CommandsBundleLayout {
                 _Id = Guid.NewGuid().ToString(),
                 CommandLayout = commandLayout
@@ -234,6 +234,8 @@ namespace antdlib.Config {
                 Terminal.Execute(SupposeCommandReplacement(command.Command));
             }
         }
+
+        public static bool Exists => GetEnabledCommandsBundle().Any();
 
         public class Export {
             private static readonly string ConfigFolder = Folder.Config;
@@ -310,12 +312,155 @@ namespace antdlib.Config {
             public static IEnumerable<CommandsBundleLayout> DefaultCommandsBundle() {
                 return new List<CommandsBundleLayout>
                 {
-                    new CommandsBundleLayout { CommandLayout = $"hostnamectl {tag}" },
                     new CommandsBundleLayout { CommandLayout = "nft [nft-table-func:x] [nft-table-family:x] [nft-table-name:x]" },
                     new CommandsBundleLayout { CommandLayout = "nft [nft-chain-func:x] [nft-table-family:x] [nft-table-name:x] [nft-chain-hook:x] { type [nft-chain-type:x] hook [nft-chain-hook:x] priority [nft-chain-priority:0] \\; }" },
                     new CommandsBundleLayout { CommandLayout = $"nft [nft-rule-func:x] [nft-table-family:x] [nft-chain-hook:x] [nft-rule:0]" },
+
+                    new CommandsBundleLayout { CommandLayout = "systemd-machine-id-setup" },
+                    new CommandsBundleLayout { CommandLayout = $"hostnamectl set-hostname {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"hostnamectl set-chassis {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"hostnamectl set-deployment {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"hostnamectl set-location {tag}" },
+                    new CommandsBundleLayout { CommandLayout = "timedatectl" },
+                    new CommandsBundleLayout { CommandLayout = "timedatectl --no-pager --no-ask-password --adjust-system-clock" },
+                    new CommandsBundleLayout { CommandLayout = $"set-timezone {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"killall {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"killall dhclient" },
+                    new CommandsBundleLayout { CommandLayout = $"systemctl start {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"systemctl restart {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"systemctl stop {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"echo {tag} {tag} > /etc/resolv.conf" },
+                    new CommandsBundleLayout { CommandLayout = $"echo {tag} {tag} >> /etc/resolv.conf" },
+                    new CommandsBundleLayout { CommandLayout = $"ip link set up dev {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"ip link set dev {tag} promisc on" },
+                    new CommandsBundleLayout { CommandLayout = $"brctl addbr {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"brctl addif {tag} {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"brctl stp {tag} off" },
+                    new CommandsBundleLayout { CommandLayout = $"ip addr add {tag} dev {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"ip addr flush {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"ntpdate {tag}" },
+                    new CommandsBundleLayout { CommandLayout = "timedatectl --no-pager --no-ask-password --adjust-system-clock set-ntp yes" },
+                    new CommandsBundleLayout { CommandLayout = $"rmdir {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"mkdir {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"mkdir -p {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"mount -o rw,discard,noatime {tag} {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"mount -o rw,discard,noatime LABEL={tag} {tag}" },
+
+                    new CommandsBundleLayout { CommandLayout = $"nft -f {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"ip route add {tag} via {tag} dev {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"chown -R named:named {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"touch {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"chmod {tag} {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"cp {tag} {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"systemctl daemon-reload" },
+                    new CommandsBundleLayout { CommandLayout = $"sleep {tag}" },
+
                 };
             }
+        }
+
+        public class FromFile {
+            private static readonly string ConfigFolder = Folder.Config;
+
+            private static IEnumerable<string> Contexts {
+                get {
+                    return Directory.EnumerateDirectories(ConfigFolder).Where(d => !d.StartsWith("disabled."));
+                }
+            }
+
+            private static IEnumerable<string> GetContextFiles(string contextName) {
+                try {
+                    var fullPath = Path.Combine(ConfigFolder, contextName);
+                    if (!Contexts.Contains(fullPath)) {
+                        throw new Exception();
+                    }
+                    return Directory.EnumerateFiles(fullPath, "*.cfg", SearchOption.TopDirectoryOnly).Where(d => !d.StartsWith("disabled.")).OrderBy(f => f);
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn($"No files found for this configuration context: {contextName}");
+                    ConsoleLogger.Warn(ex.Message);
+                    return new List<string>();
+                }
+            }
+
+            public static void ApplyForAll() {
+                try {
+                    foreach (var context in Contexts) {
+                        ApplyConfigForContext(context);
+                    }
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn(ex.Message);
+                }
+            }
+
+            private static void ApplyConfigForContext(string contextName) {
+                try {
+                    var files = GetContextFiles(contextName);
+                    var enumerable = files as string[] ?? files.ToArray();
+                    if (!enumerable.Any()) {
+                        throw new Exception();
+                    }
+                    foreach (var file in enumerable) {
+                        LaunchConfigurationForFile(file);
+                    }
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn($"There is nothing to apply for this configuration context: {contextName}");
+                    ConsoleLogger.Warn(ex.Message);
+                }
+            }
+
+            private static void LaunchConfigurationForFile(string filename) {
+                try {
+                    if (!File.Exists(filename)) {
+                        throw new Exception();
+                    }
+                    var lines = File.ReadAllLines(filename);
+                    if (!lines.Any()) {
+                        throw new Exception();
+                    }
+                    foreach (var line in lines) {
+                        try {
+                            Terminal.Execute(line);
+                            AddCommandsBundle(line);
+                        }
+                        catch (Exception) {
+                            ConsoleLogger.Warn($"Error while executing: {line}");
+                        }
+                    }
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn($"Cannot apply configuration stored in: {filename}");
+                    ConsoleLogger.Warn("The file may not exists or it may be empty");
+                    ConsoleLogger.Warn(ex.Message);
+                }
+            }
+
+            //public static void SaveConfiguration(string contextName, string file, IEnumerable<string> lines) {
+            //    try {
+            //        var enumerable = lines as string[] ?? lines.ToArray();
+            //        if (!enumerable.Any()) {
+            //            throw new Exception();
+            //        }
+            //        var contextPath = Path.Combine(ConfigFolder, contextName);
+            //        if (!Directory.Exists(contextPath)) {
+            //            Directory.CreateDirectory(contextPath);
+            //        }
+            //        if (!file.EndsWith(".cfg")) {
+            //            file = file + ".cfg";
+            //        }
+            //        var filePath = Path.Combine(contextPath, file);
+            //        if (File.Exists(filePath)) {
+            //            File.Delete(filePath);
+            //        }
+            //        File.WriteAllLines(filePath, enumerable);
+            //    }
+            //    catch (Exception ex) {
+            //        ConsoleLogger.Warn($"Cannot save {file} configuration for {contextName}");
+            //        ConsoleLogger.Warn(ex.Message);
+            //    }
+            //}
         }
     }
 }
