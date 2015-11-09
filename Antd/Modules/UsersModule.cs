@@ -44,7 +44,6 @@ namespace Antd.Modules {
                 vmod.UserEntities = UserEntity.Repository.GetAll();
                 vmod.SystemUsers = SystemUser.GetAllFromDatabase();
                 vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
-                vmod.ApplicationUsers = ApplicationUser.GetAll();
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
@@ -62,18 +61,8 @@ namespace Antd.Modules {
             };
 
             Post["/create"] = x => {
-                string type = Request.Form.UserType.Value;
-                if (type == "app") {
-                    string fname = Request.Form.FirstName;
-                    string lname = Request.Form.LastName;
-                    string passwd = Request.Form.Passwd;
-                    string email = Request.Form.Email;
-                    ApplicationUser.Create(fname, lname, passwd, email);
-                }
-                else if (type == "sys") {
-                    string name = Request.Form.Name;
-                    SystemUser.CreateUser(name);
-                }
+                string name = Request.Form.Name;
+                SystemUser.CreateUser(name);
                 return Response.AsRedirect("/users");
             };
 

@@ -1,11 +1,11 @@
 ﻿<legend id="Entity">User Entity</legend>
-<form id="UserIdentityDashboard" action="/users/identity" method="POST" enctype="multipart/form-data" class="grid">
+<form id="UserIdentityDashboard" action="/users/identity" method="POST" enctype="multipart/form-data" class="grid" autocomplete="off">
     <div class="row">
         <div class="span3">
             <label>user name</label>
         </div>
         <div class="span6">
-            <input name="UserEntity" type="text" class="bg-anthilla-gray" style="height: 30px; width: 90%;">
+            <input name="UserEntity" type="text" class="bg-anthilla-gray" style="height: 30px; width: 90%;" autocomplete="off">
         </div>
     </div>
     <div class="row">
@@ -13,7 +13,7 @@
             <label>password</label>
         </div>
         <div class="span6">
-            <input name="UserPassword" type="password" class="bg-anthilla-gray" style="height: 30px; width: 90%;">
+            <input name="UserPassword" type="password" class="bg-anthilla-gray" style="height: 30px; width: 90%;" autocomplete="off">
         </div>
     </div>
     <div class="row">
@@ -39,10 +39,10 @@
             @foreach (antdlib.Users.UserEntity.UserEntityModel.Claim claim in user.Claims) {
                 <li data-role="claim" data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 45px; margin-bottom: 3px;">
                     <input name="MasterGuid" type="hidden" value="@user.MasterGuid" />
-                    <p style="display: inline-block; width: 175px;">
+                    <p style="display: inline-block; width: 175px; float: left;">
                         @claim.Key
                     </p>
-                    <p style="display: inline-block;">
+                    <p style="display: inline-block; width: 250px; overflow: hidden;">
                         @claim.Value
                     </p>
 
@@ -51,16 +51,18 @@
                     }
                 </li>
             }
-            <li data-role="claim" data-user-guid="@user.MasterGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 45px; margin-bottom: 3px;">
-                <form action="/users/identity/addclaim" method="POST" enctype="multipart/form-data">
+            <li data-role="claim" data-user-guid="@user.MasterGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 93px; margin-bottom: 3px;">
+                <form action="/users/identity/addclaim" method="POST" enctype="multipart/form-data" autocomplete="off">
                     <input name="Userguid" type="hidden" value="@user.MasterGuid" />
-                    <select name="Type" class="bg-anthilla-gray border-anthilla-green fg-white" @*style="display: inline; width: 25%; height: 26px;"*@>
-                        <option value="identity">Identity</option>
-                        <option value="password">Password</option>
-                        <option value="token">Token</option>
-                    </select>
-                    <input name="Key" type="text" class="bg-anthilla-gray" style="width: 25%; height: 26px;">
-                    <input name="Value" type="text" class="bg-anthilla-gray" style="width: 25%; height: 26px;">
+
+                    <input name="Type" value="identity" type="radio" /> Identity
+                    <input name="Type" value="password" type="radio" /> Password
+                    <input name="Type" value="token" type="radio" /> Token
+                    <input name="Type" value="other" type="radio" /> Other
+                    <br />
+                    <br />
+                    <input name="Key" placeholder="Key" type="text" class="bg-anthilla-gray" style="width: 31%; height: 26px;">
+                    <input name="Value" placeholder="Value" type="text" class="bg-anthilla-gray" style="width: 31%; height: 26px;">
                     <input type="submit" class="bg-anthilla-green" value="Add Claim" style="width: 100px; color: #3A3A3A !important;">
                 </form>
             </li>

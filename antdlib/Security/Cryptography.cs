@@ -134,8 +134,11 @@ namespace antdlib.Security {
         }
 
         public static byte[] Hash256(string inputString) {
-            HashAlgorithm algorithm = SHA256.Create();
-            return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+            return SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+
+        public static string Hash256ToString(string inputString) {
+            return SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(inputString)).ToHex();
         }
 
         public static string Hash256Terminal(string inputString, string salt) {

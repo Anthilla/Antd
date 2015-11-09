@@ -75,11 +75,21 @@ namespace antdlib.Common {
         public static void CopyDirectory(string source, string destination) {
             Directory.CreateDirectory(source);
             Directory.CreateDirectory(destination);
-            foreach (var dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories)) {
-                Directory.CreateDirectory(dirPath.Replace(source, destination));
+            foreach (var dirPath in Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories)) {
+                try {
+                    Directory.CreateDirectory(dirPath.Replace(source, destination));
+                }
+                catch (Exception) {
+                    Terminal.Terminal.Execute($"mkdir -p {dirPath.Replace(source, destination)}");
+                }
             }
-            foreach (var newPath in Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)) {
-                File.Copy(newPath, newPath.Replace(source, destination), true);
+            foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
+                try {
+                    File.Copy(newPath, newPath.Replace(source, destination), true);
+                }
+                catch (Exception) {
+                    Terminal.Terminal.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
+                }
             }
         }
 

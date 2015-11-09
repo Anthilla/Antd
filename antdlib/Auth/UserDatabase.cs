@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Security;
 using antdlib.Users;
 using Nancy;
 using Nancy.Authentication.Forms;
@@ -35,7 +34,6 @@ using Nancy.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using antdlib.Common;
 
 namespace antdlib.Auth {
 
@@ -47,19 +45,25 @@ namespace antdlib.Auth {
 
     public class UserDatabase : IUserMapper {
 
-        private static HashSet<AuthUser> Users() {
-            var userList = new HashSet<AuthUser> {
-                new AuthUser {
-                    Name = "master",
-                    Password = "master",
-                    UserType = UserType.Master,
-                    Guid = new Guid("00000000-0000-0000-0000-000000000500")
+        private static IEnumerable<UserEntity.UserEntityModel> Users() {
+            var userList = new List<UserEntity.UserEntityModel> {
+                new UserEntity.UserEntityModel {
+                    _Id = "00000000-0000-0000-0000-000000000500",
+                    MasterGuid = "master",
+                    MasterUsername = "master",
+                    IsEnabled = true,
+                    Claims = new List<UserEntity.UserEntityModel.Claim> {
+                        new UserEntity.UserEntityModel.Claim {
+                            ClaimGuid = "00000000-0000-0000-0000-000000000500",
+                            Type= UserEntity.ClaimType.UserPassword,
+                            Key = "master-password",
+                            Value= "master"
+                        }
+                    }
                 }
             };
-            var sysUsers = SystemUser.GetAll();
-            var appUsers = ApplicationUser.GetAll();
-            userList.UnionWith(Map(sysUsers));
-            userList.UnionWith(Map(appUsers));
+            var appUsers = UserEntity.Repository.GetAll();
+            userList.Concat(appUsers);
             return userList;
         }
 
@@ -67,66 +71,26 @@ namespace antdlib.Auth {
             var userRecord = Users().FirstOrDefault(u => u.Guid == identifier);
             return userRecord == null
                        ? null
-                       : new UserIdentity { UserName = userRecord.Name };
+                       : new UserIdentity { UserName = userRecord.MasterUsername };
         }
 
         public static string GetUserEmail(Guid identifier) {
             var user = Users().FirstOrDefault(u => u.Guid == identifier);
-            return user?.Email;
+            return user?.MasterUsername;
         }
 
-        public static Guid? ValidateUser(string username, string password) {
-            var user = Users().FirstOrDefault(u => u.Name == username);
-            if (user == null) {
-                return null;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userIdentity"> == username, email</param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static Guid? ValidateUser(string userIdentity, string password) {
+            if (userIdentity == "master" && password == "master") {
+                return Guid.Parse("00000000-0000-0000-0000-000000000500");
             }
-            var type = user.UserType;
-            switch (type) {
-                case UserType.Master:
-                    if (CheckMasterPassword(password)) {
-                        return user.Guid;
-                    }
-                    return null;
-                case UserType.IsApplicationUser:
-                    if (CheckApplicationPassword(password, user.Password)) {
-                        return user.Guid;
-                    }
-                    return null;
-                case UserType.IsSystemUser:
-                    if (CheckSystemPassword(password, user.Password, user.Salt)) {
-                        return user.Guid;
-                    }
-                    return null;
-                default:
-                    return null;
-            }
-        }
-
-        private static IEnumerable<AuthUser> Map(IEnumerable<UserModel> users) {
-            var list = new HashSet<AuthUser>();
-            foreach (var au in users.Select(user => new AuthUser {
-                Name = user.Alias,
-                Password = user.Password.Result,
-                Salt = user.Password.Salt,
-                UserType = user.UserType,
-                Guid = Guid.Parse(user.Guid)
-            }))
-            {
-                list.Add(au);
-            }
-            return list;
-        }
-
-        private static bool CheckMasterPassword(string input) {
-            return (input == "master");
-        }
-
-        private static bool CheckApplicationPassword(string input, string passwd) {
-            return (Cryptography.Hash256(input).ToHex() == passwd);
-        }
-
-        private static bool CheckSystemPassword(string input, string passwd, string salt) {
-            return (Cryptography.Hash256Terminal(input, salt) == passwd);
+            var auth = UserEntity.Manage.AuthenticatePassword(userIdentity, password);
+            return auth.Value;
         }
     }
 }

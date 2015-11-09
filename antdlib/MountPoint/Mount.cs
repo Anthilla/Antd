@@ -105,7 +105,8 @@ namespace antdlib.MountPoint {
                 Terminal.Terminal.Execute($"mkdir -p {path}");
                 Terminal.Terminal.Execute($"mkdir -p {mntPath}");
                 if (!System.IO.File.Exists(file)) {
-                    System.IO.File.Copy(mntFile, file);
+                    Terminal.Terminal.Execute($"cp {mntFile} {file}");
+
                 }
                 ConsoleLogger.Info($"         {mntFile} -> {file}");
                 if (IsAlreadyMounted(file) == false) {
@@ -118,13 +119,8 @@ namespace antdlib.MountPoint {
                 CheckMount(t.Path);
             }
             ConsoleLogger.Log("     Restartng associated systemd services:");
-            foreach (var t in directoryMounts) {
-                var service = t.AssociatedUnits;
-                if (service.Count <= 0)
-                    continue;
-                foreach (var srvc in service) {
-                    Terminal.Terminal.Execute($"systemctl restart {srvc}");
-                }
+            foreach (var srvc in from t in directoryMounts select t.AssociatedUnits into service where service.Count > 0 from srvc in service select srvc) {
+                Terminal.Terminal.Execute($"systemctl restart {srvc}");
             }
         }
 
@@ -147,7 +143,6 @@ namespace antdlib.MountPoint {
                     Terminal.Terminal.Execute($"mkdir -p {t}");
                     Terminal.Terminal.Execute($"mkdir -p {realPath}");
                     Terminal.Terminal.Execute($"cp {t} {realPath}");
-                    //FileSystem.CopyDirectory(directories[i], realPath);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);

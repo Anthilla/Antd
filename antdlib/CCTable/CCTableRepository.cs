@@ -206,7 +206,7 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
 
         private static void SetConfFile(string source, string destination) {
             Terminal.Terminal.Execute($"cp {source} {destination}");
-            File.Copy(source, destination, true);
+            //File.Copy(source, destination, true);
             Terminal.Terminal.Execute($"mount --bind {source} {destination}");
         }
 
