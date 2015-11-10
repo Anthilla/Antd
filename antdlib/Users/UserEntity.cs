@@ -138,6 +138,7 @@ namespace antdlib.Users {
                     IsEnabled = true,
                     MasterUsername = username,
                     MasterAlias = alias,
+                    Keys = RsaCore.GenerateKeys(),
                     Claims = claims
                 };
                 Session.New.Set(user);

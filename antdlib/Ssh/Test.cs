@@ -6,7 +6,9 @@ namespace antdlib.Ssh {
 
         public static void Start(string server, string user, string password, int serverport = 22) {
             try {
-                var connNfo = new ConnectionInfo(server, serverport, user, new PasswordAuthenticationMethod(user, password));
+                var connNfo = new ConnectionInfo(server, serverport, user, 
+                    new PasswordAuthenticationMethod(user, password), 
+                    new PrivateKeyAuthenticationMethod(user, new PrivateKeyFile(@"/chiave.ppk")));
                 using (var sshclient = new SshClient(connNfo)) {
                     sshclient.Connect();
                     if (sshclient.IsConnected) {

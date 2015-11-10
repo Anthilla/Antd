@@ -32,14 +32,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using static System.Console;
 
 namespace antdlib.Antdsh {
     public class Execute {
+
+        private static int _retryCountTryStopProcess;
+        private static void TryStopProcess(string query) {
+            var psResult = Terminal.Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep |awk '{{print $2}}");
+            var netResult = psResult.Length > 0 ? Terminal.Terminal.Execute($"netstat -anp |grep {psResult}") : "";
+            if (psResult.Length <= 0 && netResult.Length <= 0) return;
+            Terminal.Terminal.Execute($"kill -9 {psResult.Trim()}");
+            _retryCountTryStopProcess = _retryCountTryStopProcess + 1;
+            Thread.Sleep(500);
+            TryStopProcess(query);
+        }
+
         public static void StopServices() {
-            Terminal.Terminal.Execute("systemctl stop app-antd-01-prepare.service");
-            Terminal.Terminal.Execute("systemctl stop app-antd-02-mount.service");
-            Terminal.Terminal.Execute("systemctl stop app-antd-03-launcher.service");
+            //Terminal.Terminal.Execute("systemctl stop app-antd-01-prepare.service");
+            //Terminal.Terminal.Execute("systemctl stop app-antd-02-mount.service");
+            //Terminal.Terminal.Execute("systemctl stop app-antd-03-launcher.service");
+            TryStopProcess("mono /framework/antd/Antd.exe");
+            Thread.Sleep(2000);
         }
 
         public static void CheckRunningExists() {
@@ -176,7 +191,7 @@ namespace antdlib.Antdsh {
             UmountTmpRam();
             RemoveTmpAll();
         }
-        
+
         public static void PrintVersions() {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Folder.AntdVersionsDir, "*.*");
@@ -278,9 +293,10 @@ namespace antdlib.Antdsh {
         }
 
         public static void RestartSystemctlAntdServices() {
-            Terminal.Terminal.Execute("systemctl restart app-antd-01-prepare.service");
-            Terminal.Terminal.Execute("systemctl restart app-antd-02-mount.service");
-            Terminal.Terminal.Execute("systemctl restart app-antd-03-launcher.service");
+            Terminal.Terminal.Execute("systemctl daemon-reload");
+            Terminal.Terminal.Execute("systemctl restart app-antd-01-prepare");
+            Terminal.Terminal.Execute("systemctl restart app-antd-02-mount");
+            Terminal.Terminal.Execute("systemctl restart app-antd-03-launcher");
         }
 
         public static void UmountAntd() {

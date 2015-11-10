@@ -27,6 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using antdlib.Common;
+using antdlib.Security;
 using Nancy;
 
 namespace Antd.Modules {

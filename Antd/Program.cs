@@ -50,7 +50,8 @@ namespace Antd {
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
-            var uri = CoreParametersConfig.GetHostUri();
+            //var uri = CoreParametersConfig.GetHostUri();
+            var uri = "https://+:7788/";
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -87,7 +88,7 @@ namespace Antd {
                 //15 - start scheduler
                 AntdBoot.StartScheduler(true);
                 //16 - start directory watcher
-                AntdBoot.StartDirectoryWatcher(new[] { Folder.Config}, false);
+                AntdBoot.StartDirectoryWatcher(new[] { Folder.Config }, false);
                 //17 - set authentication method
                 AntdBoot.InitAuthentication();
                 //18 - setup and launch all apps

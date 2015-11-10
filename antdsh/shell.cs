@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
+using antdlib.MountPoint;
 using antdlib.Terminal;
 using static System.Console;
 
@@ -256,8 +257,16 @@ namespace antdsh {
             WriteLine("   Stopping services");
             antdlib.Antdsh.Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
-            antdlib.Antdsh.Execute.Umount(Folder.Root);
-            antdlib.Antdsh.Execute.Umount("/framework/antd");
+
+            if (Mount.IsAlreadyMounted("/framework/antd")) {
+                Mount.Umount("/framework/antd");
+            }
+            if (Mount.IsAlreadyMounted(Folder.Root)) {
+                Mount.Umount(Folder.Root);
+            }
+
+            //antdlib.Antdsh.Execute.Umount(Folder.Root);
+            //antdlib.Antdsh.Execute.Umount("/framework/antd");
             antdlib.Antdsh.Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
             antdlib.Antdsh.Execute.MountTmpRam();
@@ -289,8 +298,16 @@ namespace antdsh {
             antdlib.Antdsh.Execute.LinkVersionToRunning(squashName);
             antdlib.Antdsh.Execute.CleanTmp();
             antdlib.Antdsh.Execute.UmountTmpRam();
+
+            if (Mount.IsAlreadyMounted("/framework/antd")) {
+                Mount.Umount("/framework/antd");
+            }
+            if (Mount.IsAlreadyMounted(Folder.Root)) {
+                Mount.Umount(Folder.Root);
+            }
+
             antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
-            WriteLine($"   Update complete!");
+            WriteLine("   Update complete!");
         }
 
         public static void UpdateSelect() {
@@ -351,7 +368,7 @@ namespace antdsh {
         }
 
         public static void Exit() {
-            WriteLine("Bye bye");
+            //WriteLine("Bye bye");
             Environment.Exit(1);
         }
 

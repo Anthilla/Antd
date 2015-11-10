@@ -80,7 +80,7 @@ namespace antdlib.Boot {
         public static string GetHostUri() {
             try {
                 if (Writer.CheckValue(Label.Port) == false) {
-                    return Uri.Antd;
+                    return "http://+:7777/";
                 }
                 return "http://+:" + Writer.ReadValue(Label.Port) + "/";
             }
