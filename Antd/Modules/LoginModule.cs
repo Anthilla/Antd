@@ -41,13 +41,25 @@ namespace Antd.Modules {
     public class LoginModule : NancyModule {
 
         public LoginModule() {
-            Get["/login"] = x => {
+            Get["/login/{message?}"] = x => {
                 dynamic model = new ExpandoObject();
                 model.WantsEmail = false;
                 model.HasToken = false;
                 model.Username = "";
                 model.Password = "";
                 model.Email = "";
+                model.Message = "";
+                switch ((string)x.message) {
+                    case "fail":
+                        model.Message = "Login has failed, chech your username or password!";
+                        break;
+                    case "expired":
+                        model.Message = "Your session is expired, you need to authenticate again!";
+                        break;
+                    case "tkn":
+                        model.Message = "Your token is not valid!";
+                        break;
+                }
                 return View["login", model];
             };
 
@@ -55,17 +67,16 @@ namespace Antd.Modules {
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
                 var validationGuid = UserDatabase.ValidateUser(username, password);
+                if (validationGuid == null) {
+                    return Context.GetRedirect("~/login/fail");
+                }
+                var cookies = Request.Cookies;
+                cookies.Clear();
+                cookies.Remove("antd-session");
                 NancyCookie cookie;
                 if (Config.IsEnabled == false) {
-                    if (validationGuid == null) {
-                        return Context.GetRedirect("~/login");
-                    }
                     cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                    return this.LoginAndRedirect(Guid.Parse(validationGuid.ToGuid().ToString()), DateTime.Now.AddHours(100)).WithCookie(cookie);
-                }
-                if (validationGuid == null) {
-                    //return Context.GetRedirect("~/login?error=true&Username=" + (string)this.Request.Form.Username);
-                    return Context.GetRedirect("~/login");
+                    return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(cookie);
                 }
                 var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
                 var requestEmail = (string)Request.Form.Email;
@@ -77,7 +88,6 @@ namespace Antd.Modules {
                     Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
                 }
                 cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                //return this.LoginAndRedirect(validationGuid.ToGuid(), expiry).WithCookie(cookie);
                 return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
             };
 
@@ -132,6 +142,35 @@ namespace Antd.Modules {
                 var validationGuid = UserDatabase.ValidateUser(username, password);
                 var response = validationGuid != null;
                 return Response.AsJson(response);
+            };
+
+            Post["/antd/authentication"] = x => {
+                //var username = (string)Request.Form.Username;
+                //var password = (string)Request.Form.Password;
+                //var validationGuid = UserDatabase.ValidateUser(username, password);
+                //if (validationGuid == null) {
+                //    return Context.GetRedirect("~/login/fail");
+                //}
+                //var cookies = Request.Cookies;
+                //cookies.Clear();
+                //cookies.Remove("antd-session");
+                //NancyCookie cookie;
+                //if (Config.IsEnabled == false) {
+                //    cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
+                //    return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(cookie);
+                //}
+                //var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
+                //var requestEmail = (string)Request.Form.Email;
+                //if (validationEmail == null && requestEmail == "") {
+                //    return Response.AsRedirect("/login/auth/" + username + "/" + password);
+                //}
+                //var email = validationEmail ?? requestEmail;
+                //if (email != null) {
+                //    Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
+                //}
+                //cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
+                //return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
+                return HttpStatusCode.OK;
             };
         }
     }

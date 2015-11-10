@@ -63,8 +63,8 @@ namespace antdlib.Auth {
                 }
             };
             var appUsers = UserEntity.Repository.GetAll();
-            userList.Concat(appUsers);
-            return userList;
+            var userEntityModels = userList.Concat(appUsers);
+            return userEntityModels;
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {

@@ -34,30 +34,30 @@ using System.Text;
 
 namespace antdlib.Security {
 
-    public class RSA : RSACore {
-        private static UnicodeEncoding _encoder = new UnicodeEncoding();
+    public class Rsa : RsaCore {
+        public static readonly UnicodeEncoding _encoder = new UnicodeEncoding();
 
         public static void Test() {
             var keys = GenerateKeys();
             var rsa = new RSACryptoServiceProvider();
             var param = keys.Public.Param;
             rsa.ImportParameters(param);
-            string text = "helloworld";
-            Console.WriteLine("RSA // Text to encrypt: " + text);
+            const string text = "helloworld";
+            Console.WriteLine("Rsa // Text to encrypt: " + text);
             var enc = CoreEncrypt(text);
-            Console.WriteLine("RSA // Encrypted Text: " + enc);
+            Console.WriteLine("Rsa // Encrypted Text: " + enc);
             var dec = CoreDecrypt(enc);
-            Console.WriteLine("RSA // Decrypted Text: " + dec);
+            Console.WriteLine("Rsa // Decrypted Text: " + dec);
             Console.WriteLine("");
         }
 
-        public static string Encrypt(string data, RSAKeys.Public key) {
+        public static string Encrypt(string data, RsaKeys.Public key) {
             var rsa = new RSACryptoServiceProvider();
             var param = key.Param;
             rsa.ImportParameters(param);
             var dataToEncrypt = _encoder.GetBytes(data);
             var encryptedByteArray = rsa.Encrypt(dataToEncrypt, false).ToArray();
-            var length = encryptedByteArray.Count();
+            var length = encryptedByteArray.Length;
             var item = 0;
             var sb = new StringBuilder();
             foreach (var x in encryptedByteArray) {
@@ -70,11 +70,11 @@ namespace antdlib.Security {
             return sb.ToString();
         }
 
-        public static string Decrypt(string data, RSAKeys.Private key) {
+        public static string Decrypt(string data, RsaKeys.Private key) {
             var rsa = new RSACryptoServiceProvider();
-            var dataArray = data.Split(new char[] { ',' });
-            byte[] dataByte = new byte[dataArray.Length];
-            for (int i = 0; i < dataArray.Length; i++) {
+            var dataArray = data.Split(',');
+            var dataByte = new byte[dataArray.Length];
+            for (var i = 0; i < dataArray.Length; i++) {
                 dataByte[i] = Convert.ToByte(dataArray[i]);
             }
             var param = key.Param;

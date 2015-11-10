@@ -33,31 +33,30 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace antdlib.Security {
-    public class RSACore {
+    public class RsaCore {
         private static string _privateKey;
         private static string _publicKey;
-        private static UnicodeEncoding _encoder = new UnicodeEncoding();
+        private static readonly UnicodeEncoding Encoder = new UnicodeEncoding();
 
-        public static RSAKeys.Pair GenerateKeys() {
+        public static RsaKeys.Pair GenerateKeys() {
             var rsa = new RSACryptoServiceProvider(3072);
-            //Console.WriteLine("A new key pair of legth {0} was created", rsa.KeySize);
             _privateKey = rsa.ToXmlString(true);
             _publicKey = rsa.ToXmlString(false);
             var privateParam = rsa.ExportParameters(true);
             var publicParam = rsa.ExportParameters(false);
             var privateKey = MapPrivateKey(privateParam, _privateKey);
             var publicKey = MapPublicKey(publicParam, _publicKey);
-            var keys = new RSAKeys.Pair() {
+            var keys = new RsaKeys.Pair {
                 Private = privateKey,
                 Public = publicKey
             };
             return keys;
         }
 
-        private static RSAKeys.Private MapPrivateKey(RSAParameters key, string xml) {
-            return new RSAKeys.Private() {
+        private static RsaKeys.Private MapPrivateKey(RSAParameters key, string xml) {
+            return new RsaKeys.Private{
                 Param = key,
-                XML = xml,
+                Xml = xml,
                 Modulus = key.Modulus,
                 Exponent = key.Exponent,
                 P = key.P,
@@ -69,10 +68,10 @@ namespace antdlib.Security {
             };
         }
 
-        private static RSAKeys.Public MapPublicKey(RSAParameters key, string xml) {
-            return new RSAKeys.Public() {
+        private static RsaKeys.Public MapPublicKey(RSAParameters key, string xml) {
+            return new RsaKeys.Public {
                 Param = key,
-                XML = xml,
+                Xml = xml,
                 Modulus = key.Modulus,
                 Exponent = key.Exponent
             };
@@ -81,9 +80,9 @@ namespace antdlib.Security {
         public static string CoreEncrypt(string data) {
             var rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(_publicKey);
-            var dataToEncrypt = _encoder.GetBytes(data);
+            var dataToEncrypt = Encoder.GetBytes(data);
             var encryptedByteArray = rsa.Encrypt(dataToEncrypt, false).ToArray();
-            var length = encryptedByteArray.Count();
+            var length = encryptedByteArray.Length;
             var item = 0;
             var sb = new StringBuilder();
             foreach (var x in encryptedByteArray) {
@@ -98,14 +97,14 @@ namespace antdlib.Security {
 
         public static string CoreDecrypt(string data) {
             var rsa = new RSACryptoServiceProvider();
-            var dataArray = data.Split(new char[] { ',' });
-            byte[] dataByte = new byte[dataArray.Length];
-            for (int i = 0; i < dataArray.Length; i++) {
+            var dataArray = data.Split(',');
+            var dataByte = new byte[dataArray.Length];
+            for (var i = 0; i < dataArray.Length; i++) {
                 dataByte[i] = Convert.ToByte(dataArray[i]);
             }
             rsa.FromXmlString(_privateKey);
             var decryptedByte = rsa.Decrypt(dataByte, false);
-            return _encoder.GetString(decryptedByte);
+            return Encoder.GetString(decryptedByte);
         }
     }
 }

@@ -46,12 +46,12 @@ namespace antdlib.Security {
     public class TokenRepository {
 
         public static List<TokenModel> GetAll(string session) {
-            List<TokenModel> list = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).ToList();
+            var list = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).ToList();
             return list;
         }
 
         public static TokenModel GetBySession(string session) {
-            TokenModel item = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).FirstOrDefault();
+            var item = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).FirstOrDefault();
             return item;
         }
 
@@ -60,17 +60,18 @@ namespace antdlib.Security {
             foreach (var c in captchas) {
                 DeNSo.Session.New.Delete(c);
             }
-            TokenModel item = new TokenModel();
-            item._Id = Guid.NewGuid().ToString();
-            item.Guid = Guid.NewGuid().ToString();
-            item.Session = session;
-            item.Value = Token.Generate();
+            var item = new TokenModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Session = session,
+                Value = Token.Generate()
+            };
             DeNSo.Session.New.Set(item);
             return item;
         }
 
         public static void Delete(string session) {
-            TokenModel item = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).FirstOrDefault();
+            var item = DeNSo.Session.New.Get<TokenModel>(i => i.Session == session).FirstOrDefault();
             if (item != null) {
                 DeNSo.Session.New.Delete(item);
             }
@@ -87,28 +88,20 @@ namespace antdlib.Security {
     public static class Token {
 
         public static string Generate() {
-            string randomString = "";
-            foreach (var s in RandomNumbers(6)) {
-                randomString += s.ToString();
-            }
-            return randomString;
+            return RandomNumbers(6).Aggregate("", (current, s) => current + s.ToString());
         }
 
         public static string Generate(int lenght) {
-            string randomString = "";
-            foreach (var s in RandomNumbers(lenght)) {
-                randomString += s.ToString();
-            }
-            return randomString;
+            return RandomNumbers(lenght).Aggregate("", (current, s) => current + s.ToString());
         }
 
         private static List<char> RandomNumbers(int lenght) {
-            const string AllowedChars = "0123456789";
-            char[] allChar = AllowedChars.ToCharArray();
-            List<char> chars = new List<char>();
+            const string allowedChars = "0123456789";
+            var allChar = allowedChars.ToCharArray();
+            var chars = new List<char>();
 
-            for (int i = 1; i <= lenght; i++) {
-                Random rnd = new Random(Guid.NewGuid().GetHashCode());
+            for (var i = 1; i <= lenght; i++) {
+                var rnd = new Random(Guid.NewGuid().GetHashCode());
                 chars.Add(allChar[rnd.Next(0, allChar.Length)]);
             }
             return chars;

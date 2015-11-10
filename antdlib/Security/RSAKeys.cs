@@ -30,12 +30,12 @@
 using System.Security.Cryptography;
 
 namespace antdlib.Security {
-    public class RSAKeys {
+    public class RsaKeys {
         public class Private {
 
             public RSAParameters Param { get; set; }
 
-            public string XML { get; set; }
+            public string Xml { get; set; }
 
             public byte[] Modulus { get; set; }
 
@@ -58,7 +58,7 @@ namespace antdlib.Security {
 
             public RSAParameters Param { get; set; }
 
-            public string XML { get; set; }
+            public string Xml { get; set; }
 
             public byte[] Modulus { get; set; }
 

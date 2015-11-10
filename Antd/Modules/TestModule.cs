@@ -39,6 +39,11 @@ namespace Antd.Modules {
             Get["Test page", "/"] = x => Response.AsText("Hello World!");
 
             Get["/page"] = x => View["page-test"];
+
+            Get["/ssh"] = x => {
+                antdlib.Ssh.Test.Start("aos003", "root", "root");
+                return View["page-test"];
+            };
         }
     }
 }

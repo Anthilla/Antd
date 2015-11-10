@@ -37,23 +37,22 @@ using System.Linq;
 
 namespace antdlib.Ssh {
     public class SshConfig {
+        private const string ServiceGuid = "A7A04748-9A03-4B1B-9D0F-BBF738F8C8E9";
 
-        private static string _serviceGuid = "A7A04748-9A03-4B1B-9D0F-BBF738F8C8E9";
+        private const string Dir = "/etc/ssh";
 
-        private static string _dir = "/etc/ssh";
+        private static readonly string MntDir = Mount.SetDirsPath(Dir);
 
-        private static string _mntDir = Mount.SetDirsPath(_dir);
-
-        private static string _mainFile = "sshd_config";
+        private const string MainFile = "sshd_config";
 
         public static void SetReady() {
-            Terminal.Terminal.Execute($"cp {_dir} {_mntDir}");
-            FileSystem.CopyDirectory(_dir, _mntDir);
-            Mount.Dir(_dir);
+            Terminal.Terminal.Execute($"cp {Dir} {MntDir}");
+            FileSystem.CopyDirectory(Dir, MntDir);
+            Mount.Dir(Dir);
         }
 
         private static bool CheckIsActive() {
-            return (MountRepository.Get(_dir) != null);
+            return MountRepository.Get(Dir) != null;
         }
 
         public static bool IsActive => CheckIsActive();
@@ -90,7 +89,7 @@ namespace antdlib.Ssh {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
         }
 
         public class MapFile {
@@ -114,13 +113,13 @@ namespace antdlib.Ssh {
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                var key = keyValuePair.Length > 0 ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
                     type = ServiceDataType.Disabled;
                 }
                 else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    value = keyValuePair.Length > 1 ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 var booleanVerbs = type == ServiceDataType.Boolean ? Helper.ServiceData.SupposeBooleanVerbs(value.Trim()) : new KeyValuePair<string, string>("", "");
@@ -135,11 +134,11 @@ namespace antdlib.Ssh {
             }
 
             public static void Render() {
-                var lines = ReadFile(_mainFile);
+                var lines = ReadFile(MainFile);
                 var data = lines.ToList();
                 var ssh = new SshModel {
-                    _Id = _serviceGuid,
-                    Guid = _serviceGuid,
+                    _Id = ServiceGuid,
+                    Guid = ServiceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
@@ -147,7 +146,7 @@ namespace antdlib.Ssh {
             }
 
             public static SshModel Get() {
-                var ssh = DeNSo.Session.New.Get<SshModel>(s => s.Guid == _serviceGuid).FirstOrDefault();
+                var ssh = DeNSo.Session.New.Get<SshModel>(s => s.Guid == ServiceGuid).FirstOrDefault();
                 return ssh;
             }
         }
@@ -169,8 +168,8 @@ namespace antdlib.Ssh {
             public static void SaveGlobalConfig(List<ServiceSsh> newParameters) {
                 var data = newParameters.Select(ConvertData).ToList();
                 var ssh = new SshModel {
-                    _Id = _serviceGuid,
-                    Guid = _serviceGuid,
+                    _Id = ServiceGuid,
+                    Guid = ServiceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
@@ -183,9 +182,9 @@ namespace antdlib.Ssh {
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
+                foreach (var t in parameters) {
+                    var line = $"{t.Key} {MapRules.CharKevValueSeparator} {t.Value}";
+                    AppendLine(t.FilePath, line);
                 }
             }
 
@@ -198,10 +197,10 @@ namespace antdlib.Ssh {
             }
 
             public static void AddParameterToGlobal(string key, string value) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
-                var line = new LineModel() {
-                    FilePath = $"{_mntDir}/{_mainFile}",
+                var line = new LineModel {
+                    FilePath = $"{MntDir}/{MainFile}",
                     Key = key,
                     Value = value,
                     Type = type,
@@ -209,9 +208,9 @@ namespace antdlib.Ssh {
                 };
                 var data = MapFile.Get().Data;
                 data.Add(line);
-                var ssh = new SshModel() {
-                    _Id = _serviceGuid,
-                    Guid = _serviceGuid,
+                var ssh = new SshModel {
+                    _Id = ServiceGuid,
+                    Guid = ServiceGuid,
                     Timestamp = Timestamp.Now,
                     Data = data
                 };
@@ -219,18 +218,17 @@ namespace antdlib.Ssh {
             }
 
             public static void RewriteSshdconf() {
-                var file = $"{_mntDir}/{_mainFile}";
+                var file = $"{MntDir}/{MainFile}";
                 CleanFile(file);
             }
         }
 
         public class Keys {
+            private const string FileStartsWith = "ssh_host_";
 
-            private static string fileStartsWith = "ssh_host_";
+            private const string PrivateEndsWith = "_key";
 
-            private static string privateEndsWith = "_key";
-
-            private static string publicEndsWith = "_key.pub";
+            private const string PublicEndsWith = "_key.pub";
 
             public class KeyModel {
                 public string _Id { get; set; }
@@ -248,9 +246,9 @@ namespace antdlib.Ssh {
 
             public static List<KeyModel> GetAll() {
                 var list = new List<KeyModel>();
-                var files = Directory.EnumerateFiles(_dir).Where(f => f.Contains(fileStartsWith)).ToArray();
+                var files = Directory.EnumerateFiles(Dir).Where(f => f.Contains(FileStartsWith)).ToArray();
                 foreach (var k in from file in files
-                                  let type = file.EndsWith(publicEndsWith) ? SSHKeyType.Public : SSHKeyType.Private
+                                  let type = file.EndsWith(PublicEndsWith) ? SSHKeyType.Public : SSHKeyType.Private
                                   select new KeyModel {
                                       _Id = Guid.NewGuid().ToString(),
                                       Guid = Guid.NewGuid().ToString(),
@@ -270,11 +268,11 @@ namespace antdlib.Ssh {
             }
 
             public static void Generate(string keyName) {
-                Terminal.Terminal.Execute($"ssh-keygen -t rsa -f {_dir}/{fileStartsWith}{keyName}{privateEndsWith} -N {Guid.NewGuid()}");
+                Terminal.Terminal.Execute($"ssh-keygen -t rsa -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith} -N {Guid.NewGuid()}");
             }
 
             public static void SendKey(string host, string keyName, string user = "") {
-                var at = ((user.Length > 0) ? user + "@" : "") + $"{host}";
+                var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
                 Terminal.Terminal.Execute($"scp {keyName} {at} ~/.ssh/authorized_keys");
             }
         }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using antdlib.Security;
 using DeNSo;
+using Microsoft.Owin.Security;
 
 namespace antdlib.Users {
     public class UserEntity {
@@ -16,6 +17,8 @@ namespace antdlib.Users {
                     return ClaimType.UserPassword;
                 case "token":
                     return ClaimType.UserToken;
+                case "pin":
+                    return ClaimType.UserPin;
                 default:
                     return ClaimType.Other;
             }
@@ -25,21 +28,45 @@ namespace antdlib.Users {
             UserIdentity = 1,
             UserPassword = 2,
             UserToken = 3,
+            UserPin = 4,
+            Other = 99
+        }
+
+        public static ClaimMode ConvertClaimMode(string claimString) {
+            switch (claimString) {
+                case "antd":
+                    return ClaimMode.Antd;
+                case "system":
+                    return ClaimMode.System;
+                case "activedirectory":
+                    return ClaimMode.ActiveDirectory;
+                default:
+                    return ClaimMode.Other;
+            }
+        }
+
+        public enum ClaimMode : byte {
+            Antd = 1,
+            System = 2,
+            ActiveDirectory = 3,
             Other = 99
         }
 
         public class UserEntityModel {
             [Key]
             public string _Id { get; set; } = Guid.NewGuid().ToString();
-            public Guid Guid { get { return Guid.Parse(_Id); } }
+            public Guid Guid => Guid.Parse(_Id);
             public string MasterGuid { get; set; }
             public string MasterUsername { get; set; }
+            public string MasterAlias { get; set; }
             public bool IsEnabled { get; set; }
+            public RsaKeys.Pair Keys { get; set; }
             public IEnumerable<Claim> Claims { get; set; }
 
             public class Claim {
                 public string ClaimGuid { get; set; }
                 public ClaimType Type { get; set; }
+                public ClaimMode Mode { get; set; }
                 public string Key { get; set; }
                 public string Value { get; set; }
             }
@@ -66,24 +93,65 @@ namespace antdlib.Users {
                 return Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper();
             }
 
-            public static void Create(string guid, string username) {
+            public static string GenerateUserAlias(string identity) {
+                var trySplit = identity.Split(' ');
+                string stringAlias;
+                if (trySplit.Length > 1) {
+                    var last = trySplit[1].Length < 4 ? trySplit[1] : trySplit[1].Replace(" ", "").Substring(0, 3);
+                    var first = trySplit[0].Length < 4 ? trySplit[1] : trySplit[0].Replace(" ", "").Substring(0, 3);
+                    stringAlias = last + first;
+                }
+                else {
+                    var cleanIdentity = identity.Replace(" ", "");
+                    stringAlias = cleanIdentity.Length < 7 ? cleanIdentity : identity.Replace(" ", "").Substring(0, 6);
+                }
+                var tryAlias = stringAlias + "01";
+                var isUser = GetByUserIdentity(tryAlias);
+                if (isUser == null) {
+                    return tryAlias.ToLower();
+                }
+                var table = GetAll();
+                var existingAlias = (from c in table
+                                     where c.MasterAlias.Contains(stringAlias)
+                                     orderby c.MasterAlias ascending
+                                     select c.MasterAlias).ToArray();
+                var lastAlias = existingAlias[existingAlias.Length - 1];
+                var newNumber = (Convert.ToInt32(lastAlias.Substring(6, 2)) + 1).ToString("D2");
+                return (stringAlias + newNumber).ToLower();
+            }
+
+            public static void Create(string guid, string username, string alias) {
                 var user = new UserEntityModel {
                     MasterGuid = guid,
                     IsEnabled = true,
                     MasterUsername = username,
+                    MasterAlias = alias,
+                    Keys = RsaCore.GenerateKeys(),
                     Claims = new List<UserEntityModel.Claim>()
                 };
                 Session.New.Set(user);
             }
 
-            public static void AddClaim(string guid, ClaimType type, string key, string value) {
+            public static void Create(string guid, string username, string alias, IEnumerable<UserEntityModel.Claim> claims) {
+                var user = new UserEntityModel {
+                    MasterGuid = guid,
+                    IsEnabled = true,
+                    MasterUsername = username,
+                    MasterAlias = alias,
+                    Claims = claims
+                };
+                Session.New.Set(user);
+            }
+
+            public static void AddClaim(string guid, ClaimType type, ClaimMode mode, string key, string value) {
                 var user = Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == guid);
                 if (user == null)
                     return;
-                var secureValue = (type == ClaimType.UserPassword) ? Cryptography.Hash256ToString(value) : value;
+                var secureValue = type == ClaimType.UserPassword ? Cryptography.Hash256ToString(value) : value;
                 var claim = new UserEntityModel.Claim {
                     ClaimGuid = Guid.NewGuid().ToString(),
                     Type = type,
+                    Mode = mode,
                     Key = key,
                     Value = secureValue
                 };

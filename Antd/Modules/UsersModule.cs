@@ -27,8 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Dynamic;
 using antdlib.CCTable;
+using antdlib.Security;
 using antdlib.Users;
 using Nancy;
 //using Nancy.Security;
@@ -89,19 +91,49 @@ namespace Antd.Modules {
                 var guid = UserEntity.Repository.GenerateGuid();
                 string userIdentity = Request.Form.UserEntity;
                 string userPassword = Request.Form.UserPassword;
-                UserEntity.Repository.Create(guid, userIdentity);
-                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "antd-master-id", guid);
-                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserIdentity, "antd-master-identity", userIdentity);
-                UserEntity.Repository.AddClaim(guid, UserEntity.ClaimType.UserPassword, "antd-master-password", userPassword);
+                var alias = UserEntity.Repository.GenerateUserAlias(userIdentity);
+
+                var claims = new List<UserEntity.UserEntityModel.Claim> {
+                    new UserEntity.UserEntityModel.Claim {
+                        ClaimGuid = guid,
+                        Mode = UserEntity.ClaimMode.Antd,
+                        Type = UserEntity.ClaimType.UserIdentity,
+                        Key = "antd-master-id",
+                        Value = guid
+                    },
+                    new UserEntity.UserEntityModel.Claim {
+                        ClaimGuid = guid,
+                        Mode = UserEntity.ClaimMode.Antd,
+                        Type = UserEntity.ClaimType.UserIdentity,
+                        Key = "antd-master-identity",
+                        Value = userIdentity
+                    },
+                    new UserEntity.UserEntityModel.Claim {
+                        ClaimGuid = guid,
+                        Mode = UserEntity.ClaimMode.Antd,
+                        Type = UserEntity.ClaimType.UserIdentity,
+                        Key = "antd-master-alias",
+                        Value = alias
+                    },
+                    new UserEntity.UserEntityModel.Claim {
+                        ClaimGuid = guid,
+                        Mode = UserEntity.ClaimMode.Antd,
+                        Type = UserEntity.ClaimType.UserPassword,
+                        Key = "antd-master-password",
+                        Value = Cryptography.Hash256ToString(userPassword)
+                    }
+                };
+                UserEntity.Repository.Create(guid, userIdentity, alias, claims);
                 return Response.AsRedirect("/users");
             };
 
             Post["/identity/addclaim"] = x => {
                 string userGuid = Request.Form.Userguid;
                 string type = Request.Form.Type.Value;
+                string mode = Request.Form.Mode.Value;
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
-                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), key, val);
+                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
                 return Response.AsRedirect("/users");
             };
 
