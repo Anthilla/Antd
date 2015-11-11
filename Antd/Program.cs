@@ -27,14 +27,18 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
-using antdlib.Boot;
-using Microsoft.Owin.Hosting;
-using Owin;
 using System;
 using System.IO;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
+using antdlib;
+using antdlib.Boot;
 using antdlib.Common;
+using Microsoft.Owin.Builder;
+using Nowin;
+using Owin;
 
 namespace Antd {
     internal static class Program {
@@ -50,8 +54,6 @@ namespace Antd {
                 ConsoleLogger.Warn("some functions may be disabled!");
             }
 
-            //var uri = CoreParametersConfig.GetHostUri();
-            var uri = "https://+:7788/";
             var stop = new ManualResetEvent(false);
             Console.CancelKeyPress +=
                 (sender, e) => {
@@ -68,43 +70,55 @@ namespace Antd {
             //03 - configuro i parametri di base di antd
             AntdBoot.SetCoreParameters();
 
-            using (WebApp.Start<Startup>(uri)) {
-                //07 - load config degli utenti
-                AntdBoot.ReloadUsers();
-                //08 - load config dell'ssh
-                AntdBoot.ReloadSsh();
-                //09 - load config di network
-                AntdBoot.SetBootConfiguration();
-                //10 - mount system directories
-                AntdBoot.SetMounts();
-                //11 - mount os directories
-                AntdBoot.SetOsMount();
-                //12 - install websocketd
-                AntdBoot.SetWebsocketd();
-                //13 - set journald
-                AntdBoot.SetSystemdJournald();
-                //14 - check resolv.conf
-                AntdBoot.CheckResolvd();
-                //15 - start scheduler
-                AntdBoot.StartScheduler(true);
-                //16 - start directory watcher
-                AntdBoot.StartDirectoryWatcher(new[] { Folder.Config }, false);
-                //17 - set authentication method
-                AntdBoot.InitAuthentication();
-                //18 - setup and launch all apps
-                AntdBoot.LaunchApps();
-                //19 - download files
-                AntdBoot.DownloadDefaultRepoFiles();
+            var owinbuilder = new AppBuilder();
+            Microsoft.Owin.Host.HttpListener.OwinServerFactory.Initialize(owinbuilder.Properties);
+            new Startup().Configuration(owinbuilder);
+            var port = Convert.ToInt32(CoreParametersConfig.GetPort());
+            var builder = ServerBuilder.New()
+                .SetOwinApp(owinbuilder.Build())
+                .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
+                .SetCertificate(new X509Certificate2("/certificate/mycert.pfx", "antd"));
+            //.RequireClientCertificate();
 
-                Console.WriteLine("Checking existing Config...");
-
+            using (var server = builder.Build()) {
+                Task.Run(() => server.Start());
+                Console.WriteLine("Applying configuration...");
+                Configuration();
                 ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log("    server url -> {0}", uri);
-
+                ConsoleLogger.Log("    server port -> {0}", port);
                 ConsoleLogger.Log("antd is running");
                 ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
                 stop.WaitOne();
             }
+        }
+
+        private static void Configuration() {
+            //07 - load config degli utenti
+            AntdBoot.ReloadUsers();
+            //08 - load config dell'ssh
+            AntdBoot.ReloadSsh();
+            //09 - load config di network
+            AntdBoot.SetBootConfiguration();
+            //10 - mount system directories
+            AntdBoot.SetMounts();
+            //11 - mount os directories
+            AntdBoot.SetOsMount();
+            //12 - install websocketd
+            AntdBoot.SetWebsocketd();
+            //13 - set journald
+            AntdBoot.SetSystemdJournald();
+            //14 - check resolv.conf
+            AntdBoot.CheckResolvd();
+            //15 - start scheduler
+            AntdBoot.StartScheduler(true);
+            //16 - start directory watcher
+            AntdBoot.StartDirectoryWatcher(new[] { Folder.Config }, false);
+            //17 - set authentication method
+            AntdBoot.InitAuthentication();
+            //18 - setup and launch all apps
+            AntdBoot.LaunchApps();
+            //19 - download files
+            AntdBoot.DownloadDefaultRepoFiles();
         }
     }
 
