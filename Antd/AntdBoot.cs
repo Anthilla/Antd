@@ -31,29 +31,29 @@ namespace Antd {
                 new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "")
                     .Replace("\"", "")
                     .Trim();
-            ConsoleLogger.Log("    global repository -> checking");
+            ConsoleLogger.Info("    global repository -> checking");
             var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
             if (mountResult.Length > 0) {
                 if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                    ConsoleLogger.Log("                      is RO -> remounting");
+                    ConsoleLogger.Info("                      is RO -> remounting");
                     Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
                 else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                    ConsoleLogger.Log("                      is RW -> ok!");
+                    ConsoleLogger.Info("                      is RW -> ok!");
                 }
             }
             else {
-                ConsoleLogger.Log("                      is not mounted -> IMPOSSIBLE");
+                ConsoleLogger.Info("                      is not mounted -> IMPOSSIBLE");
             }
-            ConsoleLogger.Log($"    global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log("    global repository -> checked");
+            ConsoleLogger.Info($"    global repository -> {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Info("    global repository -> checked");
         }
 
         public static void SetWorkingDirectories() {
             if (!AssemblyInfo.IsUnix)
                 return;
             Mount.WorkingDirectories();
-            ConsoleLogger.Log("    working directories -> checked");
+            ConsoleLogger.Info("    working directories -> checked");
         }
 
         public static void SetMounts() {
@@ -120,7 +120,7 @@ namespace Antd {
 
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
-            ConsoleLogger.Log("    antd core parameters -> loaded");
+            ConsoleLogger.Info("    antd core parameters -> loaded");
         }
 
         public static void CheckSysctl(bool isActive) {

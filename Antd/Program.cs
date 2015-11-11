@@ -77,12 +77,12 @@ namespace Antd {
             var builder = ServerBuilder.New()
                 .SetOwinApp(owinbuilder.Build())
                 .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
-                .SetCertificate(new X509Certificate2("/certificate/mycert.pfx", "antd"));
+                .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
             //.RequireClientCertificate();
 
             using (var server = builder.Build()) {
                 Task.Run(() => server.Start());
-                Console.WriteLine("Applying configuration...");
+                ConsoleLogger.Log("Applying configuration...");
                 Configuration();
                 ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log("    server port -> {0}", port);

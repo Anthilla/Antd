@@ -47,11 +47,11 @@ namespace antdlib.MountPoint {
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
                 if (IsAlreadyMounted(dir) == false) {
-                    ConsoleLogger.Log($"    - mounting {mntDir}");
+                    ConsoleLogger.Info($"    - mounting {mntDir}");
                     SetBind(mntDir, dir);
                 }
                 else {
-                    ConsoleLogger.Log($"    - {mntDir} already mounted");
+                    ConsoleLogger.Info($"    - {mntDir} already mounted");
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace antdlib.MountPoint {
             }
 
             var files = Directory.EnumerateFiles(Folder.Dirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
-            var s = (files.Length == 1) ? "" : "s";
+            var s = files.Length == 1 ? "" : "s";
             ConsoleLogger.Log($"      {files.Length} file{s} found in {Folder.Dirs}");
             foreach (var t in files) {
                 var realPath = GetFilesPath(t);
@@ -248,12 +248,12 @@ namespace antdlib.MountPoint {
         }
 
         private static void SetBind(string source, string destination) {
-            ConsoleLogger.Log($"    Check if {source} is already mounted...");
+            ConsoleLogger.Info($"    Check if {source} is already mounted...");
             if (IsAlreadyMounted(source, destination)) {
-                ConsoleLogger.Log($"     {source} is already mounted!");
+                ConsoleLogger.Info($"     {source} is already mounted!");
             }
             else {
-                ConsoleLogger.Log($"      Mounting: {source}");
+                ConsoleLogger.Info($"      Mounting: {source}");
                 Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
             }
         }

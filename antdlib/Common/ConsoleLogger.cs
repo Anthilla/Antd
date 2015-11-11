@@ -64,7 +64,6 @@ namespace antdlib.Common {
                 , GetTime(DateTime.Now)
                 , message);
             Console.ForegroundColor = currentColor;
-            Logger.Trace("", "", EventLevel.Info, message);
         }
 
         public static void Success(dynamic message, params object[] args) {
