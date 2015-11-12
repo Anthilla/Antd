@@ -48,9 +48,9 @@ namespace antdlib.Antdsh {
             var available = Execute($"df -k {volume} | sed -e 1d|head -3").
                 Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
             var availableInt = Convert.ToInt32(available);
-            var msg = (availableInt > 0) ? "There's enought disk space for the update" : "Not enough free disk space, try to remove something...";
+            var msg = availableInt > 0 ? "There's enought disk space for the update" : "Not enough free disk space, try to remove something...";
             WriteLine($"{msg}");
-            return (availableInt > 0);
+            return availableInt > 0;
         }
 
         /// <summary>

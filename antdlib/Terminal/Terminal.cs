@@ -200,7 +200,7 @@ namespace antdlib.Terminal {
             }
 
             public static void Wipe() {
-                Terminal.Execute("screen -wipe");
+                Terminal.Background.Execute("screen -wipe");
             }
 
             public static void Kill(string screenName) {
@@ -208,7 +208,7 @@ namespace antdlib.Terminal {
                 if (s.Length > 0) {
                     var proc = s.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries).ToArray().First();
                     if (proc.Length > 0) {
-                        Terminal.Execute($"kill -9 {proc}");
+                        Terminal.Background.Execute($"kill -9 {proc}");
                     }
                 }
                 Wipe();

@@ -42,7 +42,7 @@ namespace Antd.Modules {
 
             Get["/"] = x => View["page-terminal"];
 
-            Post["/"] = x => Response.AsJson((string)((Request.Form.Directory == "") ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
+            Post["/"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
 
             Post["/directory"] = x => {
                 string directory = Request.Form.Directory;
@@ -75,7 +75,7 @@ namespace Antd.Modules {
 
             Post["/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = (Request.Form.Directory == "") ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
+                var result = Request.Form.Directory == "" ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 

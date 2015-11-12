@@ -255,7 +255,7 @@ namespace antdsh {
             antdlib.Antdsh.Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
 
-            Terminal.Execute("umount /framework/antd");
+            Terminal.Background.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
             }
@@ -292,7 +292,7 @@ namespace antdsh {
             antdlib.Antdsh.Execute.CleanTmp();
             antdlib.Antdsh.Execute.UmountTmpRam();
 
-            Terminal.Execute("umount /framework/antd");
+            Terminal.Background.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
             }
@@ -342,7 +342,7 @@ namespace antdsh {
         }
 
         public static void ReloadSystemctl() {
-            Terminal.Execute("systemctl daemon-reload");
+            Terminal.Background.Execute("systemctl daemon-reload");
         }
 
         public static void IsRunning() {

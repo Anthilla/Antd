@@ -90,7 +90,7 @@ namespace Antd.Modules {
 
             Post["/ipv4/flush"] = x => {
                 string interfaceName = Request.Form.Interface;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
+                var i = interfaceName.Length > 0 ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.FlushConfigurationIpv4(i);
                 return Response.AsJson(result);
             };
@@ -116,7 +116,7 @@ namespace Antd.Modules {
             Post["/ipv4/add/route"] = x => {
                 string gateway = Request.Form.Gateway;
                 string destination = Request.Form.Destination;
-                var i = (destination.Length > 0) ? destination : null;
+                var i = destination.Length > 0 ? destination : null;
                 var result = NetworkConfig.Iproute2.AddRouteIpv4(gateway, i);
                 return Response.AsJson(result);
             };
@@ -124,7 +124,7 @@ namespace Antd.Modules {
             Post["/ipv4/del/route"] = x => {
                 string gateway = Request.Form.Gateway;
                 string destination = Request.Form.Destination;
-                var i = (destination.Length > 0) ? destination : null;
+                var i = destination.Length > 0 ? destination : null;
                 var result = NetworkConfig.Iproute2.DeleteRouteIpv4(gateway, i);
                 return Response.AsJson(result);
             };
@@ -228,7 +228,7 @@ namespace Antd.Modules {
             Post["/ipv6/add/route/gw"] = x => {
                 string address = Request.Form.Address;
                 string gateway = Request.Form.Gateway;
-                var g = (gateway.Length > 0) ? gateway : null;
+                var g = gateway.Length > 0 ? gateway : null;
                 var result = NetworkConfig.Iproute2.AddRouteIpv6Gateway(address, g);
                 return Response.AsJson(result);
             };
@@ -236,7 +236,7 @@ namespace Antd.Modules {
             Post["/ipv6/del/route/gw"] = x => {
                 string address = Request.Form.Address;
                 string gateway = Request.Form.Gateway;
-                var g = (gateway.Length > 0) ? gateway : null;
+                var g = gateway.Length > 0 ? gateway : null;
                 var result = NetworkConfig.Iproute2.DeleteRouteIpv6Gateway(address, g);
                 return Response.AsJson(result);
             };
@@ -244,7 +244,7 @@ namespace Antd.Modules {
             Post["/ipv6/add/route/if"] = x => {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
+                var i = interfaceName.Length > 0 ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.AddRouteIpv6Interface(address, i);
                 return Response.AsJson(result);
             };
@@ -252,7 +252,7 @@ namespace Antd.Modules {
             Post["/ipv6/del/route/if"] = x => {
                 string address = Request.Form.Address;
                 string interfaceName = Request.Form.Interface;
-                var i = (interfaceName.Length > 0) ? interfaceName : null;
+                var i = interfaceName.Length > 0 ? interfaceName : null;
                 var result = NetworkConfig.Iproute2.DeleteRouteIpv6Interface(address, i);
                 return Response.AsJson(result);
             };

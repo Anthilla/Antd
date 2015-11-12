@@ -52,7 +52,7 @@ namespace Antd.Modules {
             };
 
             Get["/tree/{path?}"] = x => {
-                string p = (x.path == null) ? "/" : "/" + x.path;
+                string p = x.path == null ? "/" : "/" + x.path;
                 var dirs = new DirectoryViewModel {
                     Parents = new DirectoryLister(p, false).ParentList.Reverse(),
                     Children2 = new DirectoryLister(p, false).FullList2

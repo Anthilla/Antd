@@ -101,7 +101,7 @@ namespace antdlib.Status {
         }
 
         public static void LoadConfig() {
-            Terminal.Terminal.Execute("sysctl -p " + Path.Combine(Folder.Root, "antd.sysctl.conf"));
+            Terminal.Terminal.Background.Execute("sysctl -p " + Path.Combine(Folder.Root, "antd.sysctl.conf"));
         }
     }
 }

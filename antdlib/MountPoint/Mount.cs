@@ -102,10 +102,10 @@ namespace antdlib.MountPoint {
                     continue;
                 var path = file.GetAllStringsButLast('/');
                 var mntPath = mntFile.GetAllStringsButLast('/');
-                Terminal.Terminal.Execute($"mkdir -p {path}");
-                Terminal.Terminal.Execute($"mkdir -p {mntPath}");
+                Terminal.Terminal.Background.Execute($"mkdir -p {path}");
+                Terminal.Terminal.Background.Execute($"mkdir -p {mntPath}");
                 if (!System.IO.File.Exists(file)) {
-                    Terminal.Terminal.Execute($"cp {mntFile} {file}");
+                    Terminal.Terminal.Background.Execute($"cp {mntFile} {file}");
 
                 }
                 ConsoleLogger.Info($"         {mntFile} -> {file}");
@@ -120,7 +120,7 @@ namespace antdlib.MountPoint {
             }
             ConsoleLogger.Log("     Restartng associated systemd services:");
             foreach (var srvc in from t in directoryMounts select t.AssociatedUnits into service where service.Count > 0 from srvc in service select srvc) {
-                Terminal.Terminal.Execute($"systemctl restart {srvc}");
+                Terminal.Terminal.Background.Execute($"systemctl restart {srvc}");
             }
         }
 
@@ -140,9 +140,9 @@ namespace antdlib.MountPoint {
                     continue;
                 try {
                     ConsoleLogger.Log($"      {realPath} does not exists, copying content from {t}");
-                    Terminal.Terminal.Execute($"mkdir -p {t}");
-                    Terminal.Terminal.Execute($"mkdir -p {realPath}");
-                    Terminal.Terminal.Execute($"cp {t} {realPath}");
+                    Terminal.Terminal.Background.Execute($"mkdir -p {t}");
+                    Terminal.Terminal.Background.Execute($"mkdir -p {realPath}");
+                    Terminal.Terminal.Background.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -166,9 +166,9 @@ namespace antdlib.MountPoint {
                     ConsoleLogger.Log($"      {realPath} does not exists, copying content from {t}");
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
-                    Terminal.Terminal.Execute($"mkdir -p {path}");
-                    Terminal.Terminal.Execute($"mkdir -p {mntPath}");
-                    Terminal.Terminal.Execute($"cp {t} {realPath}");
+                    Terminal.Terminal.Background.Execute($"mkdir -p {path}");
+                    Terminal.Terminal.Background.Execute($"mkdir -p {mntPath}");
+                    Terminal.Terminal.Background.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -254,7 +254,7 @@ namespace antdlib.MountPoint {
             }
             else {
                 ConsoleLogger.Info($"      Mounting: {source}");
-                Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
+                Terminal.Terminal.Background.Execute($"mount -o bind {source} {destination}");
             }
         }
 
@@ -296,7 +296,7 @@ namespace antdlib.MountPoint {
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 ConsoleLogger.Info($"umount, retry #{_umount1Retry}");
-                Terminal.Terminal.Execute($"umount {directory}");
+                Terminal.Terminal.Background.Execute($"umount {directory}");
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
             }
@@ -307,8 +307,8 @@ namespace antdlib.MountPoint {
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 ConsoleLogger.Info($"umount, retry #{_umount2Retry}");
-                Terminal.Terminal.Execute($"umount {source}");
-                Terminal.Terminal.Execute($"umount {destination}");
+                Terminal.Terminal.Background.Execute($"umount {source}");
+                Terminal.Terminal.Background.Execute($"umount {destination}");
                 _umount2Retry = _umount2Retry + 1;
                 Umount(source, destination);
             }

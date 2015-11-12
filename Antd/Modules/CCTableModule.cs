@@ -56,7 +56,7 @@ namespace Antd.Modules {
                 if (tbl.RemoveWhiteSpace().Length > 0) {
                     CCTableRepository.CreateTable(tbl, tblType, context);
                 }
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
@@ -92,7 +92,7 @@ namespace Antd.Modules {
                 }
 
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
@@ -105,13 +105,13 @@ namespace Antd.Modules {
                 var resultString = (string)Request.Form.Result;
                 ConsoleLogger.Log(commandString);
                 if (commandString != "") {
-                    var thisResult = (resultString == "") ? Terminal.Execute(commandString) : resultString;
+                    var thisResult = resultString == "" ? Terminal.Execute(commandString) : resultString;
                     CCTableRepository.CreateRowDataView(table, tableName, label, commandString, thisResult);
                 }
                 ConsoleLogger.Info(commandString);
 
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
@@ -121,7 +121,7 @@ namespace Antd.Modules {
                 var indexArray = (string)Request.Form.MapLabelIndex;
                 CCTableRepository.SaveMapData(rowGuid, labelArray, indexArray);
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
@@ -160,20 +160,20 @@ namespace Antd.Modules {
 
                 switch (commandType) {
                     case "direct":
-                        Terminal.Execute(row.CommandDirect);
+                        Terminal.Background.Execute(row.CommandDirect);
                         break;
                     case "text":
-                        Terminal.Execute(row.CommandSet.Replace("{Value}", newValue));
+                        Terminal.Background.Execute(row.CommandSet.Replace("{Value}", newValue));
                         break;
                     case "bool":
                         if (boolSelected == "true") {
-                            Terminal.Execute(row.CommandTrue);
+                            Terminal.Background.Execute(row.CommandTrue);
                         }
                         else if (boolSelected == "false") {
-                            Terminal.Execute(row.CommandFalse);
+                            Terminal.Background.Execute(row.CommandFalse);
                         }
                         else {
-                            Terminal.Execute("echo COMMAND NOT FOUND");
+                            Terminal.Background.Execute("echo COMMAND NOT FOUND");
                         }
                         break;
                 }
@@ -191,7 +191,7 @@ namespace Antd.Modules {
                     CCTableRepository.CreateRowConf(table, tableName, file, type);
                 }
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
@@ -202,31 +202,31 @@ namespace Antd.Modules {
                 var text = (string)Request.Form.FileText;
                 CCTableRepository.UpdateConfFile(file, text);
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
 
             Post["/map/conf"] = x => {
                 var guid = Guid.NewGuid().ToString();
                 var commentInput = ((string)Request.Form.CharComment).ToCharArray();
-                var comment = (commentInput.Length > 0) ? commentInput[0] : ' ';
+                var comment = commentInput.Length > 0 ? commentInput[0] : ' ';
                 var filePath = (string)Request.Form.FilePath;
                 bool hasInclude = Request.Form.PermitsInclude.HasValue;
                 var include = (string)Request.Form.VerbInclude;
                 bool hasSection = Request.Form.PermitsSection.HasValue;
                 var sectionOpenInput = ((string)Request.Form.CharSectionOpen).ToCharArray();
-                var sectionOpen = (sectionOpenInput.Length > 0) ? sectionOpenInput[0] : ' ';
+                var sectionOpen = sectionOpenInput.Length > 0 ? sectionOpenInput[0] : ' ';
                 var sectionCloseInput = ((string)Request.Form.CharSectionClose).ToCharArray();
-                var sectionClose = (sectionCloseInput.Length > 0) ? sectionCloseInput[0] : ' ';
+                var sectionClose = sectionCloseInput.Length > 0 ? sectionCloseInput[0] : ' ';
                 var dataSeparatorInput = ((string)Request.Form.CharKevValueSeparator).ToCharArray();
-                var dataSeparator = (dataSeparatorInput.Length > 0) ? dataSeparatorInput[0] : ' ';
+                var dataSeparator = dataSeparatorInput.Length > 0 ? dataSeparatorInput[0] : ' ';
                 bool hasBlock = Request.Form.PermitsBlock.HasValue;
                 var blockOpenInput = ((string)Request.Form.CharBlockOpen).ToCharArray();
-                var blockOpen = (blockOpenInput.Length > 0) ? blockOpenInput[0] : ' ';
+                var blockOpen = blockOpenInput.Length > 0 ? blockOpenInput[0] : ' ';
                 var blockCloseInput = ((string)Request.Form.CharBlockClose).ToCharArray();
-                var blockClose = (blockCloseInput.Length > 0) ? blockCloseInput[0] : ' ';
+                var blockClose = blockCloseInput.Length > 0 ? blockCloseInput[0] : ' ';
                 var endOfLineInput = ((string)Request.Form.CharEndOfLine).ToCharArray();
-                var endOfLine = (endOfLineInput.Length > 0) ? endOfLineInput[0] : '\n';
+                var endOfLine = endOfLineInput.Length > 0 ? endOfLineInput[0] : '\n';
 
                 CCTableConf.Mapping.Repository.Create(guid, filePath, comment, hasInclude, include, hasSection, sectionOpen, sectionClose, dataSeparator, hasBlock, blockOpen, blockClose, endOfLine);
 
@@ -244,7 +244,7 @@ namespace Antd.Modules {
                 }
 
                 var context = (string)Request.Form.Context;
-                var redirect = (context.RemoveWhiteSpace().Length > 0) ? context : "/cctable";
+                var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
                 return Response.AsRedirect(redirect);
             };
         }

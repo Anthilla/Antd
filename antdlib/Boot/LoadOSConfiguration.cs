@@ -40,7 +40,7 @@ namespace antdlib.Boot {
             if (Mount.IsAlreadyMounted($"{Folder.Dirs}/FILE_etc_collectd.conf", realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Terminal.Terminal.Execute("systemctl restart collectd.service");
+            Terminal.Terminal.Background.Execute("systemctl restart collectd.service");
         }
 
         public static void LoadSystemdJournald() {
@@ -49,7 +49,7 @@ namespace antdlib.Boot {
             if (Mount.IsAlreadyMounted($"{Folder.Dirs}/{"FILE_etc_systemd_journald.conf"}", realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Terminal.Terminal.Execute("systemctl restart systemd-journald.service");
+            Terminal.Terminal.Background.Execute("systemctl restart systemd-journald.service");
         }
 
         public static void LoadWpaSupplicant() {
@@ -58,7 +58,7 @@ namespace antdlib.Boot {
             if (Mount.IsAlreadyMounted($"{Folder.Dirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Terminal.Terminal.Execute("systemctl restart wpa_supplicant.service");
+            Terminal.Terminal.Background.Execute("systemctl restart wpa_supplicant.service");
         }
 
         public static void LoadFirewall() {
@@ -70,7 +70,7 @@ namespace antdlib.Boot {
             if (File.Exists(filePath)) return;
             ConsoleLogger.Info("Downloading websocketd");
             File.Copy($"{Folder.Resources}/websocketd", filePath, true);
-            Terminal.Terminal.Execute($"chmod 777 {filePath}");
+            Terminal.Terminal.Background.Execute($"chmod 777 {filePath}");
         }
     }
 }

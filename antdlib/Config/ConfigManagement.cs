@@ -198,7 +198,7 @@ namespace antdlib.Config {
         public static void LaunchCommand(string guid) {
             var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Guid == guid);
             if (getmodel != null) {
-                Terminal.Terminal.Execute(SupposeCommandReplacement(getmodel.Command));
+                Terminal.Terminal.Background.Execute(SupposeCommandReplacement(getmodel.Command));
             }
         }
 
@@ -231,7 +231,7 @@ namespace antdlib.Config {
 
         public static void ExecuteAll() {
             foreach (var command in GetEnabledCommandsBundle()) {
-                Terminal.Terminal.Execute(SupposeCommandReplacement(command.Command));
+                Terminal.Terminal.Background.Execute(SupposeCommandReplacement(command.Command));
             }
         }
 
@@ -422,7 +422,7 @@ namespace antdlib.Config {
                     }
                     foreach (var line in lines) {
                         try {
-                            Terminal.Terminal.Execute(line);
+                            Terminal.Terminal.Background.Execute(line);
                             AddCommandsBundle(line);
                         }
                         catch (Exception) {

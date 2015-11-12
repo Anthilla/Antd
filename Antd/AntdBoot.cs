@@ -36,7 +36,7 @@ namespace Antd {
             if (mountResult.Length > 0) {
                 if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
                     ConsoleLogger.Info("                      is RO -> remounting");
-                    Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                    Terminal.Background.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
                 else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
                     ConsoleLogger.Info("                      is RW -> ok!");
@@ -75,7 +75,7 @@ namespace Antd {
             if (!AssemblyInfo.IsUnix)
                 return;
             if (Mount.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
+                Terminal.Background.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Terminal.Execute("uname -r").Trim();
@@ -86,10 +86,10 @@ namespace Antd {
                 Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
                 ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
-                Terminal.Execute($"mount {module} {moduleDir}");
+                Terminal.Background.Execute($"mount {module} {moduleDir}");
             }
             ConsoleLogger.Log("    os mount -> checked");
-            Terminal.Execute("systemctl restart systemd-modules-load.service");
+            Terminal.Background.Execute("systemctl restart systemd-modules-load.service");
         }
 
         public static void SetWebsocketd() {
@@ -240,12 +240,12 @@ namespace Antd {
             var mntDir = Mount.SetDirsPath(dir);
             ConsoleLogger.Log("ssh> set directories");
             if (!Directory.Exists(mntDir)) {
-                Terminal.Execute($"cp -fR {dir} {mntDir}");
+                Terminal.Background.Execute($"cp -fR {dir} {mntDir}");
             }
             Mount.Umount(dir);
             Mount.Dir(dir);
-            Terminal.Execute("ssh-keygen -A");
-            Terminal.Execute("systemctl restart sshd.service");
+            Terminal.Background.Execute("ssh-keygen -A");
+            Terminal.Background.Execute("systemctl restart sshd.service");
         }
 
         public static void ReloadUsers() {

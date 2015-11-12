@@ -80,7 +80,7 @@ namespace antdlib.Common {
                     Directory.CreateDirectory(dirPath.Replace(source, destination));
                 }
                 catch (Exception) {
-                    Terminal.Terminal.Execute($"mkdir -p {dirPath.Replace(source, destination)}");
+                    Terminal.Terminal.Background.Execute($"mkdir -p {dirPath.Replace(source, destination)}");
                 }
             }
             foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
@@ -88,7 +88,7 @@ namespace antdlib.Common {
                     File.Copy(newPath, newPath.Replace(source, destination), true);
                 }
                 catch (Exception) {
-                    Terminal.Terminal.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
+                    Terminal.Terminal.Background.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
                 }
             }
         }
