@@ -1,37 +1,36 @@
 @*
-//-------------------------------------------------------------------------------------
-//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-//     All rights reserved.
-//
-//     Redistribution and use in source and binary forms, with or without
-//     modification, are permitted provided that the following conditions are met:
-//         * Redistributions of source code must retain the above copyright
-//           notice, this list of conditions and the following disclaimer.
-//         * Redistributions in binary form must reproduce the above copyright
-//           notice, this list of conditions and the following disclaimer in the
-//           documentation and/or other materials provided with the distribution.
-//         * Neither the name of the Anthilla S.r.l. nor the
-//           names of its contributors may be used to endorse or promote products
-//           derived from this software without specific prior written permission.
-//
-//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//     20141110
-//-------------------------------------------------------------------------------------*@
+    //-------------------------------------------------------------------------------------
+    //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    //     All rights reserved.
+    //
+    //     Redistribution and use in source and binary forms, with or without
+    //     modification, are permitted provided that the following conditions are met:
+    //         * Redistributions of source code must retain the above copyright
+    //           notice, this list of conditions and the following disclaimer.
+    //         * Redistributions in binary form must reproduce the above copyright
+    //           notice, this list of conditions and the following disclaimer in the
+    //           documentation and/or other materials provided with the distribution.
+    //         * Neither the name of the Anthilla S.r.l. nor the
+    //           names of its contributors may be used to endorse or promote products
+    //           derived from this software without specific prior written permission.
+    //
+    //     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    //     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    //     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    //     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    //     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    //     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    //     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    //     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    //     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    //
+    //     20141110
+    //-------------------------------------------------------------------------------------*@
 
 <nav id="nav-bar" class="navigation-bar bg-grayDarker" style="padding-left: 15px; padding-right: 20px;">
     <nav class="navigation-bar-content">
         <a href="/" class="element nav-button no-overlay fg-anthilla-green">ANTD </a>
-        @*<a href="/" class="element nav-button no-overlay fg-anthilla-green">aos#@antdlib.Status.Local.SystemVersion </a>*@
         <div class="element-divider"></div>
 
         <div class="element-divider place-right"></div>
@@ -43,10 +42,6 @@
         <a class="element place-right nav-button no-overlay" href="~/logout" id="LogOut">
             <i class="icon-exit" style="line-height: 5px;"></i>
         </a>
-        @*        <div class="element-divider place-right"></div>
-        <a class="element place-right nav-button no-overlay" href="/console">
-            <i class="icon-console" style="line-height: 5px;"></i>
-        </a>*@
         <div class="element-divider place-right"></div>
         <a class="element place-right nav-button no-overlay" href="#" id="OpenTerminal">
             <i class="icon-console" style="line-height: 5px;"></i>
@@ -55,11 +50,6 @@
         <a class="element place-right nav-button no-overlay" href="/cctable">
             <i class="icon-puzzle" style="line-height: 5px;"></i>
         </a>
-@*        <div class="element-divider place-right"></div>
-        <a class="element place-right nav-button no-overlay bg-anthilla-green fg-dark upcase" href="#" id="CmdMgmtButton">
-            <i class="icon-rocket" style="line-height: 5px;"></i>
-            Command Management
-        </a>*@
         <div class="element-divider place-right"></div>
         <a class="element place-right nav-button no-overlay" href="/cfg">
             <i class="icon-wrench fg-indigo" style="line-height: 5px;"></i>
@@ -71,66 +61,7 @@
         <div class="element-divider place-right"></div>
     </nav>
 </nav>
-@*<style type="text/css">
-    #CommandManagementForm {
-        display: none;
-        padding: 5px;
-        margin: 7px 15px;
-        border: 0 solid #996BAF;
-        border-width: 7px 0px;
-    }
-</style>
-<form id="CommandManagementForm" action="~/command/mgmt" method="POST" enctype="multipart/form-data" style="z-index: 99; width: 100%;" class="bg-anthilla-gray-m">
-    <div class="grid">
-        <div class="row">
-            <div class="span12">
-                <label>Command</label>
-                <input type="text" name="Command" style="width: 90%; height: 30px;">
-            </div>
-        </div>
-        <div class="row">
-            <div class="span12">
-                <input type="hidden" name="InputID" />
-                <input type="text" name="CommandLayout" readonly="readonly" style="width: 90%; height: 30px; border-width: 0px 0px 1px 0px !important; border-color: #60A1E4 !important;" class="bg-anthilla-gray-m">
-            </div>
-        </div>
-        <div class="row">
-            <div class="span12">
-                <label>Notes</label>
-                <textarea type="text" name="Notes" style="width: 90%; min-height: 150px; padding: 5px;" class="bg-anthilla-gray-m border-anthilla-green fg-white" placeholder="Write a comment about the command"></textarea>
-            </div>
-        </div>
-        <div class="row" style="opacity: 0.7;">
-            <div class="span12">
-                <label>Hint</label>
-                <p>Double click on any input field to add both the value and the input reference to the command</p>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 15px !important;">
-            <div class="span12">
-                <input class="bg-anthilla-green fg-anthilla-gray upcase" type="submit" value="Confirm" style="min-width: 250px !important;" />
-                <input onclick="CloseCommandMgmtPanel()" class="bg-anthilla-orange fg-anthilla-gray upcase" type="button" value="Close" style="min-width: 250px !important;">
-                <a href="/command/mgmt" target="_blank" class="button bg-anthilla-blu fg-anthilla-gray" style="min-width: 250px !important;">
-                    <i class="icon-list on-left"></i>Go to command list
-                </a>
-            </div>
-        </div>
-    </div>
-</form>*@
-<style type="text/css">
-    #TerminalContainer {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        width: 100%;
-        height: 300px;
-        overflow: scroll !important;
-        bottom: 0;
-        border-top: 5px solid #A7BD39;
-        padding: 15px;
-    }
-</style>
-<div id="TerminalContainer" style="" class="bg-black">
+<div id="TerminalContainer" style="display: none; position: fixed;z-index: 9999;width: 100%;height: 300px;overflow: scroll !important;bottom: 0;border-top: 5px solid #A7BD39;padding: 15px;" class="bg-black">
     <div id="TerminalClose" style="position: relative; float: right; width: 25px !important; height: 25px !important; padding: 5px;" class="tile bg-red fg-white no-outline"><i class="icon-cancel-2"></i></div>
     @Html.Partial("_terminal")
 </div>

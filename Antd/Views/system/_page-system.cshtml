@@ -32,7 +32,66 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_system-pagebar")
+    <style type="text/css">
+        #System-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-screen on-left" style="line-height: 5px;"></i>
+                System
+            </div>
+            <div class="element-divider"></div>
+
+            <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#General" style="padding-top: 11px;">
+                General
+            </a>
+            <div class="element-divider"></div>
+            <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#SecureShell" style="padding-top: 11px;">
+                Secure Shell
+            </a>
+            <div class="element-divider"></div>
+            <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#CertManager" style="padding-top: 11px;">
+                Cert Manager
+            </a>
+            <div class="element-divider"></div>
+            <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Firwmare" style="padding-top: 11px;">
+                Firwmare
+            </a>
+            <div class="element-divider"></div>
+            <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Authentication" style="padding-top: 11px;">
+                Authentication
+            </a>
+
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <div class="element-divider"></div>
+            <a href="/system/mounts" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+                Mounts
+            </a>
+            <div class="element-divider"></div>
+            <a href="/system/sysctl" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+                Sysctl
+            </a>
+            <div class="element-divider"></div>
+
+            <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+                <i class="icon-arrow-up"></i>
+            </a>
+            <div class="element-divider place-right"></div>
+            <a onclick="SetCreate()" class="element place-right upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DashboardForm" style="padding-top: 11px;">
+                New Table
+            </a>
+        </nav>
+    </nav>
 }
 
 @section Dashboard {
@@ -43,7 +102,7 @@
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
     }
-    @Html.Partial("page-system-generalTEST", Model)
+    @Html.Partial("page-system-general", Model)
     @Html.Partial("page-system-secureshell", Model)
     @Html.Partial("page-system-certmanager", Model)
     @Html.Partial("page-system-firmware", Model)

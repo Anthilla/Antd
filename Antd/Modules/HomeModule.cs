@@ -35,6 +35,8 @@ namespace Antd.Modules {
         public HomeModule() {
             this.RequiresAuthentication();
             Get["/"] = x => Response.AsRedirect("/system");
+            
+            //Get["/"] = x => View["page-empty"];
         }
     }
 }

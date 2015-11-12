@@ -32,7 +32,50 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_users-pagebar")
+    <style type="text/css">
+        #Users-TB {
+            border-bottom: 10px solid #A7BD39;
+            height: 80px !important;
+        }
+    </style>
+    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
+        <nav class="navigation-bar-content">
+            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+                <i class="icon-user-2 on-left" style="line-height: 5px;"></i>
+                Users
+            </div>
+            <div class="element-divider"></div>
+
+            <a onclick="SetCreateUser()" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#CreateUser" style="padding-top: 11px;">
+                Add User
+            </a>
+            <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Entity" style="padding-top: 11px;">
+                Entity
+            </a>
+            <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Application" style="padding-top: 11px;">
+                Application
+            </a>
+            <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#System" style="padding-top: 11px;">
+                System
+            </a>
+            <div class="element-divider"></div>
+            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Groups" style="padding-top: 11px;">
+                Groups
+            </a>
+            <div class="element-divider"></div>
+
+            <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+                <i class="icon-arrow-up"></i>
+            </a>
+            <div class="element-divider place-right"></div>
+            <a onclick="SetCreate()" class="element place-right upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DashboardForm" style="padding-top: 11px;">
+                New Table
+            </a>
+        </nav>
+    </nav>
 }
 
 @section Dashboard {
@@ -46,13 +89,13 @@
     }
     @Html.Partial("page-users-entity", Model)
     @*@Html.Partial("page-users-system", Model)
-    @Html.Partial("page-users-groups", Model)*@
+        @Html.Partial("page-users-groups", Model)*@
 }
 
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('input[type="text"]').each(function() {
+            $('input[type="text"]').each(function () {
                 $(this).val('');
             });
             $('input[type="password"]').each(function () {
@@ -60,12 +103,12 @@
             });
         });
 
-        $('.search-field').keyup(function() {
+        $('.search-field').keyup(function () {
             var queryString = $(this).val();
             var table = $('.searchable');
             var tableBody = table.children('tbody');
             var row = tableBody.children('tr');
-            row.each(function(index) {
+            row.each(function (index) {
                 var thisRow = $(this);
                 var queriedText = $(this).text();
                 if (queriedText.indexOf(queryString) != -1) {
@@ -77,7 +120,7 @@
             });
         });
 
-        $('i[data-role="remove-claim"]').click(function() {
+        $('i[data-role="remove-claim"]').click(function () {
             var userGuid = $(this).attr('data-user-guid');
             var claimGuid = $(this).attr('data-claim-guid');
             jQuery.support.cors = true;
@@ -88,13 +131,13 @@
                     Userguid: userGuid,
                     Guid: claimGuid
                 },
-                success: function() {
+                success: function () {
                     location.reload(true);
                 }
             });
         });
 
-        $('li[data-role="user"]').click(function() {
+        $('li[data-role="user"]').click(function () {
             var userGuid = $(this).attr('data-user-guid');
             $('li[data-user-guid="' + userGuid + '"]').not('li[data-role="user"]').toggle();
         });

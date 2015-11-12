@@ -96,7 +96,7 @@ namespace Antd {
             //07 - load config degli utenti
             AntdBoot.ReloadUsers();
             //08 - load config dell'ssh
-            AntdBoot.ReloadSsh();
+            //AntdBoot.ReloadSsh();
             //09 - load config di network
             AntdBoot.SetBootConfiguration();
             //10 - mount system directories

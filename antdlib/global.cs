@@ -76,6 +76,8 @@ namespace antdlib {
         public static string AntdVersionsDir => $"{Apps}/Anthilla_Antd";
         public static string AntdshVersionsDir => $"{Apps}/Anthilla_antdsh";
         public static string AntdTmpDir => $"{Apps}/tmp";
+        public static string CertificateAuthority => "/ca";
+        public static string Resources => "/framework/antd/Resources";
     }
 
     public class AntdFile {

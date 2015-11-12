@@ -1,6 +1,7 @@
-﻿<legend id="List">App List</legend>
+﻿@using System.Collections.Generic
+<legend id="List">App List</legend>
 
-@foreach (antdlib.Apps.Management.AppInfo app in antdlib.Apps.Management.DetectApps()) {
+@foreach (antdlib.Apps.Management.AppInfo app in Model.AppList) {
     <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@app.Name">
             <i class="icon-cone on-left"></i>  @app.Name

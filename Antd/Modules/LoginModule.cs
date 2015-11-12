@@ -1,13 +1,4 @@
-﻿using System;
-using System.Dynamic;
-using antdlib.Auth;
-using antdlib.Auth.T2FA;
-using antdlib.Common;
-using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Cookies;
-using Nancy.Extensions;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -35,6 +26,16 @@ using Nancy.Extensions;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
+using System;
+using System.Dynamic;
+using antdlib.Auth;
+using antdlib.Auth.T2FA;
+using antdlib.Common;
+using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Cookies;
+using Nancy.Extensions;
 
 namespace Antd.Modules {
 

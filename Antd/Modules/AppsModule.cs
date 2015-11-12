@@ -44,7 +44,12 @@ namespace Antd.Modules {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.AppList = Management.DetectApps();
                 vmod.AppExists = AnthillaSp.Setting.CheckSquash();
+                vmod.AnthillaSpIsActive = AnthillaSp.Status.IsActiveAnthillaSp();
+                vmod.AnthillaSpStatus = AnthillaSp.Status.AnthillaSp();
+                vmod.AnthillaServerIsActive = AnthillaSp.Status.IsActiveAnthillaServer();
+                vmod.AnthillaServerStatus = AnthillaSp.Status.AnthillaServer();
                 return View["_page-apps", vmod];
             };
 

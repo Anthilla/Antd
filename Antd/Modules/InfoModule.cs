@@ -44,16 +44,6 @@ namespace Antd.Modules {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.hostname = Terminal.Execute("hostname");
-                vmod.os = Version.GetModel().value;
-                vmod.time = Terminal.Execute("date");
-                vmod.procinfo = "";
-                vmod.uptime = Uptime.UpTime;
-                vmod.runprocs = Proc.All.ToArray().Length.ToString();
-                vmod.CPUload = Uptime.LoadAverage;
-                vmod.CPUusage = "";
-                vmod.rmem = "";
-                vmod.ldskspc = "";
                 vmod.MEMINFO = Meminfo.GetModel();
                 vmod.CPUINFO = Cpuinfo.GetModel();
                 vmod.VERSION = Version.GetModel();
