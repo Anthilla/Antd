@@ -132,7 +132,6 @@ namespace Antd.Modules {
                 ConfigManagement.Export.ExportConfigurationToFile();
                 return Response.AsJson(true);
             };
-
         }
     }
 }

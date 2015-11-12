@@ -151,13 +151,12 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('a[data-role="export-conf"]').click(function (event) {
-            var g = $(this).attr('data-guid');
+        $('a[data-role="export-conf"]').click(function () {
             jQuery.support.cors = true;
             $.ajax({
                 url: '/cfg/export',
                 type: 'POST',
-                success: function (data) {
+                success: function () {
                     location.reload(true);
                 }
             });

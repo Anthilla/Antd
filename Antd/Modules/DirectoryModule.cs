@@ -59,8 +59,6 @@ namespace Antd.Modules {
                 };
                 return View["page-dir", dirs];
             };
-
-            Get["/directory/watch/"] = x => View["page-directories-watch"];
         }
     }
 }

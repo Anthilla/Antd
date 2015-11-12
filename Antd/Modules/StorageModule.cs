@@ -46,7 +46,7 @@ namespace Antd.Modules {
                 dynamic vmod = new ExpandoObject();
                 vmod.VolumesInfo = Volumes.BlocksFromDd();
                 vmod.IsOsRemovable = InstallCheck.IsOsRemovable;
-
+                vmod.Mounts = antdlib.MountPoint.MountRepository.Get();
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;

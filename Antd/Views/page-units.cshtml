@@ -28,6 +28,7 @@
     //     20141110
     //-------------------------------------------------------------------------------------*@
 
+@using System
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{Layout = "_layout.cshtml";}
 
@@ -92,7 +93,7 @@
                 type: 'POST',
                 data: JSON.stringify(p),
                 contentType: "application/json;charset=utf-8",
-                success: function (data) {
+                success: function () {
                     location.reload(true);
                     return false;
                 }
@@ -107,7 +108,7 @@
                 type: 'POST',
                 data: JSON.stringify(p),
                 contentType: "application/json;charset=utf-8",
-                success: function (data) {
+                success: function () {
                     location.reload(true);
                     return false;
                 }

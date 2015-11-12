@@ -32,7 +32,66 @@
 @{Layout = "_layout.cshtml";}
 
 @section PageBar {
-    @Html.Partial("_system-pagebar-static")
+<style type="text/css">
+    #System-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+    <nav class="navigation-bar-content">
+        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+            <i class="icon-screen on-left" style="line-height: 5px;"></i>
+            System
+        </div>
+        <div class="element-divider"></div>
+
+        <a href="/system" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            General
+        </a>
+        <div class="element-divider"></div>
+        <a href="/system" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Secure Shell
+        </a>
+        <div class="element-divider"></div>
+        <a href="/system" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Cert Manager
+        </a>
+        <div class="element-divider"></div>
+        <a href="/system" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Firwmare
+        </a>
+        <a href="/system" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Authentication" style="padding-top: 11px;">
+            Authentication
+        </a>
+
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <a href="/system/mounts" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Mounts
+        </a>
+        <div class="element-divider"></div>
+        <a href="/system/sysctl" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Sysctl
+        </a>
+        <div class="element-divider"></div>
+
+        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+            <i class="icon-arrow-up"></i>
+        </a>
+        <div class="element-divider place-right"></div>
+        <a onclick="SetCreate()" class="element place-right upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DashboardForm" style="padding-top: 11px;">
+            New Table
+        </a>
+    </nav>
+</nav>
+
 }
 
 @section MainContent {
@@ -49,17 +108,18 @@
         </thead>
         <tbody id="SysctlBodyTable">
             @foreach (Antd.ViewHelpers.StatusSysctlViewModel value in Model.Sysctl) {
-                @if (value.RunningValue.ToCharArray().Length < 15) {
-<tr>
+                if (value.RunningValue.ToCharArray().Length >= 15) {
+                    continue;
+                }
+                <tr>
                     <td style="text-align: right;">
                         <label>@value.Label </label>
                     </td>
                     <td style="text-align: center;">@value.StockValue </td>
                     <td style="text-align: center;">@value.RunningValue </td>
                     <td style="text-align: center;">@value.AntdValue
-                </td>
+                    </td>
                 </tr>
-                }
             }
         </tbody>
     </table>
@@ -77,10 +137,10 @@
             var table = $('.searchable');
             var tableBody = table.children('tbody');
             var row = tableBody.children('tr');
-            row.each(function (index) {
+            row.each(function () {
                 var thisRow = $(this);
                 var queriedText = $(this).text();
-                if (queriedText.indexOf(queryString) != -1) {
+                if (queriedText.indexOf(queryString) !== -1) {
                     thisRow.show();
                 }
                 if (queriedText.indexOf(queryString) < 0) {
