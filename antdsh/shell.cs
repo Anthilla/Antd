@@ -38,7 +38,6 @@ using static System.Console;
 
 namespace antdsh {
     public class Shell {
-
         public static void Start() {
             if (antdlib.Antdsh.Execute.IsAntdRunning()) {
                 WriteLine("Cannot start antd becaust it's already running!");
@@ -67,7 +66,6 @@ namespace antdsh {
         }
 
         private static int _startCount;
-
         private static void StartLoop(string versionToRun) {
             while (true) {
                 _startCount++;
@@ -112,7 +110,6 @@ namespace antdsh {
         }
 
         private static int _stopCount;
-
         private static void StopLoop() {
             while (true) {
                 _stopCount++;
@@ -258,15 +255,11 @@ namespace antdsh {
             antdlib.Antdsh.Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
 
+            Terminal.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
             }
-            if (Mount.IsAlreadyMounted(Folder.Root)) {
-                Mount.Umount(Folder.Root);
-            }
 
-            //antdlib.Antdsh.Execute.Umount(Folder.Root);
-            //antdlib.Antdsh.Execute.Umount("/framework/antd");
             antdlib.Antdsh.Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
             antdlib.Antdsh.Execute.MountTmpRam();
@@ -299,11 +292,9 @@ namespace antdsh {
             antdlib.Antdsh.Execute.CleanTmp();
             antdlib.Antdsh.Execute.UmountTmpRam();
 
+            Terminal.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
-            }
-            if (Mount.IsAlreadyMounted(Folder.Root)) {
-                Mount.Umount(Folder.Root);
             }
 
             antdlib.Antdsh.Execute.RestartSystemctlAntdServices();

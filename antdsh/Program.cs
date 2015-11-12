@@ -34,9 +34,9 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace antdsh {
-    class Program {
-        static string _command;
-        static readonly HashSet<Cmd> CommandList = new HashSet<Cmd>();
+    internal class Program {
+        private static string _command;
+        private static readonly HashSet<Cmd> CommandList = new HashSet<Cmd>();
 
         private static void Main(string[] args) {
             while (true) {
@@ -68,7 +68,7 @@ namespace antdsh {
             }
         }
 
-        static void Command(string command) {
+        private static void Command(string command) {
             switch (command) {
                 case "help":
                     Help();
@@ -126,7 +126,7 @@ namespace antdsh {
             }
         }
 
-        static void Help() {
+        private static void Help() {
             Console.WriteLine("> Command List:");
             WriteHelp("help", "show this list");
             WriteHelp("start", "initialize a running version of antd");
@@ -148,12 +148,12 @@ namespace antdsh {
             WriteHelp(" ", "any other command not listed here will be executed on this machine and you will get its return code");
         }
 
-        static void WriteHelp(string command, string description) {
+        private static void WriteHelp(string command, string description) {
             Console.WriteLine("    {0}:", command);
             Console.WriteLine("        {0};", description);
         }
 
-        static void AddCommand(string command) {
+        private static void AddCommand(string command) {
             if (command == "history")
                 return;
             var cmd = new Cmd {
@@ -163,7 +163,7 @@ namespace antdsh {
             CommandList.Add(cmd);
         }
 
-        static void PrintHistory() {
+        private static void PrintHistory() {
             foreach (var cmd in CommandList) {
                 Console.WriteLine(cmd.Command);
             }

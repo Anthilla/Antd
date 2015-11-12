@@ -295,6 +295,7 @@ namespace antdlib.MountPoint {
         private static int _umount1Retry;
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
+                ConsoleLogger.Info($"umount, retry #{_umount1Retry}");
                 Terminal.Terminal.Execute($"umount {directory}");
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
@@ -305,6 +306,7 @@ namespace antdlib.MountPoint {
         private static int _umount2Retry;
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
+                ConsoleLogger.Info($"umount, retry #{_umount2Retry}");
                 Terminal.Terminal.Execute($"umount {source}");
                 Terminal.Terminal.Execute($"umount {destination}");
                 _umount2Retry = _umount2Retry + 1;

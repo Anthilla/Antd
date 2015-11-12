@@ -40,19 +40,22 @@ namespace antdlib.Antdsh {
 
         private static int _retryCountTryStopProcess;
         private static void TryStopProcess(string query) {
-            var psResult = Terminal.Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep |awk '{{print $2}}");
-            var netResult = psResult.Length > 0 ? Terminal.Terminal.Execute($"netstat -anp |grep {psResult}") : "";
-            if (psResult.Length <= 0 && netResult.Length <= 0) return;
-            Terminal.Terminal.Execute($"kill -9 {psResult.Trim()}");
-            _retryCountTryStopProcess = _retryCountTryStopProcess + 1;
-            Thread.Sleep(500);
-            TryStopProcess(query);
+            while (true) {
+                var psResult = Terminal.Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep");
+                //var netResult = psResult.Length > 0 ? Terminal.Terminal.Execute($"netstat -anp |grep {psResult}") : "";
+                if (psResult.Length <= 0)
+                    return;
+                var split = psResult.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length <= 0)
+                    return;
+                var pid = split[1];
+                Terminal.Terminal.Execute($"kill -9 {pid.Trim()}");
+                _retryCountTryStopProcess = _retryCountTryStopProcess + 1;
+                Thread.Sleep(500);
+            }
         }
 
         public static void StopServices() {
-            //Terminal.Terminal.Execute("systemctl stop app-antd-01-prepare.service");
-            //Terminal.Terminal.Execute("systemctl stop app-antd-02-mount.service");
-            //Terminal.Terminal.Execute("systemctl stop app-antd-03-launcher.service");
             TryStopProcess("mono /framework/antd/Antd.exe");
             Thread.Sleep(2000);
         }
