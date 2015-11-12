@@ -62,6 +62,7 @@ namespace antdlib {
         public static string Root => "/cfg/antd";
         public static string Database => Root + "/database";
         public static string Networkd => Root + "/networkd";
+        public static string Keys => Root + "/keys";
         //todo: as soon as there's systemd managed websocketd.target change this value v
         public static string Websocketd => AppsUnits;
         public static string AntdRepo => "/mnt/cdrom";

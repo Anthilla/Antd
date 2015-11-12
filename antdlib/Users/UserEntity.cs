@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using antdlib.Common;
 using antdlib.Security;
 using DeNSo;
-using Microsoft.Owin.Security;
 
 namespace antdlib.Users {
     public class UserEntity {
@@ -60,8 +61,10 @@ namespace antdlib.Users {
             public string MasterUsername { get; set; }
             public string MasterAlias { get; set; }
             public bool IsEnabled { get; set; }
-            public RsaKeys.Pair Keys { get; set; }
             public IEnumerable<Claim> Claims { get; set; }
+
+            public byte[] PublicKey { get; set; }
+            public byte[] PrivateKey { get; set; }
 
             public class Claim {
                 public string ClaimGuid { get; set; }
@@ -126,9 +129,11 @@ namespace antdlib.Users {
                     IsEnabled = true,
                     MasterUsername = username,
                     MasterAlias = alias,
-                    Keys = RsaCore.GenerateKeys(),
                     Claims = new List<UserEntityModel.Claim>()
                 };
+                var keys = GenerateUsersKeys(guid);
+                user.PublicKey = keys.Item1;
+                user.PrivateKey = keys.Item2;
                 Session.New.Set(user);
             }
 
@@ -138,9 +143,11 @@ namespace antdlib.Users {
                     IsEnabled = true,
                     MasterUsername = username,
                     MasterAlias = alias,
-                    Keys = RsaCore.GenerateKeys(),
                     Claims = claims
                 };
+                var keys = GenerateUsersKeys(guid);
+                user.PublicKey = keys.Item1;
+                user.PrivateKey = keys.Item2;
                 Session.New.Set(user);
             }
 
@@ -192,6 +199,20 @@ namespace antdlib.Users {
             public static void Delete(string guid) {
                 var user = Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == guid);
                 Session.New.Delete(user);
+            }
+
+            private static Tuple<byte[], byte[]> GenerateUsersKeys(string userGuid) {
+                var keyrepo = Folder.Keys;
+                Directory.CreateDirectory(keyrepo);
+                var userkeyrepo = $"{keyrepo}/{userGuid}";
+                Directory.CreateDirectory(userkeyrepo);
+                ConsoleLogger.Info($"keys for {userGuid} created");
+                Terminal.Terminal.Execute($"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
+                var publicFile = $"{userkeyrepo}/{userGuid}.pub";
+                var privateFile = $"{userkeyrepo}/{userGuid}";
+                var publicBytes = File.ReadAllBytes(publicFile);
+                var privateBytes = File.ReadAllBytes(privateFile);
+                return new Tuple<byte[], byte[]>(publicBytes, privateBytes);
             }
         }
 

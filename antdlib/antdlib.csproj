@@ -252,7 +252,6 @@
     <Compile Include="Systemd\Units.cs" />
     <Compile Include="Terminal\CommandRepository.cs" />
     <Compile Include="Terminal\Terminal.cs" />
-    <Compile Include="Users\ApplicationUser.cs" />
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\UserEntity.cs" />
     <Compile Include="Users\SystemUser.cs" />
