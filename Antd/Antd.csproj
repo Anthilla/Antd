@@ -189,6 +189,7 @@
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
+    <Compile Include="Modules\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\ConfModule.cs" />
@@ -329,6 +330,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\network\page-network-setupOLD.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\page-ca.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\page-cfg.cshtml">
