@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.Terminal;
 using Nancy;
 
 namespace Antd.Modules {
@@ -43,6 +44,11 @@ namespace Antd.Modules {
             Get["/ssh"] = x => {
                 antdlib.Ssh.Test.Start("aos003", "root", "root");
                 return View["page-test"];
+            };
+
+            Get["/bgcmd"] = x => {
+                Terminal.Background.Execute("touch /mnt/cdrom/Apps/tmp/prova.txt");
+                return HttpStatusCode.OK;
             };
         }
     }

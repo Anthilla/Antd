@@ -35,45 +35,41 @@ using antdlib.Common;
 namespace antdlib.Boot {
     public class LoadOsConfiguration {
         public static void LoadCollectd() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_collectd.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_collectd.conf"}", file);
+            File.Copy($"{Folder.Resources}/FILE_etc_collectd.conf", $"{Folder.Dirs}/FILE_etc_collectd.conf", true);
             var realFileName = Mount.GetFilesPath("FILE_etc_collectd.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            if (Mount.IsAlreadyMounted($"{Folder.Dirs}/FILE_etc_collectd.conf", realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Terminal.Execute("systemctl restart collectd.service");
         }
 
         public static void LoadSystemdJournald() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_systemd_journald.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_systemd_journald.conf"}", file);
+            File.Copy($"{Folder.Resources}/FILE_etc_systemd_journald.conf", $"{Folder.Dirs}/{"FILE_etc_systemd_journald.conf"}", true);
             var realFileName = Mount.GetFilesPath("FILE_etc_systemd_journald.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            if (Mount.IsAlreadyMounted($"{Folder.Dirs}/{"FILE_etc_systemd_journald.conf"}", realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Terminal.Execute("systemctl restart systemd-journald.service");
         }
 
         public static void LoadWpaSupplicant() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", file);
+            File.Copy($"{Folder.Resources}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", $"{Folder.Dirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", true);
             var realFileName = Mount.GetFilesPath("FILE_etc_wpa_supplicant_wpa_suplicant.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            if (Mount.IsAlreadyMounted($"{Folder.Dirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
         public static void LoadFirewall() {
-            var file = $"{Folder.Dirs}/{"antd.boot.firewall.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"antd.boot.firewall.conf"}", file);
+            File.Copy($"{Folder.Resources}/antd.boot.firewall.conf", $"{Folder.Dirs}/antd.boot.firewall.conf", true);
         }
 
         public static void LoadWebsocketd() {
             var filePath = $"{Folder.Root}/websocketd";
             if (File.Exists(filePath)) return;
             ConsoleLogger.Info("Downloading websocketd");
-            FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
+            File.Copy($"{Folder.Resources}/websocketd", filePath, true);
             Terminal.Terminal.Execute($"chmod 777 {filePath}");
         }
     }

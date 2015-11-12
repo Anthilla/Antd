@@ -317,7 +317,6 @@ namespace antdlib.Terminal {
                 catch (Exception ex) {
                     Console.WriteLine("-----------------------------------");
                     Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
                     Console.WriteLine($"{ex.Message}");
                     Console.WriteLine("-----------------------------------");
                 }
@@ -341,7 +340,6 @@ namespace antdlib.Terminal {
                 catch (Exception ex) {
                     Console.WriteLine("-----------------------------------");
                     Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
                     Console.WriteLine($"{ex.Message}");
                     Console.WriteLine("-----------------------------------");
                 }
