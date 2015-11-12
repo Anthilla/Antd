@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using library.u2f;
-using Nancy;
+﻿using Nancy;
 using Nancy.Security;
 
 //-------------------------------------------------------------------------------------

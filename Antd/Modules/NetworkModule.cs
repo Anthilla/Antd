@@ -39,6 +39,12 @@ namespace Antd.Modules {
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
+                vmod.Physical = antdlib.Network.NetworkInterface.Physical;
+                vmod.Virtual = antdlib.Network.NetworkInterface.Virtual;
+                vmod.Bond = antdlib.Network.NetworkInterface.Bond;
+
+
+
                 return View["_page-network", vmod];
             };
         }

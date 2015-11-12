@@ -69,10 +69,7 @@
     @if (Model.Count > 0) {
         @Html.Partial("_cctable-main", Model.CCTable)
     }
-    @*@Html.Partial("page-storage-database", Model)*@
     @Html.Partial("page-storage-disks", Model.VolumesInfo)
-    @*@Html.Partial("page-storage-volumes")*@
-    @*@Html.Partial("page-storage-backup")*@
     @*@Html.Partial("page-storage-iscsi")*@
 }
 
@@ -88,7 +85,7 @@
                     data: {
                         DiskName: diskName
                     },
-                    success: function (data) {
+                    success: function () {
                         location.reload(true);
                     }
                 });
@@ -104,7 +101,7 @@
                     type: 'GET',
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    success: function (data) {
+                    success: function () {
                         location.reload(true);
                         return false;
                     }

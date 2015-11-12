@@ -45,6 +45,8 @@ namespace Antd.Modules {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.VolumesInfo = Volumes.BlocksFromDd();
+                vmod.IsOsRemovable = InstallCheck.IsOsRemovable;
+
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
                 vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;

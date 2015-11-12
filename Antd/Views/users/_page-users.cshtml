@@ -54,10 +54,6 @@
                 Entity
             </a>
             <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Application" style="padding-top: 11px;">
-                Application
-            </a>
-            <div class="element-divider"></div>
             <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#System" style="padding-top: 11px;">
                 System
             </a>
@@ -78,18 +74,10 @@
     </nav>
 }
 
-@section Dashboard {
-    @Html.Partial("_cctable-dashboard", Model.CurrentContext)
-    @Html.Partial("page-users-dashboard")
-}
-
 @section MainContent {
-    @if (Model.Count > 0) {
-        @Html.Partial("_cctable-main", Model.CCTable)
-    }
     @Html.Partial("page-users-entity", Model)
-    @*@Html.Partial("page-users-system", Model)
-        @Html.Partial("page-users-groups", Model)*@
+    @*@Html.Partial("page-users-system", Model)*@
+    @*@Html.Partial("page-users-groups", Model)*@
 }
 
 @section Scripts {

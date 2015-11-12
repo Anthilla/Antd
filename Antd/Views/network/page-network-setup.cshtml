@@ -11,7 +11,7 @@
 
     <div class="frames">
         <div id="if" class="frame" style="display: block;">
-            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Physical) {
+            @foreach (string interfaceName in Model.Physical) {
                 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
                     <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
                         <i class="icon-cone on-left"></i> @interfaceName
@@ -82,7 +82,7 @@
         </div>
 
         <div id="bondnif" class="frame" style="display: none;">
-            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Virtual) {
+            @foreach (string interfaceName in Model.Virtual) {
                 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
                     <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
                         <i class="icon-cone on-left"></i>  @interfaceName
@@ -95,7 +95,7 @@
         </div>
 
         <div id="ifv" class="frame" style="display: none;">
-            @foreach (string interfaceName in antdlib.Network.NetworkInterface.Bond) {
+            @foreach (string interfaceName in Model.Bond) {
                 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
                     <div class="panel-header bg-anthilla-gray fg-white nif-header" data-nif-name="@interfaceName">
                         <i class="icon-cone on-left"></i>  @interfaceName

@@ -29,26 +29,22 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
-using antdlib.CCTable;
 using antdlib.Security;
 using antdlib.Users;
 using Nancy;
-//using Nancy.Security;
+using Nancy.Security;
 
 namespace Antd.Modules {
     public class UsersModule : NancyModule {
         public UsersModule()
             : base("/users") {
-            //this.RequiresAuthentication();
+            this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.UserEntities = UserEntity.Repository.GetAll();
                 vmod.SystemUsers = SystemUser.GetAllFromDatabase();
                 vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 return View["_page-users", vmod];
             };
 

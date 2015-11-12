@@ -30,36 +30,21 @@
 using System;
 using System.Dynamic;
 using System.Linq;
-using antdlib.CCTable;
 using antdlib.MountPoint;
 using antdlib.Status;
-using antdlib.Terminal;
 using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
     public class SystemModule : NancyModule {
-
         public SystemModule()
             : base("/system") {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Hostname = Terminal.Execute("hostname");
-                vmod.Domainname = Terminal.Execute("hostname -f");
-                vmod.Timezone = Terminal.Execute("timedatectl");
-                vmod.Timeserver = "time.server.net";
-                vmod.Language = "English";
-                vmod.TCPport = "";
-                vmod.MaxProcesses = "2";
-                vmod.AlternateHostnames = "";
                 vmod.SSHPort = "22";
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
                 vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
                 return View["_page-system", vmod];
             };
