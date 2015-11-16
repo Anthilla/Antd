@@ -1,0 +1,48 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend id="CertManager">Certificate Manager</legend>
+    <div class="grid">
+        <div class="row">
+            <div class="span4">
+                <label>SSL Status</label>
+            </div>
+            <div class="span7">
+                <input type="text" value="@Model.SslStatus" style="width: 90%; height: 35px;" readonly="readonly" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4"><label>Toggle Ssl</label></div>
+            <div class="span7">
+                <input data-role="InvertSslOption" value="@Model.SslStatusAction" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 25px;">
+            <div class="span4"><label>Certificate Path</label></div>
+            <div class="span7">
+                <input name="CertificatePath" style="width: 60%; height: 25px;" type="text" value="@Model.CertificatePath" />
+                <input data-role="ChangeCertificatePath" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" type="button" value="Apply" />
+            </div>
+        </div>
+    </div>
+    <hr class="bg-anthilla-gray" />
+    <legend>Certificate Authority Manager</legend>
+    <div class="grid">
+        <div class="row">
+            <div class="span4">
+                <label>Certificate Authority Setup</label>
+            </div>
+            <div class="span7">
+                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
+            </div>
+            <div class="span4">
+                <label>Create New Certificate</label>
+            </div>
+            <div class="span7">
+                <input data-role="CertificateName" style="width: 60%; height: 25px;" type="text" />
+                <input class="bg-anthilla-green" data-role="CreateNewCertificate" style="width: 40% !important; color: #464646; float: right;" type="button" value="New Certificate" />
+            </div>
+        </div>
+    </div>
+    @Each.Certificates
+    <p>@Current</p>
+    @EndEach
+</div>
