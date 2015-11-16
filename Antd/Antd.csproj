@@ -177,6 +177,9 @@
     <None Include="Resources\antd.boot.firewall.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\certificate.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\dhcpd.leases">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -245,7 +248,7 @@
     <None Include="Views\system\page-system-authentication.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\system\page-system-certmanager.html">
+    <None Include="Views\system\page-system-ca.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\system\page-system-firmware.html">
@@ -355,9 +358,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\network\_page-network.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-ca.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-cfg.html">

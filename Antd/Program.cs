@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -74,24 +75,29 @@ namespace Antd {
                 AntdBoot.StartDatabase();
 
                 var owinbuilder = new AppBuilder();
-                Microsoft.Owin.Host.HttpListener.OwinServerFactory.Initialize(owinbuilder.Properties);
+                OwinServerFactory.Initialize(owinbuilder.Properties);
                 new Startup().Configuration(owinbuilder);
                 var port = Convert.ToInt32(CoreParametersConfig.GetPort());
-                ServerBuilder builder;
-                if (!File.Exists("certificate/certificate.pfx")) {
-                    builder = ServerBuilder.New()
-                        .SetOwinApp(owinbuilder.Build())
-                        .SetEndPoint(new IPEndPoint(IPAddress.Any, port));
+                ConsoleLogger.Log("build server");
+                var builder = ServerBuilder.New()
+                    .SetOwinApp(owinbuilder.Build())
+                    .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
+                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
+                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways);
 
-                }
-                else {
-                    builder = ServerBuilder.New()
-                       .SetOwinApp(owinbuilder.Build())
-                       .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
-                       .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
+                if (CoreParametersConfig.GetSsl() == "yes") {
+                    if (!File.Exists(CoreParametersConfig.GetCertificatePath())) {
+                        ConsoleLogger.Log("import ssl certificate");
+                        File.Copy($"{Folder.Resources}/certificate.pfx", CoreParametersConfig.GetCertificatePath());
+                    }
+                    ConsoleLogger.Log("ssl active");
+                    ConsoleLogger.Log("build certificate");
+                    builder.SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
                 }
 
+                ConsoleLogger.Log("build almost complete");
                 using (var server = builder.Build()) {
+                    ConsoleLogger.Log("server built");
                     server.Start();
                     //Task.Run(() => server.Start());
                     ConsoleLogger.Log("Applying configuration...");
@@ -104,7 +110,7 @@ namespace Antd {
                 }
             }
             catch (Exception ex) {
-                File.WriteAllText("/cfg/antd-crash-report.txt", ex.ToString());
+                File.WriteAllText("/cfg/antd/crash-report.txt", ex.ToString());
             }
         }
 
@@ -112,7 +118,7 @@ namespace Antd {
             //07 - load config degli utenti
             AntdBoot.ReloadUsers();
             //08 - load config dell'ssh
-            AntdBoot.ReloadSsh();
+            //AntdBoot.ReloadSsh();
             //09 - load config di network
             AntdBoot.SetBootConfiguration();
             //10 - mount system directories

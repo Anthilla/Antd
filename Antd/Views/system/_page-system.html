@@ -80,14 +80,66 @@
 @Section['MainContent']
 @Partial['_cctable-table-new'];
 @Partial['page-system-general'];
+@Partial['page-system-ca'];
 @Partial['page-system-secureshell'];
-@Partial['page-system-certmanager'];
 @Partial['page-system-firmware'];
 @Partial['page-system-authentication'];
 @EndSection
 
 @Section['Scripts']
 <script type="text/javascript">
+    $('[data-role="CertificateAuthoritySetup"]').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/ca/setup',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="CreateNewCertificate"]').click(function () {
+        var name = $(this).prev('input[name="CertificateName"]').val();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/ca/certificate/new',
+            type: 'POST',
+            data: {
+                Certificate: name
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="InvertSslOption"]').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/ca/ssl/toggle',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="ChangeCertificatePath"]').click(function () {
+        var path = $(this).prev('input[name="CertificatePath"]').val();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/ca/cert/set',
+            type: 'POST',
+            data: {
+                CertificatePath: path
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
     $('[data-role="submit-general-function"]').click(function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="input-general-function"]').val();

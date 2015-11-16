@@ -1,4 +1,6 @@
-﻿using Nancy;
+﻿using antdlib.Boot;
+using antdlib.Certificate;
+using Nancy;
 using Nancy.Security;
 
 //-------------------------------------------------------------------------------------
@@ -39,6 +41,43 @@ namespace Antd.Modules {
 
             Get["/"] = x => View["login-authentication"];
 
+            Get["/ssl/status"] = x => Response.AsJson(CoreParametersConfig.GetSsl());
+
+            Post["/ssl/toggle"] = x => {
+                if (CoreParametersConfig.GetSsl() == "yes") {
+                    CoreParametersConfig.DisableSsl();
+                    return Response.AsJson(true);
+                }
+                CoreParametersConfig.EnableSsl();
+                return Response.AsJson(true);
+            };
+
+            Post["/ssl/enable"] = x => {
+                CoreParametersConfig.EnableSsl();
+                return Response.AsJson(true);
+            };
+
+            Post["/ssl/disable"] = x => {
+                CoreParametersConfig.DisableSsl();
+                return Response.AsJson(true);
+            };
+
+            Get["/cert/get"] = x => Response.AsJson(CoreParametersConfig.GetCertificatePath());
+
+            Post["/cert/set"] = x => {
+                CoreParametersConfig.SetCertificatePath((string)Request.Form.CertificatePath);
+                return Response.AsJson(true);
+            };
+
+            Post["/setup"] = x => {
+                CertificateAuthority.Setup();
+                return Response.AsJson(true);
+            };
+
+            Post["/certificate/new"] = x => {
+                new CertificateAuthority.Certificate((string)Request.Form.Certificate).Create();
+                return Response.AsJson(true);
+            };
         }
     }
 }

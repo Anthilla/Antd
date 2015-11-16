@@ -45,8 +45,6 @@ namespace antdlib.Boot {
         public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
 
         public static void WriteDefaults() {
-            if (!File.Exists(Files[0]))
-                return;
             Writer.Write(Label.Root, Folder.Root);
             Writer.ReadValue(Label.Root);
             if (Writer.CheckValue(Label.Port) == false) {
@@ -55,11 +53,95 @@ namespace antdlib.Boot {
             if (Writer.CheckValue(Label.Database) == false) {
                 Writer.Write(Label.Database, Folder.Database);
             }
+            if (Writer.CheckValue("ssl") == false) {
+                Writer.Write("ssl", "yes");
+            }
+            if (Writer.CheckValue("certificate") == false) {
+                Writer.Write("certificate", $"{Folder.Root}/certificate.pfx");
+            }
+            if (Writer.CheckValue("ca") == false) {
+                Writer.Write("ca", "no");
+            }
+        }
+
+        public static string GetCertificatePath() {
+            try {
+                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Folder.Root}/certificate.pfx";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return $"{Folder.Root}/certificate.pfx";
+            }
+        }
+
+        public static void SetCertificatePath(string newCert) {
+            try {
+                Writer.Write("certificate", $"{Folder.Root}/certificate.pfx");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static string GetSsl() {
+            try {
+                return Writer.CheckValue("ssl") ? Writer.ReadValue("ssl") : "yes";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return "yes";
+            }
+        }
+
+        public static void EnableSsl() {
+            try {
+                Writer.Write("ssl", "yes");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static void DisableSsl() {
+            try {
+                Writer.Write("ssl", "no");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static string GetCa() {
+            try {
+                return Writer.CheckValue("ca") ? Writer.ReadValue("ca") : "no";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return "no";
+            }
+        }
+
+        public static void EnableCa() {
+            try {
+                Writer.Write("ca", "yes");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static void DisableCa() {
+            try {
+                Writer.Write("ca", "no");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
         }
 
         public static string GetPort() {
             try {
-                return (Writer.CheckValue(Label.Port)) ? Writer.ReadValue(Label.Port) : Port.Antd;
+                return Writer.CheckValue(Label.Port) ? Writer.ReadValue(Label.Port) : Port.Antd;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -69,7 +151,7 @@ namespace antdlib.Boot {
 
         public static string GetDb() {
             try {
-                return (Writer.CheckValue(Label.Database)) ? Writer.ReadValue(Label.Database) : Folder.Database;
+                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Folder.Database;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);

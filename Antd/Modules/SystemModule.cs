@@ -30,7 +30,9 @@
 using System;
 using System.Dynamic;
 using System.Linq;
+using antdlib.Boot;
 using antdlib.CCTable;
+using antdlib.Certificate;
 using antdlib.Common;
 using antdlib.MountPoint;
 using antdlib.Status;
@@ -85,6 +87,19 @@ namespace Antd.Modules {
                 dynamic vmod = new ExpandoObject();
                 vmod.SSHPort = "22";
                 vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
+
+                vmod.SslStatus = "Enabled";
+                vmod.SslStatusAction = "Disable";
+                if (CoreParametersConfig.GetSsl() == "no") {
+                    vmod.SslStatus = "Disabled";
+                    vmod.SslStatusAction = "Enable";
+                }
+                vmod.CertificatePath = CoreParametersConfig.GetCertificatePath();
+                vmod.CaStatus = "Enabled";
+                if (CoreParametersConfig.GetCa() == "no") {
+                    vmod.SslStatus = "Disabled";
+                }
+                vmod.Certificates = CertificateAuthority.GetAllCertificates();
 
                 vmod.CCTableContext = CctableContextName;
                 var table = CCTableRepository.GetByContext2(CctableContextName);
