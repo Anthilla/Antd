@@ -1,0 +1,210 @@
+﻿@Master['layout.html']
+<!--//-------------------------------------------------------------------------------------
+// Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+// * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// * Neither the name of the Anthilla S.r.l. nor the
+// names of its contributors may be used to endorse or promote products
+// derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// 20141110
+//-------------------------------------------------------------------------------------
+    -->
+@Section['PageBar']
+<style type="text/css">
+    #System-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+    <nav class="navigation-bar-content">
+        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+            <i class="icon-screen on-left" style="line-height: 5px;"></i>
+            System
+        </div>
+        <div class="element-divider"></div>
+
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#General" style="padding-top: 11px;">
+            General
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#SecureShell" style="padding-top: 11px;">
+            Secure Shell
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#CertManager" style="padding-top: 11px;">
+            Cert Manager
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Firwmare" style="padding-top: 11px;">
+            Firwmare
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Authentication" style="padding-top: 11px;">
+            Authentication
+        </a>
+
+        <div class="element-divider"></div>
+        <div class="element-divider"></div>
+        <a href="/system/sysctl" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="padding-top: 11px;">
+            Sysctl
+        </a>
+        <div class="element-divider"></div>
+
+        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+            <i class="icon-arrow-up"></i>
+        </a>
+    </nav>
+</nav>
+@EndSection
+
+@Section['MainContent']
+@Partial['_cctable-table-new'];
+@Partial['page-system-general'];
+@Partial['page-system-secureshell'];
+@Partial['page-system-certmanager'];
+@Partial['page-system-firmware'];
+@Partial['page-system-authentication'];
+@EndSection
+
+@Section['Scripts']
+<script type="text/javascript">
+    $('[data-role="submit-general-function"]').click(function () {
+        var command = $(this).attr('data-command');
+        var param = $(this).prev('[data-role="input-general-function"]').val();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/terminal/direct',
+            type: 'POST',
+            data: {
+                Command: command.replace("[tag:x]", param)
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('textarea[data-role="show-general-function"]').each(function () {
+            var t = $(this);
+            var command = t.attr('data-command');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/terminal/direct',
+                type: 'POST',
+                data: {
+                    Command: command
+                },
+                success: function (data) {
+                    console.log(data);
+                    t.text(data);
+                }
+            });
+        });
+        $('select[data-role2="show-general-function"]').each(function () {
+            var t = $(this);
+            var command = t.attr('data-command');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/terminal/direct',
+                type: 'POST',
+                data: {
+                    Command: command
+                },
+                success: function (data) {
+                    console.log(data);
+                    var arr = data.split('\n');
+                    $.each(arr, function (i, value) {
+                        t.append('<option value="' + value + '">' + value + '</option>');
+                    });
+                }
+            });
+        });
+    });
+
+    $('.search-field').keyup(function () {
+        var queryString = $(this).val();
+        var table = $('.searchable');
+        var tableBody = table.children('tbody');
+        var row = tableBody.children('tr');
+        row.each(function () {
+            var thisRow = $(this);
+            var queriedText = $(this).text();
+            if (queriedText.indexOf(queryString) != -1) {
+                thisRow.show();
+            }
+            if (queriedText.indexOf(queryString) < 0) {
+                thisRow.hide();
+            }
+        });
+    });
+
+    $('p.edit-conf').click(function () {
+        var path = $(this).attr('data-path');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/system/read/file/' + path,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function (text) {
+                var dashboard = $('#FileConfigDashboard');
+                dashboard.find('#title').text('Editing: ' + path);
+                dashboard.find('input[name="FilePath"]').val(path);
+                dashboard.find('textarea[name="FileContent"]').text(text);
+                dashboard.show();
+                //todo scrollup to dashboard
+                return false;
+            }
+        });
+    });
+
+    $('p.export-conf').click(function () {
+        var p = $(this).attr('data-path');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/system/export/file/' + p,
+            type: 'POST',
+            data: JSON.stringify(p),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                location.reload(true);
+                return false;
+            }
+        });
+    });
+
+    $('input#close').click(function () {
+        var form = $('form');
+        form.find('input').val('');
+        form.find('textarea').text('');
+        form.hide();
+    });
+
+    $('input#clear').click(function () {
+        var form = $('form');
+        form.find('input').val('');
+        form.find('textarea').text('');
+    });
+</script>
+@EndSection

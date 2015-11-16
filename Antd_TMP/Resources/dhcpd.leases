@@ -1,0 +1,224 @@
+# The format of this file is documented in the dhcpd.leases(5) manual page.
+# This lease file was written by isc-dhcp-4.3.2 Gentoo-r0
+
+lease 10.99.3.101 {
+  starts 2 2015/08/11 04:23:51;
+  ends 2 2015/08/11 05:08:50;
+  tstp 2 2015/08/11 05:08:50;
+  cltt 2 2015/08/11 04:23:51;
+  binding state free;
+  hardware ethernet 52:54:00:58:bd:5d;
+  uid "\377\036r0)\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.99.3.102 {
+  starts 2 2015/08/11 04:23:53;
+  ends 2 2015/08/11 05:08:51;
+  tstp 2 2015/08/11 05:08:51;
+  cltt 2 2015/08/11 04:23:53;
+  binding state free;
+  hardware ethernet 52:54:00:76:bd:1a;
+  uid "\377bl\250t\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.99.3.103 {
+  starts 2 2015/08/11 04:24:17;
+  ends 2 2015/08/11 05:09:16;
+  tstp 2 2015/08/11 05:09:16;
+  cltt 2 2015/08/11 04:24:17;
+  binding state free;
+  hardware ethernet ce:36:bc:0f:56:45;
+  uid "\377\245X|F\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.99.3.100 {
+  starts 2 2015/08/11 05:08:39;
+  ends 2 2015/08/11 17:08:39;
+  tstp 2 2015/08/11 17:08:39;
+  cltt 2 2015/08/11 05:08:39;
+  binding state free;
+  hardware ethernet 52:54:00:02:de:a6;
+}
+lease 10.99.3.104 {
+  starts 2 2015/08/11 05:10:26;
+  ends 2 2015/08/11 17:10:26;
+  tstp 2 2015/08/11 17:10:26;
+  cltt 2 2015/08/11 05:10:26;
+  binding state free;
+  hardware ethernet 52:54:00:91:eb:93;
+}
+lease 10.99.3.111 {
+  starts 4 2015/08/27 18:28:17;
+  ends 5 2015/08/28 06:28:17;
+  tstp 5 2015/08/28 06:28:17;
+  cltt 4 2015/08/27 18:28:17;
+  binding state free;
+  hardware ethernet 24:db:ed:65:48:ae;
+  uid "\001$\333\355eH\256";
+  set vendor-class-identifier = "dhcpcd-5.2.10";
+}
+lease 10.99.3.110 {
+  starts 3 2015/09/02 08:01:32;
+  ends 3 2015/09/02 20:01:32;
+  cltt 3 2015/09/02 08:01:32;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 6c:71:d9:50:ae:49;
+  uid "\377\331P\256I\000\001\000\001\033z\341\316lq\331P\256I";
+  set vendor-class-identifier = "dhcpcd-6.9.1:Linux-4.1.0-sabayon:x86_64:GenuineIntel";
+  client-hostname "DeborahNotebook";
+}
+lease 10.99.3.108 {
+  starts 3 2015/09/02 11:16:55;
+  ends 3 2015/09/02 23:16:55;
+  cltt 3 2015/09/02 11:16:55;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 10:2f:6b:c8:a8:70;
+  uid "\001\020/k\310\250p";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "Windows-Phone";
+}
+lease 10.99.3.109 {
+  starts 3 2015/09/02 11:19:01;
+  ends 3 2015/09/02 23:19:01;
+  cltt 3 2015/09/02 11:19:01;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 30:10:b3:9c:d9:81;
+  uid "\0010\020\263\234\331\201";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "AnthBook001";
+}
+lease 10.99.3.107 {
+  starts 3 2015/09/02 12:46:03;
+  ends 4 2015/09/03 00:46:03;
+  cltt 3 2015/09/02 12:46:03;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 24:7f:3c:a1:9d:af;
+  set vendor-class-identifier = "dhcpcd-5.5.6";
+  client-hostname "android-eb225a5724e255cc";
+}
+lease 10.99.3.105 {
+  starts 3 2015/09/02 14:37:19;
+  ends 4 2015/09/03 02:37:19;
+  cltt 3 2015/09/02 14:37:19;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:cb:38:82:87:af;
+  uid "\001\300\3138\202\207\257";
+  client-hostname "STAMPANTE";
+}
+lease 10.99.3.106 {
+  starts 3 2015/09/02 14:42:43;
+  ends 4 2015/09/03 02:42:43;
+  cltt 3 2015/09/02 14:42:43;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 54:e4:bd:6b:0f:5c;
+  uid "\001T\344\275k\017\\";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "Oplite";
+}
+lease 10.1.3.101 {
+  starts 2 2015/08/11 11:09:16;
+  ends 2 2015/08/11 23:09:16;
+  tstp 2 2015/08/11 23:09:16;
+  cltt 2 2015/08/11 11:09:16;
+  binding state free;
+  hardware ethernet ce:36:bc:0f:56:45;
+  uid "\377\245X|F\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.1.3.104 {
+  starts 2 2015/08/11 15:21:00;
+  ends 3 2015/08/12 03:21:00;
+  tstp 3 2015/08/12 03:21:00;
+  cltt 2 2015/08/11 15:21:00;
+  binding state free;
+  hardware ethernet ce:36:bc:0f:56:45;
+}
+lease 10.1.3.105 {
+  starts 1 2015/08/17 11:16:01;
+  ends 1 2015/08/17 23:16:01;
+  tstp 1 2015/08/17 23:16:01;
+  cltt 1 2015/08/17 11:16:01;
+  binding state free;
+  hardware ethernet 08:d8:33:19:5c:bf;
+  uid "\001\010\3303\031\\\277";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.1.3.100 {
+  starts 1 2015/08/24 12:16:48;
+  ends 1 2015/08/24 21:22:52;
+  tstp 1 2015/08/24 21:22:52;
+  cltt 1 2015/08/24 12:16:48;
+  binding state free;
+  hardware ethernet 54:e4:bd:6b:0f:5c;
+  uid "\001T\344\275k\017\\";
+}
+lease 10.1.3.103 {
+  starts 1 2015/08/24 10:17:39;
+  ends 1 2015/08/24 22:17:39;
+  tstp 1 2015/08/24 22:17:39;
+  cltt 1 2015/08/24 10:17:39;
+  binding state free;
+  hardware ethernet 30:10:b3:9c:d9:81;
+  uid "\0010\020\263\234\331\201";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.1.3.106 {
+  starts 1 2015/08/24 10:53:11;
+  ends 1 2015/08/24 22:53:11;
+  tstp 1 2015/08/24 22:53:11;
+  cltt 1 2015/08/24 10:53:11;
+  binding state free;
+  hardware ethernet 24:7f:3c:a1:9d:af;
+  set vendor-class-identifier = "dhcpcd-5.5.6";
+}
+lease 10.1.3.102 {
+  starts 1 2015/08/24 14:29:55;
+  ends 2 2015/08/25 02:29:55;
+  tstp 2 2015/08/25 02:29:55;
+  cltt 1 2015/08/24 14:29:55;
+  binding state free;
+  hardware ethernet 10:2f:6b:c8:a8:70;
+  uid "\001\020/k\310\250p";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.99.3.107 {
+  starts 3 2015/09/02 14:49:51;
+  ends 4 2015/09/03 02:49:51;
+  cltt 3 2015/09/02 14:49:51;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 24:7f:3c:a1:9d:af;
+  set vendor-class-identifier = "dhcpcd-5.5.6";
+  client-hostname "android-eb225a5724e255cc";
+}
+lease 10.99.3.105 {
+  starts 3 2015/09/02 14:57:39;
+  ends 4 2015/09/03 02:57:39;
+  cltt 3 2015/09/02 14:57:39;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:cb:38:82:87:af;
+  uid "\001\300\3138\202\207\257";
+  client-hostname "STAMPANTE";
+}
+lease 10.99.3.105 {
+  starts 3 2015/09/02 15:12:00;
+  ends 4 2015/09/03 03:12:00;
+  cltt 3 2015/09/02 15:12:00;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:cb:38:82:87:af;
+  uid "\001\300\3138\202\207\257";
+  client-hostname "STAMPANTE";
+}

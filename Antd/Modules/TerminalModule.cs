@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using antdlib.Config;
 using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
@@ -79,9 +80,17 @@ namespace Antd.Modules {
                 return Response.AsJson(result);
             };
 
-            Post["/direct/get"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
+            Post["/direct/get"] = x => {
+                var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var result = Request.Form.Directory == "" ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
+                return Response.AsJson(result);
+            };
 
-            Post["/direct/post"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
+            Post["/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command)));
+
+            //Post["/direct/get"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
+
+            //Post["/direct/post"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
         }
     }
 }

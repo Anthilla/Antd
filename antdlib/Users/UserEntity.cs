@@ -207,7 +207,7 @@ namespace antdlib.Users {
                 var userkeyrepo = $"{keyrepo}/{userGuid}";
                 Directory.CreateDirectory(userkeyrepo);
                 ConsoleLogger.Info($"keys for {userGuid} created");
-                Terminal.Terminal.Background.Execute($"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
+                Terminal.Terminal.Execute($"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
                 var publicFile = $"{userkeyrepo}/{userGuid}.pub";
                 var privateFile = $"{userkeyrepo}/{userGuid}";
                 var publicBytes = File.ReadAllBytes(publicFile);

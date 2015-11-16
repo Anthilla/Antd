@@ -30,6 +30,8 @@
 using System;
 using System.Dynamic;
 using System.Linq;
+using antdlib.CCTable;
+using antdlib.Common;
 using antdlib.MountPoint;
 using antdlib.Status;
 using Antd.ViewHelpers;
@@ -38,14 +40,57 @@ using Nancy.Security;
 
 namespace Antd.Modules {
     public class SystemModule : NancyModule {
+        private const string CctableContextName = "system";
+
         public SystemModule()
             : base("/system") {
             this.RequiresAuthentication();
+
+            Before += x => {
+                if (CCTableRepository.GetByContext(CctableContextName) == null) {
+                    CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
+                }
+                return null;
+            };
+
+            Post["/cctable"] = x => {
+                var label = (string)Request.Form.Label;
+                var inputLabel = (string)Request.Form.InputLabel;
+                var notes = (string)Request.Form.Notes;
+                var inputId = "New" + CctableContextName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                string inputLocation = "CCTable" + Request.Form.TableName;
+                switch ((string)Request.Form.InputType.Value) {
+                    case "hidden":
+                        var directCommand = (string)Request.Form.CommandDirect;
+                        CCTableRepository.New.CreateRowForDirectCommand(CctableContextName, label, inputLabel, directCommand,
+                            notes, inputId, inputLocation);
+                        break;
+                    case "text":
+                        var setCommand = (string)Request.Form.CommandSet;
+                        var getCommand = (string)Request.Form.CommandGet;
+                        CCTableRepository.New.CreateRowForTextInputCommand(CctableContextName, label, inputLabel, setCommand,
+                            getCommand, notes, inputId, inputLocation);
+                        break;
+                    case "checkbox":
+                        var enableCommand = (string)Request.Form.CommandTrue;
+                        var disableCommand = (string)Request.Form.CommandFalse;
+                        CCTableRepository.New.CreateRowForBooleanPairCommand(CctableContextName, label, inputLabel,
+                            enableCommand, disableCommand, notes, inputId, inputLocation);
+                        break;
+                }
+                return Response.AsRedirect("/system");
+            };
 
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.SSHPort = "22";
                 vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
+
+                vmod.CCTableContext = CctableContextName;
+                var table = CCTableRepository.GetByContext2(CctableContextName);
+                vmod.CommandDirect = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.Direct);
+                vmod.CommandText = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.TextInput);
+                vmod.CommandBool = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.BooleanPair);
                 return View["_page-system", vmod];
             };
 
@@ -67,7 +112,7 @@ namespace Antd.Modules {
             Post["/mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 string unit = Request.Form.Unit;
-                var unitsSplit = unit.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var unitsSplit = unit.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 if (unitsSplit.Length > 0) {
                     MountRepository.AddUnit(guid, unitsSplit);
                 }

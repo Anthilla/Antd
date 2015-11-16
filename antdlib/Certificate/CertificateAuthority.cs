@@ -58,16 +58,16 @@ namespace antdlib.Certificate {
             Directory.CreateDirectory($"{CaDirectory}/crl");
             Directory.CreateDirectory($"{CaDirectory}/newcerts");
             Directory.CreateDirectory($"{CaDirectory}/private");
-            Terminal.Terminal.Background.Execute($"chmod 700 {CaDirectory}/private");
-            Terminal.Terminal.Background.Execute($"touch {CaDirectory}/index.txt");
-            Terminal.Terminal.Background.Execute($"echo 1000 > {CaDirectory}/serial");
+            Terminal.Terminal.Execute($"chmod 700 {CaDirectory}/private");
+            Terminal.Terminal.Execute($"touch {CaDirectory}/index.txt");
+            Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
             File.Copy($"{Folder.Resources}/openssl.cnf", CaRootConfFile);
-            Terminal.Terminal.Background.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096");
-            Terminal.Terminal.Background.Execute($"chmod 400 {CaRootPrivateKey}");
-            Terminal.Terminal.Background.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
+            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096");
+            Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
+            Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
                 $"-new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{CaRootPass}" +
                  "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Anthilla SRL Root CA/emailAddress=.\"");
-            Terminal.Terminal.Background.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
+            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
         }
 
         private static readonly string CaIntermediateDirectory = $"{CaDirectory}/intermediate";
@@ -83,22 +83,22 @@ namespace antdlib.Certificate {
             Directory.CreateDirectory($"{CaIntermediateDirectory}/crl");
             Directory.CreateDirectory($"{CaIntermediateDirectory}/newcerts");
             Directory.CreateDirectory($"{CaIntermediateDirectory}/private");
-            Terminal.Terminal.Background.Execute($"chmod 700 {CaIntermediateDirectory}/private");
-            Terminal.Terminal.Background.Execute($"touch {CaIntermediateDirectory}/index.txt");
-            Terminal.Terminal.Background.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
-            Terminal.Terminal.Background.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
+            Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
+            Terminal.Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
+            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
+            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
             File.Copy($"{Folder.Resources}/openssl-intermediate.cnf", CaIntermediateConfFile);
-            Terminal.Terminal.Background.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096");
-            Terminal.Terminal.Background.Execute($"chmod 400 {CaIntermediatePrivateKey}");
-            Terminal.Terminal.Background.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
+            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096");
+            Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
+            Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
                 $"-new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{CaIntermediatePass}" +
                  "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Anthilla SRL Intermediate CA/emailAddress=.\"");
 
-            Terminal.Terminal.Background.Execute($"openssl ca -config {CaRootConfFile} -extensions v3_intermediate_ca" +
+            Terminal.Terminal.Execute($"openssl ca -config {CaRootConfFile} -extensions v3_intermediate_ca" +
                 $"-days 3650 - notext - md sha256 -passin pass:{CaIntermediatePass}" +
                 $"-in {CaIntermediateCertificateReq} -out {CaIntermediateCertificate}" +
                  "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Anthilla SRL Intermediate CA/emailAddress=.\"");
-            Terminal.Terminal.Background.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
+            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
 
             //# cd /root/ca
             //# openssl ca -config openssl.cnf -extensions v3_intermediate_ca \

@@ -1,0 +1,219 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend><i class="icon-dashboard on-left"></i> @Model.CCTableContext</legend>
+    <form id="NewCCTableCommandForm" class="grid" action="/@Model.CCTableContext/cctable" method="POST" enctype="multipart/form-data">
+        <!--
+        <div class="row">
+            <div class="span4"></div>
+            <div class="span7">
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="span4"><label>Command Label</label></div>
+            <div class="span7">
+                <input type="text" name="Label" style="width: 90%; height: 35px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Command Type</label>
+            </div>
+            <div class="span7">
+                <select name="InputType" class="bg-anthilla-gray border-anthilla-green fg-white" style="width: 700px; height: 25px;">
+                    <option value="hidden" selected>Direct Command</option>
+                    <option value="text">Text Input Command</option>
+                    <option value="checkbox">Boolean Command</option>
+                </select>
+            </div>
+        </div>
+        <div id="NoneCommand">
+            <div class="row">
+                <div class="span4">
+                    <label>Direct Command</label>
+                </div>
+                <div class="span7">
+                    <input data-role="command-place" name="CommandDirect" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <div id="TextCommand" style="display: none;">
+            <div class="row">
+                <div class="span4">
+                    <label>Command for "Get"</label>
+                </div>
+                <div class="span7">
+                    <input data-role="command-place" name="CommandGet" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Command for "Set"</label>
+                </div>
+                <div class="span7">
+                    <input data-role="command-place" name="CommandSet" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <div id="BooleanCommand" style="display: none;">
+            <div class="row">
+                <div class="span4">
+                    <label>Command for "Enable"</label>
+                </div>
+                <div class="span7">
+                    <input data-role="command-place" name="CommandTrue" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Command for "Disable"</label>
+                </div>
+                <div class="span7">
+                    <input data-role="command-place" name="CommandFalse" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 25px;">
+            <div class="span4"></div>
+            <div class="span7">
+                <ul id="ResultsContainer" class="fg-white bg-anthilla-gray border-anthilla-gray" style="display: none; list-style: none; padding: 5px; margin-left: 0px; margin-top: -23px; width: 700px; min-height: 37px;"></ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4"></div>
+            <div class="span7">
+                <input type="hidden" name="Context" value="@Model.CCTableContext" />
+                <input type="submit" value="Add Command" style="width: 700px; height: 25px; color: #3A3A3A !important;" class="bg-anthilla-green" />
+            </div>
+        </div>
+    </form>
+    <hr class="bg-anthilla-gray" />
+    <table class="table" data-table-content="@Model.Guid">
+        <tbody>
+            @Each.CommandDirect
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid">
+                <td style="width: 200px;">
+                    <label>@Current.Label</label>
+                </td>
+                <td colspan="3" style="width: 560px !important">
+                    <input id="@Current.Guid" data-role="submit-general-function" data-command="@Current.CommandDirect" value="Launch '@Current.CommandDirect'" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
+                </td>
+                <td>
+                    <p>@Current.Notes</p>
+                </td>
+                <td style="width: 30px">
+                    <i class="icon-eye fg-anthilla-green" data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="main" style="cursor: pointer;"></i>
+                </td>
+            </tr>
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="@Current.Guid" style="display: none; border-bottom: 6px solid #535353 !important;">
+                <td class="bg-anthilla-gray-m" style="border-right: 3px solid #535353 !important;"></td>
+                <td colspan="3" data-row-commands="list">
+                    <label style="display: inline-block;">Associated Commands</label>
+                    <br />
+                    <p data-command="Direct">@Current.CommandDirect</p>
+                    <p data-command="Set">@Current.CommandSet</p>
+                    <p data-command="Get">@Current.CommandGet</p>
+                    <p data-command="False">@Current.CommandFalse</p>
+                    <p data-command="True">@Current.CommandTrue</p>
+                </td>
+                <td>
+                    <input data-cmd-guid="@Current.Guid" type="button" value="Edit Command" class="bg-anthilla-violet set-edit-command" style="width: 100% !important" />
+                    <input data-cmd-guid="@Current.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important" />
+                </td>
+                <td></td>
+            </tr>
+            @EndEach
+
+            @Each.CommandText
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid">
+                <td style="width: 200px;">
+                    <label>@Current.Label</label>
+                </td>
+                <td style="width: 560px !important">
+                    <input data-role="input-general-function" style="width: 60%; height: 25px;" type="text" />
+                    <input class="bg-anthilla-green" data-command="@Current.CommandSet" data-role="submit-general-function" style="width: 40% !important; color: #464646; float: right;" type="button" value="Apply" />
+                </td>
+                <td colspan="2" style="width: 300px">
+                    <textarea class="fg-white bg-anthilla-gray" data-command="@Current.CommandGet" data-role="show-general-function" style="min-width: 100%; max-width: 100%; width: 100%; min-height: 200px; border: 0;"></textarea>
+                </td>
+                <td>
+                    <p>@Current.Notes</p>
+                </td>
+                <td style="width: 30px">
+                    <i class="icon-eye fg-anthilla-green" data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="main" style="cursor: pointer;"></i>
+                </td>
+            </tr>
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="@Current.Guid" style="display: none; border-bottom: 6px solid #535353 !important;">
+                <td class="bg-anthilla-gray-m" style="border-right: 3px solid #535353 !important;"></td>
+                <td colspan="3" data-row-commands="list">
+                    <label style="display: inline-block;">Associated Commands</label>
+                    <br />
+                    <p data-command="Direct">@Current.CommandDirect</p>
+                    <p data-command="Set">@Current.CommandSet</p>
+                    <p data-command="Get">@Current.CommandGet</p>
+                    <p data-command="False">@Current.CommandFalse</p>
+                    <p data-command="True">@Current.CommandTrue</p>
+                </td>
+                <td>
+                    <input class="bg-anthilla-violet set-edit-command" data-cmd-guid="@Current.Guid" style="width: 100% !important" type="button" value="Edit Command" />
+                    <input class="bg-anthilla-orange delete-command" data-cmd-guid="@Current.Guid" style="width: 100% !important" type="button" value="Delete" />
+                </td>
+                <td></td>
+            </tr>
+            @EndEach
+
+            @Each.CommandBool
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid">
+                <td style="width: 200px;">
+                    <label>@Current.Label</label>
+                </td>
+                <td style="width: 560px !important">
+                    <select id="@Current.Guid" data-role="CommandBooleanSelector">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <input id="@Current.Guid" data-sumbit-type="bool" type="button" value="Apply" class="bg-anthilla-green" style="width: 67% !important; color: #464646; float: right;" />
+                </td>
+                <td colspan="2" style="width: 300px">
+                    <textarea data-role="show-general-function" data-command="@Current.CommandGet" style="min-width: 100%; max-width: 100%; width: 100%; min-height: 200px; border: 0;" class="fg-white bg-anthilla-gray"></textarea>
+                </td>
+                <td>
+                    <p>@Current.Notes</p>
+                </td>
+                <td style="width: 30px">
+                    <i class="icon-eye fg-anthilla-green" data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="main" style="cursor: pointer;"></i>
+                </td>
+            </tr>
+            <tr data-row-guid="@Current.Guid" data-row-nuid="@Current.NUid" data-row-role="@Current.Guid" style="display: none; border-bottom: 6px solid #535353 !important;">
+                <td class="bg-anthilla-gray-m" style="border-right: 3px solid #535353 !important;"></td>
+                <td colspan="3" data-row-commands="list">
+                    <label style="display: inline-block;">Associated Commands</label>
+                    <br />
+                    <p data-command="Direct">@Current.CommandDirect</p>
+                    <p data-command="Set">@Current.CommandSet</p>
+                    <p data-command="Get">@Current.CommandGet</p>
+                    <p data-command="False">@Current.CommandFalse</p>
+                    <p data-command="True">@Current.CommandTrue</p>
+                </td>
+                <td>
+                    <input data-cmd-guid="@Current.Guid" type="button" value="Edit Command" class="bg-anthilla-violet set-edit-command" style="width: 100% !important" />
+                    <input data-cmd-guid="@Current.Guid" type="button" value="Delete" class="bg-anthilla-orange delete-command" style="width: 100% !important" />
+                </td>
+                <td></td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <!--
+    @Each.CommandDirect
+    <p>ecco un comando :D</p>
+    @EndEach
+
+    @Each.CommandText
+    <p>ecco un comando :D</p>
+    @EndEach
+
+    @Each.CommandBool
+    <p>ecco un comando :D</p>
+    @EndEach
+        -->
+</div>

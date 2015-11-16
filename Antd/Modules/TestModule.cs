@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Dynamic;
 using antdlib.Terminal;
 using Nancy;
 
@@ -49,6 +50,13 @@ namespace Antd.Modules {
             Get["/bgcmd"] = x => {
                 Terminal.Background.Execute("touch /mnt/cdrom/Apps/tmp/prova.txt");
                 return HttpStatusCode.OK;
+            };
+
+            Get["/2"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.Name = "Rendered with SSVE! ☻";
+                vmod.List = new[] { "uno", "due", "tre" };
+                return View["page-empty", vmod];
             };
         }
     }

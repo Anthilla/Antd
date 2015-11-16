@@ -1,0 +1,175 @@
+﻿@Master['layout.html']
+<!--
+    //-------------------------------------------------------------------------------------
+    //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    //     All rights reserved.
+    //
+    //     Redistribution and use in source and binary forms, with or without
+    //     modification, are permitted provided that the following conditions are met:
+    //         * Redistributions of source code must retain the above copyright
+    //           notice, this list of conditions and the following disclaimer.
+    //         * Redistributions in binary form must reproduce the above copyright
+    //           notice, this list of conditions and the following disclaimer in the
+    //           documentation and/or other materials provided with the distribution.
+    //         * Neither the name of the Anthilla S.r.l. nor the
+    //           names of its contributors may be used to endorse or promote products
+    //           derived from this software without specific prior written permission.
+    //
+    //     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    //     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    //     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    //     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    //     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    //     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    //     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    //     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    //     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    //
+    //     20141110
+    //------------------------------------------------------------------------------------->
+@Section['PageBar']
+<style type="text/css">
+    #System-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+    <nav class="navigation-bar-content">
+        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+            <i class="icon-wrench on-left" style="line-height: 5px;"></i>
+            Config
+        </div>
+        <div class="element-divider"></div>
+
+        <a data-role="export-conf" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="cursor:pointer; padding-top: 11px;">
+            Export Configuration
+        </a>
+
+        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+            <i class="icon-arrow-up"></i>
+        </a>
+    </nav>
+</nav>
+@EndSection
+
+@Section['MainContent']
+<div id="ValueBundlesContainer" style="float: left;">
+    <form action="/cfg/addvalue" enctype="multipart/form-data" id="ValueBundleDashboard" method="POST">
+        <div style="display: inline-block; float: left; margin-right: 9px; height: 35px;" class="bg-anthilla-gray selectizecontainer">
+            <input id="valueBundleTag" name="Tag" type="text" class="bg-anthilla-gray" style="width: 258px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+        </div>
+        <input name="Key" type="hidden" value="">
+        <input placeholder="Value" name="Value" type="text" class="bg-anthilla-gray" style="width: 258px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+        <input type="submit" class="bg-anthilla-green" style="width: 90px; padding: 10px; margin-bottom: 5px; display: inline; color: #3A3A3A !important;" autocomplete="off" value="ADD">
+    </form>
+    <table class="table">
+        <tbody>
+            <tr style="border-bottom: 2px solid #A7BD39;">
+                <td style="width: 40%;">Tag(Context)</td>
+                <td>Value</td>
+                <td style="width: 100px;">ValueID(Index)</td>
+                <td style="width: 100px;"></td>
+            </tr>@Each.ValueBundle
+            <tr>
+                <td>@Current.Tag</td>
+                <td>@Current.Value</td>
+                <td>@Current.Key</td>
+                <td>
+                    @If.Current.IsDefault
+                    <i class="icon-remove fg-orange" data-key="@Current.Key" data-role="delete-value" data-tag="@Current.Tag" data-value="@Current.Value"></i>
+                    @EndIf
+                </td>
+            </tr>@EndEach
+        </tbody>
+    </table>
+</div>
+<div id="CommandBundleContainer" style="float: right;">
+    <form id="ValueBundleDashboard" action="/cfg/addcommand" method="POST" enctype="multipart/form-data">
+        <input data-role="command-place" name="Command" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
+        <input type="submit" class="bg-anthilla-green" style="width: 94px; padding: 10px; margin-bottom: 5px; display: inline; color: #3A3A3A !important;" autocomplete="off" value="ADD">
+    </form>
+    <ul id="ResultsContainer" class="fg-white bg-anthilla-gray border-anthilla-gray" style="display: none; list-style: none; padding: 5px; margin-left: 0; margin-top: -23px; width: 700px; min-height: 37px;"></ul>
+    <p id="Tip" style="padding-left: 10px; display: none;">Tip: write [tag:index]</p>
+    <div style="width: 800px; min-height: 250px; padding-right: 10px;" class="bg-anthilla-gray fg-white border-2-anthilla-gray-m" id="MegaContainer">
+        <form id="CommandBundleDashboard2" action="/cfg/reindex" method="POST" enctype="multipart/form-data">
+            <ul id="sortable" style="list-style: none;" class="fg-white">
+                <li class="border-2-anthilla-gray bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+                    <i data-role="show-all-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i class="icon-warning fg-orange blinking" data-role="missing-value-notif" style="display: none; float: right; margin-right: 10px;"></i>
+                </li>
+                @Each.CommandBundle
+                @If.Current.IsEnabled
+                <li class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+                    <input name="Guid" type="hidden" value="@Current.Guid" />
+                    <input name="Index" type="hidden" value="@i" />
+                    <p data-role="command-saved" style="float: left;">
+                        @Current.Command
+                    </p>
+                    <p data-role="command-exd" style="display: none; float: left">
+                        @Current.CommandWithValues
+                    </p>
+
+                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                    <i data-role="disable-command" data-guid="@Current.Guid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                </li>
+                @EndIf
+                @IfNot.Current.IsEnabled
+                <li class="border-2-anthilla-gray-m bg-anthilla-gray" style="padding: 10px; height: 45px; opacity: 0, 5; margin-bottom: 3px;">
+                    <input name="Guid" type="hidden" value="@Current.Guid" />
+                    <input name="Index" type="hidden" value="@i" />
+                    <p data-role="command-saved" style="float: left;">
+                        @Current.Command
+                    </p>
+                    <p data-role="command-exd" style="display: none; float: left">
+                        @Current.CommandWithValues
+                    </p>
+                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                    <i data-role="enable-command" data-guid="@Current.Guid" class="icon-blocked fg-lightRed" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                </li>
+                @EndIf
+                @EndEach
+            </ul>
+            <input type="submit" class="bg-anthilla-green" value="Save configuration order" style="width: 90%; margin-left: 40px; color:#3A3A3A !important;" />
+        </form>
+    </div>
+</div>@EndSection
+
+@Section['Scripts']
+<script type="text/javascript">
+    $('a[data-role="export-conf"]').click(function() {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/cfg/export',
+            type: 'POST',
+            success: function() {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('i[data-role="delete-value"]').click(function() {
+        var t = $(this).attr('data-tag');
+        var k = $(this).attr('data-key');
+        var v = $(this).attr('data-value');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/cfg/delvalue',
+            type: 'POST',
+            data: {
+                Tag: t,
+                Key: k,
+                Value: v
+            },
+            success: function(data) {
+                location.reload(true);
+            }
+        });
+    });
+</script>
+@EndSection

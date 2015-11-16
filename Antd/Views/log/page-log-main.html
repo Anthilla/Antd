@@ -1,0 +1,29 @@
+﻿@using antdlib.Log
+<legend id="Main">Main</legend>
+<table id="log" class="table">
+    <tbody>
+        @Each.LOGS
+        <tr data-guid="@Current.LogGuid">
+            <td style="width: 50px;">
+                <!--
+                    @if (log.Level == EventLevel.Warn) {
+                <i class="icon-warning fg-yellow" data-level="warning"></i>
+                }
+                @if (log.Level == EventLevel.Info) {
+                <i class="icon-info fg-lightBlue" data-level="info"></i>
+                }
+                @if (log.Level == EventLevel.Error) {
+                <i class="icon-warning fg-red" data-level="error"></i>
+                }
+                    -->
+            </td>
+            <td style="width: 200px;">
+                <p>@Current.DateTime</p>
+            </td>
+            <td class="right">
+                <p>@Current.Message</p>
+            </td>
+        </tr>
+        @EndEach
+    </tbody>
+</table>

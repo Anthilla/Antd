@@ -46,7 +46,7 @@ namespace antdlib.Ssh {
         private const string MainFile = "sshd_config";
 
         public static void SetReady() {
-            Terminal.Terminal.Background.Execute($"cp {Dir} {MntDir}");
+            Terminal.Terminal.Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -268,12 +268,12 @@ namespace antdlib.Ssh {
             }
 
             public static void Generate(string keyName) {
-                Terminal.Terminal.Background.Execute($"ssh-keygen -t rsa -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith} -N {Guid.NewGuid()}");
+                Terminal.Terminal.Execute($"ssh-keygen -t rsa -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith} -N {Guid.NewGuid()}");
             }
 
             public static void SendKey(string host, string keyName, string user = "") {
                 var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
-                Terminal.Terminal.Background.Execute($"scp {keyName} {at} ~/.ssh/authorized_keys");
+                Terminal.Terminal.Execute($"scp {keyName} {at} ~/.ssh/authorized_keys");
             }
         }
     }

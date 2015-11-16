@@ -36,6 +36,7 @@ namespace antdlib.CCTable {
             Settings = 1,
             DataView = 2,
             Conf = 3,
+            New = 4,
             None = 99
         }
 

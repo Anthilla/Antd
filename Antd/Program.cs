@@ -32,7 +32,6 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Threading.Tasks;
 using antdlib;
 using antdlib.Boot;
 using antdlib.Common;
@@ -43,52 +42,69 @@ using Owin;
 namespace Antd {
     internal static class Program {
         private static void Main() {
-            var startTime = DateTime.Now;
-            Console.Title = "ANTD";
+            try {
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                var startTime = DateTime.Now;
+                Console.Title = "ANTD";
 
-            if (AssemblyInfo.IsUnix == false) {
-                Directory.CreateDirectory("/cfg/antd");
-                Directory.CreateDirectory("/cfg/antd/database");
-                Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                ConsoleLogger.Warn("This application is not running on an Unix OS:");
-                ConsoleLogger.Warn("some functions may be disabled!");
+                if (AssemblyInfo.IsUnix == false) {
+                    Directory.CreateDirectory("/cfg/antd");
+                    Directory.CreateDirectory("/cfg/antd/database");
+                    Directory.CreateDirectory("/mnt/cdrom/DIRS");
+                    ConsoleLogger.Warn("This application is not running on an Unix OS:");
+                    ConsoleLogger.Warn("some functions may be disabled!");
+                }
+
+                var stop = new ManualResetEvent(false);
+                Console.CancelKeyPress +=
+                    (sender, e) => {
+                        Console.WriteLine("^C");
+                        Environment.Exit(1);
+                        stop.Set();
+                        e.Cancel = true;
+                    };
+
+                //01 - controlo lo stato di lettura/scrittura
+                AntdBoot.CheckIfGlobalRepositoryIsWriteable();
+                //02 - controllo e creo le cartelle di lavoro di antd
+                AntdBoot.SetWorkingDirectories();
+                //03 - configuro i parametri di base di antd
+                AntdBoot.SetCoreParameters();
+                //04 - avvio il database
+                AntdBoot.StartDatabase();
+
+                var owinbuilder = new AppBuilder();
+                Microsoft.Owin.Host.HttpListener.OwinServerFactory.Initialize(owinbuilder.Properties);
+                new Startup().Configuration(owinbuilder);
+                var port = Convert.ToInt32(CoreParametersConfig.GetPort());
+                ServerBuilder builder;
+                if (!File.Exists("certificate/certificate.pfx")) {
+                    builder = ServerBuilder.New()
+                        .SetOwinApp(owinbuilder.Build())
+                        .SetEndPoint(new IPEndPoint(IPAddress.Any, port));
+
+                }
+                else {
+                    builder = ServerBuilder.New()
+                       .SetOwinApp(owinbuilder.Build())
+                       .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
+                       .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
+                }
+
+                using (var server = builder.Build()) {
+                    server.Start();
+                    //Task.Run(() => server.Start());
+                    ConsoleLogger.Log("Applying configuration...");
+                    Configuration();
+                    ConsoleLogger.Log("loading service");
+                    ConsoleLogger.Log("    server port -> {0}", port);
+                    ConsoleLogger.Log("antd is running");
+                    ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
+                    stop.WaitOne();
+                }
             }
-
-            var stop = new ManualResetEvent(false);
-            Console.CancelKeyPress +=
-                (sender, e) => {
-                    Console.WriteLine("^C");
-                    Environment.Exit(1);
-                    stop.Set();
-                    e.Cancel = true;
-                };
-
-            //01 - controlo lo stato di lettura/scrittura
-            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
-            //02 - controllo e creo le cartelle di lavoro di antd
-            AntdBoot.SetWorkingDirectories();
-            //03 - configuro i parametri di base di antd
-            AntdBoot.SetCoreParameters();
-
-            var owinbuilder = new AppBuilder();
-            Microsoft.Owin.Host.HttpListener.OwinServerFactory.Initialize(owinbuilder.Properties);
-            new Startup().Configuration(owinbuilder);
-            var port = Convert.ToInt32(CoreParametersConfig.GetPort());
-            var builder = ServerBuilder.New()
-                .SetOwinApp(owinbuilder.Build())
-                .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
-                .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
-            //.RequireClientCertificate();
-
-            using (var server = builder.Build()) {
-                Task.Run(() => server.Start());
-                ConsoleLogger.Log("Applying configuration...");
-                Configuration();
-                ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log("    server port -> {0}", port);
-                ConsoleLogger.Log("antd is running");
-                ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
-                stop.WaitOne();
+            catch (Exception ex) {
+                File.WriteAllText("/cfg/antd-crash-report.txt", ex.ToString());
             }
         }
 
@@ -96,7 +112,7 @@ namespace Antd {
             //07 - load config degli utenti
             AntdBoot.ReloadUsers();
             //08 - load config dell'ssh
-            //AntdBoot.ReloadSsh();
+            AntdBoot.ReloadSsh();
             //09 - load config di network
             AntdBoot.SetBootConfiguration();
             //10 - mount system directories
@@ -124,9 +140,7 @@ namespace Antd {
 
     internal class Startup {
         public void Configuration(IAppBuilder app) {
-            //04 - avvio il database
-            AntdBoot.StartDatabase();
-            ConsoleLogger.Log("loading core service configuration");
+            ConsoleLogger.Log("loading app configuration");
             //05 - avvio signalr
             AntdBoot.StartSignalR(app, true, true);
             //06 - avvio nancy

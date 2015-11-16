@@ -91,7 +91,7 @@ namespace antdlib.Users {
         }
 
         public static void CreateGroup(string group) {
-            Terminal.Terminal.Background.Execute($"groupadd {group}");
+            Terminal.Terminal.Execute($"groupadd {group}");
         }
     }
 }

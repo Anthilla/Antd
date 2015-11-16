@@ -50,6 +50,7 @@ namespace antdlib.Config {
             public string Index { get; set; }
             public string Guid { get; set; }
             public string Command { get; set; }
+            public string CommandWithValues { get; set; }
             public bool IsEnabled { get; set; } = true;
         }
 
@@ -135,7 +136,12 @@ namespace antdlib.Config {
         }
 
         public static IEnumerable<CommandsBundle> GetCommandsBundle() {
-            return DeNSo.Session.New.Get<CommandsBundle>().OrderBy(_ => _.Index);
+            var list = new List<CommandsBundle>();
+            foreach (var command in DeNSo.Session.New.Get<CommandsBundle>().OrderBy(_ => _.Index)) {
+                command.CommandWithValues = SupposeCommandReplacement(command.Command);
+                list.Add(command);
+            }
+            return list;
         }
 
         public static IEnumerable<CommandsBundleLayout> GetCommandsBundleLayout() {
@@ -148,7 +154,8 @@ namespace antdlib.Config {
 
         public static void AddCommandsBundle(string command) {
             var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Command == command);
-            if (getmodel != null || command.Length <= 0) return;
+            if (getmodel != null || command.Length <= 0)
+                return;
             var model = new CommandsBundle {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
@@ -198,7 +205,7 @@ namespace antdlib.Config {
         public static void LaunchCommand(string guid) {
             var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Guid == guid);
             if (getmodel != null) {
-                Terminal.Terminal.Background.Execute(SupposeCommandReplacement(getmodel.Command));
+                Terminal.Terminal.Execute(SupposeCommandReplacement(getmodel.Command));
             }
         }
 
@@ -231,7 +238,7 @@ namespace antdlib.Config {
 
         public static void ExecuteAll() {
             foreach (var command in GetEnabledCommandsBundle()) {
-                Terminal.Terminal.Background.Execute(SupposeCommandReplacement(command.Command));
+                Terminal.Terminal.Execute(SupposeCommandReplacement(command.Command));
             }
         }
 
@@ -422,7 +429,7 @@ namespace antdlib.Config {
                     }
                     foreach (var line in lines) {
                         try {
-                            Terminal.Terminal.Background.Execute(line);
+                            Terminal.Terminal.Execute(line);
                             AddCommandsBundle(line);
                         }
                         catch (Exception) {

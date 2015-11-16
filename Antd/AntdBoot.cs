@@ -16,6 +16,7 @@ using antdlib.Terminal;
 using antdlib.Users;
 using Microsoft.AspNet.SignalR;
 using Nancy;
+using Nancy.Owin;
 using Owin;
 
 namespace Antd {
@@ -193,7 +194,8 @@ namespace Antd {
 
         public static void StartNancy(IAppBuilder app) {
             StaticConfiguration.DisableErrorTraces = false;
-            app.UseNancy();
+            var options = new NancyOptions { EnableClientCertificates = true };
+            app.UseNancy(options);
             ConsoleLogger.Log("    nancy -> loaded");
         }
 

@@ -43,7 +43,7 @@ function ShowDisplayer() {
 }
 
 function HideDisplayer() {
-    $('#ResultsContainer').hide();
+    $("#ResultsContainer").hide();
 }
 
 function DisplayResults(objectsToDisplay) {

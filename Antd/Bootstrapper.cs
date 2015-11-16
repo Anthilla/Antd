@@ -27,13 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using antdlib.Auth;
+using Antd2;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
-using Nancy.Diagnostics;
 using Nancy.TinyIoc;
+using Nancy.ViewEngines.SuperSimpleViewEngine;
 
 namespace Antd {
 
@@ -67,14 +69,26 @@ namespace Antd {
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
-            var formsAuthConfiguration =
-                new FormsAuthenticationConfiguration() {
-                    RedirectUrl = "~/login",
-                    UserMapper = requestContainer.Resolve<IUserMapper>(),
-                };
+            var formsAuthConfiguration = new FormsAuthenticationConfiguration {
+                RedirectUrl = "/login",
+                UserMapper = requestContainer.Resolve<IUserMapper>()
+            };
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
         }
 
-        protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = "@Nancy12e3" };
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
+            base.ConfigureApplicationContainer(container);
+            // Register the custom/additional processors/matchers for our view
+            // rendering within the SSVE
+            container
+                .Register<IEnumerable<ISuperSimpleViewEngineMatcher>>(
+                    (c, p) => new List<ISuperSimpleViewEngineMatcher>()
+                    {
+                        // This matcher provides support for @Translate. tokens
+                        new AntdViewEngine()
+                    });
+        }
+
+        //protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = "@Nancy12e3" };
     }
 }

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+        //-------------------------------------------------------------------------------------
+        //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+        //     All rights reserved.
+        //
+        //     Redistribution and use in source and binary forms, with or without
+        //     modification, are permitted provided that the following conditions are met:
+        //         * Redistributions of source code must retain the above copyright
+        //           notice, this list of conditions and the following disclaimer.
+        //         * Redistributions in binary form must reproduce the above copyright
+        //           notice, this list of conditions and the following disclaimer in the
+        //           documentation and/or other materials provided with the distribution.
+        //         * Neither the name of the Anthilla S.r.l. nor the
+        //           names of its contributors may be used to endorse or promote products
+        //           derived from this software without specific prior written permission.
+        //
+        //     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+        //     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+        //     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        //     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+        //     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+        //     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+        //     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+        //     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+        //     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+        //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        //
+        //     20141110
+        //-------------------------------------------------------------------------------------
+          -->
+    <title>ANTD</title>
+
+    <link href="/Content/Style/jquery.terminal.css" rel="stylesheet">
+    <script src="/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="/Scripts/jquery.terminal.min.js"></script>
+
+</head>
+<body class="metro" style="background-color: black;">
+    <div id="Terminal" style="text-align: left !important;background-color: black !important;color: white !important;font-family: monospace !important;font-weight: 300 !important;"></div>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var directory = '';
+            $('#Terminal').terminal(function (command, term) {
+                var self = $(this);
+                if (command == 'help') {
+                    term.echo("just type something...");
+                    scrollToBottom();
+                }
+                else if (command == '' || command == ' ') {
+                    scrollToBottom();
+                }
+                else if (command == 'cd -') {
+                    term.echo('Command "' + command + '" not implemented yet!');
+                    scrollToBottom();
+                }
+                else if (command.substring(0, 3) == 'cd ' && command != 'cd -' && command != 'cd ..') {
+                    directory = command.substring(3, command.length);
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: '/terminal/directory',
+                        type: 'POST',
+                        data: {
+                            Directory: directory
+                        },
+                        success: function (data) {
+                            if (data == '0') {
+                                term.echo(command + ' No such file or directory');
+                                scrollToBottom();
+                            }
+                            else {
+                                term.set_prompt(data);
+                                scrollToBottom();
+                            }
+                        }
+                    });
+                }
+                else if (command == 'cd ..') {
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: '/terminal/directory/parent',
+                        type: 'POST',
+                        data: {
+                            Directory: directory
+                        },
+                        success: function (data) {
+                            if (data == '0') {
+                                term.echo(command + ' No such file or directory');
+                                scrollToBottom();
+                            }
+                            else {
+                                term.set_prompt(data);
+                                scrollToBottom();
+                            }
+                        }
+                    });
+                }
+                else if ((command.slice(-2) == '>>')) {
+                    var c = command.substring(0, command.length - 2);
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: '/terminal/',
+                        type: 'POST',
+                        data: {
+                            Command: c,
+                            Directory: directory
+                        },
+                        success: function (data) {
+                            term.echo('Both the command and its result are copied in the clipboard...');
+                            term.echo('');
+                            $('input#Clipboard0').val(c);
+                            $('input#Clipboard1').val(data);
+                            term.echo(data);
+                            scrollToBottom();
+                            return false;
+                        }
+                    });
+                }
+                else {
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: '/terminal/',
+                        type: 'POST',
+                        data: {
+                            Command: command,
+                            Directory: directory
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            term.echo(data);
+                            scrollToBottom();
+                            return false;
+                        }
+                    });
+                }
+            }, {
+                greetings: "Welcome to the Antd terminal!" + "\n" + "You can enter a few commands to control the machine." + "\n"
+            });
+        });
+
+        function scrollToBottom() {
+            $('#TerminalContainer').scrollTop($('#TerminalContainer')[0].scrollHeight);
+        }
+    </script>
+</body>
+</html>

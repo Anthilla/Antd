@@ -42,7 +42,7 @@ namespace antdlib.Boot {
             if (mountResult.Length > 0) {
                 if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
                     ConsoleLogger.Log("                      is RO -> remounting");
-                    Terminal.Terminal.Background.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                    Terminal.Terminal.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
                 else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
                     ConsoleLogger.Log("                      is RW -> ok!");

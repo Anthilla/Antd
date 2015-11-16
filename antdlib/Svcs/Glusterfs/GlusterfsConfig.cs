@@ -53,10 +53,11 @@ namespace antdlib.Svcs.Glusterfs {
         }
 
         private static bool CheckIsActive() {
-            return MountRepository.Get(dir) != null;
+            var mount = MountRepository.Get(dir);
+            return (mount == null) ? false : true;
         }
 
-        public static bool IsActive => CheckIsActive();
+        public static bool IsActive { get { return CheckIsActive(); } }
 
         /// <summary>
         /// todo prendere comando giusto
@@ -66,9 +67,11 @@ namespace antdlib.Svcs.Glusterfs {
         }
 
         private static List<string> GetServiceStructure() {
-            var list = new List<string>();
+            var list = new List<string>() { };
             var files = Directory.EnumerateFiles(DIR, "*.vol", SearchOption.AllDirectories).ToArray();
-            list.AddRange(files.Select(t => t.Replace("\\", "/")));
+            for (int i = 0; i < files.Length; i++) {
+                list.Add(files[i].Replace("\\", "/"));
+            }
             return list;
         }
 

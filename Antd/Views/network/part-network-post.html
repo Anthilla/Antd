@@ -1,0 +1,15 @@
+﻿<div class="row">
+    <div class="span3">
+        <label>@functionName</label>
+    </div>
+    <div class="span8">
+        @Each.Model
+        <p style="display: inline-block;">@Current</p>
+        <input id="Value_@functionName@Current" type="text" style="height: 25px; width: 80%; float: right;">
+        <br style="margin-bottom: 5px;">
+        @EndEach
+    </div>
+    <div class="span5">
+        <input id="@functionName" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Apply @functionName" />
+    </div>
+</div>

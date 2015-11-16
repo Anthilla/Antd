@@ -1,0 +1,171 @@
+﻿@Master['layout.html']
+<!--
+    //-------------------------------------------------------------------------------------
+    //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+    //     All rights reserved.
+    //
+    //     Redistribution and use in source and binary forms, with or without
+    //     modification, are permitted provided that the following conditions are met:
+    //         * Redistributions of source code must retain the above copyright
+    //           notice, this list of conditions and the following disclaimer.
+    //         * Redistributions in binary form must reproduce the above copyright
+    //           notice, this list of conditions and the following disclaimer in the
+    //           documentation and/or other materials provided with the distribution.
+    //         * Neither the name of the Anthilla S.r.l. nor the
+    //           names of its contributors may be used to endorse or promote products
+    //           derived from this software without specific prior written permission.
+    //
+    //     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    //     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    //     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    //     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+    //     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    //     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    //     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    //     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    //     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    //
+    //     20141110
+    //------------------------------------------------------------------------------------->
+
+
+@Section['MainContent']
+    <table class="table">
+        <tbody id="VMSTATS"></tbody>
+    </table>
+@EndSection
+
+@Section['Scripts']
+    <script src="/Scripts/d3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var data = [{
+            'x': 0,
+            'y': 0
+        }];
+        var tickSpan = 20;
+        var x = 20;
+        var xMinValue = 0;
+        var xMaxValue = 200;
+        var xTicksNumber = xMaxValue / x;
+
+        $('input[value="add"]').click(function () {
+            var value = $('input[name="value"]').val();
+            AddValue(value);
+        });
+
+        $('input[value="random"]').click(function () {
+            var min = 0;
+            var max = 2000;
+            var value = Math.floor(Math.random() * (max - min + 1) + min);
+            AddValue(value);
+        });
+
+        function AddValue(value) {
+            if ($.isNumeric(value)) {
+                var obj = {
+                    'x': x,
+                    'y': value
+                };
+                x = x + tickSpan;
+                data.push(obj);
+                d3.selectAll("svg > *").remove();
+                if ((data.length) > xTicksNumber) {
+                    data.splice(0, 1);
+                    xMinValue = xMinValue + tickSpan;
+                    xMaxValue = xMaxValue + tickSpan;
+                }
+                InitChart(data);
+            }
+        }
+
+        InitChart(data);
+
+        function InitChart(list) {
+            var lineData = list;
+
+            var vis = d3.select("#visualisation"),
+              WIDTH = 600,
+              HEIGHT = 200,
+              MARGINS = {
+                  top: 20,
+                  right: 20,
+                  bottom: 20,
+                  left: 50
+              },
+              xRange = d3.scale.linear().range([50, 600]).domain([xMinValue, xMaxValue]),
+              yRange = d3.scale.linear().range([180, 20]).domain([0, 2000]),
+              xAxis = d3.svg.axis()
+              .scale(xRange)
+              .tickSize(5)
+              .tickSubdivide(false),
+              yAxis = d3.svg.axis()
+              .scale(yRange)
+              .tickSize(5)
+              .orient("left")
+              .tickSubdivide(true);
+
+            vis.append("svg:g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0, 180)")
+              .call(xAxis);
+
+            vis.append("svg:g")
+              .attr("class", "y axis")
+              .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+              .call(yAxis);
+
+            var lineFunc = d3.svg.line()
+              .x(function (d) {
+                  return xRange(d.x);
+              })
+              .y(function (d) {
+                  return yRange(d.y);
+              })
+              .interpolate('linear');
+
+            vis.append("svg:path")
+              .attr("d", lineFunc(lineData))
+              .attr("stroke", "green")
+              .attr("stroke-width", 2)
+              .attr("fill", "none");
+        }
+
+        ////////////////////////////////////////////////////////////////
+
+        $(document).ready(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/log/websocket/listen',
+                type: 'POST',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+
+        $(function () {
+            var connection = $.hubConnection();
+            var proxy = connection.createHubProxy('DataHub');
+            connection.start();
+            proxy.on('getWebsocketd', function (data) {
+                var arr = data.trim().split(/ +/);
+                var rowContent = "";
+                $.each(arr, function (i, value) {
+                    if (value.length > 0 && value != '') {
+                        rowContent += '<td>' + value + '</td>';
+                        //todo check is Number
+                        //ResetValue(arr[2]);
+                    }
+                });
+                var row = '<tr>' + rowContent + '</tr>';
+                $('#VMSTATS').append(row);
+            });
+        });
+
+        //$.connection.hub.start({
+        //    transport: ['longPolling', 'foreverFrame', 'serverSentEvents']
+        //}).done(function () {
+    </script>
+@EndSection

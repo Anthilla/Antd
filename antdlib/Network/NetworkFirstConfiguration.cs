@@ -57,8 +57,8 @@ namespace antdlib.Network {
                 }
                 ConsoleLogger.Info("Network config => existing configuration found...");
                 ConsoleLogger.Info("Network config => applying this configuration!");
-                Terminal.Terminal.Background.Execute($"chmod 777 {FileName}");
-                Terminal.Terminal.Background.Execute($".{FileName}");
+                Terminal.Terminal.Execute($"chmod 777 {FileName}");
+                Terminal.Terminal.Execute($".{FileName}");
                 //todo: ShowNetworkInfo("", "");
             }
             else {
@@ -68,9 +68,10 @@ namespace antdlib.Network {
             }
         }
 
-        private static IEnumerable<string> DetectAllNetworkInterfaces() {
+        private static List<string> DetectAllNetworkInterfaces() {
             var niFlist = new List<string>();
-            for (var i = 0; i < 15; i++) {
+            var m = 15;
+            for (var i = 0; i < m; i++) {
                 var r = Terminal.Terminal.Execute($"ip link set eth{i} up");
                 if (r.Length > 0) {
                     break;
@@ -139,10 +140,10 @@ namespace antdlib.Network {
                 var ip = PickIp();
                 ConsoleLogger.Info($"_> Assigning {ip} to {selectedNif}");
                 var cmd1 = $"ip addr add {ip} dev {selectedNif}";
-                Terminal.Terminal.Background.Execute(cmd1);
+                Terminal.Terminal.Execute(cmd1);
                 Commands.Add(cmd1);
                 var cmd2 = $"ip route add default via {ip}";
-                Terminal.Terminal.Background.Execute(cmd2);
+                Terminal.Terminal.Execute(cmd2);
                 Commands.Add(cmd2);
                 //WriteConfFile();
                 ShowNetworkInfo(selectedNif, ip);
@@ -158,7 +159,7 @@ namespace antdlib.Network {
             var bluetoothConnectionName = $"{nif}_S{ip.Replace("/", "-")}";
             ConsoleLogger.Info("Showing network configuration with a bluetooth connection ;)");
             ConsoleLogger.Info("bt >> set up all wireless connections");
-            Terminal.Terminal.Background.Execute("rfkill unblock all");
+            Terminal.Terminal.Execute("rfkill unblock all");
             var btDirs = Directory.EnumerateDirectories("/var/lib/bluetooth").ToArray();
             if (btDirs.Length > 0) {
                 ConsoleLogger.Info("bt >> create bt configuration file");
@@ -177,10 +178,10 @@ namespace antdlib.Network {
                     FileSystem.WriteFile(replace, string.Join(n, fileLines));
                 }
                 ConsoleLogger.Info("bt >> restart bluetooth service");
-                Terminal.Terminal.Background.Execute("systemctl restart bluetooth");
+                Terminal.Terminal.Execute("systemctl restart bluetooth");
                 ConsoleLogger.Info("bt >> activate bluetooth connection");
                 var btCombo = $"power on{n}discoverable on{n}agent on{n}quit{n}";
-                Terminal.Terminal.Background.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
+                Terminal.Terminal.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
                 ConsoleLogger.Info("bt >> done!");
             }
             else {

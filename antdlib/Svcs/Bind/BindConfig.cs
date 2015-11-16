@@ -45,7 +45,7 @@ namespace antdlib.Svcs.Bind {
         private const string MainFile = "named.conf";
 
         public static void SetReady() {
-            Terminal.Terminal.Background.Execute($"cp {Dir} {MntDir}");
+            Terminal.Terminal.Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -61,7 +61,7 @@ namespace antdlib.Svcs.Bind {
         /// todo cambiare comando
         /// </summary>
         public static void ReloadConfig() {
-            Terminal.Terminal.Background.Execute("");
+            Terminal.Terminal.Execute("");
         }
 
         public class MapRules {

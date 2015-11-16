@@ -1,0 +1,77 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px;  margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend><i class="icon-wrench on-left"></i> @Model.Alias</legend>
+    <table class="table" data-table-content="@Model.Guid">
+        <tbody>
+            @foreach (antdlib.CCTable.CCTableRowModel row in Model.Content) {
+                @if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.File) {
+                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
+                        <td style="width: 90%;">
+                            <form action="/cctable/update/conf" method="POST" enctype="multipart/form-data">
+                                <label><i class="icon-file on-left"></i> @row.File</label>
+                                <textarea name="FileText" class="bg-anthilla-gray fg-white border-anthilla-gray" style="width: 90%; min-width: 90%;max-width: 90%; min-height: 250px; padding: 5px;">@FileSystem.ReadFile(row.File)</textarea>
+                                <input name="FileName" type="hidden" value="@row.File" />
+                                <input name="Context" type="hidden" value="@Model.Context" />
+                                <input type="submit" class="bg-anthilla-green " value="Update" style="color:#3A3A3A !important;">
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (row.ConfType == antdlib.CCTable.CCTableFlags.ConfType.Directory) {
+                    <tr data-row-guid="@row.Guid" data-row-nuid="@row.NUid">
+                        <td style="width: 90%;">
+                            <label><i class="icon-folder on-left"></i> @row.File</label>
+                            @foreach (antdlib.CCTable.CCTableConfModel file in antdlib.CCTable.CCTableRepository.GetEtcConfs(row.File)) {
+                                <div data-role="panel" class="panel collapsed border-2-anthilla-gray" style="margin-left: 20px; margin-bottom: 4px;">
+                                    <div class="panel-header bg-trasnsparent fg-white">
+                                        <label class="fg-white"><i class="icon-folder on-left fg-white"></i> @file.Path</label>
+                                    </div>
+                                    <div class="panel-content" style="display: none;">
+                                        <form action="/cctable/update/conf" method="POST" enctype="multipart/form-data">
+                                            <textarea name="FileText" class="bg-anthilla-gray fg-white border-anthilla-gray" style="width: 90%; min-width: 90%;max-width: 90%; min-height: 250px; padding: 5px;">@FileSystem.ReadFile(file.Path)</textarea>
+                                            <input name="FileName" type="hidden" value="@file.Path" />
+                                            <input name="Context" type="hidden" value="@Model.Context" />
+                                            <input type="submit" class="bg-anthilla-green " value="Update" style="color:#3A3A3A !important;">
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+
+                            @*<ul style="list-style: none;" class="fg-white">
+                                @foreach (antdlib.CCTable.CCTableConfModel file in antdlib.CCTable.CCTableRepository.GetEtcConfs(row.File)) {
+                                    <li>@file.Path</li>
+                                }
+                            </ul>*@
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <form action="/cctable/row/conf" method="POST" enctype="multipart/form-data" data-table-form="@Model.Guid" class="grid border-anthilla-gray" style="display: none; padding: 5px; margin-bottom: -20px !important;">
+        <div class="row">
+            <div class="span3">
+                <label>File or Directory</label>
+            </div>
+            <div class="span7">
+                <input type="hidden" name="TableGuid" value="@Model.Guid">
+                <input type="hidden" name="TableName" value="@Model.Alias">
+                <input type="hidden" name="Context" value="@Model.Context">
+                <div>
+                    <input id="show-etc-confs" name="File" type="text">
+                </div>
+            </div>
+        </div>
+        <hr class="bg-anthilla-gray" style="height: 1px !important;">
+        <div class="row">
+            <div class="span3">
+                <label>&nbsp</label>
+            </div>
+            <div class="span7">
+                <input class="bg-anthilla-green" type="submit" value="Create" style="width: 90%;">
+            </div>
+        </div>
+    </form>
+    <hr class="bg-anthilla-gray" />
+    <input type="button" class="bg-anthilla-blu" data-cctable-role="add-row" data-table-guid="@Model.Guid" value="New Row" />
+    <input type="button" class="bg-anthilla-orange" data-cctable-role="delete-table" data-table-guid="@Model.Guid" value="Delete" />
+</div>

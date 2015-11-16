@@ -53,6 +53,22 @@ namespace antdlib.CCTable {
             return list;
         }
 
+        public static CCTableModel GetByContext(string context) {
+            var item = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Context == context).FirstOrDefault();
+            if (item != null) {
+                item.Content = GetRows(item.Guid);
+            }
+            return item;
+        }
+
+        public static CCTableModel GetByContext2(string context) {
+            var item = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Context == context).FirstOrDefault();
+            if (item != null) {
+                item.Content = GetRows(context);
+            }
+            return item;
+        }
+
         public static CCTableModel GetByGuid(string guid) {
             var cc = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Guid == guid).FirstOrDefault();
             if (cc != null) {
@@ -205,12 +221,13 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         }
 
         private static void SetConfFile(string source, string destination) {
-            Terminal.Terminal.Background.Execute($"cp {source} {destination}");
-            Terminal.Terminal.Background.Execute($"mount --bind {source} {destination}");
+            Terminal.Terminal.Execute($"cp {source} {destination}");
+            //File.Copy(source, destination, true);
+            Terminal.Terminal.Execute($"mount --bind {source} {destination}");
         }
 
         private static void SetConfDirectory(string source, string destination) {
-            Terminal.Terminal.Background.Execute($"cp {source} {destination}");
+            Terminal.Terminal.Execute($"cp {source} {destination}");
             FileSystem.CopyDirectory(source, destination);
             MountPoint.Mount.Dir(source);
         }
@@ -333,8 +350,75 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
                     return CCTableFlags.TableType.DataView;
                 case 3:
                     return CCTableFlags.TableType.Conf;
+                case 4:
+                    return CCTableFlags.TableType.New;
                 default:
                     return CCTableFlags.TableType.None;
+            }
+        }
+
+        public class New {
+            public static void CreateRowForDirectCommand(string tableName, string label, string inputLabel, string command, string notes, string inputId, string inputLocation) {
+                var model = new CCTableRowModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    NUid = UID.ShortGuid,
+                    TableGuid = tableName,
+                    Label = label,
+                    InputType = "hidden",
+                    InputLabel = inputLabel,
+                    CommandDirect = command,
+                    CommandType = CCTableCommandType.Direct,
+                    Notes = notes,
+                    CommandInputId = inputId,
+                    CommandInputLocation = inputLocation
+                };
+                model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                DeNSo.Session.New.Set(model);
+            }
+
+            public static void CreateRowForTextInputCommand(string tableName, string label,
+    string inputLabel, string inputCommandSet, string inputCommandGet, string notes, string inputId, string inputLocation) {
+                var model = new CCTableRowModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    NUid = UID.ShortGuid,
+                    TableGuid = tableName,
+                    Label = label,
+                    InputType = "text",
+                    InputLabel = inputLabel,
+                    CommandSet = inputCommandSet,
+                    CommandGet = inputCommandGet,
+                    CommandType = CCTableCommandType.TextInput,
+                    Notes = notes,
+                    CommandInputId = inputId,
+                    CommandInputLocation = inputLocation
+                };
+                model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                DeNSo.Session.New.Set(model);
+            }
+
+            public static void CreateRowForBooleanPairCommand(string tableName, string label, string inputLabel, string inputCommandTrue, string inputCommandFalse, string notes, string inputId, string inputLocation) {
+                var model = new CCTableRowModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    NUid = UID.ShortGuid,
+                    TableGuid = tableName,
+                    Label = label,
+                    InputType = "checkbox",
+                    InputLabel = inputLabel,
+                    CommandTrue = inputCommandTrue,
+                    CommandFalse = inputCommandFalse,
+                    CommandType = CCTableCommandType.BooleanPair,
+                    Notes = notes,
+                    CommandInputId = inputId,
+                    CommandInputLocation = inputLocation
+                };
+                model.HtmlInputId = "New" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                model.HtmlSumbitId = "Update" + tableName.UppercaseAllFirstLetters().RemoveWhiteSpace() + model.Label.UppercaseAllFirstLetters().RemoveWhiteSpace();
+                DeNSo.Session.New.Set(model);
             }
         }
     }

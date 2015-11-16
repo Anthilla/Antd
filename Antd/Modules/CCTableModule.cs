@@ -231,9 +231,9 @@ namespace Antd.Modules {
                 CCTableConf.Mapping.Repository.Create(guid, filePath, comment, hasInclude, include, hasSection, sectionOpen, sectionClose, dataSeparator, hasBlock, blockOpen, blockClose, endOfLine);
 
                 var number = (string)Request.Form.LineNumber;
-                var numbers = number.Split(new [] { "," }, StringSplitOptions.None).ToIntArray();
+                var numbers = number.Split(new[] { "," }, StringSplitOptions.None).ToIntArray();
                 var type = (string)Request.Form.LineType;
-                var types = type.Split(new [] { "," }, StringSplitOptions.None).ToArray();
+                var types = type.Split(new[] { "," }, StringSplitOptions.None).ToArray();
                 //linee e typi dovrebbero essere uguali
                 if (numbers.Length == types.Length) {
                     var l = (numbers.Length + types.Length) / 2;

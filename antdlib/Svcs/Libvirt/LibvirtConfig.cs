@@ -49,7 +49,7 @@ namespace antdlib.Svcs.Libvirt {
         private static string _antdLibvirtFile = "antd.libvirt.conf";
 
         public static void SetReady() {
-            Terminal.Terminal.Background.Execute($"cp {_dir} {_mntDir}");
+            Terminal.Terminal.Execute($"cp {_dir} {_mntDir}");
             FileSystem.CopyDirectory(_dir, _mntDir);
             Mount.Dir(_dir);
         }
@@ -62,7 +62,7 @@ namespace antdlib.Svcs.Libvirt {
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Terminal.Terminal.Background.Execute("smbcontrol all reload-config");
+            Terminal.Terminal.Execute("smbcontrol all reload-config");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {

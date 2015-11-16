@@ -200,7 +200,7 @@ namespace antdlib.Terminal {
             }
 
             public static void Wipe() {
-                Terminal.Background.Execute("screen -wipe");
+                Terminal.Execute("screen -wipe");
             }
 
             public static void Kill(string screenName) {
@@ -208,7 +208,7 @@ namespace antdlib.Terminal {
                 if (s.Length > 0) {
                     var proc = s.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries).ToArray().First();
                     if (proc.Length > 0) {
-                        Terminal.Background.Execute($"kill -9 {proc}");
+                        Terminal.Execute($"kill -9 {proc}");
                     }
                 }
                 Wipe();
@@ -317,6 +317,7 @@ namespace antdlib.Terminal {
                 catch (Exception ex) {
                     Console.WriteLine("-----------------------------------");
                     Console.WriteLine($"Launching [{command}] has failed!");
+                    Console.WriteLine("Error message:");
                     Console.WriteLine($"{ex.Message}");
                     Console.WriteLine("-----------------------------------");
                 }
@@ -340,6 +341,7 @@ namespace antdlib.Terminal {
                 catch (Exception ex) {
                     Console.WriteLine("-----------------------------------");
                     Console.WriteLine($"Launching [{command}] has failed!");
+                    Console.WriteLine("Error message:");
                     Console.WriteLine($"{ex.Message}");
                     Console.WriteLine("-----------------------------------");
                 }

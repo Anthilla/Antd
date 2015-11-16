@@ -49,7 +49,7 @@ namespace antdlib.Svcs.Systemd.Hostnamectl {
         private static string antdHostnamectlFile = "antd.hostnamectl.conf";
 
         public static void SetReady() {
-            Terminal.Terminal.Background.Execute($"cp {dir} {DIR}");
+            Terminal.Terminal.Execute($"cp {dir} {DIR}");
             FileSystem.CopyDirectory(dir, DIR);
             Mount.Dir(dir);
         }
@@ -62,7 +62,7 @@ namespace antdlib.Svcs.Systemd.Hostnamectl {
         public static bool IsActive { get { return CheckIsActive(); } }
 
         public static void ReloadConfig() {
-            Terminal.Terminal.Background.Execute($"smbcontrol all reload-config");
+            Terminal.Terminal.Execute($"smbcontrol all reload-config");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {

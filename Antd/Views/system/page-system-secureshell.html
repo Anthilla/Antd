@@ -1,0 +1,45 @@
+﻿<legend id="SecureShell">Secure Shell</legend>
+
+<table class="table hovered">
+    <tbody>
+        <tr>
+            <td>
+                <label>Secure Shell Server</label>
+            </td>
+            <td>
+                <input id="NewEnableSecureShell" type="checkbox" />Enable Secure Shell  
+                                <input type="button" id="UpdateEnableSecureShell" class="bg-anthilla-green" value="Apply" />
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Authentication Method</label>
+            </td>
+            <td>
+                <input id="NewAuthenticationMethod" type="checkbox" />Disable password login for Secure Shell (Rsa/DSA key only)    
+                                <input type="button" id="UpdateAuthenticationMethod" class="bg-anthilla-green" value="Apply" />
+            </td>
+            <td>
+                <p>
+                    When enabled, authorized keys need to be configured for each user that has been granted secure shell access.
+                </p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <label>SSH port</label>
+            </td>
+            <td>
+                <p>Current SSH port: @Model.SSHPort</p>
+            </td>
+            <td>
+                <input id="NewSSHport" type="text" />
+                <input type="button" id="UpdateSSHport" class="bg-anthilla-green" value="Apply" />
+            </td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

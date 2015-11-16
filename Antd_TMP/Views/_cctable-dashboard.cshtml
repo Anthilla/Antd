@@ -1,0 +1,37 @@
+﻿<form id="DashboardForm" action="/cctable" method="POST" enctype="multipart/form-data" style="display: none;">
+    <div class="grid">
+        <div class="row">
+            <div class="span3">
+                <label>Table Type</label>
+            </div>
+            <div class="span7">
+                <select name="TableType">
+                    <option value="1">Settings Table</option>
+                    <option value="2">Data View Table</option>
+                    <option value="3">Conf Table</option>
+                </select>
+                <script type="text/javascript">
+                    $('select[name="TableType"]').windowed();
+                </script>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span3">
+                <label>Table Name</label>
+            </div>
+            <div class="span7">
+                <input type="hidden" name="Context" value="@Model">
+                <input type="text" name="Alias" style="width: 90%; height: 25px;">
+            </div>
+        </div>
+        <hr class="bg-anthilla-gray" style="height: 1px !important;">
+        <div class="row">
+            <div class="span3">
+                <label>&nbsp</label>
+            </div>
+            <div class="span7">
+                <input class="bg-anthilla-green fg-white" type="submit" value="Submit" style="width: 90%; height: 30px;">
+            </div>
+        </div>
+    </div>
+</form>

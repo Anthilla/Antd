@@ -137,12 +137,12 @@ namespace antdlib.Users {
         }
 
         public static void CreateUser(string user) {
-            Terminal.Terminal.Background.Execute("useradd " + user);
+            Terminal.Terminal.Execute("useradd " + user);
         }
 
         public class Config {
             public static void ResetPasswordForUser(string user, string password) {
-                Terminal.Terminal.Background.Execute($"usermod -p '{password.Trim()}' {user}");
+                Terminal.Terminal.Execute($"usermod -p '{password.Trim()}' {user}");
             }
 
             public static void ResetPasswordForUserStoredInDb() {

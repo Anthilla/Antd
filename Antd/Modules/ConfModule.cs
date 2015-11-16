@@ -43,7 +43,7 @@ namespace Antd.Modules {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ValueBundle = ConfigManagement.GetValuesBundle();
-                vmod.CommandBundle = ConfigManagement.GetCommandsBundle().ToArray();
+                vmod.CommandBundle = ConfigManagement.GetCommandsBundle();
                 return View["page-cfg", vmod];
             };
 

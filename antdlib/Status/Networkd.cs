@@ -75,7 +75,7 @@ namespace antdlib.Status {
         }
 
         private static void MountNetworkdDir() {
-            Terminal.Terminal.Background.Execute("mount --bind /etc/systemd/network " + Folder.Networkd);
+            Terminal.Terminal.Execute("mount --bind /etc/systemd/network " + Folder.Networkd);
         }
 
         private static void RestartNetworkdDir() {
