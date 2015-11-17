@@ -35,9 +35,6 @@ using antdlib.MountPoint;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {
-
-        private static readonly string CaDirectory = Folder.CertificateAuthority;
-
         public static void Setup() {
             try {
                 SetupRootCa();
@@ -46,10 +43,11 @@ namespace antdlib.Certificate {
                 ConsoleLogger.Log("___________________________________");
             }
             catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
+                ConsoleLogger.Warn(ex.ToString());
             }
         }
 
+        private static readonly string CaDirectory = Folder.CertificateAuthority;
         private static readonly string CaRootConfFile = $"{CaDirectory}/openssl.cnf";
         private static readonly string CaRootPrivateKey = $"{CaDirectory}/private/ca.key.pem";
         private static readonly string CaRootCertificate = $"{CaDirectory}/certs/ca.cert.pem";
@@ -57,20 +55,24 @@ namespace antdlib.Certificate {
 
         private static void SetupRootCa() {
             ConsoleLogger.Log("______ Setup Root CA ______");
-            ConsoleLogger.Log("1) Create directories: /ca .certs .crl .newcerts .private");
-            Directory.CreateDirectory(CaDirectory);
-            Directory.CreateDirectory($"{CaDirectory}/certs");
-            Directory.CreateDirectory($"{CaDirectory}/crl");
-            Directory.CreateDirectory($"{CaDirectory}/newcerts");
-            Directory.CreateDirectory($"{CaDirectory}/private");
+            ConsoleLogger.Log("1) Create directories: /ca ");
+            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}");
+            ConsoleLogger.Log("1a) .certs");
+            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/certs");
+            ConsoleLogger.Log("1a) .crl");
+            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/crl");
+            ConsoleLogger.Log("1a) .newcerts ");
+            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/newcerts");
+            ConsoleLogger.Log("1a) .private");
+            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/private");
             ConsoleLogger.Log("2) Change .private acl");
             Terminal.Terminal.Execute($"chmod 700 {CaDirectory}/private");
             ConsoleLogger.Log("3) Create index file");
-            File.WriteAllText($"{CaDirectory}/index.txt", "");
+            Terminal.Terminal.Execute($"touch {CaDirectory}/index.txt");
             ConsoleLogger.Log("4) Create serial file");
-            File.WriteAllText($"{CaDirectory}/serial", "1000");
+            Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
             ConsoleLogger.Log("5) Copy .conf file");
-            File.Copy($"{Folder.Resources}/openssl.cnf", CaRootConfFile, true);
+            Terminal.Terminal.Execute($"cp {Folder.Resources}/openssl.cnf {CaRootConfFile}");
             //Debug
             ConsoleLogger.Log("6) Generate root private key");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096"));
@@ -102,21 +104,21 @@ namespace antdlib.Certificate {
         private static void SetupIntermediateCa() {
             ConsoleLogger.Log("______ Setup Intermediate CA ______");
             ConsoleLogger.Log("1) Create directories: /ca/intermediate .certs .crl .newcerts .private");
-            Directory.CreateDirectory(CaIntermediateDirectory);
-            Directory.CreateDirectory($"{CaIntermediateDirectory}/certs");
-            Directory.CreateDirectory($"{CaIntermediateDirectory}/crl");
-            Directory.CreateDirectory($"{CaIntermediateDirectory}/newcerts");
-            Directory.CreateDirectory($"{CaIntermediateDirectory}/private");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/certs");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/crl");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/newcerts");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/private");
             ConsoleLogger.Log("2) Change .private acl");
             Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
             ConsoleLogger.Log("3) Create index file");
-            File.WriteAllText($"{CaIntermediateDirectory}/index.txt", "");
+            Terminal.Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
             ConsoleLogger.Log("4) Create serial file");
-            File.WriteAllText($"{CaIntermediateDirectory}/serial", "1000");
+            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
             ConsoleLogger.Log("5) Create crlnumber file");
-            File.WriteAllText($"{CaIntermediateDirectory}/crlnumber", "1000");
+            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
             ConsoleLogger.Log("6) Copy .conf file");
-            File.Copy($"{Folder.Resources}/openssl-intermediate.cnf", CaIntermediateConfFile, true);
+            Terminal.Terminal.Execute($"cp {Folder.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
             //Debug
             ConsoleLogger.Log("7) Generate intermediate private key");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096"));
