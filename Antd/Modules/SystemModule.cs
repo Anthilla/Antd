@@ -99,8 +99,8 @@ namespace Antd.Modules {
                 if (CoreParametersConfig.GetCa() == "no") {
                     vmod.CaStatus = "Disabled";
                 }
-
-                vmod.Certificates = CertificateAuthority.GetAllCertificates();
+                vmod.CaIsActive = CertificateAuthority.IsActive;
+                vmod.Certificates = CertificateRepository.GetAll();
 
                 vmod.CCTableContext = CctableContextName;
                 var table = CCTableRepository.GetByContext2(CctableContextName);

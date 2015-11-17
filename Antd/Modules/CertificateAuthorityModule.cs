@@ -1,6 +1,7 @@
 ﻿using antdlib.Boot;
 using antdlib.Certificate;
 using Nancy;
+using Nancy.Routing.Constraints;
 using Nancy.Security;
 
 //-------------------------------------------------------------------------------------
@@ -75,7 +76,16 @@ namespace Antd.Modules {
             };
 
             Post["/certificate/new"] = x => {
-                new CertificateAuthority.Certificate((string)Request.Form.Certificate).Create();
+                var countryName = ((string)Request.Form.CountryName).Length < 1 ? "." : (string)Request.Form.CountryName;
+                var stateProvinceName = ((string)Request.Form.StateProvinceName).Length < 1 ? "." : (string)Request.Form.StateProvinceName;
+                var localityName = ((string)Request.Form.LocalityName).Length < 1 ? "." : (string)Request.Form.LocalityName;
+                var organizationName = ((string)Request.Form.OrganizationName).Length < 1 ? "." : (string)Request.Form.OrganizationName;
+                var organizationalUnitName = ((string)Request.Form.OrganizationalUnitName).Length < 1 ? "." : (string)Request.Form.OrganizationalUnitName;
+                var commonName = ((string)Request.Form.CommonName).Length < 1 ? "*" : (string)Request.Form.CommonName;
+                var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
+                var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.CommoPasswordnName;
+                var usePasswordForPrivateKey = (bool)Request.Form.UsePasswordForPrivateKey;
+                CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, usePasswordForPrivateKey);
                 return Response.AsJson(true);
             };
         }

@@ -31,7 +31,7 @@
                 <label>Certificate Authority Setup</label>
             </div>
             <div class="span7">
-                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
+                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;"/>
             </div>
         </div>
         <div class="row">
@@ -39,11 +39,12 @@
                 <label>Create New Certificate</label>
             </div>
             <div class="span7">
-                <input data-role="CertificateName" style="width: 60%; height: 25px;" type="text" />
-                <input class="bg-anthilla-green" data-role="CreateNewCertificate" style="width: 40% !important; color: #464646; float: right;" type="button" value="New Certificate" />
+                <input data-role="CertificateName" style="width: 60%; height: 25px;" type="text"/>
+                <input class="bg-anthilla-green" data-role="CreateNewCertificate" style="width: 40% !important; color: #464646; float: right;" type="button" value="New Certificate"/>
             </div>
         </div>
     </div>
+    <p>@Model.CaIsActive</p>
     @Each.Certificates
     <p>@Current</p>
     @EndEach
