@@ -48,7 +48,7 @@ namespace antdlib.Status {
         public static List<SysctlModel> Running => GetAllSysctls();
 
         private static List<SysctlModel> ReadSysctlCustomFile() {
-            var output = JsonConvert.SerializeObject(FileSystem.ReadFile(Folder.Root, "antd.sysctl.conf"));
+            var output = JsonConvert.SerializeObject(FileSystem.ReadFile(Folder.AntdCfg, "antd.sysctl.conf"));
             return MapSysctlJson(output);
         }
 
@@ -85,8 +85,8 @@ namespace antdlib.Status {
         }
 
         public static void WriteConfig() {
-            Directory.CreateDirectory(Folder.Root);
-            var path = Path.Combine(Folder.Root, "antd.sysctl.conf");
+            Directory.CreateDirectory(Folder.AntdCfg);
+            var path = Path.Combine(Folder.AntdCfg, "antd.sysctl.conf");
             if (File.Exists(path)) {
                 File.Delete(path);
             }
@@ -101,7 +101,7 @@ namespace antdlib.Status {
         }
 
         public static void LoadConfig() {
-            Terminal.Terminal.Execute("sysctl -p " + Path.Combine(Folder.Root, "antd.sysctl.conf"));
+            Terminal.Terminal.Execute("sysctl -p " + Path.Combine(Folder.AntdCfg, "antd.sysctl.conf"));
         }
     }
 }

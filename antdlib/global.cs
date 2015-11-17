@@ -59,25 +59,42 @@ namespace antdlib {
     }
 
     public class Folder {
-        public static string Root => "/cfg/antd";
-        public static string Database => Root + "/database";
-        public static string Networkd => Root + "/networkd";
-        public static string Keys => Root + "/keys";
-        //todo: as soon as there's systemd managed websocketd.target change this value v
-        public static string Websocketd => AppsUnits;
-        public static string AntdRepo => "/mnt/cdrom";
-        public static string Apps => "/mnt/cdrom/Apps";
-        public static string Dirs => "/mnt/cdrom/DIRS";
-        public static string Config => "/mnt/cdrom/Config";
-        public static string LiveCd => "/mnt/livecd";
-        public static string AppsUnits => $"{AntdRepo}/Units/applicative.target.wants";
-        public static string kernelDir => $"{AntdRepo}/Kernel";
-        public static string systemDir => $"{AntdRepo}/System";
-        public static string AntdVersionsDir => $"{Apps}/Anthilla_Antd";
-        public static string AntdshVersionsDir => $"{Apps}/Anthilla_antdsh";
-        public static string AntdTmpDir => $"{Apps}/tmp";
-        public static string CertificateAuthority => "/ca";
-        public static string Resources => "/framework/antd/Resources";
+        public static string RootData => "/Data";
+        public static string RootFramework => "/framework";
+        public static string RootSystem => "/System";
+        public static string RootPorts => "/ports";
+        public static string RootCfg => "/cfg";
+
+        public static string AntdCfg => $"{RootCfg}/antd";
+        public static string AntdCfgDatabase => $"{AntdCfg}/database";
+        public static string AntdCfgNetworkd => $"{AntdCfg}/networkd";
+        public static string AntdCfgKeys => $"{AntdCfg}/keys";
+
+        public static string Repo => "/mnt/cdrom";
+        public static string RepoApps => $"{Repo}/Apps";
+        public static string RepoBackup => $"{Repo}/Backup";
+        public static string RepoConfig => $"{Repo}/Config";
+        public static string RepoDirs => $"{Repo}/DIRS";
+        public static string RepoKernel => $"{Repo}/Kernel";
+        public static string RepoOverlay => $"{Repo}/Overlay";
+        public static string RepoScripts => $"{Repo}/Scripts";
+        public static string RepoSecureBoot => $"{Repo}/SecureBoot";
+        public static string RepoSystem => $"{Repo}/System";
+        public static string RepoUnits => $"{Repo}/Units";
+        public static string RepoBoot => $"{Repo}/boot";
+        public static string RepoEfi => $"{Repo}/efi";
+        public static string RepoGrub => $"{Repo}/grub";
+        public static string RepoLivecdFile => $"{Repo}/livecd";
+
+        public static string Livecd => "/mnt/livecd";
+        public static string AppsUnits => $"{RepoUnits}/applicative.target.wants";
+        public static string WebsocketUnits => $"{RepoUnits}/websocket.target.wants";
+        public static string KernelUnits => $"{RepoUnits}/kernelpkgload.target.wants";
+        public static string AntdVersionsDir => $"{RepoApps}/Anthilla_Antd";
+        public static string AntdshVersionsDir => $"{RepoApps}/Anthilla_antdsh";
+        public static string AntdTmpDir => $"{RepoApps}/tmp";
+        public static string CertificateAuthority => $"{RepoConfig}/ca";
+        public static string Resources => $"{RootFramework}/antd/Resources";
     }
 
     public class AntdFile {

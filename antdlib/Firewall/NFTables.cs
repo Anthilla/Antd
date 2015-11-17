@@ -79,7 +79,7 @@ namespace antdlib.Firewall {
             }
 
             private static IEnumerable<string> GetConfigurationFileNames() {
-                return Directory.EnumerateFiles(Folder.Config, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName);
+                return Directory.EnumerateFiles(Folder.RepoConfig, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName);
             }
 
             private static string GetLastFileName() {
@@ -97,7 +97,7 @@ namespace antdlib.Firewall {
             public static void WriteFile() {
                 FlushDb();
                 SaveRules();
-                using (var sw = File.CreateText(Path.Combine(Folder.Config, GetLastFileName()))) {
+                using (var sw = File.CreateText(Path.Combine(Folder.RepoConfig, GetLastFileName()))) {
                     sw.WriteLine("flush ruleset;");
                     sw.WriteLine("");
                     foreach (var t3 in TableType) {

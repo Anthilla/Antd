@@ -102,12 +102,12 @@ namespace antdlib.Common {
             Logger.Trace("", "", EventLevel.Error, message);
         }
 
-        public static void Point(string where, string message = "") {
+        public static void Point(string message) {
             var currentFg = Console.ForegroundColor;
             var currentBg = Console.BackgroundColor;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"○○○ {where} ○○○ {message}");
+            Console.WriteLine($"○○○ {message}");
             Console.ForegroundColor = currentFg;
             Console.BackgroundColor = currentBg;
             Logger.Trace("", "", EventLevel.Info, message);

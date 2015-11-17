@@ -40,7 +40,7 @@ namespace antdlib.Apps {
 
     public class AnthillaSp {
 
-        private static readonly string AnthillaSpAppDir = $"{Folder.Apps}/Anthilla_AnthillaSP";
+        private static readonly string AnthillaSpAppDir = $"{Folder.RepoApps}/Anthilla_AnthillaSP";
         private static string _anthillaSpFrameworkDir = "/framework/anthillasp";
 
         public static void SetApp() {
@@ -137,7 +137,7 @@ namespace antdlib.Apps {
 
             public static bool CheckSquash() {
                 Directory.CreateDirectory(AnthillaSpAppDir);
-                var filePaths = Directory.EnumerateFiles(Folder.Apps, "*.squashfs.xz*", SearchOption.AllDirectories);
+                var filePaths = Directory.EnumerateFiles(Folder.RepoApps, "*.squashfs.xz*", SearchOption.AllDirectories);
                 return filePaths.Any(t => t.Contains("anthillasp"));
             }
 

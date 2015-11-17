@@ -48,7 +48,7 @@ namespace antdlib.Status {
 
         private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
             var list = new List<SystemComponentModel>();
-            var activeLinkData = Terminal.Terminal.Execute($"find {Folder.AntdRepo} -type l | grep active");
+            var activeLinkData = Terminal.Terminal.Execute($"find {Folder.Repo} -type l | grep active");
             ConsoleLogger.Warn(activeLinkData);
             var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var link in activeLinks) {

@@ -45,19 +45,19 @@ namespace antdlib.Boot {
         public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
 
         public static void WriteDefaults() {
-            Writer.Write(Label.Root, Folder.Root);
+            Writer.Write(Label.Root, Folder.AntdCfg);
             Writer.ReadValue(Label.Root);
             if (Writer.CheckValue(Label.Port) == false) {
                 Writer.Write(Label.Port, Port.Antd);
             }
             if (Writer.CheckValue(Label.Database) == false) {
-                Writer.Write(Label.Database, Folder.Database);
+                Writer.Write(Label.Database, Folder.AntdCfgDatabase);
             }
             if (Writer.CheckValue("ssl") == false) {
                 Writer.Write("ssl", "yes");
             }
             if (Writer.CheckValue("certificate") == false) {
-                Writer.Write("certificate", $"{Folder.Root}/certificate.pfx");
+                Writer.Write("certificate", $"{Folder.AntdCfg}/certificate.pfx");
             }
             if (Writer.CheckValue("ca") == false) {
                 Writer.Write("ca", "no");
@@ -66,17 +66,17 @@ namespace antdlib.Boot {
 
         public static string GetCertificatePath() {
             try {
-                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Folder.Root}/certificate.pfx";
+                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Folder.AntdCfg}/certificate.pfx";
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-                return $"{Folder.Root}/certificate.pfx";
+                return $"{Folder.AntdCfg}/certificate.pfx";
             }
         }
 
         public static void SetCertificatePath(string newCert) {
             try {
-                Writer.Write("certificate", $"{Folder.Root}/certificate.pfx");
+                Writer.Write("certificate", $"{Folder.AntdCfg}/certificate.pfx");
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -151,11 +151,11 @@ namespace antdlib.Boot {
 
         public static string GetDb() {
             try {
-                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Folder.Database;
+                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Folder.AntdCfgDatabase;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-                return Folder.Database;
+                return Folder.AntdCfgDatabase;
             }
         }
 

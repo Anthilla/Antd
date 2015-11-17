@@ -36,10 +36,12 @@ using antdlib.MountPoint;
 namespace antdlib.Certificate {
     public class CertificateAuthority {
 
+        private static readonly string CaDirectory = Folder.CertificateAuthority;
+
         public static void Setup() {
             try {
                 ConsoleLogger.Log("Setup Certificate Authority Directory");
-                SetupCaDirectory();
+            Directory.CreateDirectory(CaDirectory);
                 ConsoleLogger.Log("Setup Certificate Authority Root");
                 SetupRootCa();
                 ConsoleLogger.Log("Setup Certificate Authority Intermediate");
@@ -48,15 +50,6 @@ namespace antdlib.Certificate {
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
             }
-        }
-
-        private static readonly string CaDirectory = Folder.CertificateAuthority;
-        private static readonly string CaMountDirectory = Mount.SetDirsPath(CaDirectory);
-
-        public static void SetupCaDirectory() {
-            Directory.CreateDirectory(CaDirectory);
-            Directory.CreateDirectory(CaMountDirectory);
-            Mount.Dir(CaDirectory);
         }
 
         private static readonly string CaRootConfFile = $"{CaDirectory}/openssl.cnf";
@@ -74,16 +67,24 @@ namespace antdlib.Certificate {
             File.WriteAllText($"{CaDirectory}/index.txt", "");
             File.WriteAllText($"{CaDirectory}/serial", "1000");
             File.Copy($"{Folder.Resources}/openssl.cnf", CaRootConfFile, true);
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096");
-            Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
-            Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
+            //Debug
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
                 $"-new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{CaRootPass}" +
-                 "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Antd Root CA/emailAddress=.\"");
-            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
+                 "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Antd Root CA/emailAddress=.\""));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}"));
+
+            //Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096");
+            //Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
+            //Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
+            //    $"-new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{CaRootPass}" +
+            //     "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Antd Root CA/emailAddress=.\"");
+            //Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
         }
 
         private static readonly string CaIntermediateDirectory = $"{CaDirectory}/intermediate";
-        private static readonly string CaIntermediateConfFile = $"{CaIntermediateDirectory}/openssl-intermediate.cnf";
+        private static readonly string CaIntermediateConfFile = $"{CaIntermediateDirectory}/openssl.cnf";
         private static readonly string CaIntermediatePrivateKey = $"{CaIntermediateDirectory}/private/intermediate.key.pem";
         private static readonly string CaIntermediateCertificateReq = $"{CaIntermediateDirectory}/csr/intermediate.csr.pem";
         private static readonly string CaIntermediateCertificate = $"{CaIntermediateDirectory}/certs/intermediate.cert.pem";
@@ -101,18 +102,36 @@ namespace antdlib.Certificate {
             File.WriteAllText($"{CaIntermediateDirectory}/serial", "1000");
             File.WriteAllText($"{CaIntermediateDirectory}/crlnumber", "1000");
             File.Copy($"{Folder.Resources}/openssl-intermediate.cnf", CaIntermediateConfFile, true);
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096");
-            Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
-            Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
+            //Debug
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
                 $"-new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{CaIntermediatePass}" +
-                 "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU=./CN=Antd Intermediate CA/emailAddress=.\"");
-            Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca" +
+                 "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU=./CN=Antd Intermediate CA/emailAddress=.\""));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca" +
                  $"-days 3650 -notext -md sha256 -passin pass:{CaIntermediatePass}" +
                  $"-in {CaIntermediateCertificateReq}" +
-                 $"-out {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}");
-            Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}");
+                 $"-out {CaIntermediateCertificate}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}"));
+            ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}"));
+
+            //Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096");
+            //Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
+            //Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
+            //    $"-new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{CaIntermediatePass}" +
+            //     "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU=./CN=Antd Intermediate CA/emailAddress=.\"");
+            //Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca" +
+            //     $"-days 3650 -notext -md sha256 -passin pass:{CaIntermediatePass}" +
+            //     $"-in {CaIntermediateCertificateReq}" +
+            //     $"-out {CaIntermediateCertificate}");
+            //Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}");
+            //Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}");
+            //Terminal.Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}");
+            //Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}");
+            //Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}");
         }
 
         private static void Convert() {

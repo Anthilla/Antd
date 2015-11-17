@@ -75,7 +75,7 @@ namespace antdlib.Status {
         }
 
         private static void MountNetworkdDir() {
-            Terminal.Terminal.Execute("mount --bind /etc/systemd/network " + Folder.Networkd);
+            Terminal.Terminal.Execute("mount --bind /etc/systemd/network " + Folder.AntdCfgNetworkd);
         }
 
         private static void RestartNetworkdDir() {
@@ -90,7 +90,7 @@ namespace antdlib.Status {
         private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,
                                       string networkDhcp, string networkDns, string networkBridge, string networkIpForward,
                                       string addressAddress, string routeGateway) {
-            var path = Path.Combine(Folder.Networkd, filename + ".network");
+            var path = Path.Combine(Folder.AntdCfgNetworkd, filename + ".network");
             using (var sw = File.CreateText(path)) {
                 sw.WriteLine("[Match]");
                 sw.WriteLine("Name=" + matchName);
@@ -124,23 +124,23 @@ namespace antdlib.Status {
         }
 
         public static string ReadAntdUnit() {
-            var path = Path.Combine(Folder.Networkd, "antd.network");
+            var path = Path.Combine(Folder.AntdCfgNetworkd, "antd.network");
             return !File.Exists(path) ? "Unit file doesn't exist!" : File.ReadAllText(path);
         }
 
         public static List<string> ReadUnits() {
             var list = new List<string>();
-            var dirContainer = Folder.Networkd;
+            var dirContainer = Folder.AntdCfgNetworkd;
             if (Directory.Exists(dirContainer)) {
-                var dirs = Directory.GetFiles(Folder.Networkd);
-                list.AddRange(dirs.Select(file => Path.Combine(Folder.Networkd, file)).Select(path => !File.Exists(path) ? "Unit file does not exist!" : File.ReadAllText(path)));
+                var dirs = Directory.GetFiles(Folder.AntdCfgNetworkd);
+                list.AddRange(dirs.Select(file => Path.Combine(Folder.AntdCfgNetworkd, file)).Select(path => !File.Exists(path) ? "Unit file does not exist!" : File.ReadAllText(path)));
                 return list;
             }
             return list;
         }
 
         public static void CreateCustomUnit(string text, string fname) {
-            var path = Path.Combine(Folder.Networkd, fname + ".network");
+            var path = Path.Combine(Folder.AntdCfgNetworkd, fname + ".network");
             if (File.Exists(path)) {
                 File.Delete(path);
             }

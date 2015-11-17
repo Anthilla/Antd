@@ -202,7 +202,7 @@ namespace antdlib.Users {
             }
 
             private static Tuple<byte[], byte[]> GenerateUsersKeys(string userGuid) {
-                var keyrepo = Folder.Keys;
+                var keyrepo = Folder.AntdCfgKeys;
                 Directory.CreateDirectory(keyrepo);
                 var userkeyrepo = $"{keyrepo}/{userGuid}";
                 Directory.CreateDirectory(userkeyrepo);

@@ -65,35 +65,38 @@ namespace Antd {
                         e.Cancel = true;
                     };
 
-                //01 - controlo lo stato di lettura/scrittura
-                AntdBoot.CheckIfGlobalRepositoryIsWriteable();
-                //02 - controllo e creo le cartelle di lavoro di antd
-                AntdBoot.SetWorkingDirectories();
-                //03 - configuro i parametri di base di antd
-                AntdBoot.SetCoreParameters();
-                //04 - avvio il database
-                AntdBoot.StartDatabase();
+                Configuration();
+
+                //var owinbuilder = new AppBuilder();
+                //OwinServerFactory.Initialize(owinbuilder.Properties);
+                //new Startup().Configuration(owinbuilder);
+                //var port = Convert.ToInt32(CoreParametersConfig.GetPort());
+                //ConsoleLogger.Log("build server");
+                //var builder = ServerBuilder.New()
+                //    .SetOwinApp(owinbuilder.Build())
+                //    .SetEndPoint(new IPEndPoint(IPAddress.Any, port));
+                //    //.SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
+                //    //.SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways);
+
+                //if (CoreParametersConfig.GetSsl() == "yes") {
+                //    if (!File.Exists(CoreParametersConfig.GetCertificatePath())) {
+                //        ConsoleLogger.Log("import ssl certificate");
+                //        File.Copy($"{Folder.Resources}/certificate.pfx", CoreParametersConfig.GetCertificatePath());
+                //    }
+                //    ConsoleLogger.Log("ssl active");
+                //    ConsoleLogger.Log("build certificate");
+                //    builder.SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
+                //}
 
                 var owinbuilder = new AppBuilder();
-                OwinServerFactory.Initialize(owinbuilder.Properties);
+                Microsoft.Owin.Host.HttpListener.OwinServerFactory.Initialize(owinbuilder.Properties);
                 new Startup().Configuration(owinbuilder);
                 var port = Convert.ToInt32(CoreParametersConfig.GetPort());
-                ConsoleLogger.Log("build server");
                 var builder = ServerBuilder.New()
                     .SetOwinApp(owinbuilder.Build())
                     .SetEndPoint(new IPEndPoint(IPAddress.Any, port))
-                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
-                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways);
+                    .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
 
-                if (CoreParametersConfig.GetSsl() == "yes") {
-                    if (!File.Exists(CoreParametersConfig.GetCertificatePath())) {
-                        ConsoleLogger.Log("import ssl certificate");
-                        File.Copy($"{Folder.Resources}/certificate.pfx", CoreParametersConfig.GetCertificatePath());
-                    }
-                    ConsoleLogger.Log("ssl active");
-                    ConsoleLogger.Log("build certificate");
-                    builder.SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
-                }
 
                 ConsoleLogger.Log("build almost complete");
                 using (var server = builder.Build()) {
@@ -101,7 +104,6 @@ namespace Antd {
                     server.Start();
                     //Task.Run(() => server.Start());
                     ConsoleLogger.Log("Applying configuration...");
-                    Configuration();
                     ConsoleLogger.Log("loading service");
                     ConsoleLogger.Log("    server port -> {0}", port);
                     ConsoleLogger.Log("antd is running");
@@ -115,41 +117,31 @@ namespace Antd {
         }
 
         private static void Configuration() {
-            //07 - load config degli utenti
+            //todo check commented lines
+            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
+            AntdBoot.SetWorkingDirectories();
+            AntdBoot.SetCoreParameters();
+            AntdBoot.StartDatabase();
             AntdBoot.ReloadUsers();
-            //08 - load config dell'ssh
             //AntdBoot.ReloadSsh();
-            //09 - load config di network
             AntdBoot.SetBootConfiguration();
-            //10 - mount system directories
             AntdBoot.SetMounts();
-            //11 - mount os directories
             AntdBoot.SetOsMount();
-            //12 - install websocketd
-            AntdBoot.SetWebsocketd();
-            //13 - set journald
-            AntdBoot.SetSystemdJournald();
-            //14 - check resolv.conf
-            AntdBoot.CheckResolvd();
-            //15 - start scheduler
-            AntdBoot.StartScheduler(true);
-            //16 - start directory watcher
-            AntdBoot.StartDirectoryWatcher(new[] { Folder.Config }, false);
-            //17 - set authentication method
-            AntdBoot.InitAuthentication();
-            //18 - setup and launch all apps
-            AntdBoot.LaunchApps();
-            //19 - download files
-            AntdBoot.DownloadDefaultRepoFiles();
+            //AntdBoot.SetWebsocketd();
+            //AntdBoot.SetSystemdJournald();
+            //AntdBoot.CheckResolvd();
+            //AntdBoot.StartScheduler(true);
+            //AntdBoot.StartDirectoryWatcher(new[] { Folder.RepoConfig }, false);
+            //AntdBoot.InitAuthentication();
+            //AntdBoot.LaunchApps();
+            //AntdBoot.DownloadDefaultRepoFiles();
         }
     }
 
     internal class Startup {
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading app configuration");
-            //05 - avvio signalr
             AntdBoot.StartSignalR(app, true, true);
-            //06 - avvio nancy
             AntdBoot.StartNancy(app);
         }
     }

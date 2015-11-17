@@ -35,8 +35,8 @@ using antdlib.Common;
 namespace antdlib.Boot {
     public class LoadOsConfiguration {
         public static void LoadCollectd() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_collectd.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_collectd.conf"}", file);
+            var file = $"{Folder.RepoDirs}/{"FILE_etc_collectd.conf"}";
+            File.Copy($"{Folder.Resources}/FILE_etc_collectd.conf", file);
             var realFileName = Mount.GetFilesPath("FILE_etc_collectd.conf");
             if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
@@ -45,8 +45,8 @@ namespace antdlib.Boot {
         }
 
         public static void LoadSystemdJournald() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_systemd_journald.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_systemd_journald.conf"}", file);
+            var file = $"{Folder.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
+            File.Copy($"{Folder.Resources}/FILE_etc_systemd_journald.conf", file);
             var realFileName = Mount.GetFilesPath("FILE_etc_systemd_journald.conf");
             if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
@@ -55,9 +55,9 @@ namespace antdlib.Boot {
         }
 
         public static void LoadWpaSupplicant() {
-            var file = $"{Folder.Dirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}", file);
-            var realFileName = Mount.GetFilesPath("FILE_etc_wpa_supplicant_wpa_suplicant.conf");
+            var file = $"{Folder.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
+            File.Copy($"{Folder.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
+            var realFileName = Mount.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
             if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
@@ -65,15 +65,14 @@ namespace antdlib.Boot {
         }
 
         public static void LoadFirewall() {
-            var file = $"{Folder.Dirs}/{"antd.boot.firewall.conf"}";
-            FileSystem.Download($"{Url.Antd}repo/{"antd.boot.firewall.conf"}", file);
+            File.Copy($"{Folder.Resources}/antd.boot.firewall.conf", $"{Folder.RepoDirs}/{"antd.boot.firewall.conf"}");
         }
 
         public static void LoadWebsocketd() {
-            var filePath = $"{Folder.Root}/websocketd";
+            var filePath = $"{Folder.AntdCfg}/websocketd";
             if (File.Exists(filePath)) return;
             ConsoleLogger.Info("Downloading websocketd");
-            FileSystem.Download($"{Url.Antd}repo/websocketd", filePath);
+            File.Copy($"{Folder.Resources}/websocketd", filePath);
             Terminal.Terminal.Execute($"chmod 777 {filePath}");
         }
     }

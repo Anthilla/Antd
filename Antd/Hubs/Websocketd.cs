@@ -41,7 +41,7 @@ using antdlib.Terminal;
 namespace Antd.Hubs {
     public class Websocketd {
         private static string _fileName = "websocketd";
-        private static readonly string _filePath = $"{Folder.Root}/websocketd";
+        private static readonly string _filePath = $"{Folder.AntdCfg}/websocketd";
 
         public static string GetFirstPort(long port = 31000) {
             var c = Terminal.Execute($"netstat -anp | grep :{port}");
@@ -50,7 +50,7 @@ namespace Antd.Hubs {
 
         public static void SetUnit(string port, string command) {
             var unitName = $"ws{port}.service";
-            var unitPath = $"{Folder.Websocketd}/{unitName}";
+            var unitPath = $"{Folder.WebsocketUnits}/{unitName}";
             if (!File.Exists(unitPath)) {
                 using (var sw = File.CreateText(unitPath)) {
                     sw.WriteLine("[Unit]");

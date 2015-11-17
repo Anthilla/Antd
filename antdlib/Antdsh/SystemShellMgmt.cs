@@ -75,23 +75,23 @@ namespace antdlib.Antdsh {
             var systemTmp = $"{Folder.AntdTmpDir}/system";
             FileSystem.Download("/url/download/system", $"{systemTmp}");
 
-            Execute($"cp {firmwareTmp} {Folder.kernelDir}");
-            Execute($"cp {initrdTmp} {Folder.kernelDir}");
-            Execute($"cp {kernelTmp} {Folder.kernelDir}");
-            Execute($"cp {modulesTmp} {Folder.kernelDir}");
-            Execute($"cp {systemTmp} {Folder.systemDir}");
+            Execute($"cp {firmwareTmp} {Folder.RepoKernel}");
+            Execute($"cp {initrdTmp} {Folder.RepoKernel}");
+            Execute($"cp {kernelTmp} {Folder.RepoKernel}");
+            Execute($"cp {modulesTmp} {Folder.RepoKernel}");
+            Execute($"cp {systemTmp} {Folder.RepoSystem}");
 
-            Execute($"rm {Folder.kernelDir}/active-firmware");
-            Execute($"rm {Folder.kernelDir}/active-initrd");
-            Execute($"rm {Folder.kernelDir}/active-kernel");
-            Execute($"rm {Folder.kernelDir}/active-modules");
-            Execute($"rm {Folder.systemDir}/active-system");
+            Execute($"rm {Folder.RepoKernel}/active-firmware");
+            Execute($"rm {Folder.RepoKernel}/active-initrd");
+            Execute($"rm {Folder.RepoKernel}/active-kernel");
+            Execute($"rm {Folder.RepoKernel}/active-modules");
+            Execute($"rm {Folder.RepoSystem}/active-system");
 
-            Execute($"ln -s {Folder.kernelDir}/firmware {Folder.kernelDir}/active-firmware");
-            Execute($"ln -s {Folder.kernelDir}/initrd {Folder.kernelDir}/active-initrd");
-            Execute($"ln -s {Folder.kernelDir}/kernel {Folder.kernelDir}/active-kernel");
-            Execute($"ln -s {Folder.kernelDir}/modules {Folder.kernelDir}/active-modules");
-            Execute($"ln -s {Folder.systemDir}/system {Folder.systemDir}/active-system");
+            Execute($"ln -s {Folder.RepoKernel}/firmware {Folder.RepoKernel}/active-firmware");
+            Execute($"ln -s {Folder.RepoKernel}/initrd {Folder.RepoKernel}/active-initrd");
+            Execute($"ln -s {Folder.RepoKernel}/kernel {Folder.RepoKernel}/active-kernel");
+            Execute($"ln -s {Folder.RepoKernel}/modules {Folder.RepoKernel}/active-modules");
+            Execute($"ln -s {Folder.RepoSystem}/system {Folder.RepoSystem}/active-system");
 
             CleanTmp();
         }
@@ -136,7 +136,7 @@ namespace antdlib.Antdsh {
         /// </summary>
         public static void SetAndMountDirs() {
             WriteLine("Mounting directories and files: ");
-            var directories = Directory.EnumerateDirectories(Folder.Dirs).Where(d => !d.Contains(".ori"));
+            var directories = Directory.EnumerateDirectories(Folder.RepoDirs).Where(d => !d.Contains(".ori"));
             foreach (var t in directories) {
                 var path = Path.GetFileName(t);
                 if (path == null)
@@ -146,7 +146,7 @@ namespace antdlib.Antdsh {
                 Execute($"mount --bind {t} {newPath}");
             }
 
-            var files = Directory.EnumerateFiles(Folder.Dirs).Where(f => !f.Contains(".ori"));
+            var files = Directory.EnumerateFiles(Folder.RepoDirs).Where(f => !f.Contains(".ori"));
             foreach (var t in files) {
                 var path = Path.GetFileName(t);
                 if (path == null)

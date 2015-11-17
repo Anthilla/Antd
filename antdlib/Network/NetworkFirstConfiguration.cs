@@ -37,7 +37,7 @@ using antdlib.Common;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static readonly string FileName = $"{Folder.Dirs}/{AntdFile.NetworkConfig}";
+        private static readonly string FileName = $"{Folder.RepoDirs}/{AntdFile.NetworkConfig}";
 
         private static bool CheckNetworkIsConfigured() {
             if (File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0) {

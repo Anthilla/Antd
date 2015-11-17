@@ -308,8 +308,8 @@ namespace antdlib.Antdsh {
                 var f = Terminal.Terminal.Execute("df | grep /cfg/antd");
                 if (r.Length <= 0 && f.Length <= 0)
                     return;
-                Terminal.Terminal.Execute($"umount {Folder.Root}");
-                Terminal.Terminal.Execute($"umount {Folder.Database}");
+                Terminal.Terminal.Execute($"umount {Folder.AntdCfg}");
+                Terminal.Terminal.Execute($"umount {Folder.AntdCfgDatabase}");
                 Terminal.Terminal.Execute("umount /framework/antd");
             }
         }

@@ -1,5 +1,4 @@
 # OpenSSL root CA configuration file.
-# Copy to `/ca/openssl.cnf`.
 
 [ ca ]
 # `man ca`
@@ -7,7 +6,7 @@ default_ca = CA_default
 
 [ CA_default ]
 # Directory and file locations.
-dir               = /ca
+dir               = /mnt/cdrom/Config/ca
 certs             = $dir/certs
 crl_dir           = $dir/crl
 new_certs_dir     = $dir/newcerts
@@ -78,10 +77,10 @@ commonName                      = Common Name
 emailAddress                    = Email Address
 
 # Optionally, specify some defaults.
-countryName_default             = GB
-stateOrProvinceName_default     = England
+countryName_default             = 
+stateOrProvinceName_default     = 
 localityName_default            =
-0.organizationName_default      = Alice Ltd
+0.organizationName_default      = 
 organizationalUnitName_default  =
 emailAddress_default            =
 

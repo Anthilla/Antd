@@ -270,7 +270,7 @@ namespace Antd {
         public static void DownloadDefaultRepoFiles() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            var dir = $"{Folder.Config}/database";
+            var dir = $"{Folder.RepoConfig}/database";
             Directory.CreateDirectory(dir);
             FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
             FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");

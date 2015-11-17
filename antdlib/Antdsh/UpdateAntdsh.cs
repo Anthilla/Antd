@@ -44,8 +44,8 @@ namespace antdlib.Antdsh {
             WriteLine("   Stopping services");
             Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
-            Execute.Umount(Folder.Root);
-            Execute.Umount(Folder.Database);
+            Execute.Umount(Folder.AntdCfg);
+            Execute.Umount(Folder.AntdCfgDatabase);
             Execute.Umount("/framework/antdsh");
             Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
