@@ -27,8 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
-
 namespace antdlib.Certificate {
     public class CertificateModel {
         public string _Id { get; set; }
@@ -44,6 +42,6 @@ namespace antdlib.Certificate {
         public string CertificateEmailAddress { get; set; }
         public bool IsProtectedByPassword { get; set; }
 
-        public string CertificateValue => File.ReadAllText(CertificatePath);
+        //public string CertificateValue => File.ReadAllText(CertificatePath);
     }
 }

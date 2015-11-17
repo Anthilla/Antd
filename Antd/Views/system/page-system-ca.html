@@ -26,25 +26,103 @@
     <hr class="bg-anthilla-gray" />
     <legend>Certificate Authority Manager</legend>
     <div class="grid">
+        @IfNot.CaIsActive
         <div class="row">
             <div class="span4">
                 <label>Certificate Authority Setup</label>
             </div>
             <div class="span7">
-                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;"/>
+                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
             </div>
         </div>
+        @EndIf
+        @If.CaIsActive
         <div class="row">
             <div class="span4">
-                <label>Create New Certificate</label>
+                <label>Certificate Authority Setup</label>
             </div>
             <div class="span7">
-                <input data-role="CertificateName" style="width: 60%; height: 25px;" type="text"/>
-                <input class="bg-anthilla-green" data-role="CreateNewCertificate" style="width: 40% !important; color: #464646; float: right;" type="button" value="New Certificate"/>
+                <p>Certificate Authority is active on this machine</p>
             </div>
         </div>
+        @EndIf
+        <form action="/ca/certificate/new" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="span4">
+                    <label>Certificate Name / Common Name</label>
+                </div>
+                <div class="span7">
+                    <input name="CommonName" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Country Name</label>
+                </div>
+                <div class="span7">
+                    <input name="CountryName" style="width: 60%; height: 25px;" type="text" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>State or Province Name</label>
+                </div>
+                <div class="span7">
+                    <input name="StateProvinceName" style="width: 60%; height: 25px;" type="text" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Locality Name</label>
+                </div>
+                <div class="span7">
+                    <input name="LocalityName" style="width: 60%; height: 25px;" type="text" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Organization Name</label>
+                </div>
+                <div class="span7">
+                    <input name="OrganizationName" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Organizational Unit Name</label>
+                </div>
+                <div class="span7">
+                    <input name="OrganizationalUnitName" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Email Address</label>
+                </div>
+                <div class="span7">
+                    <input name="EmailAddress" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Password</label>
+                </div>
+                <div class="span7">
+                    <input name="Password" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+                <div class="span4">
+                    <label>Leave this field blank if you don't want to assign a password to this certificate.</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span7">
+                    <input class="bg-anthilla-green" style="width: 90% !important; color: #464646;" type="submit" value="Create New Certificate" />
+                </div>
+            </div>
+        </form>
     </div>
-    <p>@Model.CaIsActive</p>
     @Each.Certificates
     <p>@Current</p>
     @EndEach

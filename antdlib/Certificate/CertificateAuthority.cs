@@ -37,10 +37,10 @@ namespace antdlib.Certificate {
     public class CertificateAuthority {
         public static void Setup() {
             try {
+                if (IsActive)
+                    return;
                 SetupRootCa();
-                ConsoleLogger.Log("___________________________________");
                 SetupIntermediateCa();
-                ConsoleLogger.Log("___________________________________");
                 CoreParametersConfig.EnableCa();
             }
             catch (Exception ex) {
@@ -171,9 +171,23 @@ namespace antdlib.Certificate {
                     Terminal.Terminal.Execute($"chmod 400 {certificateKeyPath}");
                     Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {certificateKeyPath} -new -sha256 -out {certificateRequestPath} -passin pass:{password} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={commonName}/emailAddress={emailAddress}\"");
                 }
+                if (!File.Exists(certificateRequestPath) || !File.Exists(certificateKeyPath)) {
+                    throw new FileNotFoundException("File Not Found", certificateRequestPath);
+                }
 
                 Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions server_cert -days 375 -notext -md sha256 -passin pass:{password} -in {certificateRequestPath} -out {certificatePath}");
+                if (!File.Exists(certificatePath)) {
+                    throw new FileNotFoundException("File Not Found", certificatePath);
+                }
                 Terminal.Terminal.Execute($"chmod 444 {certificatePath}");
+
+                var certificateDerPath = $"{CaIntermediateDirectory}/certs/{commonName}.cert.cer ";
+                Terminal.Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
+                Terminal.Terminal.Execute($"chmod 444 {certificateDerPath}");
+
+                var certificatePfxPath = $"{CaIntermediateDirectory}/certs/{commonName}.cert.pfx ";
+                Terminal.Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath}");
+                Terminal.Terminal.Execute($"chmod 444 {certificatePfxPath}");
 
                 if (File.Exists(certificatePath)) {
                     CertificateRepository.Create(certificatePath, countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, usePasswordForPrivateKey);

@@ -84,9 +84,9 @@ namespace Antd.Modules {
                 var commonName = ((string)Request.Form.CommonName).Length < 1 ? "*" : (string)Request.Form.CommonName;
                 var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
                 var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.CommoPasswordnName;
-                var usePasswordForPrivateKey = (bool)Request.Form.UsePasswordForPrivateKey;
+                var usePasswordForPrivateKey = ((string)Request.Form.Password).Length > 0;
                 CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, usePasswordForPrivateKey);
-                return Response.AsJson(true);
+                return Response.AsRedirect("/system");
             };
         }
     }
