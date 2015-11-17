@@ -97,8 +97,9 @@ namespace Antd.Modules {
                 vmod.CertificatePath = CoreParametersConfig.GetCertificatePath();
                 vmod.CaStatus = "Enabled";
                 if (CoreParametersConfig.GetCa() == "no") {
-                    vmod.SslStatus = "Disabled";
+                    vmod.CaStatus = "Disabled";
                 }
+
                 vmod.Certificates = CertificateAuthority.GetAllCertificates();
 
                 vmod.CCTableContext = CctableContextName;

@@ -40,12 +40,10 @@ namespace antdlib.Certificate {
 
         public static void Setup() {
             try {
-                ConsoleLogger.Log("Setup Certificate Authority Directory");
-            Directory.CreateDirectory(CaDirectory);
-                ConsoleLogger.Log("Setup Certificate Authority Root");
                 SetupRootCa();
-                ConsoleLogger.Log("Setup Certificate Authority Intermediate");
+                ConsoleLogger.Log("___________________________________");
                 SetupIntermediateCa();
+                ConsoleLogger.Log("___________________________________");
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -58,21 +56,31 @@ namespace antdlib.Certificate {
         private const string CaRootPass = "antdca";
 
         private static void SetupRootCa() {
+            ConsoleLogger.Log("______ Setup Root CA ______");
+            ConsoleLogger.Log("1) Create directories: /ca .certs .crl .newcerts .private");
             Directory.CreateDirectory(CaDirectory);
             Directory.CreateDirectory($"{CaDirectory}/certs");
             Directory.CreateDirectory($"{CaDirectory}/crl");
             Directory.CreateDirectory($"{CaDirectory}/newcerts");
             Directory.CreateDirectory($"{CaDirectory}/private");
+            ConsoleLogger.Log("2) Change .private acl");
             Terminal.Terminal.Execute($"chmod 700 {CaDirectory}/private");
+            ConsoleLogger.Log("3) Create index file");
             File.WriteAllText($"{CaDirectory}/index.txt", "");
+            ConsoleLogger.Log("4) Create serial file");
             File.WriteAllText($"{CaDirectory}/serial", "1000");
+            ConsoleLogger.Log("5) Copy .conf file");
             File.Copy($"{Folder.Resources}/openssl.cnf", CaRootConfFile, true);
             //Debug
+            ConsoleLogger.Log("6) Generate root private key");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096"));
+            ConsoleLogger.Log("7) Change private key acl");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}"));
+            ConsoleLogger.Log("8) Generate root certificate");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey}" +
                 $"-new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{CaRootPass}" +
                  "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU =./CN =Antd Root CA/emailAddress=.\""));
+            ConsoleLogger.Log("9) Check root certificate");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}"));
 
             //Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{CaRootPass} 4096");
@@ -92,30 +100,46 @@ namespace antdlib.Certificate {
         private const string CaIntermediatePass = "antdca";
 
         private static void SetupIntermediateCa() {
+            ConsoleLogger.Log("______ Setup Intermediate CA ______");
+            ConsoleLogger.Log("1) Create directories: /ca/intermediate .certs .crl .newcerts .private");
             Directory.CreateDirectory(CaIntermediateDirectory);
             Directory.CreateDirectory($"{CaIntermediateDirectory}/certs");
             Directory.CreateDirectory($"{CaIntermediateDirectory}/crl");
             Directory.CreateDirectory($"{CaIntermediateDirectory}/newcerts");
             Directory.CreateDirectory($"{CaIntermediateDirectory}/private");
+            ConsoleLogger.Log("2) Change .private acl");
             Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
+            ConsoleLogger.Log("3) Create index file");
             File.WriteAllText($"{CaIntermediateDirectory}/index.txt", "");
+            ConsoleLogger.Log("4) Create serial file");
             File.WriteAllText($"{CaIntermediateDirectory}/serial", "1000");
+            ConsoleLogger.Log("5) Create crlnumber file");
             File.WriteAllText($"{CaIntermediateDirectory}/crlnumber", "1000");
+            ConsoleLogger.Log("6) Copy .conf file");
             File.Copy($"{Folder.Resources}/openssl-intermediate.cnf", CaIntermediateConfFile, true);
             //Debug
+            ConsoleLogger.Log("7) Generate intermediate private key");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096"));
+            ConsoleLogger.Log("8) Change private key acl");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}"));
+            ConsoleLogger.Log("9) Generate intermediate cert request");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey}" +
                 $"-new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{CaIntermediatePass}" +
                  "-subj \"/C=IT/ST=Milan/L=./O=Anthilla SRL/OU=./CN=Antd Intermediate CA/emailAddress=.\""));
+            ConsoleLogger.Log("10) Generate intermediate certificate, signed with root certificate");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca" +
                  $"-days 3650 -notext -md sha256 -passin pass:{CaIntermediatePass}" +
                  $"-in {CaIntermediateCertificateReq}" +
                  $"-out {CaIntermediateCertificate}"));
+            ConsoleLogger.Log("11) Change intermediate certificate acl");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}"));
+            ConsoleLogger.Log("12) Check intermediate certificate");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}"));
+            ConsoleLogger.Log("13) Verify intermediate certificate");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}"));
+            ConsoleLogger.Log("14) Generate intermediate chain file");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}"));
+            ConsoleLogger.Log("15) Change intermediate chain file acl");
             ConsoleLogger.Point(Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}"));
 
             //Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{CaIntermediatePass} 4096");
