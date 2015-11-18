@@ -208,13 +208,6 @@ namespace Antd {
             //server.Start();
         }
 
-        public static void InitAuthentication() {
-            ConsoleLogger.Log("    authentication -> initialize");
-            if (Config.ValueExists == false) {
-                Config.Disable();
-            }
-        }
-
         public static void LaunchApps() {
             if (!AssemblyInfo.IsUnix)
                 return;

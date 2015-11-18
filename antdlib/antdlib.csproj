@@ -139,7 +139,6 @@
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
     <Compile Include="Auth\T2FA\Authentication.cs" />
-    <Compile Include="Auth\T2FA\Config.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Boot\Boot.cs" />

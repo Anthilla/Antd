@@ -86,7 +86,7 @@ namespace Antd.Modules {
             Get["/"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.SSHPort = "22";
-                vmod.AuthStatus = antdlib.Auth.T2FA.Config.IsEnabled;
+                vmod.AuthStatus = CoreParametersConfig.GetT2Fa();
 
                 vmod.SslStatus = "Enabled";
                 vmod.SslStatusAction = "Disable";
@@ -111,12 +111,12 @@ namespace Antd.Modules {
             };
 
             Get["/auth/disable"] = x => {
-                antdlib.Auth.T2FA.Config.Disable();
+                CoreParametersConfig.DisableT2Fa();
                 return Response.AsJson(true);
             };
 
             Get["/auth/enable"] = x => {
-                antdlib.Auth.T2FA.Config.Enable();
+                CoreParametersConfig.EnableT2Fa();
                 return Response.AsJson(true);
             };
 

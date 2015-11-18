@@ -62,6 +62,37 @@ namespace antdlib.Boot {
             if (Writer.CheckValue("ca") == false) {
                 Writer.Write("ca", "no");
             }
+            if (Writer.CheckValue(Label.Auth.IsEnabled) == false) {
+                Writer.Write(Label.Auth.IsEnabled, false.ToString());
+            }
+        }
+
+        public static bool GetT2Fa() {
+            try {
+                return Writer.CheckValue(Label.Auth.IsEnabled) ? Convert.ToBoolean(Writer.ReadValue(Label.Auth.IsEnabled)) : false;
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return false;
+            }
+        }
+
+        public static void EnableT2Fa() {
+            try {
+                Writer.Write(Label.Auth.IsEnabled, true.ToString());
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static void DisableT2Fa() {
+            try {
+                Writer.Write(Label.Auth.IsEnabled, false.ToString());
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
         }
 
         public static string GetCertificatePath() {

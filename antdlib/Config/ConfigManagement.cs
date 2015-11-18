@@ -436,7 +436,7 @@ namespace antdlib.Config {
                     }
                 }
                 catch (Exception) {
-                    ConsoleLogger.Log($"Nothing to configure for {contextName}");
+                    ConsoleLogger.Log($"Nothing to configure in {filename}");
                     //ConsoleLogger.Warn($"Cannot apply configuration stored in: {filename}");
                     //ConsoleLogger.Warn("The file may not exists or it may be empty");
                     //ConsoleLogger.Warn(ex.Message);
