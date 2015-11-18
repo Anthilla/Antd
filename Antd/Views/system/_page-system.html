@@ -92,8 +92,62 @@
 @EndSection
 
 @Section['Scripts']
-<script src="/Scripts/antd.selectize.js" type="text/javascript"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $.when(
+            LoadUserEntitiesUnits()
+        ).then();
+    });
+
+    var UserSelectizerOptions = function () {
+        return {
+            load: function (query, callback) {
+                if (!query.length) return callback();
+                $.ajax({
+                    url: this.settings.remoteUrl,
+                    type: "GET",
+                    dataType: "json",
+                    data: {
+                        s: query
+                    },
+                    error: function () {
+                        callback();
+                    },
+                    success: function (data) {
+                        callback(data);
+                    }
+                });
+            },
+            render: function (data, escape) {
+                return '<div><span data-guid="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + String(data.alias) + "</span></div>";
+            }
+        };
+    }();
+
+    var $userEntitiesSelectizer = $("#userEntities").selectize({
+        delimiter: ",",
+        persist: false,
+        valueField: "guid",
+        labelField: "alias",
+        searchField: ["alias", "guid"],
+        render: { option: UserSelectizerOptions.render },
+        remoteUrl: "/users/json",
+        load: UserSelectizerOptions.load,
+        sortField: "alias"
+    });
+
+    function LoadUserEntitiesUnits() {
+        if ($("#userEntities").size() > 0) {
+            var userEntitiesSelectizer = $userEntitiesSelectizer[0].selectize;
+            userEntitiesSelectizer.load(function (callback) {
+                Callback(callback, this.settings.remoteUrl);
+                $("#userEntities").hide();
+            });
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////
+
     $('select[name="Assignment"]').focusout(function () {
         var selectedoption = $(this).find('option:selected').val();
         if (selectedoption === "user") {

@@ -160,9 +160,9 @@ namespace antdlib.Certificate {
                 try {
                     var certName = commonName;
                     var usePassphraseForPrivateKey = passphrase.Length > 0;
-                    var certificateKeyPath = $"{CaIntermediateDirectory}/private/{certName}.key.pem ";
-                    var certificateRequestPath = $"{CaIntermediateDirectory}/csr/{certName}.csr.pem ";
-                    var certificatePath = $"{CaIntermediateDirectory}/certs/{certName}.cert.pem ";
+                    var certificateKeyPath = $"{CaIntermediateDirectory}/private/{certName}.key.pem";
+                    var certificateRequestPath = $"{CaIntermediateDirectory}/csr/{certName}.csr.pem";
+                    var certificatePath = $"{CaIntermediateDirectory}/certs/{certName}.cert.pem";
 
                     if (usePassphraseForPrivateKey == false) {
                         Terminal.Terminal.Execute($"openssl genrsa -out {certificateKeyPath} {bytesLength}");

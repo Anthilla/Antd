@@ -383,9 +383,8 @@ namespace antdlib.Config {
                     }
                     return Directory.EnumerateFiles(fullPath, "*.cfg", SearchOption.TopDirectoryOnly).Where(d => !d.StartsWith("disabled.")).OrderBy(f => f);
                 }
-                catch (Exception ex) {
-                    ConsoleLogger.Warn($"No files found for this configuration context: {contextName}");
-                    ConsoleLogger.Warn(ex.Message);
+                catch (Exception) {
+                    ConsoleLogger.Log($"Nothing to configure for {contextName}");
                     return new List<string>();
                 }
             }
@@ -412,9 +411,8 @@ namespace antdlib.Config {
                         LaunchConfigurationForFile(file);
                     }
                 }
-                catch (Exception ex) {
-                    ConsoleLogger.Warn($"There is nothing to apply for this configuration context: {contextName}");
-                    ConsoleLogger.Warn(ex.Message);
+                catch (Exception) {
+                    ConsoleLogger.Log($"Nothing to configure for {contextName}");
                 }
             }
 
@@ -428,19 +426,20 @@ namespace antdlib.Config {
                         throw new Exception();
                     }
                     foreach (var line in lines) {
-                        try {
-                            Terminal.Terminal.Execute(line);
-                            AddCommandsBundle(line);
-                        }
-                        catch (Exception) {
-                            ConsoleLogger.Warn($"Error while executing: {line}");
-                        }
+                        //try {
+                        AddCommandsBundle(line);
+                        Terminal.Terminal.Execute(line);
+                        //}
+                        //catch (Exception) {
+                        //    ConsoleLogger.Warn($"Error while executing: {line}");
+                        //}
                     }
                 }
-                catch (Exception ex) {
-                    ConsoleLogger.Warn($"Cannot apply configuration stored in: {filename}");
-                    ConsoleLogger.Warn("The file may not exists or it may be empty");
-                    ConsoleLogger.Warn(ex.Message);
+                catch (Exception) {
+                    ConsoleLogger.Log($"Nothing to configure for {contextName}");
+                    //ConsoleLogger.Warn($"Cannot apply configuration stored in: {filename}");
+                    //ConsoleLogger.Warn("The file may not exists or it may be empty");
+                    //ConsoleLogger.Warn(ex.Message);
                 }
             }
 
