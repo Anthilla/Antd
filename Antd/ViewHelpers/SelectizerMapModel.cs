@@ -29,6 +29,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Config;
+using antdlib.Users;
 
 namespace Antd.ViewHelpers {
     public class SelectizerMapModel {
@@ -38,9 +40,15 @@ namespace Antd.ViewHelpers {
             return list;
         }
 
-        public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<antdlib.Config.ConfigManagement.CommandsBundleLayout> commands) {
+        public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<ConfigManagement.CommandsBundleLayout> commands) {
             var list = new List<RawCommandBundleLayout>();
             list.AddRange(commands.Select(c => new RawCommandBundleLayout { name = c.CommandLayout }));
+            return list;
+        }
+
+        public static IEnumerable<RawUserEntity> MapRawUserEntity(IEnumerable<UserEntity.UserEntityModel> users) {
+            var list = new List<RawUserEntity>();
+            list.AddRange(users.Select(c => new RawUserEntity { alias = c.MasterAlias, guid = c.MasterGuid }));
             return list;
         }
     }
@@ -51,5 +59,10 @@ namespace Antd.ViewHelpers {
 
     public class RawCommandBundleLayout {
         public string name { get; set; }
+    }
+
+    public class RawUserEntity {
+        public string alias { get; set; }
+        public string guid { get; set; }
     }
 }

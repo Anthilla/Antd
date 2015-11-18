@@ -54,15 +54,13 @@ namespace Antd.Modules {
                 var model = (from d in list
                              where d.isFile
                              select d.path).ToList();
-                var json = JsonConvert.SerializeObject(model);
-                return json;
+                return JsonConvert.SerializeObject(model);
             };
 
             Get["/file/content/{path*}"] = x => {
                 var p = x.path;
                 var model = FileSystem.ReadFile(p);
-                var json = JsonConvert.SerializeObject(model);
-                return json;
+                return JsonConvert.SerializeObject(model);
             };
         }
     }

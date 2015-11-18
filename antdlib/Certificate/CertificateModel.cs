@@ -27,12 +27,38 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace antdlib.Certificate {
+    public class CertificateRepository {
+        public static IEnumerable<CertificateModel> GetAll() => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent);
+
+        public static CertificateModel GetByGuid(string guid) => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent && _.CertificateGuid == guid).FirstOrDefault();
+    }
+
+    public enum CertificateAuthorityLevel : byte {
+        Root = 1,
+        Intermediate = 2,
+        Common = 3,
+        Other = 99
+    }
+
+    public enum CertificateAssignment : byte {
+        Service = 1,
+        User = 2,
+        Other = 99
+    }
+
     public class CertificateModel {
         public string _Id { get; set; }
-        public bool IsDeleted { get; set; } = false;
+        public bool IsPresent { get; set; }
+        public bool IsRevoked { get; set; } = false;
         public string CertificateGuid { get; set; }
         public string CertificatePath { get; set; }
+        public string CertificateDerPath { get; set; }
+        public string CertificatePfxPath { get; set; }
         public string CertificateCountryName { get; set; }
         public string CertificateStateProvinceNameh { get; set; }
         public string CertificateLocalityName { get; set; }
@@ -40,7 +66,19 @@ namespace antdlib.Certificate {
         public string CertificateOrganizationalUnitName { get; set; }
         public string CertificateCommonName { get; set; }
         public string CertificateEmailAddress { get; set; }
-        public bool IsProtectedByPassword { get; set; }
+        public string CertificatePassphrase { get; set; }
+        public string CertificateBytes { get; set; }
+        public bool IsProtectedByPassphrase { get; set; }
+
+        public DateTime ReleaseDateTime { get; set; }
+        public DateTime ExpirationDateTime { get; set; }
+
+        public CertificateAuthorityLevel CertificateAuthorityLevel { get; set; }
+        public CertificateAssignment CertificateAssignment { get; set; }
+        public IEnumerable<string> AssignmentUserGuid  { get; set; }
+
+        public string AssignmentServiceGuid { get; set; }
+        public string AssignmentServiceAlias { get; set; }
 
         //public string CertificateValue => File.ReadAllText(CertificatePath);
     }

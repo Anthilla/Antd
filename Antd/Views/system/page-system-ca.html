@@ -52,7 +52,7 @@
                     <label>Certificate Name / Common Name</label>
                 </div>
                 <div class="span7">
-                    <input name="CommonName" style="width: 60%; height: 25px;" type="text"/>
+                    <input name="CommonName" style="width: 60%; height: 25px;" type="text" />
                 </div>
             </div>
             <div class="row">
@@ -84,7 +84,7 @@
                     <label>Organization Name</label>
                 </div>
                 <div class="span7">
-                    <input name="OrganizationName" style="width: 60%; height: 25px;" type="text"/>
+                    <input name="OrganizationName" style="width: 60%; height: 25px;" type="text" />
                 </div>
             </div>
             <div class="row">
@@ -92,7 +92,7 @@
                     <label>Organizational Unit Name</label>
                 </div>
                 <div class="span7">
-                    <input name="OrganizationalUnitName" style="width: 60%; height: 25px;" type="text"/>
+                    <input name="OrganizationalUnitName" style="width: 60%; height: 25px;" type="text" />
                 </div>
             </div>
             <div class="row">
@@ -100,7 +100,7 @@
                     <label>Email Address</label>
                 </div>
                 <div class="span7">
-                    <input name="EmailAddress" style="width: 60%; height: 25px;" type="text"/>
+                    <input name="EmailAddress" style="width: 60%; height: 25px;" type="text" />
                 </div>
             </div>
             <div class="row">
@@ -108,12 +108,50 @@
                     <label>Password</label>
                 </div>
                 <div class="span7">
-                    <input name="Password" style="width: 60%; height: 25px;" type="text"/>
+                    <input name="Password" style="width: 60%; height: 25px;" type="text" />
                 </div>
                 <div class="span4">
-                    <label>Leave this field blank if you don't want to assign a password to this certificate.</label>
+                    <p>Leave this field blank if you don't want to assign a password to this certificate.</p>
                 </div>
             </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Bytes Length</label>
+                </div>
+                <div class="span7">
+                    <input name="BytesLength" style="width: 60%; height: 25px;" type="text" value="2048" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Assignment</label>
+                </div>
+                <div class="span7">
+                    <select class="bg-anthilla-gray fg-white border-anthilla-green" name="Assignment" style="width: 60%; height: 25px;">
+                        <option value="user" selected="selected">User</option>
+                        <option value="service">Service</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" id="UserAssignmentRow">
+                <div class="span4">
+                    <label>User Assignment</label>
+                </div>
+                <div class="span7">
+                    <input type="hidden" name="UserAlias" value="" />
+                    <input id="userEntities" name="UserGuid" type="text" />
+                </div>
+            </div>
+            <div class="row" style="display: none;" id="ServiceAssignmentRow">
+                <div class="span4">
+                    <label>Service Assignment</label>
+                </div>
+                <div class="span7">
+                    <input type="hidden" name="ServiceGuid" value=""/>
+                    <input name="ServiceAlias" style="width: 60%; height: 25px;" type="text"/>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="span4">
                 </div>
@@ -123,7 +161,59 @@
             </div>
         </form>
     </div>
-    @Each.Certificates
-    <p>@Current</p>
-    @EndEach
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Certificate </th>
+                <th> Location </th>
+                <th> Organization </th>
+                <th> Assigned to </th>
+                <th> Expire date </th>
+                <th> Status (isRevoked?) </th>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.Certificates
+            <tr data-guid="@Current.CertificateGuid" data-path="@Current.CertificatePath">
+                <td>
+                    <p>@Current.CertificateCommonName</p>
+                </td>
+                <td>
+                    <p>@Current.CertificateCountryName @Current.CertificateStateProvinceNameh @Current.CertificateLocalityName</p>
+                </td>
+                <td>
+                    <p>@Current.CertificateOrganizationName @Current.CertificateOrganizationalUnitName @Current.CertificateEmailAddress</p>
+                </td>
+                <td>
+                    <p>@Current.CertificateAssignment</p>
+                </td>
+                <td>
+                    <p>@Current.ExpirationDateTime</p>
+                </td>
+                <td>
+                    <p>@Current.IsRevoked</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <a href="/ca/certificate/download/pem/@Current.CertificateGuid" class="button bg-anthilla-green">Download PEM Certificate</a>
+                    <a href="/ca/certificate/download/pfx/@Current.CertificateGuid" class="button bg-anthilla-green">Download PFX Certificate</a>
+                    <a href="/ca/certificate/download/der/@Current.CertificateGuid" class="button bg-anthilla-green">Download CER Certificate</a>
+                </td>
+            </tr>
+            <!--
+            public bool IsRevoked { get; set; } = false;
+            public string CertificatePath { get; set; }
+
+            public string CertificateOrganizationName { get; set; }
+            public string CertificateOrganizationalUnitName { get; set; }
+            public string CertificateEmailAddress { get; set; }
+
+            public DateTime ExpirationDateTime { get; set; }
+
+            public CertificateAuthorityLevel CertificateAuthorityLevel { get; set; }
+            public CertificateAssignment CertificateAssignment { get; set; }-->
+            @EndEach
+        </tbody>
+    </table>
 </div>

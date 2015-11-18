@@ -202,17 +202,24 @@ namespace antdlib.Users {
             }
 
             private static Tuple<byte[], byte[]> GenerateUsersKeys(string userGuid) {
-                var keyrepo = Folder.AntdCfgKeys;
-                Directory.CreateDirectory(keyrepo);
-                var userkeyrepo = $"{keyrepo}/{userGuid}";
-                Directory.CreateDirectory(userkeyrepo);
-                ConsoleLogger.Info($"keys for {userGuid} created");
-                Terminal.Terminal.Execute($"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
-                var publicFile = $"{userkeyrepo}/{userGuid}.pub";
-                var privateFile = $"{userkeyrepo}/{userGuid}";
-                var publicBytes = File.ReadAllBytes(publicFile);
-                var privateBytes = File.ReadAllBytes(privateFile);
-                return new Tuple<byte[], byte[]>(publicBytes, privateBytes);
+                try {
+                    var keyrepo = Folder.AntdCfgKeys;
+                    Directory.CreateDirectory(keyrepo);
+                    var userkeyrepo = $"{keyrepo}/{userGuid}";
+                    Directory.CreateDirectory(userkeyrepo);
+                    ConsoleLogger.Info($"keys for {userGuid} created");
+                    Terminal.Terminal.Execute(
+                        $"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
+                    var publicFile = $"{userkeyrepo}/{userGuid}.pub";
+                    var privateFile = $"{userkeyrepo}/{userGuid}";
+                    var publicBytes = File.ReadAllBytes(publicFile);
+                    var privateBytes = File.ReadAllBytes(privateFile);
+                    return new Tuple<byte[], byte[]>(publicBytes, privateBytes);
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn(ex.Message);
+                    return new Tuple<byte[], byte[]>(null, null);
+                }
             }
         }
 

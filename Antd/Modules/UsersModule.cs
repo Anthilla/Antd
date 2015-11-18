@@ -29,8 +29,10 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
+using antdlib.Config;
 using antdlib.Security;
 using antdlib.Users;
+using Antd.ViewHelpers;
 using Nancy;
 using Nancy.Security;
 
@@ -47,6 +49,8 @@ namespace Antd.Modules {
                 //vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
                 return View["_page-users", vmod];
             };
+
+            Get["/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(UserEntity.Repository.GetAll()));
 
             Post["/refresh/users"] = x => {
                 SystemUser.ImportUsersToDatabase();

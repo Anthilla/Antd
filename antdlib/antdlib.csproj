@@ -153,7 +153,6 @@
     <Compile Include="CCTable\CCTableRepository.cs" />
     <Compile Include="Certificate\CertificateAuthority.cs" />
     <Compile Include="Certificate\CertificateModel.cs" />
-    <Compile Include="Certificate\CertificateRepository.cs" />
     <Compile Include="Collectd\CollectdModel.cs" />
     <Compile Include="Collectd\CollectdRepo.cs" />
     <Compile Include="Common\ConsoleLogger.cs" />

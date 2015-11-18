@@ -1,10 +1,4 @@
-﻿using antdlib.Boot;
-using antdlib.Certificate;
-using Nancy;
-using Nancy.Routing.Constraints;
-using Nancy.Security;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,6 +26,13 @@ using Nancy.Security;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
+using System.IO;
+using antdlib.Boot;
+using antdlib.Certificate;
+using Nancy;
+using Nancy.Responses;
+using Nancy.Security;
 
 namespace Antd.Modules {
 
@@ -77,17 +78,54 @@ namespace Antd.Modules {
 
             Post["/certificate/new"] = x => {
                 var countryName = ((string)Request.Form.CountryName).Length < 1 ? "." : (string)Request.Form.CountryName;
+                if (countryName.Length > 2) {
+                    countryName = countryName.Substring(0, 2).ToUpper();
+                }
                 var stateProvinceName = ((string)Request.Form.StateProvinceName).Length < 1 ? "." : (string)Request.Form.StateProvinceName;
                 var localityName = ((string)Request.Form.LocalityName).Length < 1 ? "." : (string)Request.Form.LocalityName;
                 var organizationName = ((string)Request.Form.OrganizationName).Length < 1 ? "." : (string)Request.Form.OrganizationName;
                 var organizationalUnitName = ((string)Request.Form.OrganizationalUnitName).Length < 1 ? "." : (string)Request.Form.OrganizationalUnitName;
                 var commonName = ((string)Request.Form.CommonName).Length < 1 ? "*" : (string)Request.Form.CommonName;
                 var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
-                var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.CommoPasswordnName;
-                var usePasswordForPrivateKey = ((string)Request.Form.Password).Length > 0;
-                CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, usePasswordForPrivateKey);
+                var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.Password;
+                var bytesLength = ((string)Request.Form.BytesLength).Length < 1 ? "2048" : (string)Request.Form.BytesLength;
+                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : DetectCertificateAssignment((string)Request.Form.Assignment.Value);
+                var userGuid = ((string)Request.Form.UserGuid).Length < 1 ? "" : (string)Request.Form.UserGuid;
+                var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
+                var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;
+                CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, assignment, bytesLength, userGuid, serviceGuid, serviceAlias);
                 return Response.AsRedirect("/system");
             };
+
+            Get["/certificate/download/{format}/{guid}"] = x => {
+                var guid = (string)x.guid;
+                var certificate = CertificateRepository.GetByGuid(guid);
+                if (certificate == null) return HttpStatusCode.InternalServerError;
+                string path;
+                var format = (string)x.format;
+                switch (format) {
+                    case "der":
+                        path = certificate.CertificateDerPath;
+                        break;
+                    case "pfx":
+                        path = certificate.CertificatePfxPath;
+                        break;
+                    default:
+                        path = certificate.CertificatePath;
+                        break;
+                }
+                var file = new FileStream(path, FileMode.Open);
+                var fileName = Path.GetFileName(certificate.CertificatePath);
+                var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
+                return response.AsAttachment(fileName);
+            };
+        }
+
+        private static CertificateAssignment DetectCertificateAssignment(string value) {
+            if (value == "user") {
+                return CertificateAssignment.User;
+            }
+            return value == "service" ? CertificateAssignment.Service : CertificateAssignment.Other;
         }
     }
 }
