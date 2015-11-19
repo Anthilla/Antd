@@ -462,6 +462,9 @@
     <Content Include="Views\users\page-users-dashboard.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\users\page-users-entity-partial.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\users\page-users-entity.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

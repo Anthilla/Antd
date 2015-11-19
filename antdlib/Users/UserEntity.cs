@@ -63,8 +63,8 @@ namespace antdlib.Users {
             public bool IsEnabled { get; set; }
             public IEnumerable<Claim> Claims { get; set; }
 
-            public byte[] PublicKey { get; set; }
-            public byte[] PrivateKey { get; set; }
+            public string PublicKey { get; set; }
+            public string PrivateKey { get; set; }
 
             public class Claim {
                 public string ClaimGuid { get; set; }
@@ -131,7 +131,7 @@ namespace antdlib.Users {
                     MasterAlias = alias,
                     Claims = new List<UserEntityModel.Claim>()
                 };
-                var keys = GenerateUsersKeys(guid);
+                var keys = GenerateUsersKeys(guid, "rsa", "20048");
                 user.PublicKey = keys.Item1;
                 user.PrivateKey = keys.Item2;
                 Session.New.Set(user);
@@ -145,7 +145,7 @@ namespace antdlib.Users {
                     MasterAlias = alias,
                     Claims = claims
                 };
-                var keys = GenerateUsersKeys(guid);
+                var keys = GenerateUsersKeys(guid, "rsa", "20048");
                 user.PublicKey = keys.Item1;
                 user.PrivateKey = keys.Item2;
                 Session.New.Set(user);
@@ -201,24 +201,26 @@ namespace antdlib.Users {
                 Session.New.Delete(user);
             }
 
-            private static Tuple<byte[], byte[]> GenerateUsersKeys(string userGuid) {
+            private static Tuple<string, string> GenerateUsersKeys(string userGuid, string type, string keyLenght) {
                 try {
                     var keyrepo = Folder.AntdCfgKeys;
                     Directory.CreateDirectory(keyrepo);
-                    var userkeyrepo = $"{keyrepo}/{userGuid}";
-                    Directory.CreateDirectory(userkeyrepo);
+                    var userkeyrepo = keyrepo;
+                    //var userkeyrepo = $"{keyrepo}/{userGuid}";
+                    //Directory.CreateDirectory(userkeyrepo);
+                    var c = $"ssh-keygen -t {type} -b {keyLenght} -P antd{userGuid} -C \"antd_{userGuid}_key\" -f {userkeyrepo}/key_{userGuid}";
+                    ConsoleLogger.Warn(c);
+                    Terminal.Terminal.Execute(c);
                     ConsoleLogger.Info($"keys for {userGuid} created");
-                    Terminal.Terminal.Execute(
-                        $"ssh-keygen -t rsa -b 2048 -P antd{userGuid} -C \"{userGuid} key\" -f {userkeyrepo}/{userGuid}");
-                    var publicFile = $"{userkeyrepo}/{userGuid}.pub";
-                    var privateFile = $"{userkeyrepo}/{userGuid}";
-                    var publicBytes = File.ReadAllBytes(publicFile);
-                    var privateBytes = File.ReadAllBytes(privateFile);
-                    return new Tuple<byte[], byte[]>(publicBytes, privateBytes);
+                    var publicFile = $"{userkeyrepo}/key_{userGuid}.pub";
+                    var privateFile = $"{userkeyrepo}/key_{userGuid}";
+                    var publicBytes = File.ReadAllText(publicFile);
+                    var privateBytes = File.ReadAllText(privateFile);
+                    return new Tuple<string, string>(publicBytes, privateBytes);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
-                    return new Tuple<byte[], byte[]>(null, null);
+                    return new Tuple<string, string>("", "");
                 }
             }
         }

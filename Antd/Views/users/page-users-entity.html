@@ -32,27 +32,12 @@
             </p>
             <p style="display: inline-block;">
                 @Current.MasterUsername
+                <input name="UserPublicKey" type="hidden" value="@Current.PublicKey"/>
             </p>
             <i data-role="remove-user" data-guid="@user.MasterGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
             <i data-role="disable-user" data-guid="@user.MasterGuid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
         </li>
-        <!--
-        foreach (antdlib.Users.UserEntity.UserEntityModel.Claim claim in user.Claims) {
-        <li data-role="claim" data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 45px; margin-bottom: 3px;">
-            <input name="MasterGuid" type="hidden" value="@user.MasterGuid"/>
-            <p style="display: inline-block; width: 175px; float: left;">
-                @claim.Key
-            </p>
-            <p style="display: inline-block; width: 250px; overflow: hidden;">
-                @claim.Value
-            </p>
-
-            @if (!claim.Key.StartsWith("antd-master-")) {
-            <i data-role="remove-claim" data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-            }
-        </li>
-        }
-            -->
+        @Partial['page-users-entity-partial', Current.Claims]
         <li data-role="claim" data-user-guid="@user.MasterGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 205px; margin-bottom: 3px;">
             <form action="/users/identity/addclaim" method="POST" enctype="multipart/form-data" autocomplete="off" class="grid">
                 <input name="Userguid" type="hidden" value="@user.MasterGuid" />

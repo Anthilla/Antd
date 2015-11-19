@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Dynamic;
 using antdlib.Terminal;
 using Nancy;
@@ -55,7 +56,12 @@ namespace Antd.Modules {
             Get["/2"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Name = "Rendered with SSVE! ☻";
-                vmod.List = new[] { "uno", "due", "tre" };
+                var list = new List<string> {"uno", "due", "tre"};
+                var list2 = new List<List<string>>();
+                list2.Add(list);
+                list2.Add(list);
+                list2.Add(list);
+                vmod.List = list2;
                 return View["page-empty", vmod];
             };
         }
