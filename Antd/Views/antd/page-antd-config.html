@@ -3,7 +3,7 @@
     <table class="table">
         <tbody>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Hostname</label>
                 </td>
                 <td>
@@ -11,7 +11,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Set Hostname</label>
                 </td>
                 <td>
@@ -20,7 +20,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Set Chassis</label>
                 </td>
                 <td>
@@ -29,7 +29,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Set Deployment</label>
                 </td>
                 <td>
@@ -38,7 +38,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Set Location</label>
                 </td>
                 <td>
@@ -47,29 +47,35 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Sync System and Hardware Clocks</label>
                 </td>
                 <td>
-                    <input data-role="submit-general-function" data-command="hwclock --systohc $nl hwclock --hctosys" type="button" value="Sync" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
+                    <input data-role="submit-general-function" data-command="hwclock --systohc $nl hwclock --hctosys" type="button" value="Sync" class="bg-anthilla-green" style="width: 40% !important; color: #464646;" />
                 </td>
             </tr>
-
             <tr>
-                <td style="width: 200px;">
-                    <label>Date</label>
+                <td style="width: 350px;">
+                    <label>System Time</label>
                 </td>
                 <td>
                     <textarea data-role="show-general-function" data-command="date" style="min-width: 100%; max-width: 100%; width: 100%; height: 100%; background-color: #464646; border: 0;" class="fg-white"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 350px;">
+                    <label>Hardware Time</label>
+                </td>
+                <td>
                     <textarea data-role="show-general-function" data-command="timedatectl" style="min-width: 100%; max-width: 100%; width: 100%; height: 100%; background-color: #464646; border: 0;" class="fg-white"></textarea>
                 </td>
             </tr>
             <tr>
-                <td style="width: 200px;">
+                <td style="width: 350px;">
                     <label>Set Timezone</label>
                 </td>
                 <td>
-                    <select data-role="input-general-function" data-role2="show-general-function" data-command="timedatectl list-timezone" style="width: 60%; height: 25px;" class="border-2-anthilla-green"></select>
+                    <select data-role="input-general-function" data-role2="show-general-function" data-command="timedatectl list-timezones" style="width: 60%; height: 25px;" class="border-2-anthilla-green"></select>
                     <input data-role="submit-general-function" data-command="timedatectl --nopager --no-ask-password --adjust-system-clock set-timezone [tag:x]" type="button" Value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
                 </td>
             </tr>

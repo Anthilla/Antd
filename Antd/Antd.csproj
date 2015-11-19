@@ -282,6 +282,15 @@
     <None Include="Views\antd\page-antd-config.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Views\antd\page-antd-dns-client.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-firewall.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-network.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

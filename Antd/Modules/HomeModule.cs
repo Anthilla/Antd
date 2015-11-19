@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -35,6 +36,8 @@ using antdlib.Boot;
 using antdlib.CCTable;
 using antdlib.Certificate;
 using antdlib.Contexts;
+using antdlib.Firewall;
+using antdlib.Network;
 using antdlib.Status;
 using antdlib.Terminal;
 using Nancy;
@@ -66,6 +69,14 @@ namespace Antd.Modules {
                 viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'");
                 viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'");
                 viewModel.Cpuinfo = Cpuinfo.Get();
+
+                viewModel.NetworkPhysicalIf = NetworkInterface.Physical;
+                viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
+                viewModel.NetworkBondIf = NetworkInterface.Bond;
+                viewModel.NetworkBridgeIf = Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+                viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
+
 
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();

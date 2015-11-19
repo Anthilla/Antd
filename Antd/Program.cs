@@ -128,7 +128,7 @@ namespace Antd {
             AntdBoot.SetOsMount();
             //AntdBoot.SetWebsocketd();
             //AntdBoot.SetSystemdJournald();
-            //AntdBoot.CheckResolvd();
+            AntdBoot.CheckResolv();
             //AntdBoot.StartScheduler(true);
             //AntdBoot.StartDirectoryWatcher(new[] { Folder.RepoConfig }, false);
             //AntdBoot.InitAuthentication();

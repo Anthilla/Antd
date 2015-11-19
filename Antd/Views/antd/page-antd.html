@@ -49,6 +49,21 @@
             Config
         </a>
         <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Network" style="padding-top: 11px;">
+            Network
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DnsClient" style="padding-top: 11px;">
+            Dns Client
+        </a>
+        <div class="element-divider"></div>
+        <a href="#" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Firewall" style="padding-top: 11px;">
+            Firewall
+        </a>
+        <div class="element-divider"></div>
+
+
+
 
         <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
             <i class="icon-arrow-up"></i>
@@ -60,6 +75,10 @@
 @Section['MainContent']
 @Partial['antd/page-antd-info'];
 @Partial['antd/page-antd-config'];
+@Partial['antd/page-antd-network'];
+@Partial['antd/page-antd-dns-client'];
+@Partial['antd/page-antd-firewall'];
+
 <hr />
 <hr />
 <hr />
@@ -71,16 +90,16 @@
 @EndSection
 
 @Section['Scripts']
-<script type="text/javascript">
-    $(document).ready(function () {
+<script data-context="general" type="text/javascript">
+    $(document).ready(function() {
         $.when(
             LoadUserEntitiesUnits()
         ).then();
     });
 
-    var UserSelectizerOptions = function () {
+    var UserSelectizerOptions = function() {
         return {
-            load: function (query, callback) {
+            load: function(query, callback) {
                 if (!query.length) return callback();
                 $.ajax({
                     url: this.settings.remoteUrl,
@@ -89,15 +108,15 @@
                     data: {
                         s: query
                     },
-                    error: function () {
+                    error: function() {
                         callback();
                     },
-                    success: function (data) {
+                    success: function(data) {
                         callback(data);
                     }
                 });
             },
-            render: function (data, escape) {
+            render: function(data, escape) {
                 return '<div><span data-guid="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + String(data.alias) + "</span></div>";
             }
         };
@@ -118,7 +137,7 @@
     function LoadUserEntitiesUnits() {
         if ($("#userEntities").size() > 0) {
             var userEntitiesSelectizer = $userEntitiesSelectizer[0].selectize;
-            userEntitiesSelectizer.load(function (callback) {
+            userEntitiesSelectizer.load(function(callback) {
                 Callback(callback, this.settings.remoteUrl);
                 $("#userEntities").hide();
             });
@@ -127,7 +146,7 @@
 
     //////////////////////////////////////////////////////////////////
 
-    $('select[name="Assignment"]').focusout(function () {
+    $('select[name="Assignment"]').focusout(function() {
         var selectedoption = $(this).find('option:selected').val();
         if (selectedoption === "user") {
             $('#UserAssignmentRow').show();
@@ -139,7 +158,7 @@
         }
     });
 
-    $('select[name="Assignment"]').click(function () {
+    $('select[name="Assignment"]').click(function() {
         var selectedoption = $(this).find('option:selected').val();
         if (selectedoption === "user") {
             $('#UserAssignmentRow').show();
@@ -151,18 +170,18 @@
         }
     });
 
-    $('[data-role="CertificateAuthoritySetup"]').click(function () {
+    $('[data-role="CertificateAuthoritySetup"]').click(function() {
         jQuery.support.cors = true;
         $.ajax({
             url: '/ca/setup',
             type: 'POST',
-            success: function () {
+            success: function() {
                 location.reload(true);
             }
         });
     });
 
-    $('[data-role="CreateNewCertificate"]').click(function () {
+    $('[data-role="CreateNewCertificate"]').click(function() {
         var name = $(this).prev('input[name="CertificateName"]').val();
         jQuery.support.cors = true;
         $.ajax({
@@ -171,24 +190,24 @@
             data: {
                 Certificate: name
             },
-            success: function () {
+            success: function() {
                 location.reload(true);
             }
         });
     });
 
-    $('[data-role="InvertSslOption"]').click(function () {
+    $('[data-role="InvertSslOption"]').click(function() {
         jQuery.support.cors = true;
         $.ajax({
             url: '/ca/ssl/toggle',
             type: 'POST',
-            success: function () {
+            success: function() {
                 location.reload(true);
             }
         });
     });
 
-    $('[data-role="ChangeCertificatePath"]').click(function () {
+    $('[data-role="ChangeCertificatePath"]').click(function() {
         var path = $(this).prev('input[name="CertificatePath"]').val();
         jQuery.support.cors = true;
         $.ajax({
@@ -197,13 +216,13 @@
             data: {
                 CertificatePath: path
             },
-            success: function () {
+            success: function() {
                 location.reload(true);
             }
         });
     });
 
-    $('[data-role="submit-general-function"]').click(function () {
+    $('[data-role="submit-general-function"]').click(function() {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="input-general-function"]').val();
         jQuery.support.cors = true;
@@ -213,14 +232,30 @@
             data: {
                 Command: command.replace("[tag:x]", param)
             },
-            success: function () {
+            success: function() {
                 location.reload(true);
             }
         });
     });
 
-    $(document).ready(function () {
-        $('textarea[data-role="show-general-function"]').each(function () {
+    $('[data-role="submit-general-function-from-text"]').click(function() {
+        var command = $(this).attr('data-command');
+        var param = $(this).prev('[data-role="show-general-function"]').text();
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/terminal/direct',
+            type: 'POST',
+            data: {
+                Command: command.replace("[tag:x]", param)
+            },
+            success: function() {
+                location.reload(true);
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('textarea[data-role="show-general-function"]').each(function() {
             var t = $(this);
             var command = t.attr('data-command');
             jQuery.support.cors = true;
@@ -230,13 +265,13 @@
                 data: {
                     Command: command
                 },
-                success: function (data) {
+                success: function(data) {
                     console.log(data);
                     t.text(data);
                 }
             });
         });
-        $('select[data-role2="show-general-function"]').each(function () {
+        $('select[data-role2="show-general-function"]').each(function() {
             var t = $(this);
             var command = t.attr('data-command');
             jQuery.support.cors = true;
@@ -246,10 +281,10 @@
                 data: {
                     Command: command
                 },
-                success: function (data) {
+                success: function(data) {
                     console.log(data);
                     var arr = data.split('\n');
-                    $.each(arr, function (i, value) {
+                    $.each(arr, function(i, value) {
                         t.append('<option Value="' + value + '">' + value + '</option>');
                     });
                 }
@@ -257,12 +292,12 @@
         });
     });
 
-    $('.search-field').keyup(function () {
+    $('.search-field').keyup(function() {
         var queryString = $(this).val();
         var table = $('.searchable');
         var tableBody = table.children('tbody');
         var row = tableBody.children('tr');
-        row.each(function () {
+        row.each(function() {
             var thisRow = $(this);
             var queriedText = $(this).text();
             if (queriedText.indexOf(queryString) != -1) {
@@ -274,7 +309,7 @@
         });
     });
 
-    $('p.edit-conf').click(function () {
+    $('p.edit-conf').click(function() {
         var path = $(this).attr('data-path');
         jQuery.support.cors = true;
         $.ajax({
@@ -282,7 +317,7 @@
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-            success: function (text) {
+            success: function(text) {
                 var dashboard = $('#FileConfigDashboard');
                 dashboard.find('#title').text('Editing: ' + path);
                 dashboard.find('input[name="FilePath"]').val(path);
@@ -294,7 +329,7 @@
         });
     });
 
-    $('p.export-conf').click(function () {
+    $('p.export-conf').click(function() {
         var p = $(this).attr('data-path');
         jQuery.support.cors = true;
         $.ajax({
@@ -302,24 +337,71 @@
             type: 'POST',
             data: JSON.stringify(p),
             contentType: "application/json;charset=utf-8",
-            success: function (data) {
+            success: function(data) {
                 location.reload(true);
                 return false;
             }
         });
     });
 
-    $('input#close').click(function () {
+    $('input#close').click(function() {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');
         form.hide();
     });
 
-    $('input#clear').click(function () {
+    $('input#clear').click(function() {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');
     });
+</script>
+
+<script data-context="firewall" type="text/javascript">
+        $('div[data-object="ruleset"]').dblclick(function () {
+            var table = $(this).attr('data-table');
+            var type = $(this).attr('data-type');
+            var hook = $(this).attr('data-hook');
+            $('#ValueBundleDashboard').find('input[name="Command"]').val('nft add rule ' + table + ' ' + type + ' ' + hook);
+            $('[data-role="display-table-context"]').text(table + ' ' + type + ' ' + hook);
+            $(window).scrollTop($('#ValueBundleDashboard').offset().top);
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/firewall/getrule/' + table + '/' + type + '/' + hook,
+                type: 'GET',
+                contentType: 'application/json;charset=utf-8',
+                success: function (data) {
+                    $('#new_rules').text(data);
+                    return false;
+                }
+            });
+        });
+
+        $('i[data-role="stop-rule"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/firewall/stoprule',
+                type: 'POST',
+                data: {
+                    Guid: guid
+                },
+                success: function () {
+                    location.reload(true);
+                }
+            });
+        });
+
+        $('#ExportFirewallConfiguration').click(function () {
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/firewall/export',
+                type: 'POST',
+                success: function () {
+                    location.reload(true);
+                }
+            });
+        });
 </script>
 @EndSection

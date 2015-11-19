@@ -1,0 +1,172 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Network">Network</legend>
+    <table class="table">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <label>Physical Interfaces</label>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.NetworkPhysicalIf
+            <tr>
+                <td style="width: 200px;">
+                    <label>@Current</label>
+                </td>
+                <td>
+                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
+                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
+                    @EditParameterRowPost("EnableInterface", new string[] { })
+                    @EditParameterRowPost("DisableInterface", new string[] { })
+                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
+                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
+                    <label>IPV6 configuration</label>
+                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
+                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
+                    @EditParameterRowGet("ShowRoutes", new string[] { })
+                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
+                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <label>Virtual Interfaces</label>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.NetworkVirtualIf
+            <tr>
+                <td style="width: 200px;">
+                    <label>@Current</label>
+                </td>
+                <td>
+                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
+                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
+                    @EditParameterRowPost("EnableInterface", new string[] { })
+                    @EditParameterRowPost("DisableInterface", new string[] { })
+                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
+                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
+                    <label>IPV6 configuration</label>
+                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
+                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
+                    @EditParameterRowGet("ShowRoutes", new string[] { })
+                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
+                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <label>Bond Interfaces</label>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.NetworkBondIf
+            <tr>
+                <td style="width: 200px;">
+                    <label>@Current</label>
+                </td>
+                <td>
+                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
+                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
+                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
+                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
+                    @EditParameterRowPost("EnableInterface", new string[] { })
+                    @EditParameterRowPost("DisableInterface", new string[] { })
+                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
+                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
+                    <label>IPV6 configuration</label>
+                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
+                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
+                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
+                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
+                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
+                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
+                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
+                    @EditParameterRowGet("ShowRoutes", new string[] { })
+                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
+                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    <label>Bridge Interfaces</label>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.NetworkBondIf
+            <tr>
+                <td style="width: 200px;">
+                    <label>@Current</label>
+                </td>
+                <td>
+                    @EditParameterRowPost("AddBridgeName", new string[] { "Bridge" })
+                    @EditParameterRowPost("DeleteBridgeName", new string[] { "Bridge" })
+                    @EditParameterRowPost("AddNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
+                    @EditParameterRowPost("DeleteNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
+                    @EditParameterRowPost("EnableStpOnBridge", new string[] { "Bridge" })
+                    @EditParameterRowPost("DisableStpOnBridge", new string[] { "Bridge" })
+                    @EditParameterRowPost("SetBridgePathCost", new string[] { "Bridge", "Path", "Cost" })
+                    @EditParameterRowPost("SetBridgePortPriority", new string[] { "Bridge", "Port", "Priority" })
+
+                    @EditParameterRowGet("ShowBridgeMACS", new string[] { })
+                    @EditParameterRowGet("ShowBridgeSTP", new string[] { })
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

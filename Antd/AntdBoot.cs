@@ -249,15 +249,11 @@ namespace Antd {
             SystemUser.Config.ResetPasswordForUserStoredInDb();
         }
 
-        public static void CheckResolvd() {
+        public static void CheckResolv() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            const string resolvfile = "/etc/resolv.conf";
-            if (File.Exists(resolvfile))
-                return;
-            if (File.ReadAllText(resolvfile).Length < 1) {
-                FileSystem.WriteFile(resolvfile, "nameserver 8.8.8.8");
-            }
+            if (!File.Exists("/etc/resolv.conf"))
+                Terminal.Execute("touch /etc/resolv.conf");
         }
 
         public static void DownloadDefaultRepoFiles() {

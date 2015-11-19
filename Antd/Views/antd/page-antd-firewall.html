@@ -1,0 +1,162 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Firewall">
+        <i class="icon-fire on-left"></i>
+        Firewall
+        <i id="ExportFirewallConfiguration" class="icon-upload fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
+    <div style="margin-bottom: 55px;">
+        <label style="float:left; position: relative; left: 140px;">prerouting</label>
+        <label style="float:left; position: relative; left: 250px;">input</label>
+        <label style="float:left; position: relative; left: 430px;">forward</label>
+        <label style="float:left; position: relative; left: 600px;">output</label>
+        <label style="float:left; position: relative; left: 695px;">postrouting</label>
+    </div>
+    <div style="width: 1450px; height: 500px ;  position:absolute; z-index: 0; opacity: 0.3;">
+        <div data-hook="prerouting" style="height: 100%; width: 150px; position: relative ;left: 105px; float: left;" class="bg-white"></div>
+        <div data-hook="input" style="height: 100%; width: 150px; position: relative; left: 115px; float: left;" class="bg-white"></div>
+        <div data-hook="forward" style="height: 100%; width: 150px; position: relative ;left:185px; float: left;" class="bg-white"></div>
+        <div data-hook="output" style="height: 100%; width: 150px; position: relative ;left:255px; float: left;" class="bg-white"></div>
+        <div data-hook="postrouting" style="height: 100%; width: 150px; position: relative ;left:265px; float: left;" class="bg-white"></div>
+    </div>
+    <div class="grid bg-transparent" style="width: 1450px; position:relative; z-index: 4;">
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @ConnectionBox("IP", "gray")
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "input", "ip", "red")
+            @RulesetBox("filter", "input", "ip")
+            @RulesetBox("nat", "input", "ip", "blue")
+            @EmptyBox()
+            @ConnectionBox("local machine")
+            @EmptyBox()
+            @RulesetBox("nat", "output", "ip", "blue")
+            @RulesetBox("filter", "output", "ip")
+            @RulesetBox("route", "output", "ip", "red")
+        </div>
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @EmptyBox()
+            @RulesetBox("nat", "prerouting", "ip", "blue")
+            @RulesetBox("filter", "prerouting", "ip")
+            @RulesetBox("route", "prerouting", "ip", "red")
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "postrouting", "ip", "red")
+            @RulesetBox("filter", "postrouting", "ip")
+            @RulesetBox("nat", "postrouting", "ip", "blue")
+        </div>
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "forward", "ip", "red")
+            @RulesetBox("filter", "forward", "ip")
+            @RulesetBox("nat", "forward", "ip", "blue")
+        </div>
+        <hr class="bg-anthilla-gray" />
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @ConnectionBox("ARP", "gray")
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "input", "arp", "red")
+            @RulesetBox("filter", "input", "arp")
+            @RulesetBox("nat", "input", "arp", "blue")
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("nat", "output", "arp", "blue")
+            @RulesetBox("filter", "output", "arp")
+            @RulesetBox("route", "output", "arp", "red")
+        </div>
+        <hr class="bg-anthilla-gray" />
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @ConnectionBox("BRIDGE", "gray")
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "input", "bridge", "red")
+            @RulesetBox("filter", "input", "bridge")
+            @RulesetBox("nat", "input", "bridge", "blue")
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("nat", "output", "bridge", "blue")
+            @RulesetBox("filter", "output", "bridge")
+            @RulesetBox("route", "output", "bridge", "red")
+        </div>
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @EmptyBox()
+            @RulesetBox("route", "forward", "bridge", "red")
+            @RulesetBox("filter", "forward", "bridge")
+            @RulesetBox("nat", "forward", "bridge", "blue")
+        </div>
+    </div>
+    <hr class="bg-anthilla-gray" />
+    <form id="ValueBundleDashboard" action="/firewall/addrule" enctype="multipart/form-data" method="POST">
+        <h2 style="display: inline-block;" class="fg-white">Rules for: </h2>
+        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+        <br />
+        <input type="hidden" name="Command" />
+        <input name="Rule" type="text" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" class="bg-anthilla-gray" data-role="command-place">
+        <input type="submit" value="ADD" style="width: 94px; padding: 10px; margin-bottom: 5px; display: inline; color: #3A3A3A ! important;" class="bg-anthilla-green">
+    </form>
+    <ul id="ResultsContainer" class="fg-white bg-anthilla-gray border-anthilla-gray" style="display: none; list-style: none; padding: 5px; margin-left: 0px; margin-top: -23px; width: 700px; min-height: 37px;"></ul>
+    <p id="Tip" style="padding-left: 10px; display: none;">Tip: write {tag:index}</p>
+    <div style="width: 800px; min-height: 250px; padding-right: 10px;" class="bg-anthilla-gray fg-white border-2-anthilla-gray-m" id="MegaContainer">
+        <form action="/cfg/reindex" method="POST" enctype="multipart/form-data">
+            <ul id="sortable" style="list-style: none;" class="fg-white">
+                <li class="border-2-anthilla-gray bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+                    <i data-role="show-all-command" class="icon-eye fg-white" style="cursor:pointer ;float:right; margin-right: 10px;"></i>
+                    <i data-role="missing-Value-notif" class="icon-warning fg-orange blinking" style="display: none;float:right; margin-right: 10px;"></i>
+                </li>
+                @Each.FirewallCommands
+                @If.Current.IsEnabled
+                <li class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+                    <input name="Guid" type="hidden" value="@Current.Guid" />
+                    <input name="Index" type="hidden" value="@i" />
+                    <p data-role="command-saved" style="float: left;">
+                        @Current.Command
+                    </p>
+                    <p data-role="command-exd" style="display: none; float: left">
+                        @Current.CommandWithValues
+                    </p>
+
+                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                    <i data-role="disable-command" data-guid="@Current.Guid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                </li>
+                @EndIf
+                @IfNot.Current.IsEnabled
+                <li class="border-2-anthilla-gray-m bg-anthilla-gray" style="padding: 10px; height: 45px; opacity: 0, 5; margin-bottom: 3px;">
+                    <input name="Guid" type="hidden" value="@Current.Guid" />
+                    <input name="Index" type="hidden" value="@i" />
+                    <p data-role="command-saved" style="float: left;">
+                        @Current.Command
+                    </p>
+                    <p data-role="command-exd" style="display: none; float: left">
+                        @Current.CommandWithValues
+                    </p>
+                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                    <i data-role="enable-command" data-guid="@Current.Guid" class="icon-blocked fg-lightRed" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                </li>
+                @EndIf
+                @EndEach
+            </ul>
+            <input type="submit" class="bg-anthilla-green" value="Save order" style="width: 90%; margin-left: 40px; color:#3A3A3A !important;" />
+        </form>
+    </div>
+</div>

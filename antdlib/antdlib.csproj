@@ -181,6 +181,7 @@
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
     <Compile Include="Log\Logger.cs" />
+    <Compile Include="Log\Syslog.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />

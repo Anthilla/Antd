@@ -71,7 +71,8 @@
                 <td>Value</td>
                 <td style="width: 100px;">ValueID(Index)</td>
                 <td style="width: 100px;"></td>
-            </tr>@Each.ValueBundle
+            </tr>
+            @Each.ValueBundle
             <tr>
                 <td>@Current.Tag</td>
                 <td>@Current.Value</td>
@@ -81,7 +82,8 @@
                     <i class="icon-remove fg-orange" data-key="@Current.Key" data-role="delete-Value" data-tag="@Current.Tag" data-Value="@Current.Value"></i>
                     @EndIf
                 </td>
-            </tr>@EndEach
+            </tr>
+            @EndEach
         </tbody>
     </table>
 </div>
@@ -142,18 +144,18 @@
 
 @Section['Scripts']
 <script type="text/javascript">
-    $('a[data-role="export-conf"]').click(function() {
+    $('a[data-role="export-conf"]').click(function () {
         jQuery.support.cors = true;
         $.ajax({
             url: '/cfg/export',
             type: 'POST',
-            success: function() {
+            success: function () {
                 location.reload(true);
             }
         });
     });
 
-    $('i[data-role="delete-Value"]').click(function() {
+    $('i[data-role="delete-Value"]').click(function () {
         var t = $(this).attr('data-tag');
         var k = $(this).attr('data-key');
         var v = $(this).attr('data-Value');
@@ -166,7 +168,7 @@
                 Key: k,
                 Value: v
             },
-            success: function(data) {
+            success: function (data) {
                 location.reload(true);
             }
         });
