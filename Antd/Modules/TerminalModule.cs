@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using antdlib.Config;
 using antdlib.Terminal;
 using Nancy;
@@ -80,13 +82,14 @@ namespace Antd.Modules {
                 return Response.AsJson(result);
             };
 
-            Post["/direct/get"] = x => {
-                var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = Request.Form.Directory == "" ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
+            Post["/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command.Replace("$'", "\""))));
+
+            Post["/direct"] = x => {
+                var cmds = (string)Request.Form.Command;
+                var replaceWithValues = cmds.Split(new[] {"$nl"}, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
+                var result = Terminal.MultiLine.Execute(replaceWithValues);
                 return Response.AsJson(result);
             };
-
-            Post["/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command)));
 
             //Post["/direct/get"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
 

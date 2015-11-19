@@ -107,8 +107,7 @@ namespace antdlib.Terminal {
         }
 
         public class MultiLine {
-
-            public static string Execute(string[] commands) {
+            public static string Execute(IEnumerable<string> commands) {
                 var genericOutput = string.Empty;
                 if (!AssemblyInfo.IsUnix)
                     return genericOutput;
@@ -144,7 +143,7 @@ namespace antdlib.Terminal {
                 return genericOutput;
             }
 
-            public static string Execute(string[] commands, string dir) {
+            public static string Execute(IEnumerable<string> commands, string dir) {
                 var genericOutput = string.Empty;
                 if (!AssemblyInfo.IsUnix)
                     return genericOutput;

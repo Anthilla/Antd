@@ -26,16 +26,23 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
-
 using System;
+using antdlib.Models;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.Common;
-using antdlib.Models;
 using Newtonsoft.Json;
 
-namespace antdlib.Contexts {
+namespace antdlib.Status {
     public class Cpuinfo {
+        public static IEnumerable<string> Get() {
+            var r1 = Terminal.Terminal.Execute("numactl -s");
+            var list = r1.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(row => row).ToList();
+            var r2 = Terminal.Terminal.Execute("numactl -H");
+            list.AddRange(r2.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(row => row));
+            return list;
+        }
+
         public static string GetText() {
             return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/cpuinfo"));
         }
@@ -51,8 +58,8 @@ namespace antdlib.Contexts {
                     select row.Split(new[] { ": " }, StringSplitOptions.None).ToArray()
                 into cellList
                     select new CpuinfoModel {
-                        key = cellList[0],
-                        value = (cellList.Length > 1) ? cellList[1] : ""
+                        Key = cellList[0],
+                        Value = (cellList.Length > 1) ? cellList[1] : ""
                     }).ToList();
         }
     }

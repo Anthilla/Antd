@@ -78,7 +78,7 @@
                 <td>@Current.Key</td>
                 <td>
                     @If.Current.IsDefault
-                    <i class="icon-remove fg-orange" data-key="@Current.Key" data-role="delete-value" data-tag="@Current.Tag" data-value="@Current.Value"></i>
+                    <i class="icon-remove fg-orange" data-key="@Current.Key" data-role="delete-Value" data-tag="@Current.Tag" data-Value="@Current.Value"></i>
                     @EndIf
                 </td>
             </tr>@EndEach
@@ -97,7 +97,7 @@
             <ul id="sortable" style="list-style: none;" class="fg-white">
                 <li class="border-2-anthilla-gray bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
                     <i data-role="show-all-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i class="icon-warning fg-orange blinking" data-role="missing-value-notif" style="display: none; float: right; margin-right: 10px;"></i>
+                    <i class="icon-warning fg-orange blinking" data-role="missing-Value-notif" style="display: none; float: right; margin-right: 10px;"></i>
                 </li>
                 @Each.CommandBundle
                 @If.Current.IsEnabled
@@ -153,13 +153,13 @@
         });
     });
 
-    $('i[data-role="delete-value"]').click(function() {
+    $('i[data-role="delete-Value"]').click(function() {
         var t = $(this).attr('data-tag');
         var k = $(this).attr('data-key');
-        var v = $(this).attr('data-value');
+        var v = $(this).attr('data-Value');
         jQuery.support.cors = true;
         $.ajax({
-            url: '/cfg/delvalue',
+            url: '/cfg/delValue',
             type: 'POST',
             data: {
                 Tag: t,

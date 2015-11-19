@@ -52,7 +52,7 @@ namespace Antd {
                     Directory.CreateDirectory("/cfg/antd");
                     Directory.CreateDirectory("/cfg/antd/database");
                     Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                    ConsoleLogger.Warn("This application is not running on an Unix OS:");
+                    ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux:");
                     ConsoleLogger.Warn("some functions may be disabled!");
                 }
 
@@ -102,7 +102,6 @@ namespace Antd {
                 using (var server = builder.Build()) {
                     ConsoleLogger.Log("server built");
                     server.Start();
-                    //Task.Run(() => server.Start());
                     ConsoleLogger.Log("Applying configuration...");
                     ConsoleLogger.Log("loading service");
                     ConsoleLogger.Log("    server port -> {0}", port);

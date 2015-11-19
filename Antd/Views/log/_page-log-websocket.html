@@ -50,12 +50,12 @@
         var xMaxValue = 200;
         var xTicksNumber = xMaxValue / x;
 
-        $('input[value="add"]').click(function () {
-            var value = $('input[name="value"]').val();
+        $('input[Value="add"]').click(function () {
+            var value = $('input[name="Value"]').val();
             AddValue(value);
         });
 
-        $('input[value="random"]').click(function () {
+        $('input[Value="random"]').click(function () {
             var min = 0;
             var max = 2000;
             var value = Math.floor(Math.random() * (max - min + 1) + min);

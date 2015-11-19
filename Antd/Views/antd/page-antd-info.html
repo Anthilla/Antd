@@ -1,0 +1,106 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Info">Info</legend>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td colspan="2"><label>Memory</label></td>
+            </tr>
+            <tr>
+                <td><label>MemTotal</label></td>
+                <td>@Model.Meminfo.MemTotal</td>
+            </tr>
+            <tr>
+                <td><label>MemFree</label></td>
+                <td>@Model.Meminfo.MemFree</td>
+            </tr>
+            <tr>
+                <td><label>MemAvailable</label></td>
+                <td>@Model.Meminfo.MemAvailable</td>
+            </tr>
+            <tr>
+                <td><label>Buffers</label></td>
+                <td>@Model.Meminfo.MemTBuffersotal</td>
+            </tr>
+            <tr>
+                <td><label>Cached</label></td>
+                <td>@Model.Meminfo.Cached</td>
+            </tr>
+            <tr>
+                <td><label>SwapCached</label></td>
+                <td>@Model.Meminfo.SwapCached</td>
+            </tr>
+            <tr>
+                <td><label>SwapTotal</label></td>
+                <td>@Model.Meminfo.SwapTotal</td>
+            </tr>
+            <tr>
+                <td><label>SwapFree</label></td>
+                <td>@Model.Meminfo.SwapFree</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td><label>Linux Version</label></td>
+                <td>@Model.VersionOS</td>
+            </tr>
+            <tr>
+                <td><label>AnthillaOS Version</label></td>
+                <td>@Model.VersionAOS</td>
+            </tr>
+            <tr>
+                <td colspan="2"><label>AnthillaOS - Active Kernel</label></td>
+            </tr>
+            @Each.ActiveKernel
+            <tr>
+                <td colspan="2">
+                    <p>@Current</p>
+                </td>
+            </tr>
+            @EndEach
+            <tr>
+                <td colspan="2"><label>AnthillaOS - Active System</label></td>
+            </tr>
+            @Each.ActiveSystem
+            <tr>
+                <td colspan="2">
+                    <p>@Current</p>
+                </td>
+            </tr>
+            @EndEach
+            <tr>
+                <td colspan="2"><label>AnthillaOS - Recovery Kernel</label></td>
+            </tr>
+            @Each.RecoveryKernel
+            <tr>
+                <td colspan="2">
+                    <p>@Current</p>
+                </td>
+            </tr>
+            @EndEach
+            <tr>
+                <td colspan="2"><label>AnthillaOS - Recovery System</label></td>
+            </tr>
+            @Each.RecoverySystem
+            <tr>
+                <td colspan="2">
+                    <p>@Current</p>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td><label>CPU</label></td>
+            </tr>
+            @Each.Cpuinfo
+            <tr>
+                <td><p>@Current</p></td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

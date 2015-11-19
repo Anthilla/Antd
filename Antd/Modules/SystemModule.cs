@@ -148,7 +148,7 @@ namespace Antd.Modules {
                 return View["_page-system-sysctl", vmod];
             };
 
-            Post["/sysctl/{param}/{value}"] = x => {
+            Post["/sysctl/{param}/{Value}"] = x => {
                 string param = x.param;
                 string value = x.value;
                 var output = Sysctl.Config(param, value);

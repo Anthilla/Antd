@@ -170,7 +170,6 @@
     <Compile Include="global.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\ParameterXmlWriter.cs" />
-    <Compile Include="Contexts\Cpuinfo.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
     <Compile Include="Contexts\Ifconfig.cs" />
     <Compile Include="Contexts\Meminfo.cs" />
@@ -221,6 +220,7 @@
     <Compile Include="Security\RSAKeys.cs" />
     <Compile Include="Security\Token.cs" />
     <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Status\Cpuinfo.cs" />
     <Compile Include="Status\Local.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />

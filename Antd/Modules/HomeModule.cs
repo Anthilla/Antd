@@ -27,14 +27,70 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Dynamic;
+using System.IO;
+using System.Linq;
+using antdlib;
+using antdlib.Boot;
+using antdlib.CCTable;
+using antdlib.Certificate;
+using antdlib.Contexts;
+using antdlib.Status;
+using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class HomeModule : NancyModule {
+        private const string CctableContextName = "system";
+
         public HomeModule() {
             this.RequiresAuthentication();
-            Get["/"] = x => Response.AsRedirect("/system");
+            //Get["/"] = x => Response.AsRedirect("/system");
+
+            Before += x => {
+                if (CCTableRepository.GetByContext(CctableContextName) == null) {
+                    CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
+                }
+                return null;
+            };
+
+            Get["/"] = x => {
+                dynamic viewModel = new ExpandoObject();
+
+                viewModel.Meminfo = Meminfo.GetMappedModel();
+                viewModel.VersionOS = Terminal.Execute("uname -a");
+                viewModel.VersionAOS = Terminal.Execute("cat /etc/aos-release");
+                viewModel.ActiveKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'");
+                viewModel.RecoveryKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'");
+                viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'");
+                viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'");
+                viewModel.Cpuinfo = Cpuinfo.Get();
+
+                viewModel.SSHPort = "22";
+                viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();
+
+                viewModel.SslStatus = "Enabled";
+                viewModel.SslStatusAction = "Disable";
+                if (CoreParametersConfig.GetSsl() == "no") {
+                    viewModel.SslStatus = "Disabled";
+                    viewModel.SslStatusAction = "Enable";
+                }
+                viewModel.CertificatePath = CoreParametersConfig.GetCertificatePath();
+                viewModel.CaStatus = "Enabled";
+                if (CoreParametersConfig.GetCa() == "no") {
+                    viewModel.CaStatus = "Disabled";
+                }
+                viewModel.CaIsActive = CertificateAuthority.IsActive;
+                viewModel.Certificates = CertificateRepository.GetAll();
+
+                viewModel.CCTableContext = CctableContextName;
+                var table = CCTableRepository.GetByContext2(CctableContextName);
+                viewModel.CommandDirect = table.Content.Where(_ => _.CommandType == CCTableCommandType.Direct);
+                viewModel.CommandText = table.Content.Where(_ => _.CommandType == CCTableCommandType.TextInput);
+                viewModel.CommandBool = table.Content.Where(_ => _.CommandType == CCTableCommandType.BooleanPair);
+                return View["antd/page-antd", viewModel];
+            };
         }
     }
 }

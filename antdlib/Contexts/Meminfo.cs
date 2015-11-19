@@ -42,20 +42,47 @@ namespace antdlib.Contexts {
             return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/meminfo"));
         }
 
-        public static List<MeminfoModel> GetModel() {
+        public static IEnumerable<MeminfoModel> GetModel() {
             return ConvertMeminfo(FileSystem.ReadFile("/proc/meminfo"));
         }
 
-        public static List<MeminfoModel> ConvertMeminfo(string meminfoText) {
+        public static IEnumerable<MeminfoModel> ConvertMeminfo(string meminfoText) {
             var rowList = meminfoText.Split(new[] { "\n" }, StringSplitOptions.None).ToArray();
             return (from row in rowList
                     where !string.IsNullOrEmpty(row)
                     select row.Split(new[] { ": " }, StringSplitOptions.None).ToArray()
                 into cellList
                     select new MeminfoModel {
-                        key = cellList[0],
-                        value = cellList[1]
+                        key = cellList[0].Trim(),
+                        value = cellList[1].Trim()
                     }).ToList();
         }
+
+        public static MeminfoMappedModel GetMappedModel() {
+            var raw = ConvertMeminfo(FileSystem.ReadFile("/proc/meminfo"));
+            var meminfoModels = raw as IList<MeminfoModel> ?? raw.ToList();
+            var meminfo = new MeminfoMappedModel {
+                MemTotal = meminfoModels.Where(_ => _.key == "MemTotal").Select(_ => _.value).FirstOrDefault(),
+                MemFree = meminfoModels.Where(_ => _.key == "MemFree").Select(_ => _.value).FirstOrDefault(),
+                MemAvailable = meminfoModels.Where(_ => _.key == "MemAvailable").Select(_ => _.value).FirstOrDefault(),
+                Buffers = meminfoModels.Where(_ => _.key == "Buffers").Select(_ => _.value).FirstOrDefault(),
+                Cached = meminfoModels.Where(_ => _.key == "Cached").Select(_ => _.value).FirstOrDefault(),
+                SwapCached = meminfoModels.Where(_ => _.key == "SwapCached").Select(_ => _.value).FirstOrDefault(),
+                SwapTotal = meminfoModels.Where(_ => _.key == "SwapTotal").Select(_ => _.value).FirstOrDefault(),
+                SwapFree = meminfoModels.Where(_ => _.key == "SwapFree").Select(_ => _.value).FirstOrDefault(),
+            };
+            return meminfo;
+        }
+    }
+
+    public class MeminfoMappedModel {
+        public string MemTotal { get; set; }
+        public string MemFree { get; set; }
+        public string MemAvailable { get; set; }
+        public string Buffers { get; set; }
+        public string Cached { get; set; }
+        public string SwapCached { get; set; }
+        public string SwapTotal { get; set; }
+        public string SwapFree { get; set; }
     }
 }

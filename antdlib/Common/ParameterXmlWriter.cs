@@ -94,7 +94,7 @@ namespace antdlib.Common {
                             from el in tList
                             select new XElement("param",
                             new XAttribute("key", el.Key),
-                            new XAttribute("value", el.Value)
+                            new XAttribute("Value", el.Value)
             )));
             foreach (var p in _path) {
                 document.Save(p);
@@ -113,7 +113,7 @@ namespace antdlib.Common {
                      SectionName = xelement.Attribute("section").Value,
                      Param = new Param {
                          Key = elem.Attribute("key").Value,
-                         Value = elem.Attribute("value").Value
+                         Value = elem.Attribute("Value").Value
                      },
                  }
                 ).ToList();

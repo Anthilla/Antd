@@ -273,6 +273,15 @@
     <None Include="Scripts\jquery-2.1.4.min.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\antd\page-antd.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\antd\page-antd-info.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\antd\page-antd-config.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

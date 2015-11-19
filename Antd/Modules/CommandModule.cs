@@ -74,7 +74,7 @@ namespace Antd.Modules {
                 return Response.AsJson(r);
             };
 
-            Get["/ex/{inputid}/{value}"] = x => {
+            Get["/ex/{inputid}/{Value}"] = x => {
                 string inputid = x.inputid;
                 string value = x.value;
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);

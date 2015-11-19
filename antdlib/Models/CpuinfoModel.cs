@@ -30,8 +30,8 @@
 namespace antdlib.Models {
     public class CpuinfoModel {
 
-        public string key { get; set; }
+        public string Key { get; set; }
 
-        public string value { get; set; }
+        public string Value { get; set; }
     }
 }

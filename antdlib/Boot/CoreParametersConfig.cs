@@ -45,8 +45,6 @@ namespace antdlib.Boot {
         public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
 
         public static void WriteDefaults() {
-            Writer.Write(Label.Root, Folder.AntdCfg);
-            Writer.ReadValue(Label.Root);
             if (Writer.CheckValue(Label.Port) == false) {
                 Writer.Write(Label.Port, Port.Antd);
             }
