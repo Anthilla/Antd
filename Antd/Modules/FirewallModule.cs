@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Linq;
 using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
@@ -46,6 +47,8 @@ namespace Antd.Modules {
                 NfTables.DeleteNftRule((string)Request.Form.Guid);
                 return Response.AsRedirect("/firewall");
             };
+
+            Get["/firewall/checkdefault"] = x => Response.AsJson(FirewallLists.GetAll().Count());
 
             Get["/firewall/getrule/{table}/{chain}/{hook}"] = x => Response.AsJson(FirewallLists.GetForRule((string)x.table, (string)x.chain, (string)x.hook));
 

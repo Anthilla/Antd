@@ -275,6 +275,7 @@ namespace Antd {
         public static void SetFirewall() {
             ConsoleLogger.Log("loading default values for firewall");
             FirewallLists.SetDefaultLists();
+            ConsoleLogger.Log("default values for firewall load");
         }
     }
 }

@@ -56,7 +56,7 @@ namespace antdlib.Firewall {
             => GetAll().Where(_ => _.IdTable == table && _.IdType == chain && _.IdHook == hook);
 
         public static void SetDefaultLists() {
-            if (!GetAllHidden().Any()) {
+            if (GetAllHidden().Any()) {
                 return;
             }
             var list = new List<FirewallListModel> {
