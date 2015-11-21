@@ -45,17 +45,11 @@ namespace antdlib.Boot {
         public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
 
         public static void WriteDefaults() {
-            if (Writer.CheckValue(Label.Port) == false) {
-                Writer.Write(Label.Port, Port.Antd);
-            }
             if (Writer.CheckValue("AntdHttpPort") == false) {
                 Writer.Write("AntdHttpPort", "80");
             }
             if (Writer.CheckValue("AntdHttpsPort") == false) {
                 Writer.Write("AntdHttpsPort", "443");
-            }
-            if (Writer.CheckValue(Label.Port) == false) {
-                Writer.Write(Label.Port, Port.Antd);
             }
             if (Writer.CheckValue(Label.Database) == false) {
                 Writer.Write(Label.Database, Folder.AntdCfgDatabase);
@@ -243,16 +237,6 @@ namespace antdlib.Boot {
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-            }
-        }
-
-        public static string GetPort() {
-            try {
-                return Writer.CheckValue(Label.Port) ? Writer.ReadValue(Label.Port) : Port.Antd;
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "7777";
             }
         }
 

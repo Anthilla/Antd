@@ -250,7 +250,6 @@
     <Compile Include="Svcs\Systemd\Journald\JournaldConfig.cs" />
     <Compile Include="Svcs\Systemd\Networkd\NetworkdConfig.cs" />
     <Compile Include="Svcs\Zfs\ZfsConfig.cs" />
-    <Compile Include="SystemConfig\General.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\UnitRepo.cs" />
     <Compile Include="Systemd\Units.cs" />

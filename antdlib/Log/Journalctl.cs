@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
-using Org.BouncyCastle.Bcpg;
 
 namespace antdlib.Log {
     public class Journalctl {
@@ -53,7 +52,7 @@ namespace antdlib.Log {
         }
 
         public static IEnumerable<string> GetAntdLog() {
-            var result = Terminal.Terminal.Execute($"journalctl --no-pager --quiet -u {Units.Name.Launcher}");
+            var result = Terminal.Terminal.Execute($"journalctl --no-pager --quiet -u {Units.Name.NameLauncher}");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 

@@ -142,7 +142,7 @@ namespace antdlib.Apps {
             }
 
             public static void CreateSquash() {
-                Terminal.Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.dateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.DateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash(string version = null) {

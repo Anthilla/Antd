@@ -7,7 +7,7 @@
             </td>
             <td>
                 @if (antdlib.Mail.Smtp.Settings.ConfigExists == false) { 
-                    <p>SMTP is not configured yet, before enabling 2FA-Token Authentication you have to configure SMTP</p>
+                    <p>Smtp is not configured yet, before enabling 2FA-Token Authentication you have to configure Smtp</p>
                 }
                 else if (Model.AuthStatus == true) {
                     <input id="Disable2FA" class="bg-anthilla-green" type="button" value="Disable" />

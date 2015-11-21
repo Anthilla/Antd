@@ -162,11 +162,11 @@ namespace antdlib.Antdsh {
         /// </summary>
         public static void CheckAntd() {
             WriteLine("Checking Antd Units:");
-            WriteLine(Execute($"systemctl status {Units.Name.Prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
             WriteLine("-------");
-            WriteLine(Execute($"systemctl status {Units.Name.Prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
             WriteLine("-------");
-            WriteLine(Execute($"systemctl status {Units.Name.Prepare}"));
+            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
         }
 
         /// <summary>

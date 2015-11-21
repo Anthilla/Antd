@@ -148,11 +148,11 @@ namespace antdsh {
             var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
             if (res.Length == 0) {
                 WriteLine("No antd process found.");
-                WriteLine(Terminal.Execute("systemctl status app-antd-03-launcher.service"));
+                WriteLine(Terminal.Execute($"systemctl status {Units.Name.NameLauncher}"));
             }
             else {
                 WriteLine(res);
-                WriteLine(Terminal.Execute("systemctl status app-antd-03-launcher.service"));
+                WriteLine(Terminal.Execute($"systemctl status {Units.Name.NameLauncher}"));
             }
         }
 
@@ -263,9 +263,9 @@ namespace antdsh {
             antdlib.Antdsh.Execute.CleanTmp();
             WriteLine("   Mounting tmp ram");
             antdlib.Antdsh.Execute.MountTmpRam();
-            var antdRepoUrl = $"{Update.remoteRepo}/{Update.remoteAntdDir}";
-            var updateFileUrl = $"{antdRepoUrl}/{Update.remoteUpdateInfo}";
-            var updateFile = $"{Folder.AntdTmpDir}/{Update.remoteUpdateInfo}";
+            var antdRepoUrl = $"{Update.RemoteRepo}/{Update.RemoteAntdDir}";
+            var updateFileUrl = $"{antdRepoUrl}/{Update.RemoteUpdateInfo}";
+            var updateFile = $"{Folder.AntdTmpDir}/{Update.RemoteUpdateInfo}";
             WriteLine($"   Downloading from: {updateFileUrl}");
             WriteLine($"                 to: {updateFile}");
             antdlib.Antdsh.Execute.DownloadFromUrl(updateFileUrl, updateFile);
@@ -359,7 +359,6 @@ namespace antdsh {
         }
 
         public static void Exit() {
-            //WriteLine("Bye bye");
             Environment.Exit(1);
         }
 

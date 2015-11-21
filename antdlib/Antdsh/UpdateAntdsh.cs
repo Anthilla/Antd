@@ -50,9 +50,9 @@ namespace antdlib.Antdsh {
             Execute.CleanTmp();
             WriteLine($"Mounting tmp ram");
             Execute.MountTmpRam();
-            var antdshRepoUrl = $"{Update.remoteRepo}/{Update.remoteAntdshDir}";
-            var updateFileUrl = $"{antdshRepoUrl}/{Update.remoteUpdateInfo}";
-            var updateFile = $"{Folder.AntdTmpDir}/{Update.remoteUpdateInfo}";
+            var antdshRepoUrl = $"{Update.RemoteRepo}/{Update.RemoteAntdshDir}";
+            var updateFileUrl = $"{antdshRepoUrl}/{Update.RemoteUpdateInfo}";
+            var updateFile = $"{Folder.AntdTmpDir}/{Update.RemoteUpdateInfo}";
             WriteLine($"Downloading from: {updateFileUrl}");
             WriteLine($"to: {updateFile}");
             Execute.DownloadFromUrl(updateFileUrl, updateFile);
@@ -62,7 +62,7 @@ namespace antdlib.Antdsh {
             }
             WriteLine($"Download complete!");
             var updateText = FileSystem.ReadFile(updateFile);
-            var squashName = updateText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
+            var squashName = updateText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.RemoteUpdateInfo));
             WriteLine($"Version found: {squashName}");
             var squashUrl = $"{antdshRepoUrl}/{squashName}";
             var squashFile = $"{Folder.AntdshVersionsDir}/{squashName}";

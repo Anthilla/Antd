@@ -39,14 +39,14 @@ namespace antdlib {
         public static string Database => "antd_database";
         public static string Files => "antd_files";
 
-        public class SMTP {
+        public class Smtp {
             public static string Url => "smtp_url";
             public static string Port => "smtp_port";
             public static string Account => "smtp_account";
             public static string Password => "smtp_password";
         }
 
-        public class IMAP {
+        public class Imap {
             public static string Url => "imap_url";
             public static string Port => "imap_port";
             public static string Account => "imap_account";
@@ -120,23 +120,14 @@ namespace antdlib {
     }
 
     public class Port {
-        public static string Antd => "7777";
         public static string Websocket => "8888";
     }
 
-    public class Uri {
-        public static string Antd => "http://+:" + Port.Antd + "/";
-    }
-
-    public class Url {
-        public static string Antd => "http://localhost:" + Port.Antd + "/";
-    }
-
     public class AssemblyInfo {
-        public const string dateFormat = "yyyyMMdd";
+        public const string DateFormat = "yyyyMMdd";
 
         private static string GetGuid() {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
             var attribute = (GuidAttribute)assembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
             return attribute.Value;
         }
@@ -153,20 +144,20 @@ namespace antdlib {
     public class Units {
 
         public class Name {
-            public static string Prepare => "app-antd-01-Prepare.service";
-            public static string Mount => "app-antd-02-Mount.service";
-            public static string Launcher => "app-antd-03-launcher.service";
+            public static string NamePrepare => "app-antd-01-prepare.service";
+            public static string NameMount => "app-antd-02-mount.service";
+            public static string NameLauncher => "app-antd-03-launcher.service";
         }
 
-        public static string Prepare = $"{Folder.AppsUnits}/{Name.Prepare}";
-        public static string Mount = $"{Folder.AppsUnits}/{Name.Mount}";
-        public static string Launcher = $"{Folder.AppsUnits}/{Name.Launcher}";
+        public static string Prepare = $"{Folder.AppsUnits}/{Name.NamePrepare}";
+        public static string Mount = $"{Folder.AppsUnits}/{Name.NameMount}";
+        public static string Launcher = $"{Folder.AppsUnits}/{Name.NameLauncher}";
     }
 
     public class Update {
-        public const string remoteRepo = "http://srv.anthilla.com:8081";
-        public const string remoteAntdDir = "antd-update";
-        public const string remoteAntdshDir = "antdsh-update";
-        public const string remoteUpdateInfo = "update.txt";
+        public const string RemoteRepo = "http://srv.anthilla.com:8081";
+        public const string RemoteAntdDir = "antd-update";
+        public const string RemoteAntdshDir = "antdsh-update";
+        public const string RemoteUpdateInfo = "update.txt";
     }
 }
