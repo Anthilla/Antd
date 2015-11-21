@@ -54,6 +54,8 @@ namespace Antd.Modules {
 
             Get["/firewall/getrule/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(FirewallLists.GetForRule((string)x.table, (string)x.type, (string)x.hook));
 
+            Get["/firewall/getruleset/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(FirewallLists.GetRuleSet((string)x.table, (string)x.type, (string)x.hook));
+
             Post["/firewall/add/list"] = x => {
                 var guid = Guid.NewGuid().ToString();
                 var table = (string)Request.Form.Table;

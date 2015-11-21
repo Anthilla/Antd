@@ -27,10 +27,51 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace antdlib.Network {
     public class NetworkConfig {
-        public class Iproute2 {
+        public class CommandListModel {
+            public bool IsPostMethod { get; set; }
+            public string Label { get; set; }
+            public IEnumerable<string> Elements { get; set; }
+        }
 
+        public class CommandList {
+            public static IEnumerable<CommandListModel> Get() {
+                return new List<CommandListModel> {
+                    new CommandListModel { IsPostMethod = true, Label = "AddNewAddressIPV4", Elements = new List<string>{ "Address", "Range", "Broadcast" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteAddressIPV4", Elements =  new List<string> { "Address", "Range", "Broadcast" } },
+                    new CommandListModel { IsPostMethod = true, Label="FlushConfigurationIPV4", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
+                    new CommandListModel { IsPostMethod = true, Label="AddMultipathRoute", Elements =  new List<string> { "Network1", "Network2" } },
+                    new CommandListModel { IsPostMethod = true, Label="EnableInterface", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = true, Label="DisableInterface", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = true, Label="AddTunnelPointToPointIPV4", Elements =  new List<string> { "Ttl", "Tunnel", "Address" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteTunnelPointToPointIPV4", Elements =  new List<string> ()},
+
+                    new CommandListModel { IsPostMethod = true, Label="AddNewAddressIPV6", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteAddressIPV6", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { IsPostMethod = true, Label="FlushConfigurationIPV6", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = true, Label="AddNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
+                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
+                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+
+                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceAddr", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceLink", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceStats", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = false, Label="ShowRoutes", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = false, Label="ShowNeighborsIPV6", Elements =  new List<string> ()},
+                    new CommandListModel { IsPostMethod = false, Label="ShowTunnelsIPV6", Elements =  new List<string> ()}
+                };
+            }
+        }
+
+        public class Iproute2 {
             public static string AddNewAddressIpv4(string address, string range, string interfaceName, string broadcast) {
                 var cmd = (broadcast == "") ?
                     $"ip addr add {address}/{range} dev {interfaceName}" :

@@ -383,7 +383,23 @@
                         '</td></tr>';
                     container.append(row);
                     ReloadListValues();
+                    SaveListValues();
                 });
+
+                $.ajax({
+                    url: '/firewall/getruleset/' + table + '/' + type + '/' + hook,
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    success: function (data) {
+                        $('#AAATest').html('');
+                        $.each(data, function (i, list) {
+                            $('#AAATest').append('<li>' + list + '</li>');
+                        });
+                        return false;
+                    }
+                });
+
                 return false;
             }
         });

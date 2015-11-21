@@ -216,12 +216,12 @@ namespace antdlib.MountPoint {
             var directoryTimestamp = DFP.GetTimestamp(directory);
             var directoryDfp = (directoryTimestamp != null);
             if (isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
-                ConsoleLogger.Log($"unauthorizedaccessexception");
+                ConsoleLogger.Log("unauthorizedaccessexception");
                 MountRepository.SetAsMountedReadOnly(directory);
             }
             else if (isMntd && dirsDfp && directoryDfp) {
                 if (dirsTimestamp == directoryTimestamp) {
-                    ConsoleLogger.Log($"mounted");
+                    ConsoleLogger.Log("mounted");
                     MountRepository.SetAsMounted(directory, mntDirectory);
                 }
                 else {
@@ -230,19 +230,18 @@ namespace antdlib.MountPoint {
                 }
             }
             else if (isMntd == false && dirsDfp && directoryDfp == false) {
-                ConsoleLogger.Log($"not mounted");
+                ConsoleLogger.Log("not mounted");
                 MountRepository.SetAsNotMounted(directory);
             }
             else if (isMntd && dirsDfp == false && directoryDfp) {
-                ConsoleLogger.Log($"tmp mounted");
+                ConsoleLogger.Log("tmp mounted");
                 MountRepository.SetAsTmpMounted(directory);
             }
             else if (isMntd == false && dirsDfp == false && directoryDfp == false) {
-                ConsoleLogger.Log($"error");
+                ConsoleLogger.Log("error");
                 MountRepository.SetAsError(directory);
             }
             else {
-                ConsoleLogger.Warn($"unknown error");
                 MountRepository.SetAsError(directory);
             }
             DFP.Delete(mntDirectory);

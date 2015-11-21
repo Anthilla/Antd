@@ -83,11 +83,15 @@ namespace Antd.Modules {
                 viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
                 viewModel.NetworkBondIf = NetworkInterface.Bond;
                 viewModel.NetworkBridgeIf = Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                viewModel.NetworkCommands = NetworkConfig.CommandList.Get();
 
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
 
                 viewModel.Mounts = antdlib.MountPoint.MountRepository.Get();
 
+
+
+                //todo check next parameters
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();
 

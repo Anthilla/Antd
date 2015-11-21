@@ -1,0 +1,10 @@
+[Unit]
+Description=ExtUnit, Application: Antd 02 Mount Service
+Requires=app-antd-01-prepare.service
+After=app-antd-01-prepare.service
+
+[Service]
+ExecStart=/bin/mount /mnt/cdrom/Apps/Anthilla_Antd/active-version /framework/antd
+
+[Install]
+WantedBy=applicative.target

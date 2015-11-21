@@ -1,0 +1,31 @@
+﻿@helper EditParameterRowPost(string functionName, string[] parameters) {
+<div class="row">
+    <div class="span3">
+        <label>@functionName</label>
+    </div>
+    <div class="span8">
+        @foreach (string param in parameters) {
+        <p style="display: inline-block;">@param</p>
+        <input id="Value_@functionName@param" type="text" style="height: 25px; width: 80%; float: right;">
+        <br style="margin-bottom: 5px;">
+        }
+    </div>
+    <div class="span5">
+        <input id="@functionName" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Apply @functionName" />
+    </div>
+</div>
+}
+
+@helper EditParameterRowGet(string functionName, string[] parameters) {
+<div class="row">
+    <div class="span3">
+        <label>@functionName</label>
+    </div>
+    <div class="span5">
+        <input id="@functionName" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Get @functionName" />
+    </div>
+    <div class="span8">
+        <textarea id="@functionName" class="bg-anthilla-gray fg-white" style="width: 90%; height: 250px; min-height: 250px; max-height: 250px; display: none; overflow: scroll !important;"></textarea>
+    </div>
+</div>
+}

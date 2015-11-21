@@ -21,66 +21,66 @@
     </div>
     <div class="grid bg-transparent" style="width: 1450px; position: relative; z-index: 4;">
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-connection-ip'];
-            @Partial['_partial/part-firewall-ip-prerouting-nat'];
-            @Partial['_partial/part-firewall-ip-prerouting-filter'];
-            @Partial['_partial/part-firewall-ip-input-route'];
-            @Partial['_partial/part-firewall-ip-input-filter'];
-            @Partial['_partial/part-firewall-ip-input-nat'];
-            @Partial['_partial/part-firewall-ip-forward-route'];
-            @Partial['_partial/part-firewall-ip-forward-filter'];
-            @Partial['_partial/part-firewall-ip-forward-nat'];
-            @Partial['_partial/part-firewall-ip-output-nat'];
-            @Partial['_partial/part-firewall-ip-output-filter'];
-            @Partial['_partial/part-firewall-ip-output-route'];
-            @Partial['_partial/part-firewall-ip-postrouting-filter'];
-            @Partial['_partial/part-firewall-ip-postrouting-nat'];
+            @Partial['_partial_firewall/part-firewall-connection-ip'];
+            @Partial['_partial_firewall/part-firewall-ip-prerouting-nat'];
+            @Partial['_partial_firewall/part-firewall-ip-prerouting-filter'];
+            @Partial['_partial_firewall/part-firewall-ip-input-route'];
+            @Partial['_partial_firewall/part-firewall-ip-input-filter'];
+            @Partial['_partial_firewall/part-firewall-ip-input-nat'];
+            @Partial['_partial_firewall/part-firewall-ip-forward-route'];
+            @Partial['_partial_firewall/part-firewall-ip-forward-filter'];
+            @Partial['_partial_firewall/part-firewall-ip-forward-nat'];
+            @Partial['_partial_firewall/part-firewall-ip-output-nat'];
+            @Partial['_partial_firewall/part-firewall-ip-output-filter'];
+            @Partial['_partial_firewall/part-firewall-ip-output-route'];
+            @Partial['_partial_firewall/part-firewall-ip-postrouting-filter'];
+            @Partial['_partial_firewall/part-firewall-ip-postrouting-nat'];
         </div>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-connection-ip6'];
-            @Partial['_partial/part-firewall-ip6-prerouting-nat'];
-            @Partial['_partial/part-firewall-ip6-prerouting-filter'];
-            @Partial['_partial/part-firewall-ip6-input-route'];
-            @Partial['_partial/part-firewall-ip6-input-filter'];
-            @Partial['_partial/part-firewall-ip6-input-nat'];
-            @Partial['_partial/part-firewall-ip6-forward-route'];
-            @Partial['_partial/part-firewall-ip6-forward-filter'];
-            @Partial['_partial/part-firewall-ip6-forward-nat'];
-            @Partial['_partial/part-firewall-ip6-output-nat'];
-            @Partial['_partial/part-firewall-ip6-output-filter'];
-            @Partial['_partial/part-firewall-ip6-output-route'];
-            @Partial['_partial/part-firewall-ip6-postrouting-filter'];
-            @Partial['_partial/part-firewall-ip6-postrouting-nat'];
-        </div>
-        <hr class="bg-anthilla-gray" />
-        <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-connection-arp'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-arp-input-route'];
-            @Partial['_partial/part-firewall-arp-input-filter'];
-            @Partial['_partial/part-firewall-arp-input-nat'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-arp-output-nat'];
-            @Partial['_partial/part-firewall-arp-output-filter'];
-            @Partial['_partial/part-firewall-arp-output-route'];
+            @Partial['_partial_firewall/part-firewall-connection-ip6'];
+            @Partial['_partial_firewall/part-firewall-ip6-prerouting-nat'];
+            @Partial['_partial_firewall/part-firewall-ip6-prerouting-filter'];
+            @Partial['_partial_firewall/part-firewall-ip6-input-route'];
+            @Partial['_partial_firewall/part-firewall-ip6-input-filter'];
+            @Partial['_partial_firewall/part-firewall-ip6-input-nat'];
+            @Partial['_partial_firewall/part-firewall-ip6-forward-route'];
+            @Partial['_partial_firewall/part-firewall-ip6-forward-filter'];
+            @Partial['_partial_firewall/part-firewall-ip6-forward-nat'];
+            @Partial['_partial_firewall/part-firewall-ip6-output-nat'];
+            @Partial['_partial_firewall/part-firewall-ip6-output-filter'];
+            @Partial['_partial_firewall/part-firewall-ip6-output-route'];
+            @Partial['_partial_firewall/part-firewall-ip6-postrouting-filter'];
+            @Partial['_partial_firewall/part-firewall-ip6-postrouting-nat'];
         </div>
         <hr class="bg-anthilla-gray" />
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-connection-br'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-bridge-input-route'];
-            @Partial['_partial/part-firewall-bridge-input-filter'];
-            @Partial['_partial/part-firewall-bridge-input-nat'];
-            @Partial['_partial/part-firewall-bridge-forward-route'];
-            @Partial['_partial/part-firewall-bridge-forward-filter'];
-            @Partial['_partial/part-firewall-bridge-forward-nat'];
-            @Partial['_partial/part-firewall-bridge-output-nat'];
-            @Partial['_partial/part-firewall-bridge-output-filter'];
-            @Partial['_partial/part-firewall-bridge-output-route'];
+            @Partial['_partial_firewall/part-firewall-connection-arp'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-arp-input-route'];
+            @Partial['_partial_firewall/part-firewall-arp-input-filter'];
+            @Partial['_partial_firewall/part-firewall-arp-input-nat'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-arp-output-nat'];
+            @Partial['_partial_firewall/part-firewall-arp-output-filter'];
+            @Partial['_partial_firewall/part-firewall-arp-output-route'];
+        </div>
+        <hr class="bg-anthilla-gray" />
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @Partial['_partial_firewall/part-firewall-connection-br'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-empty'];
+            @Partial['_partial_firewall/part-firewall-bridge-input-route'];
+            @Partial['_partial_firewall/part-firewall-bridge-input-filter'];
+            @Partial['_partial_firewall/part-firewall-bridge-input-nat'];
+            @Partial['_partial_firewall/part-firewall-bridge-forward-route'];
+            @Partial['_partial_firewall/part-firewall-bridge-forward-filter'];
+            @Partial['_partial_firewall/part-firewall-bridge-forward-nat'];
+            @Partial['_partial_firewall/part-firewall-bridge-output-nat'];
+            @Partial['_partial_firewall/part-firewall-bridge-output-filter'];
+            @Partial['_partial_firewall/part-firewall-bridge-output-route'];
         </div>
     </div>
     <hr class="bg-anthilla-gray" />
@@ -121,15 +121,19 @@
         <hr class="bg-anthilla-violet"/>
         <table class="table">
             <thead>
-                <tr>
-                    <td colspan="3">
-                        <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
-                        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="3">
+                    <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
+                    <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+                </td>
+            </tr>
             </thead>
             <tbody id="FirewallConfigurationLists"></tbody>
         </table>
+        <hr class="bg-anthilla-violet" />
+        <ul id="RuleList" class="fg-white" style="list-style: none;">
+            
+        </ul>
     </div>
 
     <!--

@@ -29,7 +29,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using antdlib.Common;
 
 namespace antdlib.Firewall {
     public class FirewallListModel {
@@ -55,6 +57,14 @@ namespace antdlib.Firewall {
         public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook) {
             var l = GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
             return l;
+        }
+
+        public static IEnumerable<string> GetRuleSet(string table, string type, string hook) {
+            var startMark = $"#start_{table}_{type}_{hook}";
+            var endMark = $"#end_{table}_{type}_{hook}";
+            var templateText = File.ReadAllText($"{Folder.RepoConfig}/antd.firewall.template.conf");
+            var part = string.Join("", templateText.SplitAndGetTextBetween(startMark, endMark));
+            return part.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
         }
 
         public static void AddList(string guid, string table, string type, string hook, string label) {

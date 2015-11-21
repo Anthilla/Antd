@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@helper EditParameterRowGet(string functionName, string[] parameters) {
+<div class="row">
     <div class="span3">
         <label>@functionName</label>
     </div>
@@ -9,3 +10,4 @@
         <textarea id="@functionName" class="bg-anthilla-gray fg-white" style="width: 90%; height: 250px; min-height: 250px; max-height: 250px; display: none; overflow: scroll !important;"></textarea>
     </div>
 </div>
+}

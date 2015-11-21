@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -35,13 +34,6 @@ namespace Antd.Modules {
         public NetworkModule() {
             this.RequiresAuthentication();
 
-            Get["/network"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.Physical = antdlib.Network.NetworkInterface.Physical;
-                vmod.Virtual = antdlib.Network.NetworkInterface.Virtual;
-                vmod.Bond = antdlib.Network.NetworkInterface.Bond;
-                return View["_page-network", vmod];
-            };
         }
     }
 }

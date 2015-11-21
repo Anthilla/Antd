@@ -1,0 +1,10 @@
+[Unit]
+Description=ExtUnit, Application: Antd 03 Launcher
+Requires=app-antd-02-mount.service
+After=app-antd-02-mount.service
+
+[Service]
+ExecStart=/usr/bin/mono /framework/antd/Antd.exe
+
+[Install]
+WantedBy=applicative.target
