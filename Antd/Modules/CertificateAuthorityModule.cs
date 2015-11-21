@@ -36,16 +36,15 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class CertificateAuthorityModule : NancyModule {
-        public CertificateAuthorityModule()
-            : base("/ca") {
+    public class CertificateAuthorityModule : CoreModule {
+        public CertificateAuthorityModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => View["login-authentication"];
+            Get["/ca/"] = x => View["login-authentication"];
 
-            Get["/ssl/status"] = x => Response.AsJson(CoreParametersConfig.GetSsl());
+            Get["/ca/ssl/status"] = x => Response.AsJson(CoreParametersConfig.GetSsl());
 
-            Post["/ssl/toggle"] = x => {
+            Post["/ca/ssl/toggle"] = x => {
                 if (CoreParametersConfig.GetSsl() == "yes") {
                     CoreParametersConfig.DisableSsl();
                     return Response.AsJson(true);
@@ -54,29 +53,29 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Post["/ssl/enable"] = x => {
+            Post["/ca/ssl/enable"] = x => {
                 CoreParametersConfig.EnableSsl();
                 return Response.AsJson(true);
             };
 
-            Post["/ssl/disable"] = x => {
+            Post["/ca/ssl/disable"] = x => {
                 CoreParametersConfig.DisableSsl();
                 return Response.AsJson(true);
             };
 
-            Get["/cert/get"] = x => Response.AsJson(CoreParametersConfig.GetCertificatePath());
+            Get["/ca/cert/get"] = x => Response.AsJson(CoreParametersConfig.GetCertificatePath());
 
-            Post["/cert/set"] = x => {
+            Post["/ca/cert/set"] = x => {
                 CoreParametersConfig.SetCertificatePath((string)Request.Form.CertificatePath);
                 return Response.AsJson(true);
             };
 
-            Post["/setup"] = x => {
+            Post["/ca/setup"] = x => {
                 CertificateAuthority.Setup();
                 return Response.AsJson(true);
             };
 
-            Post["/certificate/new"] = x => {
+            Post["/ca/certificate/new"] = x => {
                 var countryName = ((string)Request.Form.CountryName).Length < 1 ? "." : (string)Request.Form.CountryName;
                 if (countryName.Length > 2) {
                     countryName = countryName.Substring(0, 2).ToUpper();
@@ -97,7 +96,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/system");
             };
 
-            Get["/certificate/download/{format}/{guid}"] = x => {
+            Get["/ca/certificate/download/{format}/{guid}"] = x => {
                 var guid = (string)x.guid;
                 var certificate = CertificateRepository.GetByGuid(guid);
                 if (certificate == null) return HttpStatusCode.InternalServerError;

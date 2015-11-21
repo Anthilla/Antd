@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------------
-//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 //     All rights reserved.
 //
 //     Redistribution and use in source and binary forms, with or without
@@ -27,18 +27,13 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
-using Nancy.Security;
+using Nancy;
 
 namespace Antd.Modules {
-    public class VncModule : CoreModule {
-        public VncModule() {
-            this.RequiresAuthentication();
 
-            Get["/vnc"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-vnc", vmod];
-            };
+    public class CoreModule : NancyModule {
+        public CoreModule() {
+            Before += x => Request.Url.ToString().StartsWith("http://") ? Response.AsRedirect("/redirect") : null;
         }
     }
 }

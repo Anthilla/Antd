@@ -35,14 +35,11 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
-    public class StorageModule : NancyModule {
-
-        public StorageModule()
-            : base("/storage") {
+    public class StorageModule : CoreModule {
+        public StorageModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/storage"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.VolumesInfo = Volumes.BlocksFromDd();
                 vmod.IsOsRemovable = InstallCheck.IsOsRemovable;
@@ -53,12 +50,12 @@ namespace Antd.Modules {
                 return View["_page-storage", vmod];
             };
 
-            Get["/reload/volumes"] = x => {
+            Get["/storage/reload/volumes"] = x => {
                 Volumes.PopulateBlocks();
                 return Response.AsJson(true);
             };
 
-            Post["/install"] = x => {
+            Post["/storage/install"] = x => {
                 new InstallOperativeSystem((string)Request.Form.DiskName).SetDiskAndInstall();
                 return Response.AsJson(true);
             };

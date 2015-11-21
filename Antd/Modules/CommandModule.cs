@@ -34,19 +34,18 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class CommandModule : NancyModule {
+    public class CommandModule : CoreModule {
 
-        public CommandModule()
-            : base("/command/mgmt") {
+        public CommandModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/command/mgmt"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.list = CommandRepository.GetAll();
                 return View["page-command-mgmt", vmod];
             };
 
-            Post["/"] = x => {
+            Post["/command/mgmt/"] = x => {
                 string command = Request.Form.Command;
                 string layout = Request.Form.CommandLayout;
                 string notes = Request.Form.Notes;
@@ -56,25 +55,25 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/command/mgmt");
             };
 
-            Post["/Launch/{guid}"] = x => {
+            Post["/command/mgmt/Launch/{guid}"] = x => {
                 string guid = x.guid;
                 var result = CommandRepository.LaunchAndGetOutput(guid);
                 return Response.AsJson(result);
             };
 
-            Post["/delete/{guid}"] = x => {
+            Post["/command/mgmt/delete/{guid}"] = x => {
                 string guid = x.guid;
                 CommandRepository.Delete(guid);
                 return Response.AsJson(true);
             };
 
-            Get["/ex/{inputid}"] = x => {
+            Get["/command/mgmt/ex/{inputid}"] = x => {
                 string inputid = x.inputid;
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid);
                 return Response.AsJson(r);
             };
 
-            Get["/ex/{inputid}/{Value}"] = x => {
+            Get["/command/mgmt/ex/{inputid}/{Value}"] = x => {
                 string inputid = x.inputid;
                 string value = x.value;
                 var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);

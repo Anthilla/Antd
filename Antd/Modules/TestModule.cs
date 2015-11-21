@@ -29,31 +29,24 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
-using antdlib.Terminal;
 using Nancy;
 
 namespace Antd.Modules {
-    public class TestModule : NancyModule {
-        public TestModule()
-            : base("/test") {
+    public class TestModule : CoreModule {
+        public TestModule() {
 
             Before += y => null;
 
-            Get["Test page", "/"] = x => Response.AsText("Hello World!");
+            Get["Test page", "/test"] = x => Response.AsText("Hello World!");
 
-            Get["/page"] = x => View["page-test"];
+            Get["/test/page"] = x => View["page-test"];
 
-            Get["/ssh"] = x => {
+            Get["/test/ssh"] = x => {
                 antdlib.Ssh.Test.Start("aos003", "root", "root");
                 return View["page-test"];
             };
 
-            Get["/bgcmd"] = x => {
-                Terminal.Execute("touch /mnt/cdrom/Apps/tmp/prova.txt");
-                return HttpStatusCode.OK;
-            };
-
-            Get["/2"] = x => {
+            Get["/test/2"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Name = "Rendered with SSVE! ☻";
                 var list = new List<string> {"uno", "due", "tre"};
@@ -63,11 +56,6 @@ namespace Antd.Modules {
                 list2.Add(list);
                 vmod.List = list2;
                 return View["page-empty", vmod];
-            };
-
-            Get["/3"] = x => {
-                Terminal.Test.Start("touch /test");
-                return HttpStatusCode.OK;
             };
         }
     }

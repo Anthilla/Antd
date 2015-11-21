@@ -38,19 +38,18 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class CcTableModule : NancyModule {
+    public class CcTableModule : CoreModule {
 
-        public CcTableModule()
-            : base("/cctable") {
+        public CcTableModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/cctable/cctable"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.list = CCTableRepository.GetAll();
                 return View["_page-cctable", vmod];
             };
 
-            Post["/"] = x => {
+            Post["/cctable/cctable"] = x => {
                 var tbl = (string)Request.Form.Alias;
                 var context = (string)Request.Form.Context;
                 var tblType = (string)Request.Form.TableType;
@@ -61,7 +60,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Post["/row"] = x => {
+            Post["/cctable/row"] = x => {
                 var tableGuid = (string)Request.Form.TableGuid;
                 var tableName = (string)Request.Form.TableName;
                 var label = (string)Request.Form.Label;
@@ -97,7 +96,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Post["/row/dataview"] = x => {
+            Post["/cctable/row/dataview"] = x => {
                 var table = (string)Request.Form.TableGuid;
                 var tableName = (string)Request.Form.TableName;
                 var label = (string)Request.Form.Label;
@@ -116,7 +115,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Post["/row/mapdata"] = x => {
+            Post["/cctable/row/mapdata"] = x => {
                 var rowGuid = (string)Request.Form.ItemGuid;
                 var labelArray = (string)Request.Form.MapLabel;
                 var indexArray = (string)Request.Form.MapLabelIndex;
@@ -126,32 +125,32 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Post["/row/refresh"] = x => {
+            Post["/cctable/row/refresh"] = x => {
                 var guid = (string)Request.Form.Guid;
                 CCTableRepository.Refresh(guid);
                 return Response.AsJson(true);
             };
 
-            Get["/delete/table/{guid}"] = x => {
+            Get["/cctable/delete/table/{guid}"] = x => {
                 string guid = x.guid;
                 CCTableRepository.DeleteTable(guid);
                 return Response.AsJson("CCTable deleted");
             };
 
-            Get["/delete/row/{guid}"] = x => {
+            Get["/cctable/delete/row/{guid}"] = x => {
                 string guid = x.guid;
                 CCTableRepository.DeleteTableRow(guid);
                 return Response.AsJson("CCTable Row deleted");
             };
 
-            Get["/edit/row/{guid}/{cmd*}"] = x => {
+            Get["/cctable/edit/row/{guid}/{cmd*}"] = x => {
                 string guid = x.guid;
                 string cmd = x.cmd;
                 CCTableRepository.EditTableRow(guid, cmd);
                 return Response.AsJson("CCTable Row deleted");
             };
 
-            Post["/Launch"] = x => {
+            Post["/cctable/Launch"] = x => {
                 var commandType = (string)Request.Form.Type;
                 var rowGuid = (string)Request.Form.RowGuid;
                 var newValue = (string)Request.Form.NewValue;
@@ -182,7 +181,7 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Post["/row/conf"] = x => {
+            Post["/cctable/row/conf"] = x => {
                 var table = (string)Request.Form.TableGuid;
                 var tableName = (string)Request.Form.TableName;
                 var file = (string)Request.Form.File;
@@ -196,9 +195,9 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Get["/conf/files"] = x => Response.AsJson(CCTableRepository.GetEtcConfs());
+            Get["/cctable/conf/files"] = x => Response.AsJson(CCTableRepository.GetEtcConfs());
 
-            Post["/update/conf"] = x => {
+            Post["/cctable/update/conf"] = x => {
                 var file = (string)Request.Form.FileName;
                 var text = (string)Request.Form.FileText;
                 CCTableRepository.UpdateConfFile(file, text);
@@ -207,7 +206,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect(redirect);
             };
 
-            Post["/map/conf"] = x => {
+            Post["/cctable/map/conf"] = x => {
                 var guid = Guid.NewGuid().ToString();
                 var commentInput = ((string)Request.Form.CharComment).ToCharArray();
                 var comment = commentInput.Length > 0 ? commentInput[0] : ' ';

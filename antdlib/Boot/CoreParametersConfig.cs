@@ -48,6 +48,15 @@ namespace antdlib.Boot {
             if (Writer.CheckValue(Label.Port) == false) {
                 Writer.Write(Label.Port, Port.Antd);
             }
+            if (Writer.CheckValue("AntdHttpPort") == false) {
+                Writer.Write("AntdHttpPort", "80");
+            }
+            if (Writer.CheckValue("AntdHttpsPort") == false) {
+                Writer.Write("AntdHttpsPort", "443");
+            }
+            if (Writer.CheckValue(Label.Port) == false) {
+                Writer.Write(Label.Port, Port.Antd);
+            }
             if (Writer.CheckValue(Label.Database) == false) {
                 Writer.Write(Label.Database, Folder.AntdCfgDatabase);
             }
@@ -62,6 +71,75 @@ namespace antdlib.Boot {
             }
             if (Writer.CheckValue(Label.Auth.IsEnabled) == false) {
                 Writer.Write(Label.Auth.IsEnabled, false.ToString());
+            }
+            if (Writer.CheckValue("protocol") == false) {
+                Writer.Write("protocol", "https");
+            }
+        }
+
+        public static string GetHttpsPort() {
+            try {
+                return Writer.CheckValue("AntdHttpsPort") ? Writer.ReadValue("AntdHttpsPort") : "443";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return "443";
+            }
+        }
+
+        public static void SetHttpsPort(string port) {
+            try {
+                Writer.Write("AntdHttpsPort", port);
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static string GetHttpPort() {
+            try {
+                return Writer.CheckValue("AntdHttpPort") ? Writer.ReadValue("AntdHttpPort") : "80";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return "80";
+            }
+        }
+
+        public static void SetHttpPort(string  port) {
+            try {
+                Writer.Write("AntdHttpPort", port);
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static string GetHttpProtocol() {
+            try {
+                return Writer.CheckValue("protocol") ? Writer.ReadValue("protocol") : "https";
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return "https";
+            }
+        }
+
+        public static void SwitchToHttps() {
+            try {
+                Writer.Write("protocol", "https");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static void SwitchToHttp() {
+            try {
+                Writer.Write("protocol", "http");
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
             }
         }
 

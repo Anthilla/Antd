@@ -1,8 +1,4 @@
-﻿using System.Dynamic;
-using antdlib.Auth;
-using Nancy;
-using Nancy.Security;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
 //     All rights reserved.
 //
@@ -31,32 +27,36 @@ using Nancy.Security;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Dynamic;
+using antdlib.Auth;
+using Nancy;
+using Nancy.Security;
+
 namespace Antd.Modules {
-    public class TokenMgmtModule : NancyModule {
-        public TokenMgmtModule()
-            : base("/tkn") {
+    public class TokenMgmtModule : CoreModule {
+        public TokenMgmtModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/tkn"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Tokens = TokenAuthentication.Show();
                 return View["page-tknmgmt", vmod];
             };
 
-            Post["/"] = x => {
+            Post["/tkn"] = x => {
                 string u = Request.Form.Username;
                 string t = Request.Form.Token;
                 TokenAuthentication.AssignOtpToken(u, t);
                 return Response.AsJson(true);
             };
 
-            Post["/remove"] = x => {
+            Post["/tkn/remove"] = x => {
                 string u = Request.Form.Username;
                 TokenAuthentication.DeleteRelation(u);
                 return Response.AsJson(true);
             };
 
-            Post["/u2f"] = x => {
+            Post["/tkn/u2f"] = x => {
                 string u = Request.Form.Username;
                 string p = Request.Form.Password;
                 string t = Request.Form.Token;

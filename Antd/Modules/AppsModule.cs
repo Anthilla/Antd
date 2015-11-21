@@ -36,13 +36,12 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class AppsModule : NancyModule {
+    public class AppsModule : CoreModule {
 
-        public AppsModule()
-            : base("/apps") {
+        public AppsModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.AppList = Management.DetectApps();
                 vmod.AppExists = AnthillaSp.Setting.CheckSquash();
@@ -54,7 +53,7 @@ namespace Antd.Modules {
                 return View["_page-apps", vmod];
             };
 
-            Get["/set/anthillasp"] = x => {
+            Get["/apps/set/anthillasp"] = x => {
                 if (AnthillaSp.Units.CheckFiles() == false) {
                     AnthillaSp.CreateUnits();
                 }
@@ -62,12 +61,12 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Get["/apply/anthillasp"] = x => {
+            Get["/apps/apply/anthillasp"] = x => {
                 AnthillaSp.Start();
                 return Response.AsJson(true);
             };
 
-            Get["/Launch"] = x => {
+            Get["/apps/Launch"] = x => {
                 ConsoleLogger.Log(">> App >> AnthillaSP");
                 ConsoleLogger.Log(">> Check squashfs");
                 if (AnthillaSp.Setting.CheckSquash() == false) {
@@ -82,48 +81,48 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Post["/start/sp"] = x => {
+            Post["/apps/start/sp"] = x => {
                 AnthillaSp.StartSp();
                 return Response.AsJson("sp process started");
             };
 
-            Post["/start/server"] = x => {
+            Post["/apps/start/server"] = x => {
                 AnthillaSp.StartServer();
                 return Response.AsJson("server process started");
             };
 
-            Post["/stop/sp"] = x => {
+            Post["/apps/stop/sp"] = x => {
                 AnthillaSp.StopSp();
                 return Response.AsJson("sp process stopped");
             };
 
-            Post["/stop/server"] = x => {
+            Post["/apps/stop/server"] = x => {
                 AnthillaSp.StopServer();
                 return Response.AsJson("server process stopped");
             };
 
-            Get["/status/sp"] = x => Response.AsJson(AnthillaSp.Status.AnthillaSp());
+            Get["/apps/status/sp"] = x => Response.AsJson(AnthillaSp.Status.AnthillaSp());
 
-            Get["/status/server"] = x => Response.AsJson(AnthillaSp.Status.AnthillaServer());
+            Get["/apps/status/server"] = x => Response.AsJson(AnthillaSp.Status.AnthillaServer());
 
-            Post["/Mount"] = x => {
+            Post["/apps/Mount"] = x => {
                 var f = (string)Request.Form.Folder;
                 var m = (string)Request.Form.Mount;
                 Terminal.Execute("Mount " + f + " " + m);
                 return Response.AsJson(AnthillaSp.Status.AnthillaServer());
             };
 
-            Get["/update/antdsh"] = x => {
+            Get["/apps/update/antdsh"] = x => {
                 antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
                 return Response.AsJson(true);
             };
 
-            Post["/update/antdsh"] = x => {
+            Post["/apps/update/antdsh"] = x => {
                 antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
                 return Response.AsJson(true);
             };
 
-            Post["/set/anthillasp"] = x => {
+            Post["/apps/set/anthillasp"] = x => {
                 AnthillaSp.SetApp();
                 return Response.AsJson("/set/anthillasp");
             };

@@ -40,17 +40,14 @@ using antdlib.Log;
 using antdlib.Network;
 using antdlib.Status;
 using antdlib.Terminal;
-using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class HomeModule : NancyModule {
+    public class HomeModule : CoreModule {
         private const string CctableContextName = "system";
 
         public HomeModule() {
             this.RequiresAuthentication();
-            //Get["/"] = x => Response.AsRedirect("/system");
-
             Before += x => {
                 if (CCTableRepository.GetByContext(CctableContextName) == null) {
                     CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);

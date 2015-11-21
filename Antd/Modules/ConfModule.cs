@@ -35,19 +35,18 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ConfModule : NancyModule {
-        public ConfModule()
-            : base("/cfg") {
+    public class ConfModule : CoreModule {
+        public ConfModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ValueBundle = ConfigManagement.GetValuesBundle();
                 vmod.CommandBundle = ConfigManagement.GetCommandsBundle();
                 return View["page-cfg", vmod];
             };
 
-            Post["/addvalue"] = x => {
+            Post["/cfg/addvalue"] = x => {
                 var tag = (string)Request.Form.Tag;
                 var key = (string)Request.Form.Key;
                 var value = (string)Request.Form.Value;
@@ -60,7 +59,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/delvalue"] = x => {
+            Post["/cfg/delvalue"] = x => {
                 var tag = (string)Request.Form.Tag;
                 var key = (string)Request.Form.Key;
                 var value = (string)Request.Form.Value;
@@ -68,13 +67,13 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Get["/tags"] = x => {
+            Get["/cfg/tags"] = x => {
                 var data = ConfigManagement.GetTagsBundleValue();
                 var map = SelectizerMapModel.MapRawTagOfValueBundle(data);
                 return Response.AsJson(map);
             };
 
-            Post["/addcommand"] = x => {
+            Post["/cfg/addcommand"] = x => {
                 var command = (string)Request.Form.Command;
                 if (command.Length > 0) {
                     ConfigManagement.AddCommandsBundle(command);
@@ -82,31 +81,31 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/delcommand"] = x => {
+            Post["/cfg/delcommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.DeleteCommandsBundle(guid);
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/enablecommand"] = x => {
+            Post["/cfg/enablecommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.EnableCommand(guid);
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/disablecommand"] = x => {
+            Post["/cfg/disablecommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.DisableCommand(guid);
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/launchcommand"] = x => {
+            Post["/cfg/launchcommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.LaunchCommand(guid);
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/reindex"] = x => {
+            Post["/cfg/reindex"] = x => {
                 var guid = (string)Request.Form.Guid;
                 var index = (string)Request.Form.Index;
                 var guids = guid.Split(',');
@@ -117,18 +116,18 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Get["/getenabled"] = x => {
+            Get["/cfg/getenabled"] = x => {
                 var data = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled);
                 return Response.AsJson(data);
             };
 
-            Get["/layouts"] = x => {
+            Get["/cfg/layouts"] = x => {
                 var data = ConfigManagement.GetCommandsBundleLayout();
                 var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
                 return Response.AsJson(map);
             };
 
-            Post["/export"] = x => {
+            Post["/cfg/export"] = x => {
                 ConfigManagement.Export.ExportConfigurationToFile();
                 return Response.AsJson(true);
             };

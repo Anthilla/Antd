@@ -35,31 +35,30 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class FirewallModule : NancyModule {
-        public FirewallModule()
-            : base("/firewall") {
+    public class FirewallModule : CoreModule {
+        public FirewallModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/firewall"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.NFTCommands = NfTables.GetNftCommandsBundle().ToArray();
                 return View["_page-firewall", vmod];
             };
 
-            Post["/addrule"] = x => {
+            Post["/firewall/addrule"] = x => {
                 var command = (string)Request.Form.Command;
                 var rule = (string)Request.Form.Rule;
                 NfTables.AddNftRule(command, rule);
                 return Response.AsRedirect("/firewall");
             };
 
-            Post["/stoprule"] = x => {
+            Post["/firewall/stoprule"] = x => {
                 var guid = (string)Request.Form.Guid;
                 NfTables.DeleteNftRule(guid);
                 return Response.AsRedirect("/firewall");
             };
 
-            Get["/getrule/{table}/{chain}/{hook}"] = x => {
+            Get["/firewall/getrule/{table}/{chain}/{hook}"] = x => {
                 var table = x.table;
                 var chain = x.chain;
                 var hook = x.hook;
@@ -67,7 +66,7 @@ namespace Antd.Modules {
                 return Response.AsJson(data);
             };
 
-            Post["/export"] = x => {
+            Post["/firewall/export"] = x => {
                 NfTables.Export.WriteFile();
                 return Response.AsJson(true);
             };

@@ -57,6 +57,13 @@ namespace Antd {
             ConsoleLogger.Log($"working directories: checked");
         }
 
+        public static void CheckCertificate() {
+            var certificate = CoreParametersConfig.GetCertificatePath();
+            if (!File.Exists(certificate)) {
+                File.Copy($"{Folder.Resources}/certificate.pfx", certificate, true);
+            }
+        }
+
         public static void SetMounts() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -151,7 +158,7 @@ namespace Antd {
                 }
             }
             else {
-                ConsoleLogger.Log($"directory watcher: skipped");
+                ConsoleLogger.Log("directory watcher: skipped");
             }
         }
 
@@ -162,7 +169,7 @@ namespace Antd {
             if (Directory.Exists(applicationDatabasePath)) {
                 var databases = new[] { applicationDatabasePath };
                 DatabaseBoot.Start(databases, true);
-                ConsoleLogger.Log($"database: loaded");
+                ConsoleLogger.Log("database: loaded");
             }
             else {
                 ConsoleLogger.Warn("database: failed to load");

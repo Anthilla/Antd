@@ -116,6 +116,8 @@
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
+    <Compile Include="Modules\CoreModule.cs" />
+    <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
@@ -301,6 +303,9 @@
     <None Include="Views\_navbar.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\page-redirect.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\_partial\part-firewall-bridge-input-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -410,9 +415,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
-    <None Include="certificate\certificate.pfx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Scripts\jquery-2.1.4.min.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -35,39 +35,38 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class LogModule : NancyModule {
-        public LogModule()
-            : base("/log") {
+    public class LogModule : CoreModule {
+        public LogModule() {
             this.RequiresAuthentication();
 
-            Get["/journalctl/all"] = x => Response.AsJson(Journalctl.GetAllLog());
+            Get["/log/journalctl/all"] = x => Response.AsJson(Journalctl.GetAllLog());
 
-            Get["/journalctl/all/{filter}"] = x => Response.AsJson(Journalctl.GetAllLog((string)x.filter));
+            Get["/log/journalctl/all/{filter}"] = x => Response.AsJson(Journalctl.GetAllLog((string)x.filter));
 
-            Get["/journalctl/last/{hours}"] = x => Response.AsXml(Journalctl.GetAllLogSinceHour((string)x.hours));
+            Get["/log/journalctl/last/{hours}"] = x => Response.AsXml(Journalctl.GetAllLogSinceHour((string)x.hours));
 
-            Get["/journalctl/antd"] = x => Response.AsJson(Journalctl.GetAntdLog());
+            Get["/log/journalctl/antd"] = x => Response.AsJson(Journalctl.GetAntdLog());
 
-            Get["/journalctl/context"] = x => Response.AsJson(Journalctl.GetLogContexts());
+            Get["/log/journalctl/context"] = x => Response.AsJson(Journalctl.GetLogContexts());
 
-            Get["/journalctl/report/{path*}"] = x => Response.AsJson(Journalctl.Report.ReadReport((string)x.path));
+            Get["/log/journalctl/report/{path*}"] = x => Response.AsJson(Journalctl.Report.ReadReport((string)x.path));
 
-            Post["/journalctl/report"] = x => {
+            Post["/log/journalctl/report"] = x => {
                 Journalctl.Report.GenerateReport();
                 return HttpStatusCode.OK;
             };
 
-            Get["/collectd"] = x => {
+            Get["/log/collectd"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-log-collectd", vmod];
             };
 
-            Get["/websocket"] = x => {
+            Get["/log/websocket"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-log-websocket", vmod];
             };
 
-            Post["/websocket/listen", true] = async (x, ct) => {
+            Post["/log/websocket/listen", true] = async (x, ct) => {
                 var port = Websocketd.GetFirstPort();
                 //Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
                 //System.Threading.Thread.Sleep(20);
@@ -75,12 +74,12 @@ namespace Antd.Modules {
                 return Response.AsJson(port);
             };
 
-            Get["/journalctl"] = x => {
+            Get["/log/journalctl"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-log-journalctl", vmod];
             };
 
-            Post["/journalctl/listen", true] = async (x, ct) => {
+            Post["/log/journalctl/listen", true] = async (x, ct) => {
                 var port = Websocketd.GetFirstPort();
                 Websocketd.SetUnit(port, "todo");
                 await Websocketd.LaunchCommandToJournalctl(port);

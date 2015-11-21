@@ -35,13 +35,12 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class MailModule : NancyModule {
+    public class MailModule : CoreModule {
 
-        public MailModule()
-            : base("/mail") {
+        public MailModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/mail"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
@@ -61,7 +60,7 @@ namespace Antd.Modules {
                 return View["_page-mail", vmod];
             };
 
-            Post["/smtp/config"] = x => {
+            Post["/mail/smtp/config"] = x => {
                 string url = Request.Form.Url;
                 Smtp.Settings.SetUrl(url);
                 string port = Request.Form.Port;
@@ -73,7 +72,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/mail");
             };
 
-            Post["/imap/config"] = x => {
+            Post["/mail/imap/config"] = x => {
                 string url = Request.Form.Url;
                 Imap.Settings.SetUrl(url);
                 string port = Request.Form.Port;

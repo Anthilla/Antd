@@ -39,10 +39,9 @@ using Nancy.Cookies;
 using Nancy.Extensions;
 
 namespace Antd.Modules {
-
-    public class LoginModule : NancyModule {
-
+    public class LoginModule : CoreModule {
         public LoginModule() {
+
             Get["/login/{message?}"] = x => {
                 dynamic model = new ExpandoObject();
                 model.WantsEmail = false;

@@ -31,18 +31,14 @@
 using System.Linq;
 using antdlib.Directories;
 using Antd.ViewHelpers;
-using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
-    public class DirectoryModule : NancyModule {
-
-        public DirectoryModule()
-            : base("/dir") {
+    public class DirectoryModule : CoreModule {
+        public DirectoryModule() {
             this.RequiresAuthentication();
 
-            Get["/tree/{path*}"] = x => {
+            Get["/dir/tree/{path*}"] = x => {
                 string p = x.path ?? "/";
                 var dirs = new DirectoryViewModel {
                     Parents = new DirectoryLister(p, false).ParentList.Reverse(),
@@ -51,7 +47,7 @@ namespace Antd.Modules {
                 return View["page-dir", dirs];
             };
 
-            Get["/tree/{path?}"] = x => {
+            Get["/dir/tree/{path?}"] = x => {
                 string p = x.path == null ? "/" : "/" + x.path;
                 var dirs = new DirectoryViewModel {
                     Parents = new DirectoryLister(p, false).ParentList.Reverse(),

@@ -35,14 +35,11 @@ using antdlib.Contexts;
 using antdlib.Terminal;
 
 namespace Antd.Modules {
-
-    public class InfoModule : NancyModule {
-
-        public InfoModule()
-            : base("/info") {
+    public class InfoModule : CoreModule {
+        public InfoModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/info"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.MEMINFO = Meminfo.GetModel();
                 vmod.CPUINFO = Cpuinfo.GetModel();
@@ -53,11 +50,11 @@ namespace Antd.Modules {
                 return View["_page-info", vmod];
             };
 
-            Get["/loadaverage"] = x => Response.AsJson(Uptime.LoadAverage);
+            Get["/info/loadaverage"] = x => Response.AsJson(Uptime.LoadAverage);
 
-            Get["/disk"] = x => Response.AsJson(Uptime.LoadAverage);
+            Get["/info/disk"] = x => Response.AsJson(Uptime.LoadAverage);
 
-            Post["/killproc"] = x => {
+            Post["/info/killproc"] = x => {
                 Terminal.Execute("kill " + (string)Request.Form.data);
                 return Response.AsRedirect("/procs");
             };

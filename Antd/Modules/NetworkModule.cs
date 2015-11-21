@@ -28,23 +28,18 @@
 //-------------------------------------------------------------------------------------
 
 using System.Dynamic;
-using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class NetworkModule : NancyModule {
-        public NetworkModule()
-            : base("/network") {
+    public class NetworkModule : CoreModule {
+        public NetworkModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/network"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Physical = antdlib.Network.NetworkInterface.Physical;
                 vmod.Virtual = antdlib.Network.NetworkInterface.Virtual;
                 vmod.Bond = antdlib.Network.NetworkInterface.Bond;
-
-
-
                 return View["_page-network", vmod];
             };
         }

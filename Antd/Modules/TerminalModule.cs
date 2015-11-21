@@ -35,18 +35,15 @@ using Nancy.Security;
 //-------------------------------------------------------------------------------------
 
 namespace Antd.Modules {
-
-    public class TerminalModule : NancyModule {
-
-        public TerminalModule()
-            : base("/terminal") {
+    public class TerminalModule : CoreModule {
+        public TerminalModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => View["page-terminal"];
+            Get["/terminal"] = x => View["page-terminal"];
 
-            Post["/"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
+            Post["/terminal"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
 
-            Post["/directory"] = x => {
+            Post["/terminal/directory"] = x => {
                 string directory = Request.Form.Directory;
                 string result;
                 if (Directory.Exists(directory)) {
@@ -58,7 +55,7 @@ namespace Antd.Modules {
                 return Response.AsJson(result);
             };
 
-            Post["/directory/parent"] = x => {
+            Post["/terminal/directory/parent"] = x => {
                 string result;
                 if (!Directory.Exists((string)Request.Form.Directory)) {
                     result = "0";
@@ -75,24 +72,20 @@ namespace Antd.Modules {
                 return Response.AsJson(result);
             };
 
-            Post["/api"] = x => {
+            Post["/terminal/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 var result = Request.Form.Directory == "" ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
-            Post["/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command.Replace("$'", "\""))));
+            Post["/terminal/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command.Replace("$'", "\""))));
 
-            Post["/direct"] = x => {
+            Post["/terminal/direct"] = x => {
                 var cmds = (string)Request.Form.Command;
                 var replaceWithValues = cmds.Split(new[] {"$nl"}, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
                 var result = Terminal.MultiLine.Execute(replaceWithValues);
                 return Response.AsJson(result);
             };
-
-            //Post["/direct/get"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
-
-            //Post["/direct/post"] = x => Response.AsJson(Terminal.Execute((string)Request.Form.Command));
         }
     }
 }

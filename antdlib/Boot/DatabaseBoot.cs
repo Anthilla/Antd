@@ -63,7 +63,7 @@ namespace antdlib.Boot {
         }
 
         private static void Test() {
-            ConsoleLogger.Warn($"dbtest -> start");
+            ConsoleLogger.Log("dbtest -> start");
             var guid = Guid.NewGuid().ToString();
             var write = new TestClass {
                 _Id = guid,
@@ -72,12 +72,10 @@ namespace antdlib.Boot {
             };
             write.Bar = write.Foo + write.Date + write.Foo;
             DeNSo.Session.New.Set(write);
-            Thread.Sleep(1000);
             var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            if (read == null) {
-                ConsoleLogger.Warn($"dbtest -> error while reading");
-            }
-            Thread.Sleep(1000);
+            //if (read == null) {
+            //    ConsoleLogger.Warn($"dbtest -> error while reading");
+            //}
             if (read != null) {
                 read.Date = DateTime.Now;
                 read.Foo = "foo_edit";
@@ -85,10 +83,9 @@ namespace antdlib.Boot {
                 DeNSo.Session.New.Set(read);
             }
             var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            Thread.Sleep(1000);
             if (edited == null)
                 return;
-            ConsoleLogger.Warn($"dbtest -> error while reading");
+            //ConsoleLogger.Warn($"dbtest -> error while reading");
         }
     }
 

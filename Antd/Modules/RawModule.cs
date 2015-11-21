@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using antdlib.Common;
 using antdlib.Directories;
-using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
@@ -34,21 +33,18 @@ using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
 
 namespace Antd.Modules {
-
-    public class RawModule : NancyModule {
-
-        public RawModule()
-            : base("/rawdata") {
+    public class RawModule : CoreModule {
+        public RawModule() {
             this.RequiresAuthentication();
 
-            Get["/dir/{path*}"] = x => {
+            Get["/rawdata/dir/{path*}"] = x => {
                 var p = x.path;
                 var model = new DirectoryLister("/" + p, false).FullList2;
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Get["/dir/filelist/{path*}"] = x => {
+            Get["/rawdata/dir/filelist/{path*}"] = x => {
                 var p = x.path;
                 var list = new DirectoryLister("/" + p, false).FullList2;
                 var model = (from d in list
@@ -57,7 +53,7 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(model);
             };
 
-            Get["/file/content/{path*}"] = x => {
+            Get["/rawdata/file/content/{path*}"] = x => {
                 var p = x.path;
                 var model = FileSystem.ReadFile(p);
                 return JsonConvert.SerializeObject(model);

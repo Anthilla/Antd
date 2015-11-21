@@ -29,18 +29,14 @@
 
 using System.Dynamic;
 using antdlib.CCTable;
-using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
-    public class HypervisorModule : NancyModule {
-
-        public HypervisorModule()
-            : base("/hypervisor") {
+    public class HypervisorModule : CoreModule {
+        public HypervisorModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/hypervisor"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.CurrentContext = Request.Path;
                 vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);

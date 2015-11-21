@@ -29,64 +29,60 @@
 
 using System.Linq;
 using antdlib.Systemd;
-using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
-
-    public class UnitsModule : NancyModule {
-
-        public UnitsModule()
-            : base("/units") {
+    public class UnitsModule : CoreModule {
+        public UnitsModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/units"] = x => {
                 var units = Units.All;
                 return View["page-units", units];
             };
 
-            Get["/list"] = x => {
+            Get["/units/list"] = x => {
                 return JsonConvert.SerializeObject(Units.All.OrderBy(u => u.name));
             };
 
-            Post["/mgmt/enable/{unit}"] = x => {
+            Post["/units/mgmt/enable/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Enable(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Post["/mgmt/disable/{unit}"] = x => {
+            Post["/units/mgmt/disable/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Disable(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Post["/mgmt/start/{unit}"] = x => {
+            Post["/units/mgmt/start/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Start(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Post["/mgmt/stop/{unit}"] = x => {
+            Post["/units/mgmt/stop/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Stop(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Post["/mgmt/restart/{unit}"] = x => {
+            Post["/units/mgmt/restart/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Restart(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Post["/mgmt/reload/{unit}"] = x => {
+            Post["/units/mgmt/reload/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Reload(unit);
                 return JsonConvert.SerializeObject(r.outputTable);
             };
 
-            Get["/mgmt/status/{unit}"] = x => {
+            Get["/units/mgmt/status/{unit}"] = x => {
                 string unit = x.unit;
                 var r = Systemctl.Status(unit);
                 return JsonConvert.SerializeObject(r.outputTable);

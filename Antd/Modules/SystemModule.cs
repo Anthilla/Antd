@@ -41,11 +41,10 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class SystemModule : NancyModule {
+    public class SystemModule : CoreModule {
         private const string CctableContextName = "system";
 
-        public SystemModule()
-            : base("/system") {
+        public SystemModule() {
             this.RequiresAuthentication();
 
             Before += x => {
@@ -55,7 +54,7 @@ namespace Antd.Modules {
                 return null;
             };
 
-            Post["/cctable"] = x => {
+            Post["/system/cctable"] = x => {
                 var label = (string)Request.Form.Label;
                 var inputLabel = (string)Request.Form.InputLabel;
                 var notes = (string)Request.Form.Notes;
@@ -83,7 +82,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/system");
             };
 
-            Get["/"] = x => {
+            Get["/system"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.SSHPort = "22";
                 vmod.AuthStatus = CoreParametersConfig.GetT2Fa();
@@ -110,22 +109,22 @@ namespace Antd.Modules {
                 return View["_page-system", vmod];
             };
 
-            Get["/auth/disable"] = x => {
+            Get["/system/auth/disable"] = x => {
                 CoreParametersConfig.DisableT2Fa();
                 return Response.AsJson(true);
             };
 
-            Get["/auth/enable"] = x => {
+            Get["/system/auth/enable"] = x => {
                 CoreParametersConfig.EnableT2Fa();
                 return Response.AsJson(true);
             };
 
-            Get["/mounts"] = x => {
+            Get["/system/mounts"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-system-mounts", vmod];
             };
 
-            Post["/Mount/unit"] = x => {
+            Post["/system/mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 string unit = Request.Form.Unit;
                 var unitsSplit = unit.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -135,27 +134,27 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/system/mounts");
             };
 
-            Delete["/Mount/unit"] = x => {
+            Delete["/system/mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 var unit = Request.Form.Unit;
                 MountRepository.RemoveUnit(guid, unit);
                 return Response.AsJson(true);
             };
 
-            Get["/sysctl"] = x => {
+            Get["/system/sysctl"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Sysctl = VhStatus.Sysctl(Sysctl.Stock, Sysctl.Running, Sysctl.Antd);
                 return View["_page-system-sysctl", vmod];
             };
 
-            Post["/sysctl/{param}/{Value}"] = x => {
+            Post["/system/sysctl/{param}/{Value}"] = x => {
                 string param = x.param;
                 string value = x.value;
                 var output = Sysctl.Config(param, value);
                 return Response.AsJson(output);
             };
 
-            Get["/wizard"] = x => {
+            Get["/system/wizard"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-wizard", vmod];
             };

@@ -36,12 +36,11 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class UsersModule : NancyModule {
-        public UsersModule()
-            : base("/users") {
+    public class UsersModule : CoreModule {
+        public UsersModule() {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
+            Get["/users"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.UserEntities = UserEntity.Repository.GetAll();
                 //vmod.SystemUsers = SystemUser.GetAllFromDatabase();
@@ -49,44 +48,44 @@ namespace Antd.Modules {
                 return View["_page-users", vmod];
             };
 
-            Get["/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(UserEntity.Repository.GetAll()));
+            Get["/users/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(UserEntity.Repository.GetAll()));
 
-            Post["/refresh/users"] = x => {
+            Post["/users/refresh/users"] = x => {
                 SystemUser.ImportUsersToDatabase();
                 return Response.AsJson(true);
             };
 
-            Post["/refresh/group"] = x => {
+            Post["/users/refresh/group"] = x => {
                 SystemGroup.ImportGroupsToDatabase();
                 return Response.AsJson(true);
             };
 
-            Post["/create"] = x => {
+            Post["/users/create"] = x => {
                 string name = Request.Form.Name;
                 SystemUser.CreateUser(name);
                 return Response.AsRedirect("/users");
             };
 
-            Post["/create/group"] = x => {
+            Post["/users/create/group"] = x => {
                 string name = Request.Form.Name;
                 SystemGroup.CreateGroup(name);
                 return Response.AsRedirect("/users");
             };
 
-            Post["/sysmap/create"] = x => {
+            Post["/users/sysmap/create"] = x => {
                 string user = Request.Form.UserAlias;
                 string pwd = Request.Form.UserPassword;
                 SystemUser.Map.MapUser(user, pwd);
                 return Response.AsRedirect("/users");
             };
 
-            Get["/identity"] = x => {
+            Get["/users/identity"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Users = UserEntity.Repository.GetAll();
                 return View["_page-users", vmod];
             };
 
-            Post["/identity"] = x => {
+            Post["/users/identity"] = x => {
                 var guid = UserEntity.Repository.GenerateGuid();
                 string userIdentity = Request.Form.UserEntity;
                 string userPassword = Request.Form.UserPassword;
@@ -126,7 +125,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/users");
             };
 
-            Post["/identity/addclaim"] = x => {
+            Post["/users/identity/addclaim"] = x => {
                 string userGuid = Request.Form.Userguid;
                 string type = Request.Form.Type.Value;
                 string mode = Request.Form.Mode.Value;
@@ -136,7 +135,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/users");
             };
 
-            Post["/identity/delclaim"] = x => {
+            Post["/users/identity/delclaim"] = x => {
                 string userGuid = Request.Form.Userguid;
                 string guid = Request.Form.Guid;
                 UserEntity.Repository.RemoveClaim(userGuid, guid);
