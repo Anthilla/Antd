@@ -41,8 +41,7 @@ namespace antdlib.Firewall {
         public string IdHook { get; set; }
         public string Rule { get; set; }
         public string Label { get; set; }
-        public string TemplateWord => $"${Label}";
-        public string ListType { get; set; }
+        public string TemplateWord => $"${IdTable}_{IdType}_{IdHook}_{Label}";
         public IEnumerable<string> Values { get; set; }
         public string ReplaceValues => $"{{ {string.Join(", ", Values)} }}";
     }
@@ -52,8 +51,37 @@ namespace antdlib.Firewall {
 
         public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
 
-        public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook)
-            => GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
+        public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook) {
+            var l = GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
+            return l;
+        }
+
+        public static void AddList(string guid, string table, string type, string hook, string label) {
+            var model = new FirewallListModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = guid,
+                IsEnabled = true,
+                IdTable = table,
+                IdType = type,
+                IdHook = hook,
+                Label = label,
+                Values = new List<string>()
+            };
+            DeNSo.Session.New.Set(model);
+        }
+
+        public static void AddValueToList(string guid, IEnumerable<string> values) {
+            if (!GetAllHidden().Any()) {
+                return;
+            }
+            var list = GetAllHidden().FirstOrDefault(_ => _.Guid == guid);
+            if (list == null)
+                return;
+            list.Values = values;
+            DeNSo.Session.New.Set(list);
+        }
+
+        public static IEnumerable<string> GetLabels() => GetAllHidden().Select(_ => _.TemplateWord);
 
         public static void SetDefaultLists() {
             if (GetAllHidden().Any()) {
@@ -67,8 +95,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "$ipfiliniifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "iifaddr",
                     Values = new List<string> {
                         "127.0.0.1"
                     }
@@ -80,8 +107,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "$ipfiloutiifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "iifaddr",
                     Values = new List<string> {
                         "127.0.0.1"
                     }
@@ -93,8 +119,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "iifaddr",
                     Values = new List<string> {
                         "127.0.0.1"
                     }
@@ -106,8 +131,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilineifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "eifaddr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -117,8 +141,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfilouteifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "eifaddr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -128,8 +151,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfweifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "eifaddr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -139,8 +161,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "",
-                    Label = "ipfilinwanifaddr",
-                    ListType = "ipv4_addr",
+                    Label = "wanifaddr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -150,8 +171,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinprotoset",
-                    ListType = "inet_proto",
+                    Label = "protoset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -161,8 +181,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutprotoset",
-                    ListType = "inet_proto",
+                    Label = "protoset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -172,8 +191,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwprotoset",
-                    ListType = "inet_proto",
+                    Label = "protoset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -183,8 +201,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilintcpportset",
-                    ListType = "inet_service",
+                    Label = "tcpportset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -194,8 +211,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwtcpportset",
-                    ListType = "inet_service",
+                    Label = "tcpportset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -205,8 +221,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinudpportset",
-                    ListType = "inet_service",
+                    Label = "udpportset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -216,8 +231,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutudpportset",
-                    ListType = "inet_service",
+                    Label = "udpportset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -227,8 +241,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwudpportset",
-                    ListType = "inet_service",
+                    Label = "udpportset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -238,8 +251,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinpubsvcset",
-                    ListType = "inet_service",
+                    Label = "pubsvcset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -249,8 +261,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinstate",
-                    ListType = "ct_state",
+                    Label = "state",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -260,8 +271,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutstate",
-                    ListType = "ct_state",
+                    Label = "state",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -271,8 +281,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwstate",
-                    ListType = "ct_state",
+                    Label = "state",
                     Values = new List<string>()
                       },
                 new FirewallListModel {
@@ -282,8 +291,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilindaddrstate",
-                    ListType = "ct_state",
+                    Label = "daddrstate",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -293,8 +301,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinsaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "saddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -304,8 +311,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutsaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "saddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -315,8 +321,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutdaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "daddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -326,8 +331,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinsaddripdrop",
-                    ListType = "ipv4_addr",
+                    Label = "saddripdrop",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -337,8 +341,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinsaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "saddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -348,8 +351,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutsaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "saddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -359,8 +361,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutdaddrnetaccept",
-                    ListType = "net_addr",
+                    Label = "daddrnetaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -370,8 +371,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfiliniif",
-                    ListType = "if",
+                    Label = "iif",
                     Values = new List<string> {"lo"}
                 },
                 new FirewallListModel {
@@ -381,8 +381,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutiif",
-                    ListType = "if",
+                    Label = "iif",
                     Values = new List<string> {"lo"}
                 },
                 new FirewallListModel {
@@ -392,8 +391,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "output",
-                    Label = "ipfiloutoif",
-                    ListType = "if",
+                    Label = "oif",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -403,8 +401,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiif",
-                    ListType = "if",
+                    Label = "iif",
                     Values = new List<string> {"lo"}
                 },
                  new FirewallListModel {
@@ -414,8 +411,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwoif",
-                    ListType = "if",
+                    Label = "oif",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -425,8 +421,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwoifdrop",
-                    ListType = "if",
+                    Label = "oifdrop",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -436,8 +431,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfiliniifdaddraccept",
-                    ListType = "if",
+                    Label = "iifdaddraccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -447,8 +441,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiifaccept",
-                    ListType = "if",
+                    Label = "iifaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -458,8 +451,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwipoifaccept",
-                    ListType = "if",
+                    Label = "ipoifaccept",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -469,8 +461,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpiif1",
-                    ListType = "if",
+                    Label = "iptcpiif1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -480,8 +471,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpoif1",
-                    ListType = "if",
+                    Label = "iptcpoif1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -491,8 +481,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpdaddr1",
-                    ListType = "ipv4_addr",
+                    Label = "iptcpdaddr1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -502,8 +491,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpport1",
-                    ListType = "port",
+                    Label = "iptcpport1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -513,8 +501,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpiif2",
-                    ListType = "if",
+                    Label = "iptcpiif2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -524,8 +511,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpoif2",
-                    ListType = "if",
+                    Label = "iptcpoif2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -535,8 +521,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpdaddr2",
-                    ListType = "ipv4_addr",
+                    Label = "iptcpdaddr2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -546,8 +531,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "forward",
-                    Label = "ipfilfwiptcpport2",
-                    ListType = "port",
+                    Label = "iptcpport2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -557,8 +541,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "filter",
                     IdHook = "input",
-                    Label = "ipfilinpubsvcset",
-                    ListType = "net_addr",
+                    Label = "pubsvcset",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -568,8 +551,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreiif1",
-                    ListType = "if_name",
+                    Label = "iif1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -579,8 +561,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreport1",
-                    ListType = "port",
+                    Label = "port1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -590,8 +571,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatprednat1",
-                    ListType = "net_addr",
+                    Label = "dnat1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -601,8 +581,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreiif2",
-                    ListType = "if_name",
+                    Label = "iif2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -612,8 +591,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreport2",
-                    ListType = "port",
+                    Label = "port2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -623,8 +601,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatprednat2",
-                    ListType = "net_addr",
+                    Label = "dnat2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -634,8 +611,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreportredirect",
-                    ListType = "port",
+                    Label = "portredirect",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -645,8 +621,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "prerouting",
-                    Label = "ipnatpreportredirectto",
-                    ListType = "port",
+                    Label = "portredirectto",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -656,8 +631,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostnet1",
-                    ListType = "net_addr",
+                    Label = "net1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -667,8 +641,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostoif1",
-                    ListType = "if_name",
+                    Label = "oif1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -678,8 +651,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostip1",
-                    ListType = "ipv4_addr",
+                    Label = "ip1",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -689,8 +661,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostnet2",
-                    ListType = "net_addr",
+                    Label = "net2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -700,8 +671,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostoif2",
-                    ListType = "if_name",
+                    Label = "oif2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -711,8 +681,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostip2",
-                    ListType = "ipv4_addr",
+                    Label = "ip2",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -722,8 +691,7 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostoifmask",
-                    ListType = "if_name",
+                    Label = "oifmask",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
@@ -733,23 +701,11 @@ namespace antdlib.Firewall {
                     IdTable = "ip",
                     IdType = "nat",
                     IdHook = "postrouting",
-                    Label = "ipnatpostnetmask",
-                    ListType = "net_addr",
+                    Label = "netmask",
                     Values = new List<string>()
                 }
             };
             DeNSo.Session.New.SetAll(list);
-        }
-
-        public static void AddValueToList(string guid, IEnumerable<string> values) {
-            if (!GetAllHidden().Any()) {
-                return;
-            }
-            var list = GetAllHidden().FirstOrDefault(_ => _.Guid == guid);
-            if (list == null)
-                return;
-            list.Values = values;
-            DeNSo.Session.New.Set(list);
         }
     }
 }

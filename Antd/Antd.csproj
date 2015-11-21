@@ -247,9 +247,7 @@
     </None>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Views\page-empty.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\__old\page-empty.html" />
     <None Include="Views\system\page-system-authentication.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -259,15 +257,11 @@
     <None Include="Views\system\page-system-firmware.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\system\page-system-general.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\__old\page-system-general.html" />
     <None Include="Views\system\page-system-secureshell.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\system\_page-system.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\__old\_page-system.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\antd\page-log.html">
@@ -288,9 +282,7 @@
     <Content Include="Views\antd\page-antd-mount.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Views\_toolbar.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\__old\_toolbar.html" />
     <None Include="Views\antd\page-log-system.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -300,9 +292,7 @@
     <None Include="Views\antd\page-log-report.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\_navbar.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\__old\_navbar.html" />
     <None Include="Views\page-redirect.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -473,9 +463,7 @@
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\firewall\_page-firewall.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Views\__old\_page-firewall.html" />
     <Content Include="Views\hypervisor\page-hypervisor-backup.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

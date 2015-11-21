@@ -47,13 +47,6 @@ namespace Antd.Modules {
         public SystemModule() {
             this.RequiresAuthentication();
 
-            Before += x => {
-                if (CCTableRepository.GetByContext(CctableContextName) == null) {
-                    CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
-                }
-                return null;
-            };
-
             Post["/system/cctable"] = x => {
                 var label = (string)Request.Form.Label;
                 var inputLabel = (string)Request.Form.InputLabel;
@@ -80,33 +73,6 @@ namespace Antd.Modules {
                         break;
                 }
                 return Response.AsRedirect("/system");
-            };
-
-            Get["/system"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.SSHPort = "22";
-                vmod.AuthStatus = CoreParametersConfig.GetT2Fa();
-
-                vmod.SslStatus = "Enabled";
-                vmod.SslStatusAction = "Disable";
-                if (CoreParametersConfig.GetSsl() == "no") {
-                    vmod.SslStatus = "Disabled";
-                    vmod.SslStatusAction = "Enable";
-                }
-                vmod.CertificatePath = CoreParametersConfig.GetCertificatePath();
-                vmod.CaStatus = "Enabled";
-                if (CoreParametersConfig.GetCa() == "no") {
-                    vmod.CaStatus = "Disabled";
-                }
-                vmod.CaIsActive = CertificateAuthority.IsActive;
-                vmod.Certificates = CertificateRepository.GetAll();
-
-                vmod.CCTableContext = CctableContextName;
-                var table = CCTableRepository.GetByContext2(CctableContextName);
-                vmod.CommandDirect = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.Direct);
-                vmod.CommandText = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.TextInput);
-                vmod.CommandBool = table.Content.Where(_ => _.CommandType == antdlib.CCTableCommandType.BooleanPair);
-                return View["_page-system", vmod];
             };
 
             Get["/system/auth/disable"] = x => {

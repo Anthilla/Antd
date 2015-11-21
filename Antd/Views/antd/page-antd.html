@@ -362,17 +362,35 @@
         $.ajax({
             url: '/firewall/getrule/' + table + '/' + type + '/' + hook,
             type: 'GET',
+            dataType: 'json',
             contentType: 'application/json;charset=utf-8',
             success: function (data) {
                 var container = $('#FirewallConfigurationLists');
                 container.html('');
                 $.each(data, function (i, list) {
-                    container.append('<li data-index="' + i + '">' + list + '</li>');
+                    var row = '<tr data-index="' + i + '"><td style="width:200px;"><p style="display:inline-block;" class="fg-white">'
+                        + list.Label.replace(/blue/g, "red") +
+                        '</p></td><td><input type="text" data-label="' + list.Label + '" style="height: 25px; width: 90%;" class="bg-anthilla-gray fg-white" value="'
+                        + list.ReplaceValues + '"/></td><td><i class="icon-cycle fg-anthilla-violet on-left" data-label="' + list.Label +
+                        '" data-role="firewall-reload-values" data-backup="'
+                        + list.ReplaceValues +
+                        '" style="cursor: pointer !important;"></i><i class="icon-checkmark fg-anthilla-green on-left style="cursor: pointer !important;""></i>' +
+                        '</td></tr>';
+                    container.append(row);
                 });
+                ReloadListValues();
                 return false;
             }
         });
     });
+
+    function ReloadListValues() {
+        $('[data-role="firewall-reload-values"]').click(function () {
+            var label = $(this).attr('data-labe');
+            var bkup = $(this).attr('data-backup');
+            $('input[data-label="' + label + '"]').val(bkup);
+        });
+    }
 
     $('i[data-role="stop-rule"]').click(function () {
         var guid = $(this).attr('data-guid');

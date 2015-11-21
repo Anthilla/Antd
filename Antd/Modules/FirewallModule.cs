@@ -27,10 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class FirewallModule : CoreModule {
@@ -50,7 +52,21 @@ namespace Antd.Modules {
 
             Get["/firewall/checkdefault"] = x => Response.AsJson(FirewallLists.GetAll().Count());
 
-            Get["/firewall/getrule/{table}/{type}/{hook}"] = x => Response.AsJson(FirewallLists.GetForRule((string)x.table, (string)x.type, (string)x.hook));
+            Get["/firewall/getrule/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(FirewallLists.GetForRule((string)x.table, (string)x.type, (string)x.hook));
+
+            Post["/firewall/add/list"] = x => {
+                var guid = Guid.NewGuid().ToString();
+                var table = (string)Request.Form.Table;
+                var type = (string)Request.Form.Type;
+                var hook = (string)Request.Form.Hook;
+                var label = (string)Request.Form.Label;
+                FirewallLists.AddList(guid, table, type, hook, label);
+                var values = (string)Request.Form.Values;
+                if (values.Length <= 0) return Response.AsJson(true);
+                var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                FirewallLists.AddValueToList(guid, valueList);
+                return Response.AsJson(true);
+            };
 
             Post["/firewall/conf/export"] = x => {
                 NfTables.Export.ExportNewFirewallConfiguration();

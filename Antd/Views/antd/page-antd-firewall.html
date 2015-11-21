@@ -52,7 +52,7 @@
             @Partial['_partial/part-firewall-ip6-postrouting-filter'];
             @Partial['_partial/part-firewall-ip6-postrouting-nat'];
         </div>
-        <hr class="bg-anthilla-gray"/>
+        <hr class="bg-anthilla-gray" />
         <div class="row bg-transparent" style="margin-bottom: 10px;">
             @Partial['_partial/part-firewall-connection-arp'];
             @Partial['_partial/part-firewall-empty'];
@@ -67,7 +67,7 @@
             @Partial['_partial/part-firewall-arp-output-filter'];
             @Partial['_partial/part-firewall-arp-output-route'];
         </div>
-        <hr class="bg-anthilla-gray"/>
+        <hr class="bg-anthilla-gray" />
         <div class="row bg-transparent" style="margin-bottom: 10px;">
             @Partial['_partial/part-firewall-connection-br'];
             @Partial['_partial/part-firewall-empty'];
@@ -84,14 +84,21 @@
         </div>
     </div>
     <hr class="bg-anthilla-gray" />
-    <form id="ValueBundleDashboard" action="/firewall/addrule" enctype="multipart/form-data" method="POST">
-        <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
-        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
-        <br />
-        <ul id="FirewallConfigurationLists">
+    <div id="ValueBundleDashboard">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td colspan="3">
+                        <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
+                        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="FirewallConfigurationLists">
             
-        </ul>
-    </form>
+            </tbody>
+        </table>
+    </div>
 
     <!--
     <form id="ValueBundleDashboard" action="/firewall/addrule" enctype="multipart/form-data" method="POST">
