@@ -61,7 +61,16 @@ namespace Antd.Modules {
                 var hook = (string)Request.Form.Hook;
                 var label = (string)Request.Form.Label;
                 FirewallLists.AddList(guid, table, type, hook, label);
-                var values = (string)Request.Form.Values;
+                var values = (string)Request.Form.Elements;
+                if (values.Length <= 0) return Response.AsRedirect("/");
+                var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                FirewallLists.AddValueToList(guid, valueList);
+                return Response.AsRedirect("/");
+            };
+
+            Post["/firewall/add/value"] = x => {
+                var guid = (string)Request.Form.Guid;
+                var values = (string)Request.Form.Elements;
                 if (values.Length <= 0) return Response.AsJson(true);
                 var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 FirewallLists.AddValueToList(guid, valueList);

@@ -373,16 +373,17 @@
                 container.html('');
                 $.each(data, function (i, list) {
                     var row = '<tr data-index="' + i + '"><td style="width:200px;"><p style="display:inline-block;" class="fg-white">'
-                        + list.Label.replace(/blue/g, "red") +
-                        '</p></td><td><input type="text" data-label="' + list.Label + '" style="height: 25px; width: 90%;" class="bg-anthilla-gray fg-white" value="'
-                        + list.ReplaceValues + '"/></td><td><i class="icon-cycle fg-anthilla-violet on-left" data-label="' + list.Label +
+                        + list.Label +
+                        '</p></td><td><input type="text" data-guid="' + list.Guid + '" style="height: 25px; width: 90%;" class="bg-anthilla-gray fg-white" value="'
+                        + list.ReplaceValues + '"/></td><td><i class="icon-cycle fg-anthilla-violet on-left" data-guid="' + list.Guid +
                         '" data-role="firewall-reload-values" data-backup="'
                         + list.ReplaceValues +
-                        '" style="cursor: pointer !important;"></i><i class="icon-checkmark fg-anthilla-green on-left style="cursor: pointer !important;""></i>' +
+                        '" style="cursor: pointer !important;"></i><i data-role="firewall-update-values" data-guid="' + list.Guid +
+                        '" class="icon-checkmark fg-anthilla-green on-left style="cursor: pointer !important;""></i>' +
                         '</td></tr>';
                     container.append(row);
+                    ReloadListValues();
                 });
-                ReloadListValues();
                 return false;
             }
         });
@@ -390,9 +391,29 @@
 
     function ReloadListValues() {
         $('[data-role="firewall-reload-values"]').click(function () {
-            var label = $(this).attr('data-labe');
+            var guid = $(this).attr('data-guid');
             var bkup = $(this).attr('data-backup');
-            $('input[data-label="' + label + '"]').val(bkup);
+            $('input[data-guid="' + guid + '"]').val(bkup);
+            return false;
+        });
+    }
+
+    function SaveListValues() {
+        $('[data-role="firewall-update-values"]').click(function () {
+            var guid = $(this).attr('data-guid');
+            var el = $('input[data-guid="' + guid + '"]').val();
+            jQuery.support.cors = true;
+            $.ajax({
+                url: networkUrl + '/ipv4/disable/if',
+                type: 'POST',
+                data: {
+                    Guid: guid,
+                    Elements: el
+                },
+                success: function (data) {
+                    location.reload(true);
+                }
+            });
         });
     }
 
