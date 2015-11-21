@@ -65,7 +65,6 @@ namespace antdlib.Log {
             var src = source.Length > 0 ? $" src={source}" : "";
             Console.WriteLine($"lvl={(int)EventLevel.Other} msg={message}{src}");
             Console.ForegroundColor = currentFg;
-            Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Info, message);
         }
     }
 }

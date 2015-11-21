@@ -176,9 +176,6 @@
     <None Include="NoVnc\Orbitron700.woff">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\antd.boot.firewall.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\app-antd-01-prepare.service">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
