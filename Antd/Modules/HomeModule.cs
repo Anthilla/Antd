@@ -52,7 +52,6 @@ namespace Antd.Modules {
                 if (CCTableRepository.GetByContext(CctableContextName) == null) {
                     CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
                 }
-                NfTables.Export.ExportTemplate();
                 return null;
             };
 

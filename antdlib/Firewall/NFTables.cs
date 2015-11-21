@@ -81,7 +81,7 @@ namespace antdlib.Firewall {
                 var template = $"{Folder.RepoConfig}/antd.firewall.template.conf";
                 var text = Terminal.Terminal.Execute($"cat {template}");
                 foreach (var values in FirewallLists.GetAll()) {
-                    var replace = text.Replace(values.TemplateWord, ConfigManagement.SupposeCommandReplacement(values.ReplaceValues));
+                    var replace = text.Replace(values.TemplateWord, ConfigManagement.SupposeCommandReplacement(values.ReplaceTemplateValues));
                     text = replace;
                 }
                 var newConfFile = GetLastFileName();

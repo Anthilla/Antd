@@ -85,6 +85,40 @@
     </div>
     <hr class="bg-anthilla-gray" />
     <div id="ValueBundleDashboard">
+        <form action="/firewall/add/list" method="POST" enctype="multipart/form-data" class="grid border-2-anthilla-violed">
+            <div class="row">
+                <div class="span12">
+                    <h2 style="display: inline-block;" class="fg-white">Create a new set of elements for: </h2>
+                    <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Set label</label>
+                </div>
+                <div class="span6" id="NewListDashboard">
+                    <input name="Table" type="hidden"/>
+                    <input name="Type" type="hidden"/>
+                    <input name="Hook" type="hidden"/>
+                    <input name="Label" type="text" style="height: 25px; width: 90%;"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>Values</label>
+                </div>
+                <div class="span6">
+                    <input name="Values" type="text" style="height: 25px; width: 90%;"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4"></div>
+                <div class="span6">
+                    <input value="Create Set of Element" type="submit" style="height: 25px; width: 90%; color: #3a3a3a !important;" class="bg-anthilla-green" />
+                </div>
+            </div>
+        </form>
+        <hr class="bg-anthilla-violet"/>
         <table class="table">
             <thead>
                 <tr>
@@ -94,9 +128,7 @@
                     </td>
                 </tr>
             </thead>
-            <tbody id="FirewallConfigurationLists">
-            
-            </tbody>
+            <tbody id="FirewallConfigurationLists"></tbody>
         </table>
     </div>
 

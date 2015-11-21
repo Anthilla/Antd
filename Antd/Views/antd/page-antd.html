@@ -356,6 +356,10 @@
         var table = $(this).attr('data-table');
         var type = $(this).attr('data-type');
         var hook = $(this).attr('data-hook');
+        var db = $('#NewListDashboard');
+        db.find('[name="Table"]').val(table);
+        db.find('[name="Type"]').val(type);
+        db.find('[name="Hook"]').val(hook);
         $('[data-role="display-table-context"]').text(table + ' ' + type + ' ' + hook);
         $(window).scrollTop($('#ValueBundleDashboard').offset().top - 50);
         jQuery.support.cors = true;

@@ -30,13 +30,12 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using antdlib.Log;
 
 namespace antdlib.Boot {
     public class DatabaseBoot {
 
-        public static void Start(string[] dbPaths, bool doTest) {
+        public static void Start(string[] dbPaths) {
             DeNSo.Configuration.BasePath = dbPaths;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.EnableDataCompression = false;
@@ -45,9 +44,6 @@ namespace antdlib.Boot {
             DeNSo.Session.DefaultDataBase = Folder.AntdCfgDatabaseName;
             DeNSo.Session.Start();
             CheckPaths(dbPaths);
-            if (doTest) {
-                Test();
-            }
         }
 
         public static void ShutDown() {
@@ -55,37 +51,15 @@ namespace antdlib.Boot {
         }
 
         private static void CheckPaths(string[] dbPaths) {
-            foreach (string path in dbPaths.Where(path => !Directory.Exists(path))) {
+            foreach (var path in dbPaths) {
+                Directory.CreateDirectory(path);
+                Directory.CreateDirectory($"{path}/{Folder.AntdCfgDatabaseName}");
+            }
+            foreach (var path in dbPaths.Where(path => !Directory.Exists(path))) {
                 Directory.CreateDirectory(path);
                 ConsoleLogger.Warn("You are trying to write your database in {0}, but this dir does'nt exist!", path);
                 ConsoleLogger.Warn("Although Antd has created this folder, please check that you do not miss anything!");
             }
-        }
-
-        private static void Test() {
-            ConsoleLogger.Log("dbtest -> start");
-            var guid = Guid.NewGuid().ToString();
-            var write = new TestClass {
-                _Id = guid,
-                Date = DateTime.Now,
-                Foo = "foo"
-            };
-            write.Bar = write.Foo + write.Date + write.Foo;
-            DeNSo.Session.New.Set(write);
-            var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            //if (read == null) {
-            //    ConsoleLogger.Warn($"dbtest -> error while reading");
-            //}
-            if (read != null) {
-                read.Date = DateTime.Now;
-                read.Foo = "foo_edit";
-                read.Bar = read.Foo + read.Date + read.Foo;
-                DeNSo.Session.New.Set(read);
-            }
-            var edited = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
-            if (edited == null)
-                return;
-            //ConsoleLogger.Warn($"dbtest -> error while reading");
         }
     }
 

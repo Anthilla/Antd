@@ -43,7 +43,8 @@ namespace antdlib.Firewall {
         public string Label { get; set; }
         public string TemplateWord => $"${IdTable}_{IdType}_{IdHook}_{Label}";
         public IEnumerable<string> Values { get; set; }
-        public string ReplaceValues => $"{{ {string.Join(", ", Values)} }}";
+        public string ReplaceValues => string.Join(", ", Values);
+        public string ReplaceTemplateValues => $"{{ {string.Join(", ", Values)} }}";
     }
 
     public class FirewallLists {

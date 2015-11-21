@@ -169,8 +169,8 @@ namespace Antd {
             ConsoleLogger.Log("root info: application database path: {0}", applicationDatabasePath);
             if (Directory.Exists(applicationDatabasePath)) {
                 var databases = new[] { applicationDatabasePath };
-                DatabaseBoot.Start(databases, true);
-                ConsoleLogger.Log("database: loaded");
+                DatabaseBoot.Start(databases);
+                ConsoleLogger.Log("database ready");
             }
             else {
                 ConsoleLogger.Warn("database: failed to load");
@@ -182,10 +182,10 @@ namespace Antd {
             if (isActive) {
                 var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
                 app.MapSignalR(hubConfiguration);
-                ConsoleLogger.Log($"signalR: loaded");
+                ConsoleLogger.Log($"signalR ready");
             }
             else {
-                ConsoleLogger.Log($"signalR: skipped");
+                ConsoleLogger.Log($"signalR skipped");
             }
         }
 
@@ -193,7 +193,7 @@ namespace Antd {
             StaticConfiguration.DisableErrorTraces = false;
             var options = new NancyOptions { EnableClientCertificates = true };
             app.UseNancy(options);
-            ConsoleLogger.Log($"nancy: loaded");
+            ConsoleLogger.Log($"nancy ready");
         }
 
         public static void TestWebDav(string uri, string path) {
@@ -275,6 +275,7 @@ namespace Antd {
         public static void SetFirewall() {
             ConsoleLogger.Log("loading default values for firewall");
             FirewallLists.SetDefaultLists();
+            NfTables.Export.ExportTemplate();
             ConsoleLogger.Log("default values for firewall load");
         }
     }
