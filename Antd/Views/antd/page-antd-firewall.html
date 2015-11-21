@@ -12,56 +12,47 @@
         <label style="float:left; position: relative; left: 600px;">output</label>
         <label style="float:left; position: relative; left: 695px;">postrouting</label>
     </div>
-    <div style="width: 1450px; height: 500px ;  position:absolute; z-index: 0; opacity: 0.3;">
+    <div style="width: 1450px; height: 380px;  position:absolute; z-index: 0; opacity: 0.3;">
         <div data-hook="prerouting" style="height: 100%; width: 150px; position: relative ;left: 105px; float: left;" class="bg-white"></div>
         <div data-hook="input" style="height: 100%; width: 150px; position: relative; left: 115px; float: left;" class="bg-white"></div>
         <div data-hook="forward" style="height: 100%; width: 150px; position: relative ;left:185px; float: left;" class="bg-white"></div>
         <div data-hook="output" style="height: 100%; width: 150px; position: relative ;left:255px; float: left;" class="bg-white"></div>
         <div data-hook="postrouting" style="height: 100%; width: 150px; position: relative ;left:265px; float: left;" class="bg-white"></div>
     </div>
-    <div class="grid bg-transparent" style="width: 1450px; position:relative; z-index: 4;">
+    <div class="grid bg-transparent" style="width: 1450px; position: relative; z-index: 4;">
         <div class="row bg-transparent" style="margin-bottom: 10px;">
             @Partial['_partial/part-firewall-connection-ip'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-prerouting-nat'];
+            @Partial['_partial/part-firewall-ip-prerouting-filter'];
             @Partial['_partial/part-firewall-ip-input-route'];
             @Partial['_partial/part-firewall-ip-input-filter'];
             @Partial['_partial/part-firewall-ip-input-nat'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-connection-lm'];
-            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-forward-route'];
+            @Partial['_partial/part-firewall-ip-forward-filter'];
+            @Partial['_partial/part-firewall-ip-forward-nat'];
             @Partial['_partial/part-firewall-ip-output-nat'];
             @Partial['_partial/part-firewall-ip-output-filter'];
             @Partial['_partial/part-firewall-ip-output-route'];
-        </div>
-        <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-ip-prerouting-nat'];
-            @Partial['_partial/part-firewall-ip-prerouting-filter'];
-            @Partial['_partial/part-firewall-ip-prerouting-route'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-ip-postrouting-route'];
             @Partial['_partial/part-firewall-ip-postrouting-filter'];
             @Partial['_partial/part-firewall-ip-postrouting-nat'];
         </div>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-ip-forward-route'];
-            @Partial['_partial/part-firewall-ip-forward-filter'];
-            @Partial['_partial/part-firewall-ip-forward-nat'];
+            @Partial['_partial/part-firewall-connection-ip6'];
+            @Partial['_partial/part-firewall-ip6-prerouting-nat'];
+            @Partial['_partial/part-firewall-ip6-prerouting-filter'];
+            @Partial['_partial/part-firewall-ip6-input-route'];
+            @Partial['_partial/part-firewall-ip6-input-filter'];
+            @Partial['_partial/part-firewall-ip6-input-nat'];
+            @Partial['_partial/part-firewall-ip6-forward-route'];
+            @Partial['_partial/part-firewall-ip6-forward-filter'];
+            @Partial['_partial/part-firewall-ip6-forward-nat'];
+            @Partial['_partial/part-firewall-ip6-output-nat'];
+            @Partial['_partial/part-firewall-ip6-output-filter'];
+            @Partial['_partial/part-firewall-ip6-output-route'];
+            @Partial['_partial/part-firewall-ip6-postrouting-filter'];
+            @Partial['_partial/part-firewall-ip6-postrouting-nat'];
         </div>
-        <hr class="bg-anthilla-gray" />
+        <hr class="bg-anthilla-gray"/>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
             @Partial['_partial/part-firewall-connection-arp'];
             @Partial['_partial/part-firewall-empty'];
@@ -76,7 +67,7 @@
             @Partial['_partial/part-firewall-arp-output-filter'];
             @Partial['_partial/part-firewall-arp-output-route'];
         </div>
-        <hr class="bg-anthilla-gray" />
+        <hr class="bg-anthilla-gray"/>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
             @Partial['_partial/part-firewall-connection-br'];
             @Partial['_partial/part-firewall-empty'];
@@ -84,29 +75,24 @@
             @Partial['_partial/part-firewall-bridge-input-route'];
             @Partial['_partial/part-firewall-bridge-input-filter'];
             @Partial['_partial/part-firewall-bridge-input-nat'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-bridge-forward-route'];
+            @Partial['_partial/part-firewall-bridge-forward-filter'];
+            @Partial['_partial/part-firewall-bridge-forward-nat'];
             @Partial['_partial/part-firewall-bridge-output-nat'];
             @Partial['_partial/part-firewall-bridge-output-filter'];
             @Partial['_partial/part-firewall-bridge-output-route'];
         </div>
-        <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-empty'];
-            @Partial['_partial/part-firewall-bridge-forward-route'];
-            @Partial['_partial/part-firewall-bridge-forward-filter'];
-            @Partial['_partial/part-firewall-bridge-forward-nat'];
-        </div>
     </div>
-    <hr class="bg-anthilla-gray"/>
-    <ul id="FirewallConfigurationLists">
-        
-    </ul>
+    <hr class="bg-anthilla-gray" />
+    <form id="ValueBundleDashboard" action="/firewall/addrule" enctype="multipart/form-data" method="POST">
+        <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
+        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+        <br />
+        <ul id="FirewallConfigurationLists">
+            
+        </ul>
+    </form>
+
     <!--
     <form id="ValueBundleDashboard" action="/firewall/addrule" enctype="multipart/form-data" method="POST">
         <h2 style="display: inline-block;" class="fg-white">Rules for: </h2>

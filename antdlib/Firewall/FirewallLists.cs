@@ -52,8 +52,8 @@ namespace antdlib.Firewall {
 
         public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
 
-        public static IEnumerable<FirewallListModel> GetForRule(string table, string chain, string hook)
-            => GetAll().Where(_ => _.IdTable == table && _.IdType == chain && _.IdHook == hook);
+        public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook)
+            => GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
 
         public static void SetDefaultLists() {
             if (GetAllHidden().Any()) {

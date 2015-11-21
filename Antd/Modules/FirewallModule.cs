@@ -50,7 +50,7 @@ namespace Antd.Modules {
 
             Get["/firewall/checkdefault"] = x => Response.AsJson(FirewallLists.GetAll().Count());
 
-            Get["/firewall/getrule/{table}/{chain}/{hook}"] = x => Response.AsJson(FirewallLists.GetForRule((string)x.table, (string)x.chain, (string)x.hook));
+            Get["/firewall/getrule/{table}/{type}/{hook}"] = x => Response.AsJson(FirewallLists.GetForRule((string)x.table, (string)x.type, (string)x.hook));
 
             Post["/firewall/conf/export"] = x => {
                 NfTables.Export.ExportNewFirewallConfiguration();

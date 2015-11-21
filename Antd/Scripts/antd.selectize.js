@@ -1,6 +1,5 @@
 //selectize
 $(document).ready(function () {
-    console.log('kkkkkk');
     $.when(
         LoadSystemdUnits(),
         LoadUserEntitiesUnits()

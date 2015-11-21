@@ -356,17 +356,18 @@
         var table = $(this).attr('data-table');
         var type = $(this).attr('data-type');
         var hook = $(this).attr('data-hook');
-        //$('#ValueBundleDashboard').find('input[name="Command"]').val('nft add rule ' + table + ' ' + type + ' ' + hook);
-        //$('[data-role="display-table-context"]').text(table + ' ' + type + ' ' + hook);
-        //$(window).scrollTop($('#FirewallConfigurationLists').offset().top);
+        $('[data-role="display-table-context"]').text(table + ' ' + type + ' ' + hook);
+        $(window).scrollTop($('#ValueBundleDashboard').offset().top - 50);
         jQuery.support.cors = true;
         $.ajax({
             url: '/firewall/getrule/' + table + '/' + type + '/' + hook,
             type: 'GET',
             contentType: 'application/json;charset=utf-8',
             success: function (data) {
+                var container = $('#FirewallConfigurationLists');
+                container.html('');
                 $.each(data, function (i, list) {
-                    $('#FirewallConfigurationLists').append('<li data-index="' + i + '">' + list + '</li>');
+                    container.append('<li data-index="' + i + '">' + list + '</li>');
                 });
                 return false;
             }
