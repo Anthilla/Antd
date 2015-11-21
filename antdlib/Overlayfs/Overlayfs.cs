@@ -29,7 +29,7 @@
 
 using antdlib.Scheduler;
 using System.IO;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Overlayfs {
 
@@ -49,13 +49,13 @@ namespace antdlib.Overlayfs {
                 ConsoleLogger.Warn("Overlayfs -> the 'merged' dir does not exist: {0}", merged);
             }
             else {
-                ConsoleLogger.Log("Overlayfs -> mount");
-                Job.Schedule("mount Overlayfs", "mount -t overlay -o lowerdir=" + lower + ",upperdir=" + upper + ",workdir=" + work + " overlay " + merged);
+                ConsoleLogger.Log("Overlayfs -> Mount");
+                Job.Schedule("Mount Overlayfs", "Mount -t overlay -o lowerdir=" + lower + ",upperdir=" + upper + ",workdir=" + work + " overlay " + merged);
             }
         }
 
         //public static void Set(string lowerdir, string upperdir, string workdir) {
-        //    Job.Schedule("mount", "-t overlay overlay -o lowerdir=" + lowerdir + ",upperdir=" + upperdir + @",\workdir=" + workdir + " /merged");
+        //    Job.Schedule("Mount", "-t overlay overlay -o lowerdir=" + lowerdir + ",upperdir=" + upperdir + @",\workdir=" + workdir + " /merged");
         //}
     }
 }

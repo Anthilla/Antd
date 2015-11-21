@@ -14,7 +14,7 @@ $('input[data-sumbit-type]').click(function () {
     console.log(boolSelected);
     jQuery.support.cors = true;
     $.ajax({
-        url: '/cctable/launch/',
+        url: '/cctable/Launch/',
         type: 'POST',
         data: {
             Type: type,

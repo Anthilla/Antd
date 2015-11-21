@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using antdlib;
 using antdlib.Apps;
-using antdlib.Auth.T2FA;
 using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Config;
 using antdlib.Directories;
+using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Scheduler;
 using antdlib.Status;
@@ -32,36 +32,36 @@ namespace Antd {
                 new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "")
                     .Replace("\"", "")
                     .Trim();
-            ConsoleLogger.Info("    global repository -> checking");
+            ConsoleLogger.Log($"global repository: checking");
             var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
             if (mountResult.Length > 0) {
                 if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                    ConsoleLogger.Info("                      is RO -> remounting");
-                    Terminal.Background.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom");
+                    ConsoleLogger.Log($"is RO: remounting");
+                    Terminal.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
                 else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                    ConsoleLogger.Info("                      is RW -> ok!");
+                    ConsoleLogger.Log($"is RW: ok!");
                 }
             }
             else {
-                ConsoleLogger.Info("                      is not mounted -> IMPOSSIBLE");
+                ConsoleLogger.Log($"is not mounted: IMPOSSIBLE");
             }
-            ConsoleLogger.Info($"    global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Info("    global repository -> checked");
+            ConsoleLogger.Log($"global repository: {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Log($"global repository: checked");
         }
 
         public static void SetWorkingDirectories() {
             if (!AssemblyInfo.IsUnix)
                 return;
             Mount.WorkingDirectories();
-            ConsoleLogger.Info("    working directories -> checked");
+            ConsoleLogger.Log($"working directories: checked");
         }
 
         public static void SetMounts() {
             if (!AssemblyInfo.IsUnix)
                 return;
             Mount.AllDirectories();
-            ConsoleLogger.Log("    mounts -> checked");
+            ConsoleLogger.Log($"mounts: checked");
         }
 
         public static void SetUsersMount(bool isActive) {
@@ -69,14 +69,14 @@ namespace Antd {
                 return;
             SystemUser.SetReady();
             SystemGroup.SetReady();
-            ConsoleLogger.Log("    users mount -> checked");
+            ConsoleLogger.Log($"users Mount: checked");
         }
 
         public static void SetOsMount() {
             if (!AssemblyInfo.IsUnix)
                 return;
             if (Mount.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Terminal.Background.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
+                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Terminal.Execute("uname -r").Trim();
@@ -87,41 +87,30 @@ namespace Antd {
                 Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
                 ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
-                Terminal.Background.Execute($"mount {module} {moduleDir}");
+                Terminal.Execute($"mount {module} {moduleDir}");
             }
-            ConsoleLogger.Log("    os mount -> checked");
-            Terminal.Background.Execute("systemctl restart systemd-modules-load.service");
+            ConsoleLogger.Log($"os Mount: checked");
+            Terminal.Execute("systemctl restart systemd-modules-load.service");
         }
 
         public static void SetWebsocketd() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            //ConsoleLogger.Log("    os -> loading configuration");
-            //ConsoleLogger.Log("          load collectd");
-            //LoadOSConfiguration.LoadCollectd();
-            //ConsoleLogger.Log("          load journald");
-            //LoadOsConfiguration.LoadSystemdJournald();
-            //ConsoleLogger.Log("          load wpa-supplicant");
-            //LoadOSConfiguration.LoadWPASupplicant();
-            //ConsoleLogger.Log("          load network");
-            //LoadOsConfiguration.LoadNetwork();
-            //ConsoleLogger.Log("          load firewall");
-            //LoadOsConfiguration.LoadFirewall();
-            ConsoleLogger.Log("          installing websocketd");
+            ConsoleLogger.Log("installing websocketd");
             LoadOsConfiguration.LoadWebsocketd();
-            //ConsoleLogger.Log("    os -> checked");
+            ConsoleLogger.Log("websocketd installed");
         }
 
         public static void SetSystemdJournald() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            ConsoleLogger.Log("          load journald");
+            ConsoleLogger.Log($"load journald");
             LoadOsConfiguration.LoadSystemdJournald();
         }
 
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
-            ConsoleLogger.Info("    antd core parameters -> loaded");
+            ConsoleLogger.Log($"antd core parameters: loaded");
         }
 
         public static void CheckSysctl(bool isActive) {
@@ -130,10 +119,10 @@ namespace Antd {
             if (isActive) {
                 Sysctl.WriteConfig();
                 Sysctl.LoadConfig();
-                ConsoleLogger.Log("    sysctl -> loaded");
+                ConsoleLogger.Log($"sysctl: loaded");
             }
             else {
-                ConsoleLogger.Log("    sysctl -> skipped");
+                ConsoleLogger.Log($"sysctl: skipped");
             }
         }
 
@@ -145,39 +134,39 @@ namespace Antd {
 
         public static void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
-            ConsoleLogger.Log("    scheduler -> loaded");
+            ConsoleLogger.Log($"scheduler: loaded");
         }
 
         public static void StartDirectoryWatcher(string[] watchDirectories, bool isActive) {
             if (isActive && watchDirectories.Length > 0) {
-                ConsoleLogger.Log("    directory watcher -> enabled");
+                ConsoleLogger.Log($"directory watcher: enabled");
                 foreach (var folder in watchDirectories) {
                     if (Directory.Exists(folder)) {
                         new DirectoryWatcher(folder).Watch();
-                        ConsoleLogger.Log("    directory watcher -> enabled for {0}", folder);
+                        ConsoleLogger.Log($"directory watcher: enabled for {0}", folder);
                     }
                     else {
-                        ConsoleLogger.Log("    directory watcher -> {0} does not exist", folder);
+                        ConsoleLogger.Log($"directory watcher: {0} does not exist", folder);
                     }
                 }
             }
             else {
-                ConsoleLogger.Log("    directory watcher -> skipped");
+                ConsoleLogger.Log($"directory watcher: skipped");
             }
         }
 
         public static void StartDatabase() {
             var applicationDatabasePath = CoreParametersConfig.GetDb();
             Directory.CreateDirectory(applicationDatabasePath);
-            ConsoleLogger.Log("root info -> application database path: {0}", applicationDatabasePath);
+            ConsoleLogger.Log("root info: application database path: {0}", applicationDatabasePath);
             if (Directory.Exists(applicationDatabasePath)) {
                 var databases = new[] { applicationDatabasePath };
                 DatabaseBoot.Start(databases, true);
-                ConsoleLogger.Log("    database -> loaded");
+                ConsoleLogger.Log($"database: loaded");
             }
             else {
-                ConsoleLogger.Warn("    database -> failed to load");
-                ConsoleLogger.Warn("                directory does not exist");
+                ConsoleLogger.Warn("database: failed to load");
+                ConsoleLogger.Warn("directory does not exist");
             }
         }
 
@@ -185,10 +174,10 @@ namespace Antd {
             if (isActive) {
                 var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
                 app.MapSignalR(hubConfiguration);
-                ConsoleLogger.Log("    signalR -> loaded");
+                ConsoleLogger.Log($"signalR: loaded");
             }
             else {
-                ConsoleLogger.Log("    signalR -> skipped");
+                ConsoleLogger.Log($"signalR: skipped");
             }
         }
 
@@ -196,7 +185,7 @@ namespace Antd {
             StaticConfiguration.DisableErrorTraces = false;
             var options = new NancyOptions { EnableClientCertificates = true };
             app.UseNancy(options);
-            ConsoleLogger.Log("    nancy -> loaded");
+            ConsoleLogger.Log($"nancy: loaded");
         }
 
         public static void TestWebDav(string uri, string path) {
@@ -235,12 +224,12 @@ namespace Antd {
             var mntDir = Mount.SetDirsPath(dir);
             ConsoleLogger.Log("ssh> set directories");
             if (!Directory.Exists(mntDir)) {
-                Terminal.Background.Execute($"cp -fR {dir} {mntDir}");
+                Terminal.Execute($"cp -fR {dir} {mntDir}");
             }
             Mount.Umount(dir);
             Mount.Dir(dir);
-            Terminal.Background.Execute("ssh-keygen -A");
-            Terminal.Background.Execute("systemctl restart sshd.service");
+            Terminal.Execute("ssh-keygen -A");
+            Terminal.Execute("systemctl restart sshd.service");
         }
 
         public static void ReloadUsers() {

@@ -31,11 +31,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Terminal {
     public class Terminal {
-        public static string Execute(string command) {
+        public static string Execute(string command, string dir = "") {
             var output = string.Empty;
             var error = string.Empty;
             if (!AssemblyInfo.IsUnix)
@@ -49,6 +51,9 @@ namespace antdlib.Terminal {
                     UseShellExecute = false
                 }
             };
+            if (dir.Length > 0) {
+                process.StartInfo.WorkingDirectory = dir;
+            }
             try {
                 process.Start();
                 using (var streamReader = process.StandardOutput) {
@@ -61,47 +66,8 @@ namespace antdlib.Terminal {
                 return output;
             }
             catch (Exception ex) {
-                Console.WriteLine("-----------------------------------");
-                Console.WriteLine($"Launching [{command}] has failed!");
-                Console.WriteLine("Error message:");
-                Console.WriteLine($"{ex.Message}");
-                Console.WriteLine("-----------------------------------");
-                return error;
-            }
-        }
-
-        public static string Execute(string command, string dir) {
-            var output = string.Empty;
-            var error = string.Empty;
-            if (!AssemblyInfo.IsUnix)
-                return output;
-            var process = new Process {
-                StartInfo = {
-                    FileName = "bash",
-                    Arguments = $"-c \"{command}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = dir
-                }
-            };
-            try {
-                process.Start();
-                using (var streamReader = process.StandardOutput) {
-                    output = streamReader.ReadToEnd();
-                }
-                using (var streamReader = process.StandardError) {
-                    error = streamReader.ReadToEnd();
-                }
-                process.WaitForExit();
-                return output;
-            }
-            catch (Exception ex) {
-                Console.WriteLine("-----------------------------------");
-                Console.WriteLine($"Launching [{command}] has failed!");
-                Console.WriteLine("Error message:");
-                Console.WriteLine($"{ex.Message}");
-                Console.WriteLine("-----------------------------------");
+                ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
+                process.Close();
                 return error;
             }
         }
@@ -133,11 +99,7 @@ namespace antdlib.Terminal {
                     }
                     catch (Exception ex) {
                         genericOutput += ex.Message;
-                        Console.WriteLine("-----------------------------------");
-                        Console.WriteLine("{0} has failed", command);
-                        Console.WriteLine("Error message:");
-                        Console.WriteLine("{0}", ex.Message);
-                        Console.WriteLine("-----------------------------------");
+                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
                     }
                 }
                 return genericOutput;
@@ -170,180 +132,39 @@ namespace antdlib.Terminal {
                     }
                     catch (Exception ex) {
                         genericOutput += ex.Message;
-                        Console.WriteLine("-----------------------------------");
-                        Console.WriteLine("{0} has failed", command);
-                        Console.WriteLine("Error message:");
-                        Console.WriteLine("{0}", ex.Message);
-                        Console.WriteLine("-----------------------------------");
+                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
                     }
                 }
                 return genericOutput;
             }
         }
 
-        public class Screen {
-
-            public static string[] GetAll() {
-                var list = new List<string>();
-                var results = Terminal.Execute("screen -list").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                if (results.Count <= 2)
-                    return list.ToArray();
-                results.RemoveAt(results.Count - 1);
-                results.RemoveAt(0);
-                list.AddRange(from line in results where line.Contains("(") select line.RemoveWhiteSpace().Trim().Split(new[] { "(" }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault());
-                return list.ToArray();
-            }
-
-            public static string Get(string screenName) {
-                return Terminal.Execute($"screen -list | grep {screenName}").Trim();
-            }
-
-            public static void Wipe() {
-                Terminal.Execute("screen -wipe");
-            }
-
-            public static void Kill(string screenName) {
-                var s = Get(screenName);
-                if (s.Length > 0) {
-                    var proc = s.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries).ToArray().First();
-                    if (proc.Length > 0) {
-                        Terminal.Execute($"kill -9 {proc}");
+        public class Test {
+            public static void Start(string command) {
+                new Thread(() => {
+                    try {
+                        var proc = new ProcessStartInfo {
+                            FileName = "bash",
+                            Arguments = $"-c \"{command}\"",
+                            //RedirectStandardOutput = true,
+                            //RedirectStandardError = true,
+                            //UseShellExecute = false
+                            RedirectStandardOutput = true,
+                            CreateNoWindow = false,
+                            RedirectStandardError = false,
+                            UseShellExecute = false,
+                            RedirectStandardInput = false,
+                        };
+                        using (var p = new Process()) {
+                            p.StartInfo = proc;
+                            p.Start();
+                            p.WaitForExit();
+                        }
                     }
-                }
-                Wipe();
-            }
-
-            public static void KillAll() {
-                foreach (var screen in GetAll()) {
-                    Kill(screen);
-                }
-            }
-
-            private static string SetScreenName(int num) {
-                var name = $"antd-screen-{num.ToString("D2")}";
-                return (Get(name).Length > 0) ? SetScreenName(num + 1) : name;
-            }
-
-            public static string Execute(string command) {
-                var screend = $"screen -S antd-screen-{SetScreenName(0)} {command}";
-                var output = string.Empty;
-                var error = string.Empty;
-                if (!AssemblyInfo.IsUnix)
-                    return output;
-                var process = new Process {
-                    StartInfo = {
-                        FileName = "bash",
-                        Arguments = $"-c \"{screend}\"",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false
+                    catch (Exception ex) {
+                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
                     }
-                };
-                try {
-                    process.Start();
-                    using (var streamReader = process.StandardOutput) {
-                        output = streamReader.ReadToEnd();
-                    }
-                    using (var streamReader = process.StandardError) {
-                        error = streamReader.ReadToEnd();
-                    }
-                    process.WaitForExit();
-                    return output;
-                }
-                catch (Exception ex) {
-                    Console.WriteLine("-----------------------------------");
-                    Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
-                    Console.WriteLine($"{ex.Message}");
-                    Console.WriteLine("-----------------------------------");
-                    return error;
-                }
-            }
-
-            public static string Execute(string command, string dir) {
-                var screend = $"screen -S antd-screen-{SetScreenName(0)} {command}";
-                var output = string.Empty;
-                var error = string.Empty;
-                if (!AssemblyInfo.IsUnix)
-                    return output;
-                var process = new Process {
-                    StartInfo = {
-                        FileName = "bash",
-                        Arguments = $"-c \"{screend}\"",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        WorkingDirectory = dir
-                    }
-                };
-                try {
-                    process.Start();
-                    using (var streamReader = process.StandardOutput) {
-                        output = streamReader.ReadToEnd();
-                    }
-                    using (var streamReader = process.StandardError) {
-                        error = streamReader.ReadToEnd();
-                    }
-                    process.WaitForExit();
-                    return output;
-                }
-                catch (Exception ex) {
-                    Console.WriteLine("-----------------------------------");
-                    Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
-                    Console.WriteLine($"{ex.Message}");
-                    Console.WriteLine("-----------------------------------");
-                    return error;
-                }
-            }
-        }
-
-        public class Background {
-            public static void Execute(string command) {
-                if (!AssemblyInfo.IsUnix) return;
-                var process = new Process {
-                    StartInfo = {
-                        FileName = "bash",
-                        Arguments = $"-c \"{command} &\"",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false
-                    }
-                };
-                try {
-                    process.Start();
-                }
-                catch (Exception ex) {
-                    Console.WriteLine("-----------------------------------");
-                    Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
-                    Console.WriteLine($"{ex.Message}");
-                    Console.WriteLine("-----------------------------------");
-                }
-            }
-
-            public static void Execute(string command, string dir) {
-                if (!AssemblyInfo.IsUnix) return;
-                var process = new Process {
-                    StartInfo = {
-                        FileName = "bash",
-                        Arguments = $"-c \"{command} &\"",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        WorkingDirectory = dir
-                    }
-                };
-                try {
-                    process.Start();
-                }
-                catch (Exception ex) {
-                    Console.WriteLine("-----------------------------------");
-                    Console.WriteLine($"Launching [{command}] has failed!");
-                    Console.WriteLine("Error message:");
-                    Console.WriteLine($"{ex.Message}");
-                    Console.WriteLine("-----------------------------------");
-                }
+                }).Start();
             }
         }
     }

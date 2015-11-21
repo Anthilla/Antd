@@ -30,16 +30,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 namespace antdlib.Log {
 
-    public enum EventLevel : byte {
+    public enum EventLevel {
         Info = 0,
-        Warn = 1,
-        Error = 2,
-        ApiRequest = 98,
-        InvokedMethod = 99
+        Log = 1,
+        Warn = 2,
+        Error = 3,
+        ApiRequest = 4,
+        InvokedMethod = 5,
+        Other = 99
     }
 
     public class LogModel {
@@ -78,9 +81,16 @@ namespace antdlib.Log {
                     EventName = eventName,
                     Message = message
                 };
-                DeNSo.Session.New.Set(logItem);
+                if (File.Exists(Folder.AntdCfgDatabaseJournalPath)) {
+                    DeNSo.Session.New.Set(logItem);
+                }
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                var currentColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine($"lvl={(int)EventLevel.Error} msg=Cannot save a log entry: {ex.Message}");
+                Console.ForegroundColor = currentColor;
+            }
         }
     }
 }

@@ -29,7 +29,7 @@
 
 using System.Dynamic;
 using antdlib.Apps;
-using antdlib.Common;
+using antdlib.Log;
 using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
@@ -67,7 +67,7 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Get["/launch"] = x => {
+            Get["/Launch"] = x => {
                 ConsoleLogger.Log(">> App >> AnthillaSP");
                 ConsoleLogger.Log(">> Check squashfs");
                 if (AnthillaSp.Setting.CheckSquash() == false) {
@@ -106,10 +106,10 @@ namespace Antd.Modules {
 
             Get["/status/server"] = x => Response.AsJson(AnthillaSp.Status.AnthillaServer());
 
-            Post["/mount"] = x => {
+            Post["/Mount"] = x => {
                 var f = (string)Request.Form.Folder;
                 var m = (string)Request.Form.Mount;
-                Terminal.Background.Execute("mount " + f + " " + m);
+                Terminal.Execute("Mount " + f + " " + m);
                 return Response.AsJson(AnthillaSp.Status.AnthillaServer());
             };
 

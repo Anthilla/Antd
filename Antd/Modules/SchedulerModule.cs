@@ -82,7 +82,7 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Get["/launch/{guid}"] = x => {
+            Get["/Launch/{guid}"] = x => {
                 string guid = x.guid;
                 Job.ReSchedule(guid);
                 return Response.AsJson(true);

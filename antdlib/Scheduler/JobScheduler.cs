@@ -31,7 +31,7 @@ using Quartz;
 using Quartz.Impl;
 using System;
 using System.Linq;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Scheduler {
 
@@ -45,7 +45,7 @@ namespace antdlib.Scheduler {
             else {
                 Scheduler.Start();
                 var taskList = JobRepository.GetEnabled();
-                ConsoleLogger.Log("{0} job(s) scheduled", taskList.ToArray().Length);
+                ConsoleLogger.Log($"{taskList.ToArray().Length} job(s) scheduled");
                 if (taskList.ToArray().Length <= 0) return;
                 foreach (var task in taskList.Where(task => task != null)) {
                     LaunchJob<JobList.CommandJob>(task.Guid);

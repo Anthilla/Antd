@@ -31,7 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Boot {
     public class DatabaseBoot {
@@ -42,7 +42,7 @@ namespace antdlib.Boot {
             DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.EnableOperationsLog = false;
-            DeNSo.Session.DefaultDataBase = "antd_db_0";
+            DeNSo.Session.DefaultDataBase = Folder.AntdCfgDatabaseName;
             DeNSo.Session.Start();
             CheckPaths(dbPaths);
             if (doTest) {
@@ -63,7 +63,7 @@ namespace antdlib.Boot {
         }
 
         private static void Test() {
-            ConsoleLogger.Warn("     dbtest -> start");
+            ConsoleLogger.Warn($"dbtest -> start");
             var guid = Guid.NewGuid().ToString();
             var write = new TestClass {
                 _Id = guid,
@@ -75,7 +75,7 @@ namespace antdlib.Boot {
             Thread.Sleep(1000);
             var read = DeNSo.Session.New.Get<TestClass>(m => m._Id == guid).First();
             if (read == null) {
-                ConsoleLogger.Warn("     dbtest -> error while reading");
+                ConsoleLogger.Warn($"dbtest -> error while reading");
             }
             Thread.Sleep(1000);
             if (read != null) {
@@ -88,7 +88,7 @@ namespace antdlib.Boot {
             Thread.Sleep(1000);
             if (edited == null)
                 return;
-            ConsoleLogger.Warn("     dbtest -> error while reading");
+            ConsoleLogger.Warn($"dbtest -> error while reading");
         }
     }
 

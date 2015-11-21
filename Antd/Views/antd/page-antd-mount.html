@@ -1,0 +1,81 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Mount">Mount</legend>
+    <div id="AntdMountdDashboard" style="padding: 15px; margin-bottom: 20px;" class="border-2-anthilla-gray;" class="border-2-anthilla-gray">
+        <form class="grid" action="/system/mount/unit" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="span4">
+                    <label>Mount</label>
+                </div>
+                <div class="span6">
+                    <input name="Mount" type="text" value="" readonly="readonly" style="width: 90%;" />
+                    <input name="Guid" type="hidden" value="" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                    <label>unit</label>
+                </div>
+                <div class="span6">
+                    <input name="Unit" id="show-units" type="text" value="" style="width: 90%;" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span6">
+                    <input type="submit" value="Add" readonly="readonly" style="width: 90%;" class="fg-anthilla-green" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table">
+        <tbody>
+            @Each.Mounts
+            <tr data-guid="@Current.Guid" data-timestamp="@Current.DfpTimestamp">
+                <td style="width: 40px;">@Current.MountContext</td>
+                <td style="width: 40%;">@Current.DirsPath</td>
+                <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
+                    <i class="icon-arrow-right-5 fg-white"></i>
+                </td>
+                <td style="width: 40%;">@Current.Path</td>
+                <td>
+                    <i class="@CurrentHtmlStatusIcon on-left"></i>
+                    @Current.MountStatus
+                </td>
+                <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
+                    <i data-guid="@Current.Guid" class="show-units-mgmt icon-file fg-anthilla-green"></i>
+                </td>
+            </tr>
+            <tr data-guid="@Current.Guid" style="display: none; border-bottom: 2px solid #3A3A3A;" class="mount-units">
+                <td class="bg-anthilla-gray-m" style="border-right: 2px solid #3A3A3A;"></td>
+                <td colspan="3">
+                    <ul class="fg-white" style="list-style: none;">
+                        @Partial['_partial/part-Mount-units', Current.AssociatedUnits];
+                    </ul>
+                </td>
+                <td colspan="2">
+                    <input type="button" value="Add Units" style="width: 90%" data-guid="@Current.Guid" data-mntpth="@Current.Path" data-role="show-dashboard" />
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            @Each.Mounts
+            <tr>
+                <td style="width: 100px;">@Current.Type</td>
+                <td>@Current.Device</td>
+                <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-link fg-white"></i></td>
+                <td style="width: 35%;">@Current.Path</td>
+                <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-arrow-right-5 fg-white"></i></td>
+                <td style="width: 35%;">@Current.MountedPath</td>
+                <td style="width: 20px; text-align: center;">
+                    <i class="@CurrentHtmlStatusIcon on-left"></i>
+                    @Current.MountStatus
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -36,12 +35,13 @@ using System.Threading;
 using antdlib;
 using antdlib.Boot;
 using antdlib.Common;
+using antdlib.Log;
 using Microsoft.Owin.Builder;
 using Nowin;
 using Owin;
 
 namespace Antd {
-    internal static class Program {
+    internal static class AntdApplication {
         private static void Main() {
             try {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -52,8 +52,7 @@ namespace Antd {
                     Directory.CreateDirectory("/cfg/antd");
                     Directory.CreateDirectory("/cfg/antd/database");
                     Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                    ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux:");
-                    ConsoleLogger.Warn("some functions may be disabled!");
+                    ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled", ConsoleLogger.Method());
                 }
 
                 var stop = new ManualResetEvent(false);
@@ -98,20 +97,20 @@ namespace Antd {
                     .SetCertificate(new X509Certificate2("certificate/certificate.pfx"));
 
 
-                ConsoleLogger.Log("build almost complete");
+                ConsoleLogger.Log("build almost complete", ConsoleLogger.Method());
                 using (var server = builder.Build()) {
-                    ConsoleLogger.Log("server built");
+                    ConsoleLogger.Log("server built", ConsoleLogger.Method());
                     server.Start();
-                    ConsoleLogger.Log("Applying configuration...");
-                    ConsoleLogger.Log("loading service");
-                    ConsoleLogger.Log("    server port -> {0}", port);
-                    ConsoleLogger.Log("antd is running");
-                    ConsoleLogger.Log("loaded in: {0}", DateTime.Now - startTime);
+                    ConsoleLogger.Log("Applying configuration...", ConsoleLogger.Method());
+                    ConsoleLogger.Log("loading service", ConsoleLogger.Method());
+                    ConsoleLogger.Log($"server port: {port}", ConsoleLogger.Method());
+                    ConsoleLogger.Log("antd is running", ConsoleLogger.Method());
+                    ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}", ConsoleLogger.Method());
                     stop.WaitOne();
                 }
             }
             catch (Exception ex) {
-                File.WriteAllText("/cfg/antd/crash-report.txt", ex.ToString());
+                File.WriteAllText($"{Folder.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
             }
         }
 

@@ -40,10 +40,21 @@ namespace Antd.Modules {
             : base("/log") {
             this.RequiresAuthentication();
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.LOGS = Logger.GetAll();
-                return View["_page-log", vmod];
+            Get["/journalctl/all"] = x => Response.AsJson(Journalctl.GetAllLog());
+
+            Get["/journalctl/all/{filter}"] = x => Response.AsJson(Journalctl.GetAllLog((string)x.filter));
+
+            Get["/journalctl/last/{hours}"] = x => Response.AsXml(Journalctl.GetAllLogSinceHour((string)x.hours));
+
+            Get["/journalctl/antd"] = x => Response.AsJson(Journalctl.GetAntdLog());
+
+            Get["/journalctl/context"] = x => Response.AsJson(Journalctl.GetLogContexts());
+
+            Get["/journalctl/report/{path*}"] = x => Response.AsJson(Journalctl.Report.ReadReport((string)x.path));
+
+            Post["/journalctl/report"] = x => {
+                Journalctl.Report.GenerateReport();
+                return HttpStatusCode.OK;
             };
 
             Get["/collectd"] = x => {

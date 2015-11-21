@@ -32,6 +32,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using antdlib.Log;
 
 namespace antdlib.Common {
 
@@ -54,7 +55,7 @@ namespace antdlib.Common {
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
             }
-            ConsoleLogger.Warn("File {0} doesn't exist in {1}", filename, directory);
+            ConsoleLogger.Warn($"File {filename} doesn't exist in {directory}");
             return string.Empty;
         }
 

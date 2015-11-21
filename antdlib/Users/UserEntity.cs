@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
+using antdlib.Log;
 using antdlib.Security;
 using DeNSo;
 
@@ -100,13 +100,13 @@ namespace antdlib.Users {
                 var trySplit = identity.Split(' ');
                 string stringAlias;
                 if (trySplit.Length > 1) {
-                    var last = trySplit[1].Length < 4 ? trySplit[1] : trySplit[1].Replace(" ", "").Substring(0, 3);
-                    var first = trySplit[0].Length < 4 ? trySplit[1] : trySplit[0].Replace(" ", "").Substring(0, 3);
+                    var last = trySplit[1].Length < 4 ? trySplit[1] : trySplit[1].Replace($"", "").Substring(0, 3);
+                    var first = trySplit[0].Length < 4 ? trySplit[1] : trySplit[0].Replace($"", "").Substring(0, 3);
                     stringAlias = last + first;
                 }
                 else {
-                    var cleanIdentity = identity.Replace(" ", "");
-                    stringAlias = cleanIdentity.Length < 7 ? cleanIdentity : identity.Replace(" ", "").Substring(0, 6);
+                    var cleanIdentity = identity.Replace($"", "");
+                    stringAlias = cleanIdentity.Length < 7 ? cleanIdentity : identity.Replace($"", "").Substring(0, 6);
                 }
                 var tryAlias = stringAlias + "01";
                 var isUser = GetByUserIdentity(tryAlias);
@@ -211,7 +211,7 @@ namespace antdlib.Users {
                     var c = $"ssh-keygen -t {type} -b {keyLenght} -P antd{userGuid} -C \"antd_{userGuid}_key\" -f {userkeyrepo}/key_{userGuid}";
                     ConsoleLogger.Warn(c);
                     Terminal.Terminal.Execute(c);
-                    ConsoleLogger.Info($"keys for {userGuid} created");
+                    ConsoleLogger.Log($"keys for {userGuid} created");
                     var publicFile = $"{userkeyrepo}/key_{userGuid}.pub";
                     var privateFile = $"{userkeyrepo}/key_{userGuid}";
                     var publicBytes = File.ReadAllText(publicFile);

@@ -67,8 +67,12 @@ namespace antdlib {
 
         public static string AntdCfg => $"{RootCfg}/antd";
         public static string AntdCfgDatabase => $"{AntdCfg}/database";
+        public static string AntdCfgDatabaseName => "antd-database";
+        public static string AntdCfgDatabaseNamePath => $"{AntdCfgDatabase}/{AntdCfgDatabaseName}";
+        public static string AntdCfgDatabaseJournalPath => $"{AntdCfgDatabaseNamePath}/denso.jnl";
         public static string AntdCfgNetworkd => $"{AntdCfg}/networkd";
         public static string AntdCfgKeys => $"{AntdCfg}/keys";
+        public static string AntdCfgReport => $"{AntdCfg}/report";
 
         public static string Repo => "/mnt/cdrom";
         public static string RepoApps => $"{Repo}/Apps";
@@ -100,17 +104,17 @@ namespace antdlib {
     public class AntdFile {
         public const string NetworkConfig = "antd.boot.network.conf";
         public const string FirewallConfig = "antd.boot.firewall.conf";
-        public const string zipStartsWith = "antd";
-        public const string zipEndsWith = ".7z";
-        public const string squashStartsWith = "DIR_framework_antd-";
-        public const string squashEndsWith = ".squashfs.xz";
-        public const string configFile = "antdsh.config";
-        public const string antdRunning = "active-version";
-        public const string downloadName = "antdDownload.zip";
-        public const string downloadFirstDir = "antdDownloadFirst";
+        public const string ZipStartsWith = "antd";
+        public const string ZipEndsWith = ".7z";
+        public const string SquashStartsWith = "DIR_framework_antd-";
+        public const string SquashEndsWith = ".squashfs.xz";
+        public const string ConfigFile = "antdsh.config";
+        public const string AntdRunning = "active-version";
+        public const string DownloadName = "antdDownload.zip";
+        public const string DownloadFirstDir = "antdDownloadFirst";
     }
 
-    public class UID {
+    public class Uid {
         public static string Guid => System.Guid.NewGuid().ToString();
         public static string ShortGuid => System.Guid.NewGuid().ToString().Substring(0, 8);
     }
@@ -149,14 +153,14 @@ namespace antdlib {
     public class Units {
 
         public class Name {
-            public static string prepare => "app-antd-01-prepare.service";
-            public static string mount => "app-antd-02-mount.service";
-            public static string launch => "app-antd-03-launcher.service";
+            public static string Prepare => "app-antd-01-Prepare.service";
+            public static string Mount => "app-antd-02-Mount.service";
+            public static string Launcher => "app-antd-03-launcher.service";
         }
 
-        public static string prepare = $"{Folder.AppsUnits}/{Name.prepare}";
-        public static string mount = $"{Folder.AppsUnits}/{Name.mount}";
-        public static string launch = $"{Folder.AppsUnits}/{Name.launch}";
+        public static string Prepare = $"{Folder.AppsUnits}/{Name.Prepare}";
+        public static string Mount = $"{Folder.AppsUnits}/{Name.Mount}";
+        public static string Launcher = $"{Folder.AppsUnits}/{Name.Launcher}";
     }
 
     public class Update {

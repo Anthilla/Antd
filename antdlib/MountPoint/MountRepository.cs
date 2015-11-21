@@ -31,22 +31,45 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.MountPoint {
     public class MountRepository {
-        public static MountModel[] Get() {
+        public static IEnumerable<MountModel> Get() {
             try {
-                var list = new List<MountModel>() { };
+                var list = new List<MountModel>();
                 var dbGet = DeNSo.Session.New.Get<MountModel>().ToArray();
-                foreach (var mountItem in dbGet) {
-                    list.Add(mountItem);
+                foreach (var mount in dbGet) {
+                    mount.DirsPath = Mount.SetDirsPath(mount.Path);
+                    mount.HtmlStatusIcon = AssignHtmlStatusIcon(mount.MountStatus);
+                    list.Add(mount);
                 }
-                return list.OrderBy(m => m.MountContext).ToArray();
+                return list.OrderBy(m => m.MountContext);
             }
             catch (Exception ex) {
-                ConsoleLogger.Warn("Unable to do something with the database, look at this:");
-                ConsoleLogger.Warn($"{ex.Message}");
+                ConsoleLogger.Warn(ex.Message);
                 return new MountModel[] { };
+            }
+        }
+
+        private static string AssignHtmlStatusIcon(MountStatus status) {
+            switch (status) {
+                case MountStatus.Mounted:
+                    return "icon-record fg-green";
+                case MountStatus.Unmounted:
+                    return "icon-record fg-red";
+                case MountStatus.MountedTMP:
+                    return "icon-record fg-orange";
+                case MountStatus.DifferentMount:
+                    return "icon-stop-2 fg-orange";
+                case MountStatus.MountedReadOnly:
+                    return "icon-stop-2 fg-red";
+                case MountStatus.MountedReadWrite:
+                    return "icon-stop-2 fg-red";
+                case MountStatus.Error:
+                    return "icon-stop-2 fg-red";
+                default:
+                    return "icon-stop-2 fg-red";
             }
         }
 
@@ -59,22 +82,18 @@ namespace antdlib.MountPoint {
         }
 
         public static string[] GetListByUnit(string unit) {
-            var list = new List<string>() { };
-            foreach (var mnt in DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit))) {
-                list.Add(mnt.Path);
-            }
-            return list.ToArray();
+            return DeNSo.Session.New.Get<MountModel>(m => m.AssociatedUnits.Contains(unit)).Select(mnt => mnt.Path).ToArray();
         }
 
 
         public static MountModel Create(string path, MountContext context, MountEntity entity) {
             var get = Get(path);
-            var mntContext = (get == null) ? context : get.MountContext;
+            var mntContext = get?.MountContext ?? context;
             var exMount = Get(path);
             if (exMount != null) {
                 return exMount;
             }
-            var mount = new MountModel() {
+            var mount = new MountModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 DFPTimestamp = Timestamp.Now,
@@ -88,55 +107,57 @@ namespace antdlib.MountPoint {
 
         public static void SetAsMounted(string path, string mounted) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.Mounted;
-                mount.MountedPath = mounted;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.Mounted;
+            mount.MountedPath = mounted;
+            DeNSo.Session.New.Set(mount);
         }
 
         public static void SetAsNotMounted(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.Unmounted;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.Unmounted;
+            DeNSo.Session.New.Set(mount);
         }
 
-        public static void SetAsTMPMounted(string path) {
+        public static void SetAsTmpMounted(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.MountedTMP;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.MountedTMP;
+            DeNSo.Session.New.Set(mount);
         }
 
         public static void SetAsMountedReadOnly(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.MountedReadOnly;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.MountedReadOnly;
+            DeNSo.Session.New.Set(mount);
         }
 
         public static void SetAsDifferentMounted(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.DifferentMount;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.DifferentMount;
+            DeNSo.Session.New.Set(mount);
         }
 
         public static void SetAsError(string path) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
-            if (mount != null) {
-                mount.MountStatus = MountStatus.Error;
-                DeNSo.Session.New.Set(mount);
-            }
+            if (mount == null)
+                return;
+            mount.MountStatus = MountStatus.Error;
+            DeNSo.Session.New.Set(mount);
         }
 
         public static void AddUnit(string guid, string unit) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
+            if (mount == null)
+                return;
             mount.AssociatedUnits.Add(unit);
             DeNSo.Session.New.Set(mount);
         }
@@ -144,13 +165,15 @@ namespace antdlib.MountPoint {
         public static void AddUnit(string guid, IEnumerable<string> unit) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
             foreach (var u in unit) {
-                mount.AssociatedUnits.Add(u);
+                mount?.AssociatedUnits.Add(u);
             }
             DeNSo.Session.New.Set(mount);
         }
 
         public static void RemoveUnit(string guid, string unit) {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Guid == guid).FirstOrDefault();
+            if (mount == null)
+                return;
             mount.AssociatedUnits.Remove(unit);
             DeNSo.Session.New.Set(mount);
         }

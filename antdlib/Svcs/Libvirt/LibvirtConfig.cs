@@ -388,7 +388,7 @@ namespace antdlib.Svcs.Libvirt {
                 SetShareFile(name);
                 var shareData = new List<LineModel>();
                 var defaultParameter00 = new LineModel {
-                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{_mntDir}/share/{name.Replace($"", "_")}.conf",
                     Key = "path",
                     Value = directory,
                     Type = ServiceDataType.String,
@@ -396,7 +396,7 @@ namespace antdlib.Svcs.Libvirt {
                 };
                 shareData.Add(defaultParameter00);
                 var defaultParameter01 = new LineModel() {
-                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{_mntDir}/share/{name.Replace($"", "_")}.conf",
                     Key = "browseable",
                     Value = "yes",
                     Type = ServiceDataType.Boolean,
@@ -404,7 +404,7 @@ namespace antdlib.Svcs.Libvirt {
                 };
                 shareData.Add(defaultParameter01);
                 var sh = new ShareModel() {
-                    FilePath = $"{_mntDir}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{_mntDir}/share/{name.Replace($"", "_")}.conf",
                     Name = name,
                     Data = shareData
                 };
@@ -422,7 +422,7 @@ namespace antdlib.Svcs.Libvirt {
             }
 
             private static void SetShareFile(string shareName) {
-                var sharePath = $"{_mntDir}/share/{shareName.Replace(" ", "_")}.conf";
+                var sharePath = $"{_mntDir}/share/{shareName.Replace($"", "_")}.conf";
                 if (!File.Exists(sharePath)) {
                     File.Create(sharePath);
                 }

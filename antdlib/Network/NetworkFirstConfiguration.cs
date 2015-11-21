@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
@@ -55,15 +56,15 @@ namespace antdlib.Network {
                         NetworkConfigRepository.Create(cmd);
                     }
                 }
-                ConsoleLogger.Info("Network config => existing configuration found...");
-                ConsoleLogger.Info("Network config => applying this configuration!");
+                ConsoleLogger.Log("Network config => existing configuration found...");
+                ConsoleLogger.Log("Network config => applying this configuration!");
                 Terminal.Terminal.Execute($"chmod 777 {FileName}");
                 Terminal.Terminal.Execute($".{FileName}");
                 //todo: ShowNetworkInfo("", "");
             }
             else {
-                ConsoleLogger.Info("Network config => no configuration found...");
-                ConsoleLogger.Info("Network config => applying a default configuration!");
+                ConsoleLogger.Log("Network config => no configuration found...");
+                ConsoleLogger.Log("Network config => applying a default configuration!");
                 SetNetworkInterfaceUp();
             }
         }
@@ -136,9 +137,9 @@ namespace antdlib.Network {
         private static void SetNetworkInterfaceUp() {
             if (DetectActiveNetworkInterfaces().Count > 0) {
                 var selectedNif = DetectActiveNetworkInterfaces().LastOrDefault();
-                ConsoleLogger.Info($"_> Network will be initialized on: {selectedNif}");
+                ConsoleLogger.Log($"_> Network will be initialized on: {selectedNif}");
                 var ip = PickIp();
-                ConsoleLogger.Info($"_> Assigning {ip} to {selectedNif}");
+                ConsoleLogger.Log($"_> Assigning {ip} to {selectedNif}");
                 var cmd1 = $"ip addr add {ip} dev {selectedNif}";
                 Terminal.Terminal.Execute(cmd1);
                 Commands.Add(cmd1);
@@ -157,12 +158,12 @@ namespace antdlib.Network {
         private static void ShowNetworkInfo(string nif, string ip) {
             var n = Environment.NewLine;
             var bluetoothConnectionName = $"{nif}_S{ip.Replace("/", "-")}";
-            ConsoleLogger.Info("Showing network configuration with a bluetooth connection ;)");
-            ConsoleLogger.Info("bt >> set up all wireless connections");
+            ConsoleLogger.Log("Showing network configuration with a bluetooth connection ;)");
+            ConsoleLogger.Log("bt >> set up all wireless connections");
             Terminal.Terminal.Execute("rfkill unblock all");
             var btDirs = Directory.EnumerateDirectories("/var/lib/bluetooth").ToArray();
             if (btDirs.Length > 0) {
-                ConsoleLogger.Info("bt >> create bt configuration file");
+                ConsoleLogger.Log("bt >> create bt configuration file");
                 var btDir = btDirs.FirstOrDefault();
                 if (btDir != null) {
                     var dirName = Path.GetFullPath(btDir);
@@ -177,15 +178,15 @@ namespace antdlib.Network {
                     };
                     FileSystem.WriteFile(replace, string.Join(n, fileLines));
                 }
-                ConsoleLogger.Info("bt >> restart bluetooth service");
+                ConsoleLogger.Log("bt >> restart bluetooth service");
                 Terminal.Terminal.Execute("systemctl restart bluetooth");
-                ConsoleLogger.Info("bt >> activate bluetooth connection");
+                ConsoleLogger.Log("bt >> activate bluetooth connection");
                 var btCombo = $"power on{n}discoverable on{n}agent on{n}quit{n}";
                 Terminal.Terminal.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
-                ConsoleLogger.Info("bt >> done!");
+                ConsoleLogger.Log("bt >> done!");
             }
             else {
-                ConsoleLogger.Info("bt >> no bluetooth device found!");
+                ConsoleLogger.Log("bt >> no bluetooth device found!");
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend id="Firewall">
         <i class="icon-fire on-left"></i>
         Firewall
@@ -20,86 +20,86 @@
     </div>
     <div class="grid bg-transparent" style="width: 1450px; position:relative; z-index: 4;">
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @ConnectionBox("IP", "gray")
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "input", "ip", "red")
-            @RulesetBox("filter", "input", "ip")
-            @RulesetBox("nat", "input", "ip", "blue")
-            @EmptyBox()
-            @ConnectionBox("local machine")
-            @EmptyBox()
-            @RulesetBox("nat", "output", "ip", "blue")
-            @RulesetBox("filter", "output", "ip")
-            @RulesetBox("route", "output", "ip", "red")
+            @Partial['_partial/part-firewall-connection-ip'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-input-route'];
+            @Partial['_partial/part-firewall-ip-input-filter'];
+            @Partial['_partial/part-firewall-ip-input-nat'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-connection-lm'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-output-nat'];
+            @Partial['_partial/part-firewall-ip-output-filter'];
+            @Partial['_partial/part-firewall-ip-output-route'];
         </div>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @EmptyBox()
-            @RulesetBox("nat", "prerouting", "ip", "blue")
-            @RulesetBox("filter", "prerouting", "ip")
-            @RulesetBox("route", "prerouting", "ip", "red")
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "postrouting", "ip", "red")
-            @RulesetBox("filter", "postrouting", "ip")
-            @RulesetBox("nat", "postrouting", "ip", "blue")
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-prerouting-nat'];
+            @Partial['_partial/part-firewall-ip-prerouting-filter'];
+            @Partial['_partial/part-firewall-ip-prerouting-route'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-postrouting-route'];
+            @Partial['_partial/part-firewall-ip-postrouting-filter'];
+            @Partial['_partial/part-firewall-ip-postrouting-nat'];
         </div>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "forward", "ip", "red")
-            @RulesetBox("filter", "forward", "ip")
-            @RulesetBox("nat", "forward", "ip", "blue")
-        </div>
-        <hr class="bg-anthilla-gray" />
-        <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @ConnectionBox("ARP", "gray")
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "input", "arp", "red")
-            @RulesetBox("filter", "input", "arp")
-            @RulesetBox("nat", "input", "arp", "blue")
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("nat", "output", "arp", "blue")
-            @RulesetBox("filter", "output", "arp")
-            @RulesetBox("route", "output", "arp", "red")
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-ip-forward-route'];
+            @Partial['_partial/part-firewall-ip-forward-filter'];
+            @Partial['_partial/part-firewall-ip-forward-nat'];
         </div>
         <hr class="bg-anthilla-gray" />
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @ConnectionBox("BRIDGE", "gray")
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "input", "bridge", "red")
-            @RulesetBox("filter", "input", "bridge")
-            @RulesetBox("nat", "input", "bridge", "blue")
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("nat", "output", "bridge", "blue")
-            @RulesetBox("filter", "output", "bridge")
-            @RulesetBox("route", "output", "bridge", "red")
+            @Partial['_partial/part-firewall-connection-arp'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-arp-input-route'];
+            @Partial['_partial/part-firewall-arp-input-filter'];
+            @Partial['_partial/part-firewall-arp-input-nat'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-arp-output-nat'];
+            @Partial['_partial/part-firewall-arp-output-filter'];
+            @Partial['_partial/part-firewall-arp-output-route'];
+        </div>
+        <hr class="bg-anthilla-gray" />
+        <div class="row bg-transparent" style="margin-bottom: 10px;">
+            @Partial['_partial/part-firewall-connection-br'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-bridge-input-route'];
+            @Partial['_partial/part-firewall-bridge-input-filter'];
+            @Partial['_partial/part-firewall-bridge-input-nat'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-bridge-output-nat'];
+            @Partial['_partial/part-firewall-bridge-output-filter'];
+            @Partial['_partial/part-firewall-bridge-output-route'];
         </div>
         <div class="row bg-transparent" style="margin-bottom: 10px;">
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @EmptyBox()
-            @RulesetBox("route", "forward", "bridge", "red")
-            @RulesetBox("filter", "forward", "bridge")
-            @RulesetBox("nat", "forward", "bridge", "blue")
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-empty'];
+            @Partial['_partial/part-firewall-bridge-forward-route'];
+            @Partial['_partial/part-firewall-bridge-forward-filter'];
+            @Partial['_partial/part-firewall-bridge-forward-nat'];
         </div>
     </div>
     <hr class="bg-anthilla-gray" />

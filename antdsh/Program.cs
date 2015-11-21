@@ -94,7 +94,7 @@ namespace antdsh {
                 case "update-check":
                     Shell.UpdateCheck();
                     break;
-                case "update-launch":
+                case "update-Launch":
                     Shell.UpdateLaunch();
                     break;
                 case "update-select":
@@ -136,7 +136,7 @@ namespace antdsh {
             WriteHelp("update", "update antd from the public repository");
             WriteHelp("umount-all", "umount all antd directories recursively");
             WriteHelp("update-check", "check if a newer version of antd exists on this machine");
-            WriteHelp("update-launch", "update antd to the newest version found on this machine");
+            WriteHelp("update-Launch", "update antd to the newest version found on this machine");
             WriteHelp("update-select", "select a running version from the ones found on this machine");
             WriteHelp("reload-systemctl", "reload systemctl daemon");
             WriteHelp("isrunning", "check whether antd process is active or not");

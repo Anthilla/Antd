@@ -29,7 +29,6 @@
 
 using System;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using antdlib;
 using antdlib.Boot;
@@ -37,6 +36,7 @@ using antdlib.CCTable;
 using antdlib.Certificate;
 using antdlib.Contexts;
 using antdlib.Firewall;
+using antdlib.Log;
 using antdlib.Network;
 using antdlib.Status;
 using antdlib.Terminal;
@@ -55,11 +55,24 @@ namespace Antd.Modules {
                 if (CCTableRepository.GetByContext(CctableContextName) == null) {
                     CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
                 }
+                NfTables.Export.ExportTemplate();
                 return null;
             };
 
             Get["/"] = x => {
                 dynamic viewModel = new ExpandoObject();
+
+                viewModel.AntdContext = new[] {
+                    "Info",
+                    "Config",
+                    "Network",
+                    "DnsClient",
+                    "Firewall",
+                    "DnsServer",
+                    "Proxy",
+                    "Storage",
+                    "Mount"
+                };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
                 viewModel.VersionOS = Terminal.Execute("uname -a");
@@ -77,6 +90,7 @@ namespace Antd.Modules {
 
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
 
+                viewModel.Mounts = antdlib.MountPoint.MountRepository.Get();
 
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();
@@ -101,6 +115,19 @@ namespace Antd.Modules {
                 viewModel.CommandText = table.Content.Where(_ => _.CommandType == CCTableCommandType.TextInput);
                 viewModel.CommandBool = table.Content.Where(_ => _.CommandType == CCTableCommandType.BooleanPair);
                 return View["antd/page-antd", viewModel];
+            };
+
+            Get["/log"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.AntdContext = new[] {
+                    "AntdLog",
+                    "SystemLog",
+                    "LogReport",
+                };
+
+                viewModel.LOGS = Logger.GetAll();
+                viewModel.LogReports = Journalctl.Report.Get();
+                return View["antd/page-log", viewModel];
             };
         }
     }

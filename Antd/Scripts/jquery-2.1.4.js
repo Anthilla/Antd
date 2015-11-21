@@ -5840,7 +5840,7 @@ function getWidthOrHeight( elem, name, extra ) {
 		valueIsBorderBox = isBorderBox &&
 			( support.boxSizingReliable() || val === elem.style[ name ] );
 
-		// Normalize "", auto, and prepare for extra
+		// Normalize "", auto, and Prepare for extra
 		val = parseFloat( val ) || 0;
 	}
 

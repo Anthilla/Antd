@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Linq;
 using antdlib.CCTable;
 using antdlib.Common;
+using antdlib.Log;
 using antdlib.Terminal;
 using Nancy;
 using Nancy.Security;
@@ -108,7 +109,7 @@ namespace Antd.Modules {
                     var thisResult = resultString == "" ? Terminal.Execute(commandString) : resultString;
                     CCTableRepository.CreateRowDataView(table, tableName, label, commandString, thisResult);
                 }
-                ConsoleLogger.Info(commandString);
+                ConsoleLogger.Log(commandString);
 
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
@@ -150,7 +151,7 @@ namespace Antd.Modules {
                 return Response.AsJson("CCTable Row deleted");
             };
 
-            Post["/launch"] = x => {
+            Post["/Launch"] = x => {
                 var commandType = (string)Request.Form.Type;
                 var rowGuid = (string)Request.Form.RowGuid;
                 var newValue = (string)Request.Form.NewValue;
@@ -160,20 +161,20 @@ namespace Antd.Modules {
 
                 switch (commandType) {
                     case "direct":
-                        Terminal.Background.Execute(row.CommandDirect);
+                        Terminal.Execute(row.CommandDirect);
                         break;
                     case "text":
-                        Terminal.Background.Execute(row.CommandSet.Replace("{Value}", newValue));
+                        Terminal.Execute(row.CommandSet.Replace("{Value}", newValue));
                         break;
                     case "bool":
                         if (boolSelected == "true") {
-                            Terminal.Background.Execute(row.CommandTrue);
+                            Terminal.Execute(row.CommandTrue);
                         }
                         else if (boolSelected == "false") {
-                            Terminal.Background.Execute(row.CommandFalse);
+                            Terminal.Execute(row.CommandFalse);
                         }
                         else {
-                            Terminal.Background.Execute("echo COMMAND NOT FOUND");
+                            Terminal.Execute("echo COMMAND NOT FOUND");
                         }
                         break;
                 }

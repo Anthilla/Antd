@@ -69,7 +69,7 @@ $('input[data-role="notify-howto-import"]').click(function (event) {
     });
     $.Notify({
         caption: 'Import command and result: 2',
-        content: 'You can launch and test any command you want',
+        content: 'You can Launch and test any command you want',
         timeout: globalNotificationTimeout,
         style: { background: '#4390DF', color: 'white' }
     });

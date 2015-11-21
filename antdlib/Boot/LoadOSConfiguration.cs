@@ -28,9 +28,8 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib.MountPoint;
-using antdlib.Network;
 using System.IO;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Boot {
     public class LoadOsConfiguration {
@@ -71,7 +70,7 @@ namespace antdlib.Boot {
         public static void LoadWebsocketd() {
             var filePath = $"{Folder.AntdCfg}/websocketd";
             if (File.Exists(filePath)) return;
-            ConsoleLogger.Info("Downloading websocketd");
+            ConsoleLogger.Log("Downloading websocketd");
             File.Copy($"{Folder.Resources}/websocketd", filePath);
             Terminal.Terminal.Execute($"chmod 777 {filePath}");
         }

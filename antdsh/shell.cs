@@ -203,12 +203,12 @@ namespace antdsh {
                 WriteLine("Updating!");
                 antdlib.Antdsh.Execute.StopServices();
                 antdlib.Antdsh.Execute.CleanTmp();
-                if (newestVersionFound.Key.Contains(AntdFile.squashEndsWith)) {
+                if (newestVersionFound.Key.Contains(AntdFile.SquashEndsWith)) {
                     antdlib.Antdsh.Execute.RemoveLink();
                     antdlib.Antdsh.Execute.LinkVersionToRunning(newestVersionFound.Key);
                 }
-                else if (newestVersionFound.Key.Contains(AntdFile.zipEndsWith)) {
-                    var squashName = Folder.AntdVersionsDir + "/" + AntdFile.squashStartsWith + newestVersionFound.Value + AntdFile.squashEndsWith;
+                else if (newestVersionFound.Key.Contains(AntdFile.ZipEndsWith)) {
+                    var squashName = Folder.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + newestVersionFound.Value + AntdFile.SquashEndsWith;
                     antdlib.Antdsh.Execute.MountTmpRam();
                     antdlib.Antdsh.Execute.CopyToTmp(newestVersionFound.Key);
                     antdlib.Antdsh.Execute.ExtractZipTmp(newestVersionFound.Key);
@@ -232,7 +232,7 @@ namespace antdsh {
         public static void UpdateFromUrl() {
             antdlib.Antdsh.Execute.StopServices();
             antdlib.Antdsh.Execute.CleanTmp();
-            var squashName = $"{Folder.AntdVersionsDir}/{AntdFile.squashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{AntdFile.squashEndsWith}";
+            var squashName = $"{Folder.AntdVersionsDir}/{AntdFile.SquashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{AntdFile.SquashEndsWith}";
             antdlib.Antdsh.Execute.MountTmpRam();
             antdlib.Antdsh.Execute.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
             antdlib.Antdsh.Execute.ExtractDownloadedFile();
@@ -255,7 +255,7 @@ namespace antdsh {
             antdlib.Antdsh.Execute.StopServices();
             WriteLine("   Cleaning directories and mounts");
 
-            Terminal.Background.Execute("umount /framework/antd");
+            Terminal.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
             }
@@ -292,7 +292,7 @@ namespace antdsh {
             antdlib.Antdsh.Execute.CleanTmp();
             antdlib.Antdsh.Execute.UmountTmpRam();
 
-            Terminal.Background.Execute("umount /framework/antd");
+            Terminal.Execute("umount /framework/antd");
             if (Mount.IsAlreadyMounted("/framework/antd")) {
                 Mount.Umount("/framework/antd");
             }
@@ -318,12 +318,12 @@ namespace antdsh {
             WriteLine("Updating!");
             antdlib.Antdsh.Execute.StopServices();
             antdlib.Antdsh.Execute.CleanTmp();
-            if (selectedVersion.Key.Contains(AntdFile.squashEndsWith)) {
+            if (selectedVersion.Key.Contains(AntdFile.SquashEndsWith)) {
                 antdlib.Antdsh.Execute.RemoveLink();
                 antdlib.Antdsh.Execute.LinkVersionToRunning(selectedVersion.Key);
             }
-            else if (selectedVersion.Key.Contains(AntdFile.zipEndsWith)) {
-                var squashName = Folder.AntdVersionsDir + "/" + AntdFile.squashStartsWith + selectedVersion.Value + AntdFile.squashEndsWith;
+            else if (selectedVersion.Key.Contains(AntdFile.ZipEndsWith)) {
+                var squashName = Folder.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + selectedVersion.Value + AntdFile.SquashEndsWith;
                 antdlib.Antdsh.Execute.MountTmpRam();
                 antdlib.Antdsh.Execute.CopyToTmp(selectedVersion.Key);
                 antdlib.Antdsh.Execute.ExtractZipTmp(selectedVersion.Key);
@@ -342,7 +342,7 @@ namespace antdsh {
         }
 
         public static void ReloadSystemctl() {
-            Terminal.Background.Execute("systemctl daemon-reload");
+            Terminal.Execute("systemctl daemon-reload");
         }
 
         public static void IsRunning() {

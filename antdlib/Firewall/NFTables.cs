@@ -1,6 +1,4 @@
-﻿
-using antdlib.Config;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -28,6 +26,7 @@ using antdlib.Config;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+using antdlib.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -152,6 +151,14 @@ namespace antdlib.Firewall {
                     Rule = rule
                 };
                 DeNSo.Session.New.Set(set);
+            }
+
+            public static void ExportTemplate() {
+                var savedtemplate = $"{Folder.Resources}/antd.firewall.template.conf";
+                var storedtemplate = $"{Folder.RepoConfig}/antd.firewall.template.conf";
+                if (!File.Exists(storedtemplate)) {
+                    Terminal.Terminal.Execute($"cp {savedtemplate} {storedtemplate}");
+                }
             }
         }
     }

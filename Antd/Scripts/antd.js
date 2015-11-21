@@ -152,23 +152,23 @@ function AddInputIDReference(self, main, layout) {
 
 //////////////
 
-$('i[data-role="show-mount"]').click(function () {
+$('i[data-role="show-Mount"]').click(function () {
     var self = $(this);
-    var i = '<input type="text" data-role="value-mount" data-folder="' + self.attr('data-folder') + '"/>' +
-        '<i class="icon-plus fg-green" data-role="submit-mount" data-folder="' + self.attr('data-folder') + '"></i>';
+    var i = '<input type="text" data-role="value-Mount" data-folder="' + self.attr('data-folder') + '"/>' +
+        '<i class="icon-plus fg-green" data-role="submit-Mount" data-folder="' + self.attr('data-folder') + '"></i>';
     self.after(i);
     InitSubmitMount();
 });
 
 function InitSubmitMount() {
-    $('i[data-role="submit-mount"]').click(function () {
+    $('i[data-role="submit-Mount"]').click(function () {
         var g = $(this).attr('data-folder');
         var m = $('input[data-folder="' + g + '"]').val();
         alert(g);
         alert(m);
         jQuery.support.cors = true;
         $.ajax({
-            url: '/apps/mount',
+            url: '/apps/Mount',
             type: 'POST',
             data: {
                 Folder: g,

@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Status {
 
@@ -54,7 +55,7 @@ namespace antdlib.Status {
                 CreateFirstUnit();
                 RestartNetworkdDir();
                 ConsoleLogger.Log(StatusNetworkdDir());
-                ConsoleLogger.Log("    networkd -> loaded");
+                ConsoleLogger.Log($"networkd -> loaded");
             }
             else {
                 ConsoleLogger.Warn("----------------------------------+");
@@ -75,7 +76,7 @@ namespace antdlib.Status {
         }
 
         private static void MountNetworkdDir() {
-            Terminal.Terminal.Execute("mount --bind /etc/systemd/network " + Folder.AntdCfgNetworkd);
+            Terminal.Terminal.Execute("Mount --bind /etc/systemd/network " + Folder.AntdCfgNetworkd);
         }
 
         private static void RestartNetworkdDir() {

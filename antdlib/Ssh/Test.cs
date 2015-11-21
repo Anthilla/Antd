@@ -30,7 +30,7 @@ namespace antdlib.Ssh {
         public static void Mainz() {
             // Setup Credentials and Server Information
             var connNfo = new ConnectionInfo("hostOrIP", 22, "username", new PasswordAuthenticationMethod("username", "password"), new PrivateKeyAuthenticationMethod("username", new PrivateKeyFile(@"..\openssh.key", "passphrase")));
-            // Execute a (SHELL) Command - prepare upload directory
+            // Execute a (SHELL) Command - Prepare upload directory
             using (var sshclient = new SshClient(connNfo)) {
                 sshclient.Connect();
                 using (var cmd = sshclient.CreateCommand("mkdir -p /tmp/uploadtest && chmod +rw /tmp/uploadtest")) {

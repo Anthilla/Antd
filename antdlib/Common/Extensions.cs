@@ -75,12 +75,12 @@ namespace antdlib.Common {
 
         public static string GetAllStringsButFirst(this string str) {
             var arr = str.Split(' ');
-            return arr.Length > 1 ? string.Join(" ", arr.Skip(1).ToArray()) : string.Empty;
+            return arr.Length > 1 ? string.Join($"", arr.Skip(1).ToArray()) : string.Empty;
         }
 
         public static string GetAllStringsButFirst(this string str, char div) {
             var arr = str.Split(div).Skip(1).ToArray();
-            return arr.Length > 1 ? string.Join(" ", arr) : string.Empty;
+            return arr.Length > 1 ? string.Join($"", arr) : string.Empty;
         }
 
         public static string GetAllStringsButLast(this string str, char div) {
@@ -93,7 +93,7 @@ namespace antdlib.Common {
             var arr = str.Split(' ');
             var newList = new List<string>();
             newList.AddRange(arr.Select(a => a.UppercaseFirstLetter()));
-            return string.Join(" ", newList.ToArray());
+            return string.Join($"", newList.ToArray());
         }
 
         public static string UppercaseAllFirstLetters(this string str, char div) {
@@ -111,7 +111,7 @@ namespace antdlib.Common {
         }
 
         public static string RemoveWhiteSpace(this string str) {
-            return str.Replace(" ", "");
+            return str.Replace($"", "");
         }
 
         public static string AsJson(this object str) {

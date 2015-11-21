@@ -40,6 +40,10 @@ namespace antdlib.MountPoint {
 
         public string Path { get; set; } = "";
 
+        public string DirsPath { get; set; } = "";
+
+        public string HtmlStatusIcon { get; set; } = "";
+
         public string MountedPath { get; set; } = "";
 
         public MountStatus MountStatus { get; set; } = MountStatus.Unmounted;

@@ -35,7 +35,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using antdlib;
-using antdlib.Common;
+using antdlib.Log;
 using antdlib.Terminal;
 
 namespace Antd.Hubs {
@@ -67,8 +67,7 @@ namespace Antd.Hubs {
 
         public static void SetCmd(string port, string command) {
             var cmd = $"{_filePath} --port={port} {command}";
-            ConsoleLogger.Point($"cmd is {cmd}");
-            Terminal.Background.Execute(cmd);
+            Terminal.Execute(cmd);
         }
 
         /// <summary></summary>

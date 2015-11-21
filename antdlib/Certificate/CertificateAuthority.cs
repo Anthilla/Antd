@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using antdlib.Boot;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {

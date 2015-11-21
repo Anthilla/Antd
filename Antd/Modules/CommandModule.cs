@@ -56,7 +56,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/command/mgmt");
             };
 
-            Post["/launch/{guid}"] = x => {
+            Post["/Launch/{guid}"] = x => {
                 string guid = x.guid;
                 var result = CommandRepository.LaunchAndGetOutput(guid);
                 return Response.AsJson(result);

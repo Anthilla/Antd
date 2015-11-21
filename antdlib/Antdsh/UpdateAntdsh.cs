@@ -41,44 +41,44 @@ namespace antdlib.Antdsh {
         // </summary>
         public static void UpdateFromPublicRepo() {
             WriteLine("Update From Public Repo ...");
-            WriteLine("   Stopping services");
+            WriteLine($"Stopping services");
             Execute.StopServices();
-            WriteLine("   Cleaning directories and mounts");
+            WriteLine($"Cleaning directories and mounts");
             Execute.Umount(Folder.AntdCfg);
             Execute.Umount(Folder.AntdCfgDatabase);
             Execute.Umount("/framework/antdsh");
             Execute.CleanTmp();
-            WriteLine("   Mounting tmp ram");
+            WriteLine($"Mounting tmp ram");
             Execute.MountTmpRam();
             var antdshRepoUrl = $"{Update.remoteRepo}/{Update.remoteAntdshDir}";
             var updateFileUrl = $"{antdshRepoUrl}/{Update.remoteUpdateInfo}";
             var updateFile = $"{Folder.AntdTmpDir}/{Update.remoteUpdateInfo}";
-            WriteLine($"   Downloading from: {updateFileUrl}");
-            WriteLine($"                 to: {updateFile}");
+            WriteLine($"Downloading from: {updateFileUrl}");
+            WriteLine($"to: {updateFile}");
             Execute.DownloadFromUrl(updateFileUrl, updateFile);
             if (!File.Exists(updateFile)) {
-                WriteLine("   Download failed!");
+                WriteLine($"Download failed!");
                 return;
             }
-            WriteLine("   Download complete!");
+            WriteLine($"Download complete!");
             var updateText = FileSystem.ReadFile(updateFile);
             var squashName = updateText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault(v => !v.Contains(Update.remoteUpdateInfo));
-            WriteLine($"   Version found: {squashName}");
+            WriteLine($"Version found: {squashName}");
             var squashUrl = $"{antdshRepoUrl}/{squashName}";
             var squashFile = $"{Folder.AntdshVersionsDir}/{squashName}";
-            WriteLine($"   Downloading from: {squashUrl}");
-            WriteLine($"                 to: {squashFile}");
+            WriteLine($"Downloading from: {squashUrl}");
+            WriteLine($"to: {squashFile}");
             Execute.DownloadFromUrl(squashUrl, squashFile);
             if (!File.Exists(squashFile)) {
-                WriteLine("   Download failed!");
+                WriteLine($"Download failed!");
                 return;
             }
-            WriteLine("   Download complete!");
+            WriteLine($"Download complete!");
             Execute.RemoveLink();
             Execute.LinkVersionToRunning(squashName);
             Execute.CleanTmp();
             Execute.UmountTmpRam();
-            WriteLine("   Update complete!");
+            WriteLine($"Update complete!");
         }
     }
 }

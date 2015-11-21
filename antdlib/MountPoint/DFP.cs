@@ -31,6 +31,7 @@ using System;
 using System.Linq;
 using System.IO;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.MountPoint {
     public class DFP {

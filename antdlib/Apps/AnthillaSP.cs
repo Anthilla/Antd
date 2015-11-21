@@ -33,8 +33,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using antdlib.Common;
 using antdlib.Contexts;
+using antdlib.Log;
 
 namespace antdlib.Apps {
 
@@ -82,12 +82,12 @@ namespace antdlib.Apps {
         }
 
         public static void Start() {
-            if (!Systemctl.Status("app-anthillasp-01-prepare.service").output.Contains("Active: active (running)")) {
-                Systemctl.Start("app-anthillasp-01-prepare.service");
+            if (!Systemctl.Status("app-anthillasp-01-Prepare.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-01-Prepare.service");
             }
 
-            if (!Systemctl.Status("app-anthillasp-02-mount.service").output.Contains("Active: active (running)")) {
-                Systemctl.Start("app-anthillasp-02-mount.service");
+            if (!Systemctl.Status("app-anthillasp-02-Mount.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-02-Mount.service");
             }
 
             if (!Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active (running)")) {
@@ -158,8 +158,8 @@ namespace antdlib.Apps {
 
         public class Units {
             public class Name {
-                public static string Prepare => Path.Combine(Folder.AppsUnits, "app-anthillasp-01-prepare.service");
-                public static string Mount => Path.Combine(Folder.AppsUnits, "app-anthillasp-02-mount.service");
+                public static string Prepare => Path.Combine(Folder.AppsUnits, "app-anthillasp-01-Prepare.service");
+                public static string Mount => Path.Combine(Folder.AppsUnits, "app-anthillasp-02-Mount.service");
                 public static string LaunchSp => Path.Combine(Folder.AppsUnits, "app-anthillasp-04-wui-launcher.service");
                 public static string LaunchServer => Path.Combine(Folder.AppsUnits, "app-anthillasp-03-srv-launcher.service");
             }
@@ -175,7 +175,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Prepare Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("Before=app-anthillasp-02-mount.service");
+                        sw.WriteLine("Before=app-anthillasp-02-Mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/bin/mkdir -p /framework/anthillasp");
@@ -213,7 +213,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaSP Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("After=app-anthillasp-02-mount.service");
+                        sw.WriteLine("After=app-anthillasp-02-Mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillasp/AnthillaSP.exe");
@@ -232,7 +232,7 @@ namespace antdlib.Apps {
                         sw.WriteLine("[Unit]");
                         sw.WriteLine("Description=External Volume Unit, Application: AnthillaServer Launcher Service");
                         sw.WriteLine("Requires=local-fs.target sysinit.target");
-                        sw.WriteLine("After=app-anthillasp-02-mount.service");
+                        sw.WriteLine("After=app-anthillasp-02-Mount.service");
                         sw.WriteLine("");
                         sw.WriteLine("[Service]");
                         sw.WriteLine("ExecStart=/usr/bin/mono /framework/anthillasp/anthillaserver/AnthillaServer.exe");

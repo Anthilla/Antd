@@ -4,7 +4,7 @@
     <form class="grid" action="/system/mount/unit" method="POST" enctype="multipart/form-data">
         <div class="row">
             <div class="span4">
-                <label>mount</label>
+                <label>Mount</label>
             </div>
             <div class="span6">
                 <input name="Mount" type="text" value="" readonly="readonly" style="width: 90%;" />
@@ -34,25 +34,25 @@
     @Each.Mounts
     <tr data-guid="@Current.Guid" data-timestamp="@Current.DfpTimestamp">
         <td style="width: 40px;">@Current.MountContext</td>
-        <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDirsPath(mount.Path)</td>
+        <td style="width: 40%;">@antdlib.MountPoint.Mount.SetDirsPath(Mount.Path)</td>
         <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m">
             <i class="icon-arrow-right-5 fg-white"></i>
         </td>
         <td style="width: 40%;">@Current.Path</td>
         <td>
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
             <i class="icon-record fg-green on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Unmounted) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.UnMounted) {
             <i class="icon-record fg-red on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTmp) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTmp) {
             <i class="icon-record fg-orange on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
             <i class="icon-stop-2 fg-orange on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
             <i class="icon-stop-2 fg-red on-left"></i>
             }
             @Current.MountStatus
@@ -65,7 +65,7 @@
         <td class="bg-anthilla-gray-m" style="border-right: 2px solid #3A3A3A;"></td>
         <td colspan="3">
             <ul class="fg-white" style="list-style: none;">
-                @foreach (string unit in mount.AssociatedUnits) {
+                @foreach (string unit in Mount.AssociatedUnits) {
                 <li>
                     <i class="icon-remove on-left fg-orange" data-role="remove-this-unit" data-guid="@Current.Guid" data-unit="@unit" style="cursor: pointer;"></i>
                     @unit
@@ -85,7 +85,7 @@
 <table class="table">
     <tbody>
         @Each.Mounts
-    <!-- foreach (antdlib.MountPoint.MountModel mount in antdlib.MountPoint.MountLocal.Get()) -->
+    <!-- foreach (antdlib.MountPoint.MountModel Mount in antdlib.MountPoint.MountLocal.Get()) -->
            <tr>
         <td style="width: 100px;">@Current.Type</td>
         <td>@Current.Device</td>
@@ -94,25 +94,25 @@
         <td style="width: 20px; text-align: center;" class="bg-anthilla-gray-m"><i class="icon-arrow-right-5 fg-white"></i></td>
         <td style="width: 35%;">@Current.MountedPath</td>
         <td style="width: 20px; text-align: center;">
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.Mounted) {
             <i class="icon-record fg-green on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Unmounted) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.UnMounted) {
             <i class="icon-record fg-red on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTmp) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.MountedTmp) {
             <i class="icon-record fg-orange on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.DifferentMount) {
             <i class="icon-stop-2 fg-orange on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadOnly) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadOnly) {
             <i class="icon-eye fg-green on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadWrite) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.MountedReadWrite) {
             <i class="icon-pencil fg-green on-left"></i>
             }
-            @if (mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
+            @if (Mount.MountStatus == antdlib.MountPoint.MountStatus.Error) {
             <i class="icon-stop-2 fg-red on-left"></i>
             }
         </td>
@@ -120,10 +120,10 @@
     @EndEach
     </tbody>
 </table>
-<script type="text/javascript">
+<script data-context="Mount" type="text/javascript">
     $('i.show-units-mgmt').click(function () {
         var g = $(this).attr('data-guid');
-        $('tr.mount-units[data-guid="' + g + '"]').toggle();
+        $('tr.Mount-units[data-guid="' + g + '"]').toggle();
     });
 
     $('input[data-role="show-dashboard"]').click(function () {
@@ -138,7 +138,7 @@
         var u = $(this).attr('data-unit');
         jQuery.support.cors = true;
         $.ajax({
-            url: '/system/mount/unit',
+            url: '/system/Mount/unit',
             type: 'DELETE',
             data: {
                 Guid: g,

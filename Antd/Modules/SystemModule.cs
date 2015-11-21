@@ -125,7 +125,7 @@ namespace Antd.Modules {
                 return View["_page-system-mounts", vmod];
             };
 
-            Post["/mount/unit"] = x => {
+            Post["/Mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 string unit = Request.Form.Unit;
                 var unitsSplit = unit.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -135,7 +135,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/system/mounts");
             };
 
-            Delete["/mount/unit"] = x => {
+            Delete["/Mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 var unit = Request.Form.Unit;
                 MountRepository.RemoveUnit(guid, unit);

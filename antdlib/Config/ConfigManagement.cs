@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Config {
     public class ConfigManagement {

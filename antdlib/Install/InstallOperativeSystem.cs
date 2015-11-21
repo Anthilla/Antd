@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.IO;
-using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Install {
     public class InstallOperativeSystem {
@@ -40,8 +40,8 @@ namespace antdlib.Install {
         private static string _tmpDataFolder = "/Data/newsystem";
 
         public InstallOperativeSystem(string disk) {
-            ConsoleLogger.Info($"AOS INSTALLATION on: {_diskname}");
-            ConsoleLogger.Info("setting parameters...");
+            ConsoleLogger.Log($"AOS INSTALLATION on: {_diskname}");
+            ConsoleLogger.Log("setting parameters...");
             _diskname = $"{disk}";
             _diskBiosBoot = $"{disk}1";
             _diskEfi = $"{disk}2";
@@ -51,17 +51,17 @@ namespace antdlib.Install {
         }
 
         public void SetDiskAndInstall() {
-            ConsoleLogger.Info($"creating partitions on: {_diskname}");
+            ConsoleLogger.Log($"creating partitions on: {_diskname}");
             const string n = "\n";
             var fdiskOptions1 = $"p{n}n{n}1{n}1M{n}{n}{n}t{n}1{n}4{n}{n}{n}w{n}";
             Terminal.Terminal.Execute($"echo -e \"{fdiskOptions1}\" | fdisk {_diskname}");
-            ConsoleLogger.Info($"                        {_diskBiosBoot} created");
+            ConsoleLogger.Log($"{_diskBiosBoot} created");
             var fdiskOptions2 = $"p{n}n{n}2{n}-512M{n}{n}{n}t{n}2{n}1{n}{n}{n}w{n}";
             Terminal.Terminal.Execute($"echo -e \"{fdiskOptions2}\" | fdisk {_diskname}");
-            ConsoleLogger.Info($"                        {_diskEfi} created");
+            ConsoleLogger.Log($"{_diskEfi} created");
             var fdiskOptions3 = $"p{n}n{n}3{n}-32G{n}{n}{n}t{n}3{n}15{n}{n}{n}w{n}";
             Terminal.Terminal.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {_diskname}");
-            ConsoleLogger.Info($"                        {_diskData} created");
+            ConsoleLogger.Log($"{_diskData} created");
 
             Terminal.Terminal.Execute($"parted -a optimal -s {_diskname} name 2 \"EFI System Partition\"");
             Terminal.Terminal.Execute($"parted -a optimal -s {_diskname} name 3 BootExt");
@@ -69,11 +69,11 @@ namespace antdlib.Install {
             Terminal.Terminal.Execute($"mkfs.ext4 {_diskData} -L BootExt");
             Terminal.Terminal.Execute($"mkfs.fat -n EFI {_diskEfi}");
 
-            ConsoleLogger.Info("Copying files (this step will take a few minutes)");
+            ConsoleLogger.Log("Copying files (this step will take a few minutes)");
             Terminal.Terminal.Execute($"mount -o discard,noatime,rw {_diskData} {_tmpDataFolder}");
             Terminal.Terminal.Execute($"rsync -aHAz /mnt/cdrom/ {_tmpDataFolder}");
             Terminal.Terminal.Execute($"grub2-install {_diskname}");
-            ConsoleLogger.Success("INSTALLATION DONE");
+            ConsoleLogger.Log("INSTALLATION DONE");
         }
     }
 }

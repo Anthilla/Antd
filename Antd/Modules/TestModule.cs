@@ -49,7 +49,7 @@ namespace Antd.Modules {
             };
 
             Get["/bgcmd"] = x => {
-                Terminal.Background.Execute("touch /mnt/cdrom/Apps/tmp/prova.txt");
+                Terminal.Execute("touch /mnt/cdrom/Apps/tmp/prova.txt");
                 return HttpStatusCode.OK;
             };
 
@@ -63,6 +63,11 @@ namespace Antd.Modules {
                 list2.Add(list);
                 vmod.List = list2;
                 return View["page-empty", vmod];
+            };
+
+            Get["/3"] = x => {
+                Terminal.Test.Start("touch /test");
+                return HttpStatusCode.OK;
             };
         }
     }

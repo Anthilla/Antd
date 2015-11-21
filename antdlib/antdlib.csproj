@@ -165,9 +165,10 @@
     <Compile Include="Database\EntityStatus.cs" />
     <Compile Include="Database\SecureDB.cs" />
     <Compile Include="Database\SecureEntity.cs" />
+    <Compile Include="Firewall\FirewallLists.cs" />
     <Compile Include="Firewall\NFTables.cs" />
-    <Compile Include="enums.cs" />
-    <Compile Include="global.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\ParameterXmlWriter.cs" />
     <Compile Include="Contexts\Dmidecode.cs" />
@@ -180,8 +181,9 @@
     <Compile Include="Directories\DirectoryWatcher.cs" />
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
+    <Compile Include="Log\ConsoleLogger.cs" />
+    <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Log\Logger.cs" />
-    <Compile Include="Log\Syslog.cs" />
     <Compile Include="Mail\IMAP.cs" />
     <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />

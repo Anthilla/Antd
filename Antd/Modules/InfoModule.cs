@@ -58,7 +58,7 @@ namespace Antd.Modules {
             Get["/disk"] = x => Response.AsJson(Uptime.LoadAverage);
 
             Post["/killproc"] = x => {
-                Terminal.Background.Execute("kill " + (string)Request.Form.data);
+                Terminal.Execute("kill " + (string)Request.Form.data);
                 return Response.AsRedirect("/procs");
             };
         }

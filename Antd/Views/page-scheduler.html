@@ -320,7 +320,7 @@
                             <p>@job.Alias</p>
                         </li>
                         <li>
-                            <label>Command launched at this scheduled task</label>
+                            <label>Command Launched at this scheduled task</label>
                             <p>@SetCommandLine(job.Data)</p>
                         </li>
                         <li>
@@ -345,7 +345,7 @@
                         <p class="button bg-yellow" data-action="enable" data-guid="@job.Guid" style="color: black !important;">Status: Disabled</p>
                     }
                     @if (job.TriggerPeriod == antdlib.Scheduler.TriggerPeriod.IsOneTimeOnly) {
-                        <p class="button bg-yellow" data-action="launch" data-guid="@job.Guid" style="color: black !important;">Launch Now</p>
+                        <p class="button bg-yellow" data-action="Launch" data-guid="@job.Guid" style="color: black !important;">Launch Now</p>
                     }
                     <p class="button bg-yellow" data-action="delete" data-guid="@job.Guid" style="color: black !important;">Delete</p>
                 </div>
@@ -392,11 +392,11 @@
             });
         });
 
-        $('p[data-action="launch"]').click(function () {
+        $('p[data-action="Launch"]').click(function () {
             var guid = $(this).attr('data-guid');
             jQuery.support.cors = true;
             $.ajax({
-                url: '/scheduler/launch/' + guid,
+                url: '/scheduler/Launch/' + guid,
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',

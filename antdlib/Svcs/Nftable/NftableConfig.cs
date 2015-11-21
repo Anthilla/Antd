@@ -407,7 +407,7 @@ namespace antdlib.Svcs.Nftable {
                 SetShareFile(name);
                 var shareData = new List<LineModel>() { };
                 var defaultParameter00 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
                     Key = "path",
                     Value = directory,
                     Type = ServiceDataType.String,
@@ -415,7 +415,7 @@ namespace antdlib.Svcs.Nftable {
                 };
                 shareData.Add(defaultParameter00);
                 var defaultParameter01 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
                     Key = "browseable",
                     Value = "yes",
                     Type = ServiceDataType.Boolean,
@@ -423,7 +423,7 @@ namespace antdlib.Svcs.Nftable {
                 };
                 shareData.Add(defaultParameter01);
                 var sh = new ShareModel() {
-                    FilePath = $"{DIR}/share/{name.Replace(" ", "_")}.conf",
+                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
                     Name = name,
                     Data = shareData
                 };
@@ -441,7 +441,7 @@ namespace antdlib.Svcs.Nftable {
             }
 
             private static void SetShareFile(string shareName) {
-                var sharePath = $"{DIR}/share/{shareName.Replace(" ", "_")}.conf";
+                var sharePath = $"{DIR}/share/{shareName.Replace($"", "_")}.conf";
                 if (!File.Exists(sharePath)) {
                     File.Create(sharePath);
                 }

@@ -89,18 +89,9 @@
                 <i class="icon-console" style="line-height: 5px;"></i>
             </a>
             <div class="element-divider place-right"></div>
-            <a class="element place-right nav-button no-overlay" href="/cctable">
-                <i class="icon-puzzle" style="line-height: 5px;"></i>
-            </a>
-            <div class="element-divider place-right"></div>
-            <a class="element place-right nav-button no-overlay" href="/cfg">
-                <i class="icon-wrench fg-indigo" style="line-height: 5px;"></i>
-            </a>
-            <div class="element-divider place-right"></div>
             <a class="element place-right nav-button no-overlay" href="#" id="LockInput">
                 <i class="icon-locked" style="line-height: 5px;"></i>
             </a>
-            <div class="element-divider place-right"></div>
         </nav>
     </nav>
     <div id="TerminalContainer" style="display: none; position: fixed;z-index: 9999;width: 100%;height: 300px;overflow: scroll !important;bottom: 0;border-top: 5px solid #A7BD39;padding: 15px;" class="bg-black">
@@ -110,80 +101,15 @@
 
     <div id="TopContent" class="">
         <nav id="Toolbar" class="navigation-bar bg-transparent">
-            <nav class="navigation-bar-content">
-                <a id="Info-TB" href="/info" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-eye on-left"></i>
-                    <p class="fg-anthilla-green">Info </p>
+            <nav class="navigation-bar-content" style="padding-top: 5px;">
+                <a class="tool element upcase bg-anthilla-gray fg-anthilla-green" href="/" id="Config-TB" style="height: 80px; min-width: 80px; margin-right: 5px; border-top-left-radius: 5%; border-top-right-radius: 5%;">
+                    <i class="icon-wrench on-left"></i>
+                    <p class="fg-anthilla-green">Config </p>
                 </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="System-TB" href="/system" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-screen on-left"></i>
-                    <p class="fg-anthilla-green">System </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Network-TB" href="/network" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-broadcast on-left"></i>
-                    <p class="fg-anthilla-green">Network </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Firewall-TB" href="/firewall" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-fire on-left"></i>
-                    <p class="fg-anthilla-green">Firewall </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Storage-TB" href="/storage" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-box on-left"></i>
-                    <p class="fg-anthilla-green">Storage </p>
-                </a>
-                <a id="Hypervisor-TB" href="/hypervisor" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-box on-left"></i>
-                    <p class="fg-anthilla-green">Hypervisor </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Services-TB" href="/services" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-target-2 on-left"></i>
-                    <p class="fg-anthilla-green">Services </p>
-                </a>
-                <a id="Users-TB" href="/users" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-user-2 on-left"></i>
-                    <p class="fg-anthilla-green">Users </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Apps-TB" href="/apps" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-grid-view on-left"></i>
-                    <p class="fg-anthilla-green">Apps </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="VNC-TB" href="/vnc" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-screen on-left"></i>
-                    <p class="fg-anthilla-green">VNC </p>
-                </a>
-                <a id="Scheduler-TB" href="/scheduler" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-history on-left"></i>
-                    <p class="fg-anthilla-green">Scheduler </p>
-                </a>
-                <a id="Directories-TB" href="/dir/tree/" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-folder-2 on-left"></i>
-                    <p class="fg-anthilla-green">Directories </p>
-                </a>
-                <a id="Units-TB" href="/units" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
-                    <i class="icon-file on-left"></i>
-                    <p class="fg-anthilla-green">Units </p>
-                </a>
-                <span class="element-divider tool-divider"></span>
-
-                <a id="Logs-TB" href="/log" class="tool element upcase bg-anthilla-gray fg-anthilla-green">
+                <a class="tool element upcase bg-anthilla-gray fg-anthilla-green" href="/log" id="Log-TB" style="height: 80px; min-width: 80px; margin-right: 5px; border-top-left-radius: 5%; border-top-right-radius: 5%;">
                     <i class="icon-chart-alt on-left"></i>
-                    <p class="fg-anthilla-green">Logs </p>
+                    <p class="fg-anthilla-green">Log </p>
                 </a>
-                <span class="element-divider tool-divider"></span>
             </nav>
         </nav>
         @Section['PageBar'];
@@ -203,9 +129,9 @@
     <script type="text/javascript">
         $("#clock").clock({ "format": "24", "calendar": "false", "seconds": "false" });
 
-        jQuery(function($) {
+        jQuery(function ($) {
             var directory = '';
-            $('#Terminal').terminal(function(command, term) {
+            $('#Terminal').terminal(function (command, term) {
                 var self = $(this);
                 if (command == 'help') {
                     term.echo("just type something...");
@@ -224,7 +150,7 @@
                         data: {
                             Directory: directory
                         },
-                        success: function(data) {
+                        success: function (data) {
                             if (data == '0') {
                                 term.echo(command + ' No such file or directory');
                                 scrollToBottom();
@@ -242,7 +168,7 @@
                         data: {
                             Directory: directory
                         },
-                        success: function(data) {
+                        success: function (data) {
                             if (data == '0') {
                                 term.echo(command + ' No such file or directory');
                                 scrollToBottom();
@@ -262,7 +188,7 @@
                             Command: c,
                             Directory: directory
                         },
-                        success: function(data) {
+                        success: function (data) {
                             term.echo('Both the command and its result are copied in the clipboard...');
                             term.echo('');
                             $('input#Clipboard0').val(c);
@@ -281,7 +207,7 @@
                             Command: command,
                             Directory: directory
                         },
-                        success: function(data) {
+                        success: function (data) {
                             console.log(data);
                             term.echo(data);
                             scrollToBottom();
