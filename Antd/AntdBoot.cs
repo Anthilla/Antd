@@ -8,6 +8,7 @@ using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Config;
 using antdlib.Directories;
+using antdlib.Firewall;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Scheduler;
@@ -269,6 +270,11 @@ namespace Antd {
                 ConfigManagement.ExecuteAll();
             }
             ConfigManagement.FromFile.ApplyForAll();
+        }
+
+        public static void SetFirewall() {
+            ConsoleLogger.Log("loading default values for firewall");
+            FirewallLists.SetDefaultLists();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace antdlib.Firewall {
         public string Guid { get; set; }
         public bool IsEnabled { get; set; }
         public string IdTable { get; set; }
-        public string IdChain { get; set; }
+        public string IdType { get; set; }
         public string IdHook { get; set; }
         public string Rule { get; set; }
         public string Label { get; set; }
@@ -53,7 +53,7 @@ namespace antdlib.Firewall {
         public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
 
         public static IEnumerable<FirewallListModel> GetForRule(string table, string chain, string hook)
-            => GetAll().Where(_=>_.IdTable == table && _.IdChain == chain && _.IdHook == hook);
+            => GetAll().Where(_ => _.IdTable == table && _.IdType == chain && _.IdHook == hook);
 
         public static void SetDefaultLists() {
             if (!GetAllHidden().Any()) {
@@ -64,7 +64,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "iifaddr",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "$ipfiliniifaddr",
                     ListType = "ipv4_addr",
                     Values = new List<string> {
                         "127.0.0.1"
@@ -74,7 +77,36 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "eifaddr",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "$ipfiloutiifaddr",
+                    ListType = "ipv4_addr",
+                    Values = new List<string> {
+                        "127.0.0.1"
+                    }
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwiifaddr",
+                    ListType = "ipv4_addr",
+                    Values = new List<string> {
+                        "127.0.0.1"
+                    }
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilineifaddr",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
@@ -82,7 +114,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "wanifaddr",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfilouteifaddr",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
@@ -90,7 +125,32 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "protoset",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfweifaddr",
+                    ListType = "ipv4_addr",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "",
+                    Label = "ipfilinwanifaddr",
+                    ListType = "ipv4_addr",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinprotoset",
                     ListType = "inet_proto",
                     Values = new List<string>()
                 },
@@ -98,7 +158,32 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "tcpportset",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutprotoset",
+                    ListType = "inet_proto",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwprotoset",
+                    ListType = "inet_proto",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilintcpportset",
                     ListType = "inet_service",
                     Values = new List<string>()
                 },
@@ -106,7 +191,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "udpportset",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwtcpportset",
                     ListType = "inet_service",
                     Values = new List<string>()
                 },
@@ -114,7 +202,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "pubsvcset",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinudpportset",
                     ListType = "inet_service",
                     Values = new List<string>()
                 },
@@ -122,6 +213,42 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutudpportset",
+                    ListType = "inet_service",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwudpportset",
+                    ListType = "inet_service",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinpubsvcset",
+                    ListType = "inet_service",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
                     Label = "ipfilinstate",
                     ListType = "ct_state",
                     Values = new List<string>()
@@ -130,6 +257,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
                     Label = "ipfiloutstate",
                     ListType = "ct_state",
                     Values = new List<string>()
@@ -138,6 +268,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwstate",
                     ListType = "ct_state",
                     Values = new List<string>()
@@ -146,7 +279,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilinipdaddrstate",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilindaddrstate",
                     ListType = "ct_state",
                     Values = new List<string>()
                 },
@@ -154,7 +290,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilinipdsaddrnetaccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinsaddrnetaccept",
                     ListType = "net_addr",
                     Values = new List<string>()
                 },
@@ -162,7 +301,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilinipddaddrnetaccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutsaddrnetaccept",
                     ListType = "net_addr",
                     Values = new List<string>()
                 },
@@ -170,7 +312,21 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilinipdsaddripdrop",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutdaddrnetaccept",
+                    ListType = "net_addr",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinsaddripdrop",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
@@ -178,7 +334,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfiloutipdsaddrnetaccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinsaddrnetaccept",
                     ListType = "net_addr",
                     Values = new List<string>()
                 },
@@ -186,7 +345,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfiloutipddaddrnetaccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutsaddrnetaccept",
                     ListType = "net_addr",
                     Values = new List<string>()
                 },
@@ -194,7 +356,21 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilinipiif",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutdaddrnetaccept",
+                    ListType = "net_addr",
+                    Values = new List<string>()
+                },
+                new FirewallListModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Guid = Guid.NewGuid().ToString(),
+                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfiliniif",
                     ListType = "if",
                     Values = new List<string> {"lo"}
                 },
@@ -202,7 +378,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfiloutipiif",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutiif",
                     ListType = "if",
                     Values = new List<string> {"lo"}
                 },
@@ -210,7 +389,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfiloutipoif",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "output",
+                    Label = "ipfiloutoif",
                     ListType = "if",
                     Values = new List<string>()
                 },
@@ -218,7 +400,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilfwipiif",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwiif",
                     ListType = "if",
                     Values = new List<string> {"lo"}
                 },
@@ -226,7 +411,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilfwipoif",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwoif",
                     ListType = "if",
                     Values = new List<string>()
                 },
@@ -234,7 +422,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilfwipoifdrop",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwoifdrop",
                     ListType = "if",
                     Values = new List<string>()
                 },
@@ -242,7 +433,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilfwipiifdaddraccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfiliniifdaddraccept",
                     ListType = "if",
                     Values = new List<string>()
                 },
@@ -250,7 +444,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "ipfilfwipiifaccept",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
+                    Label = "ipfilfwiifaccept",
                     ListType = "if",
                     Values = new List<string>()
                 },
@@ -258,6 +455,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwipoifaccept",
                     ListType = "if",
                     Values = new List<string>()
@@ -266,6 +466,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpiif1",
                     ListType = "if",
                     Values = new List<string>()
@@ -274,6 +477,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpoif1",
                     ListType = "if",
                     Values = new List<string>()
@@ -282,6 +488,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpdaddr1",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
@@ -290,6 +499,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpport1",
                     ListType = "port",
                     Values = new List<string>()
@@ -298,6 +510,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpiif2",
                     ListType = "if",
                     Values = new List<string>()
@@ -306,6 +521,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpoif2",
                     ListType = "if",
                     Values = new List<string>()
@@ -314,6 +532,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpdaddr2",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
@@ -322,6 +543,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "forward",
                     Label = "ipfilfwiptcpport2",
                     ListType = "port",
                     Values = new List<string>()
@@ -330,7 +554,10 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "pubsvcset",
+                    IdTable = "ip",
+                    IdType = "filter",
+                    IdHook = "input",
+                    Label = "ipfilinpubsvcset",
                     ListType = "net_addr",
                     Values = new List<string>()
                 },
@@ -338,14 +565,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    Label = "pubsvcset",
-                    ListType = "if_name",
-                    Values = new List<string>()
-                },
-                new FirewallListModel {
-                    _Id = Guid.NewGuid().ToString(),
-                    Guid = Guid.NewGuid().ToString(),
-                    IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreiif1",
                     ListType = "if_name",
                     Values = new List<string>()
@@ -354,6 +576,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreport1",
                     ListType = "port",
                     Values = new List<string>()
@@ -362,6 +587,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatprednat1",
                     ListType = "net_addr",
                     Values = new List<string>()
@@ -370,6 +598,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreiif2",
                     ListType = "if_name",
                     Values = new List<string>()
@@ -378,6 +609,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreport2",
                     ListType = "port",
                     Values = new List<string>()
@@ -386,6 +620,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatprednat2",
                     ListType = "net_addr",
                     Values = new List<string>()
@@ -394,6 +631,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreportredirect",
                     ListType = "port",
                     Values = new List<string>()
@@ -402,6 +642,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "prerouting",
                     Label = "ipnatpreportredirectto",
                     ListType = "port",
                     Values = new List<string>()
@@ -410,6 +653,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostnet1",
                     ListType = "net_addr",
                     Values = new List<string>()
@@ -418,6 +664,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostoif1",
                     ListType = "if_name",
                     Values = new List<string>()
@@ -426,6 +675,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostip1",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
@@ -434,6 +686,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostnet2",
                     ListType = "net_addr",
                     Values = new List<string>()
@@ -442,6 +697,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostoif2",
                     ListType = "if_name",
                     Values = new List<string>()
@@ -450,6 +708,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostip2",
                     ListType = "ipv4_addr",
                     Values = new List<string>()
@@ -458,6 +719,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostoifmask",
                     ListType = "if_name",
                     Values = new List<string>()
@@ -466,6 +730,9 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
+                    IdTable = "ip",
+                    IdType = "nat",
+                    IdHook = "postrouting",
                     Label = "ipnatpostnetmask",
                     ListType = "net_addr",
                     Values = new List<string>()
