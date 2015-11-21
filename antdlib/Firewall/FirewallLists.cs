@@ -36,9 +36,13 @@ namespace antdlib.Firewall {
         public string _Id { get; set; }
         public string Guid { get; set; }
         public bool IsEnabled { get; set; }
-        public string TemplateWord { get; set; }
+        public string IdTable { get; set; }
+        public string IdChain { get; set; }
+        public string IdHook { get; set; }
+        public string Rule { get; set; }
         public string Label { get; set; }
-        public string Type { get; set; }
+        public string TemplateWord => $"${Label}";
+        public string ListType { get; set; }
         public IEnumerable<string> Values { get; set; }
         public string ReplaceValue => $"{{ {string.Join(", ", Values)} }}";
     }
@@ -47,6 +51,9 @@ namespace antdlib.Firewall {
         public static IEnumerable<FirewallListModel> GetAll() => DeNSo.Session.New.Get<FirewallListModel>(_ => _.IsEnabled);
 
         public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
+
+        public static IEnumerable<FirewallListModel> GetForRule(string table, string chain, string hook)
+            => GetAll().Where(_=>_.IdTable == table && _.IdChain == chain && _.IdHook == hook);
 
         public static void SetDefaultLists() {
             if (!GetAllHidden().Any()) {
@@ -57,9 +64,8 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$iifaddr$",
                     Label = "iifaddr",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string> {
                         "127.0.0.1"
                     }
@@ -68,482 +74,415 @@ namespace antdlib.Firewall {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$eifaddr$",
                     Label = "eifaddr",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$wanifaddr$",
                     Label = "wanifaddr",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$protoset$",
                     Label = "protoset",
-                    Type = "inet_proto",
+                    ListType = "inet_proto",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$tcpportset$",
                     Label = "tcpportset",
-                    Type = "inet_service",
+                    ListType = "inet_service",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$udpportset$",
                     Label = "udpportset",
-                    Type = "inet_service",
+                    ListType = "inet_service",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$pubsvcset$",
                     Label = "pubsvcset",
-                    Type = "inet_service",
+                    ListType = "inet_service",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinstate$",
                     Label = "ipfilinstate",
-                    Type = "ct_state",
+                    ListType = "ct_state",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfiloutstate$",
                     Label = "ipfiloutstate",
-                    Type = "ct_state",
+                    ListType = "ct_state",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwstate$",
                     Label = "ipfilfwstate",
-                    Type = "ct_state",
+                    ListType = "ct_state",
                     Values = new List<string>()
                       },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinipdaddrstate$",
                     Label = "ipfilinipdaddrstate",
-                    Type = "ct_state",
+                    ListType = "ct_state",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinipdsaddrnetaccept$",
                     Label = "ipfilinipdsaddrnetaccept",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinipddaddrnetaccept$",
                     Label = "ipfilinipddaddrnetaccept",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinipdsaddripdrop$",
                     Label = "ipfilinipdsaddripdrop",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfiloutipdsaddrnetaccept$",
                     Label = "ipfiloutipdsaddrnetaccept",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfiloutipddaddrnetaccept$",
                     Label = "ipfiloutipddaddrnetaccept",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilinipiif$",
                     Label = "ipfilinipiif",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string> {"lo"}
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfiloutipiif$",
                     Label = "ipfiloutipiif",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string> {"lo"}
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfiloutipoif$",
                     Label = "ipfiloutipoif",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipiif$",
                     Label = "ipfilfwipiif",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string> {"lo"}
                 },
                  new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipoif$",
                     Label = "ipfilfwipoif",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipoifdrop$",
                     Label = "ipfilfwipoifdrop",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipiifdaddraccept$",
                     Label = "ipfilfwipiifdaddraccept",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipiifaccept$",
                     Label = "ipfilfwipiifaccept",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwipoifaccept$",
                     Label = "ipfilfwipoifaccept",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpiif1$",
                     Label = "ipfilfwiptcpiif1",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpoif1$",
                     Label = "ipfilfwiptcpoif1",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpdaddr1$",
                     Label = "ipfilfwiptcpdaddr1",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpport1$",
                     Label = "ipfilfwiptcpport1",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpiif2$",
                     Label = "ipfilfwiptcpiif2",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpoif2$",
                     Label = "ipfilfwiptcpoif2",
-                    Type = "if",
+                    ListType = "if",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpdaddr2$",
                     Label = "ipfilfwiptcpdaddr2",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipfilfwiptcpport2$",
                     Label = "ipfilfwiptcpport2",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$pubsvcset$",
                     Label = "pubsvcset",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$pubsvcset$",
                     Label = "pubsvcset",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreiif1$",
                     Label = "ipnatpreiif1",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreport1$",
                     Label = "ipnatpreport1",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatprednat1$",
                     Label = "ipnatprednat1",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreiif2$",
                     Label = "ipnatpreiif2",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreport2$",
                     Label = "ipnatpreport2",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatprednat2$",
                     Label = "ipnatprednat2",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreportredirect$",
                     Label = "ipnatpreportredirect",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpreportredirectto$",
                     Label = "ipnatpreportredirectto",
-                    Type = "port",
+                    ListType = "port",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostnet1$",
                     Label = "ipnatpostnet1",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostoif1$",
                     Label = "ipnatpostoif1",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostip1$",
                     Label = "ipnatpostip1",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostnet2$",
                     Label = "ipnatpostnet2",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostoif2$",
                     Label = "ipnatpostoif2",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostip2$",
                     Label = "ipnatpostip2",
-                    Type = "ipv4_addr",
+                    ListType = "ipv4_addr",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostoifmask$",
                     Label = "ipnatpostoifmask",
-                    Type = "if_name",
+                    ListType = "if_name",
                     Values = new List<string>()
                 },
                 new FirewallListModel {
                     _Id = Guid.NewGuid().ToString(),
                     Guid = Guid.NewGuid().ToString(),
                     IsEnabled = true,
-                    TemplateWord = "$ipnatpostnetmask$",
                     Label = "ipnatpostnetmask",
-                    Type = "net_addr",
+                    ListType = "net_addr",
                     Values = new List<string>()
                 }
             };
             DeNSo.Session.New.SetAll(list);
         }
 
-        public static void AddValueToList(string guid, string value) {
+        public static void AddValueToList(string guid, IEnumerable<string> values) {
             if (!GetAllHidden().Any()) {
                 return;
             }
             var list = GetAllHidden().FirstOrDefault(_ => _.Guid == guid);
             if (list == null)
                 return;
-            var els = list.Values.ToList();
-            els.Add(value);
-            list.Values = els;
+            list.Values = values;
             DeNSo.Session.New.Set(list);
         }
-
-        public static void RemoveValueFromList(string guid, string value) {
-            if (!GetAllHidden().Any()) {
-                return;
-            }
-            var list = GetAllHidden().FirstOrDefault(_ => _.Guid == guid);
-            if (list == null)
-                return;
-            var els = list.Values.ToList();
-            els.Remove(value);
-            list.Values = els;
-            DeNSo.Session.New.Set(list);
-        }
-
-
     }
 }

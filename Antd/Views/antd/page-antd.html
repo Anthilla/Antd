@@ -351,7 +351,6 @@
         form.find('textarea').text('');
     });
 </script>
-
 <script data-context="firewall" type="text/javascript">
     $('div[data-object="ruleset"]').dblclick(function () {
         var table = $(this).attr('data-table');
@@ -366,6 +365,7 @@
             type: 'GET',
             contentType: 'application/json;charset=utf-8',
             success: function (data) {
+                //todo cambia output
                 $('#new_rules').text(data);
                 return false;
             }
@@ -387,10 +387,21 @@
         });
     });
 
+    $('#ApplyFirewallConfiguration').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/firewall/conf/export',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
     $('#ExportFirewallConfiguration').click(function () {
         jQuery.support.cors = true;
         $.ajax({
-            url: '/firewall/export',
+            url: '/firewall/conf/export',
             type: 'POST',
             success: function () {
                 location.reload(true);
@@ -398,7 +409,6 @@
         });
     });
 </script>
-
 <script data-context="Mount" type="text/javascript">
     $('i.show-units-mgmt').click(function () {
         var g = $(this).attr('data-guid');
@@ -429,5 +439,4 @@
         });
     });
 </script>
-
 @EndSection

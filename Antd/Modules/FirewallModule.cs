@@ -27,9 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
 using antdlib.Firewall;
 using Nancy;
 using Nancy.Security;
@@ -38,13 +35,6 @@ namespace Antd.Modules {
     public class FirewallModule : CoreModule {
         public FirewallModule() {
             this.RequiresAuthentication();
-
-            Get["/firewall"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.NFTCommands = NfTables.GetNftCommandsBundle().ToArray();
-                return View["_page-firewall", vmod];
-            };
-
             Post["/firewall/addrule"] = x => {
                 var command = (string)Request.Form.Command;
                 var rule = (string)Request.Form.Rule;
@@ -53,21 +43,19 @@ namespace Antd.Modules {
             };
 
             Post["/firewall/stoprule"] = x => {
-                var guid = (string)Request.Form.Guid;
-                NfTables.DeleteNftRule(guid);
+                NfTables.DeleteNftRule((string)Request.Form.Guid);
                 return Response.AsRedirect("/firewall");
             };
 
-            Get["/firewall/getrule/{table}/{chain}/{hook}"] = x => {
-                var table = x.table;
-                var chain = x.chain;
-                var hook = x.hook;
-                List<string> data = NfTables.GetRulesFromCommand(table, chain, hook);
-                return Response.AsJson(data);
+            Get["/firewall/getrule/{table}/{chain}/{hook}"] = x => Response.AsJson(FirewallLists.GetForRule((string)x.table, (string)x.chain, (string)x.hook));
+
+            Post["/firewall/conf/export"] = x => {
+                NfTables.Export.ExportNewFirewallConfiguration();
+                return Response.AsJson(true);
             };
 
-            Post["/firewall/export"] = x => {
-                NfTables.Export.WriteFile();
+            Post["/firewall/conf/apply"] = x => {
+                NfTables.Export.ApplyConfiguration();
                 return Response.AsJson(true);
             };
         }

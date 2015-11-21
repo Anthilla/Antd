@@ -31,19 +31,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
 
 namespace antdlib.Firewall {
     public class NfTables {
         public static IEnumerable<ConfigManagement.CommandsBundle> GetNftCommandsBundle() {
             return ConfigManagement.GetCommandsBundle().Where(_ => _.Command.StartsWith("nft"));
-        }
-
-        public static List<string> GetRulesFromCommand(string table, string chain, string hook) {
-            var list = new List<string>();
-            var query = $"nft add rule {table} {chain} {hook}";
-            list.AddRange(GetNftCommandsBundle().Where(_ => _.Command.Contains(query)).Select(commandFound => commandFound.Command.Replace(query, "").Trim()));
-            return list;
         }
 
         public static void AddNftRule(string prefix, string rule) {
@@ -68,89 +60,13 @@ namespace antdlib.Firewall {
         }
 
         public class Export {
-            public class NfTableRuleModel {
-                public string _Id { get; set; }
-                public string Guid { get; set; }
-                public string Table { get; set; }
-                public string Type { get; set; }
-                public string Hook { get; set; }
-                public string Rule { get; set; }
-            }
-
-            private static IEnumerable<string> GetConfigurationFileNames() {
-                return Directory.EnumerateFiles(Folder.RepoConfig, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName);
-            }
-
             private static string GetLastFileName() {
-                if (!GetConfigurationFileNames().Any())
+                var configName = Directory.EnumerateFiles(Folder.RepoConfig, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray();
+                if (!configName.Any())
                     return "0_antd_firewall.export";
-                var lastFile = GetConfigurationFileNames().Last();
+                var lastFile = configName.Last();
                 var num = Convert.ToInt32(lastFile.Split('_')[0]);
-                return $"{(num + 1)}_antd_firewall.export";
-            }
-
-            private static readonly string[] ChainType = { "filter", "route", "nat" };
-            private static readonly string[] HookType = { "prerouting", "input", "forward", "output", "postrouting" };
-            private static readonly string[] TableType = { "ip", "ip6", "arp", "bridge" };
-
-            public static void WriteFile() {
-                FlushDb();
-                SaveRules();
-                using (var sw = File.CreateText(Path.Combine(Folder.RepoConfig, GetLastFileName()))) {
-                    sw.WriteLine("flush ruleset;");
-                    sw.WriteLine("");
-                    foreach (var t3 in TableType) {
-                        foreach (var t2 in ChainType) {
-                            foreach (var t1 in HookType) {
-                                var ruleset = GetRules(t3, t2, t1);
-                                if (!ruleset.Any())
-                                    continue;
-                                sw.WriteLine($"table {t3} {t2} {{");
-                                sw.WriteLine($"    chain {t2} {t1} {{");
-                                sw.WriteLine($"        type {t2} {t1} priority 0;");
-                                foreach (var rule in ruleset) {
-                                    sw.WriteLine($"        {rule};");
-                                }
-                                sw.WriteLine("    }");
-                                sw.WriteLine("}");
-                            }
-                        }
-                    }
-                }
-            }
-
-            private static IEnumerable<NfTableRuleModel> GetAll() {
-                return DeNSo.Session.New.Get<NfTableRuleModel>();
-            }
-
-            private static void FlushDb() {
-                foreach (var rule in GetAll()) {
-                    DeNSo.Session.New.Delete(rule);
-                }
-            }
-
-            private static IEnumerable<string> GetRules(string table, string type, string hook) {
-                return DeNSo.Session.New.Get<NfTableRuleModel>().Where(_ => _.Table == table && _.Type == type && _.Hook == hook).Select(_ => _.Rule);
-            }
-
-            private static void SaveRules() {
-                var q = "nft add rule";
-                var commands = GetNftCommandsBundle().Where(_ => _.Command.StartsWith(q));
-                foreach (var a in commands.Select(command => command.Command.Replace(q, "").Trim()).Select(c => c.Split(' ')).Where(a => a.Length > 3)) {
-                    SaveRule(a[0], a[1], a[2], string.Join(" ", a.SubArray(3, (a.Length) - 3)));
-                }
-            }
-
-            private static void SaveRule(string table, string type, string hook, string rule) {
-                var set = new NfTableRuleModel {
-                    _Id = Guid.NewGuid().ToString(),
-                    Guid = Guid.NewGuid().ToString(),
-                    Table = table,
-                    Type = type,
-                    Hook = hook,
-                    Rule = rule
-                };
-                DeNSo.Session.New.Set(set);
+                return $"{num + 1}_antd_firewall.export";
             }
 
             public static void ExportTemplate() {
@@ -159,6 +75,22 @@ namespace antdlib.Firewall {
                 if (!File.Exists(storedtemplate)) {
                     Terminal.Terminal.Execute($"cp {savedtemplate} {storedtemplate}");
                 }
+            }
+
+            public static void ExportNewFirewallConfiguration() {
+                var template = $"{Folder.RepoConfig}/antd.firewall.template.conf";
+                var text = Terminal.Terminal.Execute($"cat {template}");
+                foreach (var values in FirewallLists.GetAll()) {
+                    var replace = text.Replace(values.TemplateWord, ConfigManagement.SupposeCommandReplacement(values.ReplaceValue));
+                    text = replace;
+                }
+                var newConfFile = GetLastFileName();
+                File.WriteAllText(newConfFile, text);
+            }
+
+            public static void ApplyConfiguration(string filename = "") {
+                var fileToApply = filename.Length < 1 && !File.Exists(filename) ? GetLastFileName() : filename;
+                Terminal.Terminal.Execute($"nft -f {fileToApply}");
             }
         }
     }
