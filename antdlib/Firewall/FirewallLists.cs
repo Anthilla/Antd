@@ -44,7 +44,7 @@ namespace antdlib.Firewall {
         public string TemplateWord => $"${Label}";
         public string ListType { get; set; }
         public IEnumerable<string> Values { get; set; }
-        public string ReplaceValue => $"{{ {string.Join(", ", Values)} }}";
+        public string ReplaceValues => $"{{ {string.Join(", ", Values)} }}";
     }
 
     public class FirewallLists {
