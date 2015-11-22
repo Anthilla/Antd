@@ -14,8 +14,16 @@
         @Each.NetworkPhysicalIf
         <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
-                <td colspan="4" style="width: 200px;">
+                <td colspan="4">
                     <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 200px;"></td>
+                <td colspan="3">
+                    <textarea data-role="show-general-function" data-command="ip link show @Current.InterfaceName" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip addr show @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip -s link ls @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 85px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
                 </td>
             </tr>
             @Partial['_partial_network/part-network-post', Current.PostCommands];
@@ -32,38 +40,50 @@
             </tr>
         </thead>
         @Each.NetworkVirtualIf
-        <tbody class="nif-header nif-content virtualInterfacesBody" data-nif-name="@Current.InterfaceName" style="display: none;">
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
-                <td style="width: 200px;">
-                    <label>@Current.InterfaceName</label>
-                </td>
-                <td>
-                    @Partial['_partial_network/part-network-post', Current.PostCommands];
-                    @Partial['_partial_network/part-network-get', Current.GetCommands];
+                <td colspan="4">
+                    <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>
                 </td>
             </tr>
+            <tr>
+                <td style="width: 200px;"></td>
+                <td colspan="3">
+                    <textarea data-role="show-general-function" data-command="ip link show @Current.InterfaceName" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip addr show @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip -s link ls @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 85px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                </td>
+            </tr>
+            @Partial['_partial_network/part-network-post', Current.PostCommands];
+            @Partial['_partial_network/part-network-get', Current.GetCommands];
         </tbody>
         @EndEach
     </table>
     <table class="table">
         <thead id="BondInterfacesHeader">
-            <tr>
-                <td colspan="4">
-                    <label>Bond Interfaces</label>
-                </td>
-            </tr>
+        <tr>
+            <td colspan="4">
+                <label>Bond Interfaces</label>
+            </td>
+        </tr>
         </thead>
         @Each.NetworkBondIf
-        <tbody class="nif-header nif-content bondInterfacesBody" data-nif-name="@Current.InterfaceName"  style="display: none;">
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
-                <td style="width: 200px;">
-                    <label>@Current.InterfaceName</label>
-                </td>
-                <td>
-                    @Partial['_partial_network/part-network-post', Current.PostCommands];
-                    @Partial['_partial_network/part-network-get', Current.GetCommands];
+                <td colspan="4">
+                    <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>
                 </td>
             </tr>
+            <tr>
+                <td style="width: 200px;"></td>
+                <td colspan="3">
+                    <textarea data-role="show-general-function" data-command="ip link show @Current.InterfaceName" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip addr show @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                    <textarea data-role="show-general-function" data-command="ip -s link ls @Current.InterfaceName | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 85px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
+                </td>
+            </tr>
+            @Partial['_partial_network/part-network-post', Current.PostCommands];
+            @Partial['_partial_network/part-network-get', Current.GetCommands];
         </tbody>
         @EndEach
     </table>

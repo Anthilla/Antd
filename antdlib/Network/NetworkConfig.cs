@@ -64,9 +64,9 @@ namespace antdlib.Network {
 
             public static IEnumerable<CommandListModel> CommandTypeGet() {
                 return new List<CommandListModel> {
-                    new CommandListModel { Label="ShowInterfaceAddr", Elements =  new List<string> ()},
-                    new CommandListModel { Label="ShowInterfaceLink", Elements =  new List<string> ()},
-                    new CommandListModel { Label="ShowInterfaceStats", Elements =  new List<string> ()},
+                    //new CommandListModel { Label="ShowInterfaceAddr", Elements =  new List<string> ()},
+                    //new CommandListModel { Label="ShowInterfaceLink", Elements =  new List<string> ()},
+                    //new CommandListModel { Label="ShowInterfaceStats", Elements =  new List<string> ()},
                     new CommandListModel { Label="ShowRoutes", Elements =  new List<string> ()},
                     new CommandListModel { Label="ShowNeighborsIPV6", Elements =  new List<string> ()},
                     new CommandListModel { Label="ShowTunnelsIPV6", Elements =  new List<string> ()}
