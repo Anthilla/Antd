@@ -40,8 +40,6 @@ namespace Antd.Modules {
         public CertificateAuthorityModule() {
             this.RequiresAuthentication();
 
-            Get["/ca/"] = x => View["login-authentication"];
-
             Get["/ca/ssl/status"] = x => Response.AsJson(CoreParametersConfig.GetSsl());
 
             Post["/ca/ssl/toggle"] = x => {

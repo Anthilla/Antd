@@ -2,7 +2,7 @@
     <legend id="LogReport">Log Report</legend>
     <input id="GenerateNewReport" type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Generate new report" />
     <br />
-    <table class="table searchable" data-searchable="log-report" id="LogReportTable">
+    <table class="table" id="LogReportTable">
         <tbody>
             @Each.LogReports
             <tr data-row="report" data-path="@Current"><td>@Current</td></tr>

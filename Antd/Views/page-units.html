@@ -139,22 +139,5 @@
             }
         });
     });
-
-    $('.search-field').keyup(function () {
-        var queryString = $(this).val();
-        var table = $('.searchable');
-        var tableBody = table.children('tbody');
-        var row = tableBody.children('tr');
-        row.each(function (index) {
-            var thisRow = $(this);
-            var queriedText = $(this).text();
-            if (queriedText.indexOf(queryString) != -1) {
-                thisRow.show();
-            }
-            if (queriedText.indexOf(queryString) < 0) {
-                thisRow.hide();
-            }
-        });
-    });
 </script>
 @EndSection

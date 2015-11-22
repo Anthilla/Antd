@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Log;
 
 namespace antdlib.Network {
 
@@ -102,12 +101,10 @@ namespace antdlib.Network {
             var bridgeIf = Terminal.Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
             var brList = new List<string>();
             foreach (var bbrr in bridgeIf) {
-                ConsoleLogger.Point(bbrr);
                 var brAttr = bbrr.Replace("\t", " ").Replace("/t", " ").Replace("  ", " ").Split(' ')[0];
                 brList.Add(brAttr.Trim());
             }
             foreach (var br in brList) {
-                ConsoleLogger.Point(br);
                 var phMod = new NetworkInterfaceModel {
                     _Id = Guid.NewGuid().ToString(),
                     InterfaceType = NetworkInterfaceType.Bridge,

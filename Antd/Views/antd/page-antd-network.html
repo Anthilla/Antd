@@ -40,7 +40,7 @@
             </tr>
         </thead>
         @Each.NetworkVirtualIf
-        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
+        <tbody class="nif-header nif-content virtualInterfacesBody" data-nif-name="@Current.InterfaceName" style="display: none;">
             <tr>
                 <td colspan="4">
                     <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>
@@ -61,14 +61,14 @@
     </table>
     <table class="table">
         <thead id="BondInterfacesHeader">
-        <tr>
-            <td colspan="4">
-                <label>Bond Interfaces</label>
-            </td>
-        </tr>
+            <tr>
+                <td colspan="4">
+                    <label>Bond Interfaces</label>
+                </td>
+            </tr>
         </thead>
         @Each.NetworkBondIf
-        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
+        <tbody class="nif-header nif-content bondInterfacesBody" data-nif-name="@Current.InterfaceName" style="display: none;">
             <tr>
                 <td colspan="4">
                     <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>

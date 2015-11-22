@@ -270,6 +270,21 @@
     <None Include="Views\__old\_page-system.html" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\antd\page-ca-manage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Views\_partial\part-users.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Views\__old\page-system-ca.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Views\__old\page-users-entity-partial.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\__old\page-users-entity.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Views\antd\page-log.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -478,6 +493,9 @@
     <None Include="Views\antd\page-ca.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\antd\page-antd-users.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -527,19 +545,13 @@
     <Content Include="Views\login-token.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\log\page-log-main.html">
+    <Content Include="Views\__old\_page-log-collectd.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\log\_page-log-collectd.html">
+    <Content Include="Views\__old\_page-log-journalctl.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\log\_page-log-journalctl.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\log\_page-log-websocket.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\log\_page-log.html">
+    <Content Include="Views\__old\_page-log-websocket.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\mail\page-mail-imap.html">
@@ -653,22 +665,10 @@
     <Content Include="Views\system\_page-system-sysctl.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\users\page-users-dashboard.html">
+    <Content Include="Views\__old\page-users-groups.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\users\page-users-entity-partial.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\users\page-users-entity.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\users\page-users-groups.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\users\page-users-system.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\users\_page-users.html">
+    <Content Include="Views\__old\page-users-system.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_cctable-dashboard.html">

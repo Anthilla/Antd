@@ -40,6 +40,7 @@ using antdlib.Log;
 using antdlib.Network;
 using antdlib.Status;
 using antdlib.Terminal;
+using antdlib.Users;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -67,16 +68,19 @@ namespace Antd.Modules {
                     "DnsServer",
                     "Proxy",
                     "Storage",
-                    "Mount"
+                    "Mount",
+                    "Users"
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
                 viewModel.VersionOS = Terminal.Execute("uname -a");
                 viewModel.VersionAOS = Terminal.Execute("cat /etc/aos-release");
-                viewModel.ActiveKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'");
-                viewModel.RecoveryKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'");
-                viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'");
-                viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'");
+
+                var activeKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.ActiveKernel = activeKernel;
+                viewModel.RecoveryKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.Cpuinfo = Cpuinfo.Get();
 
                 viewModel.NetworkPhysicalIf = NetworkInterface.Physical;
@@ -88,23 +92,11 @@ namespace Antd.Modules {
 
                 viewModel.Mounts = antdlib.MountPoint.MountRepository.Get();
 
+                viewModel.UserEntities = UserEntity.Repository.GetAll();
+
                 //todo check next parameters
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();
-
-                viewModel.SslStatus = "Enabled";
-                viewModel.SslStatusAction = "Disable";
-                if (CoreParametersConfig.GetSsl() == "no") {
-                    viewModel.SslStatus = "Disabled";
-                    viewModel.SslStatusAction = "Enable";
-                }
-                viewModel.CertificatePath = CoreParametersConfig.GetCertificatePath();
-                viewModel.CaStatus = "Enabled";
-                if (CoreParametersConfig.GetCa() == "no") {
-                    viewModel.CaStatus = "Disabled";
-                }
-                viewModel.CaIsActive = CertificateAuthority.IsActive;
-                viewModel.Certificates = CertificateRepository.GetAll();
 
                 viewModel.CCTableContext = CctableContextName;
                 var table = CCTableRepository.GetByContext2(CctableContextName);
@@ -125,6 +117,29 @@ namespace Antd.Modules {
                 viewModel.LOGS = Logger.GetAll();
                 viewModel.LogReports = Journalctl.Report.Get();
                 return View["antd/page-log", viewModel];
+            };
+
+            Get["/ca"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.AntdContext = new[] {
+                    "Manage",
+                };
+
+                viewModel.SslStatus = "Enabled";
+                viewModel.SslStatusAction = "Disable";
+                if (CoreParametersConfig.GetSsl() == "no") {
+                    viewModel.SslStatus = "Disabled";
+                    viewModel.SslStatusAction = "Enable";
+                }
+                viewModel.CertificatePath = CoreParametersConfig.GetCertificatePath();
+                viewModel.CaStatus = "Enabled";
+                if (CoreParametersConfig.GetCa() == "no") {
+                    viewModel.CaStatus = "Disabled";
+                }
+                viewModel.CaIsActive = CertificateAuthority.IsActive;
+                viewModel.Certificates = CertificateRepository.GetAll();
+
+                return View["antd/page-ca", viewModel];
             };
         }
     }

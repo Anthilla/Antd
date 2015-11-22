@@ -40,14 +40,6 @@ namespace Antd.Modules {
         public UsersModule() {
             this.RequiresAuthentication();
 
-            Get["/users"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.UserEntities = UserEntity.Repository.GetAll();
-                //vmod.SystemUsers = SystemUser.GetAllFromDatabase();
-                //vmod.SystemGroups = SystemGroup.GetAllFromDatabase();
-                return View["_page-users", vmod];
-            };
-
             Get["/users/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(UserEntity.Repository.GetAll()));
 
             Post["/users/refresh/users"] = x => {
