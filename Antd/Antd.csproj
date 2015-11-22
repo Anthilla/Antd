@@ -475,6 +475,9 @@
     <None Include="Views\antd\page-antd-network.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\antd\page-ca.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

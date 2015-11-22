@@ -1,5 +1,9 @@
 var networkUrl = "/network/config";
 
+$(document).ready(function() {
+    console.log('netconfig');
+});
+
 //Repository
 $('a[href="#nwboot"]').click(function () {
     jQuery.support.cors = true;
@@ -95,10 +99,10 @@ $("#ExportNetworkCommandTable").click(function () {
 
 //IPV4
 $("input#AddNewAddressIPV4").click(function () {
-    var funcReference = $(this).attr("id");
-    var range = $("#Value_" + funcReference + "Range").val();
-    var address = $("#Value_" + funcReference + "Address").val();
-    var broadcast = $("#Value_" + funcReference + "Broadcast").val();
+    var funcReference = "AddNewAddressIPV4";
+    var range = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Range").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var broadcast = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Broadcast").val();
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
     if (range.length > 0 && address.length > 0 && iface.length > 0) {
         AddNewAddressIPV4(address, range, iface, broadcast);
@@ -125,11 +129,11 @@ function AddNewAddressIPV4(address, range, interfaceName, broadcast) {
     });
 }
 
-$("input#DeleteAddressIPV4").click(function () {
-    var funcReference = $(this).attr("id");
-    var range = $("#Value_" + funcReference + "Range").val();
-    var address = $("#Value_" + funcReference + "Address").val();
-    var broadcast = $("#Value_" + funcReference + "Broadcast").val();
+$("input#AddNewAddressIPV4").click(function () {
+    var funcReference = "AddNewAddressIPV4";
+    var range = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Range").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var broadcast = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Broadcast").val();
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
     if (range.length > 0 && address.length > 0 && iface.length > 0) {
         DeleteAddressIPV4(address, range, iface, broadcast);
@@ -244,9 +248,9 @@ function ShowInterfaceStats(interfaceName) {
 }
 
 $("input#AddRouteIPV4").click(function () {
-    var funcReference = $(this).attr("id");
-    var gateway = $("#Value_" + funcReference + "Gateway").val();
-    var destination = $("#Value_" + funcReference + "Destination").val();
+    var funcReference = "AddRouteIPV4";
+    var gateway = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Gateway").val();
+    var destination = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Destination").val();
     if (destination.length > 0 && gateway.length > 0) {
         AddRouteIPV4(gateway, destination);
     }
@@ -271,9 +275,9 @@ function AddRouteIPV4(gateway, destination) {
 }
 
 $("input#DeleteRouteIPV4").click(function () {
-    var funcReference = $(this).attr("id");
-    var gateway = $("#Value_" + funcReference + "Gateway").val();
-    var destination = $("#Value_" + funcReference + "Destination").val();
+    var funcReference = "DeleteRouteIPV4";
+    var gateway = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Gateway").val();
+    var destination = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Destination").val();
     if (destination.length > 0 && gateway.length > 0) {
         DeleteRouteIPV4(gateway, destination);
     }
@@ -298,9 +302,9 @@ function DeleteRouteIPV4(gateway, destination) {
 }
 
 $("input#AddMultipathRoute").click(function () {
-    var funcReference = $(this).attr("id");
-    var network1 = $("#Value_" + funcReference + "Network1").val();
-    var network2 = $("#Value_" + funcReference + "Network2").val();
+    var funcReference = "AddMultipathRoute";
+    var network1 = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Network1").val();
+    var network2 = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Network2").val();
     if (network1.length > 0 && network2.length > 0) {
         AddMultipathRoute(network1, network2);
     }
@@ -325,9 +329,9 @@ function AddMultipathRoute(network1, network2) {
 }
 
 $("input#AddNat").click(function () {
-    var funcReference = $(this).attr("id");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var via = $("#Value_" + funcReference + "Via").val();
+    var funcReference = "AddNat";
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var via = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Via").val();
     if (address.length > 0 && via.length > 0) {
         AddNat(address, via);
     }
@@ -421,11 +425,11 @@ function DisableInterface(interfaceName) {
 }
 
 $("input#AddTunnelPointToPointIPV4").click(function () {
-    var funcReference = $(this).attr("id");
+    var funcReference = "AddTunnelPointToPointIPV4";
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
-    var ttl = $("#Value_" + funcReference + "Ttl").val();
-    var tunnel = $("#Value_" + funcReference + "Tunnel").val();
-    var address = $("#Value_" + funcReference + "Address").val();
+    var ttl = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Ttl").val();
+    var tunnel = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Tunnel").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
     if (iface.length > 0 && ttl.length > 0 && tunnel.length > 0 && address.length > 0) {
         AddTunnelPointToPointIPV4(iface, ttl, tunnel, address);
     }
@@ -498,9 +502,9 @@ function ShowTunnelsIPV4(interfaceName) {
 
 //IPV6
 $("input#AddNewAddressIPV6").click(function () {
-    var funcReference = $(this).attr("id");
+    var funcReference = "AddNewAddressIPV6";
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
-    var address = $("#Value_" + funcReference + "Address").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
     if (iface.length > 0 && address.length > 0) {
         AddNewAddressIPV6(address, iface);
     }
@@ -525,9 +529,9 @@ function AddNewAddressIPV6(address, interfaceName) {
 }
 
 $("input#DeleteAddressIPV6").click(function () {
-    var funcReference = $(this).attr("id");
+    var funcReference = "DeleteAddressIPV6";
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
-    var address = $("#Value_" + funcReference + "Address").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
     if (iface.length > 0 && address.length > 0) {
         DeleteAddressIPV6(address, iface);
     }
@@ -588,10 +592,10 @@ function ShowNeighborsIPV6(interfaceName) {
 }
 
 $("input#AddNeighborsIPV6").click(function () {
-    var funcReference = $(this).attr("id");
+    var funcReference = "AddNeighborsIPV6";
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var layer = $("#Value_" + funcReference + "Layer").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var layer = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Layer").val();
     if (iface.length > 0 && layer.length > 0 && address.length > 0) {
         AddNeighborsIPV6(address, layer, iface);
     }
@@ -617,10 +621,10 @@ function AddNeighborsIPV6(address, layer, interfaceName) {
 }
 
 $("input#DeleteNeighborsIPV6").click(function () {
-    var funcReference = $(this).attr("id");
+    var funcReference = "DeleteNeighborsIPV6";
     var iface = $(this).parents(".nif-content").attr("data-nif-name");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var layer = $("#Value_" + funcReference + "Layer").val();
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var layer = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Layer").val();
     if (iface.length > 0 && layer.length > 0 && address.length > 0) {
         DeleteNeighborsIPV6(address, layer, iface);
     }
@@ -646,9 +650,9 @@ function DeleteNeighborsIPV6(address, layer, interfaceName) {
 }
 
 $("input#AddRouteIPV6Gateway").click(function () {
-    var funcReference = $(this).attr("id");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    var funcReference = "AddRouteIPV6Gateway";
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var gateway = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Gateway").val();
     if (address.length > 0 && gateway.length > 0) {
         AddRouteIPV6Gateway(address, gateway);
     }
@@ -673,9 +677,9 @@ function AddRouteIPV6Gateway(address, gateway) {
 }
 
 $("input#DeleteRouteIPV6Gateway").click(function () {
-    var funcReference = $(this).attr("id");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    var funcReference = "DeleteRouteIPV6Gateway";
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var gateway = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Gateway").val();
     if (address.length > 0 && gateway.length > 0) {
         DeleteRouteIPV6Gateway(address, gateway);
     }
@@ -700,9 +704,9 @@ function DeleteRouteIPV6Gateway(address, gateway) {
 }
 
 $("input#AddRouteIPV6Interface").click(function () {
-    var funcReference = $(this).attr("id");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var iface = $("#Value_" + funcReference + "Interface").val();
+    var funcReference = "AddRouteIPV6Interface";
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var iface = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Interface").val();
     if (address.length > 0 && iface.length > 0) {
         AddRouteIPV6Interface(address, iface);
     }
@@ -727,9 +731,9 @@ function AddRouteIPV6Interface(address, interfaceName) {
 }
 
 $("input#DeleteRouteIPV6Interface").click(function () {
-    var funcReference = $(this).attr("id");
-    var address = $("#Value_" + funcReference + "Address").val();
-    var iface = $("#Value_" + funcReference + "Interface").val();
+    var funcReference = "DeleteRouteIPV6Interface";
+    var address = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Address").val();
+    var iface = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Interface").val();
     if (address.length > 0 && iface.length > 0) {
         DeleteRouteIPV6Interface(address, iface);
     }
@@ -776,8 +780,8 @@ function ShowTunnelsIPV6(interfaceName) {
 
 //BRIDGE
 $("input#AddBridgeName").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "AddBridgeName";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (bridge.length > 0) {
         AddBridgeName(bridge);
     }
@@ -801,8 +805,8 @@ function AddBridgeName(bridgeName) {
 }
 
 $("input#DeleteBridgeName").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "DeleteBridgeName";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (bridge.length > 0) {
         DeleteBridgeName(bridge);
     }
@@ -826,9 +830,9 @@ function DeleteBridgeName(bridgeName) {
 }
 
 $("input#AddNetworkInterfaceToBridge").click(function () {
-    var funcReference = $(this).attr("id");
-    var iface = $("#Value_" + funcReference + "Interface").val();
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "AddNetworkInterfaceToBridge";
+    var iface = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Interface").val();
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (iface.length > 0 && bridge.length > 0) {
         AddNetworkInterfaceToBridge(bridge, iface);
     }
@@ -853,9 +857,9 @@ function AddNetworkInterfaceToBridge(bridgeName, interfaceName) {
 }
 
 $("input#DeleteNetworkInterfaceToBridge").click(function () {
-    var funcReference = $(this).attr("id");
-    var iface = $("#Value_" + funcReference + "Interface").val();
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "DeleteNetworkInterfaceToBridge";
+    var iface = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Interface").val();
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (iface.length > 0 && bridge.length > 0) {
         DeleteNetworkInterfaceToBridge(bridge, iface);
     }
@@ -880,8 +884,8 @@ function DeleteNetworkInterfaceToBridge(bridgeName, interfaceName) {
 }
 
 $("input#EnableStpOnBridge").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "EnableStpOnBridge";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (bridge.length > 0) {
         EnableStpOnBridge(bridge);
     }
@@ -905,8 +909,8 @@ function EnableStpOnBridge(bridgeName) {
 }
 
 $("input#DisableStpOnBridge").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "DisableStpOnBridge";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (bridge.length > 0) {
         DisableStpOnBridge(bridge);
     }
@@ -930,8 +934,8 @@ function DisableStpOnBridge(bridgeName) {
 }
 
 $("input#ShowBridgeMACS").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "ShowBridgeMACS";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (Interface.length > 0) {
         ShowBridgeMACS(bridge);
     }
@@ -952,8 +956,8 @@ function ShowBridgeMACS(bridgeName) {
 }
 
 $("input#ShowBridgeSTP").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var funcReference = "ShowBridgeSTP";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
     if (Interface.length > 0) {
         ShowBridgeSTP(bridge);
     }
@@ -975,10 +979,10 @@ function ShowBridgeSTP(bridgeName) {
 }
 
 $("input#SetBridgePathCost").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
-    var path = $("#Value_" + funcReference + "Path").val();
-    var cost = $("#Value_" + funcReference + "Cost").val();
+    var funcReference = "SetBridgePathCost";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
+    var path = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Path").val();
+    var cost = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Cost").val();
     if (bridge.length > 0 && path.length > 0 && cost.length > 0) {
         SetBridgePortPriority(bridge, path, cost);
     }
@@ -1004,10 +1008,10 @@ function SetBridgePathCost(bridgeName, path, cost) {
 }
 
 $("input#SetBridgePortPriority").click(function () {
-    var funcReference = $(this).attr("id");
-    var bridge = $("#Value_" + funcReference + "Bridge").val();
-    var port = $("#Value_" + funcReference + "Port").val();
-    var priority = $("#Value_" + funcReference + "Priority").val();
+    var funcReference = "SetBridgePortPriority";
+    var bridge = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Bridge").val();
+    var port = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Port").val();
+    var priority = $('[data-net-attr-list="' + funcReference + '"]').find("#Value_Priority").val();
     if (bridge.length > 0 && port.length > 0 && priority.length > 0) {
         SetBridgePortPriority(bridge, port, priority);
     }

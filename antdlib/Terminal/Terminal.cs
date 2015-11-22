@@ -53,7 +53,7 @@ namespace antdlib.Terminal {
                 process.StartInfo.WorkingDirectory = dir;
             }
             try {
-                ConsoleLogger.Log($"antd is launching: {command}");
+                //ConsoleLogger.Log($"antd is launching: {command}");
                 process.Start();
                 using (var streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();

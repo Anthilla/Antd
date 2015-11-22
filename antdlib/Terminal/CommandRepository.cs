@@ -37,31 +37,18 @@ namespace antdlib.Terminal {
     public class CommandRepository {
 
         public class CommandInputModel {
-
             public string _Id { get; set; }
-
             public string Guid { get; set; }
-
             public DateTime Date { get; set; }
-
             public string Command { get; set; } = "";
-
             public string CommandTrue { get; set; } = "";
-
             public string CommandFalse { get; set; } = "";
-
             public string File { get; set; }
-
             public string Arguments { get; set; }
-
             public string Layout { get; set; }
-
             public string InputId { get; set; }
-
             public string InputLocation { get; set; }
-
             public string Notes { get; set; }
-
             public CCTableCommandType CommandType { get; set; }
         }
 

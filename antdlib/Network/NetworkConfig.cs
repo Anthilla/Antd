@@ -75,8 +75,6 @@ namespace antdlib.Network {
 
             public static IEnumerable<CommandListModel> BridgeCommandTypePost() {
                 return new List<CommandListModel> {
-                    new CommandListModel { Label = "AddBridgeName", Elements = new List<string>{ "Bridge" } },
-                    new CommandListModel { Label="DeleteBridgeName", Elements =  new List<string> { "Bridge" } },
                     new CommandListModel { Label="AddNetworkInterfaceToBridge", Elements =  new List<string> { "Interface", "Bridge" } },
                     new CommandListModel { Label="DeleteNetworkInterfaceToBridge", Elements =  new List<string> { "Interface", "Bridge" } },
                     new CommandListModel { Label="EnableStpOnBridge", Elements =  new List<string> { "Bridge" } },

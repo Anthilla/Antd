@@ -252,7 +252,6 @@
                     Command: command
                 },
                 success: function (data) {
-                    console.log(data);
                     t.text(data);
                 }
             });
@@ -268,7 +267,6 @@
                     Command: command
                 },
                 success: function (data) {
-                    console.log(data);
                     var arr = data.split('\n');
                     $.each(arr, function (i, value) {
                         t.append('<option Value="' + value + '">' + value + '</option>');

@@ -1,4 +1,5 @@
-﻿//-------------------------------------------------------------------------------------
+﻿@Master['layout.html']
+<!-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -25,21 +26,39 @@
 //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //     20141110
-//-------------------------------------------------------------------------------------
-
-using antdlib.Network;
-using Nancy;
-using Nancy.Security;
-
-namespace Antd.Modules {
-    public class NetworkModule : CoreModule {
-        public NetworkModule() {
-            this.RequiresAuthentication();
-
-            Post["/network/import/if"] = x => {
-                NetworkInterface.ImportNetworkInterface();
-                return Response.AsJson(true);
-            };
-        }
+//------------------------------------------------------------------------------------->
+@Section['PageBar']
+<style type="text/css">
+    #Ca-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
     }
-}
+
+    div.row {
+        margin-top: 20px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+    <nav class="navigation-bar-content">
+        @Each.AntdContext
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
+            @Current
+        </a>
+        @EndEach
+
+        <p class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px; cursor: pointer;">
+            <i class="icon-arrow-up"></i>
+        </p>
+    </nav>
+</nav>
+@EndSection
+
+@Section['MainContent']
+@Partial['antd/page-ca----'];
+@EndSection
+
+@Section['Scripts']
+<script data-context="log" type="text/javascript">
+   
+</script>
+@EndSection

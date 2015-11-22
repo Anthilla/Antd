@@ -1,7 +1,6 @@
 $('input[data-role="command-place"]').keyup(function () {
     var thisValue = $(this).val();
     if (thisValue.indexOf('[') > 0) {
-        console.log('Beginning of tag input detected');
         //todo: in questo caso prendere la stringa che si sta per scrivere dopo la [
         //      fare una query, tipo selectize, nei ValueBundle e mostrare tutt i valori appartenenti a quel tag
         //      con relativo indice

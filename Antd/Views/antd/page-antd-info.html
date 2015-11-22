@@ -3,6 +3,15 @@
     <table class="table">
         <tbody>
             <tr>
+                <td><label>Linux Version</label></td>
+                <td>@Model.VersionOS</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <table class="table" style="width: 49% !important; display: inline-block !important; float: left; margin-right: 26px;">
+        <tbody>
+            <tr>
                 <td colspan="2"><label>Memory</label></td>
             </tr>
             <tr>
@@ -19,7 +28,7 @@
             </tr>
             <tr>
                 <td><label>Buffers</label></td>
-                <td>@Model.Meminfo.MemTBuffersotal</td>
+                <td>@Model.Meminfo.MemBuffersotal</td>
             </tr>
             <tr>
                 <td><label>Cached</label></td>
@@ -39,12 +48,23 @@
             </tr>
         </tbody>
     </table>
-    <table class="table">
+    <table class="table" style="width: 49% !important; display: inline-block !important;">
         <tbody>
             <tr>
-                <td><label>Linux Version</label></td>
-                <td>@Model.VersionOS</td>
+                <td><label>CPU</label></td>
             </tr>
+            @Each.Cpuinfo
+            <tr>
+                <td>
+                    <p>@Current</p>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <br />
+    <table class="table">
+        <tbody>
             <tr>
                 <td><label>AnthillaOS Version</label></td>
                 <td>@Model.VersionAOS</td>
@@ -87,18 +107,6 @@
                 <td colspan="2">
                     <p>@Current</p>
                 </td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
-    <table class="table">
-        <tbody>
-            <tr>
-                <td><label>CPU</label></td>
-            </tr>
-            @Each.Cpuinfo
-            <tr>
-                <td><p>@Current</p></td>
             </tr>
             @EndEach
         </tbody>

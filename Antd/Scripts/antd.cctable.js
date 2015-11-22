@@ -9,9 +9,7 @@ $('input[data-sumbit-type]').click(function () {
     var rowGuid = self.attr('id');
     var type = self.attr('data-sumbit-type');
     var newValue = $('input[type="text"]#' + rowGuid).val();
-    console.log(newValue);
     var boolSelected = $('select#' + rowGuid).find(':selected').val();
-    console.log(boolSelected);
     jQuery.support.cors = true;
     $.ajax({
         url: '/cctable/Launch/',
@@ -316,7 +314,6 @@ $(document).ready(function () {
     $.when(
         LoadEtcConfs()
     ).then(
-        //console.log('.')
     );
 });
 

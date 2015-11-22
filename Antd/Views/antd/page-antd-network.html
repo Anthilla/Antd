@@ -24,7 +24,7 @@
         @EndEach
     </table>
     <table class="table">
-        <thead>
+        <thead id="VirtualInterfacesHeader">
             <tr>
                 <td colspan="4">
                     <label>Virtual Interfaces</label>
@@ -32,7 +32,7 @@
             </tr>
         </thead>
         @Each.NetworkVirtualIf
-        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
+        <tbody class="nif-header nif-content virtualInterfacesBody" data-nif-name="@Current.InterfaceName" style="display: none;">
             <tr>
                 <td style="width: 200px;">
                     <label>@Current.InterfaceName</label>
@@ -46,7 +46,7 @@
         @EndEach
     </table>
     <table class="table">
-        <thead>
+        <thead id="BondInterfacesHeader">
             <tr>
                 <td colspan="4">
                     <label>Bond Interfaces</label>
@@ -54,7 +54,7 @@
             </tr>
         </thead>
         @Each.NetworkBondIf
-        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
+        <tbody class="nif-header nif-content bondInterfacesBody" data-nif-name="@Current.InterfaceName"  style="display: none;">
             <tr>
                 <td style="width: 200px;">
                     <label>@Current.InterfaceName</label>
@@ -75,6 +75,26 @@
                 </td>
             </tr>
         </thead>
+        <tbody>
+            <tr>
+                <td style="width: 350px;">
+                    <label>Add Bridge</label>
+                </td>
+                <td>
+                    <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
+                    <input data-role="submit-general-function" data-command="brctl addbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 350px;">
+                    <label>Delete Bridge</label>
+                </td>
+                <td>
+                    <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
+                    <input data-role="submit-general-function" data-command="brctl delbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
+                </td>
+            </tr>
+        </tbody>
         @Each.NetworkBridgeIf
         <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>

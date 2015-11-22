@@ -53,7 +53,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        console.log('doc rdy');
         BuildCharts();
     });
 
@@ -72,7 +71,6 @@
         //var myNewChart = new Chart(ctx);
         $('.disk-size-chart').each(function () {
             var size = $(this).attr('data-size');
-            console.log('this size: ' + size);
             var diskdata = [{
                 value: size,
                 color: "#F7464A",
