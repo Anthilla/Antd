@@ -70,6 +70,7 @@ namespace Antd.Modules {
                     "Proxy",
                     "Storage",
                     "Mount",
+                    "Rsync",
                     "Users"
                 };
 

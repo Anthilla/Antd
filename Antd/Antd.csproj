@@ -273,6 +273,9 @@
     <None Include="Views\antd\page-ca-manage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\antd\page-antd-rsync.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\_partial\part-users.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

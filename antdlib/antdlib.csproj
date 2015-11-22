@@ -227,6 +227,7 @@
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Status\Uptime.cs" />
+    <Compile Include="Storage\Rsync.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Svcs\Bind\BindConfig.cs" />
     <Compile Include="Svcs\Bind\BindStatement.cs" />

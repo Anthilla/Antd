@@ -301,8 +301,8 @@ namespace antdlib.Antdsh {
 
         public static void RestartSystemctlAntdServices() {
             Terminal.Terminal.Execute("systemctl daemon-reload");
-            Terminal.Terminal.Execute("systemctl restart app-antd-01-Prepare");
-            Terminal.Terminal.Execute("systemctl restart app-antd-02-Mount");
+            Terminal.Terminal.Execute("systemctl restart app-antd-01-prepare");
+            Terminal.Terminal.Execute("systemctl restart app-antd-02-mount");
             Terminal.Terminal.Execute("systemctl restart app-antd-03-launcher");
         }
 
