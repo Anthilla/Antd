@@ -206,7 +206,6 @@
     <Compile Include="MountPoint\MountLocal.cs" />
     <Compile Include="MountPoint\MountRepository.cs" />
     <Compile Include="MountPoint\DFP.cs" />
-    <Compile Include="Network\NetworkConfigRepository.cs" />
     <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\NetworkConfig.cs" />
     <Compile Include="Network\NetworkInterface.cs" />

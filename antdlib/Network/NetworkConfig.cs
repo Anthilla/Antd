@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using antdlib.Config;
 
 namespace antdlib.Network {
     public class NetworkConfig {
@@ -58,7 +59,7 @@ namespace antdlib.Network {
                     new CommandListModel { Label="AddRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
                     new CommandListModel { Label="DeleteRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
                     new CommandListModel { Label="AddRouteIPV6Interface", Elements =  new List<string> { "Address" } },
-                    new CommandListModel { Label="DeleteRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { Label="DeleteRouteIPV6Interface", Elements =  new List<string> { "Address" } }
                 };
             }
 
@@ -80,39 +81,39 @@ namespace antdlib.Network {
                     new CommandListModel { Label="EnableStpOnBridge", Elements =  new List<string> { "Bridge" } },
                     new CommandListModel { Label="DisableStpOnBridge", Elements =  new List<string> { "Bridge" } },
                     new CommandListModel { Label="SetBridgePathCost", Elements =  new List<string> { "Bridge", "Path", "Cost" } },
-                    new CommandListModel { Label="SetBridgePortPriority", Elements =  new List<string> { "Bridge", "Port", "Priority" } },
+                    new CommandListModel { Label="SetBridgePortPriority", Elements =  new List<string> { "Bridge", "Port", "Priority" } }
                 };
             }
 
             public static IEnumerable<CommandListModel> BridgeCommandTypeGet() {
                 return new List<CommandListModel> {
                     new CommandListModel { Label="ShowBridgeMACS", Elements =  new List<string> ()},
-                    new CommandListModel { Label="ShowBridgeSTP", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowBridgeSTP", Elements =  new List<string> ()}
                 };
             }
         }
 
         public class Iproute2 {
             public static string AddNewAddressIpv4(string address, string range, string interfaceName, string broadcast) {
-                var cmd = (broadcast == "") ?
+                var cmd = broadcast == "" ?
                     $"ip addr add {address}/{range} dev {interfaceName}" :
                     $"ip addr add {address}/{range} broadcast {address} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIpv4(string address, string range, string interfaceName, string broadcast) {
-                var cmd = (broadcast == "") ?
+                var cmd = broadcast == "" ?
                     $"ip addr del {address}/{range} dev {interfaceName}" :
                     $"ip addr del {address}/{range} broadcast {address} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string FlushConfigurationIpv4(string interfaceName = null) {
-                var i = (interfaceName == null) ? "label \"eth *\"" : "dev {interfaceName}";
+                var i = interfaceName == null ? "label \"eth *\"" : "dev {interfaceName}";
                 var cmd = $"ip addr flush {i}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
@@ -132,30 +133,30 @@ namespace antdlib.Network {
             }
 
             public static string AddRouteIpv4(string gateway, string destination) {
-                var cmd = (destination == null) ?
+                var cmd = destination == null ?
                        $"ip route add default via {gateway}" :
                        $"ip route add {destination} via {gateway}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteRouteIpv4(string gateway, string destination) {
-                var cmd = (destination == null) ?
+                var cmd = destination == null ?
                     $"ip route del default via {gateway}" :
                     $"ip route del {destination} via {gateway}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddMultipathRoute(string net1, string net2) {
                 var cmd = $"ip route add default scope global nexthop dev {net1} nexthop dev {net2}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddNat(string address, string viaAddress) {
                 var cmd = $"ip route add nat {address} via {viaAddress}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
@@ -166,30 +167,30 @@ namespace antdlib.Network {
 
             public static string EnableInterface(string interfaceName) {
                 var cmd = $"ip link set {interfaceName} up";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DisableInterface(string interfaceName) {
                 var cmd = $"ip link set {interfaceName} down";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddTunnelPointToPointIpv4(string interfaceName, string ttl, string foreignTunnel, string address) {
                 var cmd = $"ip tunnel add {interfaceName} mode sit ttl {ttl} remote {foreignTunnel} local {address}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteTunnelPointToPointIpv4(string interfaceName) {
                 var cmd = $"ip tunnel del {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string ShowTunnelsIpv4(string interfaceName) {
-                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip tunnel show {i}";
                 return Terminal.Terminal.Execute(cmd);
             }
@@ -197,13 +198,13 @@ namespace antdlib.Network {
             #region IPV6 Related
             public static string AddNewAddressIpv6(string address, string interfaceName) {
                 var cmd = $"ip -6 addr add {address} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIpv6(string address, string interfaceName) {
                 var cmd = $"ip -6 addr del {address} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
@@ -214,37 +215,37 @@ namespace antdlib.Network {
 
             public static string FlushConfigurationIpv6() {
                 var cmd = $"ip addr flush dynamic";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string ShowNeighborsIpv6(string interfaceName = null) {
-                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip -6 neigh show {i}";
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddNeighborsIpv6(string address, string layerAddress, string interfaceName) {
                 var cmd = $"ip -6 neigh add {address} lladdr {layerAddress} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteNeighborsIpv6(string address, string layerAddress, string interfaceName) {
                 var cmd = $"ip -6 neigh del {address} lladdr {layerAddress} dev {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddRouteIpv6Gateway(string address, string gateway = null) {
                 if (gateway == null) {
                     var cmd = $"ip -6 route add default via {address}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route add {gateway} via {address}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
             }
@@ -252,12 +253,12 @@ namespace antdlib.Network {
             public static string DeleteRouteIpv6Gateway(string address, string gateway = null) {
                 if (gateway == null) {
                     var cmd = $"ip -6 route del default via {address}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route del {gateway} via {address}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
             }
@@ -265,12 +266,12 @@ namespace antdlib.Network {
             public static string AddRouteIpv6Interface(string interfaceName, string gateway = null) {
                 if (gateway == null) {
                     var cmd = $"ip -6 route add default dev {interfaceName}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route add {gateway} dev {interfaceName}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
             }
@@ -278,18 +279,18 @@ namespace antdlib.Network {
             public static string DeleteRouteIpv6Interface(string interfaceName, string gateway = null) {
                 if (gateway == null) {
                     var cmd = $"ip -6 route del default dev {interfaceName}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route del {gateway} dev {interfaceName}";
-                    NetworkConfigRepository.Create(cmd);
+                    ConfigManagement.AddCommandsBundle(cmd);
                     return Terminal.Terminal.Execute(cmd);
                 }
             }
 
             public static string ShowTunnelsIpv6(string interfaceName) {
-                var i = (interfaceName == null) ? "" : $"dev {interfaceName}";
+                var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip -6 tunnel show {i}";
                 return Terminal.Terminal.Execute(cmd);
             }
@@ -299,37 +300,37 @@ namespace antdlib.Network {
         public class Brctl {
             public static string AddBridgeName(string bridgeName) {
                 var cmd = $"brctl addbr {bridgeName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteBridgeName(string bridgeName) {
                 var cmd = $"brctl delbr {bridgeName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string AddNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
                 var cmd = $"brctl addif {bridgeName} {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DeleteNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
                 var cmd = $"brctl delif {bridgeName} {interfaceName}";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string EnableStpOnBridge(string bridgeName) {
                 var cmd = $"brctl stp {bridgeName} on";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string DisableStpOnBridge(string bridgeName) {
                 var cmd = $"brctl stp {bridgeName} off";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
@@ -345,13 +346,13 @@ namespace antdlib.Network {
 
             public static string SetBridgePathCost(string bridgeName, string path, string cost) {
                 var cmd = $"brctl setpathcost {bridgeName} {path} {cost} set path cost";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
 
             public static string SetBridgePortPriority(string bridgeName, string port, string priority) {
                 var cmd = $"brctl setportprio {bridgeName} {port} {priority} set port priority";
-                NetworkConfigRepository.Create(cmd);
+                ConfigManagement.AddCommandsBundle(cmd);
                 return Terminal.Terminal.Execute(cmd);
             }
         }
