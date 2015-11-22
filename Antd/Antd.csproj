@@ -566,7 +566,7 @@
     <Content Include="Views\__old\page-network-setup.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\page-cfg.html">
+    <Content Include="Views\antd\page-cfg.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-dir.html">

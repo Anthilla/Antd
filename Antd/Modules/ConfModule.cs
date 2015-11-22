@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
 using System.Linq;
 using antdlib.Config;
 using Antd.ViewHelpers;
@@ -38,13 +37,6 @@ namespace Antd.Modules {
     public class ConfModule : CoreModule {
         public ConfModule() {
             this.RequiresAuthentication();
-
-            Get["/cfg"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.ValueBundle = ConfigManagement.GetValuesBundle();
-                vmod.CommandBundle = ConfigManagement.GetCommandsBundle();
-                return View["page-cfg", vmod];
-            };
 
             Post["/cfg/addvalue"] = x => {
                 var tag = (string)Request.Form.Tag;
@@ -90,13 +82,13 @@ namespace Antd.Modules {
             Post["/cfg/enablecommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.EnableCommand(guid);
-                return Response.AsRedirect("/cfg");
+                return Response.AsJson(true);
             };
 
             Post["/cfg/disablecommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.DisableCommand(guid);
-                return Response.AsRedirect("/cfg");
+                return Response.AsJson(true);
             };
 
             Post["/cfg/launchcommand"] = x => {

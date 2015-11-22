@@ -17,7 +17,7 @@ $('input[data-role="command-place"]').keyup(function () {
             success: function (layoutJson) {
                 var results = [];
                 $.each(layoutJson, function (i, item) {
-                    if (item.name.indexOf(thisValue) == 0) {
+                    if (item.name.indexOf(thisValue) === 0) {
                         results.push(item.name);
                     }
                 });
@@ -89,7 +89,7 @@ $('i[data-role="show-command"]').mouseup(function () {
 
 
 $("#sortable").sortable({
-    stop: function (event, ui) {
+    stop: function () {
         RefreshCommandIndexes();
     }
 }).disableSelection();
@@ -109,7 +109,7 @@ function RefreshCommandIndexes() {
     });
 }
 
-$('i[data-role="remove-command"]').click(function (event) {
+$('i[data-role="remove-command"]').click(function () {
     var g = $(this).attr('data-guid');
     jQuery.support.cors = true;
     $.ajax({
@@ -118,13 +118,13 @@ $('i[data-role="remove-command"]').click(function (event) {
         data: {
             Guid: g
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 });
 
-$('i[data-role="disable-command"]').click(function (event) {
+$('i[data-role="disable-command"]').click(function () {
     var g = $(this).attr('data-guid');
     jQuery.support.cors = true;
     $.ajax({
@@ -133,13 +133,13 @@ $('i[data-role="disable-command"]').click(function (event) {
         data: {
             Guid: g
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 });
 
-$('i[data-role="enable-command"]').click(function (event) {
+$('i[data-role="enable-command"]').click(function () {
     var g = $(this).attr('data-guid');
     jQuery.support.cors = true;
     $.ajax({
@@ -148,13 +148,13 @@ $('i[data-role="enable-command"]').click(function (event) {
         data: {
             Guid: g
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 });
 
-$('i[data-role="play-command"]').click(function (event) {
+$('i[data-role="play-command"]').click(function () {
     var g = $(this).attr('data-guid');
     jQuery.support.cors = true;
     $.ajax({
@@ -163,7 +163,7 @@ $('i[data-role="play-command"]').click(function (event) {
         data: {
             Guid: g
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });

@@ -34,6 +34,7 @@ using antdlib;
 using antdlib.Boot;
 using antdlib.CCTable;
 using antdlib.Certificate;
+using antdlib.Config;
 using antdlib.Contexts;
 using antdlib.Firewall;
 using antdlib.Log;
@@ -140,6 +141,14 @@ namespace Antd.Modules {
                 viewModel.Certificates = CertificateRepository.GetAll();
 
                 return View["antd/page-ca", viewModel];
+            };
+
+            Get["/cfg"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.ValueBundle = ConfigManagement.GetValuesBundle();
+                vmod.EnabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled).OrderBy(_=>_.Index);
+                vmod.DisabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == false).OrderBy(_ => _.Index);
+                return View["antd/page-cfg", vmod];
             };
         }
     }
