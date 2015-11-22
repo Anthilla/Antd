@@ -97,10 +97,10 @@
                     <label>Set label</label>
                 </div>
                 <div class="span6" id="NewListDashboard">
-                    <input name="Table" type="hidden"/>
-                    <input name="Type" type="hidden"/>
-                    <input name="Hook" type="hidden"/>
-                    <input name="Label" type="text" style="height: 25px; width: 90%;"/>
+                    <input name="Table" type="hidden" />
+                    <input name="Type" type="hidden" />
+                    <input name="Hook" type="hidden" />
+                    <input name="Label" type="text" style="height: 25px; width: 90%;" />
                 </div>
             </div>
             <div class="row">
@@ -108,7 +108,7 @@
                     <label>Values</label>
                 </div>
                 <div class="span6">
-                    <input name="Elements" type="text" style="height: 25px; width: 90%;"/>
+                    <input name="Elements" type="text" style="height: 25px; width: 90%;" />
                 </div>
             </div>
             <div class="row">
@@ -118,22 +118,30 @@
                 </div>
             </div>
         </form>
-        <hr class="bg-anthilla-violet"/>
+        <hr class="bg-anthilla-violet" />
         <table class="table">
             <thead>
-            <tr>
-                <td colspan="3">
-                    <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
-                    <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="3">
+                        <h2 style="display: inline-block;" class="fg-white">Data for: </h2>
+                        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+                    </td>
+                </tr>
             </thead>
             <tbody id="FirewallConfigurationLists"></tbody>
         </table>
         <hr class="bg-anthilla-violet" />
-        <ul id="RuleList" class="fg-white" style="list-style: none;">
-            
-        </ul>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td colspan="3">
+                        <h2 style="display: inline-block;" class="fg-white">Rules for: </h2>
+                        <h2 style="display: inline-block;" class="fg-white" data-role="display-table-context"></h2>
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="RuleList"></tbody>
+        </table>
     </div>
 
     <!--

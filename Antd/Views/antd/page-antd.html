@@ -394,7 +394,8 @@
                     success: function (rules) {
                         $('#RuleList').html('');
                         $.each(rules, function (i, rule) {
-                            $('#RuleList').append('<li>' + rule + '</li>');
+                            var row = '<tr data-index="' + i + '"><td style="width:200px;"></td><td>' + rule + '</td></tr>';
+                            $('#RuleList').append(row);
                         });
                         return false;
                     }
