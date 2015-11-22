@@ -32,9 +32,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
     public class NetworkConfigModule : CoreModule {
-
         public NetworkConfigModule() {
             this.RequiresAuthentication();
 

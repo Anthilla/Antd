@@ -72,6 +72,26 @@ namespace antdlib.Network {
                     new CommandListModel { Label="ShowTunnelsIPV6", Elements =  new List<string> ()}
                 };
             }
+
+            public static IEnumerable<CommandListModel> BridgeCommandTypePost() {
+                return new List<CommandListModel> {
+                    new CommandListModel { Label = "AddBridgeName", Elements = new List<string>{ "Bridge" } },
+                    new CommandListModel { Label="DeleteBridgeName", Elements =  new List<string> { "Bridge" } },
+                    new CommandListModel { Label="AddNetworkInterfaceToBridge", Elements =  new List<string> { "Interface", "Bridge" } },
+                    new CommandListModel { Label="DeleteNetworkInterfaceToBridge", Elements =  new List<string> { "Interface", "Bridge" } },
+                    new CommandListModel { Label="EnableStpOnBridge", Elements =  new List<string> { "Bridge" } },
+                    new CommandListModel { Label="DisableStpOnBridge", Elements =  new List<string> { "Bridge" } },
+                    new CommandListModel { Label="SetBridgePathCost", Elements =  new List<string> { "Bridge", "Path", "Cost" } },
+                    new CommandListModel { Label="SetBridgePortPriority", Elements =  new List<string> { "Bridge", "Port", "Priority" } },
+                };
+            }
+
+            public static IEnumerable<CommandListModel> BridgeCommandTypeGet() {
+                return new List<CommandListModel> {
+                    new CommandListModel { Label="ShowBridgeMACS", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowBridgeSTP", Elements =  new List<string> ()},
+                };
+            }
         }
 
         public class Iproute2 {

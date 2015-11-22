@@ -1,14 +1,14 @@
-var networkUrl = '/network/config';
+var networkUrl = "/network/config";
 
 //Repository
 $('a[href="#nwboot"]').click(function () {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/repo/all',
-        type: 'GET',
+        url: networkUrl + "/repo/all",
+        type: "GET",
         success: function (data) {
             $.each(data, function (index, i) {
-                $('#NetworkCommandTable').append(AssembleDataRow(i));
+                $("#NetworkCommandTable").append(AssembleDataRow(i));
             });
             EnableCommand();
             DisableCommand();
@@ -19,29 +19,29 @@ $('a[href="#nwboot"]').click(function () {
 
 function AssembleDataRow(data) {
     var row = '<tr data-guid="' + data.Guid + '">';
-    row += '<td><p>' + data.CommandLine + '</p></td>';
-    if (data.IsEnabled == true) {
+    row += "<td><p>" + data.CommandLine + "</p></td>";
+    if (data.IsEnabled === true) {
         row += '<td><input type="button" value="Disable" data-role="disable-command" data-guid="' + data.Guid + '" /></td>';
     }
     else {
         row += '<td><input type="button" value="Enable" data-role="enable-command" data-guid="' + data.Guid + '" /></td>';
     }
     row += '<td><input type="button" value="Delete" data-role="delete-command" data-guid="' + data.Guid + '" /></td>';
-    row += '</tr>'
+    row += "</tr>";
     return row;
 }
 
 function EnableCommand() {
     $('input[data-role="enable-command"]').click(function () {
-        var guid = $(this).attr('data-guid');
+        var guid = $(this).attr("data-guid");
         jQuery.support.cors = true;
         $.ajax({
-            url: networkUrl + '/repo/enable',
-            type: 'POST',
+            url: networkUrl + "/repo/enable",
+            type: "POST",
             data: {
                 Guid: guid
             },
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
@@ -50,15 +50,15 @@ function EnableCommand() {
 
 function DisableCommand() {
     $('input[data-role="disable-command"]').click(function () {
-        var guid = $(this).attr('data-guid');
+        var guid = $(this).attr("data-guid");
         jQuery.support.cors = true;
         $.ajax({
-            url: networkUrl + '/repo/disable',
-            type: 'POST',
+            url: networkUrl + "/repo/disable",
+            type: "POST",
             data: {
                 Guid: guid
             },
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
@@ -67,909 +67,898 @@ function DisableCommand() {
 
 function DeleteCommand() {
     $('input[data-role="delete-command"]').click(function () {
-        var guid = $(this).attr('data-guid');
+        var guid = $(this).attr("data-guid");
         jQuery.support.cors = true;
         $.ajax({
-            url: networkUrl + '/repo/delete',
-            type: 'POST',
+            url: networkUrl + "/repo/delete",
+            type: "POST",
             data: {
                 Guid: guid
             },
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
     });
 }
 
-$('#ExportNetworkCommandTable').click(function () {
+$("#ExportNetworkCommandTable").click(function () {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/repo/export',
-        type: 'POST',
-        success: function (data) {
+        url: networkUrl + "/repo/export",
+        type: "POST",
+        success: function () {
             location.reload(true);
         }
     });
 });
 
 //IPV4
-$('input#AddNewAddressIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Range = $('#Value_' + funcReference + 'Range').val();
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Broadcast = $('#Value_' + funcReference + 'Broadcast').val();
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
-        AddNewAddressIPV4(Address, Range, Interface, Broadcast);
+$("input#AddNewAddressIPV4").click(function () {
+    var funcReference = $(this).attr("id");
+    var range = $("#Value_" + funcReference + "Range").val();
+    var address = $("#Value_" + funcReference + "Address").val();
+    var broadcast = $("#Value_" + funcReference + "Broadcast").val();
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (range.length > 0 && address.length > 0 && iface.length > 0) {
+        AddNewAddressIPV4(address, range, iface, broadcast);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddNewAddressIPV4(address, range, interfaceName, broadcast) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/add/address',
-        type: 'POST',
+        url: networkUrl + "/ipv4/add/address",
+        type: "POST",
         data: {
             Range: range,
             Address: address,
             Broadcast: broadcast,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteAddressIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Range = $('#Value_' + funcReference + 'Range').val();
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Broadcast = $('#Value_' + funcReference + 'Broadcast').val();
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Range.length > 0 && Address.length > 0 && Interface.length > 0) {
-        DeleteAddressIPV4(Address, Range, Interface, Broadcast);
+$("input#DeleteAddressIPV4").click(function () {
+    var funcReference = $(this).attr("id");
+    var range = $("#Value_" + funcReference + "Range").val();
+    var address = $("#Value_" + funcReference + "Address").val();
+    var broadcast = $("#Value_" + funcReference + "Broadcast").val();
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (range.length > 0 && address.length > 0 && iface.length > 0) {
+        DeleteAddressIPV4(address, range, iface, broadcast);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteAddressIPV4(address, range, interfaceName, broadcast) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/del/address',
-        type: 'POST',
+        url: networkUrl + "/ipv4/del/address",
+        type: "POST",
         data: {
             Range: range,
             Address: address,
             Broadcast: broadcast,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#FlushConfigurationIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        FlushConfigurationIPV4(Interface);
+$("input#FlushConfigurationIPV4").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        FlushConfigurationIPV4(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function FlushConfigurationIPV4(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/flush',
-        type: 'POST',
+        url: networkUrl + "/ipv4/flush",
+        type: "POST",
         data: {
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowInterfaceAddr').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowInterfaceAddr(Interface);
+$("input#ShowInterfaceAddr").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowInterfaceAddr(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowInterfaceAddr(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/address/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv4/address/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowInterfaceAddr').show().text(data);
+            $("textarea#ShowInterfaceAddr").show().text(data);
         }
     });
 }
 
-$('input#ShowInterfaceLink').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowInterfaceLink(Interface);
+$("input#ShowInterfaceLink").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowInterfaceLink(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowInterfaceLink(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/link/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv4/link/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowInterfaceLink').show().text(data);
+            $("textarea#ShowInterfaceLink").show().text(data);
         }
     });
 }
 
-$('input#ShowInterfaceStats').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowInterfaceStats(Interface);
+$("input#ShowInterfaceStats").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowInterfaceStats(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowInterfaceStats(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/stats/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv4/stats/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowInterfaceStats').show().text(data);
+            $("textarea#ShowInterfaceStats").show().text(data);
         }
     });
 }
 
-$('input#AddRouteIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    var Destination = $('#Value_' + funcReference + 'Destination').val();
-    if (Destination.length > 0 && Gateway.length > 0) {
-        AddRouteIPV4(Gateway, Destination);
+$("input#AddRouteIPV4").click(function () {
+    var funcReference = $(this).attr("id");
+    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    var destination = $("#Value_" + funcReference + "Destination").val();
+    if (destination.length > 0 && gateway.length > 0) {
+        AddRouteIPV4(gateway, destination);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddRouteIPV4(gateway, destination) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/add/route',
-        type: 'POST',
+        url: networkUrl + "/ipv4/add/route",
+        type: "POST",
         data: {
             Gateway: gateway,
             destination: destination
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteRouteIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    var Destination = $('#Value_' + funcReference + 'Destination').val();
-    if (Destination.length > 0 && Gateway.length > 0) {
-        DeleteRouteIPV4(Gateway, Destination);
+$("input#DeleteRouteIPV4").click(function () {
+    var funcReference = $(this).attr("id");
+    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    var destination = $("#Value_" + funcReference + "Destination").val();
+    if (destination.length > 0 && gateway.length > 0) {
+        DeleteRouteIPV4(gateway, destination);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteRouteIPV4(gateway, destination) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/del/route',
-        type: 'POST',
+        url: networkUrl + "/ipv4/del/route",
+        type: "POST",
         data: {
             Gateway: gateway,
             Destination: destination
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddMultipathRoute').click(function () {
-    var funcReference = $(this).attr('id');
-    var Network1 = $('#Value_' + funcReference + 'Network1').val();
-    var Network2 = $('#Value_' + funcReference + 'Network2').val();
-    if (Network1.length > 0 && Network2.length > 0) {
-        AddMultipathRoute(Network1, Network2);
+$("input#AddMultipathRoute").click(function () {
+    var funcReference = $(this).attr("id");
+    var network1 = $("#Value_" + funcReference + "Network1").val();
+    var network2 = $("#Value_" + funcReference + "Network2").val();
+    if (network1.length > 0 && network2.length > 0) {
+        AddMultipathRoute(network1, network2);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddMultipathRoute(network1, network2) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/add/route/multipath',
-        type: 'POST',
+        url: networkUrl + "/ipv4/add/route/multipath",
+        type: "POST",
         data: {
             Network1: network1,
             Network2: network2
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddNat').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Via = $('#Value_' + funcReference + 'Via').val();
-    if (Address.length > 0 && Via.length > 0) {
-        AddNat(Address, Via);
+$("input#AddNat").click(function () {
+    var funcReference = $(this).attr("id");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var via = $("#Value_" + funcReference + "Via").val();
+    if (address.length > 0 && via.length > 0) {
+        AddNat(address, via);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddNat(address, via) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/add/route/multipath',
-        type: 'POST',
+        url: networkUrl + "/ipv4/add/route/multipath",
+        type: "POST",
         data: {
             Address: address,
             Via: via
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowRoutes').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowRoutes(Interface);
+$("input#ShowRoutes").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowRoutes(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowRoutes(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/routes/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv4/routes/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowRoutes').show().text(data);
+            $("textarea#ShowRoutes").show().text(data);
         }
     });
 }
 
-$('input#EnableInterface').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        EnableInterface(Interface);
+$("input#EnableInterface").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        EnableInterface(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function EnableInterface(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/enable/if',
-        type: 'POST',
+        url: networkUrl + "/ipv4/enable/if",
+        type: "POST",
         data: {
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DisableInterface').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        DisableInterface(Interface);
+$("input#DisableInterface").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        DisableInterface(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DisableInterface(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/disable/if',
-        type: 'POST',
+        url: networkUrl + "/ipv4/disable/if",
+        type: "POST",
         data: {
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddTunnelPointToPointIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    var Ttl = $('#Value_' + funcReference + 'Ttl').val();
-    var Tunnel = $('#Value_' + funcReference + 'Tunnel').val();
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    if (Interface.length > 0 && Ttl.length > 0 && Tunnel.length > 0 && Address.length > 0) {
-        AddTunnelPointToPointIPV4(Interface, Ttl, Tunnel, Address);
+$("input#AddTunnelPointToPointIPV4").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    var ttl = $("#Value_" + funcReference + "Ttl").val();
+    var tunnel = $("#Value_" + funcReference + "Tunnel").val();
+    var address = $("#Value_" + funcReference + "Address").val();
+    if (iface.length > 0 && ttl.length > 0 && tunnel.length > 0 && address.length > 0) {
+        AddTunnelPointToPointIPV4(iface, ttl, tunnel, address);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddTunnelPointToPointIPV4(interfaceName, ttl, foreignTunnel, address) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/add/tunnel',
-        type: 'POST',
+        url: networkUrl + "/ipv4/add/tunnel",
+        type: "POST",
         data: {
             Interface: interfaceName,
             Ttl: ttl,
             Tunnel: foreignTunnel,
             Address: address
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteTunnelPointToPointIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        DeleteTunnelPointToPointIPV4(Interface);
+$("input#DeleteTunnelPointToPointIPV4").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        DeleteTunnelPointToPointIPV4(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteTunnelPointToPointIPV4(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/del/tunnel',
-        type: 'POST',
+        url: networkUrl + "/ipv4/del/tunnel",
+        type: "POST",
         data: {
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowTunnelsIPV4').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowTunnelsIPV4(Interface);
+$("input#ShowTunnelsIPV4").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowTunnelsIPV4(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowTunnelsIPV4(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv4/tunnels/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv4/tunnels/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowTunnelsIPV4').show().text(data);
+            $("textarea#ShowTunnelsIPV4").show().text(data);
         }
     });
 }
 
 //IPV6
-$('input#AddNewAddressIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    if (Interface.length > 0 && Address.length > 0) {
-        AddNewAddressIPV6(Address, Interface);
+$("input#AddNewAddressIPV6").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    var address = $("#Value_" + funcReference + "Address").val();
+    if (iface.length > 0 && address.length > 0) {
+        AddNewAddressIPV6(address, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddNewAddressIPV6(address, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/add/address',
-        type: 'POST',
+        url: networkUrl + "/ipv6/add/address",
+        type: "POST",
         data: {
             Address: address,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteAddressIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    if (Interface.length > 0 && Address.length > 0) {
-        DeleteAddressIPV6(Address, Interface);
+$("input#DeleteAddressIPV6").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    var address = $("#Value_" + funcReference + "Address").val();
+    if (iface.length > 0 && address.length > 0) {
+        DeleteAddressIPV6(address, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteAddressIPV6(address, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/del/address',
-        type: 'POST',
+        url: networkUrl + "/ipv6/del/address",
+        type: "POST",
         data: {
             Address: address,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#FlushConfigurationIPV6').click(function () {
+$("input#FlushConfigurationIPV6").click(function () {
     FlushConfigurationIPV6();
 });
 
 function FlushConfigurationIPV6() {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/del/address',
-        type: 'POST',
-        success: function (data) {
+        url: networkUrl + "/ipv6/del/address",
+        type: "POST",
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowNeighborsIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowNeighborsIPV6(Interface);
+$("input#ShowNeighborsIPV6").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowNeighborsIPV6(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowNeighborsIPV6(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/neigh/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv6/neigh/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowNeighborsIPV6').show().text(data);
+            $("textarea#ShowNeighborsIPV6").show().text(data);
         }
     });
 }
 
-$('input#AddNeighborsIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Layer = $('#Value_' + funcReference + 'Layer').val();
-    if (Interface.length > 0 && Layer.length > 0 && Address.length > 0) {
-        AddNeighborsIPV6(Address, Layer, Interface);
+$("input#AddNeighborsIPV6").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var layer = $("#Value_" + funcReference + "Layer").val();
+    if (iface.length > 0 && layer.length > 0 && address.length > 0) {
+        AddNeighborsIPV6(address, layer, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddNeighborsIPV6(address, layer, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/add/neigh',
-        type: 'POST',
+        url: networkUrl + "/ipv6/add/neigh",
+        type: "POST",
         data: {
             Address: address,
             Layer: layer,
-            Interface: interfaceName,
+            Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteNeighborsIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Layer = $('#Value_' + funcReference + 'Layer').val();
-    if (Interface.length > 0 && Layer.length > 0 && Address.length > 0) {
-        DeleteNeighborsIPV6(Address, Layer, Interface);
+$("input#DeleteNeighborsIPV6").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var layer = $("#Value_" + funcReference + "Layer").val();
+    if (iface.length > 0 && layer.length > 0 && address.length > 0) {
+        DeleteNeighborsIPV6(address, layer, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteNeighborsIPV6(address, layer, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/del/neigh',
-        type: 'POST',
+        url: networkUrl + "/ipv6/del/neigh",
+        type: "POST",
         data: {
             Address: address,
             Layer: layer,
-            Interface: interfaceName,
+            Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddRouteIPV6Gateway').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    if (Address.length > 0 && Gateway.length > 0) {
-        AddRouteIPV6Gateway(Address, Gateway);
+$("input#AddRouteIPV6Gateway").click(function () {
+    var funcReference = $(this).attr("id");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    if (address.length > 0 && gateway.length > 0) {
+        AddRouteIPV6Gateway(address, gateway);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddRouteIPV6Gateway(address, gateway) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/add/route/gw',
-        type: 'POST',
+        url: networkUrl + "/ipv6/add/route/gw",
+        type: "POST",
         data: {
             Address: address,
             Gateway: gateway
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteRouteIPV6Gateway').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Gateway = $('#Value_' + funcReference + 'Gateway').val();
-    if (Address.length > 0 && Gateway.length > 0) {
-        DeleteRouteIPV6Gateway(Address, Gateway);
+$("input#DeleteRouteIPV6Gateway").click(function () {
+    var funcReference = $(this).attr("id");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var gateway = $("#Value_" + funcReference + "Gateway").val();
+    if (address.length > 0 && gateway.length > 0) {
+        DeleteRouteIPV6Gateway(address, gateway);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteRouteIPV6Gateway(address, gateway) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/del/route/gw',
-        type: 'POST',
+        url: networkUrl + "/ipv6/del/route/gw",
+        type: "POST",
         data: {
             Address: address,
             Gateway: gateway
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddRouteIPV6Interface').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Interface = $('#Value_' + funcReference + 'Interface').val();
-    if (Address.length > 0 && Interface.length > 0) {
-        AddRouteIPV6Interface(Address, Interface);
+$("input#AddRouteIPV6Interface").click(function () {
+    var funcReference = $(this).attr("id");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var iface = $("#Value_" + funcReference + "Interface").val();
+    if (address.length > 0 && iface.length > 0) {
+        AddRouteIPV6Interface(address, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddRouteIPV6Interface(address, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/add/route/if',
-        type: 'POST',
+        url: networkUrl + "/ipv6/add/route/if",
+        type: "POST",
         data: {
             Address: address,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteRouteIPV6Interface').click(function () {
-    var funcReference = $(this).attr('id');
-    var Address = $('#Value_' + funcReference + 'Address').val();
-    var Interface = $('#Value_' + funcReference + 'Interface').val();
-    if (Address.length > 0 && Interface.length > 0) {
-        DeleteRouteIPV6Interface(Address, Interface);
+$("input#DeleteRouteIPV6Interface").click(function () {
+    var funcReference = $(this).attr("id");
+    var address = $("#Value_" + funcReference + "Address").val();
+    var iface = $("#Value_" + funcReference + "Interface").val();
+    if (address.length > 0 && iface.length > 0) {
+        DeleteRouteIPV6Interface(address, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteRouteIPV6Interface(address, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/del/route/if',
-        type: 'POST',
+        url: networkUrl + "/ipv6/del/route/if",
+        type: "POST",
         data: {
             Address: address,
             Interface: interfaceName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowTunnelsIPV6').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $(this).parents('.nif-content').attr('data-nif-name');
-    if (Interface.length > 0) {
-        ShowTunnelsIPV6(Interface);
+$("input#ShowTunnelsIPV6").click(function () {
+    var iface = $(this).parents(".nif-content").attr("data-nif-name");
+    if (iface.length > 0) {
+        ShowTunnelsIPV6(iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowTunnelsIPV6(interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/ipv6/tunnels/' + interfaceName,
-        type: 'GET',
+        url: networkUrl + "/ipv6/tunnels/" + interfaceName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowTunnelsIPV6').show().text(data);
+            $("textarea#ShowTunnelsIPV6").show().text(data);
         }
     });
 }
 
 //BRIDGE
-$('input#AddBridgeName').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Bridge.length > 0) {
-        AddBridgeName(Bridge);
+$("input#AddBridgeName").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (bridge.length > 0) {
+        AddBridgeName(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddBridgeName(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/add',
-        type: 'POST',
+        url: networkUrl + "/br/add",
+        type: "POST",
         data: {
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteBridgeName').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Bridge.length > 0) {
-        DeleteBridgeName(Bridge);
+$("input#DeleteBridgeName").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (bridge.length > 0) {
+        DeleteBridgeName(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteBridgeName(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/del',
-        type: 'POST',
+        url: networkUrl + "/br/del",
+        type: "POST",
         data: {
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#AddNetworkInterfaceToBridge').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $('#Value_' + funcReference + 'Interface').val();
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Interface.length > 0 && Bridge.length > 0) {
-        AddNetworkInterfaceToBridge(Bridge, Interface);
+$("input#AddNetworkInterfaceToBridge").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $("#Value_" + funcReference + "Interface").val();
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (iface.length > 0 && bridge.length > 0) {
+        AddNetworkInterfaceToBridge(bridge, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function AddNetworkInterfaceToBridge(bridgeName, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/add/if',
-        type: 'POST',
+        url: networkUrl + "/br/add/if",
+        type: "POST",
         data: {
             Interface: interfaceName,
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DeleteNetworkInterfaceToBridge').click(function () {
-    var funcReference = $(this).attr('id');
-    var Interface = $('#Value_' + funcReference + 'Interface').val();
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Interface.length > 0 && Bridge.length > 0) {
-        DeleteNetworkInterfaceToBridge(Bridge, Interface);
+$("input#DeleteNetworkInterfaceToBridge").click(function () {
+    var funcReference = $(this).attr("id");
+    var iface = $("#Value_" + funcReference + "Interface").val();
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (iface.length > 0 && bridge.length > 0) {
+        DeleteNetworkInterfaceToBridge(bridge, iface);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DeleteNetworkInterfaceToBridge(bridgeName, interfaceName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/del/if',
-        type: 'POST',
+        url: networkUrl + "/br/del/if",
+        type: "POST",
         data: {
             Interface: interfaceName,
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#EnableStpOnBridge').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Bridge.length > 0) {
-        EnableStpOnBridge(Bridge);
+$("input#EnableStpOnBridge").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (bridge.length > 0) {
+        EnableStpOnBridge(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function EnableStpOnBridge(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/stp/on/bridge',
-        type: 'POST',
+        url: networkUrl + "/br/stp/on/bridge",
+        type: "POST",
         data: {
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#DisableStpOnBridge').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    if (Bridge.length > 0) {
-        DisableStpOnBridge(Bridge);
+$("input#DisableStpOnBridge").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    if (bridge.length > 0) {
+        DisableStpOnBridge(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function DisableStpOnBridge(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/stp/off/bridge',
-        type: 'POST',
+        url: networkUrl + "/br/stp/off/bridge",
+        type: "POST",
         data: {
             Bridge: bridgeName
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#ShowBridgeMACS').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+$("input#ShowBridgeMACS").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
     if (Interface.length > 0) {
-        ShowBridgeMACS(Bridge);
+        ShowBridgeMACS(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function ShowBridgeMACS(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/macs/' + bridgeName,
-        type: 'GET',
+        url: networkUrl + "/br/macs/" + bridgeName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowBridgeMACS').show().text(data);
+            $("textarea#ShowBridgeMACS").show().text(data);
         }
     });
 }
 
-$('input#ShowBridgeSTP').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
+$("input#ShowBridgeSTP").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
     if (Interface.length > 0) {
-        ShowBridgeSTP(Bridge);
+        ShowBridgeSTP(bridge);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
@@ -977,67 +966,67 @@ $('input#ShowBridgeSTP').click(function () {
 function ShowBridgeSTP(bridgeName) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/stp/' + bridgeName,
-        type: 'GET',
+        url: networkUrl + "/br/stp/" + bridgeName,
+        type: "GET",
         success: function (data) {
-            $('textarea#ShowBridgeSTP').show().text(data);
+            $("textarea#ShowBridgeSTP").show().text(data);
         }
     });
 }
 
-$('input#SetBridgePathCost').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    var Path = $('#Value_' + funcReference + 'Path').val();
-    var Cost = $('#Value_' + funcReference + 'Cost').val();
-    if (Bridge.length > 0 && Path.length > 0 && Cost.length > 0) {
-        SetBridgePortPriority(Bridge, Path, Cost);
+$("input#SetBridgePathCost").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var path = $("#Value_" + funcReference + "Path").val();
+    var cost = $("#Value_" + funcReference + "Cost").val();
+    if (bridge.length > 0 && path.length > 0 && cost.length > 0) {
+        SetBridgePortPriority(bridge, path, cost);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function SetBridgePathCost(bridgeName, path, cost) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/path/cost',
-        type: 'POST',
+        url: networkUrl + "/br/path/cost",
+        type: "POST",
         data: {
             Bridge: bridgeName,
             Path: path,
             Cost: cost
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });
 }
 
-$('input#SetBridgePortPriority').click(function () {
-    var funcReference = $(this).attr('id');
-    var Bridge = $('#Value_' + funcReference + 'Bridge').val();
-    var Port = $('#Value_' + funcReference + 'Port').val();
-    var Priority = $('#Value_' + funcReference + 'Priority').val();
-    if (Bridge.length > 0 && Port.length > 0 && Priority.length > 0) {
-        SetBridgePortPriority(Bridge, Port, Priority);
+$("input#SetBridgePortPriority").click(function () {
+    var funcReference = $(this).attr("id");
+    var bridge = $("#Value_" + funcReference + "Bridge").val();
+    var port = $("#Value_" + funcReference + "Port").val();
+    var priority = $("#Value_" + funcReference + "Priority").val();
+    if (bridge.length > 0 && port.length > 0 && priority.length > 0) {
+        SetBridgePortPriority(bridge, port, priority);
     }
     else {
-        alert('Value cannot be null!');
+        alert("Value cannot be null!");
     }
 });
 
 function SetBridgePortPriority(bridgeName, port, prio) {
     jQuery.support.cors = true;
     $.ajax({
-        url: networkUrl + '/br/port/prio',
-        type: 'POST',
+        url: networkUrl + "/br/port/prio",
+        type: "POST",
         data: {
             Bridge: bridgeName,
             Port: port,
             Priority: prio
         },
-        success: function (data) {
+        success: function () {
             location.reload(true);
         }
     });

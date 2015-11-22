@@ -6,33 +6,33 @@
     <table class="table">
         <thead>
             <tr>
-                <td colspan="2">
+                <td colspan="4">
                     <label>Physical Interfaces</label>
                 </td>
             </tr>
         </thead>
-        <tbody>
-            @Each.NetworkPhysicalIf
+        @Each.NetworkPhysicalIf
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
                 <td colspan="4" style="width: 200px;">
-                    <label>@Current.InterfaceName</label>
+                    <label class="nif-header" data-nif-name="@Current.InterfaceName">@Current.InterfaceName</label>
                 </td>
             </tr>
             @Partial['_partial_network/part-network-post', Current.PostCommands];
             @Partial['_partial_network/part-network-get', Current.GetCommands];
-            @EndEach
         </tbody>
+        @EndEach
     </table>
     <table class="table">
         <thead>
             <tr>
-                <td colspan="2">
+                <td colspan="4">
                     <label>Virtual Interfaces</label>
                 </td>
             </tr>
         </thead>
-        <tbody>
-            @Each.NetworkVirtualIf
+        @Each.NetworkVirtualIf
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
                 <td style="width: 200px;">
                     <label>@Current.InterfaceName</label>
@@ -42,19 +42,19 @@
                     @Partial['_partial_network/part-network-get', Current.GetCommands];
                 </td>
             </tr>
-            @EndEach
         </tbody>
+        @EndEach
     </table>
     <table class="table">
         <thead>
             <tr>
-                <td colspan="2">
+                <td colspan="4">
                     <label>Bond Interfaces</label>
                 </td>
             </tr>
         </thead>
-        <tbody>
-            @Each.NetworkBondIf
+        @Each.NetworkBondIf
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
                 <td style="width: 200px;">
                     <label>@Current.InterfaceName</label>
@@ -64,38 +64,29 @@
                     @Partial['_partial_network/part-network-get', Current.GetCommands];
                 </td>
             </tr>
-            @EndEach
         </tbody>
+        @EndEach
     </table>
     <table class="table">
         <thead>
             <tr>
-                <td colspan="2">
+                <td colspan="4">
                     <label>Bridge Interfaces</label>
                 </td>
             </tr>
         </thead>
-        <tbody>
-            @Each.NetworkBondIf
+        @Each.NetworkBridgeIf
+        <tbody class="nif-header nif-content" data-nif-name="@Current.InterfaceName">
             <tr>
                 <td style="width: 200px;">
-                    <label>@Current</label>
+                    <label>@Current.InterfaceName</label>
                 </td>
                 <td>
-                    @EditParameterRowPost("AddBridgeName", new string[] { "Bridge" })
-                    @EditParameterRowPost("DeleteBridgeName", new string[] { "Bridge" })
-                    @EditParameterRowPost("AddNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
-                    @EditParameterRowPost("DeleteNetworkInterfaceToBridge", new string[] { "Interface", "Bridge" })
-                    @EditParameterRowPost("EnableStpOnBridge", new string[] { "Bridge" })
-                    @EditParameterRowPost("DisableStpOnBridge", new string[] { "Bridge" })
-                    @EditParameterRowPost("SetBridgePathCost", new string[] { "Bridge", "Path", "Cost" })
-                    @EditParameterRowPost("SetBridgePortPriority", new string[] { "Bridge", "Port", "Priority" })
-                    <label>Status</label>
-                    @EditParameterRowGet("ShowBridgeMACS", new string[] { })
-                    @EditParameterRowGet("ShowBridgeSTP", new string[] { })
+                    @Partial['_partial_network/part-network-post', Current.BridgePostCommands];
+                    @Partial['_partial_network/part-network-get', Current.BridgeGetCommands];
                 </td>
             </tr>
-            @EndEach
         </tbody>
+        @EndEach
     </table>
 </div>

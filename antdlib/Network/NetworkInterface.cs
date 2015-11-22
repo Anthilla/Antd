@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.Log;
 
 namespace antdlib.Network {
 
@@ -48,6 +49,8 @@ namespace antdlib.Network {
         public NetworkInterfaceType InterfaceType { get; set; }
         public IEnumerable<NetworkConfig.CommandListModel> PostCommands => NetworkConfig.CommandList.CommandTypePost();
         public IEnumerable<NetworkConfig.CommandListModel> GetCommands => NetworkConfig.CommandList.CommandTypeGet();
+        public IEnumerable<NetworkConfig.CommandListModel> BridgePostCommands => NetworkConfig.CommandList.BridgeCommandTypePost();
+        public IEnumerable<NetworkConfig.CommandListModel> BridgeGetCommands => NetworkConfig.CommandList.BridgeCommandTypeGet();
     }
 
     public class NetworkInterface {
@@ -96,10 +99,24 @@ namespace antdlib.Network {
                 };
                 DeNSo.Session.New.Set(phMod);
             }
+            var bridgeIf = Terminal.Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
+            ConsoleLogger.Point(bridgeIf.Count);
+            var brList = (from bbrr in bridgeIf where bbrr.Length > 0 select bbrr.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries) into brAttr select brAttr[0]).ToList();
+            ConsoleLogger.Point(brList.Count);
+            foreach (var br in brList) {
+                ConsoleLogger.Point(br);
+                var phMod = new NetworkInterfaceModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    InterfaceType = NetworkInterfaceType.Bridge,
+                    InterfaceName = br
+                };
+                DeNSo.Session.New.Set(phMod);
+            }
         }
 
         public static IEnumerable<NetworkInterfaceModel> Physical => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Physical);
         public static IEnumerable<NetworkInterfaceModel> Virtual => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Virtual);
         public static IEnumerable<NetworkInterfaceModel> Bond => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Bond);
+        public static IEnumerable<NetworkInterfaceModel> Bridge => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Bridge);
     }
 }
