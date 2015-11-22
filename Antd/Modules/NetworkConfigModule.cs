@@ -36,36 +36,6 @@ namespace Antd.Modules {
         public NetworkConfigModule() {
             this.RequiresAuthentication();
 
-            #region Repository
-            Get["/network/config/repo/all"] = x => {
-                var result = NetworkConfigRepository.GetAll();
-                return Response.AsJson(result);
-            };
-
-            Post["/network/config/repo/enable"] = x => {
-                string guid = Request.Form.Guid;
-                NetworkConfigRepository.Enable(guid);
-                return Response.AsJson(true);
-            };
-
-            Post["/network/config/repo/disable"] = x => {
-                string guid = Request.Form.Guid;
-                NetworkConfigRepository.Disable(guid);
-                return Response.AsJson(true);
-            };
-
-            Post["/network/config/repo/delete"] = x => {
-                string guid = Request.Form.Guid;
-                NetworkConfigRepository.Delete(guid);
-                return Response.AsJson(true);
-            };
-
-            Post["/network/config/repo/export"] = x => {
-                NetworkConfigRepository.ExportToFile();
-                return Response.AsJson(true);
-            };
-            #endregion Repository
-
             #region IPV4
             Post["/network/config/ipv4/add/address"] = x => {
                 string address = Request.Form.Address;

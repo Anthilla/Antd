@@ -40,38 +40,21 @@ namespace antdlib.Network {
 
         private static readonly string FileName = $"{Parameter.RepoDirs}/{AntdFile.NetworkConfig}";
 
-        private static bool CheckNetworkIsConfigured() {
-            if (File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0) {
-                return true;
-            }
-            return false;
+        private static bool CheckNetworkHasConfiguration() {
+            return File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0;
         }
 
         public static void Set() {
-            if (CheckNetworkIsConfigured()) {
-                var fileContent = FileSystem.ReadFile(FileName);
-                if (fileContent.Length > 0) {
-                    var arr = fileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    foreach (var cmd in arr) {
-                        NetworkConfigRepository.Create(cmd);
-                    }
-                }
-                ConsoleLogger.Log("Network config => existing configuration found...");
-                ConsoleLogger.Log("Network config => applying this configuration!");
-                Terminal.Terminal.Execute($"chmod 777 {FileName}");
-                Terminal.Terminal.Execute($".{FileName}");
-                //todo: ShowNetworkInfo("", "");
-            }
-            else {
-                ConsoleLogger.Log("Network config => no configuration found...");
-                ConsoleLogger.Log("Network config => applying a default configuration!");
-                SetNetworkInterfaceUp();
-            }
+            if (CheckNetworkHasConfiguration())
+                return;
+            ConsoleLogger.Log("Network config => no configuration found...");
+            ConsoleLogger.Log("Network config => applying a default configuration!");
+            SetNetworkInterfaceUp();
         }
 
-        private static List<string> DetectAllNetworkInterfaces() {
+        private static IEnumerable<string> DetectAllNetworkInterfaces() {
             var niFlist = new List<string>();
-            var m = 15;
+            const int m = 15;
             for (var i = 0; i < m; i++) {
                 var r = Terminal.Terminal.Execute($"ip link set eth{i} up");
                 if (r.Length > 0) {
@@ -128,12 +111,6 @@ namespace antdlib.Network {
 
         private static readonly List<string> Commands = new List<string>();
 
-        //private static void WriteConfFile() {
-        //    if (!File.Exists(fileName) && Commands.Count > 0) {
-        //        string.Join(Environment.NewLine, Commands.ToArray());
-        //    }
-        //}
-
         private static void SetNetworkInterfaceUp() {
             if (DetectActiveNetworkInterfaces().Count > 0) {
                 var selectedNif = DetectActiveNetworkInterfaces().LastOrDefault();
@@ -146,7 +123,6 @@ namespace antdlib.Network {
                 var cmd2 = $"ip route add default via {ip}";
                 Terminal.Terminal.Execute(cmd2);
                 Commands.Add(cmd2);
-                //WriteConfFile();
                 ShowNetworkInfo(selectedNif, ip);
             }
             else {
