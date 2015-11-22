@@ -1,13 +1,13 @@
-﻿@helper EditParameterRowGet(string functionName, string[] parameters) {
+﻿@Each.NetworkCommandsGet
 <div class="row">
     <div class="span3">
-        <label>@functionName</label>
+        <label>@Current.Label</label>
     </div>
     <div class="span5">
-        <input id="@functionName" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Get @functionName" />
+        <input id="@Current.Label" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Get @Current.Label" />
     </div>
     <div class="span8">
-        <textarea id="@functionName" class="bg-anthilla-gray fg-white" style="width: 90%; height: 250px; min-height: 250px; max-height: 250px; display: none; overflow: scroll !important;"></textarea>
+        <textarea id="@Current.Label" class="bg-anthilla-gray fg-white" style="width: 90%; height: 250px; min-height: 250px; max-height: 250px; display: none; overflow: scroll !important;"></textarea>
     </div>
 </div>
-}
+@EndEach

@@ -83,7 +83,8 @@ namespace Antd.Modules {
                 viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
                 viewModel.NetworkBondIf = NetworkInterface.Bond;
                 viewModel.NetworkBridgeIf = Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                viewModel.NetworkCommands = NetworkConfig.CommandList.Get();
+                viewModel.NetworkCommandsPost = NetworkConfig.CommandList.CommandTypePost();
+                viewModel.NetworkCommandsGet = NetworkConfig.CommandList.CommandTypeGet();
 
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
 

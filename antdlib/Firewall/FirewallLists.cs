@@ -65,10 +65,10 @@ namespace antdlib.Firewall {
             ConsoleLogger.Point(startMark);
             var endMark = $"#end_{table}_{type}_{hook}";
             var templateTextLines = File.ReadAllLines($"{Folder.RepoConfig}/antd.firewall.template.conf").ToList();
-            var startIndex = templateTextLines.FindIndex(_=>_.Contains(startMark));
-            var endIndex = templateTextLines.FindIndex(_=>_.Contains(endMark));
+            var startIndex = templateTextLines.FindIndex(_ => _.Contains(startMark));
+            var endIndex = templateTextLines.FindIndex(_ => _.Contains(endMark));
             var relevantLines = templateTextLines.Skip(startIndex).Take(endIndex - startIndex);
-            return relevantLines;
+            return relevantLines.Where(_ => !_.Contains("#"));
         }
 
         public static void AddList(string guid, string table, string type, string hook, string label) {

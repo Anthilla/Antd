@@ -391,10 +391,10 @@
                     type: 'GET',
                     dataType: 'json',
                     contentType: 'application/json;charset=utf-8',
-                    success: function (data) {
-                        $('#AAATest').html('');
-                        $.each(data, function (i, list) {
-                            $('#AAATest').append('<li>' + list + '</li>');
+                    success: function (rules) {
+                        $('#RuleList').html('');
+                        $.each(rules, function (i, rule) {
+                            $('#RuleList').append('<li>' + rule + '</li>');
                         });
                         return false;
                     }

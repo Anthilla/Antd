@@ -32,41 +32,44 @@ using System.Collections.Generic;
 namespace antdlib.Network {
     public class NetworkConfig {
         public class CommandListModel {
-            public bool IsPostMethod { get; set; }
             public string Label { get; set; }
             public IEnumerable<string> Elements { get; set; }
         }
 
         public class CommandList {
-            public static IEnumerable<CommandListModel> Get() {
+            public static IEnumerable<CommandListModel> CommandTypePost() {
                 return new List<CommandListModel> {
-                    new CommandListModel { IsPostMethod = true, Label = "AddNewAddressIPV4", Elements = new List<string>{ "Address", "Range", "Broadcast" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteAddressIPV4", Elements =  new List<string> { "Address", "Range", "Broadcast" } },
-                    new CommandListModel { IsPostMethod = true, Label="FlushConfigurationIPV4", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
-                    new CommandListModel { IsPostMethod = true, Label="AddMultipathRoute", Elements =  new List<string> { "Network1", "Network2" } },
-                    new CommandListModel { IsPostMethod = true, Label="EnableInterface", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = true, Label="DisableInterface", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = true, Label="AddTunnelPointToPointIPV4", Elements =  new List<string> { "Ttl", "Tunnel", "Address" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteTunnelPointToPointIPV4", Elements =  new List<string> ()},
+                    new CommandListModel { Label = "AddNewAddressIPV4", Elements = new List<string>{ "Address", "Range", "Broadcast" } },
+                    new CommandListModel { Label="DeleteAddressIPV4", Elements =  new List<string> { "Address", "Range", "Broadcast" } },
+                    new CommandListModel { Label="FlushConfigurationIPV4", Elements =  new List<string> ()},
+                    new CommandListModel { Label="AddRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
+                    new CommandListModel { Label="DeleteRouteIPV4", Elements =  new List<string> { "Gateway", "Destination" } },
+                    new CommandListModel { Label="AddMultipathRoute", Elements =  new List<string> { "Network1", "Network2" } },
+                    new CommandListModel { Label="EnableInterface", Elements =  new List<string> ()},
+                    new CommandListModel { Label="DisableInterface", Elements =  new List<string> ()},
+                    new CommandListModel { Label="AddTunnelPointToPointIPV4", Elements =  new List<string> { "Ttl", "Tunnel", "Address" } },
+                    new CommandListModel { Label="DeleteTunnelPointToPointIPV4", Elements =  new List<string> ()},
 
-                    new CommandListModel { IsPostMethod = true, Label="AddNewAddressIPV6", Elements =  new List<string> { "Address" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteAddressIPV6", Elements =  new List<string> { "Address" } },
-                    new CommandListModel { IsPostMethod = true, Label="FlushConfigurationIPV6", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = true, Label="AddNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
-                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
-                    new CommandListModel { IsPostMethod = true, Label="AddRouteIPV6Interface", Elements =  new List<string> { "Address" } },
-                    new CommandListModel { IsPostMethod = true, Label="DeleteRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { Label="AddNewAddressIPV6", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { Label="DeleteAddressIPV6", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { Label="FlushConfigurationIPV6", Elements =  new List<string> ()},
+                    new CommandListModel { Label="AddNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
+                    new CommandListModel { Label="DeleteNeighborsIPV6", Elements =  new List<string> { "Address", "Layer" } },
+                    new CommandListModel { Label="AddRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
+                    new CommandListModel { Label="DeleteRouteIPV6Gateway", Elements =  new List<string> { "Address", "Gateway" } },
+                    new CommandListModel { Label="AddRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+                    new CommandListModel { Label="DeleteRouteIPV6Interface", Elements =  new List<string> { "Address" } },
+                };
+            }
 
-                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceAddr", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceLink", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = false, Label="ShowInterfaceStats", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = false, Label="ShowRoutes", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = false, Label="ShowNeighborsIPV6", Elements =  new List<string> ()},
-                    new CommandListModel { IsPostMethod = false, Label="ShowTunnelsIPV6", Elements =  new List<string> ()}
+            public static IEnumerable<CommandListModel> CommandTypeGet() {
+                return new List<CommandListModel> {
+                    new CommandListModel { Label="ShowInterfaceAddr", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowInterfaceLink", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowInterfaceStats", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowRoutes", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowNeighborsIPV6", Elements =  new List<string> ()},
+                    new CommandListModel { Label="ShowTunnelsIPV6", Elements =  new List<string> ()}
                 };
             }
         }

@@ -30,9 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using antdlib.Common;
 using antdlib.Log;
 
 namespace antdlib.Terminal {
@@ -146,14 +144,9 @@ namespace antdlib.Terminal {
                         var proc = new ProcessStartInfo {
                             FileName = "bash",
                             Arguments = $"-c \"{command}\"",
-                            //RedirectStandardOutput = true,
-                            //RedirectStandardError = true,
-                            //UseShellExecute = false
                             RedirectStandardOutput = true,
-                            CreateNoWindow = false,
-                            RedirectStandardError = false,
-                            UseShellExecute = false,
-                            RedirectStandardInput = false,
+                            RedirectStandardError = true,
+                            UseShellExecute = false
                         };
                         using (var p = new Process()) {
                             p.StartInfo = proc;

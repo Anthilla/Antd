@@ -302,10 +302,10 @@
     <None Include="Views\page-redirect.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\_partial_network\part-network.html">
+    <Content Include="Views\_partial_network\part-network-get.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_partial_network\part-network-get.html">
+    <Content Include="Views\_partial_network\part-network-post-elements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial_network\part-network-post.html">
@@ -910,9 +910,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\chart\Chart.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\columnize.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\d3.min.js">

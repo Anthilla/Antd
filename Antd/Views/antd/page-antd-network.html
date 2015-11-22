@@ -15,33 +15,8 @@
                     <label>@Current</label>
                 </td>
                 <td>
-                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
-                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
-                    @EditParameterRowPost("EnableInterface", new string[] { })
-                    @EditParameterRowPost("DisableInterface", new string[] { })
-                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
-                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
-                    <label>IPV6 configuration</label>
-                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
-                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
-                    <label>Status</label>
-                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
-                    @EditParameterRowGet("ShowRoutes", new string[] { })
-                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
-                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                    @Partial['part-network-post'];
+                    @Partial['part-network-get'];
                 </td>
             </tr>
             @EndEach
@@ -62,33 +37,8 @@
                     <label>@Current</label>
                 </td>
                 <td>
-                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
-                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
-                    @EditParameterRowPost("EnableInterface", new string[] { })
-                    @EditParameterRowPost("DisableInterface", new string[] { })
-                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
-                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
-                    <label>IPV6 configuration</label>
-                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
-                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
-                    <label>Status</label>
-                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
-                    @EditParameterRowGet("ShowRoutes", new string[] { })
-                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
-                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                    @Partial['part-network-post'];
+                    @Partial['part-network-get'];
                 </td>
             </tr>
             @EndEach
@@ -109,33 +59,8 @@
                     <label>@Current</label>
                 </td>
                 <td>
-                    @EditParameterRowPost("AddNewAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("DeleteAddressIPV4", new string[] { "Address", "Range", "Broadcast" })
-                    @EditParameterRowPost("FlushConfigurationIPV4", new string[] { })
-                    @EditParameterRowPost("AddRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("DeleteRouteIPV4", new string[] { "Gateway", "Destination" })
-                    @EditParameterRowPost("AddMultipathRoute", new string[] { "Network1", "Network2" })
-                    @EditParameterRowPost("EnableInterface", new string[] { })
-                    @EditParameterRowPost("DisableInterface", new string[] { })
-                    @EditParameterRowPost("AddTunnelPointToPointIPV4", new string[] { "Ttl", "Tunnel", "Address" })
-                    @EditParameterRowPost("DeleteTunnelPointToPointIPV4", new string[] { })
-                    <label>IPV6 configuration</label>
-                    @EditParameterRowPost("AddNewAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteAddressIPV6", new string[] { "Address" })
-                    @EditParameterRowPost("FlushConfigurationIPV6", new string[] { })
-                    @EditParameterRowPost("AddNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("DeleteNeighborsIPV6", new string[] { "Address", "Layer" })
-                    @EditParameterRowPost("AddRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("DeleteRouteIPV6Gateway", new string[] { "Address", "Gateway" })
-                    @EditParameterRowPost("AddRouteIPV6Interface", new string[] { "Address" })
-                    @EditParameterRowPost("DeleteRouteIPV6Interface", new string[] { "Address" })
-                    <label>Status</label>
-                    @EditParameterRowGet("ShowInterfaceAddr", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceLink", new string[] { })
-                    @EditParameterRowGet("ShowInterfaceStats", new string[] { })
-                    @EditParameterRowGet("ShowRoutes", new string[] { })
-                    @EditParameterRowGet("ShowNeighborsIPV6", new string[] { })
-                    @EditParameterRowGet("ShowTunnelsIPV6", new string[] { })
+                    @Partial['part-network-post'];
+                    @Partial['part-network-get'];
                 </td>
             </tr>
             @EndEach
