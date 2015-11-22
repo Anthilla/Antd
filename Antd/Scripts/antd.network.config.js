@@ -1,9 +1,5 @@
 var networkUrl = "/network/config";
 
-$(document).ready(function() {
-    console.log('netconfig');
-});
-
 //Repository
 $('a[href="#nwboot"]').click(function () {
     jQuery.support.cors = true;

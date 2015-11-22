@@ -167,6 +167,20 @@ namespace antdlib.Config {
             AddCommandsBundleLayout(command);
         }
 
+        public static void AddCommandsBundle(string command, string index) {
+            var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Command == command);
+            if (getmodel != null || command.Length <= 0)
+                return;
+            var model = new CommandsBundle {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Index = "0",
+                Command = command
+            };
+            DeNSo.Session.New.Set(model);
+            AddCommandsBundleLayout(command);
+        }
+
         public static void AddCommandsBundleLayout(string command) {
             var commandLayout = command.ReplaceAllTextBetweenWith('{', '}', "{tag:x}");
             var getmodel = GetCommandsBundleLayout().FirstOrDefault(vv => vv.CommandLayout == commandLayout);
@@ -370,11 +384,7 @@ namespace antdlib.Config {
         public class FromFile {
             private static readonly string ConfigFolder = Parameter.RepoConfig;
 
-            private static IEnumerable<string> Contexts {
-                get {
-                    return Directory.EnumerateDirectories(ConfigFolder).Where(d => !d.StartsWith("disabled."));
-                }
-            }
+            private static IEnumerable<string> Contexts => Directory.EnumerateDirectories(ConfigFolder).Where(d => !d.StartsWith("disabled."));
 
             private static IEnumerable<string> GetContextFiles(string contextName) {
                 try {
@@ -426,15 +436,19 @@ namespace antdlib.Config {
                     if (!lines.Any()) {
                         throw new Exception();
                     }
-                    foreach (var line in lines) {
-                        //try {
-                        AddCommandsBundle(line);
-                        Terminal.Terminal.Execute(line);
-                        //}
-                        //catch (Exception) {
-                        //    ConsoleLogger.Warn($"Error while executing: {line}");
-                        //}
+                    for (var i = 0; i < lines.Length; i++) {
+                        AddCommandsBundle(lines[i], i.ToString());
+                        Terminal.Terminal.Execute(lines[i]);
                     }
+                    //foreach (var line in lines) {
+                    //try {
+                    //AddCommandsBundle(line);
+                    //Terminal.Terminal.Execute(line);
+                    //}
+                    //catch (Exception) {
+                    //    ConsoleLogger.Warn($"Error while executing: {line}");
+                    //}
+                    //}
                 }
                 catch (Exception) {
                     ConsoleLogger.Log($"Nothing to configure in {filename}");
@@ -444,30 +458,30 @@ namespace antdlib.Config {
                 }
             }
 
-            //public static void SaveConfiguration(string contextName, string file, IEnumerable<string> lines) {
-            //    try {
-            //        var enumerable = lines as string[] ?? lines.ToArray();
-            //        if (!enumerable.Any()) {
-            //            throw new Exception();
-            //        }
-            //        var contextPath = Path.Combine(ConfigFolder, contextName);
-            //        if (!Directory.Exists(contextPath)) {
-            //            Directory.CreateDirectory(contextPath);
-            //        }
-            //        if (!file.EndsWith(".cfg")) {
-            //            file = file + ".cfg";
-            //        }
-            //        var filePath = Path.Combine(contextPath, file);
-            //        if (File.Exists(filePath)) {
-            //            File.Delete(filePath);
-            //        }
-            //        File.WriteAllLines(filePath, enumerable);
-            //    }
-            //    catch (Exception ex) {
-            //        ConsoleLogger.Warn($"Cannot save {file} configuration for {contextName}");
-            //        ConsoleLogger.Warn(ex.Message);
-            //    }
-            //}
+            public static void SaveConfiguration(string contextName, string file, IEnumerable<string> lines) {
+                try {
+                    var enumerable = lines as string[] ?? lines.ToArray();
+                    if (!enumerable.Any()) {
+                        throw new Exception();
+                    }
+                    var contextPath = Path.Combine(ConfigFolder, contextName);
+                    if (!Directory.Exists(contextPath)) {
+                        Directory.CreateDirectory(contextPath);
+                    }
+                    if (!file.EndsWith(".cfg")) {
+                        file = file + ".cfg";
+                    }
+                    var filePath = Path.Combine(contextPath, file);
+                    if (File.Exists(filePath)) {
+                        File.Delete(filePath);
+                    }
+                    File.WriteAllLines(filePath, enumerable);
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Warn($"Cannot save {file} configuration for {contextName}");
+                    ConsoleLogger.Warn(ex.Message);
+                }
+            }
         }
     }
 }
