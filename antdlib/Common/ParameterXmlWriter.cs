@@ -47,7 +47,7 @@ namespace antdlib.Common {
         private readonly string[] _path;
 
         public ParameterXmlWriter(string[] fileNames) {
-            var applicationRoot = Folder.AntdCfg;
+            var applicationRoot = Parameter.AntdCfg;
             var tmplist = new List<string>();
             tmplist.AddRange(from fileName in fileNames let p = Path.Combine(applicationRoot, fileName + ".xml") select Path.Combine(applicationRoot, fileName + ".xml"));
             _path = tmplist.ToArray();

@@ -81,7 +81,7 @@ namespace antdlib.Log {
                     EventName = eventName,
                     Message = message
                 };
-                if (File.Exists(Folder.AntdCfgDatabaseJournalPath)) {
+                if (File.Exists(Parameter.AntdCfgDatabaseJournalPath)) {
                     DeNSo.Session.New.Set(logItem);
                 }
             }

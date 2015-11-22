@@ -51,7 +51,7 @@ namespace antdlib.Certificate {
 
         public static bool IsActive => CoreParametersConfig.GetCa() == "yes" && File.Exists(CaRootCertificate);
 
-        private static readonly string CaDirectory = Folder.CertificateAuthority;
+        private static readonly string CaDirectory = Parameter.CertificateAuthority;
         private static readonly string CaRootConfFile = $"{CaDirectory}/openssl.cnf";
         private static readonly string CaRootPrivateKey = $"{CaDirectory}/private/ca.key.pem";
         private static readonly string CaRootCertificate = $"{CaDirectory}/certs/ca.cert.pem";
@@ -73,7 +73,7 @@ namespace antdlib.Certificate {
             Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
             ConsoleLogger.Log("5) Copy .conf file");
             if (!File.Exists(CaRootConfFile)) {
-                Terminal.Terminal.Execute($"cp {Folder.Resources}/openssl.cnf {CaRootConfFile}");
+                Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
             }
             ConsoleLogger.Log("6) Generate root private key");
             Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{Passphrase} 4096");
@@ -117,7 +117,7 @@ namespace antdlib.Certificate {
             Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
             ConsoleLogger.Log("6) Copy .conf file");
             if (!File.Exists(CaIntermediateConfFile)) {
-                Terminal.Terminal.Execute($"cp {Folder.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
+                Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
             }
             ConsoleLogger.Log("7) Generate intermediate private key");
             Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{Passphrase} 4096");

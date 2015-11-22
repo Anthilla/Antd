@@ -27,39 +27,79 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace antdlib.Network {
+
+    public enum NetworkInterfaceType {
+        Physical = 1,
+        Virtual = 2,
+        Bond = 3,
+        Bridge = 4,
+        Other = 99
+    }
+
+    public class NetworkInterfaceModel {
+        public string _Id { get; set; }
+        public string InterfaceName { get; set; }
+        public NetworkInterfaceType InterfaceType { get; set; }
+        public IEnumerable<NetworkConfig.CommandListModel> PostCommands => NetworkConfig.CommandList.CommandTypePost();
+        public IEnumerable<NetworkConfig.CommandListModel> GetCommands => NetworkConfig.CommandList.CommandTypeGet();
+    }
+
     public class NetworkInterface {
-        private static List<string> GetPhysicalNetworkInterfaces() {
+        public static IEnumerable<NetworkInterfaceModel> GetAll() => DeNSo.Session.New.Get<NetworkInterfaceModel>();
+
+        private static void FlushDb() => DeNSo.Session.New.DeleteAll(GetAll());
+
+        public static void ImportNetworkInterface() {
+            FlushDb();
             if (!AssemblyInfo.IsUnix)
-                return new List<string>();
+                return;
             var dirs = Directory.GetDirectories("/sys/class/net");
-            return (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where !f.Contains("virtual") && !f.Contains("fake") select Path.GetFileName(dir)).ToList();
+            var physicalIf = from dir in dirs
+                             let f = Terminal.Terminal.Execute($"file {dir}")
+                             where !f.Contains("virtual") && !f.Contains("fake")
+                             select Path.GetFileName(dir);
+            foreach (var p in physicalIf) {
+                var phMod = new NetworkInterfaceModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    InterfaceType = NetworkInterfaceType.Physical,
+                    InterfaceName = p
+                };
+                DeNSo.Session.New.Set(phMod);
+            }
+            var virtualIf = (from dir in dirs
+                             let f = Terminal.Terminal.Execute($"file {dir}")
+                             where f.Contains("virtual") || f.Contains("fake")
+                             select Path.GetFileName(dir)).Where(_ => !_.Contains("bond"));
+            foreach (var v in virtualIf) {
+                var phMod = new NetworkInterfaceModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    InterfaceType = NetworkInterfaceType.Virtual,
+                    InterfaceName = v
+                };
+                DeNSo.Session.New.Set(phMod);
+            }
+            var bondIf = (from dir in dirs
+                          let f = Terminal.Terminal.Execute($"file {dir}")
+                          where f.Contains("virtual") || f.Contains("fake")
+                          select Path.GetFileName(dir)).Where(_ => _.Contains("bond"));
+            foreach (var b in bondIf) {
+                var phMod = new NetworkInterfaceModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    InterfaceType = NetworkInterfaceType.Bond,
+                    InterfaceName = b
+                };
+                DeNSo.Session.New.Set(phMod);
+            }
         }
 
-        public static List<string> Physical => GetPhysicalNetworkInterfaces();
-
-        private static List<string> GetVirtualNetworkInterfaces() {
-            if (!AssemblyInfo.IsUnix)
-                return new List<string>();
-            var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
-            return list.Where(s => !s.Contains("bond")).ToList();
-        }
-
-        public static List<string> Virtual => GetVirtualNetworkInterfaces();
-
-        private static List<string> GetBondNetworkInterfaces() {
-            if (!AssemblyInfo.IsUnix)
-                return new List<string>();
-            var dirs = Directory.GetDirectories("/sys/class/net");
-            var list = (from dir in dirs let f = Terminal.Terminal.Execute($"file {dir}") where f.Contains("virtual") || f.Contains("fake") select Path.GetFileName(dir)).ToList();
-            return list.Where(s => s.Contains("bond")).ToList();
-        }
-
-        public static List<string> Bond => GetBondNetworkInterfaces();
+        public static IEnumerable<NetworkInterfaceModel> Physical => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Physical);
+        public static IEnumerable<NetworkInterfaceModel> Virtual => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Virtual);
+        public static IEnumerable<NetworkInterfaceModel> Bond => GetAll().Where(_ => _.InterfaceType == NetworkInterfaceType.Bond);
     }
 }

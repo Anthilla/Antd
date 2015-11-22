@@ -246,7 +246,7 @@ namespace antdlib.Config {
         public static bool Exists => GetEnabledCommandsBundle().Any();
 
         public class Export {
-            private static readonly string ConfigFolder = Folder.RepoConfig;
+            private static readonly string ConfigFolder = Parameter.RepoConfig;
 
             private static IEnumerable<string> GetConfigurationFileNames() {
                 return Directory.EnumerateFiles(ConfigFolder, "*configuration.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName);
@@ -368,7 +368,7 @@ namespace antdlib.Config {
         }
 
         public class FromFile {
-            private static readonly string ConfigFolder = Folder.RepoConfig;
+            private static readonly string ConfigFolder = Parameter.RepoConfig;
 
             private static IEnumerable<string> Contexts {
                 get {

@@ -61,7 +61,7 @@ namespace antdlib.Firewall {
 
         public class Export {
             private static string GetLastFileName() {
-                var configName = Directory.EnumerateFiles(Folder.RepoConfig, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray();
+                var configName = Directory.EnumerateFiles(Parameter.RepoConfig, "*firewall.export", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray();
                 if (!configName.Any())
                     return "0_antd_firewall.export";
                 var lastFile = configName.Last();
@@ -70,15 +70,15 @@ namespace antdlib.Firewall {
             }
 
             public static void ExportTemplate() {
-                var savedtemplate = $"{Folder.Resources}/antd.firewall.template.conf";
-                var storedtemplate = $"{Folder.RepoConfig}/antd.firewall.template.conf";
+                var savedtemplate = $"{Parameter.Resources}/antd.firewall.template.conf";
+                var storedtemplate = $"{Parameter.RepoConfig}/antd.firewall.template.conf";
                 if (!File.Exists(storedtemplate)) {
                     Terminal.Terminal.Execute($"cp {savedtemplate} {storedtemplate}");
                 }
             }
 
             public static void ExportNewFirewallConfiguration() {
-                var template = $"{Folder.RepoConfig}/antd.firewall.template.conf";
+                var template = $"{Parameter.RepoConfig}/antd.firewall.template.conf";
                 var text = Terminal.Terminal.Execute($"cat {template}");
                 foreach (var values in FirewallLists.GetAll()) {
                     var replace = text.Replace(values.TemplateWord, ConfigManagement.SupposeCommandReplacement(values.ReplaceTemplateValues));

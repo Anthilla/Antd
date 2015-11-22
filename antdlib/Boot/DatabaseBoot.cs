@@ -41,7 +41,7 @@ namespace antdlib.Boot {
             DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.EnableOperationsLog = false;
-            DeNSo.Session.DefaultDataBase = Folder.AntdCfgDatabaseName;
+            DeNSo.Session.DefaultDataBase = Parameter.AntdCfgDatabaseName;
             DeNSo.Session.Start();
             CheckPaths(dbPaths);
         }
@@ -53,7 +53,7 @@ namespace antdlib.Boot {
         private static void CheckPaths(string[] dbPaths) {
             foreach (var path in dbPaths) {
                 Directory.CreateDirectory(path);
-                Directory.CreateDirectory($"{path}/{Folder.AntdCfgDatabaseName}");
+                Directory.CreateDirectory($"{path}/{Parameter.AntdCfgDatabaseName}");
             }
             foreach (var path in dbPaths.Where(path => !Directory.Exists(path))) {
                 Directory.CreateDirectory(path);

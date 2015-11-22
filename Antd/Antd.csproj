@@ -273,21 +273,21 @@
     <None Include="Views\antd\page-log.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\antd\page-antd-storage.html">
+    <None Include="Views\antd\page-antd-storage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-proxy.html">
+    </None>
+    <None Include="Views\antd\page-antd-proxy.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-dhcp.html">
+    </None>
+    <None Include="Views\antd\page-antd-dhcp.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-dns-server.html">
+    </None>
+    <None Include="Views\antd\page-antd-dns-server.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-mount.html">
+    </None>
+    <None Include="Views\antd\page-antd-mount.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="Views\__old\_toolbar.html" />
     <None Include="Views\antd\page-log-system.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -302,156 +302,156 @@
     <None Include="Views\page-redirect.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\_partial_network\part-network-get.html">
+    <None Include="Views\_partial_network\part-network-get.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_network\part-network-post-elements.html">
+    </None>
+    <None Include="Views\_partial_network\part-network-post-elements.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_network\part-network-post.html">
+    </None>
+    <None Include="Views\_partial_network\part-network-post.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-input-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-input-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-input-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-input-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-input-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-input-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-output-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-output-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-output-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-output-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-arp-output-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-arp-output-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-input-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-input-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-input-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-output-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-output-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-bridge-output-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-connection-arp.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-connection-arp.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-connection-br.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-connection-br.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-connection-ip.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-connection-ip.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-connection-ip6.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-connection-ip6.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-empty.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-empty.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-forward-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-forward-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-forward-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-input-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-input-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-input-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-input-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-input-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-input-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-output-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-output-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-output-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-output-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-output-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-output-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-postrouting-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-postrouting-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-postrouting-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-postrouting-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-prerouting-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-prerouting-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip-prerouting-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip-prerouting-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-input-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-input-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-input-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-output-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-output-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-route.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-output-route.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-postrouting-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-postrouting-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-postrouting-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-postrouting-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-prerouting-filter.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-prerouting-filter.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial_firewall\part-firewall-ip6-prerouting-nat.html">
+    </None>
+    <None Include="Views\_partial_firewall\part-firewall-ip6-prerouting-nat.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-mount-units.html">
+    </None>
+    <None Include="Views\_partial\part-mount-units.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Scripts\jquery-2.1.4.min.map">
@@ -466,15 +466,15 @@
     <None Include="Views\antd\page-antd-config.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\antd\page-antd-dns-client.html">
+    <None Include="Views\antd\page-antd-dns-client.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-firewall.html">
+    </None>
+    <None Include="Views\antd\page-antd-firewall.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-network.html">
+    </None>
+    <None Include="Views\antd\page-antd-network.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Views\cctable\_page-cctable.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

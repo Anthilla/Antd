@@ -52,13 +52,13 @@ namespace antdlib.Boot {
                 Writer.Write("AntdHttpsPort", "443");
             }
             if (Writer.CheckValue(Label.Database) == false) {
-                Writer.Write(Label.Database, Folder.AntdCfgDatabase);
+                Writer.Write(Label.Database, Parameter.AntdCfgDatabase);
             }
             if (Writer.CheckValue("ssl") == false) {
                 Writer.Write("ssl", "yes");
             }
             if (Writer.CheckValue("certificate") == false) {
-                Writer.Write("certificate", $"{Folder.AntdCfg}/certificate.pfx");
+                Writer.Write("certificate", $"{Parameter.AntdCfg}/certificate.pfx");
             }
             if (Writer.CheckValue("ca") == false) {
                 Writer.Write("ca", "no");
@@ -167,17 +167,17 @@ namespace antdlib.Boot {
 
         public static string GetCertificatePath() {
             try {
-                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Folder.AntdCfg}/certificate.pfx";
+                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Parameter.AntdCfg}/certificate.pfx";
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-                return $"{Folder.AntdCfg}/certificate.pfx";
+                return $"{Parameter.AntdCfg}/certificate.pfx";
             }
         }
 
         public static void SetCertificatePath(string newCert) {
             try {
-                Writer.Write("certificate", $"{Folder.AntdCfg}/certificate.pfx");
+                Writer.Write("certificate", $"{Parameter.AntdCfg}/certificate.pfx");
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -242,11 +242,11 @@ namespace antdlib.Boot {
 
         public static string GetDb() {
             try {
-                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Folder.AntdCfgDatabase;
+                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Parameter.AntdCfgDatabase;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-                return Folder.AntdCfgDatabase;
+                return Parameter.AntdCfgDatabase;
             }
         }
 

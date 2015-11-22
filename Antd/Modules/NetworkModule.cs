@@ -27,6 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Linq;
+using antdlib.Network;
+using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -34,6 +37,12 @@ namespace Antd.Modules {
         public NetworkModule() {
             this.RequiresAuthentication();
 
+            Post["/network/import/if"] = x => {
+                if (!NetworkInterface.GetAll().Any()) {
+                    NetworkInterface.ImportNetworkInterface();
+                }
+                return Response.AsJson(true);
+            };
         }
     }
 }

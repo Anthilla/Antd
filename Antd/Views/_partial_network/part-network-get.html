@@ -1,13 +1,12 @@
-﻿@Each.NetworkCommandsGet
-<div class="row">
-    <div class="span3">
-        <label>@Current.Label</label>
-    </div>
-    <div class="span5">
+﻿@Each.Model
+<tr>
+    <td></td>
+    <td><label>@Current.Label</label></td>
+    <td>
         <input id="@Current.Label" type="button" style="height: 25px; width: 90%; padding: 4px 25px;" value="Get @Current.Label" />
-    </div>
-    <div class="span8">
+    </td>
+    <td>
         <textarea id="@Current.Label" class="bg-anthilla-gray fg-white" style="width: 90%; height: 250px; min-height: 250px; max-height: 250px; display: none; overflow: scroll !important;"></textarea>
-    </div>
-</div>
+    </td>
+</tr>
 @EndEach

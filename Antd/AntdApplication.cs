@@ -94,15 +94,15 @@ namespace Antd {
                 }
             }
             catch (Exception ex) {
-                Directory.CreateDirectory($"{Folder.AntdCfgReport}");
-                File.WriteAllText($"{Folder.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
+                Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
+                File.WriteAllText($"{Parameter.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
             }
         }
 
         private static void Configuration() {
             //todo check commented lines
             AntdBoot.CheckCertificate();
-            AntdBoot.CheckIfGlobalRepositoryIsWriteable();
+            AntdBoot.CheckOsIsRw();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
             AntdBoot.StartDatabase();
@@ -115,6 +115,7 @@ namespace Antd {
             //AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
+            AntdBoot.SetNetworkInterfacesValues();
             //AntdBoot.StartScheduler(true);
             //AntdBoot.StartDirectoryWatcher(new[] { Folder.RepoConfig }, false);
             //AntdBoot.InitAuthentication();

@@ -1,5 +1,8 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Network">Network</legend>
+    <legend id="Network">
+        Network
+        <i id="ReloadNetworkInterfacesInformation" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
     <table class="table">
         <thead>
             <tr>
@@ -11,14 +14,12 @@
         <tbody>
             @Each.NetworkPhysicalIf
             <tr>
-                <td style="width: 200px;">
-                    <label>@Current</label>
-                </td>
-                <td>
-                    @Partial['part-network-post'];
-                    @Partial['part-network-get'];
+                <td colspan="4" style="width: 200px;">
+                    <label>@Current.InterfaceName</label>
                 </td>
             </tr>
+            @Partial['_partial_network/part-network-post', Current.PostCommands];
+            @Partial['_partial_network/part-network-get', Current.GetCommands];
             @EndEach
         </tbody>
     </table>
@@ -34,11 +35,11 @@
             @Each.NetworkVirtualIf
             <tr>
                 <td style="width: 200px;">
-                    <label>@Current</label>
+                    <label>@Current.InterfaceName</label>
                 </td>
                 <td>
-                    @Partial['part-network-post'];
-                    @Partial['part-network-get'];
+                    @Partial['_partial_network/part-network-post', Current.PostCommands];
+                    @Partial['_partial_network/part-network-get', Current.GetCommands];
                 </td>
             </tr>
             @EndEach
@@ -56,11 +57,11 @@
             @Each.NetworkBondIf
             <tr>
                 <td style="width: 200px;">
-                    <label>@Current</label>
+                    <label>@Current.InterfaceName</label>
                 </td>
                 <td>
-                    @Partial['part-network-post'];
-                    @Partial['part-network-get'];
+                    @Partial['_partial_network/part-network-post', Current.PostCommands];
+                    @Partial['_partial_network/part-network-get', Current.GetCommands];
                 </td>
             </tr>
             @EndEach

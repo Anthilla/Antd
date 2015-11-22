@@ -58,7 +58,7 @@ namespace antdlib {
         }
     }
 
-    public class Folder {
+    public class Parameter {
         public static string RootData => "/Data";
         public static string RootFramework => "/framework";
         public static string RootSystem => "/System";
@@ -99,6 +99,8 @@ namespace antdlib {
         public static string AntdTmpDir => $"{RepoApps}/tmp";
         public static string CertificateAuthority => $"{RepoConfig}/ca";
         public static string Resources => $"{RootFramework}/antd/Resources";
+
+        public static string Aossvc => "/usr/sbin/aossvc";
     }
 
     public class AntdFile {
@@ -149,9 +151,9 @@ namespace antdlib {
             public static string NameLauncher => "app-antd-03-launcher.service";
         }
 
-        public static string Prepare = $"{Folder.AppsUnits}/{Name.NamePrepare}";
-        public static string Mount = $"{Folder.AppsUnits}/{Name.NameMount}";
-        public static string Launcher = $"{Folder.AppsUnits}/{Name.NameLauncher}";
+        public static string Prepare = $"{Parameter.AppsUnits}/{Name.NamePrepare}";
+        public static string Mount = $"{Parameter.AppsUnits}/{Name.NameMount}";
+        public static string Launcher = $"{Parameter.AppsUnits}/{Name.NameLauncher}";
     }
 
     public class Update {

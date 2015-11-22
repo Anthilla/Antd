@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
 using antdlib.Log;
 
 namespace antdlib.Firewall {
@@ -62,9 +61,8 @@ namespace antdlib.Firewall {
 
         public static IEnumerable<string> GetRuleSet(string table, string type, string hook) {
             var startMark = $"#start_{table}_{type}_{hook}";
-            ConsoleLogger.Point(startMark);
             var endMark = $"#end_{table}_{type}_{hook}";
-            var templateTextLines = File.ReadAllLines($"{Folder.RepoConfig}/antd.firewall.template.conf").ToList();
+            var templateTextLines = File.ReadAllLines($"{Parameter.RepoConfig}/antd.firewall.template.conf").ToList();
             var startIndex = templateTextLines.FindIndex(_ => _.Contains(startMark));
             var endIndex = templateTextLines.FindIndex(_ => _.Contains(endMark));
             var relevantLines = templateTextLines.Skip(startIndex).Take(endIndex - startIndex);

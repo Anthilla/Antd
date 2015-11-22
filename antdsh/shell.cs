@@ -44,7 +44,7 @@ namespace antdsh {
             }
             else {
                 WriteLine("Antd is not running, so we can start it.");
-                WriteLine("Looking for antds in {0}", Folder.AntdVersionsDir);
+                WriteLine("Looking for antds in {0}", Parameter.AntdVersionsDir);
                 var newestVersionFound = antdlib.Antdsh.Execute.GetNewestVersion();
                 if (newestVersionFound.Key != null) {
                     antdlib.Antdsh.Execute.LinkVersionToRunning(newestVersionFound.Key);
@@ -208,7 +208,7 @@ namespace antdsh {
                     antdlib.Antdsh.Execute.LinkVersionToRunning(newestVersionFound.Key);
                 }
                 else if (newestVersionFound.Key.Contains(AntdFile.ZipEndsWith)) {
-                    var squashName = Folder.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + newestVersionFound.Value + AntdFile.SquashEndsWith;
+                    var squashName = Parameter.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + newestVersionFound.Value + AntdFile.SquashEndsWith;
                     antdlib.Antdsh.Execute.MountTmpRam();
                     antdlib.Antdsh.Execute.CopyToTmp(newestVersionFound.Key);
                     antdlib.Antdsh.Execute.ExtractZipTmp(newestVersionFound.Key);
@@ -232,7 +232,7 @@ namespace antdsh {
         public static void UpdateFromUrl() {
             antdlib.Antdsh.Execute.StopServices();
             antdlib.Antdsh.Execute.CleanTmp();
-            var squashName = $"{Folder.AntdVersionsDir}/{AntdFile.SquashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{AntdFile.SquashEndsWith}";
+            var squashName = $"{Parameter.AntdVersionsDir}/{AntdFile.SquashStartsWith}{DateTime.Now.ToString("yyyyMMdd")}{AntdFile.SquashEndsWith}";
             antdlib.Antdsh.Execute.MountTmpRam();
             antdlib.Antdsh.Execute.DownloadFromUrl("https://github.com/Anthilla/Antd/archive/master.zip");
             antdlib.Antdsh.Execute.ExtractDownloadedFile();
@@ -265,7 +265,7 @@ namespace antdsh {
             antdlib.Antdsh.Execute.MountTmpRam();
             var antdRepoUrl = $"{Update.RemoteRepo}/{Update.RemoteAntdDir}";
             var updateFileUrl = $"{antdRepoUrl}/{Update.RemoteUpdateInfo}";
-            var updateFile = $"{Folder.AntdTmpDir}/{Update.RemoteUpdateInfo}";
+            var updateFile = $"{Parameter.AntdTmpDir}/{Update.RemoteUpdateInfo}";
             WriteLine($"   Downloading from: {updateFileUrl}");
             WriteLine($"                 to: {updateFile}");
             antdlib.Antdsh.Execute.DownloadFromUrl(updateFileUrl, updateFile);
@@ -278,7 +278,7 @@ namespace antdsh {
             var squashName = updateText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
             WriteLine($"   Version found: {squashName}");
             var squashUrl = $"{antdRepoUrl}/{squashName}";
-            var squashFile = $"{Folder.AntdVersionsDir}/{squashName}";
+            var squashFile = $"{Parameter.AntdVersionsDir}/{squashName}";
             WriteLine($"   Downloading from: {squashUrl}");
             WriteLine($"                 to: {squashFile}");
             antdlib.Antdsh.Execute.DownloadFromUrl(squashUrl, squashFile);
@@ -323,7 +323,7 @@ namespace antdsh {
                 antdlib.Antdsh.Execute.LinkVersionToRunning(selectedVersion.Key);
             }
             else if (selectedVersion.Key.Contains(AntdFile.ZipEndsWith)) {
-                var squashName = Folder.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + selectedVersion.Value + AntdFile.SquashEndsWith;
+                var squashName = Parameter.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + selectedVersion.Value + AntdFile.SquashEndsWith;
                 antdlib.Antdsh.Execute.MountTmpRam();
                 antdlib.Antdsh.Execute.CopyToTmp(selectedVersion.Key);
                 antdlib.Antdsh.Execute.ExtractZipTmp(selectedVersion.Key);

@@ -67,7 +67,7 @@ namespace antdlib.Log {
         }
 
         public class Report {
-            private static readonly string ReportDir = Folder.AntdCfgReport;
+            private static readonly string ReportDir = Parameter.AntdCfgReport;
 
             public static IEnumerable<string> Get() {
                 return Directory.EnumerateFiles(ReportDir).Where(_ => _.EndsWith("antd-report.txt"));

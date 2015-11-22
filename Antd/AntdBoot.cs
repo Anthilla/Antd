@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using antdlib;
+using antdlib.Antdsh;
 using antdlib.Apps;
 using antdlib.Boot;
 using antdlib.Common;
@@ -11,6 +12,7 @@ using antdlib.Directories;
 using antdlib.Firewall;
 using antdlib.Log;
 using antdlib.MountPoint;
+using antdlib.Network;
 using antdlib.Scheduler;
 using antdlib.Status;
 using antdlib.Terminal;
@@ -22,6 +24,11 @@ using Owin;
 
 namespace Antd {
     public class AntdBoot {
+
+        public static void CheckOsIsRw() {
+            Execute.RemounwRwOs();
+        }
+
         public static void CheckIfGlobalRepositoryIsWriteable() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -61,7 +68,7 @@ namespace Antd {
         public static void CheckCertificate() {
             var certificate = CoreParametersConfig.GetCertificatePath();
             if (!File.Exists(certificate)) {
-                File.Copy($"{Folder.Resources}/certificate.pfx", certificate, true);
+                File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
             }
         }
 
@@ -256,7 +263,7 @@ namespace Antd {
         public static void DownloadDefaultRepoFiles() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            var dir = $"{Folder.RepoConfig}/database";
+            var dir = $"{Parameter.RepoConfig}/database";
             Directory.CreateDirectory(dir);
             FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
             FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");
@@ -277,6 +284,14 @@ namespace Antd {
             FirewallLists.SetDefaultLists();
             NfTables.Export.ExportTemplate();
             ConsoleLogger.Log("default values for firewall load");
+        }
+
+        public static void SetNetworkInterfacesValues() {
+            ConsoleLogger.Log("importing values for network");
+            if (!NetworkInterface.GetAll().Any()) {
+                NetworkInterface.ImportNetworkInterface();
+            }
+            ConsoleLogger.Log("values for network imported");
         }
     }
 }

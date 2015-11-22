@@ -40,7 +40,7 @@ namespace antdlib.Apps {
 
     public class AnthillaSp {
 
-        private static readonly string AnthillaSpAppDir = $"{Folder.RepoApps}/Anthilla_AnthillaSP";
+        private static readonly string AnthillaSpAppDir = $"{Parameter.RepoApps}/Anthilla_AnthillaSP";
         private static string _anthillaSpFrameworkDir = "/framework/anthillasp";
 
         public static void SetApp() {
@@ -137,7 +137,7 @@ namespace antdlib.Apps {
 
             public static bool CheckSquash() {
                 Directory.CreateDirectory(AnthillaSpAppDir);
-                var filePaths = Directory.EnumerateFiles(Folder.RepoApps, "*.squashfs.xz*", SearchOption.AllDirectories);
+                var filePaths = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz*", SearchOption.AllDirectories);
                 return filePaths.Any(t => t.Contains("anthillasp"));
             }
 
@@ -158,10 +158,10 @@ namespace antdlib.Apps {
 
         public class Units {
             public class Name {
-                public static string Prepare => Path.Combine(Folder.AppsUnits, "app-anthillasp-01-Prepare.service");
-                public static string Mount => Path.Combine(Folder.AppsUnits, "app-anthillasp-02-Mount.service");
-                public static string LaunchSp => Path.Combine(Folder.AppsUnits, "app-anthillasp-04-wui-launcher.service");
-                public static string LaunchServer => Path.Combine(Folder.AppsUnits, "app-anthillasp-03-srv-launcher.service");
+                public static string Prepare => Path.Combine(Parameter.AppsUnits, "app-anthillasp-01-Prepare.service");
+                public static string Mount => Path.Combine(Parameter.AppsUnits, "app-anthillasp-02-Mount.service");
+                public static string LaunchSp => Path.Combine(Parameter.AppsUnits, "app-anthillasp-04-wui-launcher.service");
+                public static string LaunchServer => Path.Combine(Parameter.AppsUnits, "app-anthillasp-03-srv-launcher.service");
             }
 
             public static bool CheckFiles() {

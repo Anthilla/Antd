@@ -471,6 +471,18 @@
         });
     });
 </script>
+<script data-context="network" type="text/javascript">
+    $('#ReloadNetworkInterfacesInformation').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/network/import/if',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+</script>
 <script data-context="Mount" type="text/javascript">
     $('i.show-units-mgmt').click(function () {
         var g = $(this).attr('data-guid');

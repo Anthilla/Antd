@@ -28,10 +28,10 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib;
-using antdlib.Boot;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using antdlib.Antdsh;
 
 namespace antdsh {
     internal class Program {
@@ -41,9 +41,9 @@ namespace antdsh {
         private static void Main(string[] args) {
             while (true) {
                 Console.Title = "antdsh";
-                RepositoryCheck.CheckIfGlobalRepositoryIsWriteable();
-                Directory.CreateDirectory(Folder.AntdVersionsDir);
-                Directory.CreateDirectory(Folder.AntdTmpDir);
+                Execute.RemounwRwOs();
+                Directory.CreateDirectory(Parameter.AntdVersionsDir);
+                Directory.CreateDirectory(Parameter.AntdTmpDir);
                 if (args.Length == 0) {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));

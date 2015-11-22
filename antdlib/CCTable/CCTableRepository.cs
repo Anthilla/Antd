@@ -198,10 +198,10 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
         public static void CreateRowConf(string tableGuid, string tableName, string file, CCTableFlags.ConfType type) {
             string newPath;
             if (type == CCTableFlags.ConfType.File) {
-                newPath = $"{Folder.RepoDirs}/FILE{file.Replace("/", "_")}";
+                newPath = $"{Parameter.RepoDirs}/FILE{file.Replace("/", "_")}";
             }
             else {
-                newPath = $"{Folder.RepoDirs}/DIR{file.Replace("/", "_")}";
+                newPath = $"{Parameter.RepoDirs}/DIR{file.Replace("/", "_")}";
             }
             var model = new CCTableRowModel {
                 _Id = Guid.NewGuid().ToString(),
