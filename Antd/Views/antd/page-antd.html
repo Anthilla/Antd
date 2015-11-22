@@ -222,7 +222,7 @@
         var param = $(this).prev('[data-role="input-general-function"]').val();
         jQuery.support.cors = true;
         $.ajax({
-            url: '/terminal/direct',
+            url: '/terminal/direct/post',
             type: 'POST',
             data: {
                 Command: command.replace("[tag:x]", param)

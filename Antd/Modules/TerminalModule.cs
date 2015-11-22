@@ -80,12 +80,19 @@ namespace Antd.Modules {
 
             //Post["/terminal/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command.Replace("$'", "\""))));
 
-            Post["/terminal/direct"] = x => {
+            Post["/terminal/direct/post"] = x => {
                 var inputCommand = (string)Request.Form.Command;
                 var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
                 foreach (var command in commandSplit) {
                     ConfigManagement.AddCommandsBundle(command);
                 }
+                var result = Terminal.MultiLine.Execute(commandSplit);
+                return Response.AsJson(result);
+            };
+
+            Post["/terminal/direct"] = x => {
+                var inputCommand = (string)Request.Form.Command;
+                var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
                 var result = Terminal.MultiLine.Execute(commandSplit);
                 return Response.AsJson(result);
             };
