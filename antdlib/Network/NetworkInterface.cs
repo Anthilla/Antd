@@ -103,12 +103,8 @@ namespace antdlib.Network {
             var brList = new List<string>();
             foreach (var bbrr in bridgeIf) {
                 ConsoleLogger.Point(bbrr);
-                var brAttr = bbrr.Substring(0, 10);
+                var brAttr = bbrr.Replace("\t", " ").Replace("/t", " ").Replace("  ", " ").Split(' ')[0];
                 brList.Add(brAttr.Trim());
-                //var brAttr = bbrr.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                //if (brAttr.Length > 0) {
-                //    brList.Add(brAttr[0]);
-                //}
             }
             foreach (var br in brList) {
                 ConsoleLogger.Point(br);
