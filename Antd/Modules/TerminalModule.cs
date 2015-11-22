@@ -78,8 +78,6 @@ namespace Antd.Modules {
                 return Response.AsJson(result);
             };
 
-            //Post["/terminal/direct"] = x => Response.AsJson(Terminal.Execute(ConfigManagement.SupposeCommandReplacement((string)Request.Form.Command.Replace("$'", "\""))));
-
             Post["/terminal/direct/post"] = x => {
                 var inputCommand = (string)Request.Form.Command;
                 var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();

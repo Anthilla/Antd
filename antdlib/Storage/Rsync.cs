@@ -30,19 +30,37 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using antdlib.Common;
 
 namespace antdlib.Storage {
-
     public class RsyncDirectoryModel {
         public string _Id { get; set; }
         public string Guid { get; set; }
         public string Source { get; set; }
         public string Destination { get; set; }
-
+        public string Options { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 
     public class Rsync {
 
+        public static IEnumerable<RsyncDirectoryModel> GetAll() => DeNSo.Session.New.Get<RsyncDirectoryModel>(_ => _.IsDeleted == false);
+
+        public static void Create(string source, string destination, string options) {
+            var mod = new RsyncDirectoryModel {
+                _Id = Guid.NewGuid().ToString(),
+                Guid = Guid.NewGuid().ToString(),
+                Source = source,
+                Destination = destination,
+                Options = options
+            };
+            DeNSo.Session.New.Set(mod);
+        }
+
+        public static void SyncDirectories(string source) {
+            var info = GetAll().FirstOrDefault(_ => _.Guid == source || _.Source == source);
+            if (info != null) {
+                Terminal.Terminal.Execute($"rsync {info.Options} {info.Source} {info.Destination}");
+            }
+        }
     }
 }

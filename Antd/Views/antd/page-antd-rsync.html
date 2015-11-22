@@ -1,10 +1,66 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend id="Rsync">Rsync</legend>
-
-    <form>
-        
+    <form id="OneTimeOnly" action="/rsync/add" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <div class="span4">
+                <label>Source</label>
+            </div>
+            <div class="span6">
+                <input type="text" name="Source" style="width: 90%; height: 25px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Destination</label>
+            </div>
+            <div class="span6">
+                <input type="text" name="Destination" style="width: 90%; height: 25px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>Options</label>
+            </div>
+            <div class="span10">
+                @Each.RsyncOptions
+                <input type="checkbox" data-role="add-rsync-option" data-option-to-add="@Current.Item1" />
+                <p style="display: inline-block;">@Current.Item2</p>
+                <br />
+                @EndEach
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                <label>&nbsp</label>
+            </div>
+            <div class="span6">
+                <input type="hidden" name="Options">
+                <input class="bg-anthilla-green fg-white" type="submit" value="Save" style="width: 100%; height: 34px; color: #3a3a3a !important;">
+            </div>
+        </div>
     </form>
 </div>
 <script data-context="rsync" type="text/javascript">
-    
+    $('input[type="checkbox"]').focusout(function () {
+        var optionInput = $('input[name="Options"]');
+        var value = '';
+        optionInput.val(value);
+        $('input[data-role="add-rsync-option"]').each(function () {
+            if ($(this).is(':checked')) {
+                value += $(this).attr('data-option-to-add') + ' ';
+            }
+        });
+        optionInput.val(value);
+    });
 </script>
+<table class="table">
+    <tbody>
+        @Each.RsyncDirectories
+        <tr>
+            <td>@Current.Source</td>
+            <td>@Current.Destination</td>
+        </tr>
+        @EndEach
+    </tbody>
+</table>
+

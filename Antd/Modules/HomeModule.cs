@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib;
@@ -38,8 +39,10 @@ using antdlib.Config;
 using antdlib.Contexts;
 using antdlib.Firewall;
 using antdlib.Log;
+using antdlib.MountPoint;
 using antdlib.Network;
 using antdlib.Status;
+using antdlib.Storage;
 using antdlib.Terminal;
 using antdlib.Users;
 using Nancy.Security;
@@ -84,15 +87,33 @@ namespace Antd.Modules {
                 viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.Cpuinfo = Cpuinfo.Get();
-
                 viewModel.NetworkPhysicalIf = NetworkInterface.Physical;
                 viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
                 viewModel.NetworkBondIf = NetworkInterface.Bond;
                 viewModel.NetworkBridgeIf = NetworkInterface.Bridge;
-
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
-
-                viewModel.Mounts = antdlib.MountPoint.MountRepository.Get();
+                viewModel.Mounts = MountRepository.Get();
+                viewModel.RsyncDirectories = Rsync.GetAll();
+                viewModel.RsyncOptions = new List<Tuple<string, string>> {
+                    new Tuple<string, string>("--checksum", "skip based on checksum"),
+                    new Tuple<string, string>("--archive", "archive mode"),
+                    new Tuple<string, string>("--recursive", "recurse into directories"),
+                    new Tuple<string, string>("--update", "skip files that are newer on the receiver"),
+                    new Tuple<string, string>("--links", "copy symlinks as symlinks"),
+                    new Tuple<string, string>("--copy-links", "transform symlink into referent file/dir"),
+                    new Tuple<string, string>("--copy-dirlinks", "transform symlink to dir into referent dir"),
+                    new Tuple<string, string>("--keep-dirlinks", "treat symlinked dir on receiver as dir"),
+                    new Tuple<string, string>("--hard-links", "preserve hard links"),
+                    new Tuple<string, string>("--hard-links", "preserve hard links"),
+                    new Tuple<string, string>("--hard-links", "preserve hard links"),
+                    new Tuple<string, string>("--perms", "preserve permissions"),
+                    new Tuple<string, string>("--executability", "preserve executability"),
+                    new Tuple<string, string>("--acls", "preserve ACLs"),
+                    new Tuple<string, string>("--xattrs", "preserve extended attributes"),
+                    new Tuple<string, string>("--owner", "preserve owner"),
+                    new Tuple<string, string>("--group", "preserve group"),
+                    new Tuple<string, string>("--times", "preserve modification times")
+                };
 
                 viewModel.UserEntities = UserEntity.Repository.GetAll();
 

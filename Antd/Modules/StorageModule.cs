@@ -59,6 +59,14 @@ namespace Antd.Modules {
                 new InstallOperativeSystem((string)Request.Form.DiskName).SetDiskAndInstall();
                 return Response.AsJson(true);
             };
+
+            Post["/rsync/add"] = x => {
+                var source = (string)Request.Form.Source;
+                var destination = (string)Request.Form.Destination;
+                var options = (string) Request.Form.Options;
+                Rsync.Create(source, destination, options);
+                return Response.AsRedirect("/");
+            };
         }
     }
 }
