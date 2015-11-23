@@ -36,8 +36,8 @@ using antdlib.Boot;
 using antdlib.CCTable;
 using antdlib.Certificate;
 using antdlib.Config;
-using antdlib.Contexts;
 using antdlib.Firewall;
+using antdlib.Info;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
@@ -78,14 +78,12 @@ namespace Antd.Modules {
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
-                viewModel.VersionOS = Terminal.Execute("uname -a");
-                viewModel.VersionAOS = Terminal.Execute("cat /etc/aos-release");
-
-                var activeKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.ActiveKernel = activeKernel;
-                viewModel.RecoveryKernel = Terminal.Execute("ls -l /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.ActiveSystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.RecoverySystem = Terminal.Execute("ls -l /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.VersionOS = SystemInfo.Get().VersionOs;
+                viewModel.VersionAOS = SystemInfo.Get().VersionAos;
+                viewModel.ActiveKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.RecoveryKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.ActiveSystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.RecoverySystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.Cpuinfo = Cpuinfo.Get();
                 viewModel.NetworkPhysicalIf = NetworkInterface.Physical;
                 viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
@@ -168,7 +166,7 @@ namespace Antd.Modules {
             Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.ValueBundle = ConfigManagement.GetValuesBundle();
-                vmod.EnabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled).OrderBy(_=>_.Index);
+                vmod.EnabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled).OrderBy(_ => _.Index);
                 vmod.DisabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == false).OrderBy(_ => _.Index);
                 return View["antd/page-cfg", vmod];
             };

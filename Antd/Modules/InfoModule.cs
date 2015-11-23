@@ -29,26 +29,12 @@
 using antdlib.Status;
 using Nancy;
 using Nancy.Security;
-using System.Dynamic;
-using antdlib.Common;
-using antdlib.Contexts;
 using antdlib.Terminal;
 
 namespace Antd.Modules {
     public class InfoModule : CoreModule {
         public InfoModule() {
             this.RequiresAuthentication();
-
-            Get["/info"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.MEMINFO = Meminfo.GetModel();
-                vmod.CPUINFO = Cpuinfo.GetModel();
-                vmod.VERSION = Version.GetModel();
-                vmod.DMIDECODE = Terminal.Execute("dmidecode").ConvertCommandToModel();
-                vmod.IFCONFIG = Terminal.Execute("ifconfig").ConvertCommandToModel();
-                vmod.PROCS = Proc.All;
-                return View["_page-info", vmod];
-            };
 
             Get["/info/loadaverage"] = x => Response.AsJson(Uptime.LoadAverage);
 

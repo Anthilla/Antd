@@ -27,26 +27,35 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using antdlib.Common;
 
-namespace antdlib.Contexts {
+namespace antdlib.Info {
 
-    public class Ifconfig {
+    public class SystemInfo {
+        public static IEnumerable<SystemInfoModel> GetAll() => DeNSo.Session.New.Get<SystemInfoModel>();
 
-        public static string GetEther() {
-            const string dir = "/sys/devices";
-            var find = Terminal.Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
-            if (find.isError()) {
-                return find.error;
-            }
-            var row = (from i in find.outputTable
-                       where i.Contains("eth")
-                       select i).FirstOrDefault();
-            if (row == null)
-                return null;
-            var cat = Terminal.Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
-            return cat.outputTable.FirstOrDefault();
+        public static SystemInfoModel Get() => DeNSo.Session.New.Get<SystemInfoModel>().FirstOrDefault();
+
+        private static void FlushDb() => DeNSo.Session.New.DeleteAll(GetAll());
+
+        public static void Import() {
+            FlushDb();
+            if (!AssemblyInfo.IsUnix)
+                return;
+            var model = new SystemInfoModel {
+                _Id = Guid.NewGuid().ToString(),
+                VersionOs = Terminal.Terminal.Execute("uname -a"),
+                VersionAos = Terminal.Terminal.Execute("cat /etc/aos-release")
+            };
+            DeNSo.Session.New.Set(model);
         }
+    }
+
+    public class SystemInfoModel {
+        public string _Id { get; set; }
+        public string VersionOs { get; set; }
+        public string VersionAos { get; set; }
     }
 }

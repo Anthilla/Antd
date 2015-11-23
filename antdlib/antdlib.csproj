@@ -168,11 +168,11 @@
     <Compile Include="Global.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\ParameterXmlWriter.cs" />
-    <Compile Include="Contexts\Dmidecode.cs" />
-    <Compile Include="Contexts\Ifconfig.cs" />
-    <Compile Include="Contexts\Meminfo.cs" />
-    <Compile Include="Contexts\Proc.cs" />
-    <Compile Include="Contexts\Version.cs" />
+    <Compile Include="Info\Dmidecode.cs" />
+    <Compile Include="Info\Ifconfig.cs" />
+    <Compile Include="Info\SystemInfo.cs" />
+    <Compile Include="Info\Meminfo.cs" />
+    <Compile Include="Info\Proc.cs" />
     <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Directories\DirectoryWatcher.cs" />

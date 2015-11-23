@@ -27,26 +27,19 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Common;
-using antdlib.Models;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace antdlib.Contexts {
-    public class Version {
-        public static string GetText() {
-            return JsonConvert.SerializeObject(FileSystem.ReadFile("/proc/version"));
-        }
-
-        public static VersionModel GetModel() {
-            return ConvertVersion(FileSystem.ReadFile("/proc/version"));
-        }
-
-        private static VersionModel ConvertVersion(string versionText) {
-            var version = new VersionModel {
-                key = "",
-                value = versionText
-            };
-            return version;
+namespace antdlib.Info {
+    public class Dmidecode {
+        public static string GetUuid(List<string> inputTable) {
+            var row = (from i in inputTable
+                          where i.Contains("UUID:")
+                          select i).FirstOrDefault();
+            if (row == null) return null;
+            var array = row.Split(new[] { ' ' }, 2);
+            var uuid = array[1];
+            return uuid;
         }
     }
 }

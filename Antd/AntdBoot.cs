@@ -11,6 +11,7 @@ using antdlib.Common;
 using antdlib.Config;
 using antdlib.Directories;
 using antdlib.Firewall;
+using antdlib.Info;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
@@ -215,11 +216,14 @@ namespace Antd {
         /// <summary>
         /// 15
         /// </summary>
-        public static void ImportNetworkInterfaces() {
+        public static void ImportSystemInformation() {
             if (!AssemblyInfo.IsUnix)
                 return;
             if (!NetworkInterface.GetAll().Any()) {
                 NetworkInterface.ImportNetworkInterface();
+            }
+            if (!SystemInfo.GetAll().Any()) {
+                SystemInfo.Import();
             }
             ConsoleLogger.Log("network interfaces imported");
         }

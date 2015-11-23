@@ -1,10 +1,13 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Info">Info</legend>
+    <legend id="Info">
+        Info
+        <i id="ReloadSystemInfo" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
     <table class="table">
         <tbody>
             <tr>
                 <td><label>Linux Version</label></td>
-                <td>@Model.VersionOS</td>
+                <td>@Model.VersionOs</td>
             </tr>
         </tbody>
     </table>
@@ -67,7 +70,7 @@
         <tbody>
             <tr>
                 <td><label>AnthillaOS Version</label></td>
-                <td>@Model.VersionAOS</td>
+                <td>@Model.VersionAos</td>
             </tr>
             <tr>
                 <td colspan="2"><label>AnthillaOS - Active Kernel</label></td>

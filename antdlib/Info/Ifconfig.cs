@@ -27,19 +27,26 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Linq;
+using antdlib.Common;
 
-namespace antdlib.Contexts {
-    public class Dmidecode {
-        public static string GetUuid(List<string> inputTable) {
-            var row = (from i in inputTable
-                          where i.Contains("UUID:")
-                          select i).FirstOrDefault();
-            if (row == null) return null;
-            var array = row.Split(new[] { ' ' }, 2);
-            var uuid = array[1];
-            return uuid;
+namespace antdlib.Info {
+
+    public class Ifconfig {
+
+        public static string GetEther() {
+            const string dir = "/sys/devices";
+            var find = Terminal.Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
+            if (find.isError()) {
+                return find.error;
+            }
+            var row = (from i in find.outputTable
+                       where i.Contains("eth")
+                       select i).FirstOrDefault();
+            if (row == null)
+                return null;
+            var cat = Terminal.Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
+            return cat.outputTable.FirstOrDefault();
         }
     }
 }

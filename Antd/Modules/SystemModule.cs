@@ -34,6 +34,7 @@ using antdlib.Boot;
 using antdlib.CCTable;
 using antdlib.Certificate;
 using antdlib.Common;
+using antdlib.Info;
 using antdlib.MountPoint;
 using antdlib.Status;
 using Antd.ViewHelpers;
@@ -120,9 +121,9 @@ namespace Antd.Modules {
                 return Response.AsJson(output);
             };
 
-            Get["/system/wizard"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["page-wizard", vmod];
+            Post["/system/import/info"] = x => {
+                SystemInfo.Import();
+                return Response.AsJson(true);
             };
         }
     }

@@ -116,7 +116,7 @@ namespace Antd {
             AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
-            AntdBoot.ImportNetworkInterfaces();
+            AntdBoot.ImportSystemInformation();
             //AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();

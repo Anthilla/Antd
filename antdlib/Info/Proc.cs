@@ -33,7 +33,7 @@ using System.Linq;
 using antdlib.Common;
 using Newtonsoft.Json;
 
-namespace antdlib.Contexts {
+namespace antdlib.Info {
     public class Proc {
         private static List<ProcModel> GetAllAllProc() {
             return MapProcJson(JsonConvert.SerializeObject(Terminal.Terminal.Execute("ps -aef").ConvertCommandToModel().output));

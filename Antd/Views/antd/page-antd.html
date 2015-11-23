@@ -70,6 +70,17 @@
 
 @Section['Scripts']
 <script data-context="general" type="text/javascript">
+    $('#ReloadSystemInfo').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/system/import/info',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
     $('.search-field').keyup(function () {
         var context = $(this).attr('data-searchable');
         var queryString = $(this).val();

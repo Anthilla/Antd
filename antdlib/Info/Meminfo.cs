@@ -34,7 +34,7 @@ using antdlib.Common;
 using antdlib.Models;
 using Newtonsoft.Json;
 
-namespace antdlib.Contexts {
+namespace antdlib.Info {
 
     public class Meminfo {
 
