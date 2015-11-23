@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.Common;
+using antdlib.Log;
 using antdlib.Terminal;
 
 namespace antdlib.CCTable {
@@ -54,11 +55,17 @@ namespace antdlib.CCTable {
         }
 
         public static CCTableModel GetByContext(string context) {
-            var item = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Context == context).FirstOrDefault();
-            if (item != null) {
-                item.Content = GetRows(item.Guid);
+            try {
+                var item = DeNSo.Session.New.Get<CCTableModel>(c => c != null && c.Context == context).FirstOrDefault();
+                if (item != null) {
+                    item.Content = GetRows(item.Guid);
+                }
+                return item;
             }
-            return item;
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"cannot get cctable: {ex.Message}");
+                return null;
+            }
         }
 
         public static CCTableModel GetByContext2(string context) {

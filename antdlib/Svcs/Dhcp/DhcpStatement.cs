@@ -36,16 +36,16 @@ using System.Text.RegularExpressions;
 namespace antdlib.Svcs.Dhcp {
     public class DhcpStatement {
         public static IEnumerable<DhcpConfig.LineModel> AssignGlobal(string input) {
-            var global = new List<DhcpConfig.LineModel>() { };
-            var globalStr = $"(?!range|prefix|zone|host|algor|secret)(^[^#{{}}\\s].*?;)";
+            var global = new List<DhcpConfig.LineModel>();
+            var globalStr = "(?!range|prefix|zone|host|algor|secret)(^[^#{{}}\\s].*?;)";
             var globalRegex = new Regex(globalStr, RegexOptions.Multiline);
             var globalMatches = globalRegex.Matches(input);
-            for (int i = 0; i < globalMatches.Count; i++) {
-                var split = globalMatches[i].Value.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            for (var i = 0; i < globalMatches.Count; i++) {
+                var split = globalMatches[i].Value.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 if (split.Length > 1) {
                     var k = split[0].Trim();
                     var v = split[1].Trim().Replace(";", "").Trim();
-                    var ddd = new DhcpConfig.LineModel() {
+                    var ddd = new DhcpConfig.LineModel {
                         Key = k,
                         Value = v,
                         Type = Helper.ServiceData.SupposeDataType(v),
@@ -59,11 +59,11 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.LineModel> AssignInclude(string input) {
-            var include = new List<DhcpConfig.LineModel>() { };
+            var include = new List<DhcpConfig.LineModel>();
             var includeStr = $"include[\\s\\w\\d\\-{{.:\"=/]*;";
             var includeRegex = new Regex(includeStr);
             var includeMatches = includeRegex.Matches(input);
-            for (int i = 0; i < includeMatches.Count; i++) {
+            for (var i = 0; i < includeMatches.Count; i++) {
                 var v = includeMatches[i].Value.Replace("\t", " ").Replace("include ", "").Trim();
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "include",
@@ -78,11 +78,11 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.LineModel> AssignPrefix6(string input) {
-            var prefix6 = new List<DhcpConfig.LineModel>() { };
+            var prefix6 = new List<DhcpConfig.LineModel>();
             var prefix6Str = $"prefix6[\\s\\w\\d\\-{{.:\"=/]*;";
             var prefix6Regex = new Regex(prefix6Str);
             var prefix6Matches = prefix6Regex.Matches(input);
-            for (int i = 0; i < prefix6Matches.Count; i++) {
+            for (var i = 0; i < prefix6Matches.Count; i++) {
                 var v = prefix6Matches[i].Value.Replace("\t", " ").Replace("prefix6 ", "").Trim();
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "prefix6",
@@ -97,11 +97,11 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.LineModel> AssignRange6(string input) {
-            var range6 = new List<DhcpConfig.LineModel>() { };
+            var range6 = new List<DhcpConfig.LineModel>();
             var range6Str = $"range6[\\s\\w\\d\\-{{.:\"=/]*;";
             var range6Regex = new Regex(range6Str);
             var range6Matches = range6Regex.Matches(input);
-            for (int i = 0; i < range6Matches.Count; i++) {
+            for (var i = 0; i < range6Matches.Count; i++) {
                 var v = range6Matches[i].Value.Replace("\t", " ").Replace("range6 ", "").Trim();
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "range6",
@@ -116,11 +116,11 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.LineModel> AssignRange(string input) {
-            var range = new List<DhcpConfig.LineModel>() { };
+            var range = new List<DhcpConfig.LineModel>();
             var rangeStr = $"range[\\s\\w\\d\\-{{.:\"=/]*;";
             var rangeRegex = new Regex(rangeStr);
             var rangeMatches = rangeRegex.Matches(input);
-            for (int i = 0; i < rangeMatches.Count; i++) {
+            for (var i = 0; i < rangeMatches.Count; i++) {
                 var v = rangeMatches[i].Value.Replace("\t", " ").Replace("range ", "").Trim();
                 var ddd = new DhcpConfig.LineModel() {
                     Key = "range",
@@ -135,17 +135,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignKey(string input) {
-            var key = new List<DhcpConfig.OptionModel>() { };
+            var key = new List<DhcpConfig.OptionModel>();
             var keyStr = $"key[\\s\\S]*}};";
             var keyRegex = new Regex(keyStr);
             var keyMatches = keyRegex.Matches(input);
             var data = (keyMatches.Count > 0) ? keyMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("key {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -160,13 +160,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -188,17 +188,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignSubnet(string input) {
-            var subnet = new List<DhcpConfig.OptionModel>() { };
+            var subnet = new List<DhcpConfig.OptionModel>();
             var subnetStr = $"subnet[\\s\\w\\d.]*mask[\\s\\w\\d.]*{{[\\s\\w\\d.;{{-]*";
             var subnetRegex = new Regex(subnetStr);
             var subnetMatches = subnetRegex.Matches(input);
             var data = (subnetMatches.Count > 0) ? subnetMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subnet {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -213,13 +213,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -241,17 +241,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignHost(string input) {
-            var host = new List<DhcpConfig.OptionModel>() { };
+            var host = new List<DhcpConfig.OptionModel>();
             var hostStr = $"[^\\S]host[\\s\\w\\d{{.:;\\-]*";
             var hostRegex = new Regex(hostStr);
             var hostMatches = hostRegex.Matches(input);
             var data = (hostMatches.Count > 0) ? hostMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("host {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -266,13 +266,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -294,17 +294,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignSubnet6(string input) {
-            var subnet6 = new List<DhcpConfig.OptionModel>() { };
+            var subnet6 = new List<DhcpConfig.OptionModel>();
             var subnet6Str = $"[^\\S][^\\S]subnet6[\\s\\w\\d\\-{{.:;\"=/]*";
             var subnet6Regex = new Regex(subnet6Str);
             var subnet6Matches = subnet6Regex.Matches(input);
             var data = (subnet6Matches.Count > 0) ? subnet6Matches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subnet6 {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -319,13 +319,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -347,17 +347,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignFailover(string input) {
-            var failover = new List<DhcpConfig.OptionModel>() { };
+            var failover = new List<DhcpConfig.OptionModel>();
             var failoverStr = $"[^\\S]failover[\\s\\w\\d\\-{{.:;\"]*";
             var failoverRegex = new Regex(failoverStr);
             var failoverMatches = failoverRegex.Matches(input);
             var data = (failoverMatches.Count > 0) ? failoverMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("failover {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -372,13 +372,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -400,17 +400,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignLogging(string input) {
-            var logging = new List<DhcpConfig.OptionModel>() { };
+            var logging = new List<DhcpConfig.OptionModel>();
             var loggingStr = $"logging[\\s\\w\\d\\-{{.:\"=/;}}]*";
             var loggingRegex = new Regex(loggingStr);
             var loggingMatches = loggingRegex.Matches(input);
             var data = (loggingMatches.Count > 0) ? loggingMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("logging {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -425,13 +425,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -453,17 +453,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignSharedNetwork(string input) {
-            var sharedNetwork = new List<DhcpConfig.OptionModel>() { };
+            var sharedNetwork = new List<DhcpConfig.OptionModel>();
             var sharedNetworkStr = $"[^\\S][^\\S]shared-network[\\s\\w\\d\\-{{.:;\"=/]*";
             var sharedNetworkRegex = new Regex(sharedNetworkStr);
             var sharedNetworkMatches = sharedNetworkRegex.Matches(input);
             var data = (sharedNetworkMatches.Count > 0) ? sharedNetworkMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("shared-network {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -478,13 +478,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -506,17 +506,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignGroup(string input) {
-            var group = new List<DhcpConfig.OptionModel>() { };
+            var group = new List<DhcpConfig.OptionModel>();
             var groupStr = $"[^\\S][^\\S]group[\\s\\w\\d\\-{{.:;\"=/]*";
             var groupRegex = new Regex(groupStr);
             var groupMatches = groupRegex.Matches(input);
             var data = (groupMatches.Count > 0) ? groupMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("group {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -531,13 +531,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -559,17 +559,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignClass(string input) {
-            var @class = new List<DhcpConfig.OptionModel>() { };
+            var @class = new List<DhcpConfig.OptionModel>();
             var classStr = $"[^\\S]class[\\s\\w\\d\\-{{.:;\"=]*";
             var classRegex = new Regex(classStr);
             var classMatches = classRegex.Matches(input);
             var data = (classMatches.Count > 0) ? classMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("class {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -584,13 +584,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
@@ -612,17 +612,17 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         public static IEnumerable<DhcpConfig.OptionModel> AssignSubclass(string input) {
-            var subclass = new List<DhcpConfig.OptionModel>() { };
+            var subclass = new List<DhcpConfig.OptionModel>();
             var subclassStr = $"[^\\S]subclass[\\s\\w\\d\\-{{.:;\"=/]*";
             var subclassRegex = new Regex(subclassStr);
             var subclassMatches = subclassRegex.Matches(input);
             var data = (subclassMatches.Count > 0) ? subclassMatches[0].Value : "";
-            var dataList = new List<DhcpConfig.LineModel>() { };
+            var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subclass {", "");
                 var simpleDataMatches = new Regex($"(?!([a-zA-Z0-9\\s-\"/._*;]*}})|(;))[a-zA-Z0-9\\s-/._\"*]*[;]").Matches(txt);
-                for (int i = 0; i < simpleDataMatches.Count; i++) {
-                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < simpleDataMatches.Count; i++) {
+                    var split = simpleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1 && !split[0].StartsWith("//")) {
                         var k = split[0];
                         var v = split[1].Replace(";", "").Replace("\"", "");
@@ -637,13 +637,13 @@ namespace antdlib.Svcs.Dhcp {
                     }
                 }
                 var multipleDataMatches = new Regex($"[\\w\\d\\s-\"/._*]*{{[\\w\\d\\s-\"/._*;]*}};").Matches(txt);
-                for (int i = 0; i < multipleDataMatches.Count; i++) {
-                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new String[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                for (var i = 0; i < multipleDataMatches.Count; i++) {
+                    var split = multipleDataMatches[i].Value.Replace("\t", " ").Trim().Split(new[] { " {" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                     if (split.Length > 1) {
                         var k = split[0];
                         var v = split[1].Replace("};", "").Trim();
-                        var splitValue = v.Split(new String[] { ";" }, StringSplitOptions.None).ToArray();
-                        var splitValue2 = splitValue[0].Split(new String[] { " " }, StringSplitOptions.None).ToArray();
+                        var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
+                        var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
                         var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,

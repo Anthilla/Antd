@@ -109,9 +109,9 @@ namespace Antd {
             AntdBoot.CheckCertificate();        
             AntdBoot.ReloadUsers();             
             //AntdBoot.ReloadSsh();
-            AntdBoot.LaunchDefaultOsConfiguration();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
+            AntdBoot.LaunchDefaultOsConfiguration();
             AntdBoot.SetWebsocketd();
             AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();

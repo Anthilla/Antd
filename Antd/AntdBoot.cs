@@ -113,19 +113,6 @@ namespace Antd {
         /// <summary>
         /// 08
         /// </summary>
-        public static void LaunchDefaultOsConfiguration() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            if (ConfigManagement.Exists) {
-                ConfigManagement.ExecuteAll();
-            }
-            ConfigManagement.FromFile.ApplyForAll();
-            ConsoleLogger.Log("default os configuration ready");
-        }
-
-        /// <summary>
-        /// 09
-        /// </summary>
         public static void SetMounts() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -134,7 +121,7 @@ namespace Antd {
         }
 
         /// <summary>
-        /// 10
+        /// 09
         /// </summary>
         public static void SetOsMount() {
             if (!AssemblyInfo.IsUnix)
@@ -155,6 +142,19 @@ namespace Antd {
             }
             Terminal.Execute("systemctl restart systemd-modules-load.service");
             ConsoleLogger.Log("os mounts ready");
+        }
+
+        /// <summary>
+        /// 10
+        /// </summary>
+        public static void LaunchDefaultOsConfiguration() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            if (ConfigManagement.Exists) {
+                ConfigManagement.ExecuteAll();
+            }
+            ConfigManagement.FromFile.ApplyForAll();
+            ConsoleLogger.Log("default os configuration ready");
         }
 
         /// <summary>

@@ -63,6 +63,7 @@ namespace antdlib.Common {
             using (var sw = File.CreateText(path)) {
                 sw.Write(content);
             }
+            path.DosToUnix();
         }
 
         public static void WriteFile(string directory, string filename, string content) {
@@ -71,6 +72,7 @@ namespace antdlib.Common {
             using (var sw = File.CreateText(path)) {
                 sw.Write(content);
             }
+            path.DosToUnix();
         }
 
         public static void CopyDirectory(string source, string destination) {
@@ -87,9 +89,11 @@ namespace antdlib.Common {
             foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
                 try {
                     File.Copy(newPath, newPath.Replace(source, destination), true);
+                    newPath.DosToUnix();
                 }
                 catch (Exception) {
                     Terminal.Terminal.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
+                    newPath.DosToUnix();
                 }
             }
         }

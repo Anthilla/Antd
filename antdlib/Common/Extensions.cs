@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using antdlib.Models;
-using Nancy.IO;
-using Newtonsoft.Json;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -35,6 +26,16 @@ using Newtonsoft.Json;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using antdlib.Models;
+using Nancy.IO;
+using Newtonsoft.Json;
 
 namespace antdlib.Common {
 
@@ -231,6 +232,11 @@ namespace antdlib.Common {
             var result = new T[length];
             Array.Copy(data, index, result, 0, length);
             return result;
+        }
+
+        public static void DosToUnix(this string file, string otherFile = "") {
+            var fileToConvert = otherFile.Length > 0 ? otherFile : file;
+            Terminal.Terminal.Execute($"dos2unix {fileToConvert}");
         }
     }
 }

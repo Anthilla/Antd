@@ -98,23 +98,23 @@ namespace Antd.Modules {
                 viewModel.NetworkBridgeIf = NetworkInterface.Bridge;
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
                 viewModel.DhcpdStatus = antdlib.Svcs.Dhcp.DhcpConfig.IsActive;
-                viewModel.DhcpdGetGlobal = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGlobal;
-                viewModel.DhcpdGetPrefix6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpPrefix6;
-                viewModel.DhcpdGetRange = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange;
-                viewModel.DhcpdGetRange6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange6;
-                viewModel.DhcpdGetKeys = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpKey;
-                viewModel.DhcpdGetSubnet = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubnet;
-                viewModel.DhcpdGetSubnet6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubnet6;
-                viewModel.DhcpdGetHost = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpHost;
-
-                viewModel.DhcpdGetFailover = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpFailover;
-                viewModel.DhcpdGetSharedNetwork = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSharedNetwork;
-                viewModel.DhcpdGetGroup = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGroup;
-                viewModel.DhcpdGetClass = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpClass;
-                viewModel.DhcpdGetSubclass = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubclass;
-                viewModel.DhcpdGetLogging = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpLogging;
-
-
+                var dhcpdModel = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get();
+                if (dhcpdModel != null) {
+                    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
+                    viewModel.DhcpdGetPrefix6 = dhcpdModel.DhcpPrefix6;
+                    viewModel.DhcpdGetRange = dhcpdModel.DhcpRange;
+                    viewModel.DhcpdGetRange6 = dhcpdModel.DhcpRange6;
+                    viewModel.DhcpdGetKeys = dhcpdModel.DhcpKey;
+                    viewModel.DhcpdGetSubnet = dhcpdModel.DhcpSubnet;
+                    viewModel.DhcpdGetSubnet6 = dhcpdModel.DhcpSubnet6;
+                    viewModel.DhcpdGetHost = dhcpdModel.DhcpHost;
+                    viewModel.DhcpdGetFailover = dhcpdModel.DhcpFailover;
+                    viewModel.DhcpdGetSharedNetwork = dhcpdModel.DhcpSharedNetwork;
+                    viewModel.DhcpdGetGroup = dhcpdModel.DhcpGroup;
+                    viewModel.DhcpdGetClass = dhcpdModel.DhcpClass;
+                    viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
+                    viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
+                }
 
 
 
