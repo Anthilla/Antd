@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace antdlib.Info {
-
     public class SystemInfo {
         public static IEnumerable<SystemInfoModel> GetAll() => DeNSo.Session.New.Get<SystemInfoModel>();
 

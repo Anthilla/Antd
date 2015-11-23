@@ -78,8 +78,15 @@ namespace Antd.Modules {
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
-                viewModel.VersionOS = SystemInfo.Get().VersionOs;
-                viewModel.VersionAOS = SystemInfo.Get().VersionAos;
+                if (SystemInfo.Get() == null) {
+                    viewModel.VersionOS = "";
+                    viewModel.VersionAOS = "";
+                }
+                else {
+                    viewModel.VersionOS = SystemInfo.Get().VersionOs;
+                    viewModel.VersionAOS = SystemInfo.Get().VersionAos;
+                }
+
                 viewModel.ActiveKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.RecoveryKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.ActiveSystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);

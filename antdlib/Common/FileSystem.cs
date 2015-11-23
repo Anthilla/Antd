@@ -46,7 +46,7 @@ namespace antdlib.Common {
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
             }
-            ConsoleLogger.Warn("Path '{0}' doesn't exist", path);
+            ConsoleLogger.Log($"{path} does not exist");
             return string.Empty;
         }
 
@@ -55,7 +55,7 @@ namespace antdlib.Common {
             if (File.Exists(path)) {
                 return File.ReadAllText(path);
             }
-            ConsoleLogger.Warn($"File {filename} doesn't exist in {directory}");
+            ConsoleLogger.Log($"{filename} does not exist");
             return string.Empty;
         }
 
@@ -117,8 +117,7 @@ namespace antdlib.Common {
                 File.Delete(nfile);
             }
             catch (Exception ex) {
-                ConsoleLogger.Warn($"Unable to dowload from {url}");
-                ConsoleLogger.Warn($"{ex.Message}");
+                ConsoleLogger.Warn($"unable to dowload from {url}: {ex.Message}");
             }
         }
 
