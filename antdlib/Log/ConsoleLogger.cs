@@ -37,7 +37,7 @@ namespace antdlib.Log {
 
         public static void Log(dynamic message, string source = "") {
             var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"lvl={EventLevel.Log} msg={message}{src}");
+            Console.WriteLine($"lvl={(int)EventLevel.Log} msg={message}{src}");
             Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Log, message);
         }
 
@@ -45,7 +45,7 @@ namespace antdlib.Log {
             var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"lvl={EventLevel.Warn} msg={message}{src}");
+            Console.WriteLine($"lvl={(int)EventLevel.Warn} msg={message}{src}");
             Console.ForegroundColor = currentColor;
             Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Warn, message);
         }
@@ -54,7 +54,7 @@ namespace antdlib.Log {
             var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkRed;
             var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"lvl={EventLevel.Error} msg={message}{src}");
+            Console.WriteLine($"lvl={(int)EventLevel.Error} msg={message}{src}");
             Console.ForegroundColor = currentColor;
             Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Error, message);
         }
@@ -63,7 +63,7 @@ namespace antdlib.Log {
             var currentFg = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Magenta;
             var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"lvl={EventLevel.Other} msg={message}{src}");
+            Console.WriteLine($"lvl={(int)EventLevel.Other} msg={message}{src}");
             Console.ForegroundColor = currentFg;
         }
     }

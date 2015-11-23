@@ -152,7 +152,6 @@
     <Compile Include="Certificate\CertificateModel.cs" />
     <Compile Include="Collectd\CollectdModel.cs" />
     <Compile Include="Collectd\CollectdRepo.cs" />
-    <Compile Include="Common\ConsoleLogger.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />

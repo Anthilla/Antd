@@ -177,9 +177,10 @@ namespace Antd {
             if (!AssemblyInfo.IsUnix)
                 return;
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
-            if (!File.Exists(file)) {
-                File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
+            if (File.Exists(file)) {
+                return;
             }
+            File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
             var realFileName = Mount.GetFilesPath("FILE_etc_systemd_journald.conf");
             if (Mount.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
