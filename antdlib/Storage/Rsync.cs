@@ -32,6 +32,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace antdlib.Storage {
+    public enum RsyncDirectoryType : byte {
+        FromLocalToRemote = 1,
+        FromRemoteToLocal = 2,
+        Other = 99
+    }
+
     public class RsyncDirectoryModel {
         public string _Id { get; set; }
         public string Guid { get; set; }
@@ -39,21 +45,36 @@ namespace antdlib.Storage {
         public string Destination { get; set; }
         public string Options { get; set; }
         public bool IsDeleted { get; set; } = false;
+        public RsyncDirectoryType DirectoryType { get; set; }
     }
 
     public class Rsync {
 
         public static IEnumerable<RsyncDirectoryModel> GetAll() => DeNSo.Session.New.Get<RsyncDirectoryModel>(_ => _.IsDeleted == false);
 
-        public static void Create(string source, string destination, string options) {
+        public static IEnumerable<string> GetDirectoriesToWatch() => DeNSo.Session.New.Get<RsyncDirectoryModel>(_ => _.IsDeleted == false).Select(_=>_.Source);
+
+        public static void Create(string source, string destination, string options, string type) {
             var mod = new RsyncDirectoryModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
                 Source = source,
                 Destination = destination,
-                Options = options
+                Options = options,
+                DirectoryType = ConvertToRsyncDirectoryType(type)
             };
             DeNSo.Session.New.Set(mod);
+        }
+
+        private static RsyncDirectoryType ConvertToRsyncDirectoryType(string type) {
+            switch (type) {
+                case "localtoremote":
+                    return RsyncDirectoryType.FromLocalToRemote;
+                case "remotetolocal":
+                    return RsyncDirectoryType.FromRemoteToLocal;
+                default:
+                    return RsyncDirectoryType.Other;
+            }
         }
 
         public static void SyncDirectories(string source) {

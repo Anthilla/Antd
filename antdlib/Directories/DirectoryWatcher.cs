@@ -27,45 +27,51 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using antdlib.Log;
+using antdlib.Storage;
 
 namespace antdlib.Directories {
 
     public class DirectoryWatcher {
-        private readonly string _path;
-
-        public DirectoryWatcher(string path) {
-            _path = path;
-        }
-
-        public void Watch() {
-            var watcher = new FileSystemWatcher(_path) {
-                NotifyFilter =
-                    NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName |
-                    NotifyFilters.DirectoryName,
-                IncludeSubdirectories = true
-            };
-            watcher.Changed += OnChanged;
-            watcher.Created += (OnChanged);
-            watcher.Deleted += (OnChanged);
-            watcher.Renamed += (OnRenamed);
-            watcher.EnableRaisingEvents = true;
+        public void StartWatching() {
+            try {
+                var paths = Rsync.GetDirectoriesToWatch();
+                foreach (var path in paths) {
+                    if (Directory.Exists(path) || File.Exists(path)) {
+                        var watcher = new FileSystemWatcher(path) {
+                            NotifyFilter =
+                                NotifyFilters.LastAccess |
+                                NotifyFilters.LastWrite |
+                                NotifyFilters.FileName |
+                                NotifyFilters.DirectoryName,
+                            IncludeSubdirectories = true,
+                        };
+                        watcher.Changed += OnChanged;
+                        watcher.Created += OnChanged;
+                        watcher.Deleted += OnChanged;
+                        watcher.Renamed += OnRenamed;
+                        watcher.EnableRaisingEvents = true;
+                    }
+                    else {
+                        throw new Exception($"directory Watcher: {path}");
+                    }
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Log(ex.Message);
+            }
         }
 
         private static void OnChanged(object source, FileSystemEventArgs e) {
-            //todo:
-            //if file = text lo posso leggere
-            //tell to signalr
-            //distingui r/rw/eccetera
-            //recupera IDseriale della macchina
-            //Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath);
-            ConsoleLogger.Log($"Directory Watcher >> File: {e.FullPath} {e.ChangeType}");
+            Rsync.SyncDirectories(e.FullPath);
+            ConsoleLogger.Log($"directory Watcher: {e.FullPath} {e.ChangeType}");
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
-            //Logger.TraceFileChange(e.ChangeType.ToString(), e.FullPath, e.OldName);
-            ConsoleLogger.Log($"Directory Watcher >> File: {e.OldName} renamed to {e.Name}");
+            Rsync.SyncDirectories(e.FullPath);
+            ConsoleLogger.Log($"directory Watcher: {e.OldName} renamed to {e.Name}");
         }
     }
 }

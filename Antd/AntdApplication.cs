@@ -117,10 +117,9 @@ namespace Antd {
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.ImportNetworkInterfaces();
-            AntdBoot.StartScheduler(true);
-            AntdBoot.StartDirectoryWatcher(new[] { Parameter.RepoConfig }, false);
+            //AntdBoot.StartScheduler(true);
+            AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
-            
             //AntdBoot.DownloadDefaultRepoFiles();
         }
     }

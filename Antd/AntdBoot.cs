@@ -238,16 +238,9 @@ namespace Antd {
         /// </summary>
         /// <param name="watchDirectories"></param>
         /// <param name="isActive"></param>
-        public static void StartDirectoryWatcher(string[] watchDirectories, bool isActive) {
-            if (isActive && watchDirectories.Length > 0) {
-                foreach (var folder in watchDirectories.Where(Directory.Exists)) {
-                    new DirectoryWatcher(folder).Watch();
-                }
-                ConsoleLogger.Log("directory watcher ready");
-            }
-            else {
-                ConsoleLogger.Log("directory watcher skipped");
-            }
+        public static void StartDirectoryWatcher() {
+            new DirectoryWatcher().StartWatching();
+            ConsoleLogger.Log("directory watcher ready");
         }
 
         /// <summary>

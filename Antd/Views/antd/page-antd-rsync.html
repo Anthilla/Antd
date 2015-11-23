@@ -3,6 +3,17 @@
     <form id="OneTimeOnly" action="/rsync/add" method="POST" enctype="multipart/form-data" class="grid">
         <div class="row">
             <div class="span4">
+                <label>Type</label>
+            </div>
+            <div class="span6">
+                <select name="Type" data-role="SelectRsyncType">
+                    <option value="localtoremote">From Local To Remote</option>
+                    <option value="remotetolocal">From Remote To Local</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
                 <label>Source</label>
             </div>
             <div class="span6">
@@ -23,9 +34,9 @@
             </div>
             <div class="span10">
                 @Each.RsyncOptions
-                <input type="checkbox" data-role="add-rsync-option" data-option-to-add="@Current.Item1" />
+                <input type="checkbox" data-role="add-rsync-option" data-option-to-add="@Current.Item1"/>
                 <p style="display: inline-block;">@Current.Item2</p>
-                <br />
+                <br/>
                 @EndEach
             </div>
         </div>
@@ -39,8 +50,10 @@
             </div>
         </div>
     </form>
-</div>
-<script data-context="rsync" type="text/javascript">
+    <hr class="bg-anthilla-gray"/>
+    <script data-context="rsync" type="text/javascript">
+    $('[data-role="SelectRsyncType"]').windowed();
+
     $('input[type="checkbox"]').focusout(function () {
         var optionInput = $('input[name="Options"]');
         var value = '';
@@ -52,15 +65,19 @@
         });
         optionInput.val(value);
     });
-</script>
-<table class="table">
-    <tbody>
-        @Each.RsyncDirectories
-        <tr>
-            <td>@Current.Source</td>
-            <td>@Current.Destination</td>
-        </tr>
-        @EndEach
-    </tbody>
-</table>
+    </script>
+    <table class="table">
+        <tbody>
+            @Each.RsyncDirectories
+            <tr>
+                <td>@Current.Source</td>
+                <td>@Current.Destination</td>
+                <td>@Current.Options</td>
+                <td>@Current.Type</td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>
+
 

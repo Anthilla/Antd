@@ -63,8 +63,9 @@ namespace Antd.Modules {
             Post["/rsync/add"] = x => {
                 var source = (string)Request.Form.Source;
                 var destination = (string)Request.Form.Destination;
-                var options = (string) Request.Form.Options;
-                Rsync.Create(source, destination, options);
+                var options = (string)Request.Form.Options;
+                var type = (string)Request.Form.Type.Value;
+                Rsync.Create(source, destination, options, type);
                 return Response.AsRedirect("/");
             };
         }
