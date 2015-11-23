@@ -76,7 +76,7 @@ namespace Antd.Modules {
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.DumpGlobalConfig();
                 Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSMBCONF();
+                SambaConfig.WriteFile.RewriteSmbconf();
                 return Response.AsRedirect("/");
             };
 
@@ -89,7 +89,7 @@ namespace Antd.Modules {
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.DumpShare(name);
                 Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSMBCONF();
+                SambaConfig.WriteFile.RewriteSmbconf();
                 return Response.AsRedirect("/");
             };
 
@@ -98,7 +98,7 @@ namespace Antd.Modules {
                 string value = Request.Form.NewParameterValue;
                 SambaConfig.WriteFile.AddParameterToGlobal(key, value);
                 Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSMBCONF();
+                SambaConfig.WriteFile.RewriteSmbconf();
                 return Response.AsRedirect("/");
             };
 
@@ -107,7 +107,7 @@ namespace Antd.Modules {
                 string directory = Request.Form.NewShareDirectory;
                 SambaConfig.WriteFile.AddShare(name, directory);
                 Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSMBCONF();
+                SambaConfig.WriteFile.RewriteSmbconf();
                 return Response.AsRedirect("/");
             };
             #endregion SAMBA
