@@ -97,30 +97,31 @@ namespace Antd {
                 Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
                 ConsoleLogger.Error(ex.ToString(), "antd-crash");
                 File.WriteAllText($"{Parameter.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
+                DeNSo.Session.ShutDown();
             }
         }
 
         private static void Configuration() {
-            //todo check commented lines
-            AntdBoot.CheckOsIsRw();
-            AntdBoot.SetWorkingDirectories();
-            AntdBoot.SetCoreParameters();
-            AntdBoot.StartDatabase();
-            AntdBoot.CheckCertificate();
-            AntdBoot.ReloadUsers();
-            //AntdBoot.ReloadSsh();
-            AntdBoot.SetBootConfiguration();
+            AntdBoot.CheckOsIsRw();             
+            AntdBoot.SetWorkingDirectories();   
+            AntdBoot.SetCoreParameters();       
+            AntdBoot.StartDatabase();           
+            AntdBoot.CheckCertificate();        
+            AntdBoot.ReloadUsers();             
+            AntdBoot.ReloadSsh();
+            AntdBoot.LaunchDefaultOsConfiguration();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
             AntdBoot.SetWebsocketd();
             AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
-            AntdBoot.SetNetworkInterfacesValues();
+            AntdBoot.ImportNetworkInterfaces();
             AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher(new[] { Parameter.RepoConfig }, false);
             AntdBoot.LaunchApps();
-            AntdBoot.DownloadDefaultRepoFiles();
+            
+            //AntdBoot.DownloadDefaultRepoFiles();
         }
     }
 

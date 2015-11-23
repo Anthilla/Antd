@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -25,68 +26,115 @@ using Owin;
 namespace Antd {
     public class AntdBoot {
 
+        /// <summary>
+        /// 01
+        /// </summary>
         public static void CheckOsIsRw() {
             Execute.RemounwRwOs();
         }
 
-        public static void CheckIfGlobalRepositoryIsWriteable() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            var bootExtData = Terminal.Execute("blkid | grep BootExt");
-            if (bootExtData.Length <= 0)
-                return;
-            var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
-            var bootExtUid =
-                new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "")
-                    .Replace("\"", "")
-                    .Trim();
-            ConsoleLogger.Log($"global repository: checking");
-            var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
-            if (mountResult.Length > 0) {
-                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
-                    ConsoleLogger.Log($"is RO: remounting");
-                    Terminal.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
-                }
-                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
-                    ConsoleLogger.Log($"is RW: ok!");
-                }
-            }
-            else {
-                ConsoleLogger.Log($"is not mounted: IMPOSSIBLE");
-            }
-            ConsoleLogger.Log($"global repository: {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log($"global repository: checked");
-        }
-
+        /// <summary>
+        /// 02
+        /// </summary>
         public static void SetWorkingDirectories() {
             if (!AssemblyInfo.IsUnix)
                 return;
             Mount.WorkingDirectories();
-            ConsoleLogger.Log($"working directories: checked");
+            ConsoleLogger.Log("working directories ready");
         }
 
+        /// <summary>
+        /// 03
+        /// </summary>
+        public static void SetCoreParameters() {
+            CoreParametersConfig.WriteDefaults();
+            ConsoleLogger.Log("antd core parameters ready");
+        }
+
+        /// <summary>
+        /// 04
+        /// </summary>
+        public static void StartDatabase() {
+            var databasePaths = new[] { CoreParametersConfig.GetDb() };
+            foreach (var dbPath in databasePaths) {
+                Directory.CreateDirectory(dbPath);
+            }
+            DeNSo.Configuration.BasePath = databasePaths;
+            DeNSo.Configuration.EnableJournaling = true;
+            DeNSo.Configuration.EnableDataCompression = false;
+            DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
+            DeNSo.Configuration.EnableOperationsLog = false;
+            DeNSo.Session.DefaultDataBase = Parameter.AntdCfgDatabaseName;
+            DeNSo.Session.Start();
+            ConsoleLogger.Log($"database directory: {string.Join(", ", databasePaths)}");
+            ConsoleLogger.Log("database ready");
+        }
+
+        /// <summary>
+        /// 05
+        /// </summary>
         public static void CheckCertificate() {
             var certificate = CoreParametersConfig.GetCertificatePath();
             if (!File.Exists(certificate)) {
                 File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
             }
+            ConsoleLogger.Log("certificates ready");
         }
 
+        /// <summary>
+        /// 06
+        /// </summary>
+        public static void ReloadUsers() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            SystemUser.Config.ResetPasswordForUserStoredInDb();
+            ConsoleLogger.Log("users config ready");
+        }
+
+        /// <summary>
+        /// 07
+        /// </summary>
+        public static void ReloadSsh() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            const string dir = "/etc/ssh";
+            var mntDir = Mount.SetDirsPath(dir);
+            if (!Directory.Exists(mntDir)) {
+                Terminal.Execute($"cp -fR {dir} {mntDir}");
+            }
+            Mount.Umount(dir);
+            Mount.Dir(dir);
+            Terminal.Execute("ssh-keygen -A");
+            Terminal.Execute("systemctl restart sshd.service");
+            ConsoleLogger.Log("ssh config ready");
+        }
+
+        /// <summary>
+        /// 08
+        /// </summary>
+        public static void LaunchDefaultOsConfiguration() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            if (ConfigManagement.Exists) {
+                ConfigManagement.ExecuteAll();
+            }
+            ConfigManagement.FromFile.ApplyForAll();
+            ConsoleLogger.Log("default os configuration ready");
+        }
+
+        /// <summary>
+        /// 09
+        /// </summary>
         public static void SetMounts() {
             if (!AssemblyInfo.IsUnix)
                 return;
             Mount.AllDirectories();
-            ConsoleLogger.Log($"mounts: checked");
+            ConsoleLogger.Log("mounts ready");
         }
 
-        public static void SetUsersMount(bool isActive) {
-            if (!isActive || !AssemblyInfo.IsUnix)
-                return;
-            SystemUser.SetReady();
-            SystemGroup.SetReady();
-            ConsoleLogger.Log($"users Mount: checked");
-        }
-
+        /// <summary>
+        /// 10
+        /// </summary>
         public static void SetOsMount() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -104,114 +152,106 @@ namespace Antd {
                 Directory.CreateDirectory(moduleDir);
                 Terminal.Execute($"mount {module} {moduleDir}");
             }
-            ConsoleLogger.Log($"os Mount: checked");
             Terminal.Execute("systemctl restart systemd-modules-load.service");
+            ConsoleLogger.Log("os mounts ready");
         }
 
+        /// <summary>
+        /// 11
+        /// </summary>
         public static void SetWebsocketd() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            ConsoleLogger.Log("installing websocketd");
-            LoadOsConfiguration.LoadWebsocketd();
-            ConsoleLogger.Log("websocketd installed");
+            var filePath = $"{Parameter.AntdCfg}/websocketd";
+            if (File.Exists(filePath))
+                return;
+            File.Copy($"{Parameter.Resources}/websocketd", filePath);
+            Terminal.Execute($"chmod 777 {filePath}");
+            ConsoleLogger.Log("websocketd ready");
         }
 
+        /// <summary>
+        /// 12
+        /// </summary>
         public static void SetSystemdJournald() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            ConsoleLogger.Log($"load journald");
-            LoadOsConfiguration.LoadSystemdJournald();
+            var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
+            if (!File.Exists(file)) {
+                File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
+            }
+            var realFileName = Mount.GetFilesPath("FILE_etc_systemd_journald.conf");
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+                Mount.File(realFileName);
+            }
+            Terminal.Execute("systemctl restart systemd-journald.service");
+            ConsoleLogger.Log("journald config ready");
         }
 
-        public static void SetCoreParameters() {
-            CoreParametersConfig.WriteDefaults();
-            ConsoleLogger.Log($"antd core parameters: loaded");
-        }
-
-        public static void CheckSysctl(bool isActive) {
+        /// <summary>
+        /// 13
+        /// </summary>
+        public static void CheckResolv() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            if (isActive) {
-                Sysctl.WriteConfig();
-                Sysctl.LoadConfig();
-                ConsoleLogger.Log($"sysctl: loaded");
-            }
-            else {
-                ConsoleLogger.Log($"sysctl: skipped");
-            }
+            if (File.Exists("/etc/resolv.conf"))
+                return;
+            Terminal.Execute("touch /etc/resolv.conf");
+            ConsoleLogger.Log("resolv ready");
         }
 
-        public static void StartNetworkd() {
-            if (AssemblyInfo.IsUnix) {
-                Networkd.SetConfiguration();
-            }
+        /// <summary>
+        /// 14
+        /// </summary>
+        public static void SetFirewall() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            FirewallLists.SetDefaultLists();
+            NfTables.Export.ExportTemplate();
+            ConsoleLogger.Log("firewall ready");
         }
 
+        /// <summary>
+        /// 15
+        /// </summary>
+        public static void ImportNetworkInterfaces() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            if (!NetworkInterface.GetAll().Any()) {
+                NetworkInterface.ImportNetworkInterface();
+            }
+            ConsoleLogger.Log("network interfaces imported");
+        }
+
+        /// <summary>
+        /// 16
+        /// </summary>
+        /// <param name="loadFromDatabase"></param>
         public static void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
-            ConsoleLogger.Log($"scheduler: loaded");
+            ConsoleLogger.Log("scheduler ready");
         }
 
+        /// <summary>
+        /// 17
+        /// </summary>
+        /// <param name="watchDirectories"></param>
+        /// <param name="isActive"></param>
         public static void StartDirectoryWatcher(string[] watchDirectories, bool isActive) {
             if (isActive && watchDirectories.Length > 0) {
-                ConsoleLogger.Log($"directory watcher: enabled");
-                foreach (var folder in watchDirectories) {
-                    if (Directory.Exists(folder)) {
-                        new DirectoryWatcher(folder).Watch();
-                        ConsoleLogger.Log($"directory watcher: enabled for {0}", folder);
-                    }
-                    else {
-                        ConsoleLogger.Log($"directory watcher: {0} does not exist", folder);
-                    }
+                foreach (var folder in watchDirectories.Where(Directory.Exists)) {
+                    new DirectoryWatcher(folder).Watch();
                 }
+                ConsoleLogger.Log("directory watcher ready");
             }
             else {
-                ConsoleLogger.Log("directory watcher: skipped");
+                ConsoleLogger.Log("directory watcher skipped");
             }
         }
 
-        public static void StartDatabase() {
-            var applicationDatabasePath = CoreParametersConfig.GetDb();
-            Directory.CreateDirectory(applicationDatabasePath);
-            ConsoleLogger.Log("root info: application database path: {0}", applicationDatabasePath);
-            if (Directory.Exists(applicationDatabasePath)) {
-                var databases = new[] { applicationDatabasePath };
-                DatabaseBoot.Start(databases);
-                ConsoleLogger.Log("database ready");
-            }
-            else {
-                ConsoleLogger.Warn("database: failed to load");
-                ConsoleLogger.Warn("directory does not exist");
-            }
-        }
-
-        public static void StartSignalR(IAppBuilder app, bool detailedErrors, bool isActive) {
-            if (isActive) {
-                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
-                app.MapSignalR(hubConfiguration);
-                ConsoleLogger.Log($"signalR ready");
-            }
-            else {
-                ConsoleLogger.Log($"signalR skipped");
-            }
-        }
-
-        public static void StartNancy(IAppBuilder app) {
-            StaticConfiguration.DisableErrorTraces = false;
-            var options = new NancyOptions { EnableClientCertificates = true };
-            app.UseNancy(options);
-            ConsoleLogger.Log($"nancy ready");
-        }
-
-        public static void TestWebDav(string uri, string path) {
-            //NameValueCollection properties = new NameValueCollection();
-            //properties["showDateTime"] = "true";
-            //LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
-            //WebDavServer server = new WebDavServer(new WebDavDiskStore(path));
-            //server.Listener.Prefixes.Add(uri);
-            //server.Start();
-        }
-
+        /// <summary>
+        /// 18
+        /// </summary>
         public static void LaunchApps() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -230,36 +270,12 @@ namespace Antd {
             }
             Thread.Sleep(10);
             AnthillaSp.SetApp();
+            ConsoleLogger.Log("apps ready");
         }
 
-        public static void ReloadSsh() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            const string dir = "/etc/ssh";
-            var mntDir = Mount.SetDirsPath(dir);
-            ConsoleLogger.Log("ssh> set directories");
-            if (!Directory.Exists(mntDir)) {
-                Terminal.Execute($"cp -fR {dir} {mntDir}");
-            }
-            Mount.Umount(dir);
-            Mount.Dir(dir);
-            Terminal.Execute("ssh-keygen -A");
-            Terminal.Execute("systemctl restart sshd.service");
-        }
-
-        public static void ReloadUsers() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            SystemUser.Config.ResetPasswordForUserStoredInDb();
-        }
-
-        public static void CheckResolv() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            if (!File.Exists("/etc/resolv.conf"))
-                Terminal.Execute("touch /etc/resolv.conf");
-        }
-
+        /// <summary>
+        /// 19
+        /// </summary>
         public static void DownloadDefaultRepoFiles() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -270,28 +286,43 @@ namespace Antd {
             FileSystem.Download("http://standards-oui.ieee.org/oui.txt", $"{dir}/oui.txt");
         }
 
-        public static void SetBootConfiguration() {
-            if (!AssemblyInfo.IsUnix)
-                return;
-            if (ConfigManagement.Exists) {
-                ConfigManagement.ExecuteAll();
+        public static void StartSignalR(IAppBuilder app, bool detailedErrors, bool isActive) {
+            if (isActive) {
+                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
+                app.MapSignalR(hubConfiguration);
+                ConsoleLogger.Log("signalR ready");
             }
-            ConfigManagement.FromFile.ApplyForAll();
+            else {
+                ConsoleLogger.Log("signalR skipped");
+            }
         }
 
-        public static void SetFirewall() {
-            ConsoleLogger.Log("loading default values for firewall");
-            FirewallLists.SetDefaultLists();
-            NfTables.Export.ExportTemplate();
-            ConsoleLogger.Log("default values for firewall load");
+        public static void StartNancy(IAppBuilder app) {
+            StaticConfiguration.DisableErrorTraces = false;
+            var options = new NancyOptions { EnableClientCertificates = true };
+            app.UseNancy(options);
+            ConsoleLogger.Log("nancyfx ready");
         }
 
-        public static void SetNetworkInterfacesValues() {
-            ConsoleLogger.Log("importing values for network");
-            if (!NetworkInterface.GetAll().Any()) {
-                NetworkInterface.ImportNetworkInterface();
+
+        public static void LoadCollectd() {
+            var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
+            File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
+            var realFileName = Mount.GetFilesPath("FILE_etc_collectd.conf");
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+                Mount.File(realFileName);
             }
-            ConsoleLogger.Log("values for network imported");
+            Terminal.Execute("systemctl restart collectd.service");
+        }
+
+        public static void LoadWpaSupplicant() {
+            var file = $"{Parameter.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
+            File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
+            var realFileName = Mount.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
+            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+                Mount.File(realFileName);
+            }
+            Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
     }
 }

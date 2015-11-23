@@ -64,12 +64,12 @@ namespace antdlib.Apps {
         private static void SetDirectories() {
             var app = Management.DetectApps().FirstOrDefault(a => a.Name == "anthillasp");
             if (app == null) {
-                ConsoleLogger.Warn("no appinfo detected");
+                ConsoleLogger.Log("no appinfo detected");
             }
             else {
                 var dirs = Management.GetWantedDirectories(app);
                 if (dirs.Length <= 0) {
-                    ConsoleLogger.Warn("no app directory found");
+                    ConsoleLogger.Log("no app directory found");
                 }
                 else {
                     foreach (var dir in dirs) {
