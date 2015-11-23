@@ -54,42 +54,39 @@ namespace antdlib.Svcs.Nfs {
             Mount.Dir(dir);
         }
 
-        private static bool CheckIsActive() {
-            var mount = MountRepository.Get(dir);
-            return (mount == null) ? false : true;
-        }
+        private static bool CheckIsActive() => MountRepository.Get(dir) != null;
 
-        public static bool IsActive { get { return CheckIsActive(); } }
+        public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Terminal.Terminal.Execute($"smbcontrol all reload-config");
+            Terminal.Terminal.Execute("smbcontrol all reload-config");
         }
 
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
-            var list = new List<KeyValuePair<string, List<string>>>() { };
+            var list = new List<KeyValuePair<string, List<string>>>();
             var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
+            for (var i = 0; i < files.Length; i++) {
                 if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
                     var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
-                    var dump = new List<string>() { };
+                    var dump = new List<string>();
                     foreach (var line in lines) {
                         dump.Add(line.Split('=')[1].Trim().Replace(dir, DIR));
                     }
                     list.Add(new KeyValuePair<string, List<string>>(files[i].Replace("\\", "/"), dump));
                 }
             }
-            if (list.Count() < 1) {
-                list.Add(new KeyValuePair<string, List<string>>($"{DIR}/{mainFile}", new List<string>() { }));
+            if (!list.Any()) {
+                list.Add(new KeyValuePair<string, List<string>>($"{DIR}/{mainFile}", new List<string>()));
             }
             return list;
         }
 
-        public static List<KeyValuePair<string, List<string>>> Structure { get { return GetServiceStructure(); } }
+        public static List<KeyValuePair<string, List<string>>> Structure => GetServiceStructure();
 
         private static List<string> GetServiceSimpleStructure() {
-            var list = new List<string>() { };
+            var list = new List<string>();
             var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
+            for (var i = 0; i < files.Length; i++) {
                 if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
                     var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
                     foreach (var line in lines) {
@@ -97,28 +94,28 @@ namespace antdlib.Svcs.Nfs {
                     }
                 }
             }
-            if (list.Count() < 1) {
+            if (!list.Any()) {
                 list.Add($"{DIR}/{mainFile}");
             }
             return list;
         }
 
-        public static List<string> SimpleStructure { get { return GetServiceSimpleStructure(); } }
+        public static List<string> SimpleStructure => GetServiceSimpleStructure();
 
         public class MapRules {
-            public static char CharComment { get { return ';'; } }
+            public static char CharComment => ';';
 
-            public static string VerbInclude { get { return "include"; } }
+            public static string VerbInclude => "include";
 
-            public static char CharKevValueSeparator { get { return '='; } }
+            public static char CharKevValueSeparator => '=';
 
-            public static char CharValueArraySeparator { get { return ','; } }
+            public static char CharValueArraySeparator => ',';
 
-            public static char CharEndOfLine { get { return '\n'; } }
+            public static char CharEndOfLine => '\n';
 
-            public static char CharSectionOpen { get { return '['; } }
+            public static char CharSectionOpen => '[';
 
-            public static char CharSectionClose { get { return ']'; } }
+            public static char CharSectionClose => ']';
         }
 
         public class LineModel {
@@ -138,7 +135,7 @@ namespace antdlib.Svcs.Nfs {
 
             public string Name { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
         }
 
         public class NfsModel {
@@ -148,9 +145,9 @@ namespace antdlib.Svcs.Nfs {
 
             public string Timestamp { get; set; }
 
-            public List<LineModel> Data { get; set; } = new List<LineModel>() { };
+            public List<LineModel> Data { get; set; } = new List<LineModel>();
 
-            public List<ShareModel> Share { get; set; } = new List<ShareModel>() { };
+            public List<ShareModel> Share { get; set; } = new List<ShareModel>();
         }
 
         public class MapFile {
@@ -168,7 +165,7 @@ namespace antdlib.Svcs.Nfs {
             private static IEnumerable<LineModel> ReadFile(string path) {
                 var text = FileSystem.ReadFile(path);
                 var lines = text.Split(MapRules.CharEndOfLine);
-                var list = new List<LineModel>() { };
+                var list = new List<LineModel>();
                 foreach (var line in lines) {
                     if (line != "" && !line.StartsWith("include")) {
                         var cleanLine = CleanLine(line);
@@ -180,7 +177,7 @@ namespace antdlib.Svcs.Nfs {
 
             private static ShareModel ReadFileShare(string path) {
                 var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
-                var model = new ShareModel() {
+                var model = new ShareModel {
                     FilePath = path,
                     Name = shareName
                 };
@@ -217,7 +214,7 @@ namespace antdlib.Svcs.Nfs {
                 else {
                     booleanVerbs = new KeyValuePair<string, string>("", "");
                 }
-                var model = new LineModel() {
+                var model = new LineModel {
                     FilePath = path,
                     Key = key.Trim(),
                     Value = value.Trim(),
@@ -228,8 +225,8 @@ namespace antdlib.Svcs.Nfs {
             }
 
             public static void Render() {
-                var shares = new List<ShareModel>() { };
-                var data = new List<LineModel>() { };
+                var shares = new List<ShareModel>();
+                var data = new List<LineModel>();
                 foreach (var file in SimpleStructure) {
                     if (file.Contains("/share/")) {
                         shares.Add(ReadFileShare(file));
@@ -241,7 +238,7 @@ namespace antdlib.Svcs.Nfs {
                         }
                     }
                 }
-                var nfs = new NfsModel() {
+                var nfs = new NfsModel {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
@@ -259,9 +256,9 @@ namespace antdlib.Svcs.Nfs {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceNfs parameter) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
-                var data = new LineModel() {
+                var data = new LineModel {
                     FilePath = parameter.DataFilePath,
                     Key = parameter.DataKey,
                     Value = parameter.DataValue,
@@ -273,11 +270,11 @@ namespace antdlib.Svcs.Nfs {
 
             public static void SaveGlobalConfig(List<ServiceNfs> newParameters) {
                 var shares = MapFile.Get().Share;
-                var data = new List<LineModel>() { };
+                var data = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     data.Add(ConvertData(parameter));
                 }
-                var nfs = new NfsModel() {
+                var nfs = new NfsModel {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
@@ -293,7 +290,7 @@ namespace antdlib.Svcs.Nfs {
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
-                for (int i = 0; i < parameters.Length; i++) {
+                for (var i = 0; i < parameters.Length; i++) {
                     var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
                     AppendLine(parameters[i].FilePath, line);
                 }
@@ -310,19 +307,19 @@ namespace antdlib.Svcs.Nfs {
             public static void SaveShareConfig(string fileName, string name, string queryName, List<ServiceNfs> newParameters) {
                 var data = MapFile.Get().Data;
                 var shares = MapFile.Get().Share;
-                var oldShare = shares.Where(o => o.Name == queryName).FirstOrDefault();
+                var oldShare = shares.FirstOrDefault(o => o.Name == queryName);
                 shares.Remove(oldShare);
-                var shareData = new List<LineModel>() { };
+                var shareData = new List<LineModel>();
                 foreach (var parameter in newParameters) {
                     shareData.Add(ConvertData(parameter));
                 }
-                var newShare = new ShareModel() {
+                var newShare = new ShareModel {
                     FilePath = fileName,
                     Name = name,
                     Data = shareData
                 };
                 shares.Add(newShare);
-                var nfs = new NfsModel() {
+                var nfs = new NfsModel {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
@@ -333,22 +330,22 @@ namespace antdlib.Svcs.Nfs {
             }
 
             public static void DumpShare(string shareName) {
-                var share = MapFile.Get().Share.Where(s => s.Name == shareName).FirstOrDefault();
+                var share = MapFile.Get().Share.FirstOrDefault(s => s.Name == shareName);
                 var parameters = share.Data.ToArray();
                 var file = share.FilePath;
                 CleanFile(file);
                 AppendLine(file, $"{MapRules.CharSectionOpen}{share.Name}{MapRules.CharSectionClose}");
-                for (int i = 0; i < parameters.Length; i++) {
-                    var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
-                    AppendLine(parameters[i].FilePath, line);
+                foreach (var t in parameters) {
+                    var line = $"{t.Key} {MapRules.CharKevValueSeparator} {t.Value}";
+                    AppendLine(t.FilePath, line);
                 }
             }
 
             public static void AddParameterToGlobal(string key, string value) {
                 SetCustomFile();
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
-                var line = new LineModel() {
+                var line = new LineModel {
                     FilePath = $"{DIR}/{antdNfsFile}",
                     Key = key,
                     Value = value,
@@ -358,7 +355,7 @@ namespace antdlib.Svcs.Nfs {
                 var shares = MapFile.Get().Share;
                 var data = MapFile.Get().Data;
                 data.Add(line);
-                var nfs = new NfsModel() {
+                var nfs = new NfsModel {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
@@ -393,44 +390,44 @@ namespace antdlib.Svcs.Nfs {
                 AppendLine(file, $"{MapRules.CharComment}SHARE END");
             }
 
-            private static HashSet<dynamic> GetGlobalPaths() {
+            private static IEnumerable<dynamic> GetGlobalPaths() {
                 var share = MapFile.Get().Data.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 
-            private static HashSet<dynamic> GetSharePaths() {
+            private static IEnumerable<dynamic> GetSharePaths() {
                 var share = MapFile.Get().Share.Select(s => s.FilePath).ToDynamicHashSet();
                 return share;
             }
 
             public static void AddShare(string name, string directory) {
                 SetShareFile(name);
-                var shareData = new List<LineModel>() { };
-                var defaultParameter00 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
+                var shareData = new List<LineModel>();
+                var defaultParameter00 = new LineModel {
+                    FilePath = $"{DIR}/share/{name.Replace("", "_")}.conf",
                     Key = "path",
                     Value = directory,
                     Type = ServiceDataType.String,
                     BooleanVerbs = new KeyValuePair<string, string>("", "") 
                 };
                 shareData.Add(defaultParameter00);
-                var defaultParameter01 = new LineModel() {
-                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
+                var defaultParameter01 = new LineModel {
+                    FilePath = $"{DIR}/share/{name.Replace("", "_")}.conf",
                     Key = "browseable",
                     Value = "yes",
                     Type = ServiceDataType.Boolean,
                     BooleanVerbs = new KeyValuePair<string, string>("yes", "no")
                 };
                 shareData.Add(defaultParameter01);
-                var sh = new ShareModel() {
-                    FilePath = $"{DIR}/share/{name.Replace($"", "_")}.conf",
+                var sh = new ShareModel {
+                    FilePath = $"{DIR}/share/{name.Replace("", "_")}.conf",
                     Name = name,
                     Data = shareData
                 };
                 var shares = MapFile.Get().Share;
                 var data = MapFile.Get().Data;
                 shares.Add(sh);
-                var nfs = new NfsModel() {
+                var nfs = new NfsModel {
                     _Id = serviceGuid,
                     Guid = serviceGuid,
                     Timestamp = Timestamp.Now,
@@ -441,7 +438,7 @@ namespace antdlib.Svcs.Nfs {
             }
 
             private static void SetShareFile(string shareName) {
-                var sharePath = $"{DIR}/share/{shareName.Replace($"", "_")}.conf";
+                var sharePath = $"{DIR}/share/{shareName.Replace("", "_")}.conf";
                 if (!File.Exists(sharePath)) {
                     File.Create(sharePath);
                 }

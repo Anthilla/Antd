@@ -1,6 +1,4 @@
-﻿
-using antdlib.Common;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using antdlib.Common;
 
 namespace antdlib.Svcs.Bind {
     public class BindStatement {

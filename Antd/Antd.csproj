@@ -291,10 +291,22 @@
     <None Include="Views\antd\page-antd-rsync.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\antd\page-antd-samba.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_partial_service\part-samba-structure.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\_partial\part-users.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Views\__old\page-system-ca.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_partial_service\part-samba-data.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_partial_service\part-samba-share-data.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Views\__old\page-users-entity-partial.html">
@@ -614,7 +626,7 @@
     <Content Include="Views\services\page-services-bind.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-dhcp.html">
+    <Content Include="Views\__old\page-services-dhcp.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\services\page-services-glusterfs.html">
@@ -641,7 +653,7 @@
     <Content Include="Views\services\page-services-qemu.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-samba.html">
+    <Content Include="Views\__old\page-services-samba.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\services\page-services-squid.html">

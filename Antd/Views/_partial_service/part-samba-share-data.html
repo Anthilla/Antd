@@ -1,0 +1,28 @@
+﻿<tr data-file="@filePath" data-share="@shareName" data-object="share-parameter">
+    <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A;"></td>
+    <td style="width: 33%;">
+        @key
+        <input name="DataKey" type="hidden" value="@key" />
+        <input name="DataFilePath" type="hidden" value="@filePath" />
+    </td>
+    @if (type == antdlib.ServiceDataType.String || type == antdlib.ServiceDataType.StringArray) {
+    <td>
+        <input name="DataValue" type="text" value="@Value" style="width: 90%;" />
+    </td>
+    }
+    else if (type == antdlib.ServiceDataType.Boolean) {
+    <td>
+        <select name="DataValue">
+            <option value="@verbs.Key">@verbs.Key</option>
+            <option value="@verbs.Value">@verbs.Value</option>
+        </select>
+    </td>
+    }
+</tr>
+
+
+<!--@foreach (antdlib.Svcs.Samba.SambaConfig.LineModel data in share.Data) {
+if (data.Type != antdlib.ServiceDataType.Disabled) {
+@SambaDisplayShareData(data.Type, data.Key, data.Value, data.FilePath, share.Name, data.BooleanVerbs)
+}
+}-->

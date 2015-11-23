@@ -154,8 +154,18 @@ namespace antdlib.Users {
         }
 
         public class Map {
+
+            private static IEnumerable<SystemUserModel> DefaultMappedUsers() {
+                var visorPassword = Terminal.Terminal.Execute("mkpasswd -m sha-512 Anthilla");
+                return new List<SystemUserModel> {
+                    new SystemUserModel { _Id = Guid.NewGuid().ToString(), Guid = Guid.NewGuid().ToString(), Alias = "visor", Password = visorPassword},
+                };
+            }
+
             public static IEnumerable<SystemUserModel> GetMappedUsers() {
-                return Session.New.Get<SystemUserModel>();
+                var userList = Session.New.Get<SystemUserModel>().ToList();
+                userList.AddRange(DefaultMappedUsers());
+                return userList;
             }
 
             public static void MapUser(string userAlias, string password) {

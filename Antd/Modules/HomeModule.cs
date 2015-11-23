@@ -74,7 +74,8 @@ namespace Antd.Modules {
                     "Storage",
                     "Mount",
                     "Rsync",
-                    "Users"
+                    "Users",
+                    "Samba",
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
@@ -114,6 +115,15 @@ namespace Antd.Modules {
                     viewModel.DhcpdGetClass = dhcpdModel.DhcpClass;
                     viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
                     viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
+                }
+
+                viewModel.SambaStatus = antdlib.Svcs.Samba.SambaConfig.IsActive;
+                viewModel.SambaStructure = antdlib.Svcs.Samba.SambaConfig.Structure;
+                var sambaModel = antdlib.Svcs.Samba.SambaConfig.MapFile.Get();
+                if (dhcpdModel != null) {
+                    viewModel.SambaGetData = sambaModel.Data;
+                    viewModel.SambaGetShare = sambaModel.Share;
+
                 }
 
 
