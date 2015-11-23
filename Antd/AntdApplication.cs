@@ -95,32 +95,32 @@ namespace Antd {
             }
             catch (Exception ex) {
                 Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
+                ConsoleLogger.Error(ex.ToString(), "antd-crash");
                 File.WriteAllText($"{Parameter.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
             }
         }
 
         private static void Configuration() {
             //todo check commented lines
-            AntdBoot.CheckCertificate();
             AntdBoot.CheckOsIsRw();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
             AntdBoot.StartDatabase();
+            AntdBoot.CheckCertificate();
             AntdBoot.ReloadUsers();
             //AntdBoot.ReloadSsh();
             AntdBoot.SetBootConfiguration();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
-            //AntdBoot.SetWebsocketd();
-            //AntdBoot.SetSystemdJournald();
+            AntdBoot.SetWebsocketd();
+            AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.SetNetworkInterfacesValues();
-            //AntdBoot.StartScheduler(true);
-            //AntdBoot.StartDirectoryWatcher(new[] { Folder.RepoConfig }, false);
-            //AntdBoot.InitAuthentication();
-            //AntdBoot.LaunchApps();
-            //AntdBoot.DownloadDefaultRepoFiles();
+            AntdBoot.StartScheduler(true);
+            AntdBoot.StartDirectoryWatcher(new[] { Parameter.RepoConfig }, false);
+            AntdBoot.LaunchApps();
+            AntdBoot.DownloadDefaultRepoFiles();
         }
     }
 
