@@ -51,15 +51,15 @@ namespace antdlib.Svcs.Samba {
             public static void ConfigDomain(string domain, string hostName, string hostIp, string adminPassword, string realm) {
                 var configModel = new SambaDomainConfig {
                     Domain = domain,
+                    Realm = realm,
                     HostName = hostName,
                     HostIp = hostIp,
-                    AdminPassword = adminPassword,
-                    Realm = realm
+                    AdminPassword = adminPassword
                 };
                 DeNSo.Session.New.Set(configModel);
                 var model = DeNSo.Session.New.Get<SambaDomainConfig>(_ => _._Id == ServiceGuid).FirstOrDefault();
                 if (model != null) {
-                    Terminal.Terminal.Execute($"samba-tool domain provision --domain={model.Domain} --host-name={model.HostName} --host-ip={model.HostIp} --adminpass={model.AdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc --realm={model.Realm}");
+                    Terminal.Terminal.Execute($"samba-tool domain provision --domain={model.Domain} --realm={model.Realm} --host-name={model.HostName} --host-ip={model.HostIp} --adminpass={model.AdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
                 }
             }
         }
@@ -84,18 +84,22 @@ namespace antdlib.Svcs.Samba {
             Terminal.Terminal.Execute("smbcontrol all reload-config");
         }
 
-        private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
-            var files = Directory.EnumerateFiles(MntDir, "*.conf", SearchOption.AllDirectories).Where(file => File.ReadAllText(file).Contains("include"));
-            var list = (from file in files let lines = File.ReadLines(file).Where(line => line.Contains("include")).ToList() let dump = lines.Select(line => line.Split('=')[1].Trim().Replace(Dir, MntDir)).ToList() select new KeyValuePair<string, List<string>>(file.Replace("\\", "/"), dump)).ToList();
-            if (!list.Any()) {
-                list.Add(new KeyValuePair<string, List<string>>($"{MntDir}/{MainFile}", new List<string>()));
-            }
-            return list;
-        }
+        //private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
+        //    if (!AssemblyInfo.IsUnix)
+        //        return new List<KeyValuePair<string, List<string>>>();
+        //    var files = Directory.EnumerateFiles(MntDir, "*.conf", SearchOption.AllDirectories).Where(file => File.ReadAllText(file).Contains("include"));
+        //    var list = (from file in files let lines = File.ReadLines(file).Where(line => line.Contains("include")).ToList() let dump = lines.Select(line => line.Split('=')[1].Trim().Replace(Dir, MntDir)).ToList() select new KeyValuePair<string, List<string>>(file.Replace("\\", "/"), dump)).ToList();
+        //    if (!list.Any()) {
+        //        list.Add(new KeyValuePair<string, List<string>>($"{MntDir}/{MainFile}", new List<string>()));
+        //    }
+        //    return list;
+        //}
 
-        public static List<KeyValuePair<string, List<string>>> Structure => GetServiceStructure();
+        //public static List<KeyValuePair<string, List<string>>> Structure => GetServiceStructure();
 
         private static List<string> GetServiceSimpleStructure() {
+            if (!AssemblyInfo.IsUnix)
+                return new List<string>();
             var list = new List<string>();
             var files = Directory.EnumerateFiles(MntDir, "*.conf", SearchOption.AllDirectories).Where(file => File.ReadAllText(file).Contains("include"));
             foreach (var lines in files.Select(file => File.ReadLines(file).Where(line => line.Contains("include")).ToList())) {

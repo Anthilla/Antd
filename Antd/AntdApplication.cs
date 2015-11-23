@@ -108,11 +108,11 @@ namespace Antd {
             AntdBoot.StartDatabase();           
             AntdBoot.CheckCertificate();        
             AntdBoot.ReloadUsers();             
-            //AntdBoot.ReloadSsh();
+            AntdBoot.ReloadSsh();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
             AntdBoot.LaunchDefaultOsConfiguration();
-            AntdBoot.SetWebsocketd();
+            //AntdBoot.SetWebsocketd();
             AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();

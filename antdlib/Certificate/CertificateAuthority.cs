@@ -72,9 +72,8 @@ namespace antdlib.Certificate {
             ConsoleLogger.Log("4) Create serial file");
             Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
             ConsoleLogger.Log("5) Copy .conf file");
-            if (!File.Exists(CaRootConfFile)) {
-                Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
-            }
+            Terminal.Terminal.Execute($"rm {CaRootConfFile}");
+            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
             ConsoleLogger.Log("6) Generate root private key");
             Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{Passphrase} 4096");
             if (!File.Exists(CaRootPrivateKey)) {
@@ -116,9 +115,8 @@ namespace antdlib.Certificate {
             ConsoleLogger.Log("5) Create crlnumber file");
             Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
             ConsoleLogger.Log("6) Copy .conf file");
-            if (!File.Exists(CaIntermediateConfFile)) {
-                Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
-            }
+            Terminal.Terminal.Execute($"rm {CaIntermediateConfFile}");
+            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
             ConsoleLogger.Log("7) Generate intermediate private key");
             Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{Passphrase} 4096");
             if (!File.Exists(CaIntermediatePrivateKey)) {

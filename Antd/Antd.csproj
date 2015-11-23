@@ -227,6 +227,9 @@
     <None Include="Resources\openssl.cnf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\SAMBAopenssl.cnf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\squashfs.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
