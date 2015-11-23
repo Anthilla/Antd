@@ -77,7 +77,7 @@ namespace Antd.Modules {
                 SambaConfig.WriteFile.DumpGlobalConfig();
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.RewriteSMBCONF();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/update/sambashares"] = x => {
@@ -90,7 +90,7 @@ namespace Antd.Modules {
                 SambaConfig.WriteFile.DumpShare(name);
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.RewriteSMBCONF();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/samba/addparam"] = x => {
@@ -99,7 +99,7 @@ namespace Antd.Modules {
                 SambaConfig.WriteFile.AddParameterToGlobal(key, value);
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.RewriteSMBCONF();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/samba/addshare"] = x => {
@@ -108,7 +108,7 @@ namespace Antd.Modules {
                 SambaConfig.WriteFile.AddShare(name, directory);
                 Thread.Sleep(1000);
                 SambaConfig.WriteFile.RewriteSMBCONF();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
             #endregion SAMBA
 
@@ -140,7 +140,7 @@ namespace Antd.Modules {
                 }
                 Thread.Sleep(1000);
                 BindConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/update/bind/zone/{zone}"] = x => {
@@ -149,44 +149,44 @@ namespace Antd.Modules {
                 BindConfig.WriteFile.SaveZoneConfig(zoneName, parameters);
                 Thread.Sleep(1000);
                 BindConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addacl"] = x => {
                 string k = Request.Form.NewAclKey;
                 string v = Request.Form.NewAclValue;
                 BindConfig.MapFile.AddAcl(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addkey"] = x => {
                 string name = Request.Form.NewKeyName;
                 BindConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addmasters"] = x => {
                 string name = Request.Form.NewMastersName;
                 BindConfig.MapFile.AddMasters(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addserver"] = x => {
                 string name = Request.Form.NewServerName;
                 BindConfig.MapFile.AddServer(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addview"] = x => {
                 string name = Request.Form.NewViewName;
                 BindConfig.MapFile.AddView(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/addzone"] = x => {
                 string name = Request.Form.NewZoneName;
                 BindConfig.MapFile.AddZone(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
             #endregion BIND
 
@@ -227,102 +227,102 @@ namespace Antd.Modules {
                 }
                 Thread.Sleep(1000);
                 DhcpConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addglobal"] = x => {
                 string k = Request.Form.NewKey;
                 string v = Request.Form.NewValue;
                 DhcpConfig.MapFile.AddGlobal(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addrange"] = x => {
                 string k = Request.Form.NewKey;
                 string v = Request.Form.NewValue;
                 DhcpConfig.MapFile.AddGlobal(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addprefix6"] = x => {
                 string k = Request.Form.NewKey;
                 string v = Request.Form.NewValue;
                 DhcpConfig.MapFile.AddPrefix6(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addrange6"] = x => {
                 string k = Request.Form.NewKey;
                 string v = Request.Form.NewValue;
                 DhcpConfig.MapFile.AddRange6(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addrange"] = x => {
                 string k = Request.Form.NewKey;
                 string v = Request.Form.NewValue;
                 DhcpConfig.MapFile.AddRange(k, v);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addkey"] = x => {
                 string name = Request.Form.NewKeyName;
                 DhcpConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addsubnet"] = x => {
                 string name = Request.Form.NewSubnet6Name;
                 DhcpConfig.MapFile.AddSubnet6(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addsubnet"] = x => {
                 string name = Request.Form.NewSubnetName;
                 DhcpConfig.MapFile.AddSubnet(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addhost"] = x => {
                 string name = Request.Form.NewHostName;
                 DhcpConfig.MapFile.AddHost(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addclass"] = x => {
                 string name = Request.Form.NewClassName;
                 DhcpConfig.MapFile.AddClass(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addsubclass"] = x => {
                 string name = Request.Form.NewSubclassName;
                 DhcpConfig.MapFile.AddSubclass(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addfailover"] = x => {
                 string name = Request.Form.NewFailoverName;
                 DhcpConfig.MapFile.AddFailover(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addlogging"] = x => {
                 string name = Request.Form.NewLoggingName;
                 DhcpConfig.MapFile.AddLogging(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addgroup"] = x => {
                 string name = Request.Form.NewGroupName;
                 DhcpConfig.MapFile.AddGroup(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcp/addkey"] = x => {
                 string name = Request.Form.NewKeyName;
                 DhcpConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
             #endregion DHCP
 
@@ -363,13 +363,13 @@ namespace Antd.Modules {
                 //}
                 //Thread.Sleep(1000);
                 SshConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/ssh/addkey"] = x => {
                 string name = Request.Form.NewKeyName;
                 SshConfig.Keys.Generate(name);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
             #endregion SSH
         }

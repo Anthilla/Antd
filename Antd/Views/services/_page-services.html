@@ -137,7 +137,7 @@
 @EndSection
 
 @Section['Scripts']
-    <script type="text/javascript">
+    <script data-context="services" type="text/javascript">
         $('.search-field').keyup(function () {
             var tableReference = $(this).attr('data-table');
             var searchIn = $('table[data-search="' + tableReference + '"]').find('tbody');

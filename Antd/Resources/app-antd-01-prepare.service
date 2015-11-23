@@ -1,10 +1,12 @@
 [Unit]
 Description=ExtUnit, Application: Antd 01 Prepare
-Requires=mnt-cdrom.mount
 Before=app-antd-02-mount.service
 
 [Service]
 ExecStart=/bin/mkdir -p /framework/antd
+SuccessExitStatus=0
+RemainAfterExit=yes
 
 [Install]
 WantedBy=applicative.target
+

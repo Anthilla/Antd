@@ -97,6 +97,27 @@ namespace Antd.Modules {
                 viewModel.NetworkBondIf = NetworkInterface.Bond;
                 viewModel.NetworkBridgeIf = NetworkInterface.Bridge;
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
+                viewModel.DhcpdStatus = antdlib.Svcs.Dhcp.DhcpConfig.IsActive;
+                viewModel.DhcpdGetGlobal = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGlobal;
+                viewModel.DhcpdGetPrefix6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpPrefix6;
+                viewModel.DhcpdGetRange = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange;
+                viewModel.DhcpdGetRange6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpRange6;
+                viewModel.DhcpdGetKeys = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpKey;
+                viewModel.DhcpdGetSubnet = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubnet;
+                viewModel.DhcpdGetSubnet6 = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubnet6;
+                viewModel.DhcpdGetHost = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpHost;
+
+                viewModel.DhcpdGetFailover = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpFailover;
+                viewModel.DhcpdGetSharedNetwork = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSharedNetwork;
+                viewModel.DhcpdGetGroup = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpGroup;
+                viewModel.DhcpdGetClass = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpClass;
+                viewModel.DhcpdGetSubclass = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpSubclass;
+                viewModel.DhcpdGetLogging = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get().DhcpLogging;
+
+
+
+
+
                 viewModel.Mounts = MountRepository.Get();
                 viewModel.RsyncDirectories = Rsync.GetAll();
                 viewModel.RsyncOptions = new List<Tuple<string, string>> {

@@ -70,6 +70,10 @@
 
 @Section['Scripts']
 <script data-context="general" type="text/javascript">
+    $(document).ready(function () {
+        $('div[data-role="hide-selectize"]').find('#show-units').hide();
+    });
+
     $('#ReloadSystemInfo').click(function () {
         jQuery.support.cors = true;
         $.ajax({
@@ -122,6 +126,7 @@
                         callback(data);
                     }
                 });
+                return callback;
             },
             render: function (data, escape) {
                 return '<div><span data-guid="' + escape(data.guid) + '" class="button name bg-anthilla-violet">' + String(data.alias) + "</span></div>";
@@ -325,7 +330,7 @@
             type: 'POST',
             data: JSON.stringify(p),
             contentType: "application/json;charset=utf-8",
-            success: function (data) {
+            success: function () {
                 location.reload(true);
                 return false;
             }
@@ -421,7 +426,7 @@
                     Guid: guid,
                     Elements: el
                 },
-                success: function (data) {
+                success: function () {
                     location.reload(true);
                 }
             });
@@ -547,6 +552,351 @@
         $('li[data-user-guid="' + userGuid + '"]').not('li[data-role="user"]').toggle();
     });
 
+</script>
+<script data-context="services" type="text/javascript">
+    $('.search-field').keyup(function () {
+        var tableReference = $(this).attr('data-table');
+        var searchIn = $('table[data-search="' + tableReference + '"]').find('tbody');
+        var queryString = $(this).val();
+        var row = searchIn.children('tr');
+        row.each(function () {
+            var thisRow = $(this);
+            var queriedText = $(this).text();
+            if (queriedText.indexOf(queryString) !== -1) {
+                thisRow.show();
+            }
+            if (queriedText.indexOf(queryString) < 0) {
+                thisRow.hide();
+            }
+        });
+    });
+
+    //START SAMBA
+    $('#ActivateSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/samba',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#RefreshSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/samba',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/samba',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ShowSambaStructure').mousedown(function () {
+        $('#SambaStructure').show();
+    }).mouseup(function () {
+        $('#SambaStructure').hide();
+    });;
+
+    $(document).ready(function () {
+        $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
+            dataKey.attr('name', dataKey.attr('name') + '_' + index);
+            var dataValue = $(this).find('[name="DataValue"]');
+            dataValue.attr('name', dataValue.attr('name') + '_' + index);
+            var dataFile = $(this).find('[name="DataFilePath"]');
+            dataFile.attr('name', dataFile.attr('name') + '_' + index);
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-share-form]').each(function () {
+            $(this).find('[data-object="share-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+    });
+
+    $('#AddNewParameterSamba').click(function () {
+        $('#NewParameterSambaDashboard').toggle();
+    });
+
+    $('#AddNewShare').click(function () {
+        $('#NewSambaShare').toggle();
+    });
+    //END SAMBA
+
+    //START BIND
+    $('#ActivateBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/bind',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#RefreshBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/bind',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/bind',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $.when(
+            $('input[data-array="bind"]').selectize({
+                delimiter: ';',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
+                }
+            })
+        ).done(function () {
+            $('.selectize-input.items').find('div.item[data-Value=""]').remove();
+            $('input[data-array="bind"]').hide();
+        });
+    });
+
+    $(document).ready(function () {
+        $('form[data-role="bind-section-update"]').each(function () {
+            $(this).find('[data-object="bind-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+    });
+
+    $('#AddNewAclBind').click(function () {
+        $('#NewAclBindDashboard').toggle();
+    });
+
+    $('#AddNewKeyBind').click(function () {
+        $('#NewKeyBindDashboard').toggle();
+    });
+
+    $('#AddNewMastersBind').click(function () {
+        $('#NewMastersBindDashboard').toggle();
+    });
+
+    $('#AddNewServerBind').click(function () {
+        $('#NewServerBindDashboard').toggle();
+    });
+
+    $('#AddNewViewBind').click(function () {
+        $('#NewViewBindDashboard').toggle();
+    });
+
+    $('#AddNewZoneBind').click(function () {
+        $('#NewZoneBindDashboard').toggle();
+    });
+    //END BIND
+
+    //START DHCP
+    $('#ActivateDhcp').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/dhcp',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#RefreshDhcp').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/dhcp',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadDhcp').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/dhcp',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ShowDhcpStructure').mousedown(function () {
+        $('#DhcpStructure').show();
+    }).mouseup(function () {
+        $('#DhcpStructure').hide();
+    });;
+
+    $(document).ready(function () {
+        $('#DhcpForm').find('tr[data-object="dhcp-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
+            dataKey.attr('name', dataKey.attr('name') + '_' + index);
+            var dataValue = $(this).find('[name="DataValue"]');
+            dataValue.attr('name', dataValue.attr('name') + '_' + index);
+            var dataFile = $(this).find('[name="DataFilePath"]');
+            dataFile.attr('name', dataFile.attr('name') + '_' + index);
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-share-form]').each(function () {
+            $(this).find('[data-object="share-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+    });
+
+    $('#AddNewParameterDhcp').click(function () {
+        $('#NewParameterDhcpDashboard').toggle();
+    });
+
+    $('#AddNewShare').click(function () {
+        $('#NewDhcpShare').toggle();
+    });
+
+    $(document).ready(function () {
+        $.when(
+            $('input[data-array="dhcp"]').selectize({
+                delimiter: ';',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
+                }
+            })
+        ).done(function () {
+            $('.selectize-input.items').find('div.item[data-Value=""]').remove();
+            $('input[data-array="dhcp"]').hide();
+        });
+    });
+    //END DHCP
+
+    //START SSH
+    $('#ActivateSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/ssh',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#RefreshSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/ssh',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/ssh',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ShowSshStructure').mousedown(function () {
+        $('#SshStructure').show();
+    }).mouseup(function () {
+        $('#SshStructure').hide();
+    });;
+
+    $(document).ready(function () {
+        $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
+            dataKey.attr('name', dataKey.attr('name') + '_' + index);
+            var dataValue = $(this).find('[name="DataValue"]');
+            dataValue.attr('name', dataValue.attr('name') + '_' + index);
+            var dataFile = $(this).find('[name="DataFilePath"]');
+            dataFile.attr('name', dataFile.attr('name') + '_' + index);
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-key-form]').each(function () {
+            $(this).find('[data-object="key-parameter"]').each(function (index) {
+                var dataKey = $(this).find('[name="DataKey"]');
+                dataKey.attr('name', dataKey.attr('name') + '_' + index);
+                var dataValue = $(this).find('[name="DataValue"]');
+                dataValue.attr('name', dataValue.attr('name') + '_' + index);
+                var dataFile = $(this).find('[name="DataFilePath"]');
+                dataFile.attr('name', dataFile.attr('name') + '_' + index);
+            });
+        });
+    });
+
+    $('#AddNewParameterSsh').click(function () {
+        $('#NewParameterSshDashboard').toggle();
+    });
+
+    $('#AddNewKey').click(function () {
+        $('#NewSshKey').toggle();
+    });
+    //END SSH
 </script>
 
 @EndSection
