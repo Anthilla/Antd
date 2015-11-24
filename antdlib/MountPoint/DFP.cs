@@ -69,7 +69,7 @@ namespace antdlib.MountPoint {
                     return null;
                 }
                 var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
-                return (!File.Exists(Path.GetFullPath(dfp))) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
+                return !File.Exists(Path.GetFullPath(dfp)) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
             }
             catch (UnauthorizedAccessException unauthEx) {
                 ConsoleLogger.Warn($"Error @ {unauthEx.TargetSite}");

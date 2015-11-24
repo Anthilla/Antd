@@ -61,8 +61,8 @@ namespace antdlib.Security {
                 Exponent = key.Exponent,
                 P = key.P,
                 Q = key.Q,
-                DP = key.DP,
-                DQ = key.DQ,
+                Dp = key.DP,
+                Dq = key.DQ,
                 InverseQ = key.InverseQ,
                 D = key.D
             };

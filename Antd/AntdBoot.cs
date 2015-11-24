@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using antdlib;
 using antdlib.Antdsh;
@@ -16,7 +15,6 @@ using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
 using antdlib.Scheduler;
-using antdlib.Status;
 using antdlib.Terminal;
 using antdlib.Users;
 using Microsoft.AspNet.SignalR;
@@ -27,16 +25,10 @@ using Owin;
 namespace Antd {
     public class AntdBoot {
 
-        /// <summary>
-        /// 01
-        /// </summary>
         public static void CheckOsIsRw() {
             Execute.RemounwRwOs();
         }
 
-        /// <summary>
-        /// 02
-        /// </summary>
         public static void SetWorkingDirectories() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -44,36 +36,30 @@ namespace Antd {
             ConsoleLogger.Log("working directories ready");
         }
 
-        /// <summary>
-        /// 03
-        /// </summary>
         public static void SetCoreParameters() {
             CoreParametersConfig.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
         }
 
-        /// <summary>
-        /// 04
-        /// </summary>
         public static void StartDatabase() {
+            var databaseName = Parameter.AntdCfgDatabaseName;
             var databasePaths = new[] { CoreParametersConfig.GetDb() };
             foreach (var dbPath in databasePaths) {
                 Directory.CreateDirectory(dbPath);
+                Directory.CreateDirectory($"{dbPath}/{databaseName}");
             }
             DeNSo.Configuration.BasePath = databasePaths;
             DeNSo.Configuration.EnableJournaling = true;
             DeNSo.Configuration.EnableDataCompression = false;
             DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
             DeNSo.Configuration.EnableOperationsLog = false;
-            DeNSo.Session.DefaultDataBase = Parameter.AntdCfgDatabaseName;
+            DeNSo.Session.DefaultDataBase = databaseName;
             DeNSo.Session.Start();
-            ConsoleLogger.Log($"database directory: {string.Join(", ", databasePaths)}");
+            var y = databasePaths.Length > 1 ? "ies" : "y";
+            ConsoleLogger.Log($"database director{y}: {string.Join(", ", databasePaths)}");
             ConsoleLogger.Log("database ready");
         }
 
-        /// <summary>
-        /// 05
-        /// </summary>
         public static void CheckCertificate() {
             var certificate = CoreParametersConfig.GetCertificatePath();
             if (!File.Exists(certificate)) {
@@ -82,9 +68,6 @@ namespace Antd {
             ConsoleLogger.Log("certificates ready");
         }
 
-        /// <summary>
-        /// 06
-        /// </summary>
         public static void ReloadUsers() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -92,9 +75,6 @@ namespace Antd {
             ConsoleLogger.Log("users config ready");
         }
 
-        /// <summary>
-        /// 07
-        /// </summary>
         public static void ReloadSsh() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -110,9 +90,13 @@ namespace Antd {
             ConsoleLogger.Log("ssh config ready");
         }
 
-        /// <summary>
-        /// 08
-        /// </summary>
+        public static void SetOverlayDirectories() {
+            if (!AssemblyInfo.IsUnix)
+                return;
+            Mount.OverlayDirectories();
+            ConsoleLogger.Log("overlay ready");
+        }
+
         public static void SetMounts() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -120,9 +104,6 @@ namespace Antd {
             ConsoleLogger.Log("mounts ready");
         }
 
-        /// <summary>
-        /// 09
-        /// </summary>
         public static void SetOsMount() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -144,22 +125,13 @@ namespace Antd {
             ConsoleLogger.Log("os mounts ready");
         }
 
-        /// <summary>
-        /// 10
-        /// </summary>
         public static void LaunchDefaultOsConfiguration() {
             if (!AssemblyInfo.IsUnix)
                 return;
-            if (ConfigManagement.Exists) {
-                ConfigManagement.ExecuteAll();
-            }
             ConfigManagement.FromFile.ApplyForAll();
             ConsoleLogger.Log("default os configuration ready");
         }
 
-        /// <summary>
-        /// 11
-        /// </summary>
         public static void SetWebsocketd() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -171,9 +143,6 @@ namespace Antd {
             ConsoleLogger.Log("websocketd ready");
         }
 
-        /// <summary>
-        /// 12
-        /// </summary>
         public static void SetSystemdJournald() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -190,9 +159,6 @@ namespace Antd {
             ConsoleLogger.Log("journald config ready");
         }
 
-        /// <summary>
-        /// 13
-        /// </summary>
         public static void CheckResolv() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -202,9 +168,6 @@ namespace Antd {
             ConsoleLogger.Log("resolv ready");
         }
 
-        /// <summary>
-        /// 14
-        /// </summary>
         public static void SetFirewall() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -213,9 +176,6 @@ namespace Antd {
             ConsoleLogger.Log("firewall ready");
         }
 
-        /// <summary>
-        /// 15
-        /// </summary>
         public static void ImportSystemInformation() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -228,28 +188,16 @@ namespace Antd {
             ConsoleLogger.Log("network interfaces imported");
         }
 
-        /// <summary>
-        /// 16
-        /// </summary>
-        /// <param name="loadFromDatabase"></param>
         public static void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("scheduler ready");
         }
 
-        /// <summary>
-        /// 17
-        /// </summary>
-        /// <param name="watchDirectories"></param>
-        /// <param name="isActive"></param>
         public static void StartDirectoryWatcher() {
             new DirectoryWatcher().StartWatching();
             ConsoleLogger.Log("directory watcher ready");
         }
 
-        /// <summary>
-        /// 18
-        /// </summary>
         public static void LaunchApps() {
             if (!AssemblyInfo.IsUnix)
                 return;
@@ -271,9 +219,6 @@ namespace Antd {
             ConsoleLogger.Log("apps ready");
         }
 
-        /// <summary>
-        /// 19
-        /// </summary>
         public static void DownloadDefaultRepoFiles() {
             if (!AssemblyInfo.IsUnix)
                 return;

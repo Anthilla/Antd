@@ -35,7 +35,7 @@ using System.Text;
 namespace antdlib.Security {
 
     public class Rsa : RsaCore {
-        public static readonly UnicodeEncoding _encoder = new UnicodeEncoding();
+        private static readonly UnicodeEncoding Encoder = new UnicodeEncoding();
 
         public static void Test() {
             var keys = GenerateKeys();
@@ -55,7 +55,7 @@ namespace antdlib.Security {
             var rsa = new RSACryptoServiceProvider();
             var param = key.Param;
             rsa.ImportParameters(param);
-            var dataToEncrypt = _encoder.GetBytes(data);
+            var dataToEncrypt = Encoder.GetBytes(data);
             var encryptedByteArray = rsa.Encrypt(dataToEncrypt, false).ToArray();
             var length = encryptedByteArray.Length;
             var item = 0;
@@ -80,7 +80,7 @@ namespace antdlib.Security {
             var param = key.Param;
             rsa.ImportParameters(param);
             var decryptedByte = rsa.Decrypt(dataByte, false);
-            return _encoder.GetString(decryptedByte);
+            return Encoder.GetString(decryptedByte);
         }
     }
 }

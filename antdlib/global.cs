@@ -90,6 +90,8 @@ namespace antdlib {
         public static string RepoGrub => $"{Repo}/grub";
         public static string RepoLivecdFile => $"{Repo}/livecd";
 
+        public static string Overlay => "/mnt/overlay";
+
         public static string Livecd => "/mnt/livecd";
         public static string AppsUnits => $"{RepoUnits}/applicative.target.wants";
         public static string WebsocketUnits => $"{RepoUnits}/websocket.target.wants";

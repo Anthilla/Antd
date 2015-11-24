@@ -109,7 +109,7 @@ namespace antdlib.MountPoint {
             string v = null;
             var mnt = MountRepository.Get(path);
             if (mnt != null) {
-                v = (mnt.MountedPath.Length > 0) ? mnt.MountedPath : null;
+                v = mnt.MountedPath.Length > 0 ? mnt.MountedPath : null;
             }
             return v;
         }

@@ -153,6 +153,10 @@ namespace antdlib.Config {
             return DeNSo.Session.New.Get<CommandsBundle>().Where(_ => _.IsEnabled).OrderBy(_ => _.Index);
         }
 
+        private static string GetLastIndex() =>
+            !GetCommandsBundle().Any() ? "0"
+            : (Convert.ToInt32(GetCommandsBundle().OrderBy(_ => _.Index).Select(_ => _.Index).LastOrDefault()) + 1).ToString();
+
         public static void AddCommandsBundle(string command) {
             var getmodel = GetCommandsBundle().FirstOrDefault(vv => vv.Command == command);
             if (getmodel != null || command.Length <= 0)
@@ -160,7 +164,7 @@ namespace antdlib.Config {
             var model = new CommandsBundle {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
-                Index = "0",
+                Index = GetLastIndex(),
                 Command = command
             };
             DeNSo.Session.New.Set(model);
@@ -174,7 +178,7 @@ namespace antdlib.Config {
             var model = new CommandsBundle {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
-                Index = "0",
+                Index = index,
                 Command = command
             };
             DeNSo.Session.New.Set(model);
@@ -336,7 +340,7 @@ namespace antdlib.Config {
                 {
                     new CommandsBundleLayout { CommandLayout = "nft [nft-table-func:x] [nft-table-family:x] [nft-table-name:x]" },
                     new CommandsBundleLayout { CommandLayout = "nft [nft-chain-func:x] [nft-table-family:x] [nft-table-name:x] [nft-chain-hook:x] { type [nft-chain-type:x] hook [nft-chain-hook:x] priority [nft-chain-priority:0] \\; }" },
-                    new CommandsBundleLayout { CommandLayout = $"nft [nft-rule-func:x] [nft-table-family:x] [nft-chain-hook:x] [nft-rule:0]" },
+                    new CommandsBundleLayout { CommandLayout = "nft [nft-rule-func:x] [nft-table-family:x] [nft-chain-hook:x] [nft-rule:0]" },
 
                     new CommandsBundleLayout { CommandLayout = "systemd-machine-id-setup" },
                     new CommandsBundleLayout { CommandLayout = $"hostnamectl set-hostname {tag}" },
@@ -413,17 +417,16 @@ namespace antdlib.Config {
 
             private static void ApplyConfigForContext(string contextName) {
                 try {
-                    var files = GetContextFiles(contextName);
-                    var enumerable = files as string[] ?? files.ToArray();
-                    if (!enumerable.Any()) {
+                    var files = GetContextFiles(contextName).ToArray();
+                    if (!files.Any()) {
                         throw new Exception();
                     }
-                    foreach (var file in enumerable) {
+                    foreach (var file in files) {
                         LaunchConfigurationForFile(file);
                     }
                 }
                 catch (Exception) {
-                    ConsoleLogger.Log($"Nothing to configure for {contextName}");
+                    ConsoleLogger.Log($"nothing to configure for {contextName}");
                 }
             }
 
@@ -439,22 +442,11 @@ namespace antdlib.Config {
                     for (var i = 0; i < lines.Length; i++) {
                         AddCommandsBundle(lines[i], i.ToString());
                         Terminal.Terminal.Execute(lines[i]);
+                        ConsoleLogger.Log($"applying configuration: {lines[i]}");
                     }
-                    //foreach (var line in lines) {
-                    //try {
-                    //AddCommandsBundle(line);
-                    //Terminal.Terminal.Execute(line);
-                    //}
-                    //catch (Exception) {
-                    //    ConsoleLogger.Warn($"Error while executing: {line}");
-                    //}
-                    //}
                 }
                 catch (Exception) {
-                    ConsoleLogger.Log($"Nothing to configure in {filename}");
-                    //ConsoleLogger.Warn($"Cannot apply configuration stored in: {filename}");
-                    //ConsoleLogger.Warn("The file may not exists or it may be empty");
-                    //ConsoleLogger.Warn(ex.Message);
+                    ConsoleLogger.Log($"nothing to configure in {filename}");
                 }
             }
 
