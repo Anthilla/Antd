@@ -51,14 +51,17 @@ namespace antdlib.MountPoint {
         }
 
         private static readonly string[] DefaultOverlayDirectories = {
-            $"{Parameter.Overlay}/usr/share/.mono",
-            $"{Parameter.Overlay}/var/lib/samba",
-            $"{Parameter.Overlay}/var/log/journal"
+            "/usr/share/.mono",
+            "/var/lib/samba",
+            "/var/log/journal",
+            "/var/log/nginx",
+            "/var/www/ca",
         };
 
         public static void OverlayDirectories() {
             foreach (var dir in DefaultOverlayDirectories) {
                 Dir(dir);
+                Terminal.Terminal.Execute($"rsync {Parameter.Overlay}/{dir} {dir}");
             }
         }
 
