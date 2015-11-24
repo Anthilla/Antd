@@ -33,6 +33,7 @@ using System.Text.RegularExpressions;
 using System;
 using antdlib.Common;
 using antdlib.Log;
+using Common.Logging.Simple;
 
 namespace antdlib.MountPoint {
     public class Mount {
@@ -44,7 +45,8 @@ namespace antdlib.MountPoint {
                 var mntDir = SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
-                if (IsAlreadyMounted(dir)) continue;
+                if (IsAlreadyMounted(dir))
+                    continue;
                 ConsoleLogger.Log($"mounting {mntDir}");
                 SetBind(mntDir, dir);
             }
@@ -115,7 +117,6 @@ namespace antdlib.MountPoint {
                 Terminal.Terminal.Execute($"mkdir -p {mntPath}");
                 if (!System.IO.File.Exists(file)) {
                     Terminal.Terminal.Execute($"cp {mntFile} {file}");
-
                 }
                 ConsoleLogger.Log($"{mntFile} -> {file}");
                 if (IsAlreadyMounted(file) == false) {
@@ -134,6 +135,7 @@ namespace antdlib.MountPoint {
         }
 
         public static void CheckCurrentStatus() {
+            ConsoleLogger.Point("current status prima di  EnumerateDirectories");
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             var y = directories.Length == 1 ? "y" : "ies";
             ConsoleLogger.Log($"{directories.Length} director{y} found in {Parameter.RepoDirs}");
@@ -259,10 +261,12 @@ namespace antdlib.MountPoint {
         private static void SetBind(string source, string destination) {
             ConsoleLogger.Log($"Check if {source} is already mounted...");
             if (IsAlreadyMounted(source, destination)) {
+                ConsoleLogger.Point($"is already mounted {source} {destination}");
                 ConsoleLogger.Log($"{source} is already mounted!");
             }
             else {
                 ConsoleLogger.Log($"Mounting: {source}");
+                ConsoleLogger.Point($"mount -o bind {source} {destination}");
                 Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
             }
         }
@@ -288,17 +292,13 @@ namespace antdlib.MountPoint {
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            var df = Terminal.Terminal.Execute($"df | grep w \"{directory}\"");
-            var pm = Terminal.Terminal.Execute($"cat /proc/mounts | grep w \"{directory}\"");
+            var df = Terminal.Terminal.Execute($"df | grep {directory}");
+            var pm = Terminal.Terminal.Execute($"cat /proc/mounts | grep {directory}");
             return df.Length > 0 || pm.Length > 0;
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {
-            var sdf = Terminal.Terminal.Execute($"df | grep -v \"{source}\"");
-            var spm = Terminal.Terminal.Execute($"cat /proc/mounts | grep -v \"{source}\"");
-            var ddf = Terminal.Terminal.Execute($"df | grep -v \"{destination}\"");
-            var dpm = Terminal.Terminal.Execute($"cat /proc/mounts | grep -v \"{destination}\"");
-            return sdf.Length > 0 || spm.Length > 0 || ddf.Length > 0 || dpm.Length > 0;
+            return IsAlreadyMounted(source) || IsAlreadyMounted(destination);
         }
 
         private static int _umount1Retry;

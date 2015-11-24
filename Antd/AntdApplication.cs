@@ -47,6 +47,7 @@ namespace Antd {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 var startTime = DateTime.Now;
                 Console.Title = "ANTD";
+                
 
                 if (AssemblyInfo.IsUnix == false) {
                     Directory.CreateDirectory("/cfg/antd");
