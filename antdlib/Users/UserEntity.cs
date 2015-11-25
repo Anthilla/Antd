@@ -71,6 +71,7 @@ namespace antdlib.Users {
 
             public class Claim {
                 public string ClaimGuid { get; set; }
+                public string ClaimUserGuid { get; set; }
                 public ClaimType Type { get; set; }
                 public ClaimMode Mode { get; set; }
                 public string Key { get; set; }
@@ -103,13 +104,12 @@ namespace antdlib.Users {
                 var trySplit = identity.Split(' ');
                 string stringAlias;
                 if (trySplit.Length > 1) {
-                    var last = trySplit[1].Length < 4 ? trySplit[1] : trySplit[1].Replace($"", "").Substring(0, 3);
-                    var first = trySplit[0].Length < 4 ? trySplit[1] : trySplit[0].Replace($"", "").Substring(0, 3);
+                    var last = trySplit[1].Length < 4 ? trySplit[1] : trySplit[1].Substring(0, 3);
+                    var first = trySplit[0].Length < 4 ? trySplit[1] : trySplit[0].Substring(0, 3);
                     stringAlias = last + first;
                 }
                 else {
-                    var cleanIdentity = identity.Replace($"", "");
-                    stringAlias = cleanIdentity.Length < 7 ? cleanIdentity : identity.Replace($"", "").Substring(0, 6);
+                    stringAlias = identity.Length < 7 ? identity : identity.Substring(0, 6);
                 }
                 var tryAlias = stringAlias + "01";
                 var isUser = GetByUserIdentity(tryAlias);
@@ -161,6 +161,7 @@ namespace antdlib.Users {
                 var secureValue = type == ClaimType.UserPassword ? Cryptography.Hash256ToString(value) : value;
                 var claim = new UserEntityModel.Claim {
                     ClaimGuid = Guid.NewGuid().ToString(),
+                    ClaimUserGuid = guid,
                     Type = type,
                     Mode = mode,
                     Key = key,

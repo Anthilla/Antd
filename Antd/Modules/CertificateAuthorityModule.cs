@@ -91,7 +91,7 @@ namespace Antd.Modules {
                 var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
                 var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;
                 CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, assignment, bytesLength, userGuid, serviceGuid, serviceAlias);
-                return Response.AsRedirect("/system");
+                return Response.AsRedirect("/");
             };
 
             Get["/ca/certificate/download/{format}/{guid}"] = x => {

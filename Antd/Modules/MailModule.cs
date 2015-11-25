@@ -69,7 +69,7 @@ namespace Antd.Modules {
                 Smtp.Settings.SetAccount(account);
                 string passwd = Request.Form.Password;
                 Smtp.Settings.SetPassword(passwd);
-                return Response.AsRedirect("/mail");
+                return Response.AsRedirect("/");
             };
 
             Post["/mail/imap/config"] = x => {
@@ -81,7 +81,7 @@ namespace Antd.Modules {
                 Imap.Settings.SetAccount(account);
                 string passwd = Request.Form.Password;
                 Imap.Settings.SetPassword(passwd);
-                return Response.AsRedirect("/mail");
+                return Response.AsRedirect("/");
             };
         }
     }

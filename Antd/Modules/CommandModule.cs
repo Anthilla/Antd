@@ -52,7 +52,7 @@ namespace Antd.Modules {
                 string inputid = Request.Form.InputID;
                 string inputlocation = Request.Url;
                 CommandRepository.Create(antdlib.CCTableCommandType.Direct, inputid, command, "", "", layout, inputlocation, notes);
-                return Response.AsRedirect("/command/mgmt");
+                return Response.AsRedirect("/");
             };
 
             Post["/command/mgmt/Launch/{guid}"] = x => {

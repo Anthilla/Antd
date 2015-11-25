@@ -42,7 +42,7 @@ namespace Antd.Modules {
 
             Post["/info/killproc"] = x => {
                 Terminal.Execute("kill " + (string)Request.Form.data);
-                return Response.AsRedirect("/procs");
+                return Response.AsRedirect("/");
             };
         }
     }

@@ -47,7 +47,7 @@ namespace Antd.Modules {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
                 Job.Schedule(alias, command);
-                return Response.AsRedirect("/scheduler");
+                return Response.AsRedirect("/");
             };
 
             Post["/scheduler/cron"] = x => {
@@ -55,7 +55,7 @@ namespace Antd.Modules {
                 var command = (string)Request.Form.Command;
                 var cron = (string)Request.Form.CronResult;
                 Job.Schedule(alias, command, cron);
-                return Response.AsRedirect("/scheduler");
+                return Response.AsRedirect("/");
             };
 
             //Post["/scheduler/other"] = x => {
@@ -64,7 +64,7 @@ namespace Antd.Modules {
             //    var _cron = (string)Request.Form.CronResult;
             //    Job.Schedule(_alias, _command, _cron);
             //    dynamic model = new ExpandoObject();
-            //    return Response.AsRedirect("/scheduler");
+            //    return Response.AsRedirect("/");
             //};
 
             Get["/scheduler/enable/{guid}"] = x => {

@@ -84,14 +84,14 @@ namespace Antd.Modules {
                 var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
                 var requestEmail = (string)Request.Form.Email;
                 if (validationEmail == null && requestEmail == "") {
-                    return Response.AsRedirect("/login/auth/" + username + "/" + password);
+                    return Response.AsRedirect("/");
                 }
                 var email = validationEmail ?? requestEmail;
                 if (email != null) {
                     Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
                 }
                 cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
+                return Response.AsRedirect("/");
             };
 
             Get["/logout"] = x => {
@@ -165,14 +165,14 @@ namespace Antd.Modules {
                 //var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
                 //var requestEmail = (string)Request.Form.Email;
                 //if (validationEmail == null && requestEmail == "") {
-                //    return Response.AsRedirect("/login/auth/" + username + "/" + password);
+                //    return Response.AsRedirect("/");
                 //}
                 //var email = validationEmail ?? requestEmail;
                 //if (email != null) {
                 //    Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
                 //}
                 //cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                //return Response.AsRedirect("/login/token/" + validationGuid.ToGuid().ToString()).WithCookie(cookie);
+                //return Response.AsRedirect("/");
                 return HttpStatusCode.OK;
             };
         }

@@ -1,13 +1,15 @@
 ﻿@Each.Model
-<li data-role="claim" data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 45px; margin-bottom: 3px;">
-    <input name="MasterGuid" type="hidden" value="@user.MasterGuid"/>
-    <p style="display: inline-block; width: 175px; float: left;">
-        @Current.Key
-    </p>
-    <p style="display: inline-block; width: 250px; overflow: hidden;">
-        @Current.Value
-    </p>
+<tr data-role="claim" data-user-guid="@Current.ClaimUserGuid" data-claim-guid="@Current.ClaimGuid">
+    <td>
+        <input name="MasterGuid" type="hidden" value="@Current.ClaimUserGuid" />
+        <p style="display: inline-block; width: 175px; float: left;">
+            @Current.Key
+        </p>
+        <p style="display: inline-block; width: 250px; overflow: hidden;">
+            @Current.Value
+        </p>
 
-    <i data-role="remove-claim" data-user-guid="@user.MasterGuid" data-claim-guid="@claim.ClaimGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-</li>
+        <i data-role="remove-claim" data-user-guid="@Current.ClaimUserGuid" data-claim-guid="@Current.ClaimGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+    </td>
+</tr>
 @EndEach

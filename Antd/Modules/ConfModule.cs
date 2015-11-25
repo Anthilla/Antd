@@ -48,7 +48,7 @@ namespace Antd.Modules {
                 else {
                     ConfigManagement.AddValuesBundle(tag, value);
                 }
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Post["/cfg/delvalue"] = x => {
@@ -56,7 +56,7 @@ namespace Antd.Modules {
                 var key = (string)Request.Form.Key;
                 var value = (string)Request.Form.Value;
                 ConfigManagement.DeleteValuesBundle(tag, key, value);
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Get["/cfg/tags"] = x => {
@@ -70,13 +70,13 @@ namespace Antd.Modules {
                 if (command.Length > 0) {
                     ConfigManagement.AddCommandsBundle(command);
                 }
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Post["/cfg/delcommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.DeleteCommandsBundle(guid);
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Post["/cfg/enablecommand"] = x => {
@@ -94,7 +94,7 @@ namespace Antd.Modules {
             Post["/cfg/launchcommand"] = x => {
                 var guid = (string)Request.Form.Guid;
                 ConfigManagement.LaunchCommand(guid);
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Post["/cfg/reindex"] = x => {
@@ -105,7 +105,7 @@ namespace Antd.Modules {
                 for (var i = 0; i < guids.Length; i++) {
                     ConfigManagement.AssignIndexToCommandsBundle(guids[i], indexes[i]);
                 }
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/");
             };
 
             Get["/cfg/getenabled"] = x => {

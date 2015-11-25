@@ -42,12 +42,12 @@ namespace Antd.Modules {
                 var command = (string)Request.Form.Command;
                 var rule = (string)Request.Form.Rule;
                 NfTables.AddNftRule(command, rule);
-                return Response.AsRedirect("/firewall");
+                return Response.AsRedirect("/");
             };
 
             Post["/firewall/stoprule"] = x => {
                 NfTables.DeleteNftRule((string)Request.Form.Guid);
-                return Response.AsRedirect("/firewall");
+                return Response.AsRedirect("/");
             };
 
             Get["/firewall/checkdefault"] = x => Response.AsJson(FirewallLists.GetAll().Count());

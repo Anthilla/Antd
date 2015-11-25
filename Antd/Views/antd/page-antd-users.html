@@ -23,11 +23,11 @@
         </div>
     </form>
     <hr class="bg-anthilla-green" />
-    <div id="Container" style="width: 45%;">
+    <div id="Container">
         <table class="table">
             <tbody>
                 @Each.UserEntities
-                <tr data-role="user" data-user-guid="@user.MasterGuid">
+                <tr data-role="user" data-user-guid="@Current.MasterGuid">
                     <td>
                         <i class="icon-user fg-white"></i>
                         <p style="display: inline-block; width: 175px;">
@@ -37,15 +37,15 @@
                             @Current.MasterUsername
                             <input name="UserPublicKey" type="hidden" value="@Current.PublicKey" />
                         </p>
-                        <i data-role="remove-user" data-guid="@user.MasterGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-                        <i data-role="disable-user" data-guid="@user.MasterGuid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                        <i data-role="remove-user" data-guid="@Current.MasterGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                        <i data-role="disable-user" data-guid="@Current.MasterGuid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
                     </td>
                 </tr>
-                @Partial['_partial/part-users2', Current.Claims]
+                @Partial['_partial/part-users', Current.Claims]
                 <tr>
                     <td>
                         <form action="/users/identity/addclaim" method="POST" enctype="multipart/form-data" autocomplete="off" class="grid">
-                            <input name="Userguid" type="hidden" value="@user.MasterGuid" />
+                            <input name="Userguid" type="hidden" value="@Current.MasterGuid" />
                             <div class="row bg-anthilla-gray">
                                 <div class="span3 bg-anthilla-gray">
                                     <label>Claim mode</label>
@@ -97,35 +97,35 @@
                 @EndEach
             </tbody>
         </table>
-        <!---------------------------->
+        <!--------------
         @Each.UserEntities
         <ul style="list-style: none; padding: 0;" class="fg-white">
-            <li data-role="user" data-user-guid="@user.MasterGuid" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
+            <li data-role="user" data-user-guid="@Current.MasterGuid" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
                 <i class="icon-user fg-white"></i>
                 <p style="display: inline-block; width: 175px;">
                     @Current.MasterGuid
                 </p>
                 <p style="display: inline-block;">
                     @Current.MasterUsername
-                    <input name="UserPublicKey" type="hidden" value="@Current.PublicKey" />
+                    <input name="UserPublicKey" type="hidden" value="@Current.PublicKey"/>
                 </p>
-                <i data-role="remove-user" data-guid="@user.MasterGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-                <i data-role="disable-user" data-guid="@user.MasterGuid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
+                <i data-role="remove-user" data-guid="@Current.MasterGuid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
+                <i data-role="disable-user" data-guid="@Current.MasterGuid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
             </li>
             @Partial['_partial/part-users', Current.Claims]
-            <li data-role="claim" data-user-guid="@user.MasterGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 205px; margin-bottom: 3px;">
+            <li data-role="claim" data-user-guid="@Current.MasterGuid" class="border-2-anthilla-gray bg-anthilla-gray" style="display: none; padding: 10px; height: 205px; margin-bottom: 3px;">
                 <form action="/users/identity/addclaim" method="POST" enctype="multipart/form-data" autocomplete="off" class="grid">
-                    <input name="Userguid" type="hidden" value="@user.MasterGuid" />
+                    <input name="Userguid" type="hidden" value="@Current.MasterGuid"/>
                     <div class="row bg-anthilla-gray">
                         <div class="span3 bg-anthilla-gray">
                             <label>Claim mode</label>
                         </div>
                         <div class="span5 bg-anthilla-gray">
-                            <input name="Mode" value="antd" type="radio" /> Antd
-                            <input name="Mode" value="system" type="radio" /> System
-                            <input name="Mode" value="activedirectory" type="radio" /> Active Directory
-                            <input name="Mode" value="anthillasp" type="radio" /> Anthilla SP
-                            <input name="Mode" value="other" type="radio" /> Other
+                            <input name="Mode" value="antd" type="radio"/> Antd
+                            <input name="Mode" value="system" type="radio"/> System
+                            <input name="Mode" value="activedirectory" type="radio"/> Active Directory
+                            <input name="Mode" value="anthillasp" type="radio"/> Anthilla SP
+                            <input name="Mode" value="other" type="radio"/> Other
                         </div>
                     </div>
                     <div class="row bg-anthilla-gray">
@@ -133,11 +133,11 @@
                             <label>Claim type</label>
                         </div>
                         <div class="span5 bg-anthilla-gray">
-                            <input name="Type" value="identity" type="radio" /> Identity
-                            <input name="Type" value="password" type="radio" /> Password
-                            <input name="Type" value="pin" type="radio" /> Pin
-                            <input name="Type" value="token" type="radio" /> Token
-                            <input name="Type" value="other" type="radio" /> Other
+                            <input name="Type" value="identity" type="radio"/> Identity
+                            <input name="Type" value="password" type="radio"/> Password
+                            <input name="Type" value="pin" type="radio"/> Pin
+                            <input name="Type" value="token" type="radio"/> Token
+                            <input name="Type" value="other" type="radio"/> Other
                         </div>
                     </div>
                     <div class="row bg-anthilla-gray">
@@ -165,5 +165,6 @@
             </li>
         </ul>
         @EndEach
+            -------------->
     </div>
 </div>

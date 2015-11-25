@@ -73,7 +73,7 @@ namespace Antd.Modules {
                             enableCommand, disableCommand, notes, inputId, inputLocation);
                         break;
                 }
-                return Response.AsRedirect("/system");
+                return Response.AsRedirect("/");
             };
 
             Get["/system/auth/disable"] = x => {
@@ -98,7 +98,7 @@ namespace Antd.Modules {
                 if (unitsSplit.Length > 0) {
                     MountRepository.AddUnit(guid, unitsSplit);
                 }
-                return Response.AsRedirect("/system/mounts");
+                return Response.AsRedirect("/");
             };
 
             Delete["/system/mount/unit"] = x => {

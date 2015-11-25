@@ -53,13 +53,13 @@ namespace Antd.Modules {
                 return View["_page-apps", vmod];
             };
 
-            Get["/apps/set/anthillasp"] = x => {
-                if (AnthillaSp.Units.CheckFiles() == false) {
-                    AnthillaSp.CreateUnits();
-                }
-                AnthillaSp.Start();
-                return Response.AsJson(true);
-            };
+            //Get["/apps/set/anthillasp"] = x => {
+            //    if (AnthillaSp.Units.CheckFiles() == false) {
+            //        AnthillaSp.CreateUnits();
+            //    }
+            //    AnthillaSp.Start();
+            //    return Response.AsJson(true);
+            //};
 
             Get["/apps/apply/anthillasp"] = x => {
                 AnthillaSp.Start();
@@ -76,7 +76,7 @@ namespace Antd.Modules {
                 ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
                 AnthillaSp.Setting.MountSquash();
                 ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                AnthillaSp.CreateUnits();
+                //AnthillaSp.CreateUnits();
                 AnthillaSp.Start();
                 return Response.AsJson(true);
             };
