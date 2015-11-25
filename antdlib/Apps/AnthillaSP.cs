@@ -82,12 +82,12 @@ namespace antdlib.Apps {
         }
 
         public static void Start() {
-            if (!Systemctl.Status("app-anthillasp-01-Prepare.service").output.Contains("Active: active (running)")) {
-                Systemctl.Start("app-anthillasp-01-Prepare.service");
+            if (!Systemctl.Status("app-anthillasp-01-prepare.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-01-prepare.service");
             }
 
-            if (!Systemctl.Status("app-anthillasp-02-Mount.service").output.Contains("Active: active (running)")) {
-                Systemctl.Start("app-anthillasp-02-Mount.service");
+            if (!Systemctl.Status("app-anthillasp-02-mount.service").output.Contains("Active: active (running)")) {
+                Systemctl.Start("app-anthillasp-02-mount.service");
             }
 
             if (!Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active (running)")) {
@@ -192,12 +192,13 @@ namespace antdlib.Apps {
                 if (!File.Exists(path)) {
                     using (var sw = File.CreateText(path)) {
                         sw.WriteLine("[Unit]");
-                        sw.WriteLine("Description=External Volume Unit, Application: DIR_framework_anthillasp Mount ");
-                        sw.WriteLine("ConditionPathExists=/framework/anthillasp");
+                        sw.WriteLine("Description = ExtUnit, Application: Anthillasp 02 Mount Service");
+                        sw.WriteLine("Before=app-anthillasp-03-srv-launcher.service");
                         sw.WriteLine("");
-                        sw.WriteLine("[Mount]");
-                        sw.WriteLine("What=/mnt/cdrom/Apps/Anthilla_AnthillaSP/active-version");
-                        sw.WriteLine("Where=/framework/anthillasp/");
+                        sw.WriteLine("[Service]");
+                        sw.WriteLine("ExecStart=/bin/mount /mnt/cdrom/Apps/Anthilla_AnthillaSP/active-version /framework/anthillasp");
+                        sw.WriteLine("SuccessExitStatus=0");
+                        sw.WriteLine("RemainAfterExit=yes");
                         sw.WriteLine("");
                         sw.WriteLine("[Install]");
                         sw.WriteLine("WantedBy=applicative.target");

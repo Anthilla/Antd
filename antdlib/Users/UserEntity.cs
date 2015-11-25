@@ -41,6 +41,8 @@ namespace antdlib.Users {
                     return ClaimMode.System;
                 case "activedirectory":
                     return ClaimMode.ActiveDirectory;
+                case "anthillasp":
+                    return ClaimMode.AnthillaSP;
                 default:
                     return ClaimMode.Other;
             }
@@ -50,6 +52,7 @@ namespace antdlib.Users {
             Antd = 1,
             System = 2,
             ActiveDirectory = 3,
+            AnthillaSP = 4,
             Other = 99
         }
 

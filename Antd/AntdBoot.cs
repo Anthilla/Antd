@@ -115,8 +115,6 @@ namespace Antd {
             var linkedRelease = Terminal.Execute($"file {module}").Trim();
             if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                //todo rimuovere poi la riga qui sotto
-                Directory.CreateDirectory($"/mnt/cdrom/DIRS/prova-{kernelRelease}");
                 ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
                 Terminal.Execute($"mount {module} {moduleDir}");
