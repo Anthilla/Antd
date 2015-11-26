@@ -28,10 +28,12 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 using antdlib;
 using antdlib.Boot;
 using antdlib.Common;
@@ -47,7 +49,7 @@ namespace Antd {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 var startTime = DateTime.Now;
                 Console.Title = "ANTD";
-                
+
 
                 if (AssemblyInfo.IsUnix == false) {
                     Directory.CreateDirectory("/cfg/antd");
@@ -73,25 +75,36 @@ namespace Antd {
 
                 var httpPort = Convert.ToInt32(CoreParametersConfig.GetHttpPort());
                 var httpBuilder = ServerBuilder.New()
+                    //.SetAddress(IPAddress.Parse("0.0.0.0"))
+                    .SetPort(httpPort)
                     .SetOwinApp(owinbuilder.Build())
-                    .SetEndPoint(new IPEndPoint(IPAddress.Any, httpPort));
+                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
+                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways)
+                    .SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
 
                 var httpsPort = Convert.ToInt32(CoreParametersConfig.GetHttpsPort());
                 var httpsBuilder = ServerBuilder.New()
+                    .SetPort(httpsPort)
                     .SetOwinApp(owinbuilder.Build())
-                    .SetEndPoint(new IPEndPoint(IPAddress.Any, httpsPort))
+                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
+                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways)
                     .SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
 
-                using (var httpsServer = httpsBuilder.Build())
-                using (var httpServer = httpBuilder.Build()) {
-                    httpsServer.Start();
-                    httpServer.Start();
-                    ConsoleLogger.Log("loading service");
-                    ConsoleLogger.Log($"http port: {httpPort}");
-                    ConsoleLogger.Log($"https port: {httpsPort}");
-                    ConsoleLogger.Log("antd is running");
-                    ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-                    stop.WaitOne();
+                using (var httpsServer = httpsBuilder.Build()) {
+                    if (httpsServer == null)
+                        return;
+                    using (var httpServer = httpBuilder.Build()) {
+                        if (httpServer == null)
+                            return;
+                        Task.Run(() => httpsServer.Start());
+                        Task.Run(() => httpServer.Start());
+                        ConsoleLogger.Log("loading service");
+                        ConsoleLogger.Log($"http port: {httpPort}");
+                        ConsoleLogger.Log($"https port: {httpsPort}");
+                        ConsoleLogger.Log("antd is running");
+                        ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+                        stop.WaitOne();
+                    }
                 }
             }
             catch (Exception ex) {
@@ -103,12 +116,12 @@ namespace Antd {
         }
 
         private static void Configuration() {
-            AntdBoot.CheckOsIsRw();             
-            AntdBoot.SetWorkingDirectories();   
-            AntdBoot.SetCoreParameters();       
-            AntdBoot.StartDatabase();           
-            AntdBoot.CheckCertificate();        
-            AntdBoot.ReloadUsers();             
+            AntdBoot.CheckOsIsRw();
+            AntdBoot.SetWorkingDirectories();
+            AntdBoot.SetCoreParameters();
+            AntdBoot.StartDatabase();
+            AntdBoot.CheckCertificate();
+            AntdBoot.ReloadUsers();
             AntdBoot.ReloadSsh();
             AntdBoot.SetOverlayDirectories();
             AntdBoot.SetMounts();

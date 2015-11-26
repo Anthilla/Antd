@@ -138,6 +138,7 @@
     <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
+    <Compile Include="Auth\AuthenticateUserEntity.cs" />
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />

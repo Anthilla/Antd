@@ -57,7 +57,7 @@ namespace Antd.Modules {
                     CCTableRepository.CreateTable(tbl, tblType, context);
                 }
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Post["/cctable/row"] = x => {
@@ -93,7 +93,7 @@ namespace Antd.Modules {
 
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Post["/cctable/row/dataview"] = x => {
@@ -112,7 +112,7 @@ namespace Antd.Modules {
 
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Post["/cctable/row/mapdata"] = x => {
@@ -122,7 +122,7 @@ namespace Antd.Modules {
                 CCTableRepository.SaveMapData(rowGuid, labelArray, indexArray);
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Post["/cctable/row/refresh"] = x => {
@@ -192,7 +192,7 @@ namespace Antd.Modules {
                 }
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Get["/cctable/conf/files"] = x => Response.AsJson(CCTableRepository.GetEtcConfs());
@@ -203,7 +203,7 @@ namespace Antd.Modules {
                 CCTableRepository.UpdateConfFile(file, text);
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
 
             Post["/cctable/map/conf"] = x => {
@@ -245,7 +245,7 @@ namespace Antd.Modules {
 
                 var context = (string)Request.Form.Context;
                 var redirect = context.RemoveWhiteSpace().Length > 0 ? context : "/cctable";
-                return Response.AsRedirect("/");
+                return Response.AsRedirect(redirect);
             };
         }
     }

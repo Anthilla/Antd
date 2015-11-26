@@ -40,12 +40,12 @@ using antdlib.Terminal;
 
 namespace Antd.Hubs {
     public class Websocketd {
-        private static string _fileName = "websocketd";
-        private static readonly string _filePath = $"{Parameter.AntdCfg}/websocketd";
+        public static string FileName { get; } = "websocketd";
+        private static readonly string FilePath = $"{Parameter.AntdCfg}/websocketd";
 
         public static string GetFirstPort(long port = 31000) {
             var c = Terminal.Execute($"netstat -anp | grep :{port}");
-            return (c.Length > 0) ? GetFirstPort(port + 1) : ((port > 49999) ? "30999" : port.ToString());
+            return c.Length > 0 ? GetFirstPort(port + 1) : (port > 49999 ? "30999" : port.ToString());
         }
 
         public static void SetUnit(string port, string command) {
@@ -57,7 +57,7 @@ namespace Antd.Hubs {
                     sw.WriteLine($"Description=External Volume Unit, Antd Websocketd Service @{port}");
                     sw.WriteLine("");
                     sw.WriteLine("[Service]");
-                    sw.WriteLine($"ExecStart={_filePath} --port={port} {command}");
+                    sw.WriteLine($"ExecStart={FilePath} --port={port} {command}");
                     sw.WriteLine("");
                 }
             }
@@ -66,7 +66,7 @@ namespace Antd.Hubs {
         }
 
         public static void SetCmd(string port, string command) {
-            var cmd = $"{_filePath} --port={port} {command}";
+            var cmd = $"{FilePath} --port={port} {command}";
             Terminal.Execute(cmd);
         }
 
@@ -75,9 +75,9 @@ namespace Antd.Hubs {
         ///     ->: /cfg/antd/websocketd/websocketd --port=30333 /usr/bin/vmstat -n 1
         /// <returns></returns>
         public static async Task SetWebsocket(string p = "") {
-            var port = (p.Length > 0) ? p : GetFirstPort();
+            var port = p.Length > 0 ? p : GetFirstPort();
             var ws = new ClientWebSocket();
-            var uri = new System.Uri($"ws://127.0.0.1:{port}/");
+            var uri = new Uri($"ws://127.0.0.1:{port}/");
             await ws.ConnectAsync(uri, CancellationToken.None);
             var buffer = new byte[1024];
             while (true) {
@@ -87,7 +87,7 @@ namespace Antd.Hubs {
                     await ws.CloseAsync(WebSocketCloseStatus.InvalidMessageType, "I don't do binary", CancellationToken.None);
                     ConsoleLogger.Warn("Connection closed: I don't do binary");
                 }
-                int count = result.Count;
+                var count = result.Count;
                 while (!result.EndOfMessage) {
                     if (count >= buffer.Length) {
                         await ws.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "That's too long", CancellationToken.None);
@@ -106,7 +106,7 @@ namespace Antd.Hubs {
             var port = GetFirstPort();
             SetUnit(port, command);
             var ws = new ClientWebSocket();
-            var uri = new System.Uri($"ws://127.0.0.1:{port}/");
+            var uri = new Uri($"ws://127.0.0.1:{port}/");
             await ws.ConnectAsync(uri, CancellationToken.None);
             var buffer = new byte[1024];
             while (true) {

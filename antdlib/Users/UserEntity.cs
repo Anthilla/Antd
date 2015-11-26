@@ -9,7 +9,6 @@ using DeNSo;
 
 namespace antdlib.Users {
     public class UserEntity {
-
         public static ClaimType ConvertClaimType(string claimString) {
             switch (claimString) {
                 case "identity":
@@ -53,6 +52,7 @@ namespace antdlib.Users {
             System = 2,
             ActiveDirectory = 3,
             AnthillaSP = 4,
+            Null = 98,
             Other = 99
         }
 
@@ -203,6 +203,10 @@ namespace antdlib.Users {
             public static void Delete(string guid) {
                 var user = Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == guid);
                 Session.New.Delete(user);
+            }
+
+            public static ClaimMode GetClaimModeByClaim(string claim) {
+                return GetAll().Select(_ => _.Claims.FirstOrDefault(c => c.Value == claim)).Select(p => p.Mode).FirstOrDefault();
             }
 
             private static Tuple<string, string> GenerateUsersKeys(string userGuid, string type, string keyLenght) {

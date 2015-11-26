@@ -28,43 +28,55 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using antdlib.Users;
 
-namespace antdlib.Log {
-    public class ConsoleLogger {
+namespace antdlib.Auth {
+    public class AuthenticateUserEntity {
 
-        public static string Method() => new StackTrace().GetFrame(1).GetMethod().Name;
-
-        public static void Log(dynamic message, string source = "") {
-            var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"app=antd lvl={(int)EventLevel.Log} msg={message}{src}");
-            Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Log, message);
+        public enum AuthenticationResult {
+            Ok = 0,
+            Fail = 1,
+            Other = 2
         }
 
-        public static void Warn(dynamic message, string source = "") {
-            var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"app=antd lvl={(int)EventLevel.Warn} msg={message}{src}");
-            Console.ForegroundColor = currentColor;
-            Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Warn, message);
+        public static AuthenticationResult GetUserIdentityClaimType(string value) {
+            var mode = UserEntity.Repository.GetClaimModeByClaim(value);
+            switch (mode) {
+                case UserEntity.ClaimMode.Antd:
+                    return AuthenticateUserWithAntd(value);
+                case UserEntity.ClaimMode.System:
+                    return AuthenticateUserWithAntd(value);
+                case UserEntity.ClaimMode.ActiveDirectory:
+                    return AuthenticateUserWithActiveDirectory(value);
+                case UserEntity.ClaimMode.AnthillaSP:
+                    return AuthenticateUserWithAnthillaSp(value);
+                case UserEntity.ClaimMode.Null:
+                    return AuthenticationResult.Fail;
+                case UserEntity.ClaimMode.Other:
+                    return AuthenticateUser(value);
+                default:
+                    return AuthenticationResult.Fail;
+            }
         }
 
-        public static void Error(dynamic message, string source = "") {
-            var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"app=antd lvl={(int)EventLevel.Error} msg={message}{src}");
-            Console.ForegroundColor = currentColor;
-            Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Error, message);
+        public static AuthenticationResult AuthenticateUserWithAntd(string claim) {
+            throw new NotImplementedException();
         }
 
-        public static void Point(dynamic message, string source = "") {
-            var currentFg = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"app=antd lvl={(int)EventLevel.Other} msg={message}{src}");
-            Console.ForegroundColor = currentFg;
+        public static AuthenticationResult AuthenticateUserWithActiveDirectory(string claim) {
+            throw new NotImplementedException();
+        }
+
+        public static AuthenticationResult AuthenticateUserWithAnthillaSp(string claim) {
+            throw new NotImplementedException();
+        }
+
+        public static AuthenticationResult AuthenticateUser(string claim) {
+            throw new NotImplementedException();
         }
     }
 }

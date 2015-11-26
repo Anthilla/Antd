@@ -82,8 +82,7 @@ namespace Antd {
             // rendering within the SSVE
             container
                 .Register<IEnumerable<ISuperSimpleViewEngineMatcher>>(
-                    (c, p) => new List<ISuperSimpleViewEngineMatcher>()
-                    {
+                    (c, p) => new List<ISuperSimpleViewEngineMatcher> {
                         // This matcher provides support for @Translate. tokens
                         new AntdViewEngine()
                     });

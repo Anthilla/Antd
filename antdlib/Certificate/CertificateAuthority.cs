@@ -33,6 +33,7 @@ using System.IO;
 using System.Threading;
 using antdlib.Boot;
 using antdlib.Log;
+using Microsoft.Owin.Security.Notifications;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {
@@ -42,6 +43,7 @@ namespace antdlib.Certificate {
                     return;
                 SetupRootCa();
                 SetupIntermediateCa();
+                SetupRevocationList();
                 CoreParametersConfig.EnableCa();
             }
             catch (Exception ex) {
@@ -95,6 +97,7 @@ namespace antdlib.Certificate {
         private static readonly string CaIntermediatePrivateKey = $"{CaIntermediateDirectory}/private/intermediate.key.pem";
         private static readonly string CaIntermediateCertificateReq = $"{CaIntermediateDirectory}/csr/intermediate.csr.pem";
         private static readonly string CaIntermediateCertificate = $"{CaIntermediateDirectory}/certs/intermediate.cert.pem";
+        private static readonly string CaIntermediateRevocationList = $"{CaIntermediateDirectory}/crl/intermediate.crl.pem";
         private static readonly string CaIntermediateChain = $"{CaIntermediateDirectory}/certs/ca-chain.cert.pem";
 
         private static void SetupIntermediateCa() {
@@ -149,9 +152,35 @@ namespace antdlib.Certificate {
             Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}");
         }
 
-        //private static void Convert() {
-        //    throw new NotImplementedException();
-        //}
+        private static void SetupRevocationList() {
+            ConsoleLogger.Log("______ Setup Revocation List ______");
+            Terminal.Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{Passphrase} -out {CaIntermediateRevocationList}");
+            ConsoleLogger.Log(Terminal.Terminal.Execute($"openssl crl -in {CaIntermediateRevocationList} -noout -text"));
+            //todo in aos004 rigenerare il crl e ri-pubblicarlo nella cartella di nginx
+        }
+
+        public static void SetupDomainContoller() {
+            Terminal.Terminal.Execute("killall samba");
+            Terminal.Terminal.Execute("systemctl stop samba");
+            Terminal.Terminal.Execute("samba-tool domain provision --option=\"interfaces=lo br0\" --option=\"bind interfaces only=yes\" --use-rfc2307--domain=HWK --realm=HWK.NET --host-name=aos004 --host-ip=10.1.3.194 --adminpass=Anthilla123 --dns-backend=SAMBA_INTERNAL --server-role=dc");
+            Terminal.Terminal.Execute("samba");
+            Terminal.Terminal.Execute("kinit administrator@HWK.NET");
+            MountPoint.Mount.File("/etc/krb5.conf");
+            Terminal.Terminal.Execute("mkdir DIR_var_log_ntp");
+            Terminal.Terminal.Execute("mkdir DIR_var_lib_ntp");
+            MountPoint.Mount.Dir("/var/lib/ntp");
+            Terminal.Terminal.Execute("mkdir /var/log/ntp");
+            MountPoint.Mount.Dir("/var/log/ntp");
+        }
+
+        public static void InsertUser(string username, string password) {
+            Terminal.Terminal.Execute($"pdbedit -a {username}");
+        }
+
+        public static void SetupDomainControllerCa() {
+            const string commandToGetDccGuid = "ldapsearch -x -h aos004.hwk.net -D administrator@hwk.net -w Anthilla123 -b \"CN=AOS004,OU=Domain Controllers,dc=hwk,dc=net\" -s sub \"(objectGUID=*)\"| grep objectGUID |grep -v '#'|head -1|awk -F '::' '{print $2}'";
+            var dcGuid = Terminal.Terminal.Execute(commandToGetDccGuid).Trim();
+        }
 
         public class Certificate {
             public static void Create(string countryName, string stateProvinceName, string localityName, string organizationName, string organizationalUnitName, string commonName, string emailAddress, string passphrase, CertificateAssignment assignment, string bytesLength, string userGuid, string serviceGuid, string serviceAlias) {

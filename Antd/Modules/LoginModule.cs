@@ -91,7 +91,7 @@ namespace Antd.Modules {
                     Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
                 }
                 cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                return Response.AsRedirect("/");
+                return Response.AsRedirect("/").WithCookie(cookie);
             };
 
             Get["/logout"] = x => {
@@ -147,7 +147,7 @@ namespace Antd.Modules {
                 return Response.AsJson(response);
             };
 
-            Post["/antd/authentication"] = x => {
+            //Post["/antd/authentication"] = x => {
                 //var username = (string)Request.Form.Username;
                 //var password = (string)Request.Form.Password;
                 //var validationGuid = UserDatabase.ValidateUser(username, password);
@@ -173,8 +173,8 @@ namespace Antd.Modules {
                 //}
                 //cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                 //return Response.AsRedirect("/");
-                return HttpStatusCode.OK;
-            };
+            //    return HttpStatusCode.OK;
+            //};
         }
     }
 }
