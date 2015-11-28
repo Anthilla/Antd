@@ -46,7 +46,7 @@ namespace antdlib.Boot {
 
         public static void WriteDefaults() {
             if (Writer.CheckValue("AntdHttpPort") == false) {
-                Writer.Write("AntdHttpPort", "80");
+                Writer.Write("AntdHttpPort", "8084");
             }
             if (Writer.CheckValue("AntdHttpsPort") == false) {
                 Writer.Write("AntdHttpsPort", "443");
@@ -92,11 +92,11 @@ namespace antdlib.Boot {
 
         public static string GetHttpPort() {
             try {
-                return Writer.CheckValue("AntdHttpPort") ? Writer.ReadValue("AntdHttpPort") : "80";
+                return Writer.CheckValue("AntdHttpPort") ? Writer.ReadValue("AntdHttpPort") : "8084";
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
-                return "80";
+                return "8084";
             }
         }
 

@@ -34,7 +34,6 @@ using System.IO;
 using System.Linq;
 
 namespace antdlib.Log {
-
     public enum EventLevel {
         Info = 0,
         Log = 1,
@@ -60,7 +59,6 @@ namespace antdlib.Log {
     }
 
     public class Logger {
-
         public static IEnumerable<LogModel> GetAll() {
             return DeNSo.Session.New.Get<LogModel>().OrderByDescending(_ => _.DateTime);
         }
