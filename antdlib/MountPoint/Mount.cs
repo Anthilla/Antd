@@ -67,22 +67,17 @@ namespace antdlib.MountPoint {
         }
 
         public static void AllDirectories() {
-            ConsoleLogger.Log("Checking for saved mounts information:");
             if (!MountRepository.Get().Any()) {
-                ConsoleLogger.Log("No mounts information found...");
-                ConsoleLogger.Log("I will load my default values!");
                 foreach (var t in DefaultWorkingDirectories) {
                     MountRepository.Create(t, MountContext.Core, MountEntity.Directory);
                 }
             }
+            ConsoleLogger.Log("stored mount info checked");
 
-            ConsoleLogger.Log("Checking existing directories status:");
             CheckCurrentStatus();
+            ConsoleLogger.Log("current mount status checked");
 
-            ConsoleLogger.Log("Mounting directories");
             var directoryMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.Directory).ToArray();
-            var y = directoryMounts.Length == 1 ? "y" : "ies";
-            ConsoleLogger.Log($"Mounting {directoryMounts.Length} director{y}:");
             foreach (var t in directoryMounts) {
                 try {
                     var dir = t.Path.Replace("\\", "");
@@ -98,11 +93,9 @@ namespace antdlib.MountPoint {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
+            ConsoleLogger.Log("directories mounted");
 
-            ConsoleLogger.Log("Mounting files");
             var fileMounts = MountRepository.Get().Where(m => m.MountEntity == MountEntity.File).ToArray();
-            var s = fileMounts.Length == 1 ? "" : "s";
-            ConsoleLogger.Log($"Mounting {fileMounts.Length} file{s}:");
             foreach (var t in fileMounts) {
                 var file = t.Path.Replace("\\", "");
                 var mntFile = SetFilesPath(file);
@@ -122,34 +115,30 @@ namespace antdlib.MountPoint {
                     SetBind(mntFile, file);
                 }
             }
+            ConsoleLogger.Log("files mounted");
 
-            ConsoleLogger.Log("checking detected directories status");
             foreach (var t in directoryMounts) {
                 CheckMount(t.Path);
             }
-            ConsoleLogger.Log("restarting associated services");
+            ConsoleLogger.Log("detected directories status checked");
+
             foreach (var srvc in from t in directoryMounts select t.AssociatedUnits into service where service.Count > 0 from srvc in service select srvc) {
                 Terminal.Terminal.Execute($"systemctl restart {srvc}");
             }
+            ConsoleLogger.Log("services restarted");
         }
 
         public static void CheckCurrentStatus() {
-            ConsoleLogger.Point("current status prima di  EnumerateDirectories");
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
-            var y = directories.Length == 1 ? "y" : "ies";
-            ConsoleLogger.Log($"{directories.Length} director{y} found in {Parameter.RepoDirs}");
             foreach (var t in directories) {
                 var realPath = GetDirsPath(t);
-                ConsoleLogger.Log($"{t} found, should be mounted under {realPath}");
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
                     MountRepository.Create(realPath, MountContext.External, MountEntity.Directory);
                 }
-                ConsoleLogger.Log($"Further check on {realPath}...");
                 if (Directory.Exists(realPath))
                     continue;
                 try {
-                    ConsoleLogger.Log($"{realPath} does not exists, copying content from {t}");
                     Terminal.Terminal.Execute($"mkdir -p {t}");
                     Terminal.Terminal.Execute($"mkdir -p {realPath}");
                     Terminal.Terminal.Execute($"cp {t} {realPath}");
@@ -158,22 +147,18 @@ namespace antdlib.MountPoint {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
+            ConsoleLogger.Log("current directories status checked");
 
             var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
-            var s = files.Length == 1 ? "" : "s";
-            ConsoleLogger.Log($"{files.Length} file{s} found in {Parameter.RepoDirs}");
             foreach (var t in files) {
                 var realPath = GetFilesPath(t);
-                ConsoleLogger.Log($"{t} found, should be mounted under {realPath}");
                 var mount = MountRepository.Get(realPath);
                 if (mount == null) {
                     MountRepository.Create(realPath, MountContext.External, MountEntity.File);
                 }
-                ConsoleLogger.Log($"Further check on {realPath}...");
                 if (System.IO.File.Exists(realPath))
                     continue;
                 try {
-                    ConsoleLogger.Log($"{realPath} does not exists, copying content from {t}");
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
                     Terminal.Terminal.Execute($"mkdir -p {path}");
@@ -184,6 +169,7 @@ namespace antdlib.MountPoint {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
+            ConsoleLogger.Log("current files status checked");
         }
 
         public static void Check() {
@@ -203,7 +189,6 @@ namespace antdlib.MountPoint {
             Directory.CreateDirectory(directory);
             Directory.CreateDirectory(mntDir);
             SetBind(mntDir, directory);
-            Check();
         }
 
         public static void File(string file) {
@@ -213,9 +198,7 @@ namespace antdlib.MountPoint {
         }
 
         private static void CheckMount(string directory) {
-            ConsoleLogger.Log($">>     check: {directory}");
             var isMntd = IsAlreadyMounted(directory);
-            ConsoleLogger.Log($">>     is {directory} already mounted? {isMntd}");
             var mntDirectory = SetDirsPath(directory);
             var timestampNow = Timestamp.Now;
             DFP.Set(mntDirectory, timestampNow);
@@ -225,29 +208,23 @@ namespace antdlib.MountPoint {
             var directoryTimestamp = DFP.GetTimestamp(directory);
             var directoryDfp = directoryTimestamp != null;
             if (isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
-                ConsoleLogger.Log("unauthorizedaccessexception");
                 MountRepository.SetAsMountedReadOnly(directory);
             }
             else if (isMntd && dirsDfp && directoryDfp) {
                 if (dirsTimestamp == directoryTimestamp) {
-                    ConsoleLogger.Log("mounted");
                     MountRepository.SetAsMounted(directory, mntDirectory);
                 }
                 else {
-                    ConsoleLogger.Log("mounted, but on a different directory");
                     MountRepository.SetAsDifferentMounted(directory);
                 }
             }
             else if (isMntd == false && dirsDfp && directoryDfp == false) {
-                ConsoleLogger.Log("not mounted");
                 MountRepository.SetAsNotMounted(directory);
             }
             else if (isMntd && dirsDfp == false && directoryDfp) {
-                ConsoleLogger.Log("tmp mounted");
                 MountRepository.SetAsTmpMounted(directory);
             }
             else if (isMntd == false && dirsDfp == false && directoryDfp == false) {
-                ConsoleLogger.Log("error");
                 MountRepository.SetAsError(directory);
             }
             else {
@@ -258,16 +235,9 @@ namespace antdlib.MountPoint {
         }
 
         private static void SetBind(string source, string destination) {
-            ConsoleLogger.Log($"Check if {source} is already mounted...");
-            if (IsAlreadyMounted(source, destination)) {
-                ConsoleLogger.Point($"is already mounted {source} {destination}");
-                ConsoleLogger.Log($"{source} is already mounted!");
-            }
-            else {
-                ConsoleLogger.Log($"Mounting: {source}");
-                ConsoleLogger.Point($"mount -o bind {source} {destination}");
-                Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
-            }
+            if (IsAlreadyMounted(source, destination))
+                return;
+            Terminal.Terminal.Execute($"mount -o bind {source} {destination}");
         }
 
         public static string SetDirsPath(string source) {

@@ -378,7 +378,7 @@ namespace antdlib.Config {
                     new CommandsBundleLayout { CommandLayout = $"touch {tag}" },
                     new CommandsBundleLayout { CommandLayout = $"chmod {tag} {tag}" },
                     new CommandsBundleLayout { CommandLayout = $"cp {tag} {tag}" },
-                    new CommandsBundleLayout { CommandLayout = $"systemctl daemon-reload" },
+                    new CommandsBundleLayout { CommandLayout = "systemctl daemon-reload" },
                     new CommandsBundleLayout { CommandLayout = $"sleep {tag}" },
 
                 };

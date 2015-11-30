@@ -109,7 +109,6 @@ namespace Antd {
             }
             catch (Exception ex) {
                 Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
-                ConsoleLogger.Error(ex.ToString(), "antd-crash");
                 File.WriteAllText($"{Parameter.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
                 DeNSo.Session.ShutDown();
             }
@@ -124,11 +123,11 @@ namespace Antd {
             AntdBoot.ReloadUsers();
             AntdBoot.ReloadSsh();
             AntdBoot.SetOverlayDirectories();
+            //AntdBoot.SetSystemdJournald();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
             AntdBoot.LaunchDefaultOsConfiguration();
             //AntdBoot.SetWebsocketd();
-            AntdBoot.SetSystemdJournald();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.ImportSystemInformation();

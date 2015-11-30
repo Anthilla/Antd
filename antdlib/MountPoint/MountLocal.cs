@@ -36,55 +36,52 @@ namespace antdlib.MountPoint {
     public class MountLocal {
         public static IEnumerable<MountModel> Get() {
             var list = new List<MountModel>();
-            var deny = new List<string>() { };
+            var deny = new List<string>();
             var procmounts = FileSystem.ReadFile("/proc/mounts");
             if (procmounts.Length > 0) {
-                var rows = procmounts.Split(new String[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                var rows = procmounts.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 foreach (var row in rows) {
-                    var cells = row.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    if (cells.Length > 0) {
-                        var mm = new MountModel() {
-                            Device = cells[0].Trim(),
-                            Path = cells[1].Trim(),
-                            MountContext = MountContext.Other,
-                            Type = cells[2].Trim(),
-                            Options = cells[3].Trim()
-                        };
-                        if (mm.Options.Contains("rw")) {
-                            mm.MountStatus = MountStatus.MountedReadWrite;
-                        }
-                        else if (mm.Options.Contains("ro")) {
-                            mm.MountStatus = MountStatus.MountedReadOnly;
-                        }
-                        else {
-                            mm.MountStatus = MountStatus.Mounted;
-                        }
-
-                        if (mm.Type.Contains("squash")) {
-                            mm.MountedPath = GetSquashMount(mm.Device);
-                        }
-                        else {
-                            var mntpt = GetBindMount(mm.Path);
-                            if (mntpt == null) {
-                                mm.MountedPath = "";
-                            }
-                            else {
-                                mm.MountedPath = mntpt;
-                                deny.Add(mntpt.Trim());
-                            }
-                        }
-                        list.Add(mm);
+                    var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                    if (cells.Length <= 0)
+                        continue;
+                    var mm = new MountModel {
+                        Device = cells[0].Trim(),
+                        Path = cells[1].Trim(),
+                        MountContext = MountContext.Other,
+                        Type = cells[2].Trim(),
+                        Options = cells[3].Trim()
+                    };
+                    if (mm.Options.Contains("rw")) {
+                        mm.MountStatus = MountStatus.MountedReadWrite;
                     }
+                    else if (mm.Options.Contains("ro")) {
+                        mm.MountStatus = MountStatus.MountedReadOnly;
+                    }
+                    else {
+                        mm.MountStatus = MountStatus.Mounted;
+                    }
+
+                    if (mm.Type.Contains("squash")) {
+                        mm.MountedPath = GetSquashMount(mm.Device);
+                    }
+                    else {
+                        var mntpt = GetBindMount(mm.Path);
+                        if (mntpt == null) {
+                            mm.MountedPath = "";
+                        }
+                        else {
+                            mm.MountedPath = mntpt;
+                            deny.Add(mntpt.Trim());
+                        }
+                    }
+                    list.Add(mm);
                 }
             }
 
             var preList = list.Where(m => !deny.Contains(m.Path)).OrderBy(m => m.Device).ThenBy(m => m.Path).ToList();
 
-            foreach (var d in deny) {
-                var el = preList.FirstOrDefault(m => m.Path == d);
-                if (el != null) {
-                    preList.Remove(el);
-                }
+            foreach (var el in deny.Select(d => preList.FirstOrDefault(m => m.Path == d)).Where(el => el != null)) {
+                preList.Remove(el);
             }
 
             return preList;
@@ -92,26 +89,19 @@ namespace antdlib.MountPoint {
 
         public static string GetSquashMount(string device) {
             var sq = Terminal.Terminal.Execute($"losetup | grep {device}");
-            if (sq.Length > 0) {
-                var data = sq.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var src = "";
-                if (data.Length > 1) {
-                    src = data[data.Length - 1];
-                }
-                return src;
-            }
-            else {
+            if (sq.Length <= 0)
                 return "";
+            var data = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var src = "";
+            if (data.Length > 1) {
+                src = data[data.Length - 1];
             }
+            return src;
         }
 
         public static string GetBindMount(string path) {
-            string v = null;
             var mnt = MountRepository.Get(path);
-            if (mnt != null) {
-                v = mnt.MountedPath.Length > 0 ? mnt.MountedPath : null;
-            }
-            return v;
+            return mnt.MountedPath.Length > 0 ? mnt.MountedPath : null;
         }
     }
 }

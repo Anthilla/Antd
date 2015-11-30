@@ -156,7 +156,7 @@ namespace antdlib.Terminal {
                         }
                     }
                     catch (Exception ex) {
-                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
+                        ConsoleLogger.Error($"failed to execute '{command}': {ex.Message}");
                     }
                 }).Start();
             }
