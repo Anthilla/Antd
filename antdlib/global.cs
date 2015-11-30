@@ -160,8 +160,8 @@ namespace antdlib {
 
     public class Update {
         public const string RemoteRepo = "http://srv.anthilla.com:8081";
-        public const string RemoteAntdDir = "antd-update";
-        public const string RemoteAntdshDir = "antdsh-update";
+        public const string RemoteAntdDir = "update.antd";
+        public const string RemoteAntdshDir = "update.antdsh";
         public const string RemoteUpdateInfo = "update.txt";
     }
 }

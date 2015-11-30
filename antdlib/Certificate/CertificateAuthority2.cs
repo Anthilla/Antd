@@ -35,63 +35,30 @@ using antdlib.Boot;
 using antdlib.Log;
 
 namespace antdlib.Certificate {
-    public class CertificateAuthority {
-        public static void Setup() {
-            try {
-                if (IsActive)
-                    return;
-                SetupRootCa();
-                SetupIntermediateCa();
-                SetupRevocationList();
-                CoreParametersConfig.EnableCa();
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.ToString());
-            }
+    public class CertificateAuthority2 {
+
+        private static string _caDirectory;
+
+        public CertificateAuthority2(string directory) {
+            _caDirectory = directory;
         }
 
-        public static bool IsActive => CoreParametersConfig.GetCa() == "yes" && File.Exists(CaRootCertificate);
+        private static readonly string CaRootConfFile = $"{_caDirectory}/openssl.cnf";
+        private static readonly string CaRootPrivateKey = $"{_caDirectory}/private/ca.key.pem";
+        private static readonly string CaRootCertificate = $"{_caDirectory}/certs/ca.cert.pem";
+        private static string _passphrase;
 
-        private static readonly string CaDirectory = Parameter.CertificateAuthority;
-        private static readonly string CaRootConfFile = $"{CaDirectory}/openssl.cnf";
-        private static readonly string CaRootPrivateKey = $"{CaDirectory}/private/ca.key.pem";
-        private static readonly string CaRootCertificate = $"{CaDirectory}/certs/ca.cert.pem";
-        private const string Passphrase = "antdca";
+        private static string _caCountry;
+        private static string _caProvince;
+        private static string _caLocality;
+        private static string _caOrganization;
+        private static string _caOrganizationalUnit;
+        private static string _caCommonName;
+        private static string _caEmail;
 
-        private static void SetupRootCa() {
-            ConsoleLogger.Log("______ Setup Root CA ______");
-            ConsoleLogger.Log("1) Create directories: /ca .certs .crl .newcerts .private");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/certs");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/crl");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/newcerts");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/private");
-            ConsoleLogger.Log("2) Change .private acl");
-            Terminal.Terminal.Execute($"chmod 700 {CaDirectory}/private");
-            ConsoleLogger.Log("3) Create index file");
-            Terminal.Terminal.Execute($"touch {CaDirectory}/index.txt");
-            ConsoleLogger.Log("4) Create serial file");
-            Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
-            ConsoleLogger.Log("5) Copy .conf file");
-            Terminal.Terminal.Execute($"rm {CaRootConfFile}");
-            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
-            ConsoleLogger.Log("6) Generate root private key");
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{Passphrase} 4096");
-            if (!File.Exists(CaRootPrivateKey)) {
-                throw new FileNotFoundException("File Not Found", CaRootPrivateKey);
-            }
-            ConsoleLogger.Log("7) Change private key acl");
-            Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
-            ConsoleLogger.Log("8) Generate root certificate");
-            Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey} -new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{Passphrase} -subj \"/C=IT/ST=Milan/L=./O=AnthillaSRL/OU=./CN=Antd Root CA/emailAddress=.\"");
-            if (!File.Exists(CaRootCertificate)) {
-                throw new FileNotFoundException("File Not Found", CaRootCertificate);
-            }
-            ConsoleLogger.Log("9) Check root certificate");
-            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
-        }
+        private static string _caIntermediateCommonName;
 
-        private static readonly string CaIntermediateDirectory = $"{CaDirectory}/intermediate";
+        private static readonly string CaIntermediateDirectory = $"{_caDirectory}/intermediate";
         private static readonly string CaIntermediateConfFile = $"{CaIntermediateDirectory}/openssl.cnf";
         private static readonly string CaIntermediatePrivateKey = $"{CaIntermediateDirectory}/private/intermediate.key.pem";
         private static readonly string CaIntermediateCertificateReq = $"{CaIntermediateDirectory}/csr/intermediate.csr.pem";
@@ -99,86 +66,61 @@ namespace antdlib.Certificate {
         private static readonly string CaIntermediateRevocationList = $"{CaIntermediateDirectory}/crl/intermediate.crl.pem";
         private static readonly string CaIntermediateChain = $"{CaIntermediateDirectory}/certs/ca-chain.cert.pem";
 
-        private static void SetupIntermediateCa() {
-            ConsoleLogger.Log("______ Setup Intermediate CA ______");
-            ConsoleLogger.Log("1) Create directories: /ca/intermediate .certs .crl .csr .newcerts .private");
+        public static void Setup(string passphrase, string caCountry, string caProvince, string caLocality, string caOrganization, string caOrganizationalUnit, string caCommonName, string caEmail) {
+            ConsoleLogger.Log("setting up root ca structure");
+            _passphrase = passphrase;
+
+            _caCountry = caCountry;
+            _caProvince = caProvince;
+            _caLocality = caLocality;
+            _caOrganization = caOrganization;
+            _caOrganizationalUnit = caOrganizationalUnit;
+            _caCommonName = caCommonName;
+            _caEmail = caEmail;
+            _caIntermediateCommonName = $"Intermediate {caCommonName}";
+
+            Terminal.Terminal.Execute($"mkdir -p {_caDirectory}");
+            Terminal.Terminal.Execute($"mkdir -p {_caDirectory}/certs");
+            Terminal.Terminal.Execute($"mkdir -p {_caDirectory}/crl");
+            Terminal.Terminal.Execute($"mkdir -p {_caDirectory}/newcerts");
+            Terminal.Terminal.Execute($"mkdir -p {_caDirectory}/private");
+            Terminal.Terminal.Execute($"chmod 700 {_caDirectory}/private");
+            Terminal.Terminal.Execute($"touch {_caDirectory}/index.txt");
+            Terminal.Terminal.Execute($"echo 1000 > {_caDirectory}/serial");
+            //todo check this and cnf info
+            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
+            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{_passphrase} 4096");
+            Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
+            Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey} -new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{_passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caCommonName}/emailAddress={_caEmail}\"");
+            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
+
+            ConsoleLogger.Log("setting up intermediate ca structure");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/certs");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/crl");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/csr");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/newcerts");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/private");
-            ConsoleLogger.Log("2) Change .private acl");
             Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
-            ConsoleLogger.Log("3) Create index file");
             Terminal.Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
-            ConsoleLogger.Log("4) Create serial file");
             Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
-            ConsoleLogger.Log("5) Create crlnumber file");
             Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
-            ConsoleLogger.Log("6) Copy .conf file");
-            Terminal.Terminal.Execute($"rm {CaIntermediateConfFile}");
+            //todo check this and cnf info
             Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
-            ConsoleLogger.Log("7) Generate intermediate private key");
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{Passphrase} 4096");
-            if (!File.Exists(CaIntermediatePrivateKey)) {
-                throw new FileNotFoundException("File Not Found", CaIntermediatePrivateKey);
-            }
-            ConsoleLogger.Log("8) Change private key acl");
+            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{_passphrase} 4096");
             Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
-            ConsoleLogger.Log("9) Generate intermediate cert request");
-            Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey} -new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{Passphrase} -subj \"/C=IT/ST=Milan/L=./O=AnthillaSRL/OU=./CN=Antd Intermediate CA/emailAddress=.\"");
-            if (!File.Exists(CaIntermediateCertificateReq)) {
-                throw new FileNotFoundException("File Not Found", CaIntermediateCertificateReq);
-            }
-            ConsoleLogger.Log("10) Generate intermediate certificate, signed with root certificate");
-            Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{Passphrase} -in {CaIntermediateCertificateReq} -out {CaIntermediateCertificate}");
-            if (!File.Exists(CaIntermediateCertificate)) {
-                throw new FileNotFoundException("File Not Found", CaIntermediateCertificate);
-            }
-            ConsoleLogger.Log("11) Change intermediate certificate acl");
+            Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey} -new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{_passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caIntermediateCommonName}/emailAddress={_caEmail}\"");
+            Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{_passphrase} -in {CaIntermediateCertificateReq} -out {CaIntermediateCertificate}");
             Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}");
-            ConsoleLogger.Log("12) Check intermediate certificate");
             Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}");
-            ConsoleLogger.Log("13) Verify intermediate certificate");
             Terminal.Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}");
-            ConsoleLogger.Log("14) Generate intermediate chain file");
             Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}");
-            if (!File.Exists(CaIntermediateChain)) {
-                throw new FileNotFoundException("File Not Found", CaIntermediateChain);
-            }
-            ConsoleLogger.Log("15) Change intermediate chain file acl");
             Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}");
-        }
 
-        private static void SetupRevocationList() {
-            ConsoleLogger.Log("______ Setup Revocation List ______");
-            Terminal.Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{Passphrase} -out {CaIntermediateRevocationList}");
+            ConsoleLogger.Log("setting up crl");
+            Terminal.Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{_passphrase} -out {CaIntermediateRevocationList}");
             ConsoleLogger.Log(Terminal.Terminal.Execute($"openssl crl -in {CaIntermediateRevocationList} -noout -text"));
-            //todo in aos004 rigenerare il crl e ri-pubblicarlo nella cartella di nginx
-        }
-
-        public static void SetupDomainContoller() {
-            Terminal.Terminal.Execute("killall samba");
-            Terminal.Terminal.Execute("systemctl stop samba");
-            Terminal.Terminal.Execute("samba-tool domain provision --option=\"interfaces=lo br0\" --option=\"bind interfaces only=yes\" --use-rfc2307--domain=HWK --realm=HWK.NET --host-name=aos004 --host-ip=10.1.3.194 --adminpass=Anthilla123 --dns-backend=SAMBA_INTERNAL --server-role=dc");
-            Terminal.Terminal.Execute("samba");
-            Terminal.Terminal.Execute("kinit administrator@HWK.NET");
-            MountPoint.Mount.File("/etc/krb5.conf");
-            Terminal.Terminal.Execute("mkdir -p DIR_var_log_ntp");
-            Terminal.Terminal.Execute("mkdir -p DIR_var_lib_ntp");
-            MountPoint.Mount.Dir("/var/lib/ntp");
-            Terminal.Terminal.Execute("mkdir -p /var/log/ntp");
-            MountPoint.Mount.Dir("/var/log/ntp");
-        }
-
-        public static void InsertUser(string username, string password) {
-            Terminal.Terminal.Execute($"pdbedit -a {username}");
-        }
-
-        public static void SetupDomainControllerCa() {
-            const string commandToGetDccGuid = "ldapsearch -x -h aos004.hwk.net -D administrator@hwk.net -w Anthilla123 -b \"CN=AOS004,OU=Domain Controllers,dc=hwk,dc=net\" -s sub \"(objectGUID=*)\"| grep objectGUID |grep -v '#'|head -1|awk -F '::' '{print $2}'";
-            var dcGuid = Terminal.Terminal.Execute(commandToGetDccGuid).Trim();
+            //todo update crl files
         }
 
         public class Certificate {
@@ -208,7 +150,7 @@ namespace antdlib.Certificate {
                         certExtension = "server_cert";
                     }
                     const int days = 375;
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{Passphrase} -in {certificateRequestPath} -out {certificatePath}");
+                    Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{_passphrase} -in {certificateRequestPath} -out {certificatePath}");
                     Thread.Sleep(2000);
                     Terminal.Terminal.Execute($"chmod 444 {certificatePath}");
 
@@ -217,11 +159,9 @@ namespace antdlib.Certificate {
                     Terminal.Terminal.Execute($"chmod 444 {certificateDerPath}");
 
                     var certificatePfxPath = $"{CaIntermediateDirectory}/certs/{certName}.cert.pfx";
-                    Terminal.Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase}");
+                    Terminal.Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase} -nodes");
                     Terminal.Terminal.Execute($"chmod 444 {certificatePfxPath}");
 
-                    //if (!File.Exists(certificatePath))
-                    //    return;
                     var dt = DateTime.Now;
                     var model = new CertificateModel {
                         IsPresent = true,

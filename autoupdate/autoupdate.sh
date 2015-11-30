@@ -9,13 +9,13 @@ mount -t tmpfs tmpfs /mnt/cdrom/Apps/tmp
 mkdir -p /framework/antdsh
 
 echo verify Antdsh version
-wget "http://srv.anthilla.com:8081/antdsh-update/update.txt" -O /mnt/cdrom/Apps/tmp/update.txt
+wget "http://srv.anthilla.com:8081/update.antdsh/update.txt" -O /mnt/cdrom/Apps/tmp/update.txt
 SQUASH=$(head -1 /mnt/cdrom/Apps/tmp/update.txt)
 echo "version found: $SQUASH"
 
 echo Download Antdsh
 mkdir -p /mnt/cdrom/Apps/Anthilla_antdsh
-wget "http://srv.anthilla.com:8081/antdsh-update/$SQUASH" -O "/mnt/cdrom/Apps/Anthilla_antdsh/$SQUASH"
+wget "http://srv.anthilla.com:8081/update.antdsh/$SQUASH" -O "/mnt/cdrom/Apps/Anthilla_antdsh/$SQUASH"
 
 echo kill active antdsh
 killall antdsh.exe

@@ -45,6 +45,8 @@ namespace Antd {
             var databaseName = Parameter.AntdCfgDatabaseName;
             var databasePaths = new[] { CoreParametersConfig.GetDb() };
             foreach (var dbPath in databasePaths) {
+                Terminal.Execute($"mkdir -p {dbPath}");
+                Terminal.Execute($"mkdir -p {dbPath}/{databaseName}");
                 Directory.CreateDirectory(dbPath);
                 Directory.CreateDirectory($"{dbPath}/{databaseName}");
             }

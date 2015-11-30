@@ -367,7 +367,7 @@ namespace antdlib.Config {
                     new CommandsBundleLayout { CommandLayout = $"ntpdate {tag}" },
                     new CommandsBundleLayout { CommandLayout = "timedatectl --no-pager --no-ask-password --adjust-system-clock set-ntp yes" },
                     new CommandsBundleLayout { CommandLayout = $"rmdir {tag}" },
-                    new CommandsBundleLayout { CommandLayout = $"mkdir {tag}" },
+                    new CommandsBundleLayout { CommandLayout = $"mkdir -p {tag}" },
                     new CommandsBundleLayout { CommandLayout = $"mkdir -p {tag}" },
                     new CommandsBundleLayout { CommandLayout = $"mount -o rw,discard,noatime {tag} {tag}" },
                     new CommandsBundleLayout { CommandLayout = $"mount -o rw,discard,noatime LABEL={tag} {tag}" },

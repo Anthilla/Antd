@@ -1,223 +1,107 @@
 ﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
     <legend id="CertManager">Certificate Manager</legend>
-    <div class="grid">
+    <form action="/dc/setup" method="POST" enctype="multipart/form-data" class="grid">
         <div class="row">
-            <div class="span4">
-                <label>SSL Status</label>
-            </div>
-            <div class="span7">
-                <input type="text" value="@Model.SslStatus" style="width: 90%; height: 35px;" readonly="readonly" />
-            </div>
+            <p>(1) Setup a Domain Controller</p>
         </div>
         <div class="row">
-            <div class="span4">
-                <label>Toggle Ssl</label>
-            </div>
-            <div class="span7">
-                <input data-role="InvertSslOption" value="@Model.SslStatusAction" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
-            </div>
+            <p>Domain</p>
+            <input name="DomainName" type="text"/>
+            <p>ex: HWK</p>
         </div>
-        <div class="row" style="margin-top: 25px;">
-            <div class="span4">
-                <label>Certificate Path</label>
-            </div>
-            <div class="span7">
-                <input name="CertificatePath" style="width: 60%; height: 25px;" type="text" value="@Model.CertificatePath" />
-                <input data-role="ChangeCertificatePath" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" type="button" value="Apply" />
-            </div>
-        </div>
-    </div>
-    <hr class="bg-anthilla-gray" />
-    <legend>Certificate Authority Manager</legend>
-    <div class="grid">
-        @IfNot.CaIsActive
         <div class="row">
-            <div class="span4">
-                <label>Certificate Authority Setup</label>
-            </div>
-            <div class="span7">
-                <input data-role="CertificateAuthoritySetup" value="Prepare Machine" type="button" class="bg-anthilla-green" style="width: 90%; color: #464646;" />
-            </div>
+            <p>Realm</p>
+            <input name="DomainRealmname" type="text"/>
+            <p>ex: HWK.NET</p>
         </div>
-        @EndIf
-        @If.CaIsActive
         <div class="row">
-            <div class="span4">
-                <label>Certificate Authority Setup</label>
-            </div>
-            <div class="span7">
-                <p>Certificate Authority is active on this machine</p>
-            </div>
+            <p>Hostname</p>
+            <input name="DomainHostname" type="text"/>
+            <p>ex: aos004</p>
         </div>
-        @EndIf
-        <form action="/ca/certificate/new" method="POST" enctype="multipart/form-data">
-            <div class="row">
-                <div class="span4">
-                    <label>Certificate Name / Common Name</label>
-                </div>
-                <div class="span7">
-                    <input name="CommonName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Country Name</label>
-                </div>
-                <div class="span7">
-                    <input name="CountryName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>State or Province Name</label>
-                </div>
-                <div class="span7">
-                    <input name="StateProvinceName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Locality Name</label>
-                </div>
-                <div class="span7">
-                    <input name="LocalityName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Organization Name</label>
-                </div>
-                <div class="span7">
-                    <input name="OrganizationName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Organizational Unit Name</label>
-                </div>
-                <div class="span7">
-                    <input name="OrganizationalUnitName" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Email Address</label>
-                </div>
-                <div class="span7">
-                    <input name="EmailAddress" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Password</label>
-                </div>
-                <div class="span7">
-                    <input name="Password" style="width: 60%; height: 25px;" type="text" />
-                </div>
-                <div class="span4">
-                    <p>Leave this field blank if you don't want to assign a password to this certificate.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Bytes Length</label>
-                </div>
-                <div class="span7">
-                    <input name="BytesLength" style="width: 60%; height: 25px;" type="text" value="2048" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="span4">
-                    <label>Assignment</label>
-                </div>
-                <div class="span7">
-                    <select class="bg-anthilla-gray fg-white border-anthilla-green" name="Assignment" style="width: 60%; height: 25px;">
-                        <option value="user" selected="selected">User</option>
-                        <option value="service">Service</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row" id="UserAssignmentRow">
-                <div class="span4">
-                    <label>User Assignment</label>
-                </div>
-                <div class="span7">
-                    <input type="hidden" name="UserAlias" value="" />
-                    <input id="userEntities" name="UserGuid" type="text" />
-                </div>
-            </div>
-            <div class="row" style="display: none;" id="ServiceAssignmentRow">
-                <div class="span4">
-                    <label>Service Assignment</label>
-                </div>
-                <div class="span7">
-                    <input type="hidden" name="ServiceGuid" value="" />
-                    <input name="ServiceAlias" style="width: 60%; height: 25px;" type="text" />
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="span4">
-                </div>
-                <div class="span7">
-                    <input class="bg-anthilla-green" style="width: 90% !important; color: #464646;" type="submit" value="Create New Certificate" />
-                </div>
-            </div>
-        </form>
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th> Certificate </th>
-                <th> Location </th>
-                <th> Organization </th>
-                <th> Assigned to </th>
-                <th> Expire date </th>
-                <th> Status (isRevoked?) </th>
-            </tr>
-        </thead>
-        <tbody>
-            @Each.Certificates
-            <tr data-guid="@Current.CertificateGuid" data-path="@Current.CertificatePath">
-                <td>
-                    <p>@Current.CertificateCommonName</p>
-                </td>
-                <td>
-                    <p>@Current.CertificateCountryName @Current.CertificateStateProvinceNameh @Current.CertificateLocalityName</p>
-                </td>
-                <td>
-                    <p>@Current.CertificateOrganizationName @Current.CertificateOrganizationalUnitName @Current.CertificateEmailAddress</p>
-                </td>
-                <td>
-                    <p>@Current.CertificateAssignment</p>
-                </td>
-                <td>
-                    <p>@Current.ExpirationDateTime</p>
-                </td>
-                <td>
-                    <p>@Current.IsRevoked</p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <a href="/ca/certificate/download/pem/@Current.CertificateGuid" class="button bg-anthilla-green" style="color: #3a3a3a !important;">Download PEM Certificate</a>
-                    <a href="/ca/certificate/download/pfx/@Current.CertificateGuid" class="button bg-anthilla-green" style="color: #3a3a3a !important;">Download PFX Certificate</a>
-                    <a href="/ca/certificate/download/der/@Current.CertificateGuid" class="button bg-anthilla-green" style="color: #3a3a3a !important;">Download CER Certificate</a>
-                </td>
-            </tr>
-            <!--
-            public bool IsRevoked { get; set; } = false;
-            public string CertificatePath { get; set; }
-
-            public string CertificateOrganizationName { get; set; }
-            public string CertificateOrganizationalUnitName { get; set; }
-            public string CertificateEmailAddress { get; set; }
-
-            public DateTime ExpirationDateTime { get; set; }
-
-            public CertificateAuthorityLevel CertificateAuthorityLevel { get; set; }
-            public CertificateAssignment CertificateAssignment { get; set; }-->
-            @EndEach
-        </tbody>
-    </table>
+        <div class="row">
+            <p>Host IP</p>
+            <input name="DomainHostip" type="text"/>
+            <p>ex: 10.1.3.194</p>
+        </div>
+        <div class="row">
+            <p>Administrator Password</p>
+            <input name="DomainAdminPassword" type="text"/>
+            <p>ex: MyPassword123</p>
+        </div>
+    </form>
+    <form action="/dc/adduser" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <p>(2) Add User to Domain</p>
+        </div>
+        <div class="row">
+            <p>
+                samba-tool user create visor --password=UserPassword123 --username=visor --mail-address=visor@hwk.net --given-name=visor
+            </p>
+        </div>
+        <div class="row">
+            <p>Domain</p>
+            <input name="DomainName" type="text" readonly="readonly" value="hwk.net"/>
+        </div>
+        <div class="row">
+            <p>Username</p>
+            <input name="Username" type="text"/>
+            <p>ex: visor</p>
+        </div>
+        <div class="row">
+            <p>Hostname</p>
+            <input name="UserPassword" type="text"/>
+            <p>ex: UserPassword123</p>
+        </div>
+    </form>
+    <form action="/dc/setup" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <p>(3) Setup Certificate Authority</p>
+        </div>
+        <div class="row">
+            <p>Main Directory</p>
+            <input name="CaDirectory" type="text"/>
+            <p>ex: /root/ca</p>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="CaCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="CaProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="CaLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="CaOrganization" type="text"/>
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="CaOrganizationalUnit" type="text"/>
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="CaCommonName" type="text"/>
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Email</p>
+            <input name="CaEmail" type="text"/>
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="CaPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+    </form>
 </div>

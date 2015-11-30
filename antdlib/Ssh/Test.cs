@@ -14,7 +14,7 @@ namespace antdlib.Ssh {
                     if (sshclient.IsConnected) {
                         Console.WriteLine("Client connected!");
                     }
-                    using (var cmd = sshclient.CreateCommand("mkdir /mnt/cdrom/Apps/tmpssh")) {
+                    using (var cmd = sshclient.CreateCommand("mkdir -p /mnt/cdrom/Apps/tmpssh")) {
                         cmd.Execute();
                         Console.WriteLine($"Command> {cmd.CommandText}");
                         Console.WriteLine($"Return Value = {cmd.ExitStatus}");

@@ -137,6 +137,7 @@
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
+    <Compile Include="Modules\DomainController.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
@@ -295,6 +296,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\_partial_service\part-samba-structure.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\antd\page-ca-manage-old.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Views\_partial\part-users.html">
