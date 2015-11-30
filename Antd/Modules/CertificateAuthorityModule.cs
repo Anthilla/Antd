@@ -30,6 +30,7 @@
 using System.IO;
 using antdlib.Boot;
 using antdlib.Certificate;
+using Antd.Helpers;
 using Nancy;
 using Nancy.Responses;
 using Nancy.Security;
@@ -61,15 +62,17 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Get["/ca/cert/get"] = x => Response.AsJson(CoreParametersConfig.GetCertificatePath());
-
-            Post["/ca/cert/set"] = x => {
-                CoreParametersConfig.SetCertificatePath((string)Request.Form.CertificatePath);
-                return Response.AsJson(true);
-            };
-
             Post["/ca/setup"] = x => {
-                CertificateAuthority.Setup();
+                var caDirectory = (string)Request.Form.CaDirectory;
+                var caCountry = (string)Request.Form.CaCountry;
+                var caProvince = (string)Request.Form.CaProvince;
+                var caLocality = (string)Request.Form.CaLocality;
+                var caOrganization = (string)Request.Form.CaOrganization;
+                var caOrganizationalUnit = (string)Request.Form.CaOrganizationalUnit;
+                var caCommonName = (string)Request.Form.CaCommonName;
+                var caEmail = (string)Request.Form.CaEmail;
+                var caPassphrase = (string)Request.Form.CaPassphrase;
+                CertificateAuthority.Setup(caDirectory, caPassphrase, caCountry, caProvince, caLocality, caOrganization, caOrganizationalUnit, caCommonName, caEmail);
                 return Response.AsJson(true);
             };
 
@@ -86,7 +89,7 @@ namespace Antd.Modules {
                 var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
                 var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.Password;
                 var bytesLength = ((string)Request.Form.BytesLength).Length < 1 ? "2048" : (string)Request.Form.BytesLength;
-                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : DetectCertificateAssignment((string)Request.Form.Assignment.Value);
+                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : CertificateAssignementType.Detect((string)Request.Form.Assignment.Value);
                 var userGuid = ((string)Request.Form.UserGuid).Length < 1 ? "" : (string)Request.Form.UserGuid;
                 var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
                 var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;
@@ -97,7 +100,8 @@ namespace Antd.Modules {
             Get["/ca/certificate/download/{format}/{guid}"] = x => {
                 var guid = (string)x.guid;
                 var certificate = CertificateRepository.GetByGuid(guid);
-                if (certificate == null) return HttpStatusCode.InternalServerError;
+                if (certificate == null)
+                    return HttpStatusCode.InternalServerError;
                 string path;
                 var format = (string)x.format;
                 switch (format) {
@@ -116,13 +120,6 @@ namespace Antd.Modules {
                 var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
                 return response.AsAttachment(fileName);
             };
-        }
-
-        private static CertificateAssignment DetectCertificateAssignment(string value) {
-            if (value == "user") {
-                return CertificateAssignment.User;
-            }
-            return value == "service" ? CertificateAssignment.Service : CertificateAssignment.Other;
         }
     }
 }

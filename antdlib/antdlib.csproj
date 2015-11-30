@@ -149,7 +149,6 @@
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
-    <Compile Include="Certificate\CertificateAuthority2.cs" />
     <Compile Include="Certificate\CertificateAuthority.cs" />
     <Compile Include="Certificate\CertificateModel.cs" />
     <Compile Include="Collectd\CollectdModel.cs" />

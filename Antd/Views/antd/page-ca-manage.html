@@ -54,28 +54,28 @@
             <p>ex: UserPassword123</p>
         </div>
     </form>
-    <form action="/dc/setup" method="POST" enctype="multipart/form-data" class="grid">
+    <form action="/ca/setup" method="POST" enctype="multipart/form-data" class="grid">
         <div class="row">
             <p>(3) Setup Certificate Authority</p>
         </div>
         <div class="row">
             <p>Main Directory</p>
             <input name="CaDirectory" type="text"/>
-            <p>ex: /root/ca</p>
+            <p>ex: /root/ca, can be left blank</p>
         </div>
         <div class="row">
             <p>Country</p>
-            <input name="CaCountry" type="text" />
+            <input name="CaCountry" type="text"/>
             <p>ex: IT</p>
         </div>
         <div class="row">
             <p>Province</p>
-            <input name="CaProvince" type="text" />
+            <input name="CaProvince" type="text"/>
             <p>ex:</p>
         </div>
         <div class="row">
             <p>Locality</p>
-            <input name="CaLocality" type="text" />
+            <input name="CaLocality" type="text"/>
             <p>ex:</p>
         </div>
         <div class="row">
@@ -89,7 +89,7 @@
             <p>ex:</p>
         </div>
         <div class="row">
-            <p>Organizational Unit</p>
+            <p>Common Name</p>
             <input name="CaCommonName" type="text"/>
             <p>ex:</p>
         </div>
@@ -100,8 +100,160 @@
         </div>
         <div class="row">
             <p>Passphrase</p>
-            <input name="CaPassphrase" type="text" />
+            <input name="CaPassphrase" type="text"/>
             <p>ex:</p>
         </div>
     </form>
+    <form action="/dc/cert" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <p>(4) Create a Certificate for Domain Controller</p>
+        </div>
+        <div class="row">
+            <p>Domain Controller Guid</p>
+            <input name="DomainControllerGuid" type="text"/>
+            <p>ex: </p>
+        </div>
+        <div class="row">
+            <p>Domain DNS name</p>
+            <input name="DomainDnsName" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>CRL Distribution Point</p>
+            <input name="DomainCrlDistributionPoint" type="text" />
+            <p>must be a valid url</p>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="DomainCaCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="DomainCaProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="DomainCaLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="DomainCaOrganization" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="DomainCaOrganizationalUnit" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Common Name</p>
+            <input name="DomainCaCommonName" type="text" />
+            <p>ex: hostname.domain.com</p>
+        </div>
+        <div class="row">
+            <p>Email</p>
+            <input name="DomainCaEmail" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="DomainCaPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+    </form>
+    <form action="/sc/cert" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <p>(5) Create a Certificate for Smart Card Usage</p>
+        </div>
+        <div class="row">
+            <p>User Principal Name</p>
+            <input name="UserPrincipalName" type="text" />
+            <p>ex: user@domain.com, check in AD user's properties</p>
+        </div>
+        <div class="row">
+            <p>CRL Distribution Point</p>
+            <input name="DomainCrlDistributionPoint" type="text" />
+            <p>must be a valid url and must be the same as the DC cert</p>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="SmartCardCaCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="SmartCardCaProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="SmartCardCaLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="SmartCardCaOrganization" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="SmartCardCaOrganizationalUnit" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="SmartCardCaPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+    </form>
+
+    <form action="/ca/cert" method="POST" enctype="multipart/form-data" class="grid">
+        <div class="row">
+            <p>(6) Create a Certificate for Generic Usage</p>
+        </div>
+        <div class="row">
+            <p>User Principal Name</p>
+            <input name="UserPrincipalName" type="text" />
+            <p>ex: user@domain.com, check in AD user's properties</p>
+        </div>
+        <div class="row">
+            <p>CRL Distribution Point</p>
+            <input name="DomainCrlDistributionPoint" type="text" />
+            <p>must be a valid url and must be the same as the DC cert</p>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="SmartCardCaCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="SmartCardCaProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="SmartCardCaLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="SmartCardCaOrganization" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="SmartCardCaOrganizationalUnit" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="SmartCardCaPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+    </form>
+
 </div>

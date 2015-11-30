@@ -30,7 +30,7 @@
 
 using System.Linq;
 using antdlib.Directories;
-using Antd.ViewHelpers;
+using Antd.Helpers;
 using Nancy.Security;
 
 namespace Antd.Modules {

@@ -32,12 +32,11 @@ using System.Dynamic;
 using System.Linq;
 using antdlib.Boot;
 using antdlib.CCTable;
-using antdlib.Certificate;
 using antdlib.Common;
 using antdlib.Info;
 using antdlib.MountPoint;
 using antdlib.Status;
-using Antd.ViewHelpers;
+using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
 

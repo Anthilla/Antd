@@ -48,6 +48,8 @@ namespace antdlib.Certificate {
     public enum CertificateAssignment : byte {
         Service = 1,
         User = 2,
+        DomainController = 3,
+        SmartCard = 4,
         Other = 99
     }
 
@@ -75,7 +77,8 @@ namespace antdlib.Certificate {
 
         public CertificateAuthorityLevel CertificateAuthorityLevel { get; set; }
         public CertificateAssignment CertificateAssignment { get; set; }
-        public IEnumerable<string> AssignmentUserGuid  { get; set; }
+        public IEnumerable<string> AssignmentUserGuids { get; set; }
+        public string AssignmentGuid { get; set; }
 
         public string AssignmentServiceGuid { get; set; }
         public string AssignmentServiceAlias { get; set; }

@@ -27,42 +27,42 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.Config;
+using antdlib.Users;
 
-namespace Antd.ViewHelpers {
-    public class VhStatus {
-        public static List<StatusSysctlViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
-            var paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (SysctlModel data in stockData) {
-                paramNames.Add(data.param);
-            }
-            foreach (SysctlModel data in runningData) {
-                paramNames.Add(data.param);
-            }
-            foreach (SysctlModel data in antdData) {
-                paramNames.Add(data.param);
-            }
-            var list = new List<StatusSysctlViewModel>();
-            foreach (var par in paramNames) {
-                var model = new StatusSysctlViewModel { Label = par };
-                var stockValue = (from s in stockData
-                                  where s.param == par
-                                  select s.value).FirstOrDefault();
-                model.StockValue = stockValue ?? "";
-                var runningValue = (from s in runningData
-                                    where s.param == par
-                                    select s.value).FirstOrDefault();
-                model.RunningValue = runningValue ?? "";
-                var antdValue = (from s in antdData
-                                 where s.param == par
-                                 select s.value).FirstOrDefault();
-                model.AntdValue = antdValue ?? "";
-                list.Add(model);
-            }
+namespace Antd.Helpers {
+    public class SelectizerMapModel {
+        public static IEnumerable<RawTagOfValueBundle> MapRawTagOfValueBundle(IEnumerable<string> tagValues) {
+            var list = new List<RawTagOfValueBundle>();
+            list.AddRange(tagValues.Select(v => new RawTagOfValueBundle { name = v }));
             return list;
         }
+
+        public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<ConfigManagement.CommandsBundleLayout> commands) {
+            var list = new List<RawCommandBundleLayout>();
+            list.AddRange(commands.Select(c => new RawCommandBundleLayout { name = c.CommandLayout }));
+            return list;
+        }
+
+        public static IEnumerable<RawUserEntity> MapRawUserEntity(IEnumerable<UserEntity.UserEntityModel> users) {
+            var list = new List<RawUserEntity>();
+            list.AddRange(users.Select(c => new RawUserEntity { alias = c.MasterAlias, guid = c.MasterGuid }));
+            return list;
+        }
+    }
+
+    public class RawTagOfValueBundle {
+        public string name { get; set; }
+    }
+
+    public class RawCommandBundleLayout {
+        public string name { get; set; }
+    }
+
+    public class RawUserEntity {
+        public string alias { get; set; }
+        public string guid { get; set; }
     }
 }

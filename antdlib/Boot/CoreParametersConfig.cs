@@ -63,11 +63,55 @@ namespace antdlib.Boot {
             if (Writer.CheckValue("ca") == false) {
                 Writer.Write("ca", "no");
             }
+            if (Writer.CheckValue("ca_path") == false) {
+                Writer.Write("ca", Parameter.CertificateAuthority);
+            }
+            if (Writer.CheckValue("x509") == false) {
+                Writer.Write("x509", "");
+            }
             if (Writer.CheckValue(Label.Auth.IsEnabled) == false) {
                 Writer.Write(Label.Auth.IsEnabled, false.ToString());
             }
             if (Writer.CheckValue("protocol") == false) {
                 Writer.Write("protocol", "https");
+            }
+        }
+
+        public static string GetX509() {
+            try {
+                return Writer.CheckValue("x509") ? Writer.ReadValue("x509") : Parameter.CertificateAuthority;
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return Parameter.CertificateAuthority;
+            }
+        }
+
+        public static void SetX509(string val) {
+            try {
+                Writer.Write("x509", val);
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+            }
+        }
+
+        public static string GetCaPath() {
+            try {
+                return Writer.CheckValue("ca_path") ? Writer.ReadValue("ca_path") : Parameter.CertificateAuthority;
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return Parameter.CertificateAuthority;
+            }
+        }
+
+        public static void SetCaPath(string path) {
+            try {
+                Writer.Write("ca_path", path);
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
             }
         }
 

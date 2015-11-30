@@ -134,6 +134,7 @@
     <Compile Include="AntdBoot.cs" />
     <Compile Include="AntdHub.cs" />
     <Compile Include="AntdViewEngine.cs" />
+    <Compile Include="Helpers\CertificateAssignementType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
@@ -168,9 +169,9 @@
     <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\VncModule.cs" />
     <Compile Include="AntdApplication.cs" />
-    <Compile Include="ViewHelpers\DirectoryModel.cs" />
-    <Compile Include="ViewHelpers\SelectizerMapModel.cs" />
-    <Compile Include="ViewHelpers\StatusSysctl.cs" />
+    <Compile Include="Helpers\DirectoryModel.cs" />
+    <Compile Include="Helpers\SelectizerMapModel.cs" />
+    <Compile Include="Helpers\StatusSysctl.cs" />
     <None Include="Content\fonts\iconFont.eot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -226,6 +227,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\openssl.cnf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\openssl-dc-tmplate.cnf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\openssl-sc-template.cnf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\squashfs.sh">

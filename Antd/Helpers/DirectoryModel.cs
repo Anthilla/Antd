@@ -28,41 +28,20 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
-using antdlib.Config;
-using antdlib.Users;
+using antdlib.Models;
 
-namespace Antd.ViewHelpers {
-    public class SelectizerMapModel {
-        public static IEnumerable<RawTagOfValueBundle> MapRawTagOfValueBundle(IEnumerable<string> tagValues) {
-            var list = new List<RawTagOfValueBundle>();
-            list.AddRange(tagValues.Select(v => new RawTagOfValueBundle { name = v }));
-            return list;
-        }
+namespace Antd.Helpers {
 
-        public static IEnumerable<RawCommandBundleLayout> MapRawCommandBundleLayout(IEnumerable<ConfigManagement.CommandsBundleLayout> commands) {
-            var list = new List<RawCommandBundleLayout>();
-            list.AddRange(commands.Select(c => new RawCommandBundleLayout { name = c.CommandLayout }));
-            return list;
-        }
-
-        public static IEnumerable<RawUserEntity> MapRawUserEntity(IEnumerable<UserEntity.UserEntityModel> users) {
-            var list = new List<RawUserEntity>();
-            list.AddRange(users.Select(c => new RawUserEntity { alias = c.MasterAlias, guid = c.MasterGuid }));
-            return list;
-        }
+    public class DirectoryViewModel {
+        public IEnumerable<string> Parents { get; set; }
+        public IEnumerable<string> Children { get; set; }
+        public IEnumerable<DirItemModel> Children2 { get; set; }
     }
 
-    public class RawTagOfValueBundle {
-        public string name { get; set; }
-    }
-
-    public class RawCommandBundleLayout {
-        public string name { get; set; }
-    }
-
-    public class RawUserEntity {
-        public string alias { get; set; }
-        public string guid { get; set; }
+    public class StatusSysctlViewModel {
+        public string Label { get; set; }
+        public string StockValue { get; set; }
+        public string RunningValue { get; set; }
+        public string AntdValue { get; set; }
     }
 }

@@ -27,21 +27,42 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using antdlib.Models;
 
-namespace Antd.ViewHelpers {
-
-    public class DirectoryViewModel {
-        public IEnumerable<string> Parents { get; set; }
-        public IEnumerable<string> Children { get; set; }
-        public IEnumerable<DirItemModel> Children2 { get; set; }
-    }
-
-    public class StatusSysctlViewModel {
-        public string Label { get; set; }
-        public string StockValue { get; set; }
-        public string RunningValue { get; set; }
-        public string AntdValue { get; set; }
+namespace Antd.Helpers {
+    public class VhStatus {
+        public static List<StatusSysctlViewModel> Sysctl(List<SysctlModel> stockData, List<SysctlModel> runningData, List<SysctlModel> antdData) {
+            var paramNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var data in stockData) {
+                paramNames.Add(data.param);
+            }
+            foreach (var data in runningData) {
+                paramNames.Add(data.param);
+            }
+            foreach (var data in antdData) {
+                paramNames.Add(data.param);
+            }
+            var list = new List<StatusSysctlViewModel>();
+            foreach (var par in paramNames) {
+                var model = new StatusSysctlViewModel { Label = par };
+                var stockValue = (from s in stockData
+                                  where s.param == par
+                                  select s.value).FirstOrDefault();
+                model.StockValue = stockValue ?? "";
+                var runningValue = (from s in runningData
+                                    where s.param == par
+                                    select s.value).FirstOrDefault();
+                model.RunningValue = runningValue ?? "";
+                var antdValue = (from s in antdData
+                                 where s.param == par
+                                 select s.value).FirstOrDefault();
+                model.AntdValue = antdValue ?? "";
+                list.Add(model);
+            }
+            return list;
+        }
     }
 }

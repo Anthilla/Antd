@@ -27,6 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using antdlib.Certificate;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Terminal;
@@ -64,7 +67,9 @@ namespace Antd.Modules {
                 if (!Mount.IsAlreadyMounted("/etc/resolv.conf")) {
                     Mount.File("/etc/resolv.conf");
                 }
-                Terminal.Execute($"echo nameserver {domainHostip} > /etc/resolv.conf");
+                Terminal.Execute(!File.Exists("/etc/resolv.conf")
+                    ? $"echo nameserver {domainHostip} > /etc/resolv.conf"
+                    : $"echo nameserver {domainHostip} >> /etc/resolv.conf");
                 Terminal.Execute($"echo search {domainRealmname} >> /etc/resolv.conf");
                 Terminal.Execute($"echo domain {domainRealmname} >> /etc/resolv.conf");
                 ConsoleLogger.Log($"{domainName} references updated");
@@ -81,7 +86,56 @@ namespace Antd.Modules {
                 }
 
                 Terminal.Execute($"samba-tool user create {username} --password={userPassword} --username={username} --mail-address={username}@{domainName} --given-name={username}");
+                return Response.AsRedirect("/");
+            };
 
+            Post["/dc/cert"] = x => {
+                var domControllerGuid = (string)Request.Form.DomainControllerGuid;
+                var domDnsName = (string)Request.Form.DomainDnsName;
+                var domCrlDistributionPoint = (string)Request.Form.DomainCrlDistributionPoint;
+                var domCaCountry = (string)Request.Form.DomainCaCountry;
+                var domCaProvince = (string)Request.Form.DomainCaProvince;
+                var domCaLocality = (string)Request.Form.DomainCaLocality;
+                var domCaOrganization = (string)Request.Form.DomainCaOrganization;
+                var domCaOrganizationalUnit = (string)Request.Form.DomainCaOrganizationalUnit;
+                var domCaCommonName = (string)Request.Form.DomainCaCommonName;
+                var domCaEmail = (string)Request.Form.DomainCaEmail;
+                var domCaPassphrase = (string)Request.Form.DomainCaPassphrase;
+                CertificateAuthority.DomainControllerCertificate.Create(domCrlDistributionPoint, domControllerGuid, domDnsName, domCaCountry, domCaProvince, domCaLocality, domCaOrganization, domCaOrganizationalUnit, domCaCommonName, domCaEmail, domCaPassphrase);
+                return Response.AsRedirect("/");
+            };
+
+            Post["/sc/cert"] = x => {
+                var userPrincipalName = (string)Request.Form.UserPrincipalName;
+                var domainCrlDistributionPoint = (string)Request.Form.DomainCrlDistributionPoint;
+                var smartCardCaCountry = (string)Request.Form.SmartCardCaCountry;
+                var smartCardCaProvince = (string)Request.Form.SmartCardCaProvince;
+                var smartCardCaLocality = (string)Request.Form.SmartCardCaLocality;
+                var smartCardCaOrganization = (string)Request.Form.SmartCardCaOrganization;
+                var smartCardCaOrganizationalUnit = (string)Request.Form.SmartCardCaOrganizationalUnit;
+                var smartCardCaPassphrase = (string)Request.Form.SmartCardCaPassphrase;
+                CertificateAuthority.SmartCardCertificate.Create(domainCrlDistributionPoint, userPrincipalName, smartCardCaCountry, smartCardCaProvince, smartCardCaLocality, smartCardCaOrganization, smartCardCaOrganizationalUnit, smartCardCaPassphrase);
+                return Response.AsRedirect("/");
+            };
+
+            Post["/ca/cert"] = x => {
+                var countryName = ((string)Request.Form.CountryName).Length < 1 ? "." : (string)Request.Form.CountryName;
+                if (countryName.Length > 2) {
+                    countryName = countryName.Substring(0, 2).ToUpper();
+                }
+                var stateProvinceName = ((string)Request.Form.StateProvinceName).Length < 1 ? "." : (string)Request.Form.StateProvinceName;
+                var localityName = ((string)Request.Form.LocalityName).Length < 1 ? "." : (string)Request.Form.LocalityName;
+                var organizationName = ((string)Request.Form.OrganizationName).Length < 1 ? "." : (string)Request.Form.OrganizationName;
+                var organizationalUnitName = ((string)Request.Form.OrganizationalUnitName).Length < 1 ? "." : (string)Request.Form.OrganizationalUnitName;
+                var commonName = ((string)Request.Form.CommonName).Length < 1 ? "*" : (string)Request.Form.CommonName;
+                var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
+                var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.Password;
+                var bytesLength = ((string)Request.Form.BytesLength).Length < 1 ? "2048" : (string)Request.Form.BytesLength;
+                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : DetectCertificateAssignment((string)Request.Form.Assignment.Value);
+                var userGuid = ((string)Request.Form.UserGuid).Length < 1 ? "" : (string)Request.Form.UserGuid;
+                var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
+                var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;
+                CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, assignment, bytesLength, userGuid, serviceGuid, serviceAlias);
                 return Response.AsRedirect("/");
             };
         }

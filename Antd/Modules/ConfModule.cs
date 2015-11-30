@@ -29,7 +29,7 @@
 
 using System.Linq;
 using antdlib.Config;
-using Antd.ViewHelpers;
+using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
 

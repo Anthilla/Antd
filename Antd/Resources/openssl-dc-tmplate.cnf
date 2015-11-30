@@ -1,7 +1,12 @@
-#Template for Intermediate CA
+#Template for Domain Controller Certificate
+#Replace values between  $ with you real value
+
+CRLDISTPT = $crlDitributionPoint$
+DOMAINCONTROLLERGUID = $domainControllerGuid$
+DOMAINDNS = DNS:$domainDnsName$
 
 [ ca ]
-default_ca = CA_default
+default_ca = CA_default 
 
 [ CA_default ]
 dir = /mnt/cdrom/Config/ca/intermediate
@@ -23,6 +28,7 @@ cert_opt = ca_default
 default_days = 730
 preserve = no
 policy = policy_loose
+x509_extensions = usr_cert_mskdc
 
 [ policy_loose ]
 countryName = optional
@@ -35,10 +41,11 @@ emailAddress = optional
 
 [ req ]
 default_bits = 2048
+default_keyfile = privkey.pem
 distinguished_name = req_distinguished_name
-string_mask = utf8only
-default_md = sha256
+attributes = req_attributes
 x509_extensions = v3_ca
+string_mask = utf8only
 
 [ req_distinguished_name ]
 countryName = Country Name (2 letter code)
@@ -55,42 +62,38 @@ localityName_default = Caronno Pertusella
 organizationalUnitName_default =
 emailAddress_default =
 
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
 [ v3_ca ]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
-basicConstraints = critical, CA:true
-keyUsage = critical, digitalSignature, cRLSign, keyCertSign
-
-[ v3_intermediate_ca ]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
-basicConstraints = critical, CA:true, pathlen:0
-keyUsage = critical, digitalSignature, cRLSign, keyCertSign
-
-[ usr_cert ]
-basicConstraints = CA:FALSE
-nsCertType = client, email
-nsComment = "OpenSSL Generated Client Certificate"
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
-keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
-extendedKeyUsage = clientAuth, emailProtection
-
-[ server_cert ]
-basicConstraints = CA:FALSE
-nsCertType = server
-nsComment = "OpenSSL Generated Server Certificate"
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer:always
-keyUsage = critical, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer
+basicConstraints = CA:true
+keyUsage = cRLSign, keyCertSign
+crlDistributionPoints=URI:$CRLDISTPT
+nsCertType = sslCA, emailCA
+subjectAltName=email:copy
+issuerAltName=issuer:copy
 
 [ crl_ext ]
+issuerAltName=issuer:copy
 authorityKeyIdentifier=keyid:always
 
-[ ocsp ]
-basicConstraints = CA:FALSE
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
-keyUsage = critical, digitalSignature
-extendedKeyUsage = critical, OCSPSigning
+[ usr_cert_mskdc ]
+basicConstraints=CA:FALSE
+crlDistributionPoints=URI:$CRLDISTPT
+nsCertType = server
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+nsComment = "Domain Controller Certificate"
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+subjectAltName=@dc_subjalt
+issuerAltName=issuer:copy
+nsCaRevocationUrl = $CRLDISTPT
+#extendedKeyUsage = clientAuth,serverAuth,1.3.6.1.5.2.3.5
+extendedKeyUsage = clientAuth,serverAuth
+
+[dc_subjalt]
+DNS=$DOMAINDNS
+otherName=1.3.6.1.4.1.311.25.1;FORMAT:HEX,OCTETSTRING:$DOMAINCONTROLLERGUID

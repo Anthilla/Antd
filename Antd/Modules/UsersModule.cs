@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using antdlib.Security;
 using antdlib.Users;
-using Antd.ViewHelpers;
+using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
 

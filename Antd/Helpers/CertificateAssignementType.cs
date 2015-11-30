@@ -27,37 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Newtonsoft.Json;
-using System.Linq;
+using antdlib.Certificate;
 
-namespace antdlib.Boot {
-    public class ParametersConfig : CoreParametersConfig {
-        public static void Write(string key, string value) {
-            var readValue = Writer.ReadValue(key);
-            if (readValue == null) {
-                var arr = new[] { value };
-                Writer.Write(key, JsonConvert.SerializeObject(arr));
+namespace Antd.Helpers {
+    public class CertificateAssignementType {
+        public static CertificateAssignment Detect(string value) {
+            if (value == "user") {
+                return CertificateAssignment.User;
             }
-            else {
-                AddValue(key, value);
-            }
-        }
-
-        private static void AddValue(string key, string value) {
-            var readValue = Writer.ReadValue(key);
-            var arr = JsonConvert.DeserializeObject<string[]>(readValue);
-            var list = arr.ToList();
-            list.Add(value);
-            Writer.Write(key, JsonConvert.SerializeObject(list.ToArray()));
-        }
-
-        public static string Read(string key) {
-            return Writer.ReadValue(key);
-        }
-
-        public static void Edit(string key, string value) {
-            var arr = new[] { value };
-            Writer.Write(key, JsonConvert.SerializeObject(arr));
+            return value == "service" ? CertificateAssignment.Service : CertificateAssignment.Other;
         }
     }
 }
