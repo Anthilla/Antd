@@ -30,7 +30,7 @@
 using antdlib.Certificate;
 
 namespace Antd.Helpers {
-    public class CertificateAssignementType {
+    public class CertificateAssignmentType {
         public static CertificateAssignment Detect(string value) {
             if (value == "user") {
                 return CertificateAssignment.User;

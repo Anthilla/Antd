@@ -134,7 +134,7 @@
     <Compile Include="AntdBoot.cs" />
     <Compile Include="AntdHub.cs" />
     <Compile Include="AntdViewEngine.cs" />
-    <Compile Include="Helpers\CertificateAssignementType.cs" />
+    <Compile Include="Helpers\CertificateAssignmentType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />

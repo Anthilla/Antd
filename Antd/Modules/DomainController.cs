@@ -27,12 +27,13 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.IO;
+using System.Reflection;
 using antdlib.Certificate;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Terminal;
+using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
 
@@ -119,23 +120,20 @@ namespace Antd.Modules {
             };
 
             Post["/ca/cert"] = x => {
-                var countryName = ((string)Request.Form.CountryName).Length < 1 ? "." : (string)Request.Form.CountryName;
-                if (countryName.Length > 2) {
-                    countryName = countryName.Substring(0, 2).ToUpper();
-                }
-                var stateProvinceName = ((string)Request.Form.StateProvinceName).Length < 1 ? "." : (string)Request.Form.StateProvinceName;
-                var localityName = ((string)Request.Form.LocalityName).Length < 1 ? "." : (string)Request.Form.LocalityName;
-                var organizationName = ((string)Request.Form.OrganizationName).Length < 1 ? "." : (string)Request.Form.OrganizationName;
-                var organizationalUnitName = ((string)Request.Form.OrganizationalUnitName).Length < 1 ? "." : (string)Request.Form.OrganizationalUnitName;
-                var commonName = ((string)Request.Form.CommonName).Length < 1 ? "*" : (string)Request.Form.CommonName;
-                var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
-                var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.Password;
-                var bytesLength = ((string)Request.Form.BytesLength).Length < 1 ? "2048" : (string)Request.Form.BytesLength;
-                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : DetectCertificateAssignment((string)Request.Form.Assignment.Value);
-                var userGuid = ((string)Request.Form.UserGuid).Length < 1 ? "" : (string)Request.Form.UserGuid;
-                var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
-                var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;
-                CertificateAuthority.Certificate.Create(countryName, stateProvinceName, localityName, organizationName, organizationalUnitName, commonName, emailAddress, password, assignment, bytesLength, userGuid, serviceGuid, serviceAlias);
+                var certAssignment = (string)Request.Form.CertAssignment.Value;
+                var certCountry = (string)Request.Form.CertCountry;
+                var certProvince = (string)Request.Form.CertProvince;
+                var certLocality = (string)Request.Form.CertLocality;
+                var certOrganization = (string)Request.Form.CertOrganization;
+                var certOrganizationalUnit = (string)Request.Form.CertOrganizationalUnit;
+                var certCommonName = (string)Request.Form.CertCommonName;
+                var certEmailAddress = (string)Request.Form.CertEmailAddress;
+                var certPassphrase = (string)Request.Form.CertPassphrase;
+                var certKeyLength = (string)Request.Form.CertKeyLength;
+                var certUserAssignedGuid = (string)Request.Form.CertUserAssignedGuid;
+                var certServiceAssignedGuid = (string)Request.Form.CertServiceAssignedGuid;
+                var certServiceAssignedName = (string)Request.Form.CertServiceAssignedName;
+                CertificateAuthority.Certificate.Create(certCountry, certProvince, certLocality, certOrganization, certOrganizationalUnit, certCommonName, certEmailAddress, certPassphrase, CertificateAssignmentType.Detect(certAssignment), certKeyLength, certUserAssignedGuid, certServiceAssignedGuid, certServiceAssignedName);
                 return Response.AsRedirect("/");
             };
         }

@@ -89,7 +89,7 @@ namespace Antd.Modules {
                 var emailAddress = ((string)Request.Form.EmailAddress).Length < 1 ? "." : (string)Request.Form.EmailAddress;
                 var password = ((string)Request.Form.Password).Length < 1 ? "" : (string)Request.Form.Password;
                 var bytesLength = ((string)Request.Form.BytesLength).Length < 1 ? "2048" : (string)Request.Form.BytesLength;
-                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : CertificateAssignementType.Detect((string)Request.Form.Assignment.Value);
+                var assignment = ((string)Request.Form.Assignment.Value).Length < 1 ? CertificateAssignment.User : CertificateAssignmentType.Detect((string)Request.Form.Assignment.Value);
                 var userGuid = ((string)Request.Form.UserGuid).Length < 1 ? "" : (string)Request.Form.UserGuid;
                 var serviceGuid = ((string)Request.Form.ServiceGuid).Length < 1 ? "" : (string)Request.Form.ServiceGuid;
                 var serviceAlias = ((string)Request.Form.ServiceAlias).Length < 1 ? "" : (string)Request.Form.ServiceAlias;

@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Log;
 
 namespace antdlib.Firewall {
     public class FirewallListModel {
