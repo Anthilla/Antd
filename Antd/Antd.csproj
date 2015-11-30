@@ -138,7 +138,7 @@
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
-    <Compile Include="Modules\DomainController.cs" />
+    <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
@@ -217,10 +217,19 @@
     <None Include="Resources\FILE_etc_wpa_supplicant_wpa__suplicant.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\hosts.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\krb5.conf.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\moduli">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\antd.firewall.template.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\nginx.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\openssl-intermediate.cnf">
@@ -233,6 +242,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\openssl-sc-template.cnf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\smb.conf.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\squashfs.sh">

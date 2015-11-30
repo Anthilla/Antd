@@ -1,0 +1,26 @@
+[libdefaults]
+        default_realm = $realm$
+        dns_lookup_realm = true
+        dns_lookup_kdc = true
+        pkinit_anchors = FILE:/var/lib/samba/private/tls/cacert.pem
+
+[appdefaults]
+        pkinit_anchors = FILE:/var/lib/samba/private/tls/cacert.pem
+
+[realms]
+        $realm$ = {
+                pkinit_require_eku = true
+        }
+
+[domain_realm]
+    .$realmalt$ = $realm$
+    $realmalt$ = $realm$
+    .$realm$ = $realm$
+
+[kdc]
+        enable-pkinit = yes
+        pkinit_identity = FILE:/var/lib/samba/private/tls/dc-cert.pem,/var/lib/samba/private/tls/secure/dc-privkey.pem
+        pkinit_anchors = FILE:/var/lib/samba/private/tls/cacert.pem
+        pkinit_principal_in_certificate = yes
+        pkinit_win2k = no
+        pkinit_win2k_require_binding = yes

@@ -34,7 +34,6 @@ using antdlib.Log;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {
-
         public static bool IsActive => CoreParametersConfig.GetCa() == "yes" && File.Exists(CaRootCertificate);
 
         private static readonly string CaDirectory = CoreParametersConfig.GetCaPath();
@@ -60,6 +59,14 @@ namespace antdlib.Certificate {
         private static readonly string CaIntermediateCertificate = $"{CaIntermediateDirectory}/certs/intermediate.cert.pem";
         private static readonly string CaIntermediateRevocationList = $"{CaIntermediateDirectory}/crl/intermediate.crl.pem";
         private static readonly string CaIntermediateChain = $"{CaIntermediateDirectory}/certs/ca-chain.cert.pem";
+
+        private static readonly string SambaDomainDir = "/var/lib/samba/private";
+        private static readonly string SambaCaCert = $"{SambaDomainDir}/cacert.pem";
+        private static readonly string SambaCaCrl = $"{SambaDomainDir}/ca.crl";
+        private static readonly string SambaDcCert = $"{SambaDomainDir}/dc-cert.pem";
+        private static readonly string SambaDcParams = $"{SambaDomainDir}/dc-dhparams.pem";
+        private static readonly string SambaDcKey = $"{SambaDomainDir}/secure/dc-privkey.pem";
+        public static readonly string NginxCrl = $"{SambaDomainDir}/intermediate.crl.pem";
 
         public static void Setup(string directory, string passphrase, string caCountry, string caProvince, string caLocality, string caOrganization, string caOrganizationalUnit, string caCommonName, string caEmail) {
             ConsoleLogger.Log("setting up root ca structure");
@@ -101,6 +108,7 @@ namespace antdlib.Certificate {
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/csr");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/newcerts");
             Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/private");
+            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/params");
             Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
             Terminal.Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
             Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
@@ -119,9 +127,26 @@ namespace antdlib.Certificate {
             ConsoleLogger.Log("setting up crl");
             Terminal.Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{passphrase} -out {CaIntermediateRevocationList}");
             ConsoleLogger.Log(Terminal.Terminal.Execute($"openssl crl -in {CaIntermediateRevocationList} -noout -text"));
-            //todo update crl files and nginx
-            //todo save to DB, or somewhere, the crl ditribution point url
 
+            if (File.Exists(SambaCaCert)) {
+                File.Delete(SambaCaCert);
+            }
+            Terminal.Terminal.Execute($"cp {CaIntermediateChain} {SambaCaCert}");
+
+            if (File.Exists(SambaCaCrl)) {
+                File.Delete(SambaCaCrl);
+            }
+            Terminal.Terminal.Execute($"cp {CaIntermediateRevocationList} {SambaCaCrl}");
+
+            Terminal.Terminal.Execute("systemctl restart samba");
+
+            //todo associa path e configurazione di NGINX al distribution point...
+            //todo salva da qualche parte l'url della possibile crldtrpt
+            if (File.Exists(NginxCrl)) {
+                File.Delete(NginxCrl);
+            }
+            Terminal.Terminal.Execute($"cp {CaIntermediateRevocationList} {NginxCrl}");
+            Terminal.Terminal.Execute("systemctl restart nginx");
 
             CoreParametersConfig.EnableCa();
         }
@@ -150,6 +175,28 @@ namespace antdlib.Certificate {
                     var certificatePath = $"{CaIntermediateDirectory}/certs/dc-{domainGuid}.cert.pem";
                     Terminal.Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={commonName}/emailAddress={emailAddress}\"");
                     Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{CoreParametersConfig.GetX509()}");
+                    var privDcKey = $"{CaIntermediateDirectory}/private/dc-privkey.pem";
+                    Terminal.Terminal.Execute($"openssl rsa -in {certificateKeyPath} -inform PEM -out {privDcKey} -outform PEM -passin pass:{CoreParametersConfig.GetX509()}");
+                    var paramFile = $"{CaIntermediateDirectory}/params/dc-dhparams.pem";
+                    Terminal.Terminal.Execute($"openssl dhparam 2048 -outform PEM -out {paramFile}");
+
+                    if (File.Exists(SambaDcCert)) {
+                        File.Delete(SambaDcCert);
+                    }
+                    Terminal.Terminal.Execute($"cp {certificatePath} {SambaDcCert}");
+
+                    if (File.Exists(SambaDcParams)) {
+                        File.Delete(SambaDcParams);
+                    }
+                    Terminal.Terminal.Execute($"cp {paramFile} {SambaDcParams}");
+
+                    if (File.Exists(SambaDcKey)) {
+                        File.Delete(SambaDcKey);
+                    }
+                    Terminal.Terminal.Execute($"cp {privDcKey} {SambaDcKey}");
+
+                    Terminal.Terminal.Execute("systemctl restart samba");
+
                     var dt = DateTime.Now;
                     var model = new CertificateModel {
                         IsPresent = true,
@@ -172,11 +219,6 @@ namespace antdlib.Certificate {
                         ExpirationDateTime = dt.AddDays(days)
                     };
                     DeNSo.Session.New.Set(model);
-
-                    //todo copia i file in samba
-                    //todo edit conf di samba coi path giusti
-                    //todo edit conf di krb coi path giusti
-                    //todo allina conf di krb con quella di samba/private/krb
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);

@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.IO;
-using System.Reflection;
+using antdlib;
 using antdlib.Certificate;
 using antdlib.Log;
 using antdlib.MountPoint;
@@ -39,16 +39,16 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class DomainController : CoreModule {
-        public DomainController() {
+    public class DomainControllerModule : CoreModule {
+        public DomainControllerModule() {
             this.RequiresAuthentication();
 
             Post["/dc/setup"] = x => {
-                var domainName = Request.Form.DomainName;
-                var domainRealmname = Request.Form.DomainRealmname;
-                var domainHostname = Request.Form.DomainHostname;
-                var domainHostip = Request.Form.DomainHostip;
-                var domainAdminPassword = Request.Form.DomainAdminPassword;
+                var domainName = (string)Request.Form.DomainName;
+                var domainRealmname = (string)Request.Form.DomainRealmname;
+                var domainHostname = (string)Request.Form.DomainHostname;
+                var domainHostip = (string)Request.Form.DomainHostip;
+                var domainAdminPassword = (string)Request.Form.DomainAdminPassword;
 
                 if (string.IsNullOrEmpty(domainName) || string.IsNullOrEmpty(domainRealmname) ||
                 string.IsNullOrEmpty(domainHostname) || string.IsNullOrEmpty(domainHostip) ||
@@ -73,14 +73,48 @@ namespace Antd.Modules {
                     : $"echo nameserver {domainHostip} >> /etc/resolv.conf");
                 Terminal.Execute($"echo search {domainRealmname} >> /etc/resolv.conf");
                 Terminal.Execute($"echo domain {domainRealmname} >> /etc/resolv.conf");
+
+                const string sambaRealConf = "/etc/samba/smb.conf";
+                var sambaConf = $"{Parameter.Resources}/smb.conf.template";
+                const string workgroup = "$workgroup$";
+                const string realm = "$realm$";
+                const string netbiosName = "$netbiosName$";
+                const string netlogonPath = "$netlogonPath$";
+                var lowerRealm = domainRealmname.ToLower();
+                var sambaCnfText = File.ReadAllText(sambaConf)
+                    .Replace(workgroup, domainName.ToUpper())
+                    .Replace(realm, domainRealmname.ToUpper())
+                    .Replace(netbiosName, domainHostname.ToUpper())
+                    .Replace(netlogonPath, $"/var/lib/samba/sysvol/{lowerRealm}/scripts");
+                if (File.Exists(sambaRealConf)) {
+                    File.Delete(sambaRealConf);
+                }
+                File.WriteAllText(sambaRealConf, sambaCnfText);
+
+                const string krbRealConf = "/etc/krb5.conf";
+                const string krbRealConfSamba = "/var/lib/samba/private/krb5.conf";
+                var krbConf = $"{Parameter.Resources}/krb5.conf.template";
+                const string realmAlt = "$realmalt$";
+                var krbCnfText = File.ReadAllText(krbConf)
+                    .Replace(realmAlt, lowerRealm)
+                    .Replace(realm, domainRealmname.ToUpper());
+                if (File.Exists(krbRealConf)) {
+                    File.Delete(krbRealConf);
+                }
+                File.WriteAllText(krbRealConf, krbCnfText);
+                if (File.Exists(krbRealConfSamba)) {
+                    File.Delete(krbRealConfSamba);
+                }
+                File.WriteAllText(krbRealConfSamba, krbCnfText);
+
                 ConsoleLogger.Log($"{domainName} references updated");
                 return Response.AsRedirect("/");
             };
 
             Post["/dc/adduser"] = x => {
-                var domainName = Request.Form.DomainName;
-                var username = Request.Form.Username;
-                var userPassword = Request.Form.UserPassword;
+                var domainName = (string)Request.Form.DomainName;
+                var username = (string)Request.Form.Username;
+                var userPassword = (string)Request.Form.UserPassword;
 
                 if (string.IsNullOrEmpty(domainName) || string.IsNullOrEmpty(userPassword) || string.IsNullOrEmpty(username)) {
                     return Response.AsText("error: a value is missing. go back.");
