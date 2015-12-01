@@ -142,6 +142,7 @@ namespace antdlib.Certificate {
 
             //todo associa path e configurazione di NGINX al distribution point...
             //todo salva da qualche parte l'url della possibile crldtrpt
+            //sambatool CNAME
             if (File.Exists(NginxCrl)) {
                 File.Delete(NginxCrl);
             }

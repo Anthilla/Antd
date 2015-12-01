@@ -1,6 +1,4 @@
-﻿
-using antdlib.Common;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -28,6 +26,8 @@ using antdlib.Common;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
+using antdlib.Common;
 using antdlib.MountPoint;
 using antdlib.ViewBinds;
 using System;
@@ -58,37 +58,27 @@ namespace antdlib.Ssh {
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            //todo cerca comando
-            //Terminal.Execute($"smbcontrol all reload-config");
+            Terminal.Terminal.Execute("systemctl restart sshd");
         }
 
         public class MapRules {
             public static char CharComment => '#';
-
             public static char CharKevValueSeparator => ' ';
-
             public static char CharEndOfLine => '\n';
         }
 
         public class LineModel {
             public string FilePath { get; set; }
-
             public string Key { get; set; }
-
             public string Value { get; set; }
-
             public ServiceDataType Type { get; set; }
-
             public KeyValuePair<string, string> BooleanVerbs { get; set; }
         }
 
         public class SshModel {
             public string _Id { get; set; }
-
             public string Guid { get; set; }
-
             public string Timestamp { get; set; }
-
             public List<LineModel> Data { get; set; } = new List<LineModel>();
         }
 
@@ -97,10 +87,10 @@ namespace antdlib.Ssh {
             private static string CleanLine(string line) {
                 var removeTab = line.Replace("\t", " ");
                 var clean = removeTab;
-                if (removeTab.Contains(MapRules.CharComment) && !line.StartsWith(MapRules.CharComment.ToString())) {
-                    var splitAtComment = removeTab.Split(MapRules.CharComment);
-                    clean = splitAtComment[0].Trim();
-                }
+                if (!removeTab.Contains(MapRules.CharComment) || line.StartsWith(MapRules.CharComment.ToString()))
+                    return clean;
+                var splitAtComment = removeTab.Split(MapRules.CharComment);
+                clean = splitAtComment[0].Trim();
                 return clean;
             }
 
@@ -225,22 +215,15 @@ namespace antdlib.Ssh {
 
         public class Keys {
             private const string FileStartsWith = "ssh_host_";
-
             private const string PrivateEndsWith = "_key";
-
             private const string PublicEndsWith = "_key.pub";
 
             public class KeyModel {
                 public string _Id { get; set; }
-
                 public string Guid { get; set; }
-
                 public string Timestamp { get; set; }
-
                 public string Name { get; set; }
-
                 public string Content { get; set; }
-
                 public SSHKeyType KeyType { get; set; }
             }
 
@@ -268,12 +251,28 @@ namespace antdlib.Ssh {
             }
 
             public static void Generate(string keyName) {
-                Terminal.Terminal.Execute($"ssh-keygen -t rsa -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith} -N {Guid.NewGuid()}");
+                Terminal.Terminal.Execute($"ssh-keygen -t rsa -q -N \"\" -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith}");
             }
 
             public static void SendKey(string host, string keyName, string user = "") {
                 var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
-                Terminal.Terminal.Execute($"scp {keyName} {at} ~/.ssh/authorized_keys");
+                Terminal.Terminal.Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
+            }
+
+            public static string GenerateForUser(string userName) {
+                var privateKeyPath = $"/home/{userName}/.ssh/{userName}-key";
+                var publicKeyPath = $"/home/{userName}/.ssh/{userName}-key.pub";
+                Terminal.Terminal.Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
+                return publicKeyPath;
+            }
+
+            public static void PAROLACHENONMIVIENEKeysToRemote(string remoteMachine) {
+                var localUsers = new List<string>();
+                foreach (var user in localUsers) {
+                    var userPubKeyPath = GenerateForUser(user);
+                    //todo comando per copiare la cartella di là
+                    Terminal.Terminal.Execute("scp");
+                }
             }
         }
     }
