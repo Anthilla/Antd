@@ -103,6 +103,8 @@ namespace antdlib {
         public static string Resources => $"{RootFramework}/antd/Resources";
 
         public static string Aossvc => "/usr/sbin/aossvc";
+
+        public static string AuthKeys => "/root/.ssh/authorized_keys";
     }
 
     public class AntdFile {

@@ -202,4 +202,64 @@
         </form>
     </div>
     -->
+    <hr class="bg-anthilla-gray" />
+
+    <legend id="Firewall">
+        <i class="icon-fire on-left"></i>
+        MAC Address
+        <i id="ReloadMacAddressList" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
+    <table class="table">
+        <tbody>
+            @Each.FirewallMacAddressEnabled
+            <tr>
+                <td style="width: 75px;">
+                    <i class="icon-plus"></i>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
+                <td>
+                    <p>@Current.Description</p>
+                </td>
+                <td>
+                    <input type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Disable @Current.Value" data-role="disable-mac-address" data-object-guid="@Current.Guid" />
+                </td>
+            </tr>
+            @EndEach
+            @Each.FirewallMacAddressDisabled
+            <tr>
+                <td style="width: 75px;">
+                    <i class="icon-stop"></i>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
+                <td>
+                    <p>@Current.Description</p>
+                </td>
+                <td>
+                    <input type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Enable @Current.Value" data-role="enable-mac-address" data-object-guid="@Current.Guid" />
+                </td>
+            </tr>
+            @EndEach
+            @Each.FirewallMacAddressNew
+            <tr>
+                <td style="width: 75px;">
+                    <i class="icon-star"></i>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
+                <td>
+                    <p>@Current.Description</p>
+                </td>
+                <td>
+                    <input type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Disable @Current.Value" data-role="disable-mac-address" data-object-guid="@Current.Guid" />
+                    <input type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Enable @Current.Value" data-role="enable-mac-address" data-object-guid="@Current.Guid" />
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
 </div>

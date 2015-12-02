@@ -64,7 +64,8 @@ namespace Antd.Modules {
                 var label = (string)Request.Form.Label;
                 FirewallLists.AddList(guid, table, type, hook, label);
                 var values = (string)Request.Form.Elements;
-                if (values.Length <= 0) return Response.AsRedirect("/");
+                if (values.Length <= 0)
+                    return Response.AsRedirect("/");
                 var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 FirewallLists.AddValueToList(guid, valueList);
                 return Response.AsRedirect("/");
@@ -73,7 +74,8 @@ namespace Antd.Modules {
             Post["/firewall/add/value"] = x => {
                 var guid = (string)Request.Form.Guid;
                 var values = (string)Request.Form.Elements;
-                if (values.Length <= 0) return Response.AsJson(true);
+                if (values.Length <= 0)
+                    return Response.AsJson(true);
                 var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 FirewallLists.AddValueToList(guid, valueList);
                 return Response.AsJson(true);
@@ -86,6 +88,23 @@ namespace Antd.Modules {
 
             Post["/firewall/conf/apply"] = x => {
                 NfTables.Export.ApplyConfiguration();
+                return Response.AsJson(true);
+            };
+
+            Post["/firewall/discover/macadd"] = x => {
+                MacAddressDiscovery.Discover();
+                return Response.AsJson(true);
+            };
+
+            Post["/firewall/enable/macadd"] = x => {
+                var guid = (string)Request.Form.Guid;
+                MacAddressDiscovery.Unlock(guid);
+                return Response.AsJson(true);
+            };
+
+            Post["/firewall/disable/macadd"] = x => {
+                var guid = (string)Request.Form.Guid;
+                MacAddressDiscovery.Block(guid);
                 return Response.AsJson(true);
             };
         }

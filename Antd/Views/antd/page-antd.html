@@ -352,6 +352,47 @@
     });
 </script>
 <script data-context="firewall" type="text/javascript">
+    $('input[data-role="enable-mac-address"]').click(function () {
+        var guid = $(this).attr('data-object-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/firewall/enable/macadd',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('input[data-role="disable-mac-address"]').click(function () {
+        var guid = $(this).attr('data-object-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/firewall/disable/macadd',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadMacAddressList').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/firewall/discover/macadd',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
     $('div[data-object="ruleset"]').dblclick(function () {
         var table = $(this).attr('data-table');
         var type = $(this).attr('data-type');

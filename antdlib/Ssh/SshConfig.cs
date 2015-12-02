@@ -214,64 +214,31 @@ namespace antdlib.Ssh {
         }
 
         public class Keys {
-            private const string FileStartsWith = "ssh_host_";
-            private const string PrivateEndsWith = "_key";
-            private const string PublicEndsWith = "_key.pub";
-
-            public class KeyModel {
-                public string _Id { get; set; }
-                public string Guid { get; set; }
-                public string Timestamp { get; set; }
-                public string Name { get; set; }
-                public string Content { get; set; }
-                public SSHKeyType KeyType { get; set; }
-            }
-
-            public static List<KeyModel> GetAll() {
-                var list = new List<KeyModel>();
-                var files = Directory.EnumerateFiles(Dir).Where(f => f.Contains(FileStartsWith)).ToArray();
-                foreach (var k in from file in files
-                                  let type = file.EndsWith(PublicEndsWith) ? SSHKeyType.Public : SSHKeyType.Private
-                                  select new KeyModel {
-                                      _Id = Guid.NewGuid().ToString(),
-                                      Guid = Guid.NewGuid().ToString(),
-                                      Timestamp = Timestamp.Now,
-                                      Name = file/*.Replace("", "")*/,
-                                      Content = FileSystem.ReadFile(file),
-                                      KeyType = type
-                                  }) {
-                    DeNSo.Session.New.Set(k);
-                    list.Add(k);
-                }
-                return list;
-            }
-
-            public static KeyModel Get(string name) {
-                return DeNSo.Session.New.Get<KeyModel>(k => k.Name == name).FirstOrDefault();
-            }
-
-            public static void Generate(string keyName) {
-                Terminal.Terminal.Execute($"ssh-keygen -t rsa -q -N \"\" -f {Dir}/{FileStartsWith}{keyName}{PrivateEndsWith}");
-            }
-
             public static void SendKey(string host, string keyName, string user = "") {
                 var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
                 Terminal.Terminal.Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
             }
 
-            public static string GenerateForUser(string userName) {
+            private static string GenerateForUser(string userName) {
                 var privateKeyPath = $"/home/{userName}/.ssh/{userName}-key";
                 var publicKeyPath = $"/home/{userName}/.ssh/{userName}-key.pub";
                 Terminal.Terminal.Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
                 return publicKeyPath;
             }
 
-            public static void PAROLACHENONMIVIENEKeysToRemote(string remoteMachine) {
-                var localUsers = new List<string>();
-                foreach (var user in localUsers) {
-                    var userPubKeyPath = GenerateForUser(user);
-                    //todo comando per copiare la cartella di là
-                    Terminal.Terminal.Execute("scp");
+            private static void ExportKeysToRemote(string user, string remoteMachine) {
+                var userPubKeyPath = GenerateForUser(user);
+                var keyContent = File.ReadAllText(userPubKeyPath).Replace(Environment.NewLine, " ");
+                //todo comando per aggiungere la chiave al file di là
+                Terminal.Terminal.Execute($"scp {keyContent} {remoteMachine}/{Parameter.AuthKeys}");
+            }
+
+            public static void PropagateKeys(IEnumerable<string> users, IEnumerable<string> remoteMachines) {
+                var enumerable = remoteMachines as string[] ?? remoteMachines.ToArray();
+                foreach (var user in users) {
+                    foreach (var remoteMachine in enumerable) {
+                        ExportKeysToRemote(user, remoteMachine);
+                    }
                 }
             }
         }

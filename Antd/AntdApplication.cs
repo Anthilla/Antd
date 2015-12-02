@@ -74,17 +74,17 @@ namespace Antd {
                 new Startup().Configuration(owinbuilder);
 
                 var httpPort = Convert.ToInt32(CoreParametersConfig.GetHttpPort());
+                var httpEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), httpPort);
                 var httpBuilder = ServerBuilder.New()
-                    //.SetAddress(IPAddress.Parse("0.0.0.0"))
-                    .SetPort(httpPort)
+                    .SetEndPoint(httpEndPoint)
                     .SetOwinApp(owinbuilder.Build())
                     .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
-                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways)
-                    .SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
+                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways);
 
                 var httpsPort = Convert.ToInt32(CoreParametersConfig.GetHttpsPort());
+                var httpsEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), httpsPort);
                 var httpsBuilder = ServerBuilder.New()
-                    .SetPort(httpsPort)
+                    .SetEndPoint(httpsEndPoint)
                     .SetOwinApp(owinbuilder.Build())
                     .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
                     .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways)
@@ -122,7 +122,7 @@ namespace Antd {
             AntdBoot.CheckCertificate();
             AntdBoot.ReloadUsers();
             AntdBoot.ReloadSsh();
-            AntdBoot.SetOverlayDirectories();
+            //AntdBoot.SetOverlayDirectories();
             //AntdBoot.SetSystemdJournald();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();

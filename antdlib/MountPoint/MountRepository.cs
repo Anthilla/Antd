@@ -44,7 +44,8 @@ namespace antdlib.MountPoint {
                     mount.HtmlStatusIcon = AssignHtmlStatusIcon(mount.MountStatus);
                     list.Add(mount);
                 }
-                return list.OrderBy(m => m.MountContext);
+                return list.OrderBy(m => m.MountContext)
+                    .Where(_ => !_.Path.Contains("livecd") || !_.DirsPath.Contains("livecd") || !_.MountedPath.Contains("livecd"));
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);

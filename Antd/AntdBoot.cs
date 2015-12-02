@@ -15,6 +15,7 @@ using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
 using antdlib.Scheduler;
+using antdlib.Ssh;
 using antdlib.Terminal;
 using antdlib.Users;
 using Microsoft.AspNet.SignalR;
@@ -80,6 +81,10 @@ namespace Antd {
         public static void ReloadSsh() {
             if (!AssemblyInfo.IsUnix)
                 return;
+            Terminal.Execute("mkdir -p /root/.ssh");
+            if (!File.Exists(Parameter.AuthKeys)) {
+                Terminal.Execute($"touch {Parameter.AuthKeys}");
+            }
             const string dir = "/etc/ssh";
             var mntDir = Mount.SetDirsPath(dir);
             if (!Directory.Exists(mntDir)) {
@@ -90,6 +95,7 @@ namespace Antd {
             Terminal.Execute("ssh-keygen -A");
             Terminal.Execute("systemctl restart sshd.service");
             ConsoleLogger.Log("ssh config ready");
+            //SshConfig.Keys.PropagateKeys(new[] { "" }, new[] { "" });
         }
 
         public static void SetOverlayDirectories() {

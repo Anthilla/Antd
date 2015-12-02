@@ -60,7 +60,7 @@ namespace antdlib.Certificate {
         private static readonly string CaIntermediateRevocationList = $"{CaIntermediateDirectory}/crl/intermediate.crl.pem";
         private static readonly string CaIntermediateChain = $"{CaIntermediateDirectory}/certs/ca-chain.cert.pem";
 
-        private static readonly string SambaDomainDir = "/var/lib/samba/private";
+        private const string SambaDomainDir = "/var/lib/samba/private";
         private static readonly string SambaCaCert = $"{SambaDomainDir}/cacert.pem";
         private static readonly string SambaCaCrl = $"{SambaDomainDir}/ca.crl";
         private static readonly string SambaDcCert = $"{SambaDomainDir}/dc-cert.pem";

@@ -54,8 +54,7 @@ namespace antdlib.Firewall {
         public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
 
         public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook) {
-            var l = GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
-            return l;
+            return GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
         }
 
         public static IEnumerable<string> GetRuleSet(string table, string type, string hook) {

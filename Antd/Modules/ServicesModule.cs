@@ -366,11 +366,11 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            Post["/services/ssh/addkey"] = x => {
-                string name = Request.Form.NewKeyName;
-                SshConfig.Keys.Generate(name);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/ssh/addkey"] = x => {
+            //    string name = Request.Form.NewKeyName;
+            //    SshConfig.Keys.PropagateKeys(name);
+            //    return Response.AsRedirect("/");
+            //};
             #endregion SSH
         }
     }

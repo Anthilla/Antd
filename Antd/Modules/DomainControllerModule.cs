@@ -40,10 +40,27 @@ using Nancy.Security;
 namespace Antd.Modules {
 
     public class DomainControllerModule : CoreModule {
+
+        private readonly string[] _directories = {
+            "/etc/samba",
+            "/usr/lib64/python2.7/site-packages/samba",
+            "/var/cache/samba",
+            "/var/lib/samba",
+            "/var/lock/samba",
+            "/var/log/samba"
+        };
+
         public DomainControllerModule() {
             this.RequiresAuthentication();
 
             Post["/dc/setup"] = x => {
+                foreach (var dir in _directories) {
+                    var mntDir = Mount.GetDirsPath(dir);
+                    Terminal.Execute($"mkdir -p {mntDir}");
+                    Terminal.Execute($"cp /mnt/livecd{dir} {mntDir}");
+                    Mount.Dir(dir);
+                }
+
                 var domainName = (string)Request.Form.DomainName;
                 var domainRealmname = (string)Request.Form.DomainRealmname;
                 var domainHostname = (string)Request.Form.DomainHostname;
@@ -91,23 +108,27 @@ namespace Antd.Modules {
                 }
                 File.WriteAllText(sambaRealConf, sambaCnfText);
 
-                const string krbRealConf = "/etc/krb5.conf";
-                const string krbRealConfSamba = "/var/lib/samba/private/krb5.conf";
+                Terminal.Execute("systemctl restart samba");
+
+                Terminal.Execute("mkdir -p /var/lib/samba/private");
                 var krbConf = $"{Parameter.Resources}/krb5.conf.template";
                 const string realmAlt = "$realmalt$";
                 var krbCnfText = File.ReadAllText(krbConf)
                     .Replace(realmAlt, lowerRealm)
                     .Replace(realm, domainRealmname.ToUpper());
+                const string krbRealConf = "/etc/krb5.conf";
                 if (File.Exists(krbRealConf)) {
                     File.Delete(krbRealConf);
                 }
                 File.WriteAllText(krbRealConf, krbCnfText);
+                const string krbRealConfSamba = "/var/lib/samba/private/krb5.conf";
                 if (File.Exists(krbRealConfSamba)) {
                     File.Delete(krbRealConfSamba);
                 }
                 File.WriteAllText(krbRealConfSamba, krbCnfText);
 
                 ConsoleLogger.Log($"{domainName} references updated");
+
                 return Response.AsRedirect("/");
             };
 

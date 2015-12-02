@@ -98,6 +98,9 @@ namespace Antd.Modules {
                 viewModel.NetworkBondIf = NetworkInterface.Bond;
                 viewModel.NetworkBridgeIf = NetworkInterface.Bridge;
                 viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
+                viewModel.FirewallMacAddressEnabled = MacAddressDiscovery.GetEnabled();
+                viewModel.FirewallMacAddressDisabled = MacAddressDiscovery.GetDisabled();
+                viewModel.FirewallMacAddressNew = MacAddressDiscovery.GetNew();
                 viewModel.DhcpdStatus = antdlib.Svcs.Dhcp.DhcpConfig.IsActive;
                 var dhcpdModel = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get();
                 if (dhcpdModel != null) {

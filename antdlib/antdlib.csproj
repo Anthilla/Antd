@@ -164,6 +164,7 @@
     <Compile Include="Database\SecureDB.cs" />
     <Compile Include="Database\SecureEntity.cs" />
     <Compile Include="Firewall\FirewallLists.cs" />
+    <Compile Include="Firewall\MacAddressDiscovery.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Global.cs" />
