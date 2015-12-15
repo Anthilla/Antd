@@ -36,6 +36,7 @@ using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.TinyIoc;
 using Nancy.ViewEngines.SuperSimpleViewEngine;
+using System;
 
 namespace Antd {
 
@@ -48,24 +49,19 @@ namespace Antd {
 
         protected override void ConfigureConventions(NancyConventions conv) {
             base.ConfigureConventions(conv);
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("Scripts", @"/Scripts/")
-                );
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("include", @"/NoVnc/")
-                );
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("images", @"/NoVnc/images/")
-                );
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("Fonts", @"/Fonts/")
-                );
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("repo", @"/Resources/")
-                );
-            conv.StaticContentsConventions.Add(
-                StaticContentConventionBuilder.AddDirectory("repo/ssh", @"/Resources/ssh/")
-                );
+            conv.StaticContentsConventions.Clear();
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Content", @"/Content/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Scripts", @"/Scripts/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("include", @"/NoVnc/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("images", @"/NoVnc/images/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Fonts", @"/Fonts/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo", @"/Resources/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo/ssh", @"/Resources/ssh/", TimeSpan.FromDays(365)));
+        }
+
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines) {
+            base.ApplicationStartup(container, pipelines);
+            pipelines.RegisterCompressionCheck();
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {

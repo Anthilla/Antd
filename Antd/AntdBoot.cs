@@ -15,13 +15,8 @@ using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
 using antdlib.Scheduler;
-using antdlib.Ssh;
 using antdlib.Terminal;
 using antdlib.Users;
-using Microsoft.AspNet.SignalR;
-using Nancy;
-using Nancy.Owin;
-using Owin;
 
 namespace Antd {
     public class AntdBoot {
@@ -234,25 +229,6 @@ namespace Antd {
             FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");
             FileSystem.Download("http://standards-oui.ieee.org/oui.txt", $"{dir}/oui.txt");
         }
-
-        public static void StartSignalR(IAppBuilder app, bool detailedErrors, bool isActive) {
-            if (isActive) {
-                var hubConfiguration = new HubConfiguration { EnableDetailedErrors = detailedErrors };
-                app.MapSignalR(hubConfiguration);
-                ConsoleLogger.Log("signalR ready");
-            }
-            else {
-                ConsoleLogger.Log("signalR skipped");
-            }
-        }
-
-        public static void StartNancy(IAppBuilder app) {
-            StaticConfiguration.DisableErrorTraces = false;
-            var options = new NancyOptions { EnableClientCertificates = true };
-            app.UseNancy(options);
-            ConsoleLogger.Log("nancyfx ready");
-        }
-
 
         public static void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";

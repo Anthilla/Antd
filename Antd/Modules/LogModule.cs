@@ -29,7 +29,6 @@
 
 using System.Dynamic;
 using antdlib.Log;
-using Antd.Hubs;
 using Nancy;
 using Nancy.Security;
 
@@ -66,25 +65,25 @@ namespace Antd.Modules {
                 return View["_page-log-websocket", vmod];
             };
 
-            Post["/log/websocket/listen", true] = async (x, ct) => {
-                var port = Websocketd.GetFirstPort();
-                //Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
-                //System.Threading.Thread.Sleep(20);
-                await Websocketd.SetWebsocket(port);
-                return Response.AsJson(port);
-            };
+            //Post["/log/websocket/listen", true] = async (x, ct) => {
+            //    var port = Websocketd.GetFirstPort();
+            //    //Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
+            //    //System.Threading.Thread.Sleep(20);
+            //    await Websocketd.SetWebsocket(port);
+            //    return Response.AsJson(port);
+            //};
 
             Get["/log/journalctl"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["_page-log-journalctl", vmod];
             };
 
-            Post["/log/journalctl/listen", true] = async (x, ct) => {
-                var port = Websocketd.GetFirstPort();
-                Websocketd.SetUnit(port, "todo");
-                await Websocketd.LaunchCommandToJournalctl(port);
-                return Response.AsJson(port);
-            };
+            //Post["/log/journalctl/listen", true] = async (x, ct) => {
+            //    var port = Websocketd.GetFirstPort();
+            //    Websocketd.SetUnit(port, "todo");
+            //    await Websocketd.LaunchCommandToJournalctl(port);
+            //    return Response.AsJson(port);
+            //};
         }
     }
 }

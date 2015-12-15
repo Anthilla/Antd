@@ -28,19 +28,17 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Threading.Tasks;
 using antdlib;
 using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Log;
-using Microsoft.Owin.Builder;
-using Nowin;
 using Owin;
+using Microsoft.Owin.Hosting;
+using Antd.Middleware;
+using Nancy.Owin;
 
 namespace Antd {
     internal static class AntdApplication {
@@ -48,64 +46,25 @@ namespace Antd {
             try {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 var startTime = DateTime.Now;
-                Console.Title = "ANTD";
-
-
+                Console.Title = "antd";
                 if (AssemblyInfo.IsUnix == false) {
                     Directory.CreateDirectory("/cfg/antd");
                     Directory.CreateDirectory("/cfg/antd/database");
                     Directory.CreateDirectory("/mnt/cdrom/DIRS");
                     ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
                 }
-
-                var stop = new ManualResetEvent(false);
-                Console.CancelKeyPress +=
-                    (sender, e) => {
-                        Console.WriteLine("^C");
-                        Environment.Exit(1);
-                        stop.Set();
-                        e.Cancel = true;
-                    };
-
                 Configuration();
-
-                var owinbuilder = new AppBuilder();
-                OwinServerFactory.Initialize(owinbuilder.Properties);
-                new Startup().Configuration(owinbuilder);
-
-                var httpPort = Convert.ToInt32(CoreParametersConfig.GetHttpPort());
-                var httpEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), httpPort);
-                var httpBuilder = ServerBuilder.New()
-                    .SetEndPoint(httpEndPoint)
-                    .SetOwinApp(owinbuilder.Build())
-                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
-                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways);
-
-                var httpsPort = Convert.ToInt32(CoreParametersConfig.GetHttpsPort());
-                var httpsEndPoint = new IPEndPoint(IPAddress.Parse("0.0.0.0"), httpsPort);
-                var httpsBuilder = ServerBuilder.New()
-                    .SetEndPoint(httpsEndPoint)
-                    .SetOwinApp(owinbuilder.Build())
-                    .SetOwinCapabilities((IDictionary<string, object>)owinbuilder.Properties[OwinKeys.ServerCapabilitiesKey])
-                    .SetExecutionContextFlow(ExecutionContextFlow.SuppressAlways)
-                    .SetCertificate(new X509Certificate2(CoreParametersConfig.GetCertificatePath()));
-
-                using (var httpsServer = httpsBuilder.Build()) {
-                    if (httpsServer == null)
-                        return;
-                    using (var httpServer = httpBuilder.Build()) {
-                        if (httpServer == null)
-                            return;
-                        Task.Run(() => httpsServer.Start());
-                        Task.Run(() => httpServer.Start());
-                        ConsoleLogger.Log("loading service");
-                        ConsoleLogger.Log($"http port: {httpPort}");
-                        ConsoleLogger.Log($"https port: {httpsPort}");
-                        ConsoleLogger.Log("antd is running");
-                        ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-                        stop.WaitOne();
-                    }
+                var port = Convert.ToInt32(CoreParametersConfig.GetHttpPort());
+                using (WebApp.Start<Startup>($"http://+:{port}/")) {
+                    ConsoleLogger.Log("loading service");
+                    ConsoleLogger.Log($"http port: {port}");
+                    ConsoleLogger.Log("antd is running");
+                    ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+                    do {
+                        Thread.Sleep(60000);
+                    } while (!Console.KeyAvailable);
                 }
+
             }
             catch (Exception ex) {
                 Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
@@ -141,9 +100,23 @@ namespace Antd {
     internal class Startup {
         public void Configuration(IAppBuilder app) {
             ConsoleLogger.Log("loading app configuration");
-            AntdBoot.StartSignalR(app, true, true);
-            AntdBoot.StartNancy(app);
-            ConsoleLogger.Log("app configuration ready");
+            object httpListener;
+            if (app.Properties.TryGetValue(typeof(HttpListener).FullName, out httpListener) && httpListener is HttpListener) {
+                ((HttpListener)httpListener).IgnoreWriteExceptions = true;
+            }
+            //var hubConfiguration = new HubConfiguration { EnableDetailedErrors = true };
+            //app.MapSignalR(hubConfiguration);
+            //ConsoleLogger.Log("signalR ready");
+            app.UseDebugMiddleware();
+            app.UseNancy();
+            app.UseDebugMiddleware(new DebugMiddlewareOptions() {
+                OnIncomingRequest = context => context.Response.WriteAsync("## Beginning ##"),
+                OnOutGoingRequest = context => context.Response.WriteAsync("## End ##")
+            });
+            //StaticConfiguration.DisableErrorTraces = false;
+            //var options = new NancyOptions { EnableClientCertificates = true };
+            app.UseNancy(options => options.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound));
+            ConsoleLogger.Log("nancyfx ready");
         }
     }
 }
