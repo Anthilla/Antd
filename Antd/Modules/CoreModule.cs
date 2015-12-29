@@ -33,7 +33,7 @@ namespace Antd.Modules {
 
     public class CoreModule : NancyModule {
         public CoreModule() {
-            Before += x => Request.Url.ToString().StartsWith("http://") ? Response.AsRedirect("/redirect") : null;
+            //Before += x => Request.Url.ToString().StartsWith("http://") ? Response.AsRedirect("/redirect") : null;
         }
     }
 }
