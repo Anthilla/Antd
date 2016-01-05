@@ -64,7 +64,6 @@ namespace Antd {
                         Thread.Sleep(60000);
                     } while (!Console.KeyAvailable);
                 }
-
             }
             catch (Exception ex) {
                 Directory.CreateDirectory($"{Parameter.AntdCfgReport}");

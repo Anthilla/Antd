@@ -59,6 +59,11 @@ namespace Antd.Modules {
                 return View["page-empty", vmod];
             };
 
+            Get["/test/3"] = x => {
+                var prova = antdlib.Virsh.Virsh.Monitor.list("--all --title");
+                return Response.AsJson(prova);
+            };
+
             Post["/sp/users/identity"] = x => {
                 var guid = UserEntity.Repository.GenerateGuid();
                 string spUserAlias = Request.Form.UserAlias;

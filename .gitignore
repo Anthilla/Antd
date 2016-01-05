@@ -163,5 +163,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 # Other
+ignorethis_/
+ignorethis*/
 ignorethis*
 *.vs
