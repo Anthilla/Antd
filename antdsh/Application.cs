@@ -69,42 +69,42 @@ namespace antdsh {
         }
 
         private static void Command(string command) {
-            switch (command) {
-                case "help":
-                    Help();
-                    break;
-                case "start":
-                    Shell.Start();
-                    break;
-                case "stop":
-                    Shell.Stop();
-                    break;
-                case "restart":
-                    Shell.Restart();
-                    break;
-                case "umount-all":
-                    Shell.UmountAll();
-                    break;
-                case "update":
-                    Shell.UpdateFromPublicRepo();
-                    break;
-                case "isrunning":
-                    Shell.IsRunning();
-                    break;
-                case "clean-tmp":
-                    Shell.CleanTmp();
-                    break;
-                case "history":
-                    PrintHistory();
-                    break;
-                case "exit":
-                    Shell.Exit();
-                    break;
-                case "":
-                    return;
-                default:
-                    Shell.Execute(command);
-                    break;
+            if (command == "help") {
+                Help();
+            }
+            else if (command == "start") {
+                Shell.Start();
+            }
+            else if (command == "stop") {
+                Shell.Stop();
+            }
+            else if (command == "restart") {
+                Shell.Restart();
+            }
+            else if (command == "umount-all") {
+                Shell.UmountAll();
+            }
+            else if (command.StartsWith("update")) {
+                var context = command.Split(' ');
+                if (context.Length > 0) {
+                    UpdateObject.Update(context[1]);
+                }
+            }
+            else if (command == "isrunning") {
+                Shell.IsRunning();
+            }
+            else if (command == "clean-tmp") {
+                Shell.CleanTmp();
+            }
+            else if (command == "history") {
+                PrintHistory();
+            }
+            else if (command == "exit") {
+                Shell.Exit();
+            }
+            else if (command == "") { }
+            else {
+                Shell.Execute(command);
             }
         }
 

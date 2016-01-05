@@ -306,29 +306,12 @@ namespace antdlib.Antdsh {
             Terminal.Terminal.Execute("systemctl restart app-antd-03-launcher");
         }
 
-        public static void UmountAntd() {
-            while (true) {
-                var r = Terminal.Terminal.Execute("cat /proc/mounts | grep /antd");
-                var f = Terminal.Terminal.Execute("df | grep /cfg/antd");
-                if (r.Length <= 0 && f.Length <= 0)
-                    return;
-                Terminal.Terminal.Execute($"umount {Parameter.AntdCfg}");
-                Terminal.Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
-                Terminal.Terminal.Execute("umount /framework/antd");
-            }
-        }
-
         public static void Umount(string dir) {
             while (true) {
                 if (Mount.IsAlreadyMounted(dir) != true)
                     return;
                 Terminal.Terminal.Execute($"umount {dir}");
             }
-        }
-
-        public static bool IsAntdRunning() {
-            var res = Terminal.Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
-            return (res.Length > 0);
         }
     }
 }

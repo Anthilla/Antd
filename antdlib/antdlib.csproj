@@ -60,7 +60,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="library.u2f">
-      <HintPath>..\inogrethis_libraries\library.u2f.dll</HintPath>
+      <HintPath>..\libraries\library.u2f.dll</HintPath>
     </Reference>
     <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.1.2.15\lib\net45\MailKit.dll</HintPath>

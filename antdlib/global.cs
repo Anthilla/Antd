@@ -84,6 +84,7 @@ namespace antdlib {
         public static string RepoScripts => $"{Repo}/Scripts";
         public static string RepoSecureBoot => $"{Repo}/SecureBoot";
         public static string RepoSystem => $"{Repo}/System";
+        public static string RepoTemp => $"{Repo}/temp";
         public static string RepoUnits => $"{Repo}/Units";
         public static string RepoBoot => $"{Repo}/boot";
         public static string RepoEfi => $"{Repo}/efi";
