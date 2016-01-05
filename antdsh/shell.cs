@@ -144,18 +144,6 @@ namespace antdsh {
             }
         }
 
-        public static void Status() {
-            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
-            if (res.Length == 0) {
-                WriteLine("No antd process found.");
-                WriteLine(Terminal.Execute($"systemctl status {Units.Name.NameLauncher}"));
-            }
-            else {
-                WriteLine(res);
-                WriteLine(Terminal.Execute($"systemctl status {Units.Name.NameLauncher}"));
-            }
-        }
-
         public static void UmountAll() {
             WriteLine("Unmounting all antd-related directories...");
             antdlib.Antdsh.Execute.UmountAntd();
@@ -301,50 +289,6 @@ namespace antdsh {
             WriteLine("   Update complete!");
         }
 
-        public static void UpdateSelect() {
-            var linkedVersionName = antdlib.Antdsh.Execute.GetRunningVersion();
-            if (linkedVersionName == null)
-                return;
-            var linkedVersion = antdlib.Antdsh.Execute.SetVersionKeyValuePair(linkedVersionName);
-            WriteLine("Select a version (from its number) from this list:");
-            antdlib.Antdsh.Execute.PrintVersions();
-            var number = ReadLine();
-            var selectedVersion = antdlib.Antdsh.Execute.GetVersionByNumber(number);
-            if (linkedVersion.Key == null || selectedVersion.Key == null)
-                return;
-            WriteLine("You are running {0} and the latest version is {1}.", linkedVersion.Value, selectedVersion.Value);
-            var selectedtDate = Convert.ToInt32(selectedVersion.Value);
-            WriteLine("New version of antd found!! -> {0}", selectedtDate);
-            WriteLine("Updating!");
-            antdlib.Antdsh.Execute.StopServices();
-            antdlib.Antdsh.Execute.CleanTmp();
-            if (selectedVersion.Key.Contains(AntdFile.SquashEndsWith)) {
-                antdlib.Antdsh.Execute.RemoveLink();
-                antdlib.Antdsh.Execute.LinkVersionToRunning(selectedVersion.Key);
-            }
-            else if (selectedVersion.Key.Contains(AntdFile.ZipEndsWith)) {
-                var squashName = Parameter.AntdVersionsDir + "/" + AntdFile.SquashStartsWith + selectedVersion.Value + AntdFile.SquashEndsWith;
-                antdlib.Antdsh.Execute.MountTmpRam();
-                antdlib.Antdsh.Execute.CopyToTmp(selectedVersion.Key);
-                antdlib.Antdsh.Execute.ExtractZipTmp(selectedVersion.Key);
-                antdlib.Antdsh.Execute.RemoveTmpZips();
-                antdlib.Antdsh.Execute.CreateSquash(squashName);
-                antdlib.Antdsh.Execute.CleanTmp();
-                antdlib.Antdsh.Execute.UmountTmpRam();
-                antdlib.Antdsh.Execute.RemoveLink();
-                antdlib.Antdsh.Execute.LinkVersionToRunning(squashName);
-            }
-            else {
-                WriteLine("Update failed unexpectedly");
-                return;
-            }
-            antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
-        }
-
-        public static void ReloadSystemctl() {
-            Terminal.Execute("systemctl daemon-reload");
-        }
-
         public static void IsRunning() {
             WriteLine(antdlib.Antdsh.Execute.IsAntdRunning() ? "Yes, is running." : "No.");
         }
@@ -352,10 +296,6 @@ namespace antdsh {
         public static void CleanTmp() {
             WriteLine("Cleaning tmp.");
             antdlib.Antdsh.Execute.CleanTmp();
-        }
-
-        public static void Info() {
-            WriteLine("This is a shell for antd :)");
         }
 
         public static void Exit() {

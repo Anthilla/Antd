@@ -34,7 +34,7 @@ using System.IO;
 using antdlib.Antdsh;
 
 namespace antdsh {
-    internal class Program {
+    internal class Application {
         private static string _command;
         private static readonly HashSet<Cmd> CommandList = new HashSet<Cmd>();
 
@@ -82,35 +82,17 @@ namespace antdsh {
                 case "restart":
                     Shell.Restart();
                     break;
-                case "status":
-                    Shell.Status();
-                    break;
                 case "umount-all":
                     Shell.UmountAll();
                     break;
                 case "update":
                     Shell.UpdateFromPublicRepo();
                     break;
-                case "update-check":
-                    Shell.UpdateCheck();
-                    break;
-                case "update-Launch":
-                    Shell.UpdateLaunch();
-                    break;
-                case "update-select":
-                    Shell.UpdateSelect();
-                    break;
-                case "reload-systemctl":
-                    Shell.ReloadSystemctl();
-                    break;
                 case "isrunning":
                     Shell.IsRunning();
                     break;
                 case "clean-tmp":
                     Shell.CleanTmp();
-                    break;
-                case "info":
-                    Shell.Info();
                     break;
                 case "history":
                     PrintHistory();
@@ -132,35 +114,27 @@ namespace antdsh {
             WriteHelp("start", "initialize a running version of antd");
             WriteHelp("stop", "stop any running version of antd");
             WriteHelp("restart", "restart antd related systemctl services and mounts");
-            WriteHelp("status", "show antd status from systemctl");
             WriteHelp("update", "update antd from the public repository");
             WriteHelp("umount-all", "umount all antd directories recursively");
-            WriteHelp("update-check", "check if a newer version of antd exists on this machine");
-            WriteHelp("update-Launch", "update antd to the newest version found on this machine");
-            WriteHelp("update-select", "select a running version from the ones found on this machine");
-            WriteHelp("reload-systemctl", "reload systemctl daemon");
             WriteHelp("isrunning", "check whether antd process is active or not");
             WriteHelp("clean-tmp", "remove every files and directories from tmp directory");
-            WriteHelp("info", "generic command");
             WriteHelp("history", "show the commands used in this antdsh session");
             WriteHelp("exit", "exit from antdsh");
-            WriteHelp("red-button", "delete permanently all antd(sh)-related files!");
-            WriteHelp(" ", "any other command not listed here will be executed on this machine and you will get its return code");
+            WriteHelp("", "any other command not listed here will be executed on this machine and you will get its return code");
         }
 
         private static void WriteHelp(string command, string description) {
-            Console.WriteLine("    {0}:", command);
-            Console.WriteLine("        {0};", description);
+            Console.WriteLine($"    {command}:");
+            Console.WriteLine($"        {description};");
         }
 
         private static void AddCommand(string command) {
             if (command == "history")
                 return;
-            var cmd = new Cmd {
+            CommandList.Add(new Cmd {
                 Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
                 Command = command
-            };
-            CommandList.Add(cmd);
+            });
         }
 
         private static void PrintHistory() {
