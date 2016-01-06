@@ -27,34 +27,31 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using antdlib;
+using antdlib.Terminal;
+using Nancy;
+using Nancy.Security;
 
-namespace antdlib.Info {
-    public class SystemInfo {
-        public static IEnumerable<SystemInfoModel> GetAll() => DeNSo.Session.New.Get<SystemInfoModel>();
+namespace Antd.Modules {
 
-        public static SystemInfoModel Get() => DeNSo.Session.New.Get<SystemInfoModel>().FirstOrDefault();
+    public class UpdateModule : CoreModule {
+        public UpdateModule() {
+            this.RequiresAuthentication();
 
-        private static void FlushDb() => DeNSo.Session.New.DeleteAll(GetAll());
-
-        public static void Import() {
-            FlushDb();
-            if (!Parameter.IsUnix)
-                return;
-            var model = new SystemInfoModel {
-                _Id = Guid.NewGuid().ToString(),
-                VersionOs = Terminal.Terminal.Execute("uname -a"),
-                VersionAos = Terminal.Terminal.Execute("cat /etc/aos-release")
+            Get["/autoupdate"] = x => {
+                Terminal.Execute($"mono {Parameter.RootFrameworkAntdsh}/{Parameter.ExeAntdsh} update antd");
+                return Response.AsJson(true);
             };
-            DeNSo.Session.New.Set(model);
-        }
-    }
 
-    public class SystemInfoModel {
-        public string _Id { get; set; }
-        public string VersionOs { get; set; }
-        public string VersionAos { get; set; }
+            Get["/update/{context}"] = x => {
+                antdlib.Antdsh.UpdateObject.Update((string)x.context);
+                return Response.AsJson(true);
+            };
+
+            Post["/update/{context}"] = x => {
+                antdlib.Antdsh.UpdateObject.Update((string)x.context);
+                return Response.AsJson(true);
+            };
+        }
     }
 }

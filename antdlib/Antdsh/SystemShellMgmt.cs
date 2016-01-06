@@ -156,37 +156,5 @@ namespace antdlib.Antdsh {
                 Execute($"mount --bind {t} {newPath}");
             }
         }
-
-        /// <summary>
-        /// 10 - controlla status di antd
-        /// </summary>
-        public static void CheckAntd() {
-            WriteLine("Checking Antd Units:");
-            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
-            WriteLine("-------");
-            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
-            WriteLine("-------");
-            WriteLine(Execute($"systemctl status {Units.Name.NamePrepare}"));
-        }
-
-        /// <summary>
-        /// 11 - controllo generico di systemctl
-        /// </summary>
-        public static void CheckSystemctl() {
-            WriteLine("Checking Systemct services:");
-            var l = Execute("systemctl -a | grep dead").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
-            WriteLine($"{l} dead services");
-            l = Execute("systemctl -a | grep inactive").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
-            WriteLine($"{l} inactive services");
-            l = Execute("systemctl -a | grep ' active'").Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray().Length;
-            WriteLine($"{l} active services");
-            WriteLine("-------");
-            WriteLine("Checking Antd Applicative units:");
-            var units = Directory.EnumerateFiles(Parameter.AppsUnits).ToArray();
-            foreach (var t in units) {
-                WriteLine(Execute($"systemctl status {t}"));
-                WriteLine("-------");
-            }
-        }
     }
 }

@@ -59,7 +59,7 @@ namespace antdlib.Network {
 
         public static void ImportNetworkInterface() {
             FlushDb();
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             var dirs = Directory.GetDirectories("/sys/class/net");
             var physicalIf = from dir in dirs

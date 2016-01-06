@@ -122,11 +122,11 @@ namespace antdlib.Apps {
             }
 
             public static bool IsActiveAnthillaSp() {
-                return (Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active"));
+                return Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active");
             }
 
             public static bool IsActiveAnthillaServer() {
-                return (Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active"));
+                return Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active");
             }
         }
 
@@ -139,14 +139,14 @@ namespace antdlib.Apps {
             }
 
             public static void CreateSquash() {
-                Terminal.Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString(AssemblyInfo.DateFormat)}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString("yyyyMMdd")}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash(string version = null) {
                 Directory.CreateDirectory("/framework/anthillasp");
                 var squashList = Directory.EnumerateFiles(AnthillaSpAppDir, "*.squashfs.xz", SearchOption.TopDirectoryOnly);
                 var enumerable = squashList as IList<string> ?? squashList.ToList();
-                var file = (version != null && enumerable.Any()) ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(enumerable.OrderByDescending(f => f).LastOrDefault());
+                var file = version != null && enumerable.Any() ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(enumerable.OrderByDescending(f => f).LastOrDefault());
                 if (string.IsNullOrEmpty(file))
                     return;
                 Terminal.Terminal.Execute($"mount {AnthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
@@ -162,7 +162,7 @@ namespace antdlib.Apps {
             }
 
             public static bool CheckFiles() {
-                return (File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSp) && File.Exists(Name.LaunchServer));
+                return File.Exists(Name.Prepare) && File.Exists(Name.Mount) && File.Exists(Name.LaunchSp) && File.Exists(Name.LaunchServer);
             }
 
             public static void SetAnthillaSp() {

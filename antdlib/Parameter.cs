@@ -28,39 +28,26 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
-
 namespace antdlib {
-
-    public class Label {
-        public static string Root => "antd_root";
-        public static string Port => "antd_port";
-        public static string Database => "antd_database";
-        public static string Files => "antd_files";
-
-        public class Smtp {
-            public static string Url => "smtp_url";
-            public static string Port => "smtp_port";
-            public static string Account => "smtp_account";
-            public static string Password => "smtp_password";
-        }
-
-        public class Imap {
-            public static string Url => "imap_url";
-            public static string Port => "imap_port";
-            public static string Account => "imap_account";
-            public static string Password => "imap_password";
-        }
-
-        public class Auth {
-            public static string IsEnabled => "isenabled";
-        }
-    }
-
     public class Parameter {
+        public static string LabelAntdRoot => "antd_root";
+        public static string LabelAntdPort => "antd_port";
+        public static string LabelAntdDatabase => "antd_database";
+        public static string LabelAntdFiles => "antd_files";
+        public static string LabelSmtpUrl => "smtp_url";
+        public static string LabelSmtpPort => "smtp_port";
+        public static string LabelSmtpAccount => "smtp_account";
+        public static string LabelSmtpPassword => "smtp_password";
+        public static string LabelImapUrl => "imap_url";
+        public static string LabelImapPort => "imap_port";
+        public static string LabelImapAccount => "imap_account";
+        public static string LabelImapPassword => "imap_password";
+        public static string LabelAuthIsEnabled => "isenabled";
+
         public static string RootData => "/Data";
         public static string RootFramework => "/framework";
+        public static string RootFrameworkAntd => $"{RootFramework}/antd";
+        public static string RootFrameworkAntdsh => $"{RootFramework}/antdsh";
         public static string RootSystem => "/System";
         public static string RootPorts => "/ports";
         public static string RootCfg => "/cfg";
@@ -106,9 +93,10 @@ namespace antdlib {
         public static string Aossvc => "/usr/sbin/aossvc";
 
         public static string AuthKeys => "/root/.ssh/authorized_keys";
-    }
 
-    public class AntdFile {
+        public static string ExeAntd => "Antd.exe";
+        public static string ExeAntdsh => "antdsh.exe";
+
         public const string NetworkConfig = "antd.boot.network.conf";
         public const string FirewallConfig = "antd.boot.firewall.conf";
         public const string ZipStartsWith = "antd";
@@ -119,52 +107,12 @@ namespace antdlib {
         public const string AntdRunning = "active-version";
         public const string DownloadName = "antdDownload.zip";
         public const string DownloadFirstDir = "antdDownloadFirst";
-    }
-
-    public class Uid {
-        public static string Guid => System.Guid.NewGuid().ToString();
-        public static string ShortGuid => System.Guid.NewGuid().ToString().Substring(0, 8);
-    }
-
-    public class Port {
-        public static string Websocket => "8888";
-    }
-
-    public class AssemblyInfo {
-        public const string DateFormat = "yyyyMMdd";
-
-        private static string GetGuid() {
-            var assembly = Assembly.GetExecutingAssembly();
-            var attribute = (GuidAttribute)assembly.GetCustomAttributes(typeof(GuidAttribute), true)[0];
-            return attribute.Value;
-        }
-
-        public static string Guid => GetGuid();
-
-        public static OperatingSystem OS => Environment.OSVersion;
 
         public static PlatformID Platform => Environment.OSVersion.Platform;
+        public static bool IsUnix => Platform == PlatformID.Unix;
 
-        public static bool IsUnix => (Platform == PlatformID.Unix);
-    }
-
-    public class Units {
-
-        public class Name {
-            public static string NamePrepare => "app-antd-01-prepare.service";
-            public static string NameMount => "app-antd-02-mount.service";
-            public static string NameLauncher => "app-antd-03-launcher.service";
-        }
-
-        public static string Prepare = $"{Parameter.AppsUnits}/{Name.NamePrepare}";
-        public static string Mount = $"{Parameter.AppsUnits}/{Name.NameMount}";
-        public static string Launcher = $"{Parameter.AppsUnits}/{Name.NameLauncher}";
-    }
-
-    public class Update {
-        public const string RemoteRepo = "http://srv.anthilla.com:8081";
-        public const string RemoteAntdDir = "update.antd";
-        public const string RemoteAntdshDir = "update.antdsh";
-        public const string RemoteUpdateInfo = "update.txt";
+        public static string UnitAntdPrepare => "app-antd-01-prepare.service";
+        public static string UnitAntdMount => "app-antd-02-mount.service";
+        public static string UnitAntdLauncher => "app-antd-03-launcher.service";
     }
 }

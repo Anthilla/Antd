@@ -81,20 +81,11 @@ namespace antdsh {
             else if (command == "restart") {
                 Shell.Restart();
             }
-            else if (command == "umount-all") {
-                Shell.UmountAll();
-            }
             else if (command.StartsWith("update")) {
                 var context = command.Split(' ');
                 if (context.Length > 0) {
                     UpdateObject.Update(context[1]);
                 }
-            }
-            else if (command == "isrunning") {
-                Shell.IsRunning();
-            }
-            else if (command == "clean-tmp") {
-                Shell.CleanTmp();
             }
             else if (command == "history") {
                 PrintHistory();
@@ -114,10 +105,7 @@ namespace antdsh {
             WriteHelp("start", "initialize a running version of antd");
             WriteHelp("stop", "stop any running version of antd");
             WriteHelp("restart", "restart antd related systemctl services and mounts");
-            WriteHelp("update", "update antd from the public repository");
-            WriteHelp("umount-all", "umount all antd directories recursively");
-            WriteHelp("isrunning", "check whether antd process is active or not");
-            WriteHelp("clean-tmp", "remove every files and directories from tmp directory");
+            WriteHelp("update", "update the selected resource from the public repository, options are: antd,  antdsh, system, kernel");
             WriteHelp("history", "show the commands used in this antdsh session");
             WriteHelp("exit", "exit from antdsh");
             WriteHelp("", "any other command not listed here will be executed on this machine and you will get its return code");

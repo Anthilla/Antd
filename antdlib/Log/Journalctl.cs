@@ -52,7 +52,7 @@ namespace antdlib.Log {
         }
 
         public static IEnumerable<string> GetAntdLog() {
-            var result = Terminal.Terminal.Execute($"journalctl --no-pager --quiet -u {Units.Name.NameLauncher}");
+            var result = Terminal.Terminal.Execute($"journalctl --no-pager --quiet -u {Parameter.UnitAntdLauncher}");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 

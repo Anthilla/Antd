@@ -98,7 +98,7 @@ namespace antdlib.Svcs.Samba {
         //public static List<KeyValuePair<string, List<string>>> Structure => GetServiceStructure();
 
         private static List<string> GetServiceSimpleStructure() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return new List<string>();
             var list = new List<string>();
             var files = Directory.EnumerateFiles(MntDir, "*.conf", SearchOption.AllDirectories).Where(file => File.ReadAllText(file).Contains("include"));

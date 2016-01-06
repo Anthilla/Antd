@@ -45,30 +45,30 @@ namespace antdlib.Mail {
             public static ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
 
             public static void SetUrl(string value) {
-                XmlWriter.Write(Label.Smtp.Url, value);
+                XmlWriter.Write(Parameter.LabelSmtpUrl, value);
             }
 
-            public static string Url => XmlWriter.ReadValue(Label.Smtp.Url) ?? "";
+            public static string Url => XmlWriter.ReadValue(Parameter.LabelSmtpUrl) ?? "";
 
             public static void SetPort(string value) {
-                XmlWriter.Write(Label.Smtp.Port, value);
+                XmlWriter.Write(Parameter.LabelSmtpPort, value);
             }
 
-            public static string Port => XmlWriter.ReadValue(Label.Smtp.Port) ?? "";
+            public static string Port => XmlWriter.ReadValue(Parameter.LabelSmtpPort) ?? "";
 
             public static void SetAccount(string value) {
-                XmlWriter.Write(Label.Smtp.Account, value);
+                XmlWriter.Write(Parameter.LabelSmtpAccount, value);
             }
 
-            public static string Account => XmlWriter.ReadValue(Label.Smtp.Account) ?? "";
+            public static string Account => XmlWriter.ReadValue(Parameter.LabelSmtpAccount) ?? "";
 
             public static void SetPassword(string value) {
-                XmlWriter.Write(Label.Smtp.Password, value);
+                XmlWriter.Write(Parameter.LabelSmtpPassword, value);
             }
 
-            public static string Password => XmlWriter.ReadValue(Label.Smtp.Password) ?? "";
+            public static string Password => XmlWriter.ReadValue(Parameter.LabelSmtpPassword) ?? "";
 
-            public static bool ConfigExists => (XmlWriter.ReadValue(Label.Smtp.Url) != null);
+            public static bool ConfigExists => (XmlWriter.ReadValue(Parameter.LabelSmtpUrl) != null);
         }
 
         public static void Send() {

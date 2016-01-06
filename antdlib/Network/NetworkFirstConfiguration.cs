@@ -38,7 +38,7 @@ using antdlib.Log;
 namespace antdlib.Network {
     public class NetworkFirstConfiguration {
 
-        private static readonly string FileName = $"{Parameter.RepoDirs}/{AntdFile.NetworkConfig}";
+        private static readonly string FileName = $"{Parameter.RepoDirs}/{Parameter.NetworkConfig}";
 
         private static bool CheckNetworkHasConfiguration() {
             return File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0;

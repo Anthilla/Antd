@@ -105,6 +105,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -116,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Antdsh\Execute.cs" />
     <Compile Include="Antdsh\SystemShellMgmt.cs" />
+    <Compile Include="Antdsh\UpdateAntdsh - Copy.cs" />
     <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
@@ -148,7 +150,7 @@
     <Compile Include="Firewall\MacAddressDiscovery.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Global.cs" />
+    <Compile Include="Parameter.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\ParameterXmlWriter.cs" />
     <Compile Include="Info\Dmidecode.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Threading;
 using antdlib;
 using antdlib.Antdsh;
@@ -26,7 +27,7 @@ namespace Antd {
         }
 
         public static void SetWorkingDirectories() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             Mount.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
@@ -67,14 +68,14 @@ namespace Antd {
         }
 
         public static void ReloadUsers() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             SystemUser.Config.ResetPasswordForUserStoredInDb();
             ConsoleLogger.Log("users config ready");
         }
 
         public static void ReloadSsh() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             Terminal.Execute("mkdir -p /root/.ssh");
             if (!File.Exists(Parameter.AuthKeys)) {
@@ -94,21 +95,21 @@ namespace Antd {
         }
 
         public static void SetOverlayDirectories() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             Mount.OverlayDirectories();
             ConsoleLogger.Log("overlay ready");
         }
 
         public static void SetMounts() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             Mount.AllDirectories();
             ConsoleLogger.Log("mounts ready");
         }
 
         public static void SetOsMount() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             if (Mount.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                 Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
@@ -127,14 +128,14 @@ namespace Antd {
         }
 
         public static void LaunchDefaultOsConfiguration() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             ConfigManagement.FromFile.ApplyForAll();
             ConsoleLogger.Log("default os configuration ready");
         }
 
         public static void SetWebsocketd() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             var filePath = $"{Parameter.AntdCfg}/websocketd";
             if (File.Exists(filePath))
@@ -145,7 +146,7 @@ namespace Antd {
         }
 
         public static void SetSystemdJournald() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
             if (File.Exists(file)) {
@@ -161,7 +162,7 @@ namespace Antd {
         }
 
         public static void CheckResolv() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             if (File.Exists("/etc/resolv.conf"))
                 return;
@@ -170,7 +171,7 @@ namespace Antd {
         }
 
         public static void SetFirewall() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             FirewallLists.SetDefaultLists();
             NfTables.Export.ExportTemplate();
@@ -178,7 +179,7 @@ namespace Antd {
         }
 
         public static void ImportSystemInformation() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             if (!NetworkInterface.GetAll().Any()) {
                 NetworkInterface.ImportNetworkInterface();
@@ -200,7 +201,7 @@ namespace Antd {
         }
 
         public static void LaunchApps() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             var apps = Management.DetectApps();
             if (apps.Length > 0) {
@@ -221,7 +222,7 @@ namespace Antd {
         }
 
         public static void DownloadDefaultRepoFiles() {
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return;
             var dir = $"{Parameter.RepoConfig}/database";
             Directory.CreateDirectory(dir);

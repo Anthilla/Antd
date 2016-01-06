@@ -38,7 +38,7 @@ namespace antdlib.Terminal {
         public static string Execute(string command, string dir = "") {
             var output = string.Empty;
             var error = string.Empty;
-            if (!AssemblyInfo.IsUnix)
+            if (!Parameter.IsUnix)
                 return output;
             var process = new Process {
                 StartInfo = {
@@ -74,7 +74,7 @@ namespace antdlib.Terminal {
         public class MultiLine {
             public static string Execute(IEnumerable<string> commands) {
                 var genericOutput = string.Empty;
-                if (!AssemblyInfo.IsUnix)
+                if (!Parameter.IsUnix)
                     return genericOutput;
                 foreach (var command in commands) {
                     var process = new Process {
@@ -106,7 +106,7 @@ namespace antdlib.Terminal {
 
             public static string Execute(IEnumerable<string> commands, string dir) {
                 var genericOutput = string.Empty;
-                if (!AssemblyInfo.IsUnix)
+                if (!Parameter.IsUnix)
                     return genericOutput;
                 foreach (var command in commands) {
                     var process = new Process {

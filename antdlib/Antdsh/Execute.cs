@@ -65,8 +65,8 @@ namespace antdlib.Antdsh {
         }
 
         public static void CheckRunningExists() {
-            var running = Terminal.Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + AntdFile.AntdRunning);
-            if (running.Contains(AntdFile.AntdRunning))
+            var running = Terminal.Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
+            if (running.Contains(Parameter.AntdRunning))
                 return;
             WriteLine("There's no running version of antd.");
         }
@@ -75,13 +75,13 @@ namespace antdlib.Antdsh {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
-            var zips = enumerable.Where(s => s.EndsWith(AntdFile.ZipEndsWith)).ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.SquashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
@@ -104,14 +104,14 @@ namespace antdlib.Antdsh {
         }
 
         public static void RemoveLink() {
-            var running = Parameter.AntdVersionsDir + "/" + AntdFile.AntdRunning;
+            var running = Parameter.AntdVersionsDir + "/" + Parameter.AntdRunning;
             WriteLine("Removing running {0}", running);
             Terminal.Terminal.Execute("rm " + running);
         }
 
         public static string GetRunningVersion() {
-            var running = Terminal.Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + AntdFile.AntdRunning);
-            if (!running.Contains(AntdFile.AntdRunning)) {
+            var running = Terminal.Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
+            if (!running.Contains(Parameter.AntdRunning)) {
                 WriteLine("There's no running version of antd.");
                 return null;
             }
@@ -125,24 +125,24 @@ namespace antdlib.Antdsh {
                 versionName.Trim(),
                 versionName
                 .Replace(Parameter.AntdVersionsDir, "")
-                .Replace(AntdFile.ZipStartsWith, "")
-                .Replace(AntdFile.ZipEndsWith, "")
-                .Replace(AntdFile.SquashStartsWith, "")
-                .Replace(AntdFile.SquashEndsWith, "")
+                .Replace(Parameter.ZipStartsWith, "")
+                .Replace(Parameter.ZipEndsWith, "")
+                .Replace(Parameter.SquashStartsWith, "")
+                .Replace(Parameter.SquashEndsWith, "")
                 .Replace("DIR_framework_", "")
                 .Replace("/", "")
                 .Trim()
                 );
         }
 
-        public static string RunningPath => Path.Combine(Parameter.AntdVersionsDir, AntdFile.AntdRunning);
+        public static string RunningPath => Path.Combine(Parameter.AntdVersionsDir, Parameter.AntdRunning);
 
         public static void ExtractZip(string file) {
             Terminal.Terminal.Execute("7z x " + file);
         }
 
         public static void ExtractZipTmp(string file) {
-            ZipFile.ExtractToDirectory(file.Replace(Parameter.AntdVersionsDir, Parameter.AntdTmpDir), file.Replace(Parameter.AntdVersionsDir, Parameter.AntdTmpDir).Replace(AntdFile.ZipEndsWith, ""));
+            ZipFile.ExtractToDirectory(file.Replace(Parameter.AntdVersionsDir, Parameter.AntdTmpDir), file.Replace(Parameter.AntdVersionsDir, Parameter.AntdTmpDir).Replace(Parameter.ZipEndsWith, ""));
         }
 
         public static void MountTmpRam() {
@@ -203,13 +203,13 @@ namespace antdlib.Antdsh {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
-            var zips = enumerable.Where(s => s.EndsWith(AntdFile.ZipEndsWith)).ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.SquashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
@@ -226,13 +226,13 @@ namespace antdlib.Antdsh {
             var versions = new HashSet<KeyValuePair<string, string>>();
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
-            var zips = enumerable.Where(s => s.EndsWith(AntdFile.ZipEndsWith)).ToArray();
+            var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
             if (zips.Length > 0) {
                 foreach (var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
-            var squashes = enumerable.Where(s => s.EndsWith(AntdFile.SquashEndsWith)).ToArray();
+            var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
             if (squashes.Length > 0) {
                 foreach (var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
@@ -247,7 +247,7 @@ namespace antdlib.Antdsh {
 
         public static void DownloadFromUrl(string url) {
             WriteLine("Download file from: {0}", url);
-            var to = Parameter.AntdTmpDir + "/" + AntdFile.DownloadName;
+            var to = Parameter.AntdTmpDir + "/" + Parameter.DownloadName;
             WriteLine("Download file to: {0}", to);
             Terminal.Terminal.Execute("wget " + url + " -o " + to);
             WriteLine("Download complete");
@@ -261,23 +261,23 @@ namespace antdlib.Antdsh {
         }
 
         public static void ExtractDownloadedFile() {
-            var downloadedFile = Parameter.AntdTmpDir + "/" + AntdFile.DownloadName;
+            var downloadedFile = Parameter.AntdTmpDir + "/" + Parameter.DownloadName;
             if (!File.Exists(downloadedFile)) {
                 WriteLine("The file you're looking for does not exist!");
                 return;
             }
-            var destination = Parameter.AntdTmpDir + "/" + AntdFile.DownloadFirstDir;
+            var destination = Parameter.AntdTmpDir + "/" + Parameter.DownloadFirstDir;
             WriteLine("Extract from {0} to {1}", downloadedFile, destination);
             ZipFile.ExtractToDirectory(downloadedFile, destination);
         }
 
         public static void RemoveDownloadedFile() {
-            var dir = Parameter.AntdTmpDir + "/" + AntdFile.DownloadFirstDir;
+            var dir = Parameter.AntdTmpDir + "/" + Parameter.DownloadFirstDir;
             Directory.Delete(dir, true);
         }
 
         public static void PickAndMoveZipFileInDownloadedDirectory() {
-            var mainDownloadedDir = Parameter.AntdTmpDir + "/" + AntdFile.DownloadFirstDir;
+            var mainDownloadedDir = Parameter.AntdTmpDir + "/" + Parameter.DownloadFirstDir;
             if (!Directory.Exists(mainDownloadedDir)) {
                 WriteLine("This {0} directory does not exist.", mainDownloadedDir);
                 return;

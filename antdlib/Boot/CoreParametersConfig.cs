@@ -51,8 +51,8 @@ namespace antdlib.Boot {
             if (Writer.CheckValue("AntdHttpsPort") == false) {
                 Writer.Write("AntdHttpsPort", "443");
             }
-            if (Writer.CheckValue(Label.Database) == false) {
-                Writer.Write(Label.Database, Parameter.AntdCfgDatabase);
+            if (Writer.CheckValue(Parameter.LabelAntdDatabase) == false) {
+                Writer.Write(Parameter.LabelAntdDatabase, Parameter.AntdCfgDatabase);
             }
             if (Writer.CheckValue("ssl") == false) {
                 Writer.Write("ssl", "yes");
@@ -69,8 +69,8 @@ namespace antdlib.Boot {
             if (Writer.CheckValue("x509") == false) {
                 Writer.Write("x509", "");
             }
-            if (Writer.CheckValue(Label.Auth.IsEnabled) == false) {
-                Writer.Write(Label.Auth.IsEnabled, false.ToString());
+            if (Writer.CheckValue(Parameter.LabelAuthIsEnabled) == false) {
+                Writer.Write(Parameter.LabelAuthIsEnabled, false.ToString());
             }
             if (Writer.CheckValue("protocol") == false) {
                 Writer.Write("protocol", "https");
@@ -183,7 +183,7 @@ namespace antdlib.Boot {
 
         public static bool GetT2Fa() {
             try {
-                return Writer.CheckValue(Label.Auth.IsEnabled) ? Convert.ToBoolean(Writer.ReadValue(Label.Auth.IsEnabled)) : false;
+                return Writer.CheckValue(Parameter.LabelAuthIsEnabled) ? Convert.ToBoolean(Writer.ReadValue(Parameter.LabelAuthIsEnabled)) : false;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -193,7 +193,7 @@ namespace antdlib.Boot {
 
         public static void EnableT2Fa() {
             try {
-                Writer.Write(Label.Auth.IsEnabled, true.ToString());
+                Writer.Write(Parameter.LabelAuthIsEnabled, true.ToString());
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -202,7 +202,7 @@ namespace antdlib.Boot {
 
         public static void DisableT2Fa() {
             try {
-                Writer.Write(Label.Auth.IsEnabled, false.ToString());
+                Writer.Write(Parameter.LabelAuthIsEnabled, false.ToString());
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -286,7 +286,7 @@ namespace antdlib.Boot {
 
         public static string GetDb() {
             try {
-                return Writer.CheckValue(Label.Database) ? Writer.ReadValue(Label.Database) : Parameter.AntdCfgDatabase;
+                return Writer.CheckValue(Parameter.LabelAntdDatabase) ? Writer.ReadValue(Parameter.LabelAntdDatabase) : Parameter.AntdCfgDatabase;
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -296,10 +296,10 @@ namespace antdlib.Boot {
 
         public static string GetHostUri() {
             try {
-                if (Writer.CheckValue(Label.Port) == false) {
+                if (Writer.CheckValue(Parameter.LabelAntdPort) == false) {
                     return "http://+:7777/";
                 }
-                return "http://+:" + Writer.ReadValue(Label.Port) + "/";
+                return "http://+:" + Writer.ReadValue(Parameter.LabelAntdPort) + "/";
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);

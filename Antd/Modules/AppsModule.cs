@@ -112,16 +112,6 @@ namespace Antd.Modules {
                 return Response.AsJson(AnthillaSp.Status.AnthillaServer());
             };
 
-            Get["/apps/update/antdsh"] = x => {
-                antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
-                return Response.AsJson(true);
-            };
-
-            Post["/apps/update/antdsh"] = x => {
-                antdlib.Antdsh.UpdateAntdsh.UpdateFromPublicRepo();
-                return Response.AsJson(true);
-            };
-
             Post["/apps/set/anthillasp"] = x => {
                 AnthillaSp.SetApp();
                 return Response.AsJson("/set/anthillasp");
