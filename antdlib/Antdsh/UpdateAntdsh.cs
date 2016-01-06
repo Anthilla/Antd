@@ -33,7 +33,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using antdlib.Common;
 using Newtonsoft.Json;
 
 namespace antdlib.Antdsh {
@@ -54,8 +53,8 @@ namespace antdlib.Antdsh {
         }
 
         private static string GetVersionDate(string path) {
-            if (string.IsNullOrEmpty(path))
-                return "";
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                return "00000000";
             try {
                 var fName = Path.GetFileName(path).Trim();
                 var from = path.Contains("-aufs-")
@@ -65,7 +64,7 @@ namespace antdlib.Antdsh {
                 return fName.Substring(from, to - from);
             }
             catch (Exception) {
-                return "";
+                return "00000000";
             }
         }
 
@@ -77,7 +76,7 @@ namespace antdlib.Antdsh {
         }
 
         #region Parameters
-        private const string PublicRepositoryUrl = "http://srv.anthilla.com/";
+        private const string PublicRepositoryUrl = "http://srv.anthilla.com";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string TmpDirectory => $"{Parameter.RepoTemp}/update";
         private static string AntdDirectory => $"{AppsDirectory}/Anthilla_Antd";
@@ -98,24 +97,32 @@ namespace antdlib.Antdsh {
 
         private static int _countAntd;
         private static void UpdateAntd() {
-            Directory.Delete(TmpDirectory, true);
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
             _countAntd++;
             if (_countAntd > 5) {
                 Console.WriteLine("antd update failed");
                 return;
             }
-            var date = GetVersionDate(AntdActive);
-            var requestUrl = $"{PublicRepositoryUrl}update/info/antd/{date}";
+            var currentVersion = Terminal.Terminal.Execute($"file {AntdActive}").Split(' ').Last();
+            var date = GetVersionDate(currentVersion);
+            var requestUrl = $"{PublicRepositoryUrl}/update/info/antd/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
                 Console.WriteLine("antd is already up to date");
             }
             Console.WriteLine("updating antd");
-            var downloadUrl = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Directory.CreateDirectory(TmpDirectory);
+            Console.WriteLine($"downloading file from {downloadUrl}");
+
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            FileSystem.Download(downloadUrl, downloadedFile);
+            Console.WriteLine(downloadedFile);
+            if (File.Exists(downloadedFile)) {
+                File.Delete(downloadedFile);
+            }
+            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             Console.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
@@ -126,36 +133,44 @@ namespace antdlib.Antdsh {
             Console.WriteLine($"{filename} download complete");
             var newVersion = $"{AntdDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Directory.Delete(TmpDirectory, true);
             Console.WriteLine("restart antd");
+            File.Delete(AntdActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {AntdActive}");
             Terminal.Terminal.Execute("systemctl stop app-antd-03-launcher");
             Terminal.Terminal.Execute("systemctl stop framework-antd.mount");
-            Terminal.Terminal.Execute("systemctl restart framework-antd.mount");
+            Terminal.Terminal.Execute("systemctl restart app-antd-02-mount");
             Terminal.Terminal.Execute("systemctl restart app-antd-03-launcher");
+            Directory.Delete(TmpDirectory, true);
         }
 
         private static int _countAntdsh;
         private static void UpdateAntdsh() {
-            Directory.Delete(TmpDirectory, true);
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
             _countAntdsh++;
             if (_countAntdsh > 5) {
                 Console.WriteLine("antdsh update failed");
                 return;
             }
-            var date = GetVersionDate(AntdshActive);
-            var requestUrl = $"{PublicRepositoryUrl}update/info/antdsh/{date}";
+            var currentVersion = Terminal.Terminal.Execute($"file {AntdshActive}").Split(' ').Last();
+            var date = GetVersionDate(currentVersion);
+            var requestUrl = $"{PublicRepositoryUrl}/update/info/antdsh/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
                 Console.WriteLine("antdsh is already up to date");
-                return;
             }
             Console.WriteLine("updating antdsh");
-            var downloadUrl = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Directory.CreateDirectory(TmpDirectory);
+            Console.WriteLine($"downloading file from {downloadUrl}");
+
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            FileSystem.Download(downloadUrl, downloadedFile);
+            Console.WriteLine(downloadedFile);
+            if (File.Exists(downloadedFile)) {
+                File.Delete(downloadedFile);
+            }
+            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             Console.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
@@ -166,36 +181,42 @@ namespace antdlib.Antdsh {
             Console.WriteLine($"{filename} download complete");
             var newVersion = $"{AntdshDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Directory.Delete(TmpDirectory, true);
             Console.WriteLine("restart antdsh");
+            File.Delete(AntdshActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {AntdshActive}");
-            Terminal.Terminal.Execute("systemctl stop app-anth-03-launcher");
+            Terminal.Terminal.Execute("systemctl stop app-antdsh-03-launcher");
             Terminal.Terminal.Execute("systemctl stop framework-antdsh.mount");
-            Terminal.Terminal.Execute("systemctl restart framework-antdsh.mount");
-            Terminal.Terminal.Execute("systemctl restart app-anth-03-launcher");
+            Directory.Delete(TmpDirectory, true);
         }
 
         private static int _countSystem;
         private static void UpdateSystem() {
-            Directory.Delete(TmpDirectory, true);
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
             _countSystem++;
             if (_countSystem > 5) {
                 Console.WriteLine("system update failed");
                 return;
             }
-            var date = GetVersionDate(SystemActive);
-            var requestUrl = $"{PublicRepositoryUrl}update/info/system/{date}";
+            var currentVersion = Terminal.Terminal.Execute($"file {SystemActive}").Split(' ').Last();
+            var date = GetVersionDate(currentVersion);
+            var requestUrl = $"{PublicRepositoryUrl}/update/info/system/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
-                Console.WriteLine("system is already up to date");
-                return;
+                Console.WriteLine("System is already up to date");
             }
             Console.WriteLine("updating system");
-            var downloadUrl = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Directory.CreateDirectory(TmpDirectory);
+            Console.WriteLine($"downloading file from {downloadUrl}");
+
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            FileSystem.Download(downloadUrl, downloadedFile);
+            Console.WriteLine(downloadedFile);
+            if (File.Exists(downloadedFile)) {
+                File.Delete(downloadedFile);
+            }
+            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             Console.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
@@ -206,31 +227,30 @@ namespace antdlib.Antdsh {
             Console.WriteLine($"{filename} download complete");
             var newVersion = $"{SystemDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Directory.Delete(TmpDirectory, true);
             Console.WriteLine("restart system");
+            File.Delete(SystemActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {SystemActive}");
-            //todo check this
-            //Terminal.Execute("systemctl stop app-anth-03-launcher");
-            //Terminal.Execute("systemctl stop framework-System.mount");
-            //Terminal.Execute("systemctl restart framework-System.mount");
-            //Terminal.Execute("systemctl restart app-anth-03-launcher");
+            Directory.Delete(TmpDirectory, true);
         }
 
         private static int _countKernel;
         private static void UpdateKernel() {
-            Directory.Delete(TmpDirectory, true);
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
             _countKernel++;
             if (_countKernel > 5) {
                 Console.WriteLine("kernel update failed");
                 return;
             }
-            var date = GetVersionDate(ModulesActive);
+            var currentVersion = Terminal.Terminal.Execute($"file {ModulesActive}").Split(' ').Last();
+            var date = GetVersionDate(currentVersion);
             var requestUrl = $"{PublicRepositoryUrl}update/info/kernel/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
                 Console.WriteLine("kernel is already up to date");
                 return;
             }
+            Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
 
             Console.WriteLine("updating firmware");
@@ -303,7 +323,7 @@ namespace antdlib.Antdsh {
         }
 
         private static void HelpDownloadFile(string url, string destination, string shasum) {
-            FileSystem.Download(url, destination);
+            Terminal.Terminal.Execute($"wget {url} -O {destination}");
             Console.WriteLine("check downloaded file");
             var currentSha = GetShaSum(destination);
             if (shasum != currentSha) {

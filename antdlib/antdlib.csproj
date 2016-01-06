@@ -117,7 +117,6 @@
   <ItemGroup>
     <Compile Include="Antdsh\Execute.cs" />
     <Compile Include="Antdsh\SystemShellMgmt.cs" />
-    <Compile Include="Antdsh\UpdateAntdsh - Copy.cs" />
     <Compile Include="Antdsh\UpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
