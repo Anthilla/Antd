@@ -101,6 +101,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -124,6 +125,7 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="A\Execute.cs" />
     <Compile Include="Boot\Boot.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
@@ -243,6 +245,27 @@
     <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
+    <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
+    <Compile Include="Websocket\Client\ConnectionFactory.cs" />
+    <Compile Include="Websocket\Client\Program.cs" />
+    <Compile Include="Websocket\Connections\BadRequestConnection.cs" />
+    <Compile Include="Websocket\Connections\ConnectionDetails.cs" />
+    <Compile Include="Websocket\Connections\ConnectionType.cs" />
+    <Compile Include="Websocket\Connections\HttpConnection.cs" />
+    <Compile Include="Websocket\Connections\IConnection.cs" />
+    <Compile Include="Websocket\Connections\IConnectionFactory.cs" />
+    <Compile Include="Websocket\Connections\MimeTypes.cs" />
+    <Compile Include="Websocket\Exceptions\EntityTooLargeException.cs" />
+    <Compile Include="Websocket\Exceptions\WebSocketVersionNotSupportedException.cs" />
+    <Compile Include="Websocket\HttpHelper.cs" />
+    <Compile Include="Websocket\WebServer.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\BinaryReaderWriter.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketConnection.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrame.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrameReader.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrameWriter.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketHandshakeHelper.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketOpCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -253,6 +276,9 @@
     <None Include="Svcs\Samba\json-schema1.json" />
     <None Include="Svcs\Samba\samba.command.list" />
     <None Include="Svcs\Samba\samba.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Websocket\Client\client.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
