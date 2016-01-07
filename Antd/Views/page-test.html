@@ -29,12 +29,175 @@
     //     20141110
     //------------------------------------------------------------------------------------->
 @Section['MainContent']
-    <form action="/test/page" method="POST" enctype="multipart/form-data">
-        <textarea name="Text"></textarea>
-        <input type="submit" value="submit" />
-    </form>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    body {
+        font: 13px Helvetica, Arial;
+    }
+
+    form {
+        background: #000;
+        padding: 3px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+
+    form input {
+        border: 0;
+        padding: 10px;
+        width: 90%;
+        margin-right: .5%;
+    }
+
+    form button {
+        width: 9%;
+        background: rgb(130, 200, 255);
+        border: none;
+        padding: 10px;
+    }
+
+    #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    #messages li {
+        padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+        background: #eee;
+    }
+</style>
+<button id="btn" data-test="comando">TEST</button>
+
+<ul id="messages"></ul>
+<form action="">
+    <input id="txtBox" autocomplete="off" /><button>Send</button>
+</form>
 @EndSection
 
 @Section['Scripts']
-    <script src="/Scripts/js.cookie.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    //var CHAT;
+    //window.onload = function () {
+    //    // open the connection to the Web Socket server
+    //    CHAT = new WebSocket('ws://' + location.host + ':8080/chat');
+    //    // When the connection is open
+    //    CHAT.onopen = function () {
+    //        $('#messages').append($('<li>').text('Connection opened'));
+    //    };
+    //    // when the connection is closed by the server
+    //    CHAT.onclose = function () {
+    //        $('#messages').append($('<li>').text('Connection closed'));
+    //    };
+    //    // Log errors
+    //    CHAT.onerror = function () {
+    //        console.log('An error occured');
+    //    };
+    //    // Log messages from the server
+    //    CHAT.onmessage = function (e) {
+    //        $('#messages').append($('<li>').text(e.data));
+    //    };
+    //};
+
+    //$('form').submit(function () {
+    //    CHAT.send($('#txtBox').val());
+    //    $('#txtBox').val('');
+    //    return false;
+    //});
+
+    var COMMAND;
+    window.onload = function ()  {
+        console.log('COMMAND_WS_START');
+        var commandPort = 8088;
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/ws/' + commandPort,
+            type: 'GET',
+            success: function (data) {
+                console.log(data);
+
+                // open the connection to the Web Socket server
+                COMMAND = new WebSocket('ws://' + location.host + ':' + commandPort + '/cmd');
+                // When the connection is open
+                COMMAND.onopen = function () {
+                    $('#messages').append($('<li>').text('Connection opened'));
+                };
+                // when the connection is closed by the server
+                COMMAND.onclose = function () {
+                    $('#messages').append($('<li>').text('Connection closed'));
+                };
+                // Log errors
+                COMMAND.onerror = function () {
+                    console.log('An error occured');
+                };
+                // Log messages from the server
+                COMMAND.onmessage = function (e) {
+                    $('#messages').append($('<li>').text(e.data));
+                };
+
+                return false;
+            }
+        });
+    };
+
+    $('#btn').click(function () {
+        console.log('u');
+        COMMAND.send($(this).attr('data-test'));
+        COMMAND.close();
+    });
+
+    //var COMMAND;
+    //var COMMAND_PORT = 8088;
+    //function COMMAND_WS_START() {
+    //    console.log('COMMAND_WS_START');
+    //    // open the connection to the Web Socket server
+    //    COMMAND = new WebSocket('ws://' + location.host + ':' + COMMAND_PORT + '/cmd');
+    //    // When the connection is open
+    //    COMMAND.onopen = function () {
+    //        $('#messages').append($('<li>').text('Connection opened'));
+    //    };
+    //    // when the connection is closed by the server
+    //    COMMAND.onclose = function () {
+    //        $('#messages').append($('<li>').text('Connection closed'));
+    //    };
+    //    // Log errors
+    //    COMMAND.onerror = function () {
+    //        console.log('An error occured');
+    //    };
+    //    // Log messages from the server
+    //    COMMAND.onmessage = function (e) {
+    //        $('#messages').append($('<li>').text(e.data));
+    //    };
+    //};
+
+    //$('#btn').click(function () {
+    //    jQuery.support.cors = true;
+    //    $.ajax({
+    //        url: '/ws/' + COMMAND_PORT,
+    //        type: 'GET',
+    //        success: function (data) {
+    //            console.log(data);
+    //            if (data === 'done') {
+    //                COMMAND_WS_START();
+    //                COMMAND.send($(this).attr('data-test'));
+    //            }
+    //            COMMAND.close();
+    //            return false;
+    //        }
+    //    });
+    //});
+
+</script>
 @EndSection

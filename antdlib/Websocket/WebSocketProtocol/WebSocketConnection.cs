@@ -10,7 +10,6 @@ namespace antdlib.Websocket.WebSocketProtocol {
     public abstract class WebSocketConnection : IConnection {
         private readonly NetworkStream _networkStream;
         private readonly string _header;
-        private readonly WebSocketFrameWriter _writer;
 
         private bool _isDisposed;
         private WebSocketOpCode _multiFrameOpcode;
@@ -18,7 +17,7 @@ namespace antdlib.Websocket.WebSocketProtocol {
         protected WebSocketConnection(NetworkStream networkStream, string header) {
             _networkStream = networkStream;
             _header = header;
-            _writer = new WebSocketFrameWriter(networkStream);
+            Writer = new WebSocketFrameWriter(networkStream);
         }
 
         public void Respond() {
@@ -26,14 +25,14 @@ namespace antdlib.Websocket.WebSocketProtocol {
             MainReadLoop();
         }
 
-        protected WebSocketFrameWriter Writer => _writer;
+        protected WebSocketFrameWriter Writer { get; }
 
         protected virtual void OnPing(byte[] payload) {
-            _writer.Write(WebSocketOpCode.Pong, payload);
+            Writer.Write(WebSocketOpCode.Pong, payload);
         }
 
         protected virtual void OnConnectionClosed(byte[] payload) {
-            _writer.Write(WebSocketOpCode.ConnectionClose, payload);
+            Writer.Write(WebSocketOpCode.ConnectionClose, payload);
             Trace.TraceInformation("Client requested connection close");
         }
 
@@ -136,7 +135,7 @@ namespace antdlib.Websocket.WebSocketProtocol {
         public void Dispose() {
             if (!_networkStream.CanWrite || _isDisposed) return;
             _isDisposed = true;
-            _writer.Write(WebSocketOpCode.ConnectionClose, new byte[0]);
+            Writer.Write(WebSocketOpCode.ConnectionClose, new byte[0]);
             Trace.TraceInformation("Server requested connection close");
         }
     }

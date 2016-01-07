@@ -24,6 +24,9 @@ namespace antdlib.Websocket.Client {
                     if (connectionDetails.Path == "/chat") {
                         return new ChatWebSocketConnection(connectionDetails.NetworkStream, connectionDetails.TcpClient, connectionDetails.Header);
                     }
+                    if (connectionDetails.Path == "/cmd") {
+                        return new CommandWebSocketConnection(connectionDetails.NetworkStream, connectionDetails.TcpClient, connectionDetails.Header);
+                    }
                     break;
                 case ConnectionType.Http:
                     return new HttpConnection(connectionDetails.NetworkStream, connectionDetails.Path, _webRoot);

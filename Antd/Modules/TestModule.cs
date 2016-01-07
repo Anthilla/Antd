@@ -27,9 +27,13 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using antdlib.Users;
+using antdlib.Websocket;
+using antdlib.Websocket.Client;
 using Nancy;
 
 namespace Antd.Modules {
@@ -50,18 +54,10 @@ namespace Antd.Modules {
             Get["/test/2"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Name = "Rendered with SSVE! ☻";
-                var list = new List<string> {"uno", "due", "tre"};
-                var list2 = new List<List<string>>();
-                list2.Add(list);
-                list2.Add(list);
-                list2.Add(list);
+                var list = new List<string> { "uno", "due", "tre" };
+                var list2 = new List<List<string>> {list, list, list};
                 vmod.List = list2;
                 return View["page-empty", vmod];
-            };
-
-            Get["/test/3"] = x => {
-                var prova = antdlib.Virsh.Virsh.Monitor.list("--all --title");
-                return Response.AsJson(prova);
             };
 
             Post["/sp/users/identity"] = x => {

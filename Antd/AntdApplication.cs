@@ -35,6 +35,8 @@ using antdlib;
 using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Log;
+using antdlib.Websocket;
+using antdlib.Websocket.Client;
 using Owin;
 using Microsoft.Owin.Hosting;
 using Antd.Middleware;

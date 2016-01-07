@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace antdlib.Websocket.Client {
-    public class Program {
-        private static void Main() {
+    public class WebSocket {
+        public static void Start(int port, string webroot = "") {
+            Task.Run(() => Launch(webroot, port));
+        }
+
+        private static void Launch(string webroot, int port) {
             try {
-                const string webRoot = "";
-                const int port = 8888;
-
-                // used to decide what to do with incomming connections
-                var connectionFactory = new ConnectionFactory(webRoot);
-
+                var connectionFactory = new ConnectionFactory(webroot);
                 using (var server = new WebServer(connectionFactory)) {
                     server.Listen(port);
                     Console.ReadKey();
