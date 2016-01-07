@@ -125,7 +125,6 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
-    <Compile Include="A\Execute.cs" />
     <Compile Include="Boot\Boot.cs" />
     <Compile Include="Boot\CoreParametersConfig.cs" />
     <Compile Include="Boot\ParametersConfig.cs" />
