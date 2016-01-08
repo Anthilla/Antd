@@ -32,11 +32,11 @@
 <!--<button id="btn" data-test="comando">TEST</button>-->
 <div class="grid">
     <div class="row">
-        <div data-command-role="set" class="span12">
-            <input type="text"/>
-            <br/>
-            <input type="button" value="submit"/>
-            <br/>
+        <div class="span12 command-set">
+            <input class="command-options" type="text" />
+            <br />
+            <input class="command-submit" data-command="ciao" type="button" value="submit" />
+            <br />
             <textarea></textarea>
         </div>
     </div>
@@ -46,36 +46,37 @@
 
 @Section['Scripts']
 <script type="text/javascript">
-    var COMMAND;
-    window.onload = function ()  {
+    window.onload = function () {
+        var connection;
         jQuery.support.cors = true;
         $.ajax({
             url: '/ws/port',
             type: 'GET',
             success: function (data) {
-                COMMAND = new WebSocket('ws://' + location.host + ':' + data + '/cmd');
-                COMMAND.onopen = function () {
+                connection = new WebSocket('ws://' + location.host + ':' + data + '/cmd');
+                connection.onopen = function () {
                     console.log('Websocket connection opened');
                 };
-                COMMAND.onclose = function () {
+                connection.onclose = function () {
                     console.log('Websocket connection closed');
                 };
-                COMMAND.onerror = function () {
+                connection.onerror = function () {
                     console.log('An error occured');
                 };
-                // Log messages from the server
-                COMMAND.onmessage = function (e) {
-                    $('#messages').append($('<li>').text(e.data));
+                connection.onmessage = function (response) {
+                    alert('server response: ' + response.data);
                 };
                 return false;
             }
         });
+        $('.command-submit').click(function () {
+            var command = $(this).attr('data-command');
+            var options = $(this).parents('.command-set').find('.command-options').val();
+            console.log(command + ' ' + options)
+            connection.send(command + ' ' + options);
+        });
     };
 
-    $('#btn').click(function () {
-        var value = $(this).attr('data-test');
-        console.log(value);
-        COMMAND.send(value);
-    });
+
 </script>
 @EndSection
