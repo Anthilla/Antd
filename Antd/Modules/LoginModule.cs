@@ -29,9 +29,9 @@
 
 using System;
 using System.Dynamic;
+using antdlib;
 using antdlib.Auth;
 using antdlib.Auth.T2FA;
-using antdlib.Boot;
 using antdlib.Common;
 using Nancy;
 using Nancy.Authentication.Forms;
@@ -77,7 +77,7 @@ namespace Antd.Modules {
                 cookies.Clear();
                 cookies.Remove("antd-session");
                 NancyCookie cookie;
-                if (CoreParametersConfig.GetT2Fa() == false) {
+                if (ApplicationSetting.GetT2Fa() == false) {
                     cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                     return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(cookie);
                 }

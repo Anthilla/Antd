@@ -43,7 +43,7 @@ namespace antdlib.Mail {
                 CoreFileName + "002"
             };
 
-            public static ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
+            public static XmlWriter XmlWriter = new XmlWriter(Files);
 
             public static void SetUrl(string value) {
                 XmlWriter.Write(Parameter.LabelImapUrl, value);

@@ -6,7 +6,6 @@ using System.Threading;
 using antdlib;
 using antdlib.Antdsh;
 using antdlib.Apps;
-using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Config;
 using antdlib.Directories;
@@ -18,6 +17,7 @@ using antdlib.Network;
 using antdlib.Scheduler;
 using antdlib.Terminal;
 using antdlib.Users;
+using antdlib.Websocket.Client;
 
 namespace Antd {
     public class AntdBoot {
@@ -34,13 +34,13 @@ namespace Antd {
         }
 
         public static void SetCoreParameters() {
-            CoreParametersConfig.WriteDefaults();
+            ApplicationSetting.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
         }
 
         public static void StartDatabase() {
             var databaseName = Parameter.AntdCfgDatabaseName;
-            var databasePaths = new[] { CoreParametersConfig.GetDb() };
+            var databasePaths = new[] { ApplicationSetting.GetDb() };
             foreach (var dbPath in databasePaths) {
                 Terminal.Execute($"mkdir -p {dbPath}");
                 Terminal.Execute($"mkdir -p {dbPath}/{databaseName}");
@@ -60,7 +60,7 @@ namespace Antd {
         }
 
         public static void CheckCertificate() {
-            var certificate = CoreParametersConfig.GetCertificatePath();
+            var certificate = ApplicationSetting.GetCertificatePath();
             if (!File.Exists(certificate)) {
                 File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
             }
@@ -249,6 +249,11 @@ namespace Antd {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");
+        }
+
+        public static void StartWebsocketServer() {
+            var port = 1234;
+            WebSocket.Start(port);
         }
     }
 }

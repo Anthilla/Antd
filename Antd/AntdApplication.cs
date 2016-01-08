@@ -32,11 +32,8 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using antdlib;
-using antdlib.Boot;
 using antdlib.Common;
 using antdlib.Log;
-using antdlib.Websocket;
-using antdlib.Websocket.Client;
 using Owin;
 using Microsoft.Owin.Hosting;
 using Antd.Middleware;
@@ -56,7 +53,7 @@ namespace Antd {
                     ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
                 }
                 Configuration();
-                var port = Convert.ToInt32(CoreParametersConfig.GetHttpPort());
+                var port = Convert.ToInt32(ApplicationSetting.GetHttpPort());
                 using (WebApp.Start<Startup>($"http://+:{port}/")) {
                     ConsoleLogger.Log("loading service");
                     ConsoleLogger.Log($"http port: {port}");
@@ -94,6 +91,7 @@ namespace Antd {
             //AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
+            AntdBoot.StartWebsocketServer();
             //AntdBoot.DownloadDefaultRepoFiles();
         }
     }

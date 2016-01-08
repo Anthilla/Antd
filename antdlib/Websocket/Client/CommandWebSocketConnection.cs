@@ -12,7 +12,7 @@ namespace antdlib.Websocket.Client {
         protected override void OnTextFrame(string message) {
             ConsoleLogger.Log($"executing {message}");
             var response = Terminal.Terminal.Execute(message);
-            Writer.WriteText(response);
+            Writer.WriteText($"{message} -> {response}");
         }
     }
 }

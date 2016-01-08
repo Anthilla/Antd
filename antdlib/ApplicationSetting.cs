@@ -31,9 +31,9 @@ using System;
 using antdlib.Common;
 using antdlib.Log;
 
-namespace antdlib.Boot {
+namespace antdlib {
 
-    public class CoreParametersConfig {
+    public class ApplicationSetting {
         private const string CoreFileName = "antdConfig";
 
         private static readonly string[] Files = {
@@ -42,7 +42,21 @@ namespace antdlib.Boot {
                 CoreFileName + "002"
             };
 
-        public static readonly ParameterXmlWriter Writer = new ParameterXmlWriter(Files);
+        public static readonly XmlWriter Writer = new XmlWriter(Files);
+
+        #region core CRUD
+        public static void Set(string key, string value) {
+            Writer.Write(key, value);
+        }
+
+        public static string Get(string key) {
+            return Writer.ReadValue(key);
+        }
+
+        public static void Delete(string key) {
+            throw new NotImplementedException();
+        }
+        #endregion core CRUD
 
         public static void WriteDefaults() {
             if (Writer.CheckValue("AntdHttpPort") == false) {
@@ -144,7 +158,7 @@ namespace antdlib.Boot {
             }
         }
 
-        public static void SetHttpPort(string  port) {
+        public static void SetHttpPort(string port) {
             try {
                 Writer.Write("AntdHttpPort", port);
             }
@@ -183,7 +197,7 @@ namespace antdlib.Boot {
 
         public static bool GetT2Fa() {
             try {
-                return Writer.CheckValue(Parameter.LabelAuthIsEnabled) ? Convert.ToBoolean(Writer.ReadValue(Parameter.LabelAuthIsEnabled)) : false;
+                return Writer.CheckValue(Parameter.LabelAuthIsEnabled) && Convert.ToBoolean(Writer.ReadValue(Parameter.LabelAuthIsEnabled));
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
@@ -308,3 +322,33 @@ namespace antdlib.Boot {
         }
     }
 }
+
+
+//public class ParametersConfig : CoreParametersConfig {
+//    public static void Write(string key, string value) {
+//        var readValue = Writer.ReadValue(key);
+//        if (readValue == null) {
+//            var arr = new[] { value };
+//            Writer.Write(key, JsonConvert.SerializeObject(arr));
+//        }
+//        else {
+//            AddValue(key, value);
+//        }
+//    }
+
+//    private static void AddValue(string key, string value) {
+//        var readValue = Writer.ReadValue(key);
+//        var arr = JsonConvert.DeserializeObject<string[]>(readValue);
+//        var list = arr.ToList();
+//        list.Add(value);
+//        Writer.Write(key, JsonConvert.SerializeObject(list.ToArray()));
+//    }
+
+//    public static string Read(string key) {
+//        return Writer.ReadValue(key);
+//    }
+
+//    public static void Edit(string key, string value) {
+//        var arr = new[] { value };
+//        Writer.Write(key, JsonConvert.SerializeObject(arr));
+//    }

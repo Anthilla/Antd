@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using antdlib.Log;
+﻿using antdlib.Log;
 using antdlib.Websocket.Connections;
 
 namespace antdlib.Websocket.Client {
@@ -20,7 +17,6 @@ namespace antdlib.Websocket.Client {
         public IConnection CreateInstance(ConnectionDetails connectionDetails) {
             switch (connectionDetails.ConnectionType) {
                 case ConnectionType.WebSocket:
-                    // you can support different kinds of web socket connections using a different path
                     if (connectionDetails.Path == "/chat") {
                         return new ChatWebSocketConnection(connectionDetails.NetworkStream, connectionDetails.TcpClient, connectionDetails.Header);
                     }

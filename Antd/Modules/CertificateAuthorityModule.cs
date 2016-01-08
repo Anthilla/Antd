@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.IO;
-using antdlib.Boot;
+using antdlib;
 using antdlib.Certificate;
 using Antd.Helpers;
 using Nancy;
@@ -41,24 +41,24 @@ namespace Antd.Modules {
         public CertificateAuthorityModule() {
             this.RequiresAuthentication();
 
-            Get["/ca/ssl/status"] = x => Response.AsJson(CoreParametersConfig.GetSsl());
+            Get["/ca/ssl/status"] = x => Response.AsJson(ApplicationSetting.GetSsl());
 
             Post["/ca/ssl/toggle"] = x => {
-                if (CoreParametersConfig.GetSsl() == "yes") {
-                    CoreParametersConfig.DisableSsl();
+                if (ApplicationSetting.GetSsl() == "yes") {
+                    ApplicationSetting.DisableSsl();
                     return Response.AsJson(true);
                 }
-                CoreParametersConfig.EnableSsl();
+                ApplicationSetting.EnableSsl();
                 return Response.AsJson(true);
             };
 
             Post["/ca/ssl/enable"] = x => {
-                CoreParametersConfig.EnableSsl();
+                ApplicationSetting.EnableSsl();
                 return Response.AsJson(true);
             };
 
             Post["/ca/ssl/disable"] = x => {
-                CoreParametersConfig.DisableSsl();
+                ApplicationSetting.DisableSsl();
                 return Response.AsJson(true);
             };
 

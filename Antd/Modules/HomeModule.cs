@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib;
-using antdlib.Boot;
 using antdlib.CCTable;
 using antdlib.Certificate;
 using antdlib.Config;
@@ -154,7 +153,7 @@ namespace Antd.Modules {
 
                 //todo check next parameters
                 viewModel.SSHPort = "22";
-                viewModel.AuthStatus = CoreParametersConfig.GetT2Fa();
+                viewModel.AuthStatus = ApplicationSetting.GetT2Fa();
 
                 viewModel.CCTableContext = CctableContextName;
                 var table = CCTableRepository.GetByContext2(CctableContextName);
@@ -185,13 +184,13 @@ namespace Antd.Modules {
 
                 viewModel.SslStatus = "Enabled";
                 viewModel.SslStatusAction = "Disable";
-                if (CoreParametersConfig.GetSsl() == "no") {
+                if (ApplicationSetting.GetSsl() == "no") {
                     viewModel.SslStatus = "Disabled";
                     viewModel.SslStatusAction = "Enable";
                 }
-                viewModel.CertificatePath = CoreParametersConfig.GetCertificatePath();
+                viewModel.CertificatePath = ApplicationSetting.GetCertificatePath();
                 viewModel.CaStatus = "Enabled";
-                if (CoreParametersConfig.GetCa() == "no") {
+                if (ApplicationSetting.GetCa() == "no") {
                     viewModel.CaStatus = "Disabled";
                 }
                 viewModel.CaIsActive = CertificateAuthority.IsActive;

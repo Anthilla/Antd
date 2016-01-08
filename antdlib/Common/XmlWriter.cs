@@ -27,10 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using antdlib.Log;
 
 namespace antdlib.Common {
     public class Param {
@@ -43,10 +45,10 @@ namespace antdlib.Common {
         public Param Param { get; set; }
     }
 
-    public class ParameterXmlWriter {
+    public class XmlWriter {
         private readonly string[] _path;
 
-        public ParameterXmlWriter(string[] fileNames) {
+        public XmlWriter(IEnumerable<string> fileNames) {
             var applicationRoot = Parameter.AntdCfg;
             var tmplist = new List<string>();
             tmplist.AddRange(from fileName in fileNames let p = Path.Combine(applicationRoot, fileName + ".xml") select Path.Combine(applicationRoot, fileName + ".xml"));
@@ -54,50 +56,55 @@ namespace antdlib.Common {
         }
 
         public void Write(string key, string value) {
-            List<Param> tList;
-            Param tItem;
-            var readList = ReadAll();
-            var paramList = new List<Param>();
-            if (readList != null) {
-                paramList.AddRange(from sect in readList
-                                   where sect.Param != null
-                                   select sect.Param);
-            }
+            try {
+                List<Param> tList;
+                Param tItem;
+                var readList = ReadAll();
+                var paramList = new List<Param>();
+                if (readList != null) {
+                    paramList.AddRange(from sect in readList
+                        where sect.Param != null
+                        select sect.Param);
+                }
 
-            var oldItem = (from i in paramList
-                           where i.Key == key
-                           select i).FirstOrDefault();
-            if (oldItem == null) {
-                var item = new Param {
-                    Key = key,
-                    Value = value
-                };
-                tItem = item;
-            }
-            else {
-                tItem = oldItem;
-                tItem.Value = value;
-            }
-            if (paramList.ToArray().Length < 1) {
-                var list = new List<Param> { tItem };
-                tList = list;
-            }
-            else {
-                paramList.Remove(oldItem);
-                paramList.Add(tItem);
-                tList = paramList;
-            }
+                var oldItem = (from i in paramList
+                    where i.Key == key
+                    select i).FirstOrDefault();
+                if (oldItem == null) {
+                    var item = new Param {
+                        Key = key,
+                        Value = value
+                    };
+                    tItem = item;
+                }
+                else {
+                    tItem = oldItem;
+                    tItem.Value = value;
+                }
+                if (paramList.ToArray().Length < 1) {
+                    var list = new List<Param> {tItem};
+                    tList = list;
+                }
+                else {
+                    paramList.Remove(oldItem);
+                    paramList.Add(tItem);
+                    tList = paramList;
+                }
 
-            var document = new XDocument(
-                new XDeclaration("1.0", "utf-8", "yes"),
-                new XElement("section", new XAttribute("section", "antd.config"),
-                            from el in tList
-                            select new XElement("param",
+                var document = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement("section", new XAttribute("section", "antd.config"),
+                        from el in tList
+                        select new XElement("param",
                             new XAttribute("key", el.Key),
                             new XAttribute("Value", el.Value)
-            )));
-            foreach (var p in _path) {
-                document.Save(p);
+                            )));
+                foreach (var p in _path) {
+                    document.Save(p);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"error while setting application value for {key}: {ex.Message}");
             }
         }
 
@@ -122,17 +129,23 @@ namespace antdlib.Common {
         }
 
         public string ReadValue(string key) {
-            var list = ReadAll();
-            if (list == null) {
+            try {
+                var list = ReadAll();
+                if (list == null) {
+                    return null;
+                }
+                var parList = (from p in list
+                               where p.Param != null
+                               select p.Param).ToList();
+                var param = (from v in parList
+                             where v.Key == key
+                             select v).FirstOrDefault();
+                return param?.Value;
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"cannot read application parameter: {ex.Message}");
                 return null;
             }
-            var parList = (from p in list
-                           where p.Param != null
-                           select p.Param).ToList();
-            var param = (from v in parList
-                         where v.Key == key
-                         select v).FirstOrDefault();
-            return param?.Value;
         }
 
         public bool CheckValue(string key) {

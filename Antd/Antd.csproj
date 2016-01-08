@@ -126,7 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntdBoot.cs" />
-    <Compile Include="AntdHub.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Helpers\CertificateAssignmentType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />

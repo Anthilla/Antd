@@ -30,7 +30,7 @@
 using System;
 using System.Dynamic;
 using System.Linq;
-using antdlib.Boot;
+using antdlib;
 using antdlib.CCTable;
 using antdlib.Common;
 using antdlib.Info;
@@ -76,12 +76,12 @@ namespace Antd.Modules {
             };
 
             Get["/system/auth/disable"] = x => {
-                CoreParametersConfig.DisableT2Fa();
+                ApplicationSetting.DisableT2Fa();
                 return Response.AsJson(true);
             };
 
             Get["/system/auth/enable"] = x => {
-                CoreParametersConfig.EnableT2Fa();
+                ApplicationSetting.EnableT2Fa();
                 return Response.AsJson(true);
             };
 

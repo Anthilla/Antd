@@ -27,18 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Websocket.Client;
-
 namespace antdlib.Virsh {
     public class Virsh {
         public class Domain {
-
-            //public static string AttachDevice(string options) {
-            //    WebSocket.Start(8080);
-
-
-            //}
-
             public static string Attachdevice(string options) { return Terminal.Terminal.Execute($"virsh attach_device {options}"); }
             public static string Attachdisk(string options) { return Terminal.Terminal.Execute($"virsh attach_disk {options}"); }
             public static string Attachinterface(string options) { return Terminal.Terminal.Execute($"virsh attach_interface {options}"); }

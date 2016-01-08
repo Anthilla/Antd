@@ -27,37 +27,32 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Newtonsoft.Json;
-using System.Linq;
+using System.Text.RegularExpressions;
+using antdlib.Log;
 
-namespace antdlib.Boot {
-    public class ParametersConfig : CoreParametersConfig {
-        public static void Write(string key, string value) {
-            var readValue = Writer.ReadValue(key);
-            if (readValue == null) {
-                var arr = new[] { value };
-                Writer.Write(key, JsonConvert.SerializeObject(arr));
+namespace antdlib {
+    public class RepositoryCheck {
+        public static void CheckIfGlobalRepositoryIsWriteable() {
+            var bootExtData = Terminal.Terminal.Execute("blkid | grep BootExt");
+            if (bootExtData.Length <= 0) return;
+            var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
+            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
+            ConsoleLogger.Log($"global repository -> checking");
+            var mountResult = Terminal.Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
+            if (mountResult.Length > 0) {
+                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+                    ConsoleLogger.Log($"is RO -> remounting");
+                    Terminal.Terminal.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
+                }
+                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                    ConsoleLogger.Log($"is RW -> ok!");
+                }
             }
             else {
-                AddValue(key, value);
+                ConsoleLogger.Log("is not mounted -> IMPOSSIBLE");
             }
-        }
-
-        private static void AddValue(string key, string value) {
-            var readValue = Writer.ReadValue(key);
-            var arr = JsonConvert.DeserializeObject<string[]>(readValue);
-            var list = arr.ToList();
-            list.Add(value);
-            Writer.Write(key, JsonConvert.SerializeObject(list.ToArray()));
-        }
-
-        public static string Read(string key) {
-            return Writer.ReadValue(key);
-        }
-
-        public static void Edit(string key, string value) {
-            var arr = new[] { value };
-            Writer.Write(key, JsonConvert.SerializeObject(arr));
+            ConsoleLogger.Log($"global repository -> {bootExtDevice} - {bootExtUid}");
+            ConsoleLogger.Log("global repository -> checked");
         }
     }
 }

@@ -125,9 +125,8 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
-    <Compile Include="Boot\Boot.cs" />
-    <Compile Include="Boot\CoreParametersConfig.cs" />
-    <Compile Include="Boot\ParametersConfig.cs" />
+    <Compile Include="Boot.cs" />
+    <Compile Include="ApplicationSetting.cs" />
     <Compile Include="CCTable\CCTableConf.cs" />
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
@@ -152,7 +151,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Common\Timestamp.cs" />
-    <Compile Include="Common\ParameterXmlWriter.cs" />
+    <Compile Include="Common\XmlWriter.cs" />
     <Compile Include="Info\Dmidecode.cs" />
     <Compile Include="Info\Ifconfig.cs" />
     <Compile Include="Info\SystemInfo.cs" />

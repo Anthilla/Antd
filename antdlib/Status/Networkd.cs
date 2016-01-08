@@ -45,7 +45,7 @@ namespace antdlib.Status {
                 CoreFileName + "002"
             };
 
-        private static readonly ParameterXmlWriter XmlWriter = new ParameterXmlWriter(Files);
+        private static readonly XmlWriter XmlWriter = new XmlWriter(Files);
 
         public static void SetConfiguration() {
             var check = CheckConfiguration();
