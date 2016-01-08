@@ -35,7 +35,7 @@
         <div class="span12 command-set">
             <input class="command-options" type="text" />
             <br />
-            <input class="command-submit" data-command="ciao" type="button" value="submit" />
+            <input class="command-submit" data-command="echo" type="button" value="submit" />
             <br />
             <textarea></textarea>
         </div>
@@ -72,7 +72,6 @@
         $('.command-submit').click(function () {
             var command = $(this).attr('data-command');
             var options = $(this).parents('.command-set').find('.command-options').val();
-            console.log(command + ' ' + options)
             connection.send(command + ' ' + options);
         });
     };
