@@ -28,17 +28,21 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using antdlib;
 using antdlib.Network;
-using antdlib.Websocket.Client;
 using Nancy;
+using WebSocket = antdlib.Websocket.Client.WebSocket;
 
 namespace Antd.Modules {
     public class WebsocketModule : CoreModule {
         public WebsocketModule() {
             Get["/ws"] = x => {
                 try {
-                    WebSocket.Start(PortManagement.GetFirstAvailable(12345));
+                    WebSocket.Start(PortManagement.GetFirstAvailable(45000, 45999));
                     return Response.AsText("done");
                 }
                 catch (Exception ex) {
@@ -58,15 +62,25 @@ namespace Antd.Modules {
 
             Get["/ws/port"] = x => Response.AsJson(ApplicationSetting.WebsocketPort());
 
-            Get["/ws/post"] = x => {
-                try {
-                    var port = WebSocket.Start(PortManagement.GetFirstAvailable(12345));
-                    return Response.AsJson(port);
-                }
-                catch (Exception) {
-                    return Response.AsJson(0000);
-                }
+            Post["/ws/post", true] = async (x, ct) => {
+                var port = PortManagement.GetFirstAvailable(45000, 45999);
+                WebSocket.Start(port);
+                Thread.Sleep(4);
+                var webSocket = new ClientWebSocket();
+                await webSocket.ConnectAsync(new Uri($"ws://localhost:{port}/cmd"), CancellationToken.None);
+                string command = Request.Form.Command;
+                await webSocket.SendAsync(new ArraySegment<byte>(new UTF8Encoding().GetBytes(command)), WebSocketMessageType.Text, true, CancellationToken.None);
+                return Response.AsJson(port);
             };
+        }
+
+        private static async Task<string> Send(ClientWebSocket webSocket, string command) {
+            var buffer = new UTF8Encoding().GetBytes(command);
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            while (webSocket.State == WebSocketState.Open) {
+                await Task.Delay(TimeSpan.FromMilliseconds(30000));
+            }
+            return "ok";
         }
     }
 }

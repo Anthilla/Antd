@@ -32,11 +32,11 @@ using System.Net.NetworkInformation;
 
 namespace antdlib.Network {
     public class PortManagement {
-        public static int GetFirstAvailable(int port) {
+        public static int GetFirstAvailable(int port, int portMax) {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             var tcpConnPortList = ipGlobalProperties.GetActiveTcpConnections().Select(_ => _.LocalEndPoint.Port).ToList();
             if (tcpConnPortList.Contains(port)) {
-                GetFirstAvailable(port + 1);
+                GetFirstAvailable(port + 1, portMax);
             }
             return port;
         }
