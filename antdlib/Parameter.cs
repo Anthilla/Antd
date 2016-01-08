@@ -90,6 +90,8 @@ namespace antdlib {
         public static string CertificateAuthority => $"{RepoConfig}/ca";
         public static string Resources => $"{RootFramework}/antd/Resources";
 
+        public static string CertificateAuthorityX509 => "antd";
+
         public static string Aossvc => "/usr/sbin/aossvc";
 
         public static string AuthKeys => "/root/.ssh/authorized_keys";

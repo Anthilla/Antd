@@ -29,7 +29,6 @@
 
 using System;
 using antdlib.Common;
-using antdlib.Log;
 
 namespace antdlib {
 
@@ -92,263 +91,100 @@ namespace antdlib {
         }
 
         public static string GetX509() {
-            try {
-                return Writer.CheckValue("x509") ? Writer.ReadValue("x509") : Parameter.CertificateAuthority;
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return Parameter.CertificateAuthority;
-            }
+            return Get("x509") ?? Parameter.CertificateAuthorityX509;
         }
 
         public static void SetX509(string val) {
-            try {
-                Writer.Write("x509", val);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("x509", val);
         }
 
         public static string GetCaPath() {
-            try {
-                return Writer.CheckValue("ca_path") ? Writer.ReadValue("ca_path") : Parameter.CertificateAuthority;
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return Parameter.CertificateAuthority;
-            }
+            return Get("ca_path") ?? Parameter.CertificateAuthority;
         }
 
         public static void SetCaPath(string path) {
-            try {
-                Writer.Write("ca_path", path);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("ca_path", path);
         }
 
         public static string GetHttpsPort() {
-            try {
-                return Writer.CheckValue("AntdHttpsPort") ? Writer.ReadValue("AntdHttpsPort") : "443";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "443";
-            }
+            return Get("AntdHttpsPort") ?? "443";
         }
 
         public static void SetHttpsPort(string port) {
-            try {
-                Writer.Write("AntdHttpsPort", port);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("AntdHttpsPort", port);
         }
 
         public static string GetHttpPort() {
-            try {
-                return Writer.CheckValue("AntdHttpPort") ? Writer.ReadValue("AntdHttpPort") : "8084";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "8084";
-            }
+            return Get("AntdHttpPort") ?? "8084";
         }
 
         public static void SetHttpPort(string port) {
-            try {
-                Writer.Write("AntdHttpPort", port);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("AntdHttpPort", port);
         }
 
         public static string GetHttpProtocol() {
-            try {
-                return Writer.CheckValue("protocol") ? Writer.ReadValue("protocol") : "https";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "https";
-            }
+            return Get("protocol") ?? "https";
         }
 
         public static void SwitchToHttps() {
-            try {
-                Writer.Write("protocol", "https");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("protocol", "https");
         }
 
         public static void SwitchToHttp() {
-            try {
-                Writer.Write("protocol", "http");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("protocol", "http");
         }
 
         public static bool GetT2Fa() {
-            try {
-                return Writer.CheckValue(Parameter.LabelAuthIsEnabled) && Convert.ToBoolean(Writer.ReadValue(Parameter.LabelAuthIsEnabled));
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return false;
-            }
+            var value = Get(Parameter.LabelAuthIsEnabled) ?? "false";
+            return Convert.ToBoolean(value);
         }
 
         public static void EnableT2Fa() {
-            try {
-                Writer.Write(Parameter.LabelAuthIsEnabled, true.ToString());
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write(Parameter.LabelAuthIsEnabled, "true");
         }
 
         public static void DisableT2Fa() {
-            try {
-                Writer.Write(Parameter.LabelAuthIsEnabled, false.ToString());
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write(Parameter.LabelAuthIsEnabled, "false");
         }
 
         public static string GetCertificatePath() {
-            try {
-                return Writer.CheckValue("certificate") ? Writer.ReadValue("certificate") : $"{Parameter.AntdCfg}/certificate.pfx";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return $"{Parameter.AntdCfg}/certificate.pfx";
-            }
+            return Get("certificate") ?? $"{Parameter.AntdCfg}/certificate.pfx";
         }
 
         public static void SetCertificatePath(string newCert) {
-            try {
-                Writer.Write("certificate", $"{Parameter.AntdCfg}/certificate.pfx");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("certificate", $"{Parameter.AntdCfg}/certificate.pfx");
         }
 
         public static string GetSsl() {
-            try {
-                return Writer.CheckValue("ssl") ? Writer.ReadValue("ssl") : "yes";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "yes";
-            }
+            return Get("ssl") ?? "yes";
         }
 
         public static void EnableSsl() {
-            try {
-                Writer.Write("ssl", "yes");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("ssl", "yes");
         }
 
         public static void DisableSsl() {
-            try {
-                Writer.Write("ssl", "no");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("ssl", "no");
         }
 
         public static string GetCa() {
-            try {
-                return Writer.CheckValue("ca") ? Writer.ReadValue("ca") : "no";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "no";
-            }
+            return Get("ca") ?? "no";
         }
 
         public static void EnableCa() {
-            try {
-                Writer.Write("ca", "yes");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("ca", "yes");
         }
 
         public static void DisableCa() {
-            try {
-                Writer.Write("ca", "no");
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
+            Writer.Write("ca", "no");
         }
 
         public static string GetDb() {
-            try {
-                return Writer.CheckValue(Parameter.LabelAntdDatabase) ? Writer.ReadValue(Parameter.LabelAntdDatabase) : Parameter.AntdCfgDatabase;
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return Parameter.AntdCfgDatabase;
-            }
+            return Get(Parameter.LabelAntdDatabase) ?? Parameter.AntdCfgDatabase;
         }
 
         public static string GetHostUri() {
-            try {
-                if (Writer.CheckValue(Parameter.LabelAntdPort) == false) {
-                    return "http://+:7777/";
-                }
-                return "http://+:" + Writer.ReadValue(Parameter.LabelAntdPort) + "/";
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-                return "http://+:7777/";
-            }
+            return Get(Parameter.LabelAntdPort) == null ? "http://+:7777/" : $"http://+:{Writer.ReadValue(Parameter.LabelAntdPort)}/";
         }
     }
 }
-
-
-//public class ParametersConfig : CoreParametersConfig {
-//    public static void Write(string key, string value) {
-//        var readValue = Writer.ReadValue(key);
-//        if (readValue == null) {
-//            var arr = new[] { value };
-//            Writer.Write(key, JsonConvert.SerializeObject(arr));
-//        }
-//        else {
-//            AddValue(key, value);
-//        }
-//    }
-
-//    private static void AddValue(string key, string value) {
-//        var readValue = Writer.ReadValue(key);
-//        var arr = JsonConvert.DeserializeObject<string[]>(readValue);
-//        var list = arr.ToList();
-//        list.Add(value);
-//        Writer.Write(key, JsonConvert.SerializeObject(list.ToArray()));
-//    }
-
-//    public static string Read(string key) {
-//        return Writer.ReadValue(key);
-//    }
-
-//    public static void Edit(string key, string value) {
-//        var arr = new[] { value };
-//        Writer.Write(key, JsonConvert.SerializeObject(arr));
-//    }
