@@ -30,4 +30,30 @@ namespace antdlib.Websocket.Client {
             return new BadRequestConnection(connectionDetails.NetworkStream, connectionDetails.Header);
         }
     }
+
+    public class CustomConnectionFactory : IConnectionFactory {
+        private readonly string _webRoot;
+
+        public CustomConnectionFactory(string webRoot) {
+            _webRoot = string.IsNullOrWhiteSpace(webRoot) ? "/framework/antd" : webRoot;
+            ConsoleLogger.Log($"websocket web root: {_webRoot}");
+        }
+
+        public CustomConnectionFactory() : this(null) {
+
+        }
+
+        public IConnection CreateInstance(ConnectionDetails connectionDetails) {
+            switch (connectionDetails.ConnectionType) {
+                case ConnectionType.WebSocket:
+                    if (connectionDetails.Path == "/cmd") {
+                        return new CommandWebSocketConnection(connectionDetails.NetworkStream, connectionDetails.TcpClient, connectionDetails.Header);
+                    }
+                    break;
+                case ConnectionType.Http:
+                    return new HttpConnection(connectionDetails.NetworkStream, connectionDetails.Path, _webRoot);
+            }
+            return new BadRequestConnection(connectionDetails.NetworkStream, connectionDetails.Header);
+        }
+    }
 }

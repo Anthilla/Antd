@@ -30,7 +30,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using antdlib.Log;
 
 namespace antdlib.Terminal {
@@ -135,30 +134,6 @@ namespace antdlib.Terminal {
                     }
                 }
                 return genericOutput;
-            }
-        }
-
-        public class Test {
-            public static void Start(string command) {
-                new Thread(() => {
-                    try {
-                        var proc = new ProcessStartInfo {
-                            FileName = "bash",
-                            Arguments = $"-c \"{command}\"",
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false
-                        };
-                        using (var p = new Process()) {
-                            p.StartInfo = proc;
-                            p.Start();
-                            p.WaitForExit();
-                        }
-                    }
-                    catch (Exception ex) {
-                        ConsoleLogger.Error($"failed to execute '{command}': {ex.Message}");
-                    }
-                }).Start();
             }
         }
     }

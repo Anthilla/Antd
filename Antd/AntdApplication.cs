@@ -91,7 +91,7 @@ namespace Antd {
             //AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
-            AntdBoot.StartWebsocketServer();
+            //AntdBoot.StartWebsocketServer();
             //AntdBoot.DownloadDefaultRepoFiles();
         }
     }

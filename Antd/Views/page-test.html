@@ -29,53 +29,48 @@
     //     20141110
     //------------------------------------------------------------------------------------->
 @Section['MainContent']
-<!--<button id="btn" data-test="comando">TEST</button>-->
 <div class="grid">
     <div class="row">
-        <div class="span12 command-set">
-            <input class="command-options" type="text" />
-            <br />
-            <input class="command-submit" data-command="echo" type="button" value="submit" />
-            <br />
-            <textarea></textarea>
+        <div class="span12">
+            <div data-role="command-set" data-command="echo"></div>
         </div>
     </div>
 </div>
 
+<!--<input id="Button" type="button" value="Submit" />-->
 @EndSection
 
 @Section['Scripts']
 <script type="text/javascript">
-    window.onload = function () {
-        var connection;
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/ws/port',
-            type: 'GET',
-            success: function (data) {
-                connection = new WebSocket('ws://' + location.host + ':' + data + '/cmd');
-                connection.onopen = function () {
-                    console.log('Websocket connection opened');
-                };
-                connection.onclose = function () {
-                    console.log('Websocket connection closed');
-                };
-                connection.onerror = function () {
-                    console.log('An error occured');
-                };
-                connection.onmessage = function (response) {
-                    alert('server response: ' + response.data);
-                };
-                return false;
-            }
-        });
-        $('.command-submit').click(function () {
-            var command = $(this).attr('data-command');
-            var options = $(this).parents('.command-set').find('.command-options').val();
-            connection.send(command + ' ' + options);
-        });
-    };
 
-
+    //$('#Button').click(function () {
+    //    var connection;
+    //    var command = "echo Hello World";
+    //    jQuery.support.cors = true;
+    //    $.ajax({
+    //        url: '/ws/post',
+    //        type: 'GET',
+    //        success: function (data) {
+    //            console.log('port: ' + data);
+    //            connection = new WebSocket("ws://" + location.host + ":" + data + "/cmd");
+    //            connection.onopen = function () {
+    //                console.log("websocket: connected");
+    //            };
+    //            connection.onclose = function () {
+    //                console.log("websocket: disconnected");
+    //            };
+    //            connection.onerror = function () {
+    //                console.log("websocket: error");
+    //            };
+    //            connection.onmessage = function (response) {
+    //                console.log(response.data);
+    //            };
+    //            return false;
+    //        },
+    //        complete: function () {
+    //            connection.send(command);
+    //        }
+    //    });
+    //});
 </script>
 @EndSection

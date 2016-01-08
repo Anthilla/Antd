@@ -27,8 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Net.Sockets;
-using antdlib.Log;
 using antdlib.Websocket.WebSocketProtocol;
 
 namespace antdlib.Websocket.Client {
@@ -38,11 +38,26 @@ namespace antdlib.Websocket.Client {
             tcpClient.NoDelay = true;
         }
 
-        protected override void OnTextFrame(string message) {
-            ConsoleLogger.Log($"executing {message} via websocket");
-            var response = Terminal.Terminal.Execute(message);
-            //Writer.WriteText($"{message} -> {response}");
-            Writer.WriteText(response);
+        protected override void OnTextFrame(string command) {
+            if (!Parameter.IsUnix) {
+                Writer.WriteText($"cannot execute this command: {command}");
+                return;
+            }
+            var process = new Process {
+                StartInfo = {
+                    FileName = "bash",
+                    Arguments = $"-c \"{command}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            process.ErrorDataReceived += (sendingProcess, errorLine) => Writer.WriteText(errorLine.Data);
+            process.OutputDataReceived += (sendingProcess, dataLine) => Writer.WriteText(dataLine.Data);
+            process.Start();
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
         }
     }
 }

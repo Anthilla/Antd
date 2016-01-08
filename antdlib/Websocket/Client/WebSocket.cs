@@ -1,24 +1,26 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using antdlib.Log;
 
 namespace antdlib.Websocket.Client {
     public class WebSocket {
-        public static void Start(int port, string webroot = "") {
-            Task.Run(() => Launch(webroot, port));
+        private static int _port;
+
+        public static int Start(int port) {
+            Task.Run(() => Launch(port));
+            return _port;
         }
 
-        private static void Launch(string webroot, int port) {
+        private static void Launch(int port) {
             try {
-                var connectionFactory = new ConnectionFactory(webroot);
-                using (var server = new WebServer(connectionFactory)) {
+                using (var server = new WebServer(new ConnectionFactory(""))) {
+                    _port = port;
                     server.Listen(port);
                     Console.ReadKey();
                 }
             }
             catch (Exception ex) {
-                Trace.TraceError(ex.ToString());
-                Console.ReadKey();
+                ConsoleLogger.Warn(ex.Message);
             }
         }
     }

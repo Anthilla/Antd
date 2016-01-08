@@ -319,6 +319,9 @@
     <None Include="Views\antd\page-ca-manage-old.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Scripts\antd.websocket.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\_partial\part-users.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -746,11 +749,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\jquery.signalR-2.2.0.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Content\fonts\iconFont.dev.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -959,9 +957,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\metrojs\metro-wizard.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Scripts\reconnecting-websocket.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Scripts\selectize.min.js">

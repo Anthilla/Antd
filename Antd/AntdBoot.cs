@@ -250,10 +250,10 @@ namespace Antd {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        public static void StartWebsocketServer() {
-            var port = PortManagement.GetFirstAvailable(1234);
-            ApplicationSetting.SetWebsocketPort(port.ToString());
-            WebSocket.Start(Convert.ToInt32(ApplicationSetting.WebsocketPort()));
-        }
+        //public static void StartWebsocketServer() {
+        //    var port = PortManagement.GetFirstAvailable(1234);
+        //    ApplicationSetting.SetWebsocketPort(port.ToString());
+        //    WebSocket.Start(Convert.ToInt32(ApplicationSetting.WebsocketPort()));
+        //}
     }
 }

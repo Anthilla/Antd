@@ -29,6 +29,7 @@
 
 using System;
 using antdlib;
+using antdlib.Network;
 using antdlib.Websocket.Client;
 using Nancy;
 
@@ -37,7 +38,7 @@ namespace Antd.Modules {
         public WebsocketModule() {
             Get["/ws"] = x => {
                 try {
-                    WebSocket.Start(8080);
+                    WebSocket.Start(PortManagement.GetFirstAvailable(12345));
                     return Response.AsText("done");
                 }
                 catch (Exception ex) {
@@ -56,6 +57,16 @@ namespace Antd.Modules {
             };
 
             Get["/ws/port"] = x => Response.AsJson(ApplicationSetting.WebsocketPort());
+
+            Get["/ws/post"] = x => {
+                try {
+                    var port = WebSocket.Start(PortManagement.GetFirstAvailable(12345));
+                    return Response.AsJson(port);
+                }
+                catch (Exception) {
+                    return Response.AsJson(0000);
+                }
+            };
         }
     }
 }

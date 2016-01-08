@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using antdlib.Log;
 using antdlib.Websocket.Connections;
 
 namespace antdlib.Websocket {
@@ -26,11 +27,11 @@ namespace antdlib.Websocket {
                 var localAddress = IPAddress.Any;
                 _listener = new TcpListener(localAddress, port);
                 _listener.Start();
-                Trace.TraceInformation("Server started listening on port " + port);
+                ConsoleLogger.Log($"Server started listening on port {port}");
                 StartAccept();
             }
             catch (SocketException ex) {
-                Trace.TraceError($"Error listening on port {port}. Make sure IIS or another application is not running and consuming your port.{Environment.NewLine}{ex}");
+                ConsoleLogger.Warn($"Error listening on port {port}. Make sure IIS or another application is not running and consuming your port: {ex.Message}");
             }
         }
 
@@ -43,7 +44,7 @@ namespace antdlib.Websocket {
             _listener.Start();
             StartAccept();
             var port = ((IPEndPoint)_listener.LocalEndpoint).Port;
-            Trace.TraceInformation("Server started listening on port " + port);
+            ConsoleLogger.Log($"Server started listening on port {port}");
             return port;
         }
 
