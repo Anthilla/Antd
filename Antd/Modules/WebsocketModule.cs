@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using antdlib;
 using antdlib.Websocket.Client;
 using Nancy;
 
@@ -53,6 +54,8 @@ namespace Antd.Modules {
                     return Response.AsText(ex.Message);
                 }
             };
+
+            Get["/ws/port"] = x => Response.AsJson(ApplicationSetting.WebsocketPort());
         }
     }
 }

@@ -76,12 +76,12 @@ namespace Antd.Modules {
             };
 
             Get["/system/auth/disable"] = x => {
-                ApplicationSetting.DisableT2Fa();
+                ApplicationSetting.DisableTwoFactorAuth();
                 return Response.AsJson(true);
             };
 
             Get["/system/auth/enable"] = x => {
-                ApplicationSetting.EnableT2Fa();
+                ApplicationSetting.EnableTwoFactorAuth();
                 return Response.AsJson(true);
             };
 

@@ -33,9 +33,9 @@ using antdlib.Log;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {
-        public static bool IsActive => ApplicationSetting.GetCa() == "yes" && File.Exists(CaRootCertificate);
+        public static bool IsActive => ApplicationSetting.CertificateAuthority() == "yes" && File.Exists(CaRootCertificate);
 
-        private static readonly string CaDirectory = ApplicationSetting.GetCaPath();
+        private static readonly string CaDirectory = ApplicationSetting.CaPath();
 
         private static readonly string CaRootConfFile = $"{CaDirectory}/openssl.cnf";
         private static readonly string CaRootPrivateKey = $"{CaDirectory}/private/ca.key.pem";
@@ -148,7 +148,7 @@ namespace antdlib.Certificate {
             Terminal.Terminal.Execute($"cp {CaIntermediateRevocationList} {NginxCrl}");
             Terminal.Terminal.Execute("systemctl restart nginx");
 
-            ApplicationSetting.EnableCa();
+            ApplicationSetting.EnableCertificateAuthority();
         }
 
         public class DomainControllerCertificate {
@@ -174,9 +174,9 @@ namespace antdlib.Certificate {
                     var certificateRequestPath = $"{CaIntermediateDirectory}/csr/dc-{domainGuid}.csr.pem";
                     var certificatePath = $"{CaIntermediateDirectory}/certs/dc-{domainGuid}.cert.pem";
                     Terminal.Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={commonName}/emailAddress={emailAddress}\"");
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.GetX509()}");
+                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
                     var privDcKey = $"{CaIntermediateDirectory}/private/dc-privkey.pem";
-                    Terminal.Terminal.Execute($"openssl rsa -in {certificateKeyPath} -inform PEM -out {privDcKey} -outform PEM -passin pass:{ApplicationSetting.GetX509()}");
+                    Terminal.Terminal.Execute($"openssl rsa -in {certificateKeyPath} -inform PEM -out {privDcKey} -outform PEM -passin pass:{ApplicationSetting.X509()}");
                     var paramFile = $"{CaIntermediateDirectory}/params/dc-dhparams.pem";
                     Terminal.Terminal.Execute($"openssl dhparam 2048 -outform PEM -out {paramFile}");
 
@@ -247,7 +247,7 @@ namespace antdlib.Certificate {
                     var certificateRequestPath = $"{CaIntermediateDirectory}/csr/dc-{userPrincipalName}.csr.pem";
                     var certificatePath = $"{CaIntermediateDirectory}/certs/dc-{userPrincipalName}.cert.pem";
                     Terminal.Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={userPrincipalName}/emailAddress={userPrincipalName}\"");
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.GetX509()}");
+                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
                     var certificateDerPath = $"{CaIntermediateDirectory}/certs/{userPrincipalName}.cert.cer";
                     Terminal.Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
                     Terminal.Terminal.Execute($"chmod 444 {certificateDerPath}");
@@ -309,7 +309,7 @@ namespace antdlib.Certificate {
                         certExtension = "server_cert";
                     }
                     const int days = 375;
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{ApplicationSetting.GetX509()} -in {certificateRequestPath} -out {certificatePath}");
+                    Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{ApplicationSetting.X509()} -in {certificateRequestPath} -out {certificatePath}");
                     Terminal.Terminal.Execute($"chmod 444 {certificatePath}");
                     var certificateDerPath = $"{CaIntermediateDirectory}/certs/{certName}.cert.cer";
                     Terminal.Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");

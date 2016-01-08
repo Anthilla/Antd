@@ -53,7 +53,7 @@ namespace Antd {
                     ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
                 }
                 Configuration();
-                var port = Convert.ToInt32(ApplicationSetting.GetHttpPort());
+                var port = Convert.ToInt32(ApplicationSetting.HttpPort());
                 using (WebApp.Start<Startup>($"http://+:{port}/")) {
                     ConsoleLogger.Log("loading service");
                     ConsoleLogger.Log($"http port: {port}");

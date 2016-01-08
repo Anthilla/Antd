@@ -40,7 +40,7 @@ namespace Antd {
 
         public static void StartDatabase() {
             var databaseName = Parameter.AntdCfgDatabaseName;
-            var databasePaths = new[] { ApplicationSetting.GetDb() };
+            var databasePaths = new[] { ApplicationSetting.DatabasePath() };
             foreach (var dbPath in databasePaths) {
                 Terminal.Execute($"mkdir -p {dbPath}");
                 Terminal.Execute($"mkdir -p {dbPath}/{databaseName}");
@@ -60,7 +60,7 @@ namespace Antd {
         }
 
         public static void CheckCertificate() {
-            var certificate = ApplicationSetting.GetCertificatePath();
+            var certificate = ApplicationSetting.CertificatePath();
             if (!File.Exists(certificate)) {
                 File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
             }

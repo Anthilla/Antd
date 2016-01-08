@@ -77,7 +77,7 @@ namespace Antd.Modules {
                 cookies.Clear();
                 cookies.Remove("antd-session");
                 NancyCookie cookie;
-                if (ApplicationSetting.GetT2Fa() == false) {
+                if (ApplicationSetting.TwoFactorAuth() == false) {
                     cookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                     return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(cookie);
                 }

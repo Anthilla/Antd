@@ -41,10 +41,10 @@ namespace Antd.Modules {
         public CertificateAuthorityModule() {
             this.RequiresAuthentication();
 
-            Get["/ca/ssl/status"] = x => Response.AsJson(ApplicationSetting.GetSsl());
+            Get["/ca/ssl/status"] = x => Response.AsJson(ApplicationSetting.Ssl());
 
             Post["/ca/ssl/toggle"] = x => {
-                if (ApplicationSetting.GetSsl() == "yes") {
+                if (ApplicationSetting.Ssl() == "yes") {
                     ApplicationSetting.DisableSsl();
                     return Response.AsJson(true);
                 }

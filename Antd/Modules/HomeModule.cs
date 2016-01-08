@@ -153,7 +153,7 @@ namespace Antd.Modules {
 
                 //todo check next parameters
                 viewModel.SSHPort = "22";
-                viewModel.AuthStatus = ApplicationSetting.GetT2Fa();
+                viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
 
                 viewModel.CCTableContext = CctableContextName;
                 var table = CCTableRepository.GetByContext2(CctableContextName);
@@ -184,13 +184,13 @@ namespace Antd.Modules {
 
                 viewModel.SslStatus = "Enabled";
                 viewModel.SslStatusAction = "Disable";
-                if (ApplicationSetting.GetSsl() == "no") {
+                if (ApplicationSetting.Ssl() == "no") {
                     viewModel.SslStatus = "Disabled";
                     viewModel.SslStatusAction = "Enable";
                 }
-                viewModel.CertificatePath = ApplicationSetting.GetCertificatePath();
+                viewModel.CertificatePath = ApplicationSetting.CertificatePath();
                 viewModel.CaStatus = "Enabled";
-                if (ApplicationSetting.GetCa() == "no") {
+                if (ApplicationSetting.CertificateAuthority() == "no") {
                     viewModel.CaStatus = "Disabled";
                 }
                 viewModel.CaIsActive = CertificateAuthority.IsActive;
