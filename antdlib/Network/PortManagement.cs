@@ -27,22 +27,18 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Net.Sockets;
-using antdlib.Log;
-using antdlib.Websocket.WebSocketProtocol;
+using System.Linq;
+using System.Net.NetworkInformation;
 
-namespace antdlib.Websocket.Client {
-    public class CommandWebSocketConnection : WebSocketConnection {
-        public CommandWebSocketConnection(NetworkStream networkStream, TcpClient tcpClient, string header)
-            : base(networkStream, header) {
-            tcpClient.NoDelay = true;
-        }
-
-        protected override void OnTextFrame(string message) {
-            ConsoleLogger.Log($"executing {message} via websocket");
-            var response = Terminal.Terminal.Execute(message);
-            //Writer.WriteText($"{message} -> {response}");
-            Writer.WriteText(response);
+namespace antdlib.Network {
+    public class PortManagement {
+        public static int GetFirstAvailable(int port) {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var tcpConnPortList = ipGlobalProperties.GetActiveTcpConnections().Select(_ => _.LocalEndPoint.Port).ToList();
+            if (tcpConnPortList.Contains(port)) {
+                GetFirstAvailable(port + 1);
+            }
+            return port;
         }
     }
 }

@@ -56,13 +56,12 @@ namespace antdlib.Websocket {
             var getRegex = new Regex(@"^GET(.*)HTTP\/1\.1");
 
             var getRegexMatch = getRegex.Match(header);
-            if (getRegexMatch.Success) {
-                var path = getRegexMatch.Groups[1].Value.Trim();
-                var webSocketUpgradeRegex = new Regex("Upgrade: websocket");
-                var webSocketUpgradeRegexMatch = webSocketUpgradeRegex.Match(header);
-                return webSocketUpgradeRegexMatch.Success ? new ConnectionDetails(networkStream, tcpClient, path, ConnectionType.WebSocket, header) : new ConnectionDetails(networkStream, tcpClient, path, ConnectionType.Http, header);
-            }
-            return new ConnectionDetails(networkStream, tcpClient, string.Empty, ConnectionType.Unknown, header);
+            if (!getRegexMatch.Success)
+                return new ConnectionDetails(networkStream, tcpClient, string.Empty, ConnectionType.Unknown, header);
+            var path = getRegexMatch.Groups[1].Value.Trim();
+            var webSocketUpgradeRegex = new Regex("Upgrade: websocket");
+            var webSocketUpgradeRegexMatch = webSocketUpgradeRegex.Match(header);
+            return webSocketUpgradeRegexMatch.Success ? new ConnectionDetails(networkStream, tcpClient, path, ConnectionType.WebSocket, header) : new ConnectionDetails(networkStream, tcpClient, path, ConnectionType.Http, header);
         }
 
         private void HandleAsyncConnection(IAsyncResult res) {

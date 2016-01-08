@@ -46,28 +46,20 @@
 
 @Section['Scripts']
 <script type="text/javascript">
-
     var COMMAND;
     window.onload = function ()  {
-        console.log('COMMAND_WS_START');
-        var commandPort = 8088;
         jQuery.support.cors = true;
         $.ajax({
-            url: '/ws/' + commandPort,
+            url: '/ws/port',
             type: 'GET',
             success: function (data) {
-                console.log(data);
-                // open the connection to the Web Socket server
-                COMMAND = new WebSocket('ws://' + location.host + ':' + commandPort + '/cmd');
-                // When the connection is open
+                COMMAND = new WebSocket('ws://' + location.host + ':' + data + '/cmd');
                 COMMAND.onopen = function () {
-                    $('#messages').append($('<li>').text('Connection opened'));
+                    console.log('Websocket connection opened');
                 };
-                // when the connection is closed by the server
                 COMMAND.onclose = function () {
-                    $('#messages').append($('<li>').text('Connection closed'));
+                    console.log('Websocket connection closed');
                 };
-                // Log errors
                 COMMAND.onerror = function () {
                     console.log('An error occured');
                 };

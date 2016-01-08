@@ -103,9 +103,6 @@ namespace Antd {
             if (app.Properties.TryGetValue(typeof(HttpListener).FullName, out httpListener) && httpListener is HttpListener) {
                 ((HttpListener)httpListener).IgnoreWriteExceptions = true;
             }
-            //var hubConfiguration = new HubConfiguration { EnableDetailedErrors = true };
-            //app.MapSignalR(hubConfiguration);
-            //ConsoleLogger.Log("signalR ready");
             app.UseDebugMiddleware();
             app.UseNancy();
             app.UseDebugMiddleware(new DebugMiddlewareOptions() {
@@ -113,7 +110,6 @@ namespace Antd {
                 OnOutGoingRequest = context => context.Response.WriteAsync("## End ##")
             });
             //StaticConfiguration.DisableErrorTraces = false;
-            //var options = new NancyOptions { EnableClientCertificates = true };
             app.UseNancy(options => options.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound));
             ConsoleLogger.Log("nancyfx ready");
         }

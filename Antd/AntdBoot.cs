@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Threading;
 using antdlib;
 using antdlib.Antdsh;
@@ -252,8 +251,9 @@ namespace Antd {
         }
 
         public static void StartWebsocketServer() {
-            var port = 1234;
-            WebSocket.Start(port);
+            var port = PortManagement.GetFirstAvailable(1234);
+            ApplicationSetting.SetWebsocketPort(port.ToString());
+            WebSocket.Start(Convert.ToInt32(ApplicationSetting.WebsocketPort()));
         }
     }
 }

@@ -149,6 +149,7 @@
     <Compile Include="Firewall\MacAddressDiscovery.cs" />
     <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Common\Timestamp.cs" />
     <Compile Include="Common\XmlWriter.cs" />
