@@ -37,6 +37,7 @@ using antdlib.Log;
 using Owin;
 using Microsoft.Owin.Hosting;
 using Antd.Middleware;
+using Nancy;
 using Nancy.Owin;
 
 namespace Antd {
@@ -109,7 +110,7 @@ namespace Antd {
                 OnIncomingRequest = context => context.Response.WriteAsync("## Beginning ##"),
                 OnOutGoingRequest = context => context.Response.WriteAsync("## End ##")
             });
-            //StaticConfiguration.DisableErrorTraces = false;
+            StaticConfiguration.DisableErrorTraces = false;
             app.UseNancy(options => options.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound));
             ConsoleLogger.Log("nancyfx ready");
         }
