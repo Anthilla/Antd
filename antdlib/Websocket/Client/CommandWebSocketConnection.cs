@@ -40,8 +40,8 @@ namespace antdlib.Websocket.Client {
 
         protected override void OnTextFrame(string command) {
             if (!Parameter.IsUnix) {
-                Writer.WriteText("hello");
                 Writer.WriteText($"cannot execute this command: {command}");
+                Dispose();
                 return;
             }
             var process = new Process {
@@ -59,6 +59,7 @@ namespace antdlib.Websocket.Client {
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
             process.WaitForExit();
+            Dispose();
         }
     }
 }

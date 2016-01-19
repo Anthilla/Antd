@@ -4,21 +4,30 @@ using antdlib.Log;
 
 namespace antdlib.Websocket.Client {
     public class WebSocket {
+        private readonly WebServer _webserver;
 
-        public static void Start(int port) {
+        public WebSocket() {
+            _webserver = new WebServer(new ConnectionFactory(""));
+        }
+
+        public void Start(int port) {
             Task.Run(() => Launch(port));
         }
 
-        private static void Launch(int port) {
+        private void Launch(int port) {
             try {
-                using (var server = new WebServer(new ConnectionFactory(""))) {
-                    server.Listen(port);
+                using (_webserver) {
+                    _webserver.Listen(port);
                     Console.ReadKey();
                 }
             }
             catch (Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
             }
+        }
+
+        public void Close() {
+            _webserver.Dispose();
         }
     }
 }

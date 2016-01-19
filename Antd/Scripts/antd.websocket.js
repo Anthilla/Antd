@@ -8,42 +8,30 @@
 
 $('[data-role="command-set"]').CommandTemplate();
 
-var WSCONNECTION;
-function SetWebSocketConnection(port) {
-    WSCONNECTION = new WebSocket("ws://" + location.host + ":" + port + "/cmd");
-    WSCONNECTION.onopen = function () {
-        console.log("websocket: connected on " + port);
-    };
-    WSCONNECTION.onclose = function () {
-        console.log("websocket: disconnected");
-    };
-    WSCONNECTION.onerror = function () {
-        console.log("websocket: error");
-    };
-    WSCONNECTION.onmessage = function (response) {
-        console.log('onmessage');
-        $("#CommandResult").text(response.data);
-    };
-    return false;
-}
-
-function CreateWebSocket(command) {
-    jQuery.support.cors = true;
-    $.ajax({
-        url: '/ws/post',
-        type: 'POST',
-        data: {
-            Command: command
-        },
-        success: function (data) {
-            console.log('connection /ws/post success');
-            SetWebSocketConnection(data);
-        }
-    });
-}
-
 $('[data-role="command-set"]').find('input[type="submit"]').click(function () {
+    var wsport;
+    var wsconnection;
     var parent = $(this).parents('[data-role="command-set"]');
     var command = parent.attr("data-command") + " " + parent.find('input[type="text"]').val();
-    CreateWebSocket(command);
+    jQuery.support.cors = true;
+    $.ajax({
+        url: "/ws/post",
+        type: "POST",
+        success: function (port) {
+            wsport = port;
+            wsconnection = new WebSocket("ws://" + location.host + ":" + wsport + "/cmd");
+            wsconnection.onopen = function () {
+                wsconnection.send(command);
+            };
+            wsconnection.onclose = function () {
+                console.log("websocket connection @ " + wsport + " closed");
+            };
+            wsconnection.onerror = function () {
+                console.log("websocket connection @ " + wsport + " failed due to an error");
+            };
+            wsconnection.onmessage = function (response) {
+                $("#CommandResult").text(response.data);
+            };
+        }
+    });
 });

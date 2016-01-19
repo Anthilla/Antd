@@ -314,12 +314,6 @@ namespace antdlib.Antdsh {
             Terminal.Terminal.Execute($"ln -s {xenNewVersion} {XenActive}");
 
             Directory.Delete(TmpDirectory, true);
-            //todo check this
-            //Console.WriteLine("restart kernel");
-            //Terminal.Execute("Kernelctl stop app-anth-03-launcher");
-            //Terminal.Execute("Kernelctl stop framework-kernel.mount");
-            //Terminal.Execute("Kernelctl restart framework-kernel.mount");
-            //Terminal.Execute("Kernelctl restart app-anth-03-launcher");
         }
 
         private static void HelpDownloadFile(string url, string destination, string shasum) {
