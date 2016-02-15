@@ -36,18 +36,9 @@
         </div>
     </div>
 </div>
-<button id="ButtonTest">TEST</button>
 @EndSection
 
 @Section['Scripts']
 <script type="text/javascript">
-    $.ajax({
-        url: "http://localhost:9000/api/testing/getall",
-        type: "GET",
-        success: function (port) {
-            console.log("success");
-            console.log(port);
-        }
-    });
 </script>
 @EndSection
