@@ -46,6 +46,9 @@ namespace Antd.Modules {
 
             Get["/test/page"] = x => View["page-test"];
 
+            Get["/test/vnc"] = x => View["vnc"];
+            Get["/test/vnc2"] = x => View["page-vnc"];
+
             Get["/test/ssh"] = x => {
                 antdlib.Ssh.Test.Start("aos003", "root", "root");
                 return View["page-test"];

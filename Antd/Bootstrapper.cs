@@ -52,8 +52,8 @@ namespace Antd {
             conv.StaticContentsConventions.Clear();
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Content", @"/Content/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Scripts", @"/Scripts/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("include", @"/NoVnc/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("images", @"/NoVnc/images/", TimeSpan.FromDays(365)));
+            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("novnc", @"/novnc/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("images", @"/NoVnc/images/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Fonts", @"/Fonts/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo", @"/Resources/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo/ssh", @"/Resources/ssh/", TimeSpan.FromDays(365)));
