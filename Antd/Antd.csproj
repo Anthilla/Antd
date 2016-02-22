@@ -191,6 +191,8 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="novnc\Orbitron700.ttf" />
+    <None Include="novnc\Orbitron700.woff" />
     <None Include="Resources\app-antd-01-prepare.service">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -257,6 +259,25 @@
     <None Include="Resources\websocketd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="novnc\base.css" />
+    <Content Include="novnc\base64.js" />
+    <Content Include="novnc\black.css" />
+    <Content Include="novnc\blue.css" />
+    <Content Include="novnc\chrome-app\tcp-client.js" />
+    <Content Include="novnc\des.js" />
+    <Content Include="novnc\display.js" />
+    <Content Include="novnc\inflator.js" />
+    <Content Include="novnc\input.js" />
+    <Content Include="novnc\keyboard.js" />
+    <Content Include="novnc\keysym.js" />
+    <Content Include="novnc\keysymdef.js" />
+    <Content Include="novnc\logo.js" />
+    <Content Include="novnc\playback.js" />
+    <Content Include="novnc\rfb.js" />
+    <Content Include="novnc\ui.js" />
+    <Content Include="novnc\util.js" />
+    <Content Include="novnc\websock.js" />
+    <Content Include="novnc\webutil.js" />
     <Content Include="Scripts\jquery-2.2.0.min.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
