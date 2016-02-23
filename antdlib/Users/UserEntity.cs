@@ -29,6 +29,7 @@ namespace antdlib.Users {
             UserPassword = 2,
             UserToken = 3,
             UserPin = 4,
+            Vnc = 50,
             Other = 99
         }
 
@@ -94,6 +95,10 @@ namespace antdlib.Users {
 
             public static UserEntityModel GetByUserIdentity(string userIdentity) {
                 return Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.Claims.Any(c => c.Type == ClaimType.UserIdentity && c.Value == userIdentity));
+            }
+
+            public static UserEntityModel GetByUserGuid(string userGuid) {
+                return Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == userGuid);
             }
 
             public static string GenerateGuid() {

@@ -244,6 +244,7 @@
     <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
+    <Compile Include="Vnc\VncManagement.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ConnectionFactory.cs" />

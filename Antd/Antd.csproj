@@ -170,6 +170,166 @@
     <Compile Include="Helpers\DirectoryModel.cs" />
     <Compile Include="Helpers\SelectizerMapModel.cs" />
     <Compile Include="Helpers\StatusSysctl.cs" />
+    <Content Include="Views\antd\page-antd-config.html" />
+    <Content Include="Views\antd\page-antd-dhcp.html" />
+    <Content Include="Views\antd\page-antd-dns-client.html" />
+    <Content Include="Views\antd\page-antd-dns-server.html" />
+    <Content Include="Views\antd\page-antd-firewall.html" />
+    <Content Include="Views\antd\page-antd-info.html" />
+    <Content Include="Views\antd\page-antd-mount.html" />
+    <Content Include="Views\antd\page-antd-network.html" />
+    <Content Include="Views\antd\page-antd-proxy.html" />
+    <Content Include="Views\antd\page-antd-rsync.html" />
+    <Content Include="Views\antd\page-antd-samba.html" />
+    <Content Include="Views\antd\page-antd-storage.html" />
+    <Content Include="Views\antd\page-antd-users.html" />
+    <Content Include="Views\antd\page-antd.html" />
+    <Content Include="Views\antd\page-ca-manage-old.html" />
+    <Content Include="Views\antd\page-ca-manage.html" />
+    <Content Include="Views\antd\page-ca.html" />
+    <Content Include="Views\antd\page-cfg.html" />
+    <Content Include="Views\antd\page-log-antd.html" />
+    <Content Include="Views\antd\page-log-report.html" />
+    <Content Include="Views\antd\page-log-system.html" />
+    <Content Include="Views\antd\page-log.html" />
+    <Content Include="Views\apps\page-apps-anthillasp.html" />
+    <Content Include="Views\apps\page-apps-list.html" />
+    <Content Include="Views\apps\_page-apps.html" />
+    <Content Include="Views\cctable\_page-cctable.html" />
+    <Content Include="Views\hypervisor\page-hypervisor-backup.html" />
+    <Content Include="Views\hypervisor\page-hypervisor-datastore.html" />
+    <Content Include="Views\hypervisor\page-hypervisor-hosts.html" />
+    <Content Include="Views\hypervisor\page-hypervisor-newvm.html" />
+    <Content Include="Views\hypervisor\page-hypervisor-vms.html" />
+    <Content Include="Views\hypervisor\_page-hypervisor.html" />
+    <Content Include="Views\info\page-info-cpuinfo.html" />
+    <Content Include="Views\info\page-info-dmidecode.html" />
+    <Content Include="Views\info\page-info-ifconfig.html" />
+    <Content Include="Views\info\page-info-meminfo.html" />
+    <Content Include="Views\info\page-info-procs.html" />
+    <Content Include="Views\info\page-info-version.html" />
+    <Content Include="Views\info\_page-info.html" />
+    <Content Include="Views\layout.html" />
+    <Content Include="Views\login-authentication.html" />
+    <Content Include="Views\login-token.html" />
+    <Content Include="Views\login.html" />
+    <Content Include="Views\mail\page-mail-imap.html" />
+    <Content Include="Views\mail\page-mail-smtp.html" />
+    <Content Include="Views\mail\_page-mail.html" />
+    <Content Include="Views\page-dir.html" />
+    <Content Include="Views\page-empty-partial.html" />
+    <Content Include="Views\page-redirect.html" />
+    <Content Include="Views\page-scheduler.html" />
+    <Content Include="Views\page-terminal.html" />
+    <Content Include="Views\page-test.html" />
+    <Content Include="Views\page-tknmgmt.html" />
+    <Content Include="Views\page-units.html" />
+    <Content Include="Views\page-vnc.html" />
+    <Content Include="Views\services\page-services-bind.html" />
+    <Content Include="Views\services\page-services-glusterfs.html" />
+    <Content Include="Views\services\page-services-libvirt.html" />
+    <Content Include="Views\services\page-services-lxc.html" />
+    <Content Include="Views\services\page-services-nfs.html" />
+    <Content Include="Views\services\page-services-nftable.html" />
+    <Content Include="Views\services\page-services-nginx.html" />
+    <Content Include="Views\services\page-services-ntpd.html" />
+    <Content Include="Views\services\page-services-qemu.html" />
+    <Content Include="Views\services\page-services-squid.html" />
+    <Content Include="Views\services\page-services-ssh.html" />
+    <Content Include="Views\services\page-services-syslogng.html" />
+    <Content Include="Views\services\page-services-systemd-hostnamectl.html" />
+    <Content Include="Views\services\page-services-systemd-journald.html" />
+    <Content Include="Views\services\page-services-systemd-networkd.html" />
+    <Content Include="Views\services\page-services-zfs.html" />
+    <Content Include="Views\services\_page-services.html" />
+    <Content Include="Views\storage\page-storage-disks.html" />
+    <Content Include="Views\storage\page-storage-iscsi.html" />
+    <Content Include="Views\storage\page-storage-mounts.html" />
+    <Content Include="Views\storage\_page-storage.html" />
+    <Content Include="Views\system\page-system-authentication.html" />
+    <Content Include="Views\system\page-system-ca.html" />
+    <Content Include="Views\system\page-system-firmware.html" />
+    <Content Include="Views\system\page-system-secureshell.html" />
+    <Content Include="Views\system\_page-system-sysctl.html" />
+    <Content Include="Views\vnc.html" />
+    <Content Include="Views\_cctable-dashboard.html" />
+    <Content Include="Views\_cctable-main.html" />
+    <Content Include="Views\_cctable-table-conf.html" />
+    <Content Include="Views\_cctable-table-dataview.html" />
+    <Content Include="Views\_cctable-table-new.html" />
+    <Content Include="Views\_cctable-table-settings.html" />
+    <Content Include="Views\_partial\part-mount-units.html" />
+    <Content Include="Views\_partial\part-users.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-input-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-input-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-input-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-output-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-output-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-arp-output-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-forward-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-input-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-bridge-output-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-connection-arp.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-connection-br.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-connection-ip.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-connection-ip6.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-empty.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-forward-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-input-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-input-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-input-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-output-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-output-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-output-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-postrouting-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-postrouting-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-prerouting-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip-prerouting-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-forward-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-input-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-output-route.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-postrouting-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-postrouting-nat.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-prerouting-filter.html" />
+    <Content Include="Views\_partial_firewall\part-firewall-ip6-prerouting-nat.html" />
+    <Content Include="Views\_partial_network\part-network-get.html" />
+    <Content Include="Views\_partial_network\part-network-post-elements.html" />
+    <Content Include="Views\_partial_network\part-network-post.html" />
+    <Content Include="Views\_partial_service\part-samba-data.html" />
+    <Content Include="Views\_partial_service\part-samba-share-data.html" />
+    <Content Include="Views\_partial_service\part-samba-structure.html" />
+    <Content Include="Views\__old\page-empty.html" />
+    <Content Include="Views\__old\page-network-setup.html" />
+    <Content Include="Views\__old\page-services-dhcp.html" />
+    <Content Include="Views\__old\page-services-samba.html" />
+    <Content Include="Views\__old\page-system-ca.html" />
+    <Content Include="Views\__old\page-system-general.html" />
+    <Content Include="Views\__old\page-users-entity-partial.html" />
+    <Content Include="Views\__old\page-users-entity.html" />
+    <Content Include="Views\__old\page-users-groups.html" />
+    <Content Include="Views\__old\page-users-system.html" />
+    <Content Include="Views\__old\part-users.html" />
+    <Content Include="Views\__old\_navbar.html" />
+    <Content Include="Views\__old\_page-firewall.html" />
+    <Content Include="Views\__old\_page-log-collectd.html" />
+    <Content Include="Views\__old\_page-log-journalctl.html" />
+    <Content Include="Views\__old\_page-log-websocket.html" />
+    <Content Include="Views\__old\_page-system.html" />
+    <Content Include="Views\__old\_toolbar.html" />
     <None Include="Content\fonts\iconFont.eot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -383,56 +543,11 @@
     <Content Include="Scripts\jquery-ui-1.11.4.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Views\apps\page-apps-anthillasp.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\apps\page-apps-list.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\apps\_page-apps.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\layout.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\login.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Views\__old\page-empty.html" />
-    <None Include="Views\system\page-system-authentication.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\system\page-system-ca.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\system\page-system-firmware.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\__old\page-system-general.html" />
-    <None Include="Views\system\page-system-secureshell.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\__old\_page-system.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\antd\page-ca-manage.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-rsync.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-samba.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_service\part-samba-structure.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-ca-manage-old.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Scripts\antd.websocket.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -445,431 +560,8 @@
     <Content Include="Scripts\jquery-2.2.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\vnc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-users.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\part-users.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Views\__old\page-system-ca.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_service\part-samba-data.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_service\part-samba-share-data.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Views\__old\page-users-entity-partial.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-users-entity.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Views\antd\page-log.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-storage.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-proxy.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-dhcp.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-dns-server.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-mount.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\__old\_toolbar.html" />
-    <None Include="Views\antd\page-log-system.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-log-antd.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-log-report.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\__old\_navbar.html" />
-    <None Include="Views\page-redirect.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_network\part-network-get.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_network\part-network-post-elements.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_network\part-network-post.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-input-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-input-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-input-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-output-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-output-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-arp-output-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-forward-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-input-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-input-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-input-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-output-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-output-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-bridge-output-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-connection-arp.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-connection-br.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-connection-ip.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-connection-ip6.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-empty.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-forward-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-forward-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-forward-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-input-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-input-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-input-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-output-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-output-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-output-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-postrouting-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-postrouting-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-prerouting-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip-prerouting-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-forward-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-input-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-input-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-input-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-output-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-output-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-output-route.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-postrouting-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-postrouting-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-prerouting-filter.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial_firewall\part-firewall-ip6-prerouting-nat.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\_partial\part-mount-units.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Views\antd\page-antd.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-info.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-config.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-dns-client.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-firewall.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-network.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-ca.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Views\antd\page-antd-users.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Views\cctable\_page-cctable.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Views\__old\_page-firewall.html" />
-    <Content Include="Views\hypervisor\page-hypervisor-backup.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\hypervisor\page-hypervisor-datastore.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\hypervisor\page-hypervisor-hosts.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\hypervisor\page-hypervisor-newvm.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\hypervisor\page-hypervisor-vms.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\hypervisor\_page-hypervisor.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-cpuinfo.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-dmidecode.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-ifconfig.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-meminfo.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-procs.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\page-info-version.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\info\_page-info.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\login-authentication.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\login-token.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\_page-log-collectd.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\_page-log-journalctl.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\_page-log-websocket.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\mail\page-mail-imap.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\mail\page-mail-smtp.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\mail\_page-mail.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-network-setup.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-cfg.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-dir.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="Views\page-empty-partial.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Views\page-scheduler.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-terminal.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-test.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-tknmgmt.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-units.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-vnc.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-bind.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-services-dhcp.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-glusterfs.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-libvirt.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-lxc.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-nfs.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-nftable.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-nginx.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-ntpd.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-qemu.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-services-samba.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-squid.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-ssh.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-syslogng.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-systemd-hostnamectl.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-systemd-journald.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-systemd-networkd.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-zfs.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\_page-services.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\storage\page-storage-disks.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\storage\page-storage-iscsi.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\storage\page-storage-mounts.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\storage\_page-storage.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\system\_page-system-sysctl.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-users-groups.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\__old\page-users-system.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-dashboard.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-main.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-table-new.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-table-conf.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-table-dataview.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_cctable-table-settings.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\fonts\iconFont.dev.svg">
