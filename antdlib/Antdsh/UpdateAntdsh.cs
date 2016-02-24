@@ -101,7 +101,7 @@ namespace antdlib.Antdsh {
             Directory.CreateDirectory(TmpDirectory);
             _countAntd++;
             if (_countAntd > 5) {
-                Console.WriteLine("antd update failed");
+                AntdshLogger.WriteLine("antd update failed");
                 return;
             }
             var currentVersion = Terminal.Terminal.Execute($"file {AntdActive}").Split(' ').Last();
@@ -109,31 +109,31 @@ namespace antdlib.Antdsh {
             var requestUrl = $"{PublicRepositoryUrl}/update/info/antd/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
-                Console.WriteLine("antd is already up to date");
+                AntdshLogger.WriteLine("antd is already up to date");
             }
-            Console.WriteLine("updating antd");
+            AntdshLogger.WriteLine("updating antd");
             var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Console.WriteLine($"downloading file from {downloadUrl}");
+            AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
 
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            Console.WriteLine(downloadedFile);
+            AntdshLogger.WriteLine(downloadedFile);
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
             Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
-            Console.WriteLine("check downloaded file");
+            AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
-                Console.WriteLine($"{filename} downloaded file is not valid");
+                AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
                 UpdateAntd();
             }
-            Console.WriteLine($"{filename} download complete");
+            AntdshLogger.WriteLine($"{filename} download complete");
             var newVersion = $"{AntdDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Console.WriteLine("restart antd");
+            AntdshLogger.WriteLine("restart antd");
             File.Delete(AntdActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {AntdActive}");
             Terminal.Terminal.Execute("systemctl stop app-antd-03-launcher");
@@ -149,7 +149,7 @@ namespace antdlib.Antdsh {
             Directory.CreateDirectory(TmpDirectory);
             _countAntdsh++;
             if (_countAntdsh > 5) {
-                Console.WriteLine("antdsh update failed");
+                AntdshLogger.WriteLine("antdsh update failed");
                 return;
             }
             var currentVersion = Terminal.Terminal.Execute($"file {AntdshActive}").Split(' ').Last();
@@ -157,31 +157,31 @@ namespace antdlib.Antdsh {
             var requestUrl = $"{PublicRepositoryUrl}/update/info/antdsh/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
-                Console.WriteLine("antdsh is already up to date");
+                AntdshLogger.WriteLine("antdsh is already up to date");
             }
-            Console.WriteLine("updating antdsh");
+            AntdshLogger.WriteLine("updating antdsh");
             var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Console.WriteLine($"downloading file from {downloadUrl}");
+            AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
 
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            Console.WriteLine(downloadedFile);
+            AntdshLogger.WriteLine(downloadedFile);
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
             Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
-            Console.WriteLine("check downloaded file");
+            AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
-                Console.WriteLine($"{filename} downloaded file is not valid");
+                AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
                 UpdateAntdsh();
             }
-            Console.WriteLine($"{filename} download complete");
+            AntdshLogger.WriteLine($"{filename} download complete");
             var newVersion = $"{AntdshDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Console.WriteLine("restart antdsh");
+            AntdshLogger.WriteLine("restart antdsh");
             File.Delete(AntdshActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {AntdshActive}");
             Terminal.Terminal.Execute("systemctl stop app-antdsh-03-launcher");
@@ -195,7 +195,7 @@ namespace antdlib.Antdsh {
             Directory.CreateDirectory(TmpDirectory);
             _countSystem++;
             if (_countSystem > 5) {
-                Console.WriteLine("system update failed");
+                AntdshLogger.WriteLine("system update failed");
                 return;
             }
             var currentVersion = Terminal.Terminal.Execute($"file {SystemActive}").Split(' ').Last();
@@ -203,31 +203,31 @@ namespace antdlib.Antdsh {
             var requestUrl = $"{PublicRepositoryUrl}/update/info/system/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
-                Console.WriteLine("System is already up to date");
+                AntdshLogger.WriteLine("System is already up to date");
             }
-            Console.WriteLine("updating system");
+            AntdshLogger.WriteLine("updating system");
             var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
-            Console.WriteLine($"downloading file from {downloadUrl}");
+            AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
 
             var downloadedFile = $"{TmpDirectory}/{filename}";
-            Console.WriteLine(downloadedFile);
+            AntdshLogger.WriteLine(downloadedFile);
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
             Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
-            Console.WriteLine("check downloaded file");
+            AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
-                Console.WriteLine($"{filename} downloaded file is not valid");
+                AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
                 UpdateSystem();
             }
-            Console.WriteLine($"{filename} download complete");
+            AntdshLogger.WriteLine($"{filename} download complete");
             var newVersion = $"{SystemDirectory}/{filename}";
             File.Copy(downloadedFile, newVersion, true);
-            Console.WriteLine("restart system");
+            AntdshLogger.WriteLine("restart system");
             File.Delete(SystemActive);
             Terminal.Terminal.Execute($"ln -s {newVersion} {SystemActive}");
             Directory.Delete(TmpDirectory, true);
@@ -239,7 +239,7 @@ namespace antdlib.Antdsh {
             Directory.CreateDirectory(TmpDirectory);
             _countKernel++;
             if (_countKernel > 5) {
-                Console.WriteLine("kernel update failed");
+                AntdshLogger.WriteLine("kernel update failed");
                 return;
             }
             var currentVersion = Terminal.Terminal.Execute($"file {ModulesActive}").Split(' ').Last();
@@ -247,13 +247,13 @@ namespace antdlib.Antdsh {
             var requestUrl = $"{PublicRepositoryUrl}update/info/kernel/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
             if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
-                Console.WriteLine("kernel is already up to date");
+                AntdshLogger.WriteLine("kernel is already up to date");
                 return;
             }
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
 
-            Console.WriteLine("updating firmware");
+            AntdshLogger.WriteLine("updating firmware");
             var firmwareDownloadUrl = info.Where(_ => _.Key == "firmware-url").Select(_ => _.Value).First();
             var firmwareFilename = firmwareDownloadUrl.Split('/').Last();
             var firmwareDownloadedFile = $"{TmpDirectory}/{firmwareFilename}";
@@ -263,7 +263,7 @@ namespace antdlib.Antdsh {
             File.Copy(firmwareDownloadedFile, firmwareNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {firmwareNewVersion} {FirmwareActive}");
 
-            Console.WriteLine("updating modules");
+            AntdshLogger.WriteLine("updating modules");
             var modulesDownloadUrl = info.Where(_ => _.Key == "modules-url").Select(_ => _.Value).First();
             var modulesFilename = modulesDownloadUrl.Split('/').Last();
             var modulesDownloadedFile = $"{TmpDirectory}/{modulesFilename}";
@@ -273,7 +273,7 @@ namespace antdlib.Antdsh {
             File.Copy(modulesDownloadedFile, modulesNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {modulesNewVersion} {ModulesActive}");
 
-            Console.WriteLine("updating sysmapFile");
+            AntdshLogger.WriteLine("updating sysmapFile");
             var sysmapFileDownloadUrl = info.Where(_ => _.Key == "sysmapFile-url").Select(_ => _.Value).First();
             var sysmapFileFilename = sysmapFileDownloadUrl.Split('/').Last();
             var sysmapFileDownloadedFile = $"{TmpDirectory}/{sysmapFileFilename}";
@@ -283,7 +283,7 @@ namespace antdlib.Antdsh {
             File.Copy(sysmapFileDownloadedFile, sysmapFileNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {sysmapFileNewVersion} {SystemMapActive}");
 
-            Console.WriteLine("updating initramfs");
+            AntdshLogger.WriteLine("updating initramfs");
             var initramfsDownloadUrl = info.Where(_ => _.Key == "initramfs-url").Select(_ => _.Value).First();
             var initramfsFilename = initramfsDownloadUrl.Split('/').Last();
             var initramfsDownloadedFile = $"{TmpDirectory}/{initramfsFilename}";
@@ -293,7 +293,7 @@ namespace antdlib.Antdsh {
             File.Copy(initramfsDownloadedFile, initramfsNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {initramfsNewVersion} {InitrdActive}");
 
-            Console.WriteLine("updating kernel");
+            AntdshLogger.WriteLine("updating kernel");
             var kernelDownloadUrl = info.Where(_ => _.Key == "kernel-url").Select(_ => _.Value).First();
             var kernelFilename = kernelDownloadUrl.Split('/').Last();
             var kernelDownloadedFile = $"{TmpDirectory}/{kernelFilename}";
@@ -303,7 +303,7 @@ namespace antdlib.Antdsh {
             File.Copy(kernelDownloadedFile, kernelNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {kernelNewVersion} {KernelActive}");
 
-            Console.WriteLine("updating xen");
+            AntdshLogger.WriteLine("updating xen");
             var xenDownloadUrl = info.Where(_ => _.Key == "xen-url").Select(_ => _.Value).First();
             var xenFilename = xenDownloadUrl.Split('/').Last();
             var xenDownloadedFile = $"{TmpDirectory}/{xenFilename}";
@@ -318,13 +318,13 @@ namespace antdlib.Antdsh {
 
         private static void HelpDownloadFile(string url, string destination, string shasum) {
             Terminal.Terminal.Execute($"wget {url} -O {destination}");
-            Console.WriteLine("check downloaded file");
+            AntdshLogger.WriteLine("check downloaded file");
             var currentSha = GetShaSum(destination);
             if (shasum != currentSha) {
-                Console.WriteLine($"{destination} downloaded file is not valid");
+                AntdshLogger.WriteLine($"{destination} downloaded file is not valid");
                 UpdateKernel();
             }
-            Console.WriteLine($"{destination} download complete");
+            AntdshLogger.WriteLine($"{destination} download complete");
         }
     }
 }

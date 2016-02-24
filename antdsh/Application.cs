@@ -39,9 +39,10 @@ namespace antdsh {
         private static readonly HashSet<Cmd> CommandList = new HashSet<Cmd>();
 
         private static void Main(string[] args) {
+            Execute.RemounwRwOs();
+            AhtdshLogger.SetupFile();
             while (true) {
                 Console.Title = "antdsh";
-                Execute.RemounwRwOs();
                 Directory.CreateDirectory(Parameter.AntdVersionsDir);
                 Directory.CreateDirectory(Parameter.AntdTmpDir);
                 if (args.Length == 0) {
