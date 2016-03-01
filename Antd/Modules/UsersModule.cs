@@ -34,6 +34,7 @@ using antdlib.Users;
 using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
+using antdlib.Vnc;
 
 namespace Antd.Modules {
     public class UsersModule : CoreModule {
@@ -123,7 +124,12 @@ namespace Antd.Modules {
                 string mode = Request.Form.Mode.Value;
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
-                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
+                if (type != "vnc") {
+                    UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
+                }
+                else {
+                    VncManagement.Set(userGuid, val);
+                }
                 return Response.AsRedirect("/");
             };
 

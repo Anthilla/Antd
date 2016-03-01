@@ -17,6 +17,8 @@ namespace antdlib.Users {
                     return ClaimType.UserPassword;
                 case "token":
                     return ClaimType.UserToken;
+                case "vnc":
+                    return ClaimType.Vnc;
                 case "pin":
                     return ClaimType.UserPin;
                 default:

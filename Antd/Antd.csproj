@@ -165,7 +165,6 @@
     <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\WebsocketModule.cs" />
-    <Compile Include="Modules\VncModule.cs" />
     <Compile Include="AntdApplication.cs" />
     <Compile Include="Helpers\DirectoryModel.cs" />
     <Compile Include="Helpers\SelectizerMapModel.cs" />

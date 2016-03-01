@@ -209,7 +209,7 @@ namespace Antd.Modules {
 
             Get["/vnc"] = x => {
                 dynamic vmod = new ExpandoObject();
-                return View["page-vnc", vmod];
+                return View["antd/page-vnc", vmod];
             };
         }
     }
