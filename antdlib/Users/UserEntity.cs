@@ -61,7 +61,7 @@ namespace antdlib.Users {
 
         public class UserEntityModel {
             [Key]
-            public string _Id { get; set; } = Guid.NewGuid().ToString();
+            public string _Id { get; set; }
             public Guid Guid => Guid.Parse(_Id);
             public string MasterGuid { get; set; }
             public string MasterUsername { get; set; }
@@ -100,11 +100,16 @@ namespace antdlib.Users {
             }
 
             public static UserEntityModel GetByUserGuid(string userGuid) {
-                return Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == userGuid);
+                var rGuid = GenerateGuid(userGuid);
+                return Session.New.Get<UserEntityModel>().FirstOrDefault(_ => _.MasterGuid == rGuid);
             }
 
             public static string GenerateGuid() {
                 return Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper();
+            }
+
+            public static string GenerateGuid(string guid) {
+                return guid.Replace("-", "").Substring(0, 10).ToUpper();
             }
 
             public static string GenerateUserAlias(string identity) {
@@ -134,28 +139,32 @@ namespace antdlib.Users {
             }
 
             public static void Create(string guid, string username, string alias) {
+                var rGuid = GenerateGuid(guid);
                 var user = new UserEntityModel {
-                    MasterGuid = guid,
+                    _Id = guid,
+                    MasterGuid = rGuid,
                     IsEnabled = true,
                     MasterUsername = username,
                     MasterAlias = alias,
                     Claims = new List<UserEntityModel.Claim>()
                 };
-                var keys = GenerateUsersKeys(guid, "rsa", "20048");
+                var keys = GenerateUsersKeys(rGuid, "rsa", "2048");
                 user.PublicKey = keys.Item1;
                 user.PrivateKey = keys.Item2;
                 Session.New.Set(user);
             }
 
             public static void Create(string guid, string username, string alias, IEnumerable<UserEntityModel.Claim> claims) {
+                var rGuid = GenerateGuid(guid);
                 var user = new UserEntityModel {
-                    MasterGuid = guid,
+                    _Id = guid,
+                    MasterGuid = rGuid,
                     IsEnabled = true,
                     MasterUsername = username,
                     MasterAlias = alias,
                     Claims = claims
                 };
-                var keys = GenerateUsersKeys(guid, "rsa", "20048");
+                var keys = GenerateUsersKeys(rGuid, "rsa", "20048");
                 user.PublicKey = keys.Item1;
                 user.PrivateKey = keys.Item2;
                 Session.New.Set(user);

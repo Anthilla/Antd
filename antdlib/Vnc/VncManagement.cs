@@ -27,58 +27,59 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.Log;
 using antdlib.Users;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace antdlib.Vnc {
     public class VncManagement {
-        public static string Get(string userGuid) {
+        public static IEnumerable<string> Get(string userGuid) {
             var q = $"{userGuid.Substring(0, 8)}-vnc";
             var user = UserEntity.Repository.GetByUserIdentity(userGuid);
             try {
                 if (user == null) {
                     throw new ArgumentNullException(nameof(user));
                 }
-                var vncClaim = user.Claims.FirstOrDefault(_ => _.Type == UserEntity.ClaimType.Vnc && _.Key == q);
-                return vncClaim?.Value;
+                var vncClaim = user.Claims.Where(_ => _.Type == UserEntity.ClaimType.Vnc && _.Key == q);
+                return vncClaim.Select(_ => _.Value);
             }
             catch (Exception ex) {
-                throw new NotImplementedException();
+                ConsoleLogger.Warn(ex.Message);
+                return new List<string>();
             }
+        }
+
+        public static IDictionary<string, string> GetQueryStrings(string userGuid) {
+            var user = UserEntity.Repository.GetByUserGuid(userGuid);
+            var dict = new Dictionary<string, string>();
+            try {
+                if (user == null) {
+                    throw new ArgumentNullException(nameof(user));
+                }
+                var vncClaim = user.Claims.Where(_ => _.Type == UserEntity.ClaimType.Vnc);
+                foreach (var claim in vncClaim) {
+                    dict.Add(claim.Key, ConvertToQueryString(claim.Value));
+                }
+                return dict;
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
+                return dict;
+            }
+        }
+
+        private static string ConvertToQueryString(string address) {
+            var addressInfo = address.Split(':');
+            if (address.Length != 2) {
+                return string.Empty;
+            }
+            return $"?host={addressInfo[0]}&port={addressInfo[1]}";
         }
 
         public static void Set(string userGuid, string vncAddress) {
             UserEntity.Repository.AddClaim(userGuid, UserEntity.ClaimType.Vnc, UserEntity.ClaimMode.Null, $"{userGuid.Substring(0, 8)}-vnc", vncAddress);
-        }
-
-        public static void Edit(string userGuid, string oldValue, string newValue) {
-            var user = UserEntity.Repository.GetByUserIdentity(userGuid);
-            try {
-                if (user == null) {
-                    throw new ArgumentNullException(nameof(user));
-                }
-                UserEntity.Repository.AddClaim(userGuid, UserEntity.ClaimType.Vnc, UserEntity.ClaimMode.Null, $"{userGuid.Substring(0, 8)}-vnc", newValue);
-                var vncClaim = user.Claims.FirstOrDefault(_ => _.Type == UserEntity.ClaimType.Vnc && _.Value == oldValue);
-                UserEntity.Repository.RemoveClaim(userGuid, vncClaim.ClaimGuid);
-            }
-            catch (Exception ex) {
-                throw new NotImplementedException();
-            }
-        }
-
-        public static void Remove(string userGuid, string value) {
-            var user = UserEntity.Repository.GetByUserIdentity(userGuid);
-            try {
-                if (user == null) {
-                    throw new ArgumentNullException(nameof(user));
-                }
-                var vncClaim = user.Claims.FirstOrDefault(_ => _.Type == UserEntity.ClaimType.Vnc && _.Value == value);
-                UserEntity.Repository.RemoveClaim(userGuid, vncClaim.ClaimGuid);
-            }
-            catch (Exception ex) {
-                throw new NotImplementedException();
-            }
         }
     }
 }

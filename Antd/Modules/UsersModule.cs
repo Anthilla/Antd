@@ -79,21 +79,22 @@ namespace Antd.Modules {
             };
 
             Post["/users/identity"] = x => {
-                var guid = UserEntity.Repository.GenerateGuid();
+                var guid = System.Guid.NewGuid().ToString();
+                var rGuid = UserEntity.Repository.GenerateGuid(guid);
                 string userIdentity = Request.Form.UserEntity;
                 string userPassword = Request.Form.UserPassword;
                 var alias = UserEntity.Repository.GenerateUserAlias(userIdentity);
 
                 var claims = new List<UserEntity.UserEntityModel.Claim> {
                     new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
+                        ClaimGuid = rGuid,
                         Mode = UserEntity.ClaimMode.Antd,
                         Type = UserEntity.ClaimType.UserIdentity,
                         Key = "antd-master-id",
-                        Value = guid
+                        Value = rGuid
                     },
                     new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
+                        ClaimGuid = rGuid,
                         Mode = UserEntity.ClaimMode.Antd,
                         Type = UserEntity.ClaimType.UserIdentity,
                         Key = "antd-master-identity",
@@ -107,7 +108,7 @@ namespace Antd.Modules {
                         Value = alias
                     },
                     new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
+                        ClaimGuid = rGuid,
                         Mode = UserEntity.ClaimMode.Antd,
                         Type = UserEntity.ClaimType.UserPassword,
                         Key = "antd-master-password",
@@ -124,12 +125,7 @@ namespace Antd.Modules {
                 string mode = Request.Form.Mode.Value;
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
-                if (type != "vnc") {
-                    UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
-                }
-                else {
-                    VncManagement.Set(userGuid, val);
-                }
+                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
                 return Response.AsRedirect("/");
             };
 

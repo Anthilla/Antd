@@ -598,14 +598,10 @@
         var vncSelector = $('#UserClaimTypeSelection').find('input[value="vnc"]');
         var kInput = $('#UserClaimKey');
         if (vncSelector.is(':checked')) {
-            kInput.val('The Key will have a default value');
-            kInput.addClass('disabled');
-            kInput.prop('disabled', true);
+            kInput.attr('placeholder', 'Remote Machine Name');
         }
         else {
-            kInput.val('');
-            kInput.removeClass('disabled');
-            kInput.prop('disabled', false);
+            kInput.attr('placeholder', 'Key');
         }
     });
 

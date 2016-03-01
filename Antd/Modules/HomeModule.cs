@@ -45,6 +45,7 @@ using antdlib.Storage;
 using antdlib.Terminal;
 using antdlib.Users;
 using Nancy.Security;
+using antdlib.Vnc;
 
 namespace Antd.Modules {
     public class HomeModule : CoreModule {
@@ -209,6 +210,13 @@ namespace Antd.Modules {
 
             Get["/vnc"] = x => {
                 dynamic vmod = new ExpandoObject();
+                var userGuid = Request.Cookies.FirstOrDefault(_ => _.Key == "antd-session").Value;
+                if (!string.IsNullOrEmpty(userGuid)) {
+                    vmod.Connections = VncManagement.GetQueryStrings(userGuid);
+                }
+                else {
+                    vmod.Connections = new Dictionary<string, string>();
+                }
                 return View["antd/page-vnc", vmod];
             };
         }
