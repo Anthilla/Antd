@@ -27,13 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Dynamic;
 using antdlib.Users;
-using antdlib.Websocket;
-using antdlib.Websocket.Client;
 using Nancy;
 
 namespace Antd.Modules {
@@ -46,8 +42,7 @@ namespace Antd.Modules {
 
             Get["/test/page"] = x => View["page-test"];
 
-            Get["/test/vnc"] = x => View["vnc"];
-            Get["/test/vnc2"] = x => View["page-vnc"];
+            Get["/test/vnc"] = x => View["page-vnc"];
 
             Get["/test/ssh"] = x => {
                 antdlib.Ssh.Test.Start("aos003", "root", "root");

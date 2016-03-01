@@ -332,7 +332,7 @@
     <Content Include="Views\page-units.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\page-vnc.html">
+    <Content Include="Views\page-vnc_oolldd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\services\page-services-bind.html">
@@ -413,7 +413,10 @@
     <Content Include="Views\system\_page-system-sysctl.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\vnc.html">
+    <Content Include="Views\vnc_ooldd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\page-vnc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_cctable-dashboard.html">

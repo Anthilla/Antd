@@ -40,7 +40,7 @@ namespace antdsh {
 
         private static void Main(string[] args) {
             Execute.RemounwRwOs();
-            AhtdshLogger.SetupFile();
+            AntdshLogger.SetupFile();
             while (true) {
                 Console.Title = "antdsh";
                 Directory.CreateDirectory(Parameter.AntdVersionsDir);
