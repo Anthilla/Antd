@@ -206,6 +206,11 @@ namespace Antd.Modules {
                 vmod.DisabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == false).OrderBy(_ => _.Index);
                 return View["antd/page-cfg", vmod];
             };
+
+            Get["/vnc"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["page-vnc", vmod];
+            };
         }
     }
 }

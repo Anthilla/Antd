@@ -56,13 +56,13 @@
         </div>
     </div>
 
-    <div id="CustomConnections" class="grid" style="width: 46% !important; display: inline-block !important; float: right;">
+    <div id="CustomConnections" class="grid" style="width: 46% !important; display: inline-block !important; float: right;  border-left: 5px solid #A7BD39; padding-left: 10px;">
         <div class="row">
             <div class="span3">
                 <label>Host</label>
             </div>
             <div class="span5">
-                <input id="NoVncHost" type="text" data-role="novnc-setup" style="width: 90%; height: 28px;"/>
+                <input id="NoVncHost" type="text" data-role="novnc-setup" style="width: 90%; height: 28px;" />
             </div>
         </div>
         <div class="row">
@@ -70,7 +70,7 @@
                 <label>Port</label>
             </div>
             <div class="span5">
-                <input id="NoVncPort" type="text" data-role="novnc-setup" style="width: 90%; height: 28px;"/>
+                <input id="NoVncPort" type="text" data-role="novnc-setup" style="width: 90%; height: 28px;" />
             </div>
         </div>
         <div class="row">
@@ -81,11 +81,10 @@
             </div>
         </div>
     </div>
-
 </div>
-    @EndSection
+@EndSection
 
-    @Section['MainContent']
+@Section['MainContent']
 <div id="noVNC_screen">
     <div id="noVNC_status_bar" class="noVNC_status_bar" style="margin-top: 0px;">
         <table border=0 width="100%">
@@ -95,17 +94,21 @@
                         Loading
                     </div>
                 </td>
+                <td>
+                    <div id="noVNC_clipboard" class="triangle-right top" style="display: none !important;">
+                        <textarea id="noVNC_clipboard_text" rows=5></textarea>
+                        <br />
+                        <input id="noVNC_clipboard_clear_button" type="button" value="Clear">
+                    </div>
+                </td>
                 <td width="1%">
                     <div id="noVNC_buttons">
-                        <input type=button value="Send CtrlAltDel"
-                               id="sendCtrlAltDelButton">
+                        <input type=button value="Send CtrlAltDel" id="sendCtrlAltDelButton">
+                        <input type=button value="Fullscreen" id="fullscreen">
                         <span id="noVNC_xvp_buttons">
-                            <input type=button value="Shutdown"
-                                   id="xvpShutdownButton">
-                            <input type=button value="Reboot"
-                                   id="xvpRebootButton">
-                            <input type=button value="Reset"
-                                   id="xvpResetButton">
+                            <input type=button value="Shutdown" id="xvpShutdownButton">
+                            <input type=button value="Reboot" id="xvpRebootButton">
+                            <input type=button value="Reset" id="xvpResetButton">
                         </span>
                     </div>
                 </td>
@@ -116,9 +119,9 @@
         Canvas not supported.
     </canvas>
 </div>
-    @EndSection
+@EndSection
 
-    @Section['Scripts']
+@Section['Scripts']
 <script id="DashboardScripts">
     function SetConnectionLink() {
         //?host=HOST&port=PORT&encrypt=1&true_color=1
@@ -239,6 +242,7 @@
         $D('xvpShutdownButton').onclick = xvpShutdown;
         $D('xvpRebootButton').onclick = xvpReboot;
         $D('xvpResetButton').onclick = xvpReset;
+        //$D('fullscreen').onclick = UI.toggleFullscreen;
 
         WebUtil.init_logging(WebUtil.getConfigVar('logging', 'warn'));
         document.title = unescape(WebUtil.getConfigVar('title', 'noVNC'));
@@ -294,4 +298,4 @@
         rfb.connect(host, port, password, path);
     };
 </script>
-    @EndSection
+@EndSection

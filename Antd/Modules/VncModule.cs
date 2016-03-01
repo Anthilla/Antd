@@ -29,15 +29,23 @@
 
 using System.Dynamic;
 using Nancy.Security;
+using antdlib.Vnc;
 
 namespace Antd.Modules {
     public class VncModule : CoreModule {
         public VncModule() {
             this.RequiresAuthentication();
 
-            Get["/vnc"] = x => {
+            Get["/222vnc"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["page-vnc", vmod];
+            };
+
+            Post["/vnc/set"] = x => {
+                var user = Request.Form.UserGuid;
+                var vncHost = Request.Form.VncHost;
+                VncManagement.Set(user, vncHost);
+                return Nancy.HttpStatusCode.OK;
             };
         }
     }
