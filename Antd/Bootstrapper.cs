@@ -53,7 +53,6 @@ namespace Antd {
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Content", @"/Content/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Scripts", @"/Scripts/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("novnc", @"/novnc/", TimeSpan.FromDays(365)));
-            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("images", @"/NoVnc/images/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Fonts", @"/Fonts/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo", @"/Resources/", TimeSpan.FromDays(365)));
             conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo/ssh", @"/Resources/ssh/", TimeSpan.FromDays(365)));
@@ -74,12 +73,9 @@ namespace Antd {
 
         protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
             base.ConfigureApplicationContainer(container);
-            // Register the custom/additional processors/matchers for our view
-            // rendering within the SSVE
             container
                 .Register<IEnumerable<ISuperSimpleViewEngineMatcher>>(
                     (c, p) => new List<ISuperSimpleViewEngineMatcher> {
-                        // This matcher provides support for @Translate. tokens
                         new AntdViewEngine()
                     });
         }
