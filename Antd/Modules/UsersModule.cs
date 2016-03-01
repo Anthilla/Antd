@@ -34,7 +34,6 @@ using antdlib.Users;
 using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
-using antdlib.Vnc;
 
 namespace Antd.Modules {
     public class UsersModule : CoreModule {

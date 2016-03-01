@@ -58,7 +58,7 @@ namespace antdlib.Vnc {
                 if (user == null) {
                     throw new ArgumentNullException(nameof(user));
                 }
-                var vncClaim = user.Claims.Where(_ => _.Type == UserEntity.ClaimType.Vnc);
+                var vncClaim = user.Claims.Where(_ => _.Type == UserEntity.ClaimType.Vnc).ToList();
                 foreach (var claim in vncClaim) {
                     dict.Add(claim.Key, ConvertToQueryString(claim.Value));
                 }
@@ -72,10 +72,10 @@ namespace antdlib.Vnc {
 
         private static string ConvertToQueryString(string address) {
             var addressInfo = address.Split(':');
-            if (address.Length != 2) {
-                return string.Empty;
+            if (address.Length > 1) {
+                return $"?host={addressInfo[0]}&port={addressInfo[1]}";
             }
-            return $"?host={addressInfo[0]}&port={addressInfo[1]}";
+            return string.Empty;
         }
 
         public static void Set(string userGuid, string vncAddress) {
