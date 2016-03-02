@@ -34,6 +34,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using antdlib.Common;
 
 namespace antdlib.Antdsh {
     public class UpdateObject {
@@ -116,18 +117,18 @@ namespace antdlib.Antdsh {
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
             AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
-
             var downloadedFile = $"{TmpDirectory}/{filename}";
             AntdshLogger.WriteLine(downloadedFile);
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
-            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
-                AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
+                AntdshLogger.WriteLine($"{filename}: downloaded file is not valid");
                 UpdateAntd();
             }
             AntdshLogger.WriteLine($"{filename} download complete");
@@ -170,7 +171,8 @@ namespace antdlib.Antdsh {
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
-            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
@@ -216,7 +218,8 @@ namespace antdlib.Antdsh {
             if (File.Exists(downloadedFile)) {
                 File.Delete(downloadedFile);
             }
-            Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
+            FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
             var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
             var currentSha = GetShaSum(downloadedFile);
@@ -317,7 +320,8 @@ namespace antdlib.Antdsh {
         }
 
         private static void HelpDownloadFile(string url, string destination, string shasum) {
-            Terminal.Terminal.Execute($"wget {url} -O {destination}");
+            //Terminal.Terminal.Execute($"wget {url} -O {destination}");
+            FileSystem.Download2(url, destination);
             AntdshLogger.WriteLine("check downloaded file");
             var currentSha = GetShaSum(destination);
             if (shasum != currentSha) {

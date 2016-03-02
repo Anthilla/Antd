@@ -125,6 +125,20 @@ namespace antdlib.Common {
             }
         }
 
+        public static void Download2(string url, string destination) {
+            try {
+                var myWebClient = new WebClient();
+                var nfile = destination;
+                if (File.Exists(destination)) {
+                    nfile = $"{destination}+";
+                }
+                myWebClient.DownloadFile(url, nfile);
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"unable to dowload from {url}: {ex.Message}");
+            }
+        }
+
         public static bool IsNewerThan(string source, string destination) {
             var sourceInfo = new FileInfo(source);
             var destinationInfo = new FileInfo(destination);

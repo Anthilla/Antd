@@ -16,7 +16,6 @@ using antdlib.Network;
 using antdlib.Scheduler;
 using antdlib.Terminal;
 using antdlib.Users;
-using antdlib.Websocket.Client;
 
 namespace Antd {
     public class AntdBoot {

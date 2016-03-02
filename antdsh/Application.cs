@@ -87,6 +87,10 @@ namespace antdsh {
                 if (context.Length > 0) {
                     UpdateObject.Update(context[1]);
                 }
+                else {
+                    Console.WriteLine("Check 'update' command usage:");
+                    WriteHelp("update", "update the selected resource from the public repository, options are: antd,  antdsh, system, kernel");
+                }
             }
             else if (command == "history") {
                 PrintHistory();
