@@ -59,11 +59,10 @@ namespace antdlib.Log {
             Logger.Trace("", source.Length > 0 ? source : "", EventLevel.Error, message);
         }
 
-        public static void Point(dynamic message, string source = "") {
+        public static void Point(dynamic message) {
             var currentFg = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Magenta;
-            var src = source.Length > 0 ? $" src={source}" : "";
-            Console.WriteLine($"app=antd lvl={(int)EventLevel.Other} msg={message}{src}");
+            Console.WriteLine($"→→ {message}");
             Console.ForegroundColor = currentFg;
         }
     }

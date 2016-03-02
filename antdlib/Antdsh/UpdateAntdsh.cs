@@ -35,6 +35,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using antdlib.Common;
+using antdlib.Log;
 
 namespace antdlib.Antdsh {
     public class UpdateObject {
@@ -69,11 +70,17 @@ namespace antdlib.Antdsh {
             }
         }
 
-        private static string GetShaSum(string path) => !File.Exists(path) ? null : Terminal.Terminal.Execute($"sha1sum {path}").Split(' ').First();
+        private static string GetShaSum(string path) => !File.Exists(path) ? null : Terminal.Terminal.Execute($"sha1sum {path}").Split(' ').FirstOrDefault();
 
         private static async Task<T> GetResponseFromUrl<T>(string requestUrl) {
-            var awaitResponse = new HttpClient().GetStringAsync(requestUrl);
-            return JsonConvert.DeserializeObject<T>(await awaitResponse);
+            try {
+                var awaitResponse = new HttpClient().GetStringAsync(requestUrl);
+                return JsonConvert.DeserializeObject<T>(await awaitResponse);
+            }
+            catch (Exception ex) {
+                AntdshLogger.WriteLine($"unable to get response from {requestUrl}: {ex.Message}");
+                return default(T);
+            }
         }
 
         #region Parameters
@@ -109,11 +116,11 @@ namespace antdlib.Antdsh {
             var date = GetVersionDate(currentVersion);
             var requestUrl = $"{PublicRepositoryUrl}/update/info/antd/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
-            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
+            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).FirstOrDefault() == "false") {
                 AntdshLogger.WriteLine("antd is already up to date");
             }
             AntdshLogger.WriteLine("updating antd");
-            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).FirstOrDefault();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
             AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
@@ -125,7 +132,7 @@ namespace antdlib.Antdsh {
             //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
-            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
+            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
                 AntdshLogger.WriteLine($"{filename}: downloaded file is not valid");
@@ -157,11 +164,11 @@ namespace antdlib.Antdsh {
             var date = GetVersionDate(currentVersion);
             var requestUrl = $"{PublicRepositoryUrl}/update/info/antdsh/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
-            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
+            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).FirstOrDefault() == "false") {
                 AntdshLogger.WriteLine("antdsh is already up to date");
             }
             AntdshLogger.WriteLine("updating antdsh");
-            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).FirstOrDefault();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
             AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
@@ -174,7 +181,7 @@ namespace antdlib.Antdsh {
             //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
-            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
+            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
                 AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
@@ -204,11 +211,11 @@ namespace antdlib.Antdsh {
             var date = GetVersionDate(currentVersion);
             var requestUrl = $"{PublicRepositoryUrl}/update/info/system/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
-            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
+            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).FirstOrDefault() == "false") {
                 AntdshLogger.WriteLine("System is already up to date");
             }
             AntdshLogger.WriteLine("updating system");
-            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).First();
+            var downloadUrlInfo = info.Where(_ => _.Key == "url").Select(_ => _.Value).FirstOrDefault();
             var downloadUrl = $"{PublicRepositoryUrl}{downloadUrlInfo}";
             var filename = downloadUrl.Split('/').Last();
             AntdshLogger.WriteLine($"downloading file from {downloadUrl}");
@@ -221,7 +228,7 @@ namespace antdlib.Antdsh {
             //Terminal.Terminal.Execute($"wget {downloadUrl} -O {downloadedFile}");
             FileSystem.Download2(downloadUrl, downloadedFile);
             AntdshLogger.WriteLine("check downloaded file");
-            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
+            var shasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
             var currentSha = GetShaSum(downloadedFile);
             if (shasum != currentSha) {
                 AntdshLogger.WriteLine($"{filename} downloaded file is not valid");
@@ -247,71 +254,131 @@ namespace antdlib.Antdsh {
             }
             var currentVersion = Terminal.Terminal.Execute($"file {ModulesActive}").Split(' ').Last();
             var date = GetVersionDate(currentVersion);
-            var requestUrl = $"{PublicRepositoryUrl}update/info/kernel/{date}";
+            var requestUrl = $"{PublicRepositoryUrl}/update/info/kernel/{date}";
             var info = GetResponseFromUrl<List<KeyValuePair<string, string>>>(requestUrl).Result;
-            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).First() == "false") {
+            if (info.Where(_ => _.Key == "update").Select(_ => _.Value).FirstOrDefault() == "false") {
                 AntdshLogger.WriteLine("kernel is already up to date");
                 return;
             }
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
 
+            Console.WriteLine("-----");
+            Console.WriteLine(JsonConvert.SerializeObject(info));
+            Console.WriteLine("-----");
+
             AntdshLogger.WriteLine("updating firmware");
-            var firmwareDownloadUrl = info.Where(_ => _.Key == "firmware-url").Select(_ => _.Value).First();
+            var firmwareDownloadUrl = info.Where(_ => _.Key == "firmware-url").Select(_ => _.Value).FirstOrDefault();
+            ConsoleLogger.Point(firmwareDownloadUrl);
             var firmwareFilename = firmwareDownloadUrl.Split('/').Last();
             var firmwareDownloadedFile = $"{TmpDirectory}/{firmwareFilename}";
-            var firmwareShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
+            var firmwareShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
             HelpDownloadFile(firmwareDownloadUrl, firmwareDownloadedFile, firmwareShasum);
+
+            FileSystem.Download2(firmwareDownloadUrl, firmwareDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var firmwareCurrentSha = GetShaSum(firmwareDownloadedFile);
+            if (firmwareShasum != firmwareCurrentSha) {
+                AntdshLogger.WriteLine($"{firmwareDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{firmwareDownloadedFile} download complete");
+
             var firmwareNewVersion = $"{KernelDirectory}/{firmwareFilename}";
             File.Copy(firmwareDownloadedFile, firmwareNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {firmwareNewVersion} {FirmwareActive}");
 
             AntdshLogger.WriteLine("updating modules");
-            var modulesDownloadUrl = info.Where(_ => _.Key == "modules-url").Select(_ => _.Value).First();
+            var modulesDownloadUrl = info.Where(_ => _.Key == "modules-url").Select(_ => _.Value).FirstOrDefault();
             var modulesFilename = modulesDownloadUrl.Split('/').Last();
             var modulesDownloadedFile = $"{TmpDirectory}/{modulesFilename}";
-            var modulesShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
-            HelpDownloadFile(modulesDownloadUrl, modulesDownloadedFile, modulesShasum);
+            var modulesShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
+
+            FileSystem.Download2(modulesDownloadUrl, modulesDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var moduleCurrentSha = GetShaSum(modulesDownloadedFile);
+            if (modulesShasum != moduleCurrentSha) {
+                AntdshLogger.WriteLine($"{modulesDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{modulesDownloadedFile} download complete");
+
             var modulesNewVersion = $"{KernelDirectory}/{modulesFilename}";
             File.Copy(modulesDownloadedFile, modulesNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {modulesNewVersion} {ModulesActive}");
 
             AntdshLogger.WriteLine("updating sysmapFile");
-            var sysmapFileDownloadUrl = info.Where(_ => _.Key == "sysmapFile-url").Select(_ => _.Value).First();
+            var sysmapFileDownloadUrl = info.Where(_ => _.Key == "sysmapFile-url").Select(_ => _.Value).FirstOrDefault();
             var sysmapFileFilename = sysmapFileDownloadUrl.Split('/').Last();
             var sysmapFileDownloadedFile = $"{TmpDirectory}/{sysmapFileFilename}";
-            var sysmapFileShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
-            HelpDownloadFile(sysmapFileDownloadUrl, sysmapFileDownloadedFile, sysmapFileShasum);
+            var sysmapFileShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
+
+            FileSystem.Download2(sysmapFileDownloadUrl, sysmapFileDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var sysmapCurrentSha = GetShaSum(sysmapFileDownloadedFile);
+            if (sysmapFileShasum != sysmapCurrentSha) {
+                AntdshLogger.WriteLine($"{sysmapFileDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{sysmapFileDownloadedFile} download complete");
+
             var sysmapFileNewVersion = $"{KernelDirectory}/{sysmapFileFilename}";
             File.Copy(sysmapFileDownloadedFile, sysmapFileNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {sysmapFileNewVersion} {SystemMapActive}");
 
             AntdshLogger.WriteLine("updating initramfs");
-            var initramfsDownloadUrl = info.Where(_ => _.Key == "initramfs-url").Select(_ => _.Value).First();
+            var initramfsDownloadUrl = info.Where(_ => _.Key == "initramfs-url").Select(_ => _.Value).FirstOrDefault();
             var initramfsFilename = initramfsDownloadUrl.Split('/').Last();
             var initramfsDownloadedFile = $"{TmpDirectory}/{initramfsFilename}";
-            var initramfsShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
-            HelpDownloadFile(initramfsDownloadUrl, initramfsDownloadedFile, initramfsShasum);
+            var initramfsShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
+
+            FileSystem.Download2(initramfsDownloadUrl, initramfsDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var initramfsCurrentSha = GetShaSum(initramfsDownloadedFile);
+            if (initramfsShasum != initramfsCurrentSha) {
+                AntdshLogger.WriteLine($"{initramfsDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{initramfsDownloadedFile} download complete");
+
             var initramfsNewVersion = $"{KernelDirectory}/{initramfsFilename}";
             File.Copy(initramfsDownloadedFile, initramfsNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {initramfsNewVersion} {InitrdActive}");
 
             AntdshLogger.WriteLine("updating kernel");
-            var kernelDownloadUrl = info.Where(_ => _.Key == "kernel-url").Select(_ => _.Value).First();
+            var kernelDownloadUrl = info.Where(_ => _.Key == "kernel-url").Select(_ => _.Value).FirstOrDefault();
             var kernelFilename = kernelDownloadUrl.Split('/').Last();
             var kernelDownloadedFile = $"{TmpDirectory}/{kernelFilename}";
-            var kernelShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
-            HelpDownloadFile(kernelDownloadUrl, kernelDownloadedFile, kernelShasum);
+            var kernelShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
+
+            FileSystem.Download2(kernelDownloadUrl, kernelDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var kernelCurrentSha = GetShaSum(kernelDownloadedFile);
+            if (kernelShasum != kernelCurrentSha) {
+                AntdshLogger.WriteLine($"{kernelDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{kernelDownloadedFile} download complete");
+
             var kernelNewVersion = $"{KernelDirectory}/{kernelFilename}";
             File.Copy(kernelDownloadedFile, kernelNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {kernelNewVersion} {KernelActive}");
 
             AntdshLogger.WriteLine("updating xen");
-            var xenDownloadUrl = info.Where(_ => _.Key == "xen-url").Select(_ => _.Value).First();
+            var xenDownloadUrl = info.Where(_ => _.Key == "xen-url").Select(_ => _.Value).FirstOrDefault();
             var xenFilename = xenDownloadUrl.Split('/').Last();
             var xenDownloadedFile = $"{TmpDirectory}/{xenFilename}";
-            var xenShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).First();
-            HelpDownloadFile(xenDownloadUrl, xenDownloadedFile, xenShasum);
+            var xenShasum = info.Where(_ => _.Key == "hash").Select(_ => _.Value).FirstOrDefault();
+
+            FileSystem.Download2(xenDownloadUrl, xenDownloadedFile);
+            AntdshLogger.WriteLine("check downloaded file");
+            var xenCurrentSha = GetShaSum(xenDownloadedFile);
+            if (xenShasum != xenCurrentSha) {
+                AntdshLogger.WriteLine($"{xenDownloadedFile} downloaded file is not valid");
+                UpdateKernel();
+            }
+            AntdshLogger.WriteLine($"{xenDownloadedFile} download complete");
+
             var xenNewVersion = $"{KernelDirectory}/{xenFilename}";
             File.Copy(xenDownloadedFile, xenNewVersion, true);
             Terminal.Terminal.Execute($"ln -s {xenNewVersion} {XenActive}");
