@@ -27,13 +27,49 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
 namespace antdlib.Virsh {
     public class Virsh {
+
+        public class VM {
+            public string Id { get; set; }
+            public string Domain { get; set; }
+            public string State { get; set; }
+        }
+
+        public static IEnumerable<VM> GetVmList() {
+            var vms = new List<VM>();
+            var res = Terminal.Terminal.Execute("virsh list --all | sed '1,2d'");
+            if (res.Length < 1) {
+                return vms;
+            }
+            var virshVms = res.Split(new[] { Environment.NewLine }, 3, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var i in virshVms) {
+                var info = i.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                var vm = new VM {
+                    Id = info[0],
+                    Domain = info[1],
+                    State = info[2],
+                };
+                vms.Add(vm);
+            }
+            return vms;
+        }
+
         public class Domain {
             public static string Attachdevice(string options) { return Terminal.Terminal.Execute($"virsh attach_device {options}"); }
             public static string Attachdisk(string options) { return Terminal.Terminal.Execute($"virsh attach_disk {options}"); }
             public static string Attachinterface(string options) { return Terminal.Terminal.Execute($"virsh attach_interface {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Autostart(string options) { return Terminal.Terminal.Execute($"virsh autostart {options}"); }
+
             public static string Blkdeviotune(string options) { return Terminal.Terminal.Execute($"virsh blkdeviotune {options}"); }
             public static string Blkiotune(string options) { return Terminal.Terminal.Execute($"virsh blkiotune {options}"); }
             public static string Blockcommit(string options) { return Terminal.Terminal.Execute($"virsh blockcommit {options}"); }
@@ -49,7 +85,14 @@ namespace antdlib.Virsh {
             public static string Create(string options) { return Terminal.Terminal.Execute($"virsh create {options}"); }
             public static string Define(string options) { return Terminal.Terminal.Execute($"virsh define {options}"); }
             public static string Desc(string options) { return Terminal.Terminal.Execute($"virsh desc {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Destroy(string options) { return Terminal.Terminal.Execute($"virsh destroy {options}"); }
+
             public static string detach_device(string options) { return Terminal.Terminal.Execute($"virsh detach_device {options}"); }
             public static string detach_disk(string options) { return Terminal.Terminal.Execute($"virsh detach_disk {options}"); }
             public static string detach_interface(string options) { return Terminal.Terminal.Execute($"virsh detach_interface {options}"); }
@@ -66,8 +109,21 @@ namespace antdlib.Virsh {
             public static string Domjobinfo(string options) { return Terminal.Terminal.Execute($"virsh domjobinfo {options}"); }
             public static string Domname(string options) { return Terminal.Terminal.Execute($"virsh domname {options}"); }
             public static string Domrename(string options) { return Terminal.Terminal.Execute($"virsh domrename {options}"); }
+
+            /// <summary>
+            /// TODO - low
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Dompmsuspend(string options) { return Terminal.Terminal.Execute($"virsh dompmsuspend {options}"); }
+
+            /// <summary>
+            /// TODO - low
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Dompmwakeup(string options) { return Terminal.Terminal.Execute($"virsh dompmwakeup {options}"); }
+
             public static string Domuuid(string options) { return Terminal.Terminal.Execute($"virsh domuuid {options}"); }
             public static string domxml_from_native(string options) { return Terminal.Terminal.Execute($"virsh domxml_from_native {options}"); }
             public static string domxml_to_native(string options) { return Terminal.Terminal.Execute($"virsh domxml_to_native {options}"); }
@@ -97,10 +153,35 @@ namespace antdlib.Virsh {
             public static string qemu_monitor_command(string options) { return Terminal.Terminal.Execute($"virsh qemu_monitor_command {options}"); }
             public static string qemu_monitor_event(string options) { return Terminal.Terminal.Execute($"virsh qemu_monitor_event {options}"); }
             public static string qemu_agent_command(string options) { return Terminal.Terminal.Execute($"virsh qemu_agent_command {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Reboot(string options) { return Terminal.Terminal.Execute($"virsh reboot {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Reset(string options) { return Terminal.Terminal.Execute($"virsh reset {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Restore(string options) { return Terminal.Terminal.Execute($"virsh restore {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Resume(string options) { return Terminal.Terminal.Execute($"virsh resume {options}"); }
+
             public static string Save(string options) { return Terminal.Terminal.Execute($"virsh save {options}"); }
             public static string save_image_define(string options) { return Terminal.Terminal.Execute($"virsh save_image_define {options}"); }
             public static string save_image_dumpxml(string options) { return Terminal.Terminal.Execute($"virsh save_image_dumpxml {options}"); }
@@ -111,16 +192,47 @@ namespace antdlib.Virsh {
             public static string Setmaxmem(string options) { return Terminal.Terminal.Execute($"virsh setmaxmem {options}"); }
             public static string Setmem(string options) { return Terminal.Terminal.Execute($"virsh setmem {options}"); }
             public static string Setvcpus(string options) { return Terminal.Terminal.Execute($"virsh setvcpus {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Shutdown(string options) { return Terminal.Terminal.Execute($"virsh shutdown {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Start(string options) { return Terminal.Terminal.Execute($"virsh start {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Suspend(string options) { return Terminal.Terminal.Execute($"virsh suspend {options}"); }
+
+            /// <summary>
+            /// TODO - low
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Ttyconsole(string options) { return Terminal.Terminal.Execute($"virsh ttyconsole {options}"); }
+
             public static string Undefine(string options) { return Terminal.Terminal.Execute($"virsh undefine {options}"); }
             public static string update_device(string options) { return Terminal.Terminal.Execute($"virsh update_device {options}"); }
             public static string Vcpucount(string options) { return Terminal.Terminal.Execute($"virsh vcpucount {options}"); }
             public static string Vcpuinfo(string options) { return Terminal.Terminal.Execute($"virsh vcpuinfo {options}"); }
             public static string Vcpupin(string options) { return Terminal.Terminal.Execute($"virsh vcpupin {options}"); }
             public static string Emulatorpin(string options) { return Terminal.Terminal.Execute($"virsh emulatorpin {options}"); }
+
+            /// <summary>
+            /// TODO
+            /// </summary>
+            /// <param name="options"></param>
+            /// <returns></returns>
             public static string Vncdisplay(string options) { return Terminal.Terminal.Execute($"virsh vncdisplay {options}"); }
         }
 

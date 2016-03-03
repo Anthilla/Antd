@@ -1,7 +1,18 @@
 (function ($) {
     $.fn.CommandTemplate = function () {
-        $(this).html('<input type="text" /><input type="submit" value="submit" />');
-        $(this).after('<br /><textarea id="CommandResult" style="width: 45%;"></textarea>');
+        var options = $(this).attr('data-options');
+        if (str.toLowerCase().indexOf("button-only") >= 0) {
+            //button-only:([a-z 0-9]*);
+            var myString = "button-only:value 1;";
+            var myRegexp = /button-only:([a-zAA-Z 0-9]*);/g;
+            var match = myRegexp.exec(options);
+            var buttonValue = match[1];
+            $(this).html('<input type="submit" value="' + buttonValue + '" />');
+        }
+        else {
+            $(this).html('<input type="text" /><input type="submit" value="submit" />');
+            $(this).after('<br /><textarea id="CommandResult" style="width: 45%;"></textarea>');
+        }
         return this;
     };
 }(jQuery));

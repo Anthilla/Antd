@@ -1,0 +1,30 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="VM">
+        VM Management
+    </legend>
+    <table class="table">
+        <tbody>
+            @Each.VMList
+            <tr>
+                <td>@Current.Id</td>
+                <td>@Current.Domain</td>
+                <td>@Current.State</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div data-role="command-set" data-command="virsh destroy @Current.Domain" data-options="button-only:destroy;"></div>
+                    <div data-role="command-set" data-command="virsh reboot @Current.Domain" data-options="button-only:reboot;"></div>
+                    <div data-role="command-set" data-command="virsh reset @Current.Domain" data-options="button-only:reset;"></div>
+                    <div data-role="command-set" data-command="virsh restore @Current.Domain" data-options="button-only:restore;"></div>
+                    <div data-role="command-set" data-command="virsh resume @Current.Domain" data-options="button-only:resume;"></div>
+                    <div data-role="command-set" data-command="virsh shutdown @Current.Domain" data-options="button-only:shutdown;"></div>
+                    <div data-role="command-set" data-command="virsh start @Current.Domain" data-options="button-only:start;"></div>
+                    <div data-role="command-set" data-command="virsh suspend @Current.Domain" data-options="button-only:suspend;"></div>
+                    <div data-role="command-set" data-command="virsh dompmsuspend @Current.Domain" data-options="button-only:dompmsuspend;"></div>
+                    <div data-role="command-set" data-command="virsh dompmwakeup @Current.Domain" data-options="button-only:dompmwakeup;"></div>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

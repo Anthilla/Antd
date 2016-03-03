@@ -72,6 +72,7 @@ namespace Antd.Modules {
                     "DnsServer",
                     "Proxy",
                     "Storage",
+                    "VM",
                     "Mount",
                     "Rsync",
                     "Users",
@@ -126,7 +127,6 @@ namespace Antd.Modules {
                 //    viewModel.SambaGetData = sambaModel.Data;
                 //    viewModel.SambaGetShare = sambaModel.Share;
                 //}
-
                 viewModel.Mounts = MountRepository.Get();
                 viewModel.RsyncDirectories = Rsync.GetAll();
                 viewModel.RsyncOptions = new List<Tuple<string, string>> {
@@ -149,8 +149,8 @@ namespace Antd.Modules {
                     new Tuple<string, string>("--group", "preserve group"),
                     new Tuple<string, string>("--times", "preserve modification times")
                 };
-
                 viewModel.UserEntities = UserEntity.Repository.GetAll();
+                viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
 
                 //todo check next parameters
                 viewModel.SSHPort = "22";
