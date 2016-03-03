@@ -26,12 +26,7 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
-using antdlib.Systemd;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using antdlib.Info;
 using antdlib.Log;
 
 namespace antdlib.Apps {
@@ -88,7 +83,6 @@ namespace antdlib.Apps {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }
-
 
         public static void SetGroupAcl(string path, string perms, string group = "") {
             try {

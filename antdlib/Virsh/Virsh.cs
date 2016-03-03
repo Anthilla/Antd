@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace antdlib.Virsh {
     public class Virsh {
@@ -37,6 +38,8 @@ namespace antdlib.Virsh {
             public string Id { get; set; }
             public string Domain { get; set; }
             public string State { get; set; }
+            public string VncIp { get; set; }
+            public string VncPort { get; set; }
         }
 
         public static IEnumerable<VM> GetVmList() {
@@ -53,9 +56,26 @@ namespace antdlib.Virsh {
                     Domain = info[1],
                     State = info[2],
                 };
+                var vnc = GetVmVncAddress(vm.Domain);
+                vm.VncIp = vnc.Key;
+                vm.VncPort = vnc.Value;
                 vms.Add(vm);
             }
             return vms;
+        }
+
+        private static KeyValuePair<string, string> GetVmVncAddress(string domain) {
+            //virsh dumpxml 004_NET_HWK_AnthillaOS | grep "graphics type='vnc'"
+            //<graphics type='vnc' port='22004' autoport='no' websocket='23004' listen='10.1.19.1' keymap='it' sharePolicy='force-shared'>
+            var res = Terminal.Terminal.Execute($"virsh dumpxml {domain} | grep \"graphics type='vnc'\"");
+            if (res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
+                return new KeyValuePair<string, string>(null, null);
+            }
+            var portRegex = "port='([\\d]*)'";
+            var ipRegex = "listen='([\\d. ]*)'";
+            var port = new Regex(portRegex, RegexOptions.Multiline).Matches(res)[0].Value;
+            var ip = new Regex(ipRegex, RegexOptions.Multiline).Matches(res)[0].Value;
+            return new KeyValuePair<string, string>(ip, port);
         }
 
         public class Domain {
