@@ -32,10 +32,110 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.Info;
+using antdlib.Log;
 
 namespace antdlib.Apps {
 
     public class AclManagement {
 
+        public class Permissions {
+            public class RWX {
+                public string Value { get; } = "rwx";
+                public int N { get; } = 7;
+            }
+            public class RW {
+                public string Value { get; } = "rw";
+                public int N { get; } = 6;
+            }
+            public class RX {
+                public string Value { get; } = "rx";
+                public int N { get; } = 5;
+            }
+            public class R {
+                public string Value { get; } = "r";
+                public int N { get; } = 4;
+            }
+            public class WX {
+                public string Value { get; } = "wx";
+                public int N { get; } = 3;
+            }
+            public class W {
+                public string Value { get; } = "w";
+                public int N { get; } = 2;
+            }
+            public class X {
+                public string Value { get; } = "x";
+                public int N { get; } = 1;
+            }
+            public class O {
+                public string Value { get; } = "";
+                public int N { get; } = 0;
+            }
+        }
+
+        public static void GetAcl(string path) {
+            var res = Terminal.Terminal.Execute($"getfacl {path}");
+        }
+
+        public static void SetUserAcl(string path, string perms, string user = "") {
+            try {
+                var r = Terminal.Terminal.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}");
+                if (r.Trim().Length > 0) {
+                    throw new Exception(r);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
+            }
+        }
+
+
+        public static void SetGroupAcl(string path, string perms, string group = "") {
+            try {
+                var r = Terminal.Terminal.Execute($"setfacl -R -m \"g:{group}:{perms}\" {path}");
+                if (r.Trim().Length > 0) {
+                    throw new Exception(r);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
+            }
+        }
+
+        public static void RemoveUserAcl(string path, string user = "") {
+            try {
+                var r = Terminal.Terminal.Execute($"setfacl -R -x \"u:{user}\" {path}");
+                if (r.Trim().Length > 0) {
+                    throw new Exception(r);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
+            }
+        }
+
+        public static void RemoveGroupAcl(string path, string group = "") {
+            try {
+                var r = Terminal.Terminal.Execute($"setfacl -R -x \"g:{group}\" {path}");
+                if (r.Trim().Length > 0) {
+                    throw new Exception(r);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
+            }
+        }
+
+        public static void SetOwner(string path, string userOwner, string groupOwner) {
+            try {
+                var r = Terminal.Terminal.Execute($"chown {userOwner}:{groupOwner} -R {path}");
+                if (r.Trim().Length > 0) {
+                    throw new Exception(r);
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
+            }
+        }
     }
 }
