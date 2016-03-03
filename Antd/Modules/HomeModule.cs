@@ -71,6 +71,7 @@ namespace Antd.Modules {
                     "Firewall",
                     "DnsServer",
                     "Proxy",
+                    "Acl",
                     "Storage",
                     "VM",
                     "Mount",

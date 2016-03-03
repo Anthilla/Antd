@@ -184,6 +184,9 @@
     <Content Include="Views\antd\page-antd-firewall.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\page-antd-acl.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\page-antd-vm.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -247,7 +250,7 @@
     <Content Include="Views\antd\apps\_page-apps.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\cctable\_page-cctable.html">
+    <Content Include="Views\antd\cctable\_page-cctable.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\hypervisor\page-hypervisor-backup.html">
