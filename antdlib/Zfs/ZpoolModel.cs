@@ -41,4 +41,13 @@ namespace antdlib.Zfs {
         public string Health { get; set; }
         public string AltRoot { get; set; }
     }
+
+    public class ZfsDatasetModel {
+        public string _Id { get; set; }
+        public string Name { get; set; }
+        public string Used { get; set; }
+        public string Available { get; set; }
+        public string Refer { get; set; }
+        public string Mountpoint { get; set; }
+    }
 }

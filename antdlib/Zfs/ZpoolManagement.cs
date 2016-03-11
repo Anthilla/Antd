@@ -29,20 +29,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace antdlib.Zfs {
     public class ZpoolManagement {
 
         public static void UpdateInfo() {
             ClearDatabase();
+            UpdateZpool();
+            UpdateDataset();
+        }
+
+        private static void UpdateZpool() {
             var result = Terminal.Terminal.Execute("zpool list -H");
             var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines) {
                 var info = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 var pool = new ZpoolModel {
+                    _Id = Guid.NewGuid().ToString(),
                     Name = info[0],
                     Size = info[1],
                     Allocated = info[2],
@@ -58,15 +61,40 @@ namespace antdlib.Zfs {
             }
         }
 
+        private static void UpdateDataset() {
+            var result = Terminal.Terminal.Execute("zfs list -H");
+            var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines) {
+                var info = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                var pool = new ZfsDatasetModel {
+                    _Id = Guid.NewGuid().ToString(),
+                    Name = info[0],
+                    Used = info[1],
+                    Available = info[2],
+                    Refer = info[3],
+                    Mountpoint = info[4],
+                };
+                DeNSo.Session.New.Set(pool);
+            }
+        }
+
         private static void ClearDatabase() {
             var datas = DeNSo.Session.New.Get<ZpoolModel>();
             foreach (var data in datas) {
                 DeNSo.Session.New.Delete(data);
             }
+            var datasets = DeNSo.Session.New.Get<ZfsDatasetModel>();
+            foreach (var dataset in datasets) {
+                DeNSo.Session.New.Delete(dataset);
+            }
         }
 
-        public static IEnumerable<ZpoolModel> GetInfo() {
+        public static IEnumerable<ZpoolModel> GetZpoolInfo() {
             return DeNSo.Session.New.Get<ZpoolModel>();
+        }
+
+        public static IEnumerable<ZfsDatasetModel> GetDatasetInfo() {
+            return DeNSo.Session.New.Get<ZfsDatasetModel>();
         }
     }
 }

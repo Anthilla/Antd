@@ -46,6 +46,7 @@ using antdlib.Terminal;
 using antdlib.Users;
 using Nancy.Security;
 using antdlib.Vnc;
+using antdlib.Zfs;
 
 namespace Antd.Modules {
     public class HomeModule : CoreModule {
@@ -130,6 +131,10 @@ namespace Antd.Modules {
                 //    viewModel.SambaGetShare = sambaModel.Share;
                 //}
                 viewModel.Mounts = MountRepository.Get();
+
+                viewModel.Zpool = ZpoolManagement.GetZpoolInfo();
+                viewModel.Zdataset = ZpoolManagement.GetDatasetInfo();
+
                 viewModel.RsyncDirectories = Rsync.GetAll();
                 viewModel.RsyncOptions = new List<Tuple<string, string>> {
                     new Tuple<string, string>("--checksum", "skip based on checksum"),

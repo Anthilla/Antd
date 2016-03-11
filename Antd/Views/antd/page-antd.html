@@ -954,5 +954,17 @@
     });
     //END SSH
 </script>
+<script data-context="zfs" type="text/javascript">
+    $('#ReloadZfsInformation').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/zfs/reload',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
 
+</script>
 @EndSection

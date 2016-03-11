@@ -33,6 +33,7 @@ using antdlib.Install;
 using antdlib.Storage;
 using Nancy;
 using Nancy.Security;
+using antdlib.Zfs;
 
 namespace Antd.Modules {
     public class StorageModule : CoreModule {
@@ -67,6 +68,11 @@ namespace Antd.Modules {
                 var type = (string)Request.Form.Type.Value;
                 Rsync.Create(source, destination, options, type);
                 return Response.AsRedirect("/");
+            };
+
+            Post["/zfs/reload"] = x => {
+                ZpoolManagement.UpdateInfo();
+                return Response.AsJson(true);
             };
         }
     }
