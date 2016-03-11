@@ -43,7 +43,23 @@ namespace antdlib.Antdsh {
             public const string UPDATE_VERB_FOR_ANTDSH = "update.antdsh";
             public const string UPDATE_VERB_FOR_SYSTEM = "update.system";
             public const string UPDATE_VERB_FOR_KERNEL = "update.kernel";
-            public const string UPDATE_VERB_FOR_UNITS = "update.units";
+            public const string UNITS_TARGET_APP = "/mnt/cdrom/Units/applicative.target.wants";
+            public const string UNITS_TARGET_KPL = "/mnt/cdrom/Units/kernelpkgload.target.wants";
+            public static string[] UNITS_ANTD = new[] {
+                "app-antd-01-prepare.service",
+                "app-antd-02-mount.service",
+                "app-antd-03-launcher.service",
+            };
+            public static string[] UNITS_ANTDSH = new[] {
+                "app-antdsh-01-prepare.service",
+                "app-antdsh-02-mount.service"
+            };
+            public static string[] UNITS_KERNEL = new[] {
+                "kpl-firmware-mount.service",
+                "kpl-modules-mount.",
+                "kpl-modules-prepare.service",
+                "kpl-restart-modules-load.service"
+            };
         }
 
         public class FileInfoModel {
@@ -78,18 +94,18 @@ namespace antdlib.Antdsh {
             switch (context) {
                 case "antd":
                     UpdateContext(Constants.UPDATE_VERB_FOR_ANTD, AntdActive, AntdDirectory);
+                    UpdateUnits(Constants.UNITS_ANTD);
                     break;
                 case "antdsh":
                     UpdateContext(Constants.UPDATE_VERB_FOR_ANTDSH, AntdshActive, AntdshDirectory);
+                    UpdateUnits(Constants.UNITS_ANTDSH);
                     break;
                 case "system":
                     UpdateContext(Constants.UPDATE_VERB_FOR_SYSTEM, SystemActive, SystemDirectory);
                     break;
                 case "kernel":
                     UpdateKernel(Constants.UPDATE_VERB_FOR_KERNEL, ModulesActive, KernelDirectory);
-                    break;
-                case "units":
-                    UpdateContext(Constants.UPDATE_VERB_FOR_UNITS, SystemActive, SystemDirectory);
+                    UpdateUnits(Constants.UNITS_KERNEL);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
@@ -173,7 +189,19 @@ namespace antdlib.Antdsh {
                 _updateRetry = true;
                 UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            Directory.Delete(TmpDirectory, true);
+        }
 
+        private static void UpdateUnits(IEnumerable<string> units) {
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
+            foreach (var unit in units) {
+                var unitDownloadUrl = $"{PublicRepositoryUrl}/{unit}";
+                var unitTempPath = $"{TmpDirectory}/{unit}";
+                var unitPath = $"{Constants.UNITS_TARGET_APP}/{unit}";
+                FileSystem.Download2(unitDownloadUrl, unitTempPath);
+                File.Copy(unitTempPath, unitPath, true);
+            }
             Directory.Delete(TmpDirectory, true);
         }
 

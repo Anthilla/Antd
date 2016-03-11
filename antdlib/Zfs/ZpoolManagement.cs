@@ -27,22 +27,46 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
-using antdlib.CCTable;
-using Nancy.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Antd.Modules {
-    public class HypervisorModule : CoreModule {
-        public HypervisorModule() {
-            this.RequiresAuthentication();
+namespace antdlib.Zfs {
+    public class ZpoolManagement {
 
-            Get["/hypervisor"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
-                return View["_page-hypervisor", vmod];
-            };
+        public static void UpdateInfo() {
+            ClearDatabase();
+            var result = Terminal.Terminal.Execute("zpool list -H");
+            var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines) {
+                var info = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                var pool = new ZpoolModel {
+                    Name = info[0],
+                    Size = info[1],
+                    Allocated = info[2],
+                    Free = info[3],
+                    ExpandSz = info[4],
+                    Frag = info[5],
+                    Capacity = info[6],
+                    Dedup = info[7],
+                    Health = info[8],
+                    AltRoot = info[9],
+                };
+                DeNSo.Session.New.Set(pool);
+            }
+        }
+
+        private static void ClearDatabase() {
+            var datas = DeNSo.Session.New.Get<ZpoolModel>();
+            foreach (var data in datas) {
+                DeNSo.Session.New.Delete(data);
+            }
+        }
+
+        public static IEnumerable<ZpoolModel> GetInfo() {
+            return DeNSo.Session.New.Get<ZpoolModel>();
         }
     }
 }

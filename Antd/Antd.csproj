@@ -147,7 +147,6 @@
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
-    <Compile Include="Modules\HypervisorModule.cs" />
     <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
@@ -185,6 +184,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-acl.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-zfs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-vm.html">

@@ -73,6 +73,7 @@ namespace Antd.Modules {
                     "Proxy",
                     "Acl",
                     "Storage",
+                    "Zfs",
                     "VM",
                     "Mount",
                     "Rsync",
