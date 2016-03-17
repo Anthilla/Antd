@@ -127,6 +127,7 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="Storage\BackupManagement.cs" />
     <Compile Include="Boot.cs" />
     <Compile Include="ApplicationSetting.cs" />
     <Compile Include="CCTable\CCTableConf.cs" />
@@ -284,9 +285,7 @@
     <None Include="Svcs\Samba\samba.command.list" />
     <None Include="Svcs\Samba\samba.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Backup\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

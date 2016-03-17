@@ -74,6 +74,13 @@ namespace Antd.Modules {
                 ZpoolManagement.UpdateInfo();
                 return Response.AsJson(true);
             };
+
+            Post["/backup"] = x => {
+                var source = (string)Request.Form.Source;
+                var destination = (string)Request.Form.Destination;
+                BackupManagement.LaunchBackupJob(source, destination);
+                return Response.AsJson(true);
+            };
         }
     }
 }

@@ -33,6 +33,7 @@ using System.Linq;
 
 namespace antdlib.Storage {
     public enum RsyncDirectoryType : byte {
+        Local = 0,
         FromLocalToRemote = 1,
         FromRemoteToLocal = 2,
         Other = 99
@@ -68,6 +69,8 @@ namespace antdlib.Storage {
 
         private static RsyncDirectoryType ConvertToRsyncDirectoryType(string type) {
             switch (type) {
+                case "locally":
+                    return RsyncDirectoryType.Local;
                 case "localtoremote":
                     return RsyncDirectoryType.FromLocalToRemote;
                 case "remotetolocal":
