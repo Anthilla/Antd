@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 using System.IO;
 
 namespace antdlib.Storage {
-    public class BackupManagement {
+    public class Backup {
         public static void LaunchBackupJob(string source, string destination = "") {
             if (!Directory.Exists(source)) {
                 return;

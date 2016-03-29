@@ -127,7 +127,7 @@
     <Compile Include="Auth\T2FA\Authentication.cs" />
     <Compile Include="Auth\TokenAuthentication.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
-    <Compile Include="Storage\BackupManagement.cs" />
+    <Compile Include="Storage\Backup.cs" />
     <Compile Include="Boot.cs" />
     <Compile Include="ApplicationSetting.cs" />
     <Compile Include="CCTable\CCTableConf.cs" />

@@ -78,7 +78,7 @@ namespace Antd.Modules {
             Post["/backup"] = x => {
                 var source = (string)Request.Form.Source;
                 var destination = (string)Request.Form.Destination;
-                BackupManagement.LaunchBackupJob(source, destination);
+                Backup.LaunchBackupJob(source, destination);
                 return Response.AsJson(true);
             };
         }
