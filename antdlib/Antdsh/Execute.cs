@@ -46,7 +46,6 @@ namespace antdlib.Antdsh {
         private static void TryStopProcess(string query) {
             while (true) {
                 var psResult = Terminal.Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep");
-                //var netResult = psResult.Length > 0 ? Terminal.Terminal.Execute($"netstat -anp |grep {psResult}") : "";
                 if (psResult.Length <= 0)
                     return;
                 var split = psResult.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);

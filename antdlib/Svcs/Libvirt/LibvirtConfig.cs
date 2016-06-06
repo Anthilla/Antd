@@ -56,7 +56,7 @@ namespace antdlib.Svcs.Libvirt {
 
         private static bool CheckIsActive() {
             var mount = MountRepository.Get(_dir);
-            return (mount != null);
+            return mount != null;
         }
 
         public static bool IsActive => CheckIsActive();
@@ -68,7 +68,7 @@ namespace antdlib.Svcs.Libvirt {
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
             var list = new List<KeyValuePair<string, List<string>>>();
             var files = Directory.EnumerateFiles(_mntDir, "*.conf", SearchOption.AllDirectories).ToArray();
-            foreach (string t in files) {
+            foreach (var t in files) {
                 if (!File.ReadLines(t).Any(line => line.Contains("include")))
                     continue;
                 var lines = File.ReadLines(t).Where(line => line.Contains("include")).ToList();
@@ -87,7 +87,7 @@ namespace antdlib.Svcs.Libvirt {
         private static List<string> GetServiceSimpleStructure() {
             var list = new List<string>();
             var files = Directory.EnumerateFiles(_mntDir, "*.conf", SearchOption.AllDirectories).ToArray();
-            foreach (string t in files) {
+            foreach (var t in files) {
                 if (!File.ReadLines(t).Any(line => line.Contains("include")))
                     continue;
                 var lines = File.ReadLines(t).Where(line => line.Contains("include")).ToList();
@@ -187,7 +187,7 @@ namespace antdlib.Svcs.Libvirt {
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                var key = keyValuePair.Length > 0 ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
                     type = ServiceDataType.Disabled;
@@ -196,7 +196,7 @@ namespace antdlib.Svcs.Libvirt {
                     type = ServiceDataType.Disabled;
                 }
                 else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    value = keyValuePair.Length > 1 ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 var booleanVerbs = type == ServiceDataType.Boolean ? Helper.ServiceData.SupposeBooleanVerbs(value.Trim()) : new KeyValuePair<string, string>("", "");
@@ -327,7 +327,7 @@ namespace antdlib.Svcs.Libvirt {
 
             public static void AddParameterToGlobal(string key, string value) {
                 SetCustomFile();
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
                 var line = new LineModel() {
                     FilePath = $"{_mntDir}/{_antdLibvirtFile}",

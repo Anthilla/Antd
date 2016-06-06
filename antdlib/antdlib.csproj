@@ -142,12 +142,6 @@
     <Compile Include="Common\FileSystem.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Config\ConfigManagement.cs" />
-    <Compile Include="Database\DatabaseEncryption.cs" />
-    <Compile Include="Database\DB.cs" />
-    <Compile Include="Database\Entity.cs" />
-    <Compile Include="Database\EntityStatus.cs" />
-    <Compile Include="Database\SecureDB.cs" />
-    <Compile Include="Database\SecureEntity.cs" />
     <Compile Include="Firewall\FirewallLists.cs" />
     <Compile Include="Firewall\MacAddressDiscovery.cs" />
     <Compile Include="Firewall\NFTables.cs" />
@@ -190,7 +184,7 @@
     <Compile Include="MountPoint\MountModel.cs" />
     <Compile Include="MountPoint\MountLocal.cs" />
     <Compile Include="MountPoint\MountRepository.cs" />
-    <Compile Include="MountPoint\DFP.cs" />
+    <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\NetworkConfig.cs" />
     <Compile Include="Network\NetworkInterface.cs" />

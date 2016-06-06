@@ -37,7 +37,7 @@ namespace antdlib.Users {
         private static bool CheckIsActive() {
             var mount = MountRepository.Get(File);
             var mountPwd = MountRepository.Get(File);
-            return (mount != null || mountPwd != null);
+            return mount != null || mountPwd != null;
         }
 
         public static IEnumerable<UserModel> GetAll() {
@@ -154,12 +154,9 @@ namespace antdlib.Users {
         }
 
         public class Map {
-
             private static IEnumerable<SystemUserModel> DefaultMappedUsers() {
                 //var visorPassword = Terminal.Terminal.Execute("mkpasswd -m sha-512 Anthilla");
-                return new List<SystemUserModel> {
-                    //new SystemUserModel { _Id = Guid.NewGuid().ToString(), Guid = Guid.NewGuid().ToString(), Alias = "visor", Password = visorPassword},
-                };
+                return new List<SystemUserModel>();
             }
 
             public static IEnumerable<SystemUserModel> GetMappedUsers() {

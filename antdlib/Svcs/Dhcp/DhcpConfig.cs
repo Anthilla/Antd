@@ -47,7 +47,7 @@ namespace antdlib.Svcs.Dhcp {
         }
 
         private static bool CheckIsActive() {
-            return (MountRepository.Get(Dir) != null);
+            return MountRepository.Get(Dir) != null;
         }
 
         public static bool IsActive => CheckIsActive();

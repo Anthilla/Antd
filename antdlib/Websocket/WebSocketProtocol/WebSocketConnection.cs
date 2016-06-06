@@ -62,10 +62,10 @@ namespace antdlib.Websocket.WebSocketProtocol {
                 }
                 var secWebSocketKey = webSocketKeyRegex.Match(header).Groups[1].Value.Trim();
                 var setWebSocketAccept = WebSocketHandshakeHelper.ComputeSocketAcceptString(secWebSocketKey);
-                var response = ("HTTP/1.1 101 Switching Protocols" + Environment.NewLine
-                                           + "Connection: Upgrade" + Environment.NewLine
-                                           + "Upgrade: websocket" + Environment.NewLine
-                                           + "Sec-WebSocket-Accept: " + setWebSocketAccept);
+                var response = "HTTP/1.1 101 Switching Protocols" + Environment.NewLine
+                               + "Connection: Upgrade" + Environment.NewLine
+                               + "Upgrade: websocket" + Environment.NewLine
+                               + "Sec-WebSocket-Accept: " + setWebSocketAccept;
 
                 HttpHelper.WriteHttpHeader(response, networkStream);
                 Trace.TraceInformation("Web Socket handshake sent");

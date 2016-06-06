@@ -59,7 +59,7 @@ namespace antdlib.Status {
                 into cellList
                     select new CpuinfoModel {
                         Key = cellList[0],
-                        Value = (cellList.Length > 1) ? cellList[1] : ""
+                        Value = cellList.Length > 1 ? cellList[1] : ""
                     }).ToList();
         }
     }

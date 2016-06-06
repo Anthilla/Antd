@@ -139,7 +139,7 @@ namespace antdlib.CCTable {
                 }
 
                 public static bool CheckMapForFile(string filePath) {
-                    return (GetMapByFilePath(filePath) != null);
+                    return GetMapByFilePath(filePath) != null;
                 }
 
                 public static DataType ConvertToDataType(string type) {

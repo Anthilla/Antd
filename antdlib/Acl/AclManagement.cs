@@ -26,23 +26,24 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
 using System;
 using antdlib.Log;
 
-namespace antdlib.Apps {
+namespace antdlib.Acl {
 
     public class AclManagement {
 
         public class Permissions {
-            public class RWX {
+            public class Rwx {
                 public string Value { get; } = "rwx";
                 public int N { get; } = 7;
             }
-            public class RW {
+            public class Rw {
                 public string Value { get; } = "rw";
                 public int N { get; } = 6;
             }
-            public class RX {
+            public class Rx {
                 public string Value { get; } = "rx";
                 public int N { get; } = 5;
             }
@@ -50,7 +51,7 @@ namespace antdlib.Apps {
                 public string Value { get; } = "r";
                 public int N { get; } = 4;
             }
-            public class WX {
+            public class Wx {
                 public string Value { get; } = "wx";
                 public int N { get; } = 3;
             }
@@ -69,7 +70,7 @@ namespace antdlib.Apps {
         }
 
         public static void GetAcl(string path) {
-            var res = Terminal.Terminal.Execute($"getfacl {path}");
+            Terminal.Terminal.Execute($"getfacl {path}");
         }
 
         public static void SetUserAcl(string path, string perms, string user = "") {

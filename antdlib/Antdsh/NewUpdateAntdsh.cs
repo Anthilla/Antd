@@ -45,16 +45,16 @@ namespace antdlib.Antdsh {
             public const string UPDATE_VERB_FOR_KERNEL = "update.kernel";
             public const string UNITS_TARGET_APP = "/mnt/cdrom/Units/applicative.target.wants";
             public const string UNITS_TARGET_KPL = "/mnt/cdrom/Units/kernelpkgload.target.wants";
-            public static string[] UNITS_ANTD = new[] {
+            public static string[] UNITS_ANTD = {
                 "app-antd-01-prepare.service",
                 "app-antd-02-mount.service",
                 "app-antd-03-launcher.service",
             };
-            public static string[] UNITS_ANTDSH = new[] {
+            public static string[] UNITS_ANTDSH = {
                 "app-antdsh-01-prepare.service",
                 "app-antdsh-02-mount.service"
             };
-            public static string[] UNITS_KERNEL = new[] {
+            public static string[] UNITS_KERNEL = {
                 "kpl-firmware-mount.service",
                 "kpl-modules-mount.",
                 "kpl-modules-prepare.service",

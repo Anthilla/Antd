@@ -27,35 +27,19 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Newtonsoft.Json;
-using System;
 using System.Threading;
-using antdlib.Common;
 
 namespace antdlib.Scheduler {
 
     public class Job {
-        public static void Schedule(string jobName, string command) {
-            var guid = Guid.NewGuid().ToString();
+        public static void Schedule(string guid, string jobName, string command) {
             JobRepository.SetTaskOneTimeOnly(guid, jobName, command);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }
 
-        public static void ScheduleWGuid(string guid, string command) {
-            JobRepository.SetTaskOneTimeOnly(guid, command);
-            Thread.Sleep(20);
-            JobScheduler.LaunchJob<JobList.CommandJob>(guid);
-        }
-
-        public static void Schedule(string jobName, string command, string cron) {
-            var guid = Guid.NewGuid().ToString();
-            var data = new [] {
-                    command.GetFirstString(),
-                    command.GetAllStringsButFirst()
-                };
-            var dataJson = JsonConvert.SerializeObject(data);
-            JobRepository.SetTaskCron(guid, jobName, dataJson, cron);
+        public static void Schedule(string guid, string jobName, string command, string cron) {
+            JobRepository.SetTaskCron(guid, jobName, command, cron);
             Thread.Sleep(20);
             JobScheduler.LaunchJob<JobList.CommandJob>(guid);
         }

@@ -63,7 +63,7 @@
 @Partial['antd/page-antd-dns-server'];
 @Partial['antd/page-antd-proxy'];
 @Partial['antd/page-antd-acl'];
-@Partial['antd/page-antd-cron'];
+@Partial['antd/page-antd-cron', Model];
 @Partial['antd/page-antd-storage'];
 @Partial['antd/page-antd-zfs'];
 @Partial['antd/page-antd-vm'];
@@ -81,6 +81,66 @@
 
     $('#HideCronInfo').click(function () {
         $('#CronDashboard').hide();
+    });
+
+    $('[data-role="DeleteCronJob"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/scheduler/delete",
+            type: "POST",
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="DisableCronJob"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/scheduler/disable",
+            type: "POST",
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="EnableCronJob"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/scheduler/enable",
+            type: "POST",
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="LaunchCronJob"]').click(function () {
+        var guid = $(this).attr('data-guid');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/scheduler/launch",
+            type: "POST",
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
     });
 </script>
 <script data-context="general" type="text/javascript">

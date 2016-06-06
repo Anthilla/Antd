@@ -40,6 +40,7 @@ using antdlib.Info;
 using antdlib.Log;
 using antdlib.MountPoint;
 using antdlib.Network;
+using antdlib.Scheduler;
 using antdlib.Status;
 using antdlib.Storage;
 using antdlib.Terminal;
@@ -132,6 +133,8 @@ namespace Antd.Modules {
                 //    viewModel.SambaGetShare = sambaModel.Share;
                 //}
                 viewModel.Mounts = MountRepository.Get();
+
+                viewModel.Jobs = JobRepository.GetAll();
 
                 viewModel.Zpool = ZpoolManagement.GetZpoolInfo();
                 viewModel.Zdataset = ZpoolManagement.GetDatasetInfo();

@@ -30,11 +30,11 @@
 using System;
 using System.IO;
 
-namespace antdlib {
+namespace antdlib.Antdsh {
     public class AntdshLogger {
-        private static string AntdshConfigRoot = "/cfg/antdsh";
-        private static string AntdshReport = $"{AntdshConfigRoot}/report";
-        private static string AntdshReportFile = $"{AntdshReport}/log.txt";
+        private const string AntdshConfigRoot = "/cfg/antdsh";
+        private static readonly string AntdshReport = $"{AntdshConfigRoot}/report";
+        private static readonly string AntdshReportFile = $"{AntdshReport}/log.txt";
 
         public static void SetupFile() {
             Directory.CreateDirectory(AntdshConfigRoot);

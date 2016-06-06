@@ -139,7 +139,7 @@ namespace antdlib.Svcs.Dhcp {
             var keyStr = $"key[\\s\\S]*}};";
             var keyRegex = new Regex(keyStr);
             var keyMatches = keyRegex.Matches(input);
-            var data = (keyMatches.Count > 0) ? keyMatches[0].Value : "";
+            var data = keyMatches.Count > 0 ? keyMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("key {", "");
@@ -167,7 +167,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -192,7 +192,7 @@ namespace antdlib.Svcs.Dhcp {
             var subnetStr = $"subnet[\\s\\w\\d.]*mask[\\s\\w\\d.]*{{[\\s\\w\\d.;{{-]*";
             var subnetRegex = new Regex(subnetStr);
             var subnetMatches = subnetRegex.Matches(input);
-            var data = (subnetMatches.Count > 0) ? subnetMatches[0].Value : "";
+            var data = subnetMatches.Count > 0 ? subnetMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subnet {", "");
@@ -220,7 +220,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -245,7 +245,7 @@ namespace antdlib.Svcs.Dhcp {
             var hostStr = $"[^\\S]host[\\s\\w\\d{{.:;\\-]*";
             var hostRegex = new Regex(hostStr);
             var hostMatches = hostRegex.Matches(input);
-            var data = (hostMatches.Count > 0) ? hostMatches[0].Value : "";
+            var data = hostMatches.Count > 0 ? hostMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("host {", "");
@@ -273,7 +273,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -298,7 +298,7 @@ namespace antdlib.Svcs.Dhcp {
             var subnet6Str = $"[^\\S][^\\S]subnet6[\\s\\w\\d\\-{{.:;\"=/]*";
             var subnet6Regex = new Regex(subnet6Str);
             var subnet6Matches = subnet6Regex.Matches(input);
-            var data = (subnet6Matches.Count > 0) ? subnet6Matches[0].Value : "";
+            var data = subnet6Matches.Count > 0 ? subnet6Matches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subnet6 {", "");
@@ -326,7 +326,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -351,7 +351,7 @@ namespace antdlib.Svcs.Dhcp {
             var failoverStr = $"[^\\S]failover[\\s\\w\\d\\-{{.:;\"]*";
             var failoverRegex = new Regex(failoverStr);
             var failoverMatches = failoverRegex.Matches(input);
-            var data = (failoverMatches.Count > 0) ? failoverMatches[0].Value : "";
+            var data = failoverMatches.Count > 0 ? failoverMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("failover {", "");
@@ -379,7 +379,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -404,7 +404,7 @@ namespace antdlib.Svcs.Dhcp {
             var loggingStr = $"logging[\\s\\w\\d\\-{{.:\"=/;}}]*";
             var loggingRegex = new Regex(loggingStr);
             var loggingMatches = loggingRegex.Matches(input);
-            var data = (loggingMatches.Count > 0) ? loggingMatches[0].Value : "";
+            var data = loggingMatches.Count > 0 ? loggingMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("logging {", "");
@@ -432,7 +432,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -457,7 +457,7 @@ namespace antdlib.Svcs.Dhcp {
             var sharedNetworkStr = $"[^\\S][^\\S]shared-network[\\s\\w\\d\\-{{.:;\"=/]*";
             var sharedNetworkRegex = new Regex(sharedNetworkStr);
             var sharedNetworkMatches = sharedNetworkRegex.Matches(input);
-            var data = (sharedNetworkMatches.Count > 0) ? sharedNetworkMatches[0].Value : "";
+            var data = sharedNetworkMatches.Count > 0 ? sharedNetworkMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("shared-network {", "");
@@ -485,7 +485,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -510,7 +510,7 @@ namespace antdlib.Svcs.Dhcp {
             var groupStr = $"[^\\S][^\\S]group[\\s\\w\\d\\-{{.:;\"=/]*";
             var groupRegex = new Regex(groupStr);
             var groupMatches = groupRegex.Matches(input);
-            var data = (groupMatches.Count > 0) ? groupMatches[0].Value : "";
+            var data = groupMatches.Count > 0 ? groupMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("group {", "");
@@ -538,7 +538,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -563,7 +563,7 @@ namespace antdlib.Svcs.Dhcp {
             var classStr = $"[^\\S]class[\\s\\w\\d\\-{{.:;\"=]*";
             var classRegex = new Regex(classStr);
             var classMatches = classRegex.Matches(input);
-            var data = (classMatches.Count > 0) ? classMatches[0].Value : "";
+            var data = classMatches.Count > 0 ? classMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("class {", "");
@@ -591,7 +591,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,
@@ -616,7 +616,7 @@ namespace antdlib.Svcs.Dhcp {
             var subclassStr = $"[^\\S]subclass[\\s\\w\\d\\-{{.:;\"=/]*";
             var subclassRegex = new Regex(subclassStr);
             var subclassMatches = subclassRegex.Matches(input);
-            var data = (subclassMatches.Count > 0) ? subclassMatches[0].Value : "";
+            var data = subclassMatches.Count > 0 ? subclassMatches[0].Value : "";
             var dataList = new List<DhcpConfig.LineModel>();
             if (data.Length > 0) {
                 var txt = data.Replace("subclass {", "");
@@ -644,7 +644,7 @@ namespace antdlib.Svcs.Dhcp {
                         var v = split[1].Replace("};", "").Trim();
                         var splitValue = v.Split(new[] { ";" }, StringSplitOptions.None).ToArray();
                         var splitValue2 = splitValue[0].Split(new[] { " " }, StringSplitOptions.None).ToArray();
-                        var type = (splitValue2.Length > 0) ? ServiceDataType.DataArray : ServiceDataType.StringArray;
+                        var type = splitValue2.Length > 0 ? ServiceDataType.DataArray : ServiceDataType.StringArray;
                         var ddd = new DhcpConfig.LineModel() {
                             Key = k,
                             Value = v,

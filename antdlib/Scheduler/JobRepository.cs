@@ -29,7 +29,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 
 namespace antdlib.Scheduler {
@@ -53,25 +52,7 @@ namespace antdlib.Scheduler {
         public static string GetResultByGuid(string guid) {
             var results = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).Select(j => j.Results).FirstOrDefault();
             var kvp = results?.OrderByDescending(r => r.Key).First();
-            return kvp?.Value.ToString();
-        }
-
-        public static JobModel SetTaskOneTimeOnly(string guid, string data) {
-            var task = new JobModel {
-                _Id = Guid.NewGuid().ToString(),
-                Guid = guid,
-                Alias = guid,
-                Data = data,
-                IsEnabled = false,
-                Results = new ExpandoObject(),
-                TriggerPeriod = TriggerPeriod.IsOneTimeOnly,
-                StartHour = DateTime.Now.Hour,
-                StartMinute = DateTime.Now.Minute + 1
-            };
-            task.StartTime = new DateTime(2000, 1, 1, task.StartHour, task.StartMinute, 1, 1);
-            task.CronExpression = "";
-            DeNSo.Session.New.Set(task);
-            return task;
+            return kvp?.Value;
         }
 
         public static JobModel SetTaskOneTimeOnly(string guid, string alias, string data) {
@@ -81,7 +62,6 @@ namespace antdlib.Scheduler {
                 Alias = alias,
                 Data = data,
                 IsEnabled = false,
-                Results = new ExpandoObject(),
                 TriggerPeriod = TriggerPeriod.IsOneTimeOnly,
                 StartHour = DateTime.Now.Hour,
                 StartMinute = DateTime.Now.Minute + 1
@@ -99,8 +79,6 @@ namespace antdlib.Scheduler {
                 Alias = alias,
                 Data = data,
                 IsEnabled = true,
-                Results = new ExpandoObject(),
-                TriggerPeriod = TriggerPeriod.IsCron,
                 StartHour = DateTime.Now.Hour,
                 StartMinute = DateTime.Now.Minute + 1
             };
@@ -112,14 +90,13 @@ namespace antdlib.Scheduler {
 
         public static void Enable(string guid) {
             var task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            if (task == null || task.TriggerPeriod != TriggerPeriod.IsCron) return;
+            if (task == null) return;
             task.IsEnabled = true;
             DeNSo.Session.New.Set(task);
         }
 
         public static void Disable(string guid) {
             var task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            if (task != null && task.TriggerPeriod != TriggerPeriod.IsCron) return;
             if (task == null) return;
             task.IsEnabled = false;
             DeNSo.Session.New.Set(task);
@@ -127,14 +104,15 @@ namespace antdlib.Scheduler {
 
         public static void Delete(string guid) {
             var task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
-            DeNSo.Session.New.Delete(task);
+            if (task != null) {
+                DeNSo.Session.New.Delete(task);
+            }
         }
 
         public static void AddResult(string guid, string data) {
             var task = DeNSo.Session.New.Get<JobModel>(j => j.Guid == guid).FirstOrDefault();
             if (task == null) return;
             task.Results[DateTime.Now.ToString("yyyyMMddHHmmssfff")] = data;
-            task.Results = task.Results;
             DeNSo.Session.New.Set(task);
         }
     }

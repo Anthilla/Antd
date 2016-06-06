@@ -229,7 +229,6 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
 
         private static void SetConfFile(string source, string destination) {
             Terminal.Terminal.Execute($"cp {source} {destination}");
-            //File.Copy(source, destination, true);
             Terminal.Terminal.Execute($"mount --bind {source} {destination}");
         }
 
@@ -309,12 +308,12 @@ string inputLabel, string inputCommandSet, string inputCommandGet, string notes,
 
         public static IEnumerable<CCTableRowMapped> MapData(string[] result, List<CCTableRowMap> mapList) {
             var resultArray = result;
-            return (from map in mapList
-                    let z = map.MapIndex.Aggregate("", (current, i) => current + (resultArray[i] + " "))
-                    select new CCTableRowMapped {
-                        Key = map.MapLabel,
-                        Value = z
-                    });
+            return from map in mapList
+                let z = map.MapIndex.Aggregate("", (current, i) => current + resultArray[i] + " ")
+                select new CCTableRowMapped {
+                    Key = map.MapLabel,
+                    Value = z
+                };
         }
 
         public static CCTableFlags.CommandFunction GetCommandFunction(string src) {

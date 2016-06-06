@@ -52,7 +52,7 @@ namespace antdlib.Svcs.Bind {
 
         private static bool CheckIsActive() {
             var mount = MountRepository.Get(Dir);
-            return (mount != null);
+            return mount != null;
         }
 
         public static bool IsActive => CheckIsActive();
@@ -291,7 +291,7 @@ namespace antdlib.Svcs.Bind {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceBind parameter) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,

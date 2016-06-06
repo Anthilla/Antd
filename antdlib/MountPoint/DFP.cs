@@ -34,7 +34,7 @@ using antdlib.Common;
 using antdlib.Log;
 
 namespace antdlib.MountPoint {
-    public class DFP {
+    public class Dfp {
         public static void Set(string directory, string timestamp) {
             try {
                 if (!Directory.Exists(directory)) {

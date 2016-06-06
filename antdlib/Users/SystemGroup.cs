@@ -52,7 +52,7 @@ namespace antdlib.Users {
         }
 
         private static bool CheckIsActive() {
-            return (MountRepository.Get(File) != null);
+            return MountRepository.Get(File) != null;
         }
 
         public static bool IsActive => CheckIsActive();

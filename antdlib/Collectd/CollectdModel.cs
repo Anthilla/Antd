@@ -33,49 +33,31 @@ using System.Collections.Generic;
 namespace antdlib.Collectd {
     public class CollectdItem {
         public long[] values { get; set; }
-
         public string[] dstypes { get; set; }
-
         public string[] dsnames { get; set; }
-
         public double time { get; set; }
-
         public double interval { get; set; }
-
         public string host { get; set; }
-
         public string plugin { get; set; }
-
         public string plugin_instance { get; set; }
-
         public string type { get; set; }
-
         public string type_instance { get; set; }
     }
 
     public class CollectdMappedItem {
         public string Host { get; set; }
-
         public DateTime Date { get; set; }
-
         public string Plugin { get; set; }
-
         public string PluginInstance { get; set; }
-
         public string Type { get; set; }
-
         public string TypeInstance { get; set; }
-
         public long[] Values { get; set; }
     }
 
     public class CollectdDBModel {
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
         public string Timestamp { get; set; }
-
         public List<CollectdItem> Data { get; set; } = new List<CollectdItem>();
     }
 }

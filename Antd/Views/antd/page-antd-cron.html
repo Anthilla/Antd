@@ -44,6 +44,34 @@
         <hr class="bg-anthilla-gray">
     </form>
     <table class="table">
-        <tbody></tbody>
+        <tbody>
+            @Each.Jobs
+            <tr data-guid="@Current.Guid">
+                <td style="width: 150px;">@Current.Alias</td>
+                <td>@Current.Data</td>
+                <td>@Current.Results</td>
+                <td>@Current.CronExpression</td>
+                <td>
+                    <a data-role="LaunchCronJob" data-guid="@Current.Guid" href="#" class="button bg-green" style="width: 90%; color: #3a3a3a !important;">Launch Now</a>
+                    <a data-role="DeleteCronJob" data-guid="@Current.Guid" href="#" class="button bg-violet" style="width: 90%; color: #3a3a3a !important;">Delete</a>
+                    @If.IsEnabled
+                    <a data-role="DisableCronJob" data-guid="@Current.Guid" href="#" class="button bg-yellow" style="width: 90%; color: #3a3a3a !important;">Disable</a>
+                    @EndIf
+                    @IfNot.IsEnabled
+                    <a data-role="EnableCronJob" data-guid="@Current.Guid" href="#" class="button bg-green" style="width: 90%; color: #3a3a3a !important;">Enable</a>
+                    @EndIf
+
+                </td>
+                <td style="width: 45px;">
+                    @If.IsEnabled
+                    <i class="icon-checkmark fg-anthilla-blu"></i>
+                    @EndIf
+                    @IfNot.IsEnabled
+                    <i class="icon-cancel-2 fg-anthilla-orange"></i>
+                    @EndIf
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
     </table>
 </div>

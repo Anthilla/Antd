@@ -56,7 +56,7 @@ namespace antdlib.Svcs.Qemu {
 
         private static bool CheckIsActive() {
             var mount = MountRepository.Get(dir);
-            return (mount == null) ? false : true;
+            return mount == null ? false : true;
         }
 
         public static bool IsActive { get { return CheckIsActive(); } }
@@ -68,7 +68,7 @@ namespace antdlib.Svcs.Qemu {
         private static List<KeyValuePair<string, List<string>>> GetServiceStructure() {
             var list = new List<KeyValuePair<string, List<string>>>() { };
             var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
+            for (var i = 0; i < files.Length; i++) {
                 if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
                     var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
                     var dump = new List<string>() { };
@@ -89,7 +89,7 @@ namespace antdlib.Svcs.Qemu {
         private static List<string> GetServiceSimpleStructure() {
             var list = new List<string>() { };
             var files = Directory.EnumerateFiles(DIR, "*.conf", SearchOption.AllDirectories).ToArray();
-            for (int i = 0; i < files.Length; i++) {
+            for (var i = 0; i < files.Length; i++) {
                 if (File.ReadLines(files[i]).Any(line => line.Contains("include"))) {
                     var lines = File.ReadLines(files[i]).Where(line => line.Contains("include")).ToList();
                     foreach (var line in lines) {
@@ -179,7 +179,7 @@ namespace antdlib.Svcs.Qemu {
             }
 
             private static ShareModel ReadFileShare(string path) {
-                var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
+                var shareName = GetShareName(path) == null ? "" : GetShareName(path);
                 var model = new ShareModel() {
                     FilePath = path,
                     Name = shareName
@@ -198,7 +198,7 @@ namespace antdlib.Svcs.Qemu {
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                var key = keyValuePair.Length > 0 ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
                     type = ServiceDataType.Disabled;
@@ -207,7 +207,7 @@ namespace antdlib.Svcs.Qemu {
                     type = ServiceDataType.Disabled;
                 }
                 else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    value = keyValuePair.Length > 1 ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 KeyValuePair<string, string> booleanVerbs;
@@ -259,7 +259,7 @@ namespace antdlib.Svcs.Qemu {
 
         public class WriteFile {
             private static LineModel ConvertData(ServiceQemu parameter) {
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
+                var type = Helper.ServiceData.SupposeDataType(parameter.DataValue);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(parameter.DataValue);
                 var data = new LineModel() {
                     FilePath = parameter.DataFilePath,
@@ -293,7 +293,7 @@ namespace antdlib.Svcs.Qemu {
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }
-                for (int i = 0; i < parameters.Length; i++) {
+                for (var i = 0; i < parameters.Length; i++) {
                     var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
                     AppendLine(parameters[i].FilePath, line);
                 }
@@ -338,7 +338,7 @@ namespace antdlib.Svcs.Qemu {
                 var file = share.FilePath;
                 CleanFile(file);
                 AppendLine(file, $"{MapRules.CharSectionOpen}{share.Name}{MapRules.CharSectionClose}");
-                for (int i = 0; i < parameters.Length; i++) {
+                for (var i = 0; i < parameters.Length; i++) {
                     var line = $"{parameters[i].Key} {MapRules.CharKevValueSeparator} {parameters[i].Value}";
                     AppendLine(parameters[i].FilePath, line);
                 }
@@ -346,7 +346,7 @@ namespace antdlib.Svcs.Qemu {
 
             public static void AddParameterToGlobal(string key, string value) {
                 SetCustomFile();
-                ServiceDataType type = Helper.ServiceData.SupposeDataType(value);
+                var type = Helper.ServiceData.SupposeDataType(value);
                 var booleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value);
                 var line = new LineModel() {
                     FilePath = $"{DIR}/{antdQemuFile}",

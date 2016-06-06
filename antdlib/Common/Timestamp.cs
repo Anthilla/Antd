@@ -56,7 +56,7 @@ namespace antdlib.Common {
 
         public static double ConvertDateTimeToUnix(DateTime date) {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime();
-            var span = (date.ToLocalTime() - epoch);
+            var span = date.ToLocalTime() - epoch;
             return span.TotalSeconds;
         }
     }

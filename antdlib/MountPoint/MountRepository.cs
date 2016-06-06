@@ -59,7 +59,7 @@ namespace antdlib.MountPoint {
                     return "icon-record fg-green";
                 case MountStatus.Unmounted:
                     return "icon-record fg-red";
-                case MountStatus.MountedTMP:
+                case MountStatus.MountedTmp:
                     return "icon-record fg-orange";
                 case MountStatus.DifferentMount:
                     return "icon-stop-2 fg-orange";
@@ -97,7 +97,7 @@ namespace antdlib.MountPoint {
             var mount = new MountModel {
                 _Id = Guid.NewGuid().ToString(),
                 Guid = Guid.NewGuid().ToString(),
-                DFPTimestamp = Timestamp.Now,
+                DfpTimestamp = Timestamp.Now,
                 MountContext = mntContext,
                 MountEntity = entity,
                 Path = path
@@ -127,7 +127,7 @@ namespace antdlib.MountPoint {
             var mount = DeNSo.Session.New.Get<MountModel>(m => m.Path == path).FirstOrDefault();
             if (mount == null)
                 return;
-            mount.MountStatus = MountStatus.MountedTMP;
+            mount.MountStatus = MountStatus.MountedTmp;
             DeNSo.Session.New.Set(mount);
         }
 

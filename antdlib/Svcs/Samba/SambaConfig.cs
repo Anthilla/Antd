@@ -183,7 +183,7 @@ namespace antdlib.Svcs.Samba {
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                var key = keyValuePair.Length > 0 ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
                     type = ServiceDataType.Disabled;
@@ -192,7 +192,7 @@ namespace antdlib.Svcs.Samba {
                     type = ServiceDataType.Disabled;
                 }
                 else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    value = keyValuePair.Length > 1 ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 var booleanVerbs = type == ServiceDataType.Boolean ? Helper.ServiceData.SupposeBooleanVerbs(value.Trim()) : new KeyValuePair<string, string>("", "");

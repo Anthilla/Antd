@@ -68,7 +68,7 @@ namespace antdlib.Mail {
 
             public static string Password => XmlWriter.ReadValue(Parameter.LabelSmtpPassword) ?? "";
 
-            public static bool ConfigExists => (XmlWriter.ReadValue(Parameter.LabelSmtpUrl) != null);
+            public static bool ConfigExists => XmlWriter.ReadValue(Parameter.LabelSmtpUrl) != null;
         }
 
         public static void Send() {

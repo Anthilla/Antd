@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -28,41 +26,30 @@ using System.Collections.Generic;
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+using System.Collections.Generic;
+
 namespace antdlib.MountPoint {
     public class MountModel {
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
-        public string DFPTimestamp { get; set; }
-
+        public string DfpTimestamp { get; set; }
         public string Device { get; set; } = "";
-
         public string Path { get; set; } = "";
-
         public string DirsPath { get; set; } = "";
-
         public string HtmlStatusIcon { get; set; } = "";
-
         public string MountedPath { get; set; } = "";
-
         public MountStatus MountStatus { get; set; } = MountStatus.Unmounted;
-
         public MountContext MountContext { get; set; } = MountContext.Core;
-
         public string Type { get; set; } = "";
-
         public string Options { get; set; } = "";
-
-        public HashSet<string> AssociatedUnits { get; set; } = new HashSet<string>() { };
-
+        public HashSet<string> AssociatedUnits { get; set; } = new HashSet<string>();
         public MountEntity MountEntity { get; set; }
     }
 
     public enum MountStatus : byte {
         Mounted = 1,
         Unmounted = 2,
-        MountedTMP = 3,
+        MountedTmp = 3,
         DifferentMount = 4,
         MountedReadOnly = 5,
         MountedReadWrite = 6,

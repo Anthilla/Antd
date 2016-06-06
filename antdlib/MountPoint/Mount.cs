@@ -201,11 +201,11 @@ namespace antdlib.MountPoint {
             var isMntd = IsAlreadyMounted(directory);
             var mntDirectory = SetDirsPath(directory);
             var timestampNow = Timestamp.Now;
-            DFP.Set(mntDirectory, timestampNow);
-            DFP.Set(directory, timestampNow);
-            var dirsTimestamp = DFP.GetTimestamp(mntDirectory);
+            Dfp.Set(mntDirectory, timestampNow);
+            Dfp.Set(directory, timestampNow);
+            var dirsTimestamp = Dfp.GetTimestamp(mntDirectory);
             var dirsDfp = dirsTimestamp != null;
-            var directoryTimestamp = DFP.GetTimestamp(directory);
+            var directoryTimestamp = Dfp.GetTimestamp(directory);
             var directoryDfp = directoryTimestamp != null;
             if (isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
                 MountRepository.SetAsMountedReadOnly(directory);
@@ -230,8 +230,8 @@ namespace antdlib.MountPoint {
             else {
                 MountRepository.SetAsError(directory);
             }
-            DFP.Delete(mntDirectory);
-            DFP.Delete(directory);
+            Dfp.Delete(mntDirectory);
+            Dfp.Delete(directory);
         }
 
         private static void SetBind(string source, string destination) {

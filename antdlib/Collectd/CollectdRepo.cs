@@ -1,6 +1,4 @@
-﻿
-using Newtonsoft.Json;
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -33,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.Common;
+using Newtonsoft.Json;
 
 namespace antdlib.Collectd {
     public class CollectdRepo {

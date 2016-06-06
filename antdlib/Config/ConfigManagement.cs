@@ -275,7 +275,7 @@ namespace antdlib.Config {
                     return "0_antd_configuration.export";
                 var lastFile = GetConfigurationFileNames().Last();
                 var num = Convert.ToInt32(lastFile.Split('_')[0]);
-                return $"{(num + 1)}_antd_configuration.export";
+                return $"{num + 1}_antd_configuration.export";
             }
 
             public static void ExportConfigurationToFile() {

@@ -59,6 +59,6 @@ namespace antdlib.Scheduler {
         public DateTime StartTime { get; set; }
         public int StartHour { get; set; }
         public int StartMinute { get; set; }
-        public IDictionary<string, object> Results { get; set; }
+        public IDictionary<string, string> Results { get; set; } = new Dictionary<string, string>();
     }
 }

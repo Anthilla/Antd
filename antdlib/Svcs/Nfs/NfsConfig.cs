@@ -176,7 +176,7 @@ namespace antdlib.Svcs.Nfs {
             }
 
             private static ShareModel ReadFileShare(string path) {
-                var shareName = (GetShareName(path) == null) ? "" : GetShareName(path);
+                var shareName = GetShareName(path) == null ? "" : GetShareName(path);
                 var model = new ShareModel {
                     FilePath = path,
                     Name = shareName
@@ -195,7 +195,7 @@ namespace antdlib.Svcs.Nfs {
             private static LineModel ReadLine(string path, string line) {
                 var keyValuePair = line.Split(new String[] { MapRules.CharKevValueSeparator.ToString() }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 ServiceDataType type;
-                var key = (keyValuePair.Length > 0) ? keyValuePair[0] : "";
+                var key = keyValuePair.Length > 0 ? keyValuePair[0] : "";
                 var value = "";
                 if (line.StartsWith(MapRules.CharComment.ToString())) {
                     type = ServiceDataType.Disabled;
@@ -204,7 +204,7 @@ namespace antdlib.Svcs.Nfs {
                     type = ServiceDataType.Disabled;
                 }
                 else {
-                    value = (keyValuePair.Length > 1) ? keyValuePair[1] : "";
+                    value = keyValuePair.Length > 1 ? keyValuePair[1] : "";
                     type = Helper.ServiceData.SupposeDataType(value.Trim());
                 }
                 KeyValuePair<string, string> booleanVerbs;

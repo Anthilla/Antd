@@ -109,7 +109,7 @@ namespace antdlib.Storage {
                     Size = cells[3],
                     Ro = cells[4],
                     DiskType = cells[5],
-                    MountPoint = (cells.Length > 6) ? cells[6] : ""
+                    MountPoint = cells.Length > 6 ? cells[6] : ""
                 };
                 var fromBlkid = GetBlockFromBlkid(blk.Name);
                 if (fromBlkid != null) {
@@ -158,7 +158,7 @@ namespace antdlib.Storage {
         private static IEnumerable<Block> Lsblk() {
             var rows = Terminal.Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             return rows.Select(row => row.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToArray()).Select(cells => new Block {
-                Name = cells[0], Maj = cells[1], Min = cells[1], Rm = cells[2], Size = cells[3], Ro = cells[4], DiskType = cells[5], MountPoint = (cells.Length > 6) ? cells[6] : ""
+                Name = cells[0], Maj = cells[1], Min = cells[1], Rm = cells[2], Size = cells[3], Ro = cells[4], DiskType = cells[5], MountPoint = cells.Length > 6 ? cells[6] : ""
             }).ToList();
         }
 
