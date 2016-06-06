@@ -63,6 +63,7 @@
 @Partial['antd/page-antd-dns-server'];
 @Partial['antd/page-antd-proxy'];
 @Partial['antd/page-antd-acl'];
+@Partial['antd/page-antd-cron'];
 @Partial['antd/page-antd-storage'];
 @Partial['antd/page-antd-zfs'];
 @Partial['antd/page-antd-vm'];
@@ -73,6 +74,15 @@
 @EndSection
 
 @Section['Scripts']
+<script data-context="cron" type="text/javascript">
+    $('#ShowCronInfo').click(function () {
+        $('#CronDashboard').show();
+    });
+
+    $('#HideCronInfo').click(function () {
+        $('#CronDashboard').hide();
+    });
+</script>
 <script data-context="general" type="text/javascript">
     $(document).ready(function () {
         $('div[data-role="hide-selectize"]').find('#show-units').hide();

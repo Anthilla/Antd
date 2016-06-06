@@ -168,6 +168,9 @@
     <Compile Include="Helpers\DirectoryModel.cs" />
     <Compile Include="Helpers\SelectizerMapModel.cs" />
     <Compile Include="Helpers\StatusSysctl.cs" />
+    <Content Include="Views\antd\page-antd-cron.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\page-antd-config.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

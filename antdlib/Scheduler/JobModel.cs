@@ -47,31 +47,18 @@ namespace antdlib.Scheduler {
 
     public class JobModel {
         public string _Id { get; set; }
-
         public string Guid { get; set; }
-
         public string Alias { get; set; }
-
         public string Data { get; set; }
-
         public bool IsEnabled { get; set; }
-
         public TriggerPeriod TriggerPeriod { get; set; }
-
         public IntervalType IntervalType { get; set; }
-
         public int IntervalSpan { get; set; }
-
         public int Count { get; set; }
-
         public string CronExpression { get; set; }
-
         public DateTime StartTime { get; set; }
-
         public int StartHour { get; set; }
-
         public int StartMinute { get; set; }
-
-        public IDictionary<String, object> Results { get; set; }
+        public IDictionary<string, object> Results { get; set; }
     }
 }

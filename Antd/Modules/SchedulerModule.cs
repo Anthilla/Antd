@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
 using antdlib.Scheduler;
 using Nancy;
 using Nancy.Security;
@@ -37,10 +36,18 @@ namespace Antd.Modules {
         public SchedulerModule() {
             this.RequiresAuthentication();
 
-            Get["/scheduler"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.JobList = JobRepository.GetAll();
-                return View["page-scheduler", vmod];
+            Post["/cron"] = x => {
+                var alias = (string)Request.Form.Alias;
+                var command = (string)Request.Form.Command;
+                var minutes = (string)Request.Form.Minutes;
+                if (minutes == "0") {
+                    Job.Schedule(alias, command);
+                }
+                else {
+                    var cron = $"0/{minutes} * * 1/1 * ? *";
+                    Job.Schedule(alias, command, cron);
+                }
+                return Response.AsRedirect("/");
             };
 
             Post["/scheduler/now"] = x => {
@@ -58,34 +65,25 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            //Post["/scheduler/other"] = x => {
-            //    var _alias = (string)Request.Form.Alias;
-            //    var _command = (string)Request.Form.Command;
-            //    var _cron = (string)Request.Form.CronResult;
-            //    Job.Schedule(_alias, _command, _cron);
-            //    dynamic model = new ExpandoObject();
-            //    return Response.AsRedirect("/");
-            //};
-
-            Get["/scheduler/enable/{guid}"] = x => {
+            Post["/scheduler/enable/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Enable(guid);
                 return Response.AsJson(true);
             };
 
-            Get["/scheduler/disable/{guid}"] = x => {
+            Post["/scheduler/disable/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Disable(guid);
                 return Response.AsJson(true);
             };
 
-            Get["/scheduler/Launch/{guid}"] = x => {
+            Post["/scheduler/launch/{guid}"] = x => {
                 string guid = x.guid;
                 Job.ReSchedule(guid);
                 return Response.AsJson(true);
             };
 
-            Get["/scheduler/delete/{guid}"] = x => {
+            Post["/scheduler/delete/{guid}"] = x => {
                 string guid = x.guid;
                 JobRepository.Delete(guid);
                 return Response.AsJson(true);

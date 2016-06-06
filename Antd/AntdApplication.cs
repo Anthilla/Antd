@@ -89,7 +89,7 @@ namespace Antd {
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.ImportSystemInformation();
-            //AntdBoot.StartScheduler(true);
+            AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
             //AntdBoot.StartWebsocketServer();

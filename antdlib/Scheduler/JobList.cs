@@ -41,13 +41,11 @@ namespace antdlib.Scheduler {
         }
 
         public class CommandJob : IJob {
-
             public void Execute(IJobExecutionContext context) {
-                //var key = context.JobDetail.Key;
                 var dataMap = context.JobDetail.JobDataMap;
                 var command = dataMap.GetString("data");
                 var jobId = dataMap.GetString("jobID");
-                var cmd = Terminal.Terminal.Execute(command);
+                var cmd = Terminal.Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
                 JobRepository.AddResult(jobId, cmd);
             }
         }

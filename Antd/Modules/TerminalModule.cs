@@ -74,7 +74,7 @@ namespace Antd.Modules {
 
             Post["/terminal/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = Request.Form.Directory == "" ? Terminal.MultiLine.Execute((string[])cmds) : Terminal.MultiLine.Execute((string[])cmds, (string)Request.Form.Directory);
+                var result = Request.Form.Directory == "" ? Terminal.Execute((string[])cmds) : Terminal.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
@@ -84,14 +84,14 @@ namespace Antd.Modules {
                 foreach (var command in commandSplit) {
                     ConfigManagement.AddCommandsBundle(command);
                 }
-                var result = Terminal.MultiLine.Execute(commandSplit);
+                var result = Terminal.Execute(commandSplit);
                 return Response.AsJson(result);
             };
 
             Post["/terminal/direct"] = x => {
                 var inputCommand = (string)Request.Form.Command;
                 var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
-                var result = Terminal.MultiLine.Execute(commandSplit);
+                var result = Terminal.Execute(commandSplit);
                 return Response.AsJson(result);
             };
         }

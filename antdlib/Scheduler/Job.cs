@@ -35,7 +35,6 @@ using antdlib.Common;
 namespace antdlib.Scheduler {
 
     public class Job {
-
         public static void Schedule(string jobName, string command) {
             var guid = Guid.NewGuid().ToString();
             JobRepository.SetTaskOneTimeOnly(guid, jobName, command);

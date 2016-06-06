@@ -1,0 +1,49 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Cron">
+        Cron Scheduler
+        <i id="ShowCronInfo" class="icon-plus-2 fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
+    <form id="CronDashboard" action="/cron" method="POST" enctype="multipart/form-data" class="grid" style="display: none !important;">
+        <div class="row">
+            <div class="span3">
+                <label>Cron Label</label>
+            </div>
+            <div class="span8">
+                <div class="input-control text" data-role="input-control">
+                    <input name="Alias" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 20px;">
+            <div class="span3">
+                <label>Command</label>
+            </div>
+            <div class="span8">
+                <textarea name="Command" style="width: 90%; min-height: 200px;" class="bg-anthilla-gray fg-white border-anthilla-green"></textarea>
+            </div>
+        </div>
+        <div class="row" style="padding-bottom: 20px;">
+            <div class="span3">
+                <label>Minutes</label>
+            </div>
+            <div class="span8">
+                <div class="input-control text" data-role="input-control">
+                    <input type="text" name="Minutes" value="0" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span3">
+            </div>
+            <div class="span8" style="padding-top: 30px;">
+                <input type="submit" value="Submit" class="bg-anthilla-green" style="color: #3a3a3a !important; width: 30%;" />
+                <input type="reset" value="Reset" class="bg-anthilla-violet" style="color: #3a3a3a !important; width: 30%;" />
+                <input type="button" id="HideCronInfo" value="close" class="bg-anthilla-orange" style="color: #3a3a3a !important; width: 30%;" />
+            </div>
+        </div>
+        <hr class="bg-anthilla-gray">
+    </form>
+    <table class="table">
+        <tbody></tbody>
+    </table>
+</div>

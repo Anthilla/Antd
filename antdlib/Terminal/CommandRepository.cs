@@ -102,19 +102,19 @@ namespace antdlib.Terminal {
         public static void Launch(string guid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == guid).FirstOrDefault();
             if (command != null)
-                Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+                Terminal.Execute((command.File + " " + command.Arguments).Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
         }
 
         public static string LaunchAndGetOutput(string inputid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
-            return command != null ? Terminal.MultiLine.Execute((command.File + " " + command.Arguments).Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray()) : null;
+            return command != null ? Terminal.Execute((command.File + " " + command.Arguments).Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray()) : null;
         }
 
         public static string LaunchAndGetOutputUsingNewValue(string inputid) {
             var command = DeNSo.Session.New.Get<CommandInputModel>(m => m.Guid == inputid).FirstOrDefault();
             if (command == null) return null;
             var layout = command.Layout;
-            return Terminal.MultiLine.Execute(layout.Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+            return Terminal.Execute(layout.Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
         }
 
         public static string LaunchAndGetOutputUsingNewValue(string inputid, string newValue) {
@@ -123,7 +123,7 @@ namespace antdlib.Terminal {
             var layout = command.Layout;
             var findReplace = "{" + inputid + "}";
             var newCommand = layout.Replace(findReplace, newValue);
-            return Terminal.MultiLine.Execute(newCommand.Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+            return Terminal.Execute(newCommand.Split(new[] { "/n" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
         }
     }
 }

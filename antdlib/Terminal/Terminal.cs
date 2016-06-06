@@ -30,11 +30,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using antdlib.Log;
 
 namespace antdlib.Terminal {
     public class Terminal {
         public static string Execute(string command, string dir = "") {
+            ConsoleLogger.Log($"trying to launch: {command}");
             var output = string.Empty;
             var error = string.Empty;
             if (!Parameter.IsUnix)
@@ -48,11 +50,10 @@ namespace antdlib.Terminal {
                     UseShellExecute = false
                 }
             };
-            if (dir.Length > 0) {
+            if (!string.IsNullOrEmpty(dir)) {
                 process.StartInfo.WorkingDirectory = dir;
             }
             try {
-                //ConsoleLogger.Log($"antd is launching: {command}");
                 process.Start();
                 using (var streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
@@ -70,71 +71,41 @@ namespace antdlib.Terminal {
             }
         }
 
-        public class MultiLine {
-            public static string Execute(IEnumerable<string> commands) {
-                var genericOutput = string.Empty;
-                if (!Parameter.IsUnix)
-                    return genericOutput;
-                foreach (var command in commands) {
-                    var process = new Process {
-                        StartInfo = {
-                            FileName = "bash",
-                            Arguments = "-c \"" + command + "\"",
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false
-                        }
-                    };
-                    try {
-                        process.Start();
-                        using (var streamReader = process.StandardOutput) {
-                            genericOutput += streamReader.ReadToEnd();
-                        }
-                        using (var streamReader = process.StandardError) {
-                            genericOutput += streamReader.ReadToEnd();
-                        }
-                        process.WaitForExit();
-                    }
-                    catch (Exception ex) {
-                        genericOutput += ex.Message;
-                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
-                    }
-                }
+        public static string Execute(IEnumerable<string> commands, string dir = "") {
+                ConsoleLogger.Log($"trying to launch: {string.Join(", ", commands.ToList())}");
+            var genericOutput = string.Empty;
+            if (!Parameter.IsUnix)
                 return genericOutput;
-            }
-
-            public static string Execute(IEnumerable<string> commands, string dir) {
-                var genericOutput = string.Empty;
-                if (!Parameter.IsUnix)
-                    return genericOutput;
-                foreach (var command in commands) {
-                    var process = new Process {
-                        StartInfo = {
+            foreach (var command in commands) {
+                var process = new Process {
+                    StartInfo = {
                             FileName = "bash",
                             Arguments = "-c \"" + command + "\"",
                             RedirectStandardOutput = true,
                             RedirectStandardError = true,
                             UseShellExecute = false,
-                            WorkingDirectory = dir
                         }
-                    };
-                    try {
-                        process.Start();
-                        using (var streamReader = process.StandardOutput) {
-                            genericOutput += streamReader.ReadToEnd();
-                        }
-                        using (var streamReader = process.StandardError) {
-                            genericOutput += streamReader.ReadToEnd();
-                        }
-                        process.WaitForExit();
-                    }
-                    catch (Exception ex) {
-                        genericOutput += ex.Message;
-                        ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
-                    }
+
+                };
+                if (!string.IsNullOrEmpty(dir)) {
+                    process.StartInfo.WorkingDirectory = dir;
                 }
-                return genericOutput;
+                try {
+                    process.Start();
+                    using (var streamReader = process.StandardOutput) {
+                        genericOutput += streamReader.ReadToEnd();
+                    }
+                    using (var streamReader = process.StandardError) {
+                        genericOutput += streamReader.ReadToEnd();
+                    }
+                    process.WaitForExit();
+                }
+                catch (Exception ex) {
+                    genericOutput += ex.Message;
+                    ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
+                }
             }
+            return genericOutput;
         }
     }
 }

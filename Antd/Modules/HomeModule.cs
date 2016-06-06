@@ -73,6 +73,7 @@ namespace Antd.Modules {
                     "DnsServer",
                     "Proxy",
                     "Acl",
+                    "Cron",
                     "Storage",
                     "Zfs",
                     "VM",
