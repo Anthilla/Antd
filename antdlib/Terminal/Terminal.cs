@@ -30,13 +30,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using antdlib.Log;
 
 namespace antdlib.Terminal {
     public class Terminal {
         public static string Execute(string command, string dir = "") {
-            ConsoleLogger.Log($"trying to launch: {command}");
             var output = string.Empty;
             var error = string.Empty;
             if (!Parameter.IsUnix)
@@ -72,7 +70,6 @@ namespace antdlib.Terminal {
         }
 
         public static string Execute(IEnumerable<string> commands, string dir = "") {
-                ConsoleLogger.Log($"trying to launch: {string.Join(", ", commands.ToList())}");
             var genericOutput = string.Empty;
             if (!Parameter.IsUnix)
                 return genericOutput;
