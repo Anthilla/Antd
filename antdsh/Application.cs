@@ -36,7 +36,7 @@ using antdlib.common;
 namespace antdsh {
     internal class Application {
         private static string _command;
-        private static readonly HashSet<Cmd> CommandList = new HashSet<Cmd>();
+        private static readonly IDictionary<string, string> CommandList = new Dictionary<string, string>();
 
         private static void Main(string[] args) {
             Execute.RemounwRwOs();
@@ -119,21 +119,14 @@ namespace antdsh {
         private static void AddCommand(string command) {
             if (command == "history")
                 return;
-            CommandList.Add(new Cmd {
-                Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                Command = command
-            });
+            var timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            CommandList.Add(new KeyValuePair<string, string>(timestamp, command));
         }
 
         private static void PrintHistory() {
             foreach (var cmd in CommandList) {
-                Console.WriteLine(cmd.Command);
+                Console.WriteLine(cmd.Value);
             }
-        }
-
-        public class Cmd {
-            public string Timestamp { get; set; }
-            public string Command { get; set; }
         }
     }
 }
