@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using antdlib;
+using System.Text.RegularExpressions;
 using antdlib.common;
 
 namespace antdsh {
@@ -91,7 +91,7 @@ namespace antdsh {
             switch (context) {
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    UpdateUnits(UnitsAntd, UnitsTargetApp);
+                    UpdateUnits2(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
@@ -102,7 +102,7 @@ namespace antdsh {
                     break;
                 case "kernel":
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    UpdateUnits(UnitsKernel, UnitsTargetKpl);
+                    //UpdateUnits(UnitsKernel, UnitsTargetKpl);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
@@ -121,10 +121,16 @@ namespace antdsh {
                 AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
                 return;
             }
-            var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
-            var repositoryInfo = GetRepositoryInfo();
+            var linkedFile = Terminal.Execute($"file {activeVersionPath}");
+            var currentVersionDate = GetVersionDateFromFile(linkedFile);
+            var repositoryInfo = GetRepositoryInfo().ToList();
             var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
-            var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
+            AntdshLogger.WriteLine($"found for: {currentContext}");
+            foreach (var cri in currentContextRepositoryInfo) {
+                AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
+            }
+            AntdshLogger.WriteLine("");
+            var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
             if (latestFileInfo == null) {
                 AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
                 return;
@@ -213,33 +219,61 @@ namespace antdsh {
             Directory.Delete(TmpDirectory, true);
             AntdshLogger.WriteLine("a systemctl daemon-reload may be needed...");
         }
+
+        private static void UpdateUnits2(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
+            _updateCounter++;
+            if (_updateCounter > 5) {
+                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                return;
+            }
+            var linkedFile = Terminal.Execute($"file {activeVersionPath}");
+            var currentVersionDate = GetVersionDateFromFile(linkedFile);
+            var repositoryInfo = GetRepositoryInfo().ToList();
+            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+            AntdshLogger.WriteLine($"found for: {currentContext}");
+            foreach (var cri in currentContextRepositoryInfo) {
+                AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
+            }
+            AntdshLogger.WriteLine("");
+            var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
+            if (latestFileInfo == null) {
+                AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
+                return;
+            }
+            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
+            if (!isUpdateNeeded) {
+                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                return;
+            }
+            AntdshLogger.WriteLine($"updating {currentContext}");
+
+            if (DownloadLatestFile(latestFileInfo)) {
+                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+
+            var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
+            var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
+            InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
+            Directory.Delete(TmpDirectory, true);
+            _updateCounter = 0;
+        }
         #endregion
 
         #region More Private Methods
         private static string GetVersionDateFromFile(string path) {
-            if (string.IsNullOrEmpty(path)) {
-                throw new ArgumentNullException(nameof(path));
-            }
-            if (!File.Exists(path)) {
-                throw new FileNotFoundException($"{Path.GetFileName(path)} not found!");
-            }
-            try {
-                var fileName = Path.GetFileName(path).Trim();
-                var from = path.Contains("-aufs-") ?
-                    fileName.IndexOf("-aufs-", StringComparison.InvariantCulture) + "-aufs-".Length :
-                    fileName.IndexOf("-", StringComparison.InvariantCulture) + "-".Length;
-                var to = fileName.LastIndexOf(path.Contains("-x86_64") ?
-                    "-x86_6" :
-                    ".squashfs.xz", StringComparison.InvariantCulture);
-                return fileName.Substring(from, to - from);
-            }
-            catch (Exception) {
-                return "00000000";
-            }
+            var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
+            var m = r.Match(path);
+            var vers = m.Success ? m.Groups[0].Value.Replace("-", "") : "00000000";
+            return vers;
         }
 
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
             try {
+                AntdshLogger.WriteLine($"Downloading: {PublicRepositoryUrl}/{RepositoryFileNameZip}");
                 FileSystem.Download2($"{PublicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
                 var tmpRepoListText = Terminal.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
                 var list = tmpRepoListText.SplitToList(Environment.NewLine);
@@ -269,7 +303,7 @@ namespace antdsh {
         }
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
-            var latestFileDownloadUrl = $"{PublicRepositoryUrl}{latestFileInfo.FileName}";
+            var latestFileDownloadUrl = $"{PublicRepositoryUrl}/{latestFileInfo.FileName}";
             AntdshLogger.WriteLine($"downloading file from {latestFileDownloadUrl}");
             var latestFile = $"{TmpDirectory}/{latestFileInfo.FileName}";
             if (File.Exists(latestFile)) {
