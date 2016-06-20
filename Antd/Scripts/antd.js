@@ -1,34 +1,34 @@
 //terminal
-$('#OpenTerminal').click(function () {
-    $('#TerminalContainer').toggle();
+$("#OpenTerminal").click(function () {
+    $("#TerminalContainer").toggle();
 });
 
 $('input[data-role="open-console"]').click(function (event) {
     event.preventDefault();
-    $('#TerminalContainer').toggle();
+    $("#TerminalContainer").toggle();
 });
 
-$('#TerminalClose').click(function () {
-    $('#TerminalContainer').hide();
+$("#TerminalClose").click(function () {
+    $("#TerminalContainer").hide();
 });
 
 //users
 function SetCreateUser() {
-    $('#UserCreateDashboard').toggle();
+    $("#UserCreateDashboard").toggle();
 }
 
 $('select[name="UserType"]').windowed({
     change: function (event, selected) {
-        var selected = $(selected);
-        if (selected.val() == 'app') {
-            $('#AppUsersDBoard').hide();
-            $('#SysUsersDBoard').hide();
-            $('#AppUsersDBoard').show();
+        selected = $(selected);
+        if (selected.val() === "app") {
+            $("#AppUsersDBoard").hide();
+            $("#SysUsersDBoard").hide();
+            $("#AppUsersDBoard").show();
         }
-        if (selected.val() == 'sys') {
-            $('#AppUsersDBoard').hide();
-            $('#SysUsersDBoard').hide();
-            $('#SysUsersDBoard').show();
+        if (selected.val() === "sys") {
+            $("#AppUsersDBoard").hide();
+            $("#SysUsersDBoard").hide();
+            $("#SysUsersDBoard").show();
         }
     }
 });
@@ -36,21 +36,21 @@ $('select[name="UserType"]').windowed({
 //volumes
 
 $('i[id="ReloadVolumes"]').mouseover(function (event) {
-    $(this).addClass('fg-anthilla-green');
+    $(this).addClass("fg-anthilla-green");
 });
 
 $('i[id="ReloadVolumes"]').mouseout(function (event) {
-    $(this).removeClass('fg-anthilla-green');
+    $(this).removeClass("fg-anthilla-green");
 });
 
 $('i[id="ReloadVolumes"]').click(function (event) {
     event.preventDefault();
     jQuery.support.cors = true;
     $.ajax({
-        url: '/storage/reload/volumes/',
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json;charset=utf-8',
+        url: "/storage/reload/volumes/",
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
         success: function (data) {
             location.reload(true);
             return false;
@@ -59,13 +59,13 @@ $('i[id="ReloadVolumes"]').click(function (event) {
 });
 
 //2fa,,
-$('#Disable2FA').click(function () {
+$("#Disable2FA").click(function () {
     jQuery.support.cors = true;
     $.ajax({
-        url: '/system/auth/disable/',
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json;charset=utf-8',
+        url: "/system/auth/disable/",
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
         success: function (data) {
             location.reload(true);
             return false;
@@ -73,13 +73,13 @@ $('#Disable2FA').click(function () {
     });
 });
 
-$('#Enable2FA').click(function () {
+$("#Enable2FA").click(function () {
     jQuery.support.cors = true;
     $.ajax({
-        url: '/system/auth/enable/',
-        type: 'GET',
-        dataType: 'json',
-        contentType: 'application/json;charset=utf-8',
+        url: "/system/auth/enable/",
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
         success: function (data) {
             location.reload(true);
             return false;
@@ -88,12 +88,12 @@ $('#Enable2FA').click(function () {
 });
 
 //command management
-$('#CmdMgmtButton').click(function () {
-    $('#CommandManagementForm').toggle();
+$("#CmdMgmtButton").click(function () {
+    $("#CommandManagementForm").toggle();
 });
 
 function CloseCommandMgmtPanel() {
-    $('#CommandManagementForm').hide();
+    $("#CommandManagementForm").hide();
 }
 
 $(document).ready(function () {
@@ -109,39 +109,39 @@ $(document).ready(function () {
 });
 
 function CopyInputLayout(main, layout) {
-    var mainVal = '',
-    layoutVal = '',
-    mainLength = '',
-    layoutLength = '',
-    tmpVal = '';
+    var mainVal = "",
+    layoutVal = "",
+    mainLength = "",
+    layoutLength = "",
+    tmpVal = "";
 
-    layout.val('');
+    layout.val("");
     if (main.val().length === 0) {
-        mainVal = '';
-        layoutVal = '';
-        mainLength = '';
-        layoutLength = '';
-        tmpVal = '';
-        layout.val('');
+        mainVal = "";
+        layoutVal = "";
+        mainLength = "";
+        layoutLength = "";
+        tmpVal = "";
+        layout.val("");
     }
     if (mainVal.length === 0 && layoutVal.length === 0) {
-        tmpVal = $('input[name="Command"]').val().replace(/_+/g, ' ');
+        tmpVal = $('input[name="Command"]').val().replace(/_+/g, " ");
         layout.val(tmpVal);
     } else {
         mainLength = mainVal.length;
         layoutLength = layoutVal.length;
         var mainString = main.val().substring(mainLength, main.val().length);
         var layoutString = layout.val().substring(layoutLength, layout.val().length);
-        tmpVal = (layoutVal + mainString).replace(/_+/g, ' ');
+        tmpVal = (layoutVal + mainString).replace(/_+/g, " ");
         layout.val(tmpVal);
     }
 }
 
 function AddInputIDReference(self, main, layout) {
     var parameter = self;
-    var label = parameter.attr('id');
+    var label = parameter.attr("id");
     var value = parameter.val();
-    layout.val(layout.val() + '{' + label + '}');
+    layout.val(layout.val() + "{" + label + "}");
     main.val(main.val() + value);
     mainVal = main.val();
     layoutVal = layout.val();
@@ -154,22 +154,22 @@ function AddInputIDReference(self, main, layout) {
 
 $('i[data-role="show-Mount"]').click(function () {
     var self = $(this);
-    var i = '<input type="text" data-role="value-Mount" data-folder="' + self.attr('data-folder') + '"/>' +
-        '<i class="icon-plus fg-green" data-role="submit-Mount" data-folder="' + self.attr('data-folder') + '"></i>';
+    var i = '<input type="text" data-role="value-Mount" data-folder="' + self.attr("data-folder") + '"/>' +
+        '<i class="icon-plus fg-green" data-role="submit-Mount" data-folder="' + self.attr("data-folder") + '"></i>';
     self.after(i);
     InitSubmitMount();
 });
 
 function InitSubmitMount() {
     $('i[data-role="submit-Mount"]').click(function () {
-        var g = $(this).attr('data-folder');
+        var g = $(this).attr("data-folder");
         var m = $('input[data-folder="' + g + '"]').val();
         alert(g);
         alert(m);
         jQuery.support.cors = true;
         $.ajax({
-            url: '/apps/Mount',
-            type: 'POST',
+            url: "/apps/Mount",
+            type: "POST",
             data: {
                 Folder: g,
                 Mount: m
@@ -181,16 +181,16 @@ function InitSubmitMount() {
     });
 }
 ///////////cookiecookiecookie////////////////////////
-$('#LockInput').click(function () {
-    var value = cookie.get('_input');
-    if (value == 'disabled') {
+$("#LockInput").click(function () {
+    var value = cookie.get("_input");
+    if (value == "disabled") {
         EnableInputs();
-        var d = cookie.get('_input');
+        var d = cookie.get("_input");
         ChangeLockIcon(d);
     }
     else {
         DisableInputs();
-        var e = cookie.get('_input');
+        var e = cookie.get("_input");
         ChangeLockIcon(e);
     }
     return false;
@@ -199,12 +199,12 @@ $('#LockInput').click(function () {
 var cookie = Cookies.noConflict();
 
 $(document).ready(function () {
-    var value = cookie.get('_input');
+    var value = cookie.get("_input");
     if (value == undefined) {
-        cookie.set('_input', 'enabled', { expires: 7 });
+        cookie.set("_input", "enabled", { expires: 7 });
     }
 
-    if (value == 'disabled') {
+    if (value == "disabled") {
         ChangeLockIcon(value);
         DisableInputs();
     }
@@ -215,53 +215,53 @@ $(document).ready(function () {
 });
 
 function ChangeLockIcon(value) {
-    var icon = $('#LockInput').find('i');
-    if (value == 'disabled') {
-        icon.removeClass('icon-unlocked');
-        icon.addClass('icon-locked');
+    var icon = $("#LockInput").find("i");
+    if (value == "disabled") {
+        icon.removeClass("icon-unlocked");
+        icon.addClass("icon-locked");
     }
     else {
-        icon.removeClass('icon-locked');
-        icon.addClass('icon-unlocked');
+        icon.removeClass("icon-locked");
+        icon.addClass("icon-unlocked");
     }
 }
 
 function EnableInputs() {
-    $('input').each(function () {
+    $("input").each(function () {
         $(this).fadeOut(300).fadeIn(150);
-        $(this).delay(455).prop('disabled', false);
+        $(this).delay(455).prop("disabled", false);
     });
-    $('.button').each(function () {
+    $(".button").each(function () {
         $(this).fadeOut(300).fadeIn(150);
-        $(this).delay(455).removeClass('disabled');
+        $(this).delay(455).removeClass("disabled");
     });
-    cookie.set('_input', 'enabled', { expires: 7 });
+    cookie.set("_input", "enabled", { expires: 7 });
 }
 
 function DisableInputs() {
-    $('input').each(function () {
+    $("input").each(function () {
         $(this).fadeOut(300).fadeIn(150);
-        $(this).delay(455).prop('disabled', true);
+        $(this).delay(455).prop("disabled", true);
     });
-    $('.button').each(function () {
+    $(".button").each(function () {
         $(this).fadeOut(300).fadeIn(150);
-        $(this).delay(455).addClass('disabled');
+        $(this).delay(455).addClass("disabled");
     });
-    cookie.set('_input', 'disabled', { expires: 7 });
+    cookie.set("_input", "disabled", { expires: 7 });
 }
 
-$('a.anchor').click(function (event) {
+$("a.anchor").click(function (event) {
     event.preventDefault();
-    var href = $(this).attr('data-scrollto');
-    if (href == 'top') {
-        $('html, body').animate({
+    var href = $(this).attr("data-scrollto");
+    if (href === "top") {
+        $("html, body").animate({
             'scrollTop': 0
         }, 500);
         return false;
     }
     else {
-        var scroll = $(href).offset().top - 40;
-        $('html, body').animate({
+        var scroll = $(href).offset().top - 60;
+        $("html, body").animate({
             'scrollTop': scroll
         }, 500);
         return false;
@@ -270,46 +270,46 @@ $('a.anchor').click(function (event) {
 
 $(window).scroll(function () {
     if ($(window).scrollTop() > 150) {
-        $('nav.navigation-bar.page-bar').css('position', 'fixed');
-        $('nav.navigation-bar.page-bar').css('z-index', '999');
-        $('nav.navigation-bar.page-bar').css('top', '0');
-        $('nav.navigation-bar.page-bar').css('left', '0');
-        $('nav.navigation-bar.page-bar').css('padding-left', '15px');
+        $("nav.navigation-bar.page-bar").css("position", "fixed");
+        $("nav.navigation-bar.page-bar").css("z-index", "999");
+        $("nav.navigation-bar.page-bar").css("top", "0");
+        $("nav.navigation-bar.page-bar").css("left", "0");
+        $("nav.navigation-bar.page-bar").css("padding-left", "15px");
     }
     if ($(window).scrollTop() < 150) {
-        $('nav.navigation-bar.page-bar').css('position', 'relative');
-        $('nav.navigation-bar.page-bar').css('padding-left', '0');
+        $("nav.navigation-bar.page-bar").css("position", "relative");
+        $("nav.navigation-bar.page-bar").css("padding-left", "0");
     }
 });
 
 $(document).ready(function () {
-    $('input:password').val('');
-    $('input:text').attr('autocomplete', 'off');
-    $('input:password').attr('autocomplete', 'off');
+    $("input:password").val("");
+    $("input:text").attr("autocomplete", "off");
+    $("input:password").attr("autocomplete", "off");
 });
 
 function Reset() {
-    $('.item').hide();
-    $('select').prop('selectedIndex', 0);
-    $('.project-selectable').removeClass('picked');
-    $('.group-selectable').removeClass('picked');
-    $('.js-files').hide();
+    $(".item").hide();
+    $("select").prop("selectedIndex", 0);
+    $(".project-selectable").removeClass("picked");
+    $(".group-selectable").removeClass("picked");
+    $(".js-files").hide();
     $("input:text").each(function () {
         $(this).val("");
     });
-    $('.file').remove();
+    $(".file").remove();
     return false;
 }
 
 function SetCreate() {
-    var button = $('#create-button');
+    var button = $("#create-button");
     if (button != null) {
-        button.toggleClass('fg-anthilla-green');
-        button.toggleClass('no-overlay');
-        button.toggleClass('fg-anthilla-gray');
-        button.toggleClass('bg-anthilla-green');
+        button.toggleClass("fg-anthilla-green");
+        button.toggleClass("no-overlay");
+        button.toggleClass("fg-anthilla-gray");
+        button.toggleClass("bg-anthilla-green");
     }
-    $('#DashboardForm').toggle();
+    $("#DashboardForm").toggle();
     return false;
 }
 

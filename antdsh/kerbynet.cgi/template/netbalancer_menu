@@ -1,0 +1,42 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function gatewaysmanager() {
+   top.body.location="/cgi-bin/kerbynet?Section=NetBalancer&STk=<xvar STk>&Action=Manager";
+};
+function Classifier() {
+   top.body.location="/cgi-bin/kerbynet?Section=FW&STk=<xvar STk>&Action=Manage&Chain=NetBalancer";
+}
+function Statistics() {
+   newwin=open("kerbynet?Section=NetBalancer&STk=<xvar STk>&Action=Statistics", "NBStat","top=150,left=150,width=800,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function NBMRTG() {
+   newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=mrtg_show&Type=Gateway", "MRTG","top=200,left=200,width=800,height=480,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function NBBWD() {
+   newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=bwd_show", "BWD","top=100,left=100,width=1024,height=650,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+
+</script>
+</head>
+<body topmargin="0" text="#000000" onload="gatewaysmanager()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23" bgcolor="#6060FF" width=100%>
+  <tr>
+    <td  bgcolor="#FFFFFF" nowrap width="200">
+    <p align="center"><b><font color="#4040f0">NET BALANCER</font></b></td>
+    <td width="130" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="gatewaysmanager()"><font color="#ffffff"><b>Manage</b></font></td>
+    <td width="170" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="Classifier()"><font color="#ffffff"><b>Balancing Rules</b></font></td>
+    <td width="140" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="Statistics()"><font color="#ffffff"><b>Statistics</b></font></td>
+    <td width="140" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="NBMRTG()"><font color="#ffffff"><b>Graphics</b></font></td>
+    <td width="140" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="NBBWD()"><font color="#ffffff"><b>Bandwidthd</b></font></td>
+    <td align="center"></td>
+  </tr>
+</table>
+</body>
+</html>

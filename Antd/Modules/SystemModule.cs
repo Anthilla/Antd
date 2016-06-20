@@ -27,15 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Dynamic;
-using System.Linq;
 using antdlib;
-using antdlib.CCTable;
-using antdlib.Common;
-using antdlib.Info;
-using antdlib.MountPoint;
+using antdlib.common;
 using antdlib.Status;
+using Antd.Database;
 using Antd.Helpers;
 using Nancy;
 using Nancy.Security;
@@ -53,36 +49,36 @@ namespace Antd.Modules {
                 var notes = (string)Request.Form.Notes;
                 var inputId = "New" + CctableContextName.UppercaseAllFirstLetters().RemoveWhiteSpace() + label.UppercaseAllFirstLetters().RemoveWhiteSpace();
                 string inputLocation = "CCTable" + Request.Form.TableName;
-                switch ((string)Request.Form.InputType.Value) {
-                    case "hidden":
-                        var directCommand = (string)Request.Form.CommandDirect;
-                        CCTableRepository.New.CreateRowForDirectCommand(CctableContextName, label, inputLabel, directCommand,
-                            notes, inputId, inputLocation);
-                        break;
-                    case "text":
-                        var setCommand = (string)Request.Form.CommandSet;
-                        var getCommand = (string)Request.Form.CommandGet;
-                        CCTableRepository.New.CreateRowForTextInputCommand(CctableContextName, label, inputLabel, setCommand,
-                            getCommand, notes, inputId, inputLocation);
-                        break;
-                    case "checkbox":
-                        var enableCommand = (string)Request.Form.CommandTrue;
-                        var disableCommand = (string)Request.Form.CommandFalse;
-                        CCTableRepository.New.CreateRowForBooleanPairCommand(CctableContextName, label, inputLabel,
-                            enableCommand, disableCommand, notes, inputId, inputLocation);
-                        break;
-                }
+                //switch ((string)Request.Form.InputType.Value) {
+                //    case "hidden":
+                //        var directCommand = (string)Request.Form.CommandDirect;
+                //        CCTableRepository.New.CreateRowForDirectCommand(CctableContextName, label, inputLabel, directCommand,
+                //            notes, inputId, inputLocation);
+                //        break;
+                //    case "text":
+                //        var setCommand = (string)Request.Form.CommandSet;
+                //        var getCommand = (string)Request.Form.CommandGet;
+                //        CCTableRepository.New.CreateRowForTextInputCommand(CctableContextName, label, inputLabel, setCommand,
+                //            getCommand, notes, inputId, inputLocation);
+                //        break;
+                //    case "checkbox":
+                //        var enableCommand = (string)Request.Form.CommandTrue;
+                //        var disableCommand = (string)Request.Form.CommandFalse;
+                //        CCTableRepository.New.CreateRowForBooleanPairCommand(CctableContextName, label, inputLabel,
+                //            enableCommand, disableCommand, notes, inputId, inputLocation);
+                //        break;
+                //}
                 return Response.AsRedirect("/");
             };
 
             Get["/system/auth/disable"] = x => {
                 ApplicationSetting.DisableTwoFactorAuth();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Get["/system/auth/enable"] = x => {
                 ApplicationSetting.EnableTwoFactorAuth();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Get["/system/mounts"] = x => {
@@ -93,18 +89,8 @@ namespace Antd.Modules {
             Post["/system/mount/unit"] = x => {
                 var guid = Request.Form.Guid;
                 string unit = Request.Form.Unit;
-                var unitsSplit = unit.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                if (unitsSplit.Length > 0) {
-                    MountRepository.AddUnit(guid, unitsSplit);
-                }
+                new MountRepository().SetUnit(guid, unit.SplitToList());
                 return Response.AsRedirect("/");
-            };
-
-            Delete["/system/mount/unit"] = x => {
-                var guid = Request.Form.Guid;
-                var unit = Request.Form.Unit;
-                MountRepository.RemoveUnit(guid, unit);
-                return Response.AsJson(true);
             };
 
             Get["/system/sysctl"] = x => {
@@ -121,8 +107,7 @@ namespace Antd.Modules {
             };
 
             Post["/system/import/info"] = x => {
-                SystemInfo.Import();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
         }
     }

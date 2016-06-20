@@ -1,0 +1,23 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TYPE="$1"
+PARAMETERS="$2"
+[ -z "$TYPE" ] && exit 1
+FILE="/tmp/check_dhcpd_opt.conf"
+echo "ddns-update-style interim;" >$FILE
+echo "ignore client-updates;" >>$FILE
+if [ "$TYPE" = subnet ] ; then
+  echo "subnet 0.0.0.0 netmask 0.0.0.0 {" >>$FILE
+else
+  echo "host test_h {" >>$FILE
+  echo "hardware ethernet 00:11:00:11:00:11;" >>$FILE
+  echo "fixed-address 1.2.3.4;" >>$FILE
+fi
+echo $PARAMETERS >>$FILE
+echo "}" >>$FILE
+if dhcpd -t -cf $FILE 2>/tmp/dhcp_opt.err ; then
+  exit 0
+else
+  rm -f "$FILE"
+  exit 10
+fi

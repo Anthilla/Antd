@@ -1,0 +1,64 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SUBNET="$1"
+DefaultLeaseDays="${2}"
+DefaultLeaseHours="${3}"
+DefaultLeaseMinutes="${4}"
+MaxLeaseDays="${5}"
+MaxLeaseHours="${6}"
+MaxLeaseMinutes="${7}"
+Range1Min="${8}"
+Range1Max="${9}"
+Range2Min="${10}"
+Range2Max="${11}"
+Range3Min="${12}"
+Range3Max="${13}"
+Router="${14}"
+DNS1="${15}"
+DNS2="${16}"
+DNS3="${17}"
+Domain="${18}"
+NIS="${19}"
+NTP1="${20}"
+NTP2="${21}"
+WINS1="${22}"
+WINS2="${23}"
+ENABLED="${24}"
+[ -z "$SUBNET" ] && exit 1
+CONFIG="$REGISTER/system/dhcp"
+SDIR=$CONFIG/subnets/$SUBNET
+if ! cd $SDIR 2>/dev/null ; then
+  echo "Subnet does not exist." 1>&2
+  exit 2
+fi
+echo $DefaultLeaseDays > DefaultLeaseDays 
+echo $DefaultLeaseHours > DefaultLeaseHours
+echo $DefaultLeaseMinutes > DefaultLeaseMinutes
+echo $MaxLeaseDays > MaxLeaseDays
+echo $MaxLeaseHours > MaxLeaseHours
+echo $MaxLeaseMinutes > MaxLeaseMinutes
+echo $Range1Min > Range1Min
+echo $Range1Max > Range1Max
+echo $Range2Min > Range2Min
+echo $Range2Max > Range2Max
+echo $Range3Min > Range3Min
+echo $Range3Max > Range3Max
+echo $Router > Router
+echo $DNS1 > DNS1
+echo $DNS2 > DNS2
+echo $DNS3 > DNS3
+echo $Domain > Domain
+echo $NIS > NIS
+echo $NTP1 > NTP1
+echo $NTP2 > NTP2
+echo $WINS1 > WINS1
+echo $WINS2 > WINS2
+if [ "$ENABLED" == yes ] ; then
+   echo yes > Enabled
+else
+   rm -f Enabled
+fi
+if ! $SCRIPTS/dhcp_start ; then
+  echo "DHCP is not able to start with new configuration." >&2
+  exit 4
+fi

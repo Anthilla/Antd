@@ -1,0 +1,29 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+X509="$2"
+[ -z "$INTERFACE" -o -z "$X509" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/$INTERFACE"
+[ -d $CONFIG ] || mkdir $CONFIG
+if cd "$CONFIG" 2> /dev/null ; then
+   if [ "$X509" == imported ] ; then
+      ln -sf cert.pem cert
+      ln -sf key.pem key
+   else
+     if [ "$X509" == none ] ; then
+       rm -f cert key
+     else
+       ln -sf "$SSLDIR/certs/$X509" cert 
+       ln -sf "$SSLDIR/private/$X509" key
+     fi
+   fi 
+else
+  exit 2
+fi
+
+
+
+
+
+
+

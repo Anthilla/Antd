@@ -1,0 +1,192 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+function MaxSpeed {
+  INT="$1"
+  CL="$2"
+  if [ -z "$CL" ] ; then
+    M=`cat $REGISTER/system/net/interfaces/$INT/MaxSpeed 2>/dev/null`
+    if [ -z "$M" ] ; then
+      M=`$SCRIPTS/qos_detectSpeed $INT 2>/dev/null`
+      if [ $M -lt 10 ] ; then
+        M=10
+      fi 
+    fi
+    M=`echo $M | awk '{print $0 * 1000 * 1000 / 8}'`
+  else
+    M="`$SCRIPTS/qos_getbw "$INT" "$CL" Max K`"
+    if [ -z "$M" ] ; then
+      M=$GMAX
+    else
+      M=`echo $M | awk '{print $0 * 1000 / 8}'`
+    fi
+  fi
+  echo $M  
+}
+FILE="/var/register/system/mrtg/mrtg.conf"
+MAXLOAD="`cat /proc/cpuinfo |grep processor |wc|awk '{print $1*100}'`"
+MAXSWAP="`grep ^SwapTotal /proc/meminfo | awk '{printf("%.0f\n",$2/1024)}'`"
+[ "$MAXSWAP" = 0 ] && MAXSWAP=1
+cat << EOF > $FILE
+Options[_]: growright, bits,noinfo, nobanner,withzeroes,noborder
+EnableIPv6: no
+WorkDir: /var/register/system/mrtg/html
+RunAsDaemon: Yes
+AbsMax[_]: 12500000000
+
+PageTop[System]: <br><br>
+Target[System]: \`gphdata System\`
+Title[System]: System Load
+PNGTitle[System]: System Load
+MaxBytes[System]: $MAXLOAD
+YLegend[System]: Load AVG x 100
+ShortLegend[System]: #
+Legend1[System]: Average System Load x 100 (Percentage per CPU)
+LegendI[System]:  Load x 100 (CPU)
+Options[System]: growright,noinfo,noo,gauge,withzeroes,noborder,nobanner
+
+
+PageTop[Connections]: <br><br>
+Target[Connections]: \`gphdata Connections\`
+Title[Connections]: Connection Tracking
+PNGTitle[Connections]: Number of Active Connections
+MaxBytes[Connections]: `cat /proc/sys/net/netfilter/nf_conntrack_max`
+YLegend[Connections]: Connections
+ShortLegend[Connections]: #
+Legend1[Connections]: Number of active connections
+LegendI[Connections]:  Active Connections
+Options[Connections]: growright,noinfo,noo,gauge,withzeroes,noborder,nobanner
+
+PageTop[CP]: <br><br>
+Target[CP]: \`gphdata CP\`
+Title[CP]: Captive Portal
+PNGTitle[CP]: Number of Connected Users
+MaxBytes[CP]: 10000
+YLegend[CP]: Users 
+ShortLegend[CP]: #
+Legend1[CP]: Number of Connected Users
+LegendI[CP]:  Users
+Options[CP]: growright,noinfo,noo,gauge,withzeroes,noborder,nobanner
+
+PageTop[Memory]: <br>
+Target[Memory]: \`gphdata Memory\`
+Title[Memory]: Memory
+PNGTitle[Memory]: Memory
+MaxBytes1[Memory]: `grep ^MemTotal /proc/meminfo | awk '{printf("%.0f\n",$2/1024)}'`
+MaxBytes2[Memory]: $MAXSWAP 
+YLegend[Memory]: MByte
+ShortLegend[Memory]: MB
+Legend1[Memory]: Used RAM (filesystem cache memory not included)
+Legend2[Memory]: Used Swap
+LegendI[Memory]:  Used RAM 
+LegendO[Memory]:  Used Swap
+Options[Memory]: growright,noinfo,gauge,withzeroes,noborder,nobanner
+EOF
+CONFIG="$REGISTER/system/net/interfaces/"
+cd $CONFIG
+INTERFACES=`ls |sort -f`
+for I in $INTERFACES ; do
+ if [ -d /sys/class/net/$I ] ; then
+  CREATE=yes
+  #if [ "${I:0:3}" != ETH ] ; then
+  #  CREATE=yes
+  #else
+  #  FEATURE=`$SCRIPTS/getfeature NG $I`
+  #  if checkfeature $FEATURE ; then
+  #    CREATE=yes
+  #  fi
+  #fi
+  if [ "$CREATE" = yes ] ; then
+    echo "PageTop[$I]: <br>" >>$FILE
+    echo "Target[$I]: \`gphdata Interface $I\`" >>$FILE
+    echo "Title[$I]: $I" >>$FILE
+    echo "PNGTitle[$I]: $I" >>$FILE
+    echo "MaxBytes[$I]: `MaxSpeed $I`" >>$FILE
+
+    if ! [ -f $CONFIG/$I/Bond/Name -o -f $CONFIG/$I/Bridge/Name ] ; then
+      if cd $CONFIG/$I/VLAN 2>  /dev/null ; then
+        VLANS=`ls`
+        for VLAN in $VLANS ; do
+           echo "PageTop[$I.$VLAN]: <br>" >>$FILE
+           echo "Target[$I.$VLAN]: \`gphdata Interface $I.$VLAN\`" >>$FILE
+           echo "Title[$I.$VLAN]: $I VLAN $VLAN" >>$FILE
+           echo "PNGTitle[$I.$VLAN]: $I VLAN $VLAN" >>$FILE
+           echo "MaxBytes[$I.$VLAN]: `MaxSpeed $I`" >>$FILE
+        done
+      fi
+    fi
+  fi
+ fi
+done
+
+
+
+IDIR="$REGISTER/system/net/interfaces"
+cd $IDIR
+INTERFACE=`ls`
+for I in $INTERFACE ; do
+ if [ -d /sys/class/net/$I ] ; then
+  QDIR="$IDIR/$I/QoS"
+  CREATE=yes
+  #if [ "${I:0:3}" != ETH ] ; then
+  #  CREATE=yes
+  #else
+  #  FEATURE=`$SCRIPTS/getfeature NG $I`
+  #  if checkfeature $FEATURE ; then
+  #    CREATE=yes
+  #  fi
+  #fi
+  if [ "`cat $QDIR/Enabled 2>/dev/null`" = yes -a "$CREATE" = yes ] ; then
+    MAX="`cat $QDIR/Max 2>/dev/null`"
+    MAXUNIT="`cat $QDIR/MaxUnit 2>/dev/null`"
+    if [ "$MAXUNIT" == "Mbit/s" ] ; then
+      GMAX=`echo $MAX | awk '{print $0 * 1000 * 1000 / 8}'`
+    else
+      GMAX=`echo $MAX | awk '{print $0 * 1000 / 8}'`
+    fi
+    CDIR="$QDIR/Class"
+    cd $CDIR
+    CLASSES="`ls`"
+    for C in $CLASSES ; do
+      echo "Options[${I}_$C]: dorelpercent, growright, bits, noinfo,nobanner,withzeroes,noborder" >>$FILE
+      echo "Target[${I}_$C]: \`gphdata QoS $I $C\`" >>$FILE
+      echo "Title[${I}_$C]: Class: $C ($I) " >>$FILE
+      echo "PNGTitle[${I}_$C]: Class: $C ($I) " >>$FILE
+      echo "MaxBytes1[${I}_$C]: `MaxSpeed $I $C`" >>$FILE
+      echo "MaxBytes2[${I}_$C]: $GMAX" >>$FILE
+      echo "Legend1[${I}_$C]: Class $C Outgoing Traffic in Bits per Second" >>$FILE
+      echo "Legend2[${I}_$C]: Global Outgoing Traffic in Bits per Second" >>$FILE
+      echo "Legend3[${I}_$C]: Class $C Maximal 5 Minute Outgoing Traffic" >>$FILE
+      echo "Legend4[${I}_$C]: Global Maximal 5 Minute Outgoing Traffic" >>$FILE
+      echo "LegendI[${I}_$C]: &nbsp;Class $C ($I):" >>$FILE
+      echo "LegendO[${I}_$C]: &nbsp;$I Outgoing Traffic:" >>$FILE
+ 
+    done
+  fi
+ fi
+done
+CREATE=yes
+#FEATURE=`$SCRIPTS/getfeature GG`
+#if checkfeature $FEATURE ; then
+#  CREATE=yes
+#fi
+if [ "$CREATE" = yes ] ; then
+  CONFIG=$REGISTER/system/net/nb
+  cd $CONFIG/Gateways || exit 1
+  GWS=`ls -d *`
+  for G in $GWS ; do
+    ENABLED=`cat $G/Enabled 2>/dev/null`
+    DESCRIPTION=`cat $G/Description 2>/dev/null`
+    echo "Options[GW${G}]: dorelpercent, growright, bits, noinfo,nobanner,withzeroes,noborder" >>$FILE
+    echo "Target[GW${G}]: \`gphdata Gateway $G\`" >>$FILE
+    echo "Title[GW${G}]: $DESCRIPTION " >>$FILE
+    echo "PNGTitle[GW${G}]: $DESCRIPTION " >>$FILE
+    echo "MaxBytes1[GW${G}]: 125000000" >>$FILE
+    echo "MaxBytes2[GW${G}]: 125000000" >>$FILE
+    echo "Legend1[GW${G}]: $DESCRIPTION Traffic in bits per Second" >>$FILE
+    echo "Legend2[GW${G}]: Total Balanced Traffic in bits per Second" >>$FILE
+    echo "Legend3[GW${G}]: x" >>$FILE
+    echo "Legend4[GW${G}]: x" >>$FILE
+    echo "LegendI[GW${G}]: &nbsp; $DESCRIPTION:" >>$FILE
+    echo "LegendO[GW${G}]: &nbsp;TOTAL TRAFFIC:" >>$FILE
+  done
+fi

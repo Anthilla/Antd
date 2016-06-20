@@ -30,15 +30,15 @@ using System;
 using antdlib.Models;
 using System.Collections.Generic;
 using System.Linq;
-using antdlib.Common;
+using antdlib.common;
 using Newtonsoft.Json;
 
 namespace antdlib.Status {
     public class Cpuinfo {
         public static IEnumerable<string> Get() {
-            var r1 = Terminal.Terminal.Execute("numactl -s");
+            var r1 = Terminal.Execute("numactl -s");
             var list = r1.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(row => row).ToList();
-            var r2 = Terminal.Terminal.Execute("numactl -H");
+            var r2 = Terminal.Execute("numactl -H");
             list.AddRange(r2.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(row => row));
             return list;
         }

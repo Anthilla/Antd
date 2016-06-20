@@ -1,0 +1,12 @@
+VIA="$2"
+IP="$3"
+
+if [ -z "$IP" ] ; then
+  MSG="Session opened via $VIA"
+else
+  MSG="Session opened via $VIA ($IP)"
+fi
+
+echo "$MSG"         | VIEWER
+echo "$MSG"         | MAIL
+echo "$MSG"         | SMS

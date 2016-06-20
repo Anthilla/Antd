@@ -1,0 +1,181 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title><xvar Type> Statistics</title>
+<script>
+var Feature;
+
+function printNotes(xNotes) {
+  document.getElementById("xNotes").innerHTML=xNotes;
+}
+function printPowered() {
+   printNotes("<br><font color=#3030f0><b>&nbsp;&nbsp;&nbsp;&nbsp;Powered by MRTG - Multi Router Traffic Grapher</b></font>");
+}
+function Activated() {
+  X=document.data;
+  if (X.Type.value=="Interface") {
+    sh=0;
+    if (X.Interface.value.indexOf("nomrtg_._")>-1) {
+      sh=9;
+    }
+    s=X.Interface.value.substr(0,17+sh);
+    for (i=0; i<X.Interface.options.length; i++) {
+      if (X.Interface.options[i].value.substr(0,17+sh)==s) {
+        X.Interface.options[i].value=X.Interface.options[i].value.substr(12);
+      }
+    }
+  }
+  if (X.Type.value=="QoS") {
+    sh=0;
+    if (X.Interface.value.indexOf("nomrtg_._")>-1) {
+      sh=9;
+    }
+    s=X.Interface.value.substr(0,17+sh);
+    for (i=0; i<X.Interface.options.length; i++) {
+      if (X.Interface.options[i].value.substr(0,17+sh)==s) {
+        X.Interface.options[i].value=X.Interface.options[i].value.substr(12);
+      }
+    }
+  }
+  if (X.Type.value=="Gateway") {
+    for (i=0; i<X.Interface.options.length; i++) {
+      if (X.Interface.options[i].value.substr(0,12)=="nofeature_._") {
+        X.Interface.options[i].value=X.Interface.options[i].value.substr(12);
+      }
+    }
+  }
+  printPowered();
+  SubmitData();
+  if (opener.top.log!=undefined) {
+     WO=opener.top.log;
+  } else {
+     WO=opener.opener.top.log;
+  } 
+  WO.location="/cgi-bin/kerbynet?STk=<xvar STk>&Action=LogSuccess&Object=The feature ["+Feature+"] has been successfully activated";
+}
+function PrintDesc() {
+  X=document.data;
+  if ("<xvar Type>"=="System") {
+    dw="<xvar +cpuinfo>";
+  } else if ("<xvar Type>"=="Connections") {
+    dw="Number of active connections (Max: <xvar ?cat /proc/sys/net/netfilter/nf_conntrack_max>)";
+  } else if ("<xvar Type>"=="CP") {
+    dw="Number of connected users";
+  } else if ("<xvar Type>"=="Memory") {
+    dw="Used RAM and Swap";
+  } else {
+    if ("<xvar Type>"=="QoS") dw="Class : ";
+    if ("<xvar Type>"=="Interface") dw="Interface : ";
+    if ("<xvar Type>"=="Gateway") {
+      dw="Gateway : ";
+      if (X.Interface.selectedIndex>-1) {
+        dw+=X.Interface.options[X.Interface.selectedIndex].text;
+      }
+    } else {
+      if (X.Interface.value.indexOf("_._")<0) {
+        dw+=X.Interface.value;
+      } else {
+        t=X.Interface.value.substr(X.Interface.value.indexOf("_._")+3);
+        if (t.indexOf("_._")>-1) {
+          t=t.substr(t.indexOf("_._")+3);
+        }
+        dw+=t;
+      }
+      if (dw.indexOf(".")>-1) {
+        dw=dw.substr(0,dw.indexOf("."))+" vlan "+dw.substr(dw.indexOf(".")+1)
+      }
+    }
+  }
+  if ("<xvar Type>"=="QoS") {
+   if (X.Interface.selectedIndex>-1) {
+    dw+=" "+QoSParam[X.Interface.selectedIndex];
+   }
+  }
+  document.getElementById("Descr").innerHTML=dw;
+}
+function ChangedType () {
+  X=document.data;
+  location="kerbynet?STk=<xvar STk>&Action=Render&Object=mrtg_show&Type="+X.Type.value+"&Interface="+X.Interface.value;
+}
+function SubmitData() {
+   X=document.data;
+   printPowered()
+   if (X.Interface.value.toLowerCase()!="" || X.Type.value=="System" || X.Type.value=="Connections" || X.Type.value=="CP" || X.Type.value=="Memory") {
+     if (X.Type.value=="System") {
+       W="/mrtg/system.html"
+     } else if (X.Type.value=="Connections") {
+       W="/mrtg/connections.html"
+     } else if (X.Type.value=="CP") {
+       W="/mrtg/cp.html"
+     } else if (X.Type.value=="Memory") {
+       W="/mrtg/memory.html"
+     } else {
+       W="/mrtg/"+X.Interface.value.toLowerCase()+".html";
+     }
+   } else {
+     W="kerbynet?STk=<xvar STk>&Action=Render&Object=blank";
+   }
+   PrintDesc();
+   
+   if (X.Interface.value.substr(0,9)=="nomrtg_._") {
+     printNotes("<font color=#f03030><b>No Graphic available yet</b></font><br>Close this windows and try again.");
+     W="kerbynet?STk=<xvar STk>&Action=Render&Object=blank";
+   } else if (X.Interface.value.substr(0,12)=="nofeature_._") {
+     if (X.Interface.value.indexOf("nomrtg_._")>-1) {
+       sh=9;
+     } else {
+       sh=0;
+     }
+     if (X.Type.value=="Interface") { PRE="NG";NET=X.Interface.value.substr(12+sh);}
+     if (X.Type.value=="QoS") { PRE="NG";NET=X.Interface.value.substr(12+sh,5);}
+     if (X.Type.value=="Gateway") { PRE="GG";NET="";}
+   
+     W="kerbynet?STk=<xvar STk>&Action=Render&Object=activatefeature&PRE="+PRE+"&NET="+NET;
+   }
+   gph.location=W;
+}
+function loaded() {
+  document.data.Type.value="<xvar Type>";
+  if (document.data.Type.value=="System" || document.data.Type.value=="Connections" || document.data.Type.value=="CP" || document.data.Type.value=="Memory") {
+    document.data.Interface.disabled=true;
+  } else {
+    document.data.Interface.disabled=false;
+  }
+  SubmitData();
+}
+</script>
+</head>
+<body style="color: #404080" onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='MRTG'>
+<input type=hidden name=Action value=''><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr>
+<td>
+<font color=#3030f0 face=Arial class=Bigger2><b>
+<script>
+  if ("<xvar Type>"=="System") document.write("SYSTEM LOAD STATISTICS");
+  if ("<xvar Type>"=="Connections") document.write("CONNECTION TRACKING STATISTICS");
+  if ("<xvar Type>"=="CP") document.write("CAPTIVE PORTAL STATISTICS");
+  if ("<xvar Type>"=="Memory") document.write("SYSTEM MEMORY STATISTICS");
+  if ("<xvar Type>"=="QoS") document.write("TRAFFIC SHAPING STATISTICS");
+  if ("<xvar Type>"=="Interface") document.write("NETWORK INTERFACE STATISTICS");
+  if ("<xvar Type>"=="Gateway") document.write("GATEWAY STATISTICS");
+</script>
+
+</b></font></td><td align=right>
+<select name=Type onchange="ChangedType()">
+<option value=System>System Load</option>
+<option value=Memory>System Memory</option>
+<option value=Connections>Connections</option>
+<option value=Interface>Network Interface</option>
+<option value=QoS>Traffic Shaping</option>
+<option value=Gateway>Load Balancing</option>
+<option value=CP>Captive Portal</option>
+</select>
+<select name=Interface onchange="SubmitData()"><xvar !mrtg_selectinterface (Interface) (Type)>&nbsp;&nbsp;</td><td align=right nowrap width=1%><input type=button name=refresh value=Refresh onclick="SubmitData()">&nbsp;<input type=button value=Close onclick="window.close()"></td></tr></table><font color=#606060 size=+1><b>&nbsp;<span id="Descr"></span></b></font><hr><br>
+<iframe name=gph border=0 frameborder=0 width=100% height=335 src='kerbynet?STk=<xvar STk>&Action=Render&Object=blank'>Not compatible Browser</iframe>
+
+<hr>
+<span id="xNotes"></span>
+</form>
+</body>
+</html>

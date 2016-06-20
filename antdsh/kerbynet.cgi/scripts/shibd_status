@@ -1,0 +1,12 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+ENABLED=`cat $REGISTER/system/cp/Auth/Shibboleth/Enabled 2>/dev/null`
+if [ "$ENABLED" = yes ] ; then
+  if pidof shibd >/dev/null ; then
+    echo "<font color=#20d020>Running</font>"
+  else
+    echo "<font color=#ff5050><b>Fault</b></font>"
+  fi  
+else
+  echo "<font color=#20d020>Stopped</font>"
+fi

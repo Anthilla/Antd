@@ -1,0 +1,12 @@
+#!/bin/sh
+if [ $# != 1 ] ; then
+   echo "Usage: $0 <key>"
+   exit 1
+fi
+KEY="/var/register/$1"
+if ! [ -f "$KEY" ] ; then
+   echo 
+   exit 1
+fi
+cat "$KEY"
+

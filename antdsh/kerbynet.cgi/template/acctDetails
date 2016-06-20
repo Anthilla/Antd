@@ -1,0 +1,35 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Accounting Details</title>
+<script>
+</script>
+</head>
+<body>
+<form name=data method=post action=kerbynet>
+<table width=100%>
+<tr><td><font class=Bigger2 color=#4040f0><b><xvar Entry></b></font></td><td align=right><input type=button value=Refresh onclick="location='kerbynet?Section=Acct&STk=<xvar STk>&Action=ShowDetails&Entry=<xvar _Entry>'">&nbsp;<input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<hr>
+<table border=1 width=100%><tr>
+<td>
+<table>
+<tr><td>&nbsp;&nbsp;Traffic</td><td>&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td id=SumTraffic align=right></td><td>MB</td></tr>
+<tr><td>&nbsp;&nbsp;Time</td><td>&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td id=SumTime align=right></td><td></td></tr>
+<tr><td>&nbsp;&nbsp;Cost</td><td>&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td id=SumCost align=right></td><td id=CurrencySymbol></td></tr>
+</table>
+</td><td></td><td nowrap width=250>
+<iframe name=UserCredit width=100% height=40 marginwidth=0 src="kerbynet?Section=Acct&STk=<xvar STk>&Action=ViewCredit&Username=<xvar _Entry>" border=0 frameborder=0>iframe not supported</iframe>
+</td>
+</tr></table>
+<hr>
+<table><tr><td>Sessions</td><td>&nbsp;:&nbsp;&nbsp;&nbsp;</td><td id=nSession align=right></td><td></td></tr></table>
+<input type=hidden name=Section value="Acct">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<table width=100% cellpadding=0 border=1>
+<tr bgcolor=#e0e0ff align=center><td width=1%>&nbsp;&nbsp;&nbsp;</td><td Class=Smaller1>Client Identification</td><td Class=Smaller1>NAS</td><td Class=Smaller1>Start Time</td><td Class=Smaller1>Stop Time</td><td Class=Smaller1>RX (MB)</td><td Class=Smaller1>TX (MB)</td><td Class=Smaller1>Traffic (MB)</td><td Class=Smaller1>Time</td><td Class=Smaller1>Cost (<xvar /system/acct/Currency>)</td><td Class=Smaller1>Last Update</td></tr>
+<xvar +acctDetails.pl (Entry)>
+</table>
+</form>
+</body>
+</html>

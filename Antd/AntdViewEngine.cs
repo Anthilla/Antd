@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Nancy.ViewEngines.SuperSimpleViewEngine;
 
-namespace Antd2 {
+namespace Antd {
     internal sealed class AntdViewEngine :
         ISuperSimpleViewEngineMatcher {
         /// <summary>

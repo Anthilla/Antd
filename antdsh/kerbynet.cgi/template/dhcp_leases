@@ -1,0 +1,38 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DHCP Leases</title>
+<script>
+function loaded() {
+  if ("<xvar OnlyActive>"=="yes") {
+     document.data.OnlyActive.checked=true;
+  }
+  document.data.OnlyActive.disabled=false;
+  document.data.refresh.disabled=false;
+}
+function onlyactive() {
+  if (document.data.OnlyActive.checked) {
+     location="kerbynet?Section=DHCP&STk=<xvar STk>&Action=Leases&OnlyActive=yes";
+  } else {
+     location="kerbynet?Section=DHCP&STk=<xvar STk>&Action=Leases&OnlyActive=no";
+  }
+
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data>
+<table width=100%><tr>
+<td><font color="#0000F0" class=Bigger1><b>DHCP LEASES TABLE</b></font></td><td align=right><input type=checkbox name=OnlyActive value=yes onclick="onlyactive()"><font color="#404040"> Show only active leases&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=refresh value=Refresh onclick="location.reload(true)">&nbsp;<input type=button value=Close onclick="window.close()"> </td>
+</tr></table>
+<script>
+  document.data.OnlyActive.disabled=true;
+  document.data.refresh.disabled=true;
+</script>
+<hr>
+<table bordercolor=#ffffff border=2 width=100% bgcolor=#f0f0ff style="border-collapse: collapse; font-family: courier; color: #0000A0; font-size: 10pt;">
+<tr><th>IP Address</th><th>MAC Address</th><th>Client Hostname</th><th>State</th><th>Start Time</th><th>End Time</th></tr>
+<xvar !dhcp_showleasestable /var/register/system/dhcp/dhcpd.leases (OnlyActive)>
+</table>
+</form>
+</body>
+</html>

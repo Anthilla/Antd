@@ -27,12 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
 using antdlib;
 using antdlib.Certificate;
 using Antd.Helpers;
 using Nancy;
-using Nancy.Responses;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -46,20 +44,20 @@ namespace Antd.Modules {
             Post["/ca/ssl/toggle"] = x => {
                 if (ApplicationSetting.Ssl() == "yes") {
                     ApplicationSetting.DisableSsl();
-                    return Response.AsJson(true);
+                    return HttpStatusCode.OK;
                 }
                 ApplicationSetting.EnableSsl();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/ssl/enable"] = x => {
                 ApplicationSetting.EnableSsl();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/ssl/disable"] = x => {
                 ApplicationSetting.DisableSsl();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/setup"] = x => {
@@ -73,7 +71,7 @@ namespace Antd.Modules {
                 var caEmail = (string)Request.Form.CaEmail;
                 var caPassphrase = (string)Request.Form.CaPassphrase;
                 CertificateAuthority.Setup(caDirectory, caPassphrase, caCountry, caProvince, caLocality, caOrganization, caOrganizationalUnit, caCommonName, caEmail);
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/certificate/new"] = x => {
@@ -97,29 +95,29 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            Get["/ca/certificate/download/{format}/{guid}"] = x => {
-                var guid = (string)x.guid;
-                var certificate = CertificateRepository.GetByGuid(guid);
-                if (certificate == null)
-                    return HttpStatusCode.InternalServerError;
-                string path;
-                var format = (string)x.format;
-                switch (format) {
-                    case "der":
-                        path = certificate.CertificateDerPath;
-                        break;
-                    case "pfx":
-                        path = certificate.CertificatePfxPath;
-                        break;
-                    default:
-                        path = certificate.CertificatePath;
-                        break;
-                }
-                var file = new FileStream(path, FileMode.Open);
-                var fileName = Path.GetFileName(certificate.CertificatePath);
-                var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
-                return response.AsAttachment(fileName);
-            };
+            //Get["/ca/certificate/download/{format}/{guid}"] = x => {
+            //    var guid = (string)x.guid;
+            //    var certificate = CertificateRepository.GetByGuid(guid);
+            //    if (certificate == null)
+            //        return HttpStatusCode.InternalServerError;
+            //    string path;
+            //    var format = (string)x.format;
+            //    switch (format) {
+            //        case "der":
+            //            path = certificate.CertificateDerPath;
+            //            break;
+            //        case "pfx":
+            //            path = certificate.CertificatePfxPath;
+            //            break;
+            //        default:
+            //            path = certificate.CertificatePath;
+            //            break;
+            //    }
+            //    var file = new FileStream(path, FileMode.Open);
+            //    var fileName = Path.GetFileName(certificate.CertificatePath);
+            //    var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
+            //    return response.AsAttachment(fileName);
+            //};
         }
     }
 }

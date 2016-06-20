@@ -1,0 +1,276 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Subnet</title>
+<script language=Javascript>
+<xinclude ip_utility.inc>
+var Network,Netmask;
+function dhcpLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=dhcpd","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function loaded() {
+  Network="<xvar Network>";
+  Netmask="<xvar Netmask>";
+}
+function EnabledSubnet() {
+  SaveMsg();
+}
+function validateIP(IP) {
+  IP.value=IP.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (! isValidIP(IP.value) && IP.value!="") {
+    alert("ERROR: "+IP.value+" is not a valid IP address.");
+    IP.focus();
+    IP.select();
+    return false;
+  }
+  SaveMsg();
+  return true;
+}
+function NewSubnet() {
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=NewSubnet","SubnetConfig","top=350,left=400,width=500,height=250,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function AdvancedCfg() {
+      if (document.data.SelectedSubnet.value=="") {
+        alert("No DHCP subnet selected.");
+        return;
+      }
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=AdvancedOpt&Network=<xvar Network>&Netmask=<xvar Netmask>&Subnet="+document.data.SelectedSubnet.value,"AdvancedDhcp","top=300,left=450,width=500,height=380,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function AddStatic() {
+      if (document.data.SelectedSubnet.value=="") {
+        alert("No DHCP subnet selected.");
+        return;
+      }
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=AddStatic&Network=<xvar Network>&Netmask=<xvar Netmask>&Subnet="+document.data.SelectedSubnet.value,"StaticConfig","top=250,left=350,width=500,height=350,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function EditStatic() {
+  if (document.data.SelectedSubnet.value=="") {
+    alert("No DHCP subnet selected.");
+    return;
+  }
+  se=window.StaticEntry.selected();
+  if (se=="") {
+    alert("You should select an entry to edit.");
+    return false;
+  }
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=EditStatic&Network=<xvar Network>&Netmask=<xvar Netmask>&Subnet="+document.data.SelectedSubnet.value+"&Entry="+se,"StaticConfig","top=250,left=350,width=500,height=350,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function RemoveStatic() {
+  if (document.data.SelectedSubnet.value=="") {
+    alert("No DHCP subnet selected.");
+    return;
+  }
+  se=window.StaticEntry.selected();
+  if (se=="") {
+    alert("You should select an entry to remove.");
+    return false;
+  }
+  if (confirm("Are you sure you want to remove the static entry?")) {
+    location="kerbynet?Section=DHCP&STk=<xvar STk>&Action=DeleteStatic&Subnet="+document.data.SelectedSubnet.value+"&Entry="+se;
+  }
+}
+function Details() {
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=Details","DHCPDetails","top=350,left=400,width=600,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function RemoveSubnet() {
+  if (document.data.SelectedSubnet.value=="") {
+    alert("No DHCP subnet to remove.");
+    return;
+  }
+  if (confirm("Are you sure you want to permanently remove the subnet with all its data?")) {
+    location="kerbynet?Section=DHCP&STk=<xvar STk>&Action=DeleteSubnet&Subnet="+document.data.SelectedSubnet.value;
+  }
+}
+function requery() {
+  location="kerbynet?Section=DHCP&STk=<xvar STk>&Action=Manage&SelectedSubnet="+document.data.SelectedSubnet.value;
+}
+function overlap(IP,RangeMin,RangeMax) {
+  ipnum=ip2num(IP.value);
+  minnum=ip2num(RangeMin.value);
+  maxnum=ip2num(RangeMax.value);
+  if (ipnum==0 || minnum==0 || maxnum==0) return false;
+  if (maxnum<minnum) {
+     tempnum=maxnum;
+     maxnum=minnum;
+     minnum=tempnum;
+  }
+  if (ipnum>=minnum && ipnum<=maxnum) {
+     alert("ERROR: IP address "+IP.value+" is already included in the range "+RangeMin.value+" - "+RangeMax.value);
+     IP.select();
+     IP.focus();
+     return true;
+  } else {
+     return false;
+  }  
+}
+function validateRange() {
+  X=document.data;
+  if (X.Range1Min.value!=""  && !ip_belongs_network(X.Range1Min.value,Network,Netmask)) {
+    alert("IP address "+X.Range1Min.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range1Min.select();
+    return false;
+  }
+  if (X.Range1Max.value!=""  && !ip_belongs_network(X.Range1Max.value,Network,Netmask)) {
+    alert("IP address "+X.Range1Max.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range1Max.select();
+    return false;
+  }
+  if (X.Range2Min.value!=""  && !ip_belongs_network(X.Range2Min.value,Network,Netmask)) {
+    alert("IP address "+X.Range2Min.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range2Min.select();
+    return false;
+  }
+  if (X.Range2Max.value!=""  && !ip_belongs_network(X.Range2Max.value,Network,Netmask)) {
+    alert("IP address "+X.Range2Max.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range2Max.select();
+    return false;
+  }
+  if (X.Range3Min.value!=""  && !ip_belongs_network(X.Range3Min.value,Network,Netmask)) {
+    alert("IP address "+X.Range3Min.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range3Min.select();
+    return false;
+  }
+  if (X.Range3Max.value!=""  && !ip_belongs_network(X.Range3Max.value,Network,Netmask)) {
+    alert("IP address "+X.Range3Max.value+" is not on subnet "+Network+"/"+Netmask);
+    X.Range3Max.select();
+    return false;
+  }
+  if (overlap(X.Range3Min,X.Range1Min,X.Range1Max)) return false;
+  if (overlap(X.Range3Max,X.Range1Min,X.Range1Max)) return false;
+  if (overlap(X.Range3Min,X.Range2Min,X.Range2Max)) return false;
+  if (overlap(X.Range3Max,X.Range2Min,X.Range2Max)) return false;
+  if (overlap(X.Range2Min,X.Range1Min,X.Range1Max)) return false;
+  if (overlap(X.Range2Max,X.Range1Min,X.Range1Max)) return false;
+  if (overlap(X.Range2Min,X.Range3Min,X.Range3Max)) return false;
+  if (overlap(X.Range2Max,X.Range3Min,X.Range3Max)) return false;
+  if (overlap(X.Range1Min,X.Range2Min,X.Range2Max)) return false;
+  if (overlap(X.Range1Max,X.Range2Min,X.Range2Max)) return false;
+  if (overlap(X.Range1Min,X.Range3Min,X.Range3Max)) return false;
+  if (overlap(X.Range1Max,X.Range3Min,X.Range3Max)) return false;
+  return true;
+}
+function savedata(obj) {
+   X=document.data;
+   if (X.SelectedSubnet.value=="") {
+     alert("No subnet available. Press New button to create one.");
+     return;
+   }
+
+   if (validateIP(X.Range1Min) && validateIP(X.Range1Max) && validateIP(X.Range2Min) && validateIP(X.Range2Max) && validateIP(X.Range3Min) && validateIP(X.Range3Max) && validateIP(X.Router) && validateIP(X.DNS1) && validateIP(X.DNS2) && validateIP(X.DNS3) && validateIP(X.NTP1) && validateIP(X.NTP2) && validateIP(X.WINS1) && validateIP(X.WINS2)) {
+      if (validateRange()) {
+        obj.disabled=true;
+        SavingMsg();
+        document.data.Section.value="DHCP";
+        document.data.Action.value="Save";
+        document.data.submit();
+      }
+   } 
+}
+function writeSelect(begin,end,selected) {
+   document.write("<option></option>");
+   for (i=begin;i<=end;i++) {
+      document.write("<option"+(i==selected?" selected":"")+">"+(i<10?"0":"")+i+"</option>");
+   }
+}
+function SavingMsg () {
+   var tableElem = document.getElementById('savetab');
+   var rowElem = tableElem.rows[0];
+   rowElem.cells[1].innerHTML="<font color=#0000FF>&nbsp;&nbsp;Saving....</font>";
+}
+function SaveMsg () {
+   var tableElem = document.getElementById('savetab');
+   var rowElem = tableElem.rows[0];
+   if (rowElem.cells[1].innerHTML.indexOf("Saving")<0) {
+      rowElem.cells[1].innerHTML="<font color=#FF0000>&nbsp;&nbsp;Changes not saved</font>";
+   }
+}
+function changed() {
+  SaveMsg();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="DHCP">
+<input type=hidden name=Action value="Manage"><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1 style="color: #606060">
+<tr><td width="1%" nowrap><b><font color=#808080>&nbsp;Active on:</font><font color=#00d000>&nbsp;&nbsp;<xvar _Interfaces>&nbsp;</font></b></td><td align="right">
+&nbsp;Subnet&nbsp;&nbsp;&nbsp;&nbsp;<xvar _combosubnet></td><td width=1% nowrap align=right><input type=button value="New" onclick="NewSubnet()"><input type=button value="Remove" onclick="RemoveSubnet()"></td><td width=1%><input type=button value="Show Log" onclick="dhcpLOG()"></td></tr>
+</table>
+<font color=#FF0000><xvar _ERROR></font>
+<font color=#FF0000><xvar _Warning></font>
+<table width=100% id=savetab><tr><td width=1%><input type=button Name=save value="Save" onclick="savedata(this)"></td><td></td><td align=right><font color=#0000f0 face=Arial>Enabled </font><input type=checkbox name=Enabled value=yes <xvar CheckedEnabled> onclick="EnabledSubnet()"></td></tr></table>
+<table width=100% border=1 cellpadding=4 cellspacing=0><tr><td width=30% valign=top>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;&nbsp;Dynamic IP Configuration&nbsp;&nbsp;</font></span>
+<table border=1 cellspacing=0 cellpadding=10 bordercolor=#0000a0 width=100%><tr><td>
+<table height=100% width=100%>
+<tr><td></td>
+<td nowrap><font>Default Lease Time</font><br>
+<table cellpadding=0 cellspacing=0>
+          <tr>
+             <td><font class=Smaller1 color=#808080>Days<br><select name=DefaultLeaseDays  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,99,"<xvar DefaultLeaseDays>"==""?"0":"<xvar DefaultLeaseDays>");</script></select></font></td>
+             <td><font class=Smaller1 color=#808080>Hours<br><select name=DefaultLeaseHours  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,23,"<xvar DefaultLeaseHours>"==""?"0":"<xvar DefaultLeaseHours>");</script></select></font></td>
+             <td><font class=Smaller1 color=#808080>Minutes<br><select name=DefaultLeaseMinutes  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,59,"<xvar DefaultLeaseMinutes>"==""?"0":"<xvar DefaultLeaseMinutes>");</script></select></font></td>
+           </tr>
+</table>
+<hr>
+</td>
+<td nowrap><font>&nbsp;Max Lease Time</font><br>
+<table cellpadding=0 cellspacing=0>
+          <tr>
+             <td><font class=Smaller1 color=#808080>&nbsp;Days<br><select name=MaxLeaseDays  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,99,"<xvar MaxLeaseDays>"==""?"0":"<xvar MaxLeaseDays>");</script></select></font></td>
+             <td><font class=Smaller1 color=#808080>Hours<br><select name=MaxLeaseHours  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,23,"<xvar MaxLeaseHours>"==""?"0":"<xvar MaxLeaseHours>");</script></select></font></td>
+             <td><font class=Smaller1 color=#808080>Minutes<br><select name=MaxLeaseMinutes  style="font-size: 8pt;" onchange="changed()"><script language=Javascript>writeSelect(0,59,"<xvar MaxLeaseMinutes>"==""?"0":"<xvar MaxLeaseMinutes>");</script></select></font></td>
+           </tr>
+</table>
+<hr>
+</td></tr>
+<tr><td width=25% nowrap><font color=#606060>&nbsp;&nbsp;&nbsp;&nbsp;Range 1&nbsp;</font></td><td nowrap><input type=text size=15 name=Range1Min value="<xvar _Range1Min>" onchange="validateIP(this)">&nbsp;&nbsp;-</td><td nowrap>&nbsp;<input type=text size=15 name=Range1Max value="<xvar _Range1Max>" onchange="validateIP(this)"></td></tr>
+<tr><td width=25% nowrap><font color=#606060>&nbsp;&nbsp;&nbsp;&nbsp;Range 2&nbsp;</font></td><td nowrap><input type=text size=15 name=Range2Min value="<xvar _Range2Min>" onchange="validateIP(this)">&nbsp;&nbsp;-</td><td nowrap>&nbsp;<input type=text size=15 name=Range2Max value="<xvar _Range2Max>" onchange="validateIP(this)"></td></tr>
+<tr><td width=25% nowrap><font color=#606060>&nbsp;&nbsp;&nbsp;&nbsp;Range 3&nbsp;</font></td><td nowrap><input type=text size=15 name=Range3Min value="<xvar _Range3Min>" onchange="validateIP(this)">&nbsp;&nbsp;-</td><td nowrap>&nbsp;<input type=text size=15 name=Range3Max value="<xvar _Range3Max>" onchange="validateIP(this)"></td></tr>
+</table>
+</td></tr>
+</table>
+<br>
+<table cellspacing=0 cellpadding=0 width=100%><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;&nbsp;Subnet Options&nbsp;&nbsp;</font></span></td><td align=right>
+<input type=button value="Advanced" style="font-size: 9;" onclick="AdvancedCfg()">&nbsp;</td></tr></table>
+
+<table border=1 cellspacing=0 cellpadding=10 width=100%><tr><td>
+<table width=100% style="color: #404040;">
+<tr><td width=20% nowrap><font>Default Gateway</font></td><td align=right><input type=text name=Router value="<xvar _Router>" onchange="validateIP(this)" size=15></td></tr>
+<tr><td><font>DNS 1</font></td><td align=right><input type=text name=DNS1 value="<xvar _DNS1>" onchange="validateIP(this)" size=15></td></tr>
+<tr><td><font>DNS 2</font></td><td align=right><input type=text name=DNS2 value="<xvar _DNS2>" onchange="validateIP(this)" size=15></td></tr>
+<tr><td><font>DNS 3</font></td><td align=right><input type=text name=DNS3 value="<xvar _DNS3>" onchange="validateIP(this)" size=15></td></tr>
+<tr><td nowrap><font>Domain Name</font></td><td align=right><input type=text name=Domain value="<xvar _Domain>" onchange="changed()" size=15></td></tr>
+<tr><td><font>NIS Domain</font></td><td align=right><input type=text name=NIS value="<xvar _NIS>" onchange="changed()" size=15></td></tr>
+<tr><td><font>NTP Server</font></td><td nowrap align=right><input type=text name=NTP1 value="<xvar _NTP1>" onchange="validateIP(this)" size=15>&nbsp;&nbsp;<input type=text name=NTP2 value="<xvar _NTP2>" onchange="validateIP(this)" size=15></td></tr>
+<tr><td><font>WINS Server</font></td><td nowrap align=right><input type=text name=WINS1 value="<xvar _WINS1>" onchange="validateIP(this)" size=15>&nbsp;&nbsp;<input type=text name=WINS2 value="<xvar _WINS2>" onchange="validateIP(this)" size=15></td></tr>
+</table>
+</td></tr></table>
+
+
+</td>
+<td align=right valign=top>
+
+
+
+
+<table width=100% border=0 cellspacing=0 cellpadding=0 height=100%><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;&nbsp;Static IP Entries&nbsp;&nbsp;</font></span></td><td align=right><input type=button value=Add style="height: 20 ;font-size: 10;" onclick="AddStatic()"><input type=button value=Edit style="height: 20;font-size: 10;" onclick="EditStatic()"><input type=button value=Delete style="height: 20 ;font-size: 10;" onclick="RemoveStatic()"></td></tr></table>
+
+
+<table border=1 cellspacing=0 cellpadding=0 width=100% height=100% bordercolor=#0000a0><tr><td>
+<iframe name=StaticEntry width=100% height=360 frameborder=0 scrolling=yes src="kerbynet?STk=<xvar STk>&Action=Render&Object=dhcp_liststatic&Subnet=<xvar /system/dhcp/SelectedSubnet>">IFRAME not supported</iframe>
+</td></tr></table>
+
+
+</td>
+
+</tr></table>
+</form>
+</body>
+</html>

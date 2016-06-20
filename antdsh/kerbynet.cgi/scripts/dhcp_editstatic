@@ -1,0 +1,31 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SUBNET="$1"
+ENTRY="$2"
+IP="$3"
+MAC="$4"
+DESC="$5"
+PARAMETERS="$6"
+[ -z "$SUBNET" -o -z "$ENTRY" -o -z "$IP" -o -z "$MAC" ] && exit 1
+CONFIG="$REGISTER/system/dhcp"
+if ! [ -d $CONFIG/subnets/$SUBNET ] ; then
+  echo "Subnet does not exist." 1>&2
+  exit 3
+fi
+if ! [ -d $CONFIG/subnets/$SUBNET/Statics/$ENTRY ] ; then
+  echo "Entry does not exist." 1>&2
+  exit 5
+fi 
+MAC=`echo $MAC |awk -F":" '{printf "%02s:%02s:%02s:%02s:%02s:%02s",$1,$2,$3,$4,$5,$6}'`
+cd $CONFIG/subnets/$SUBNET/Statics
+NUMIP=`echo $IP | awk -F"." '{printf "%010d",($1*256*256*256+$2*256*256+$3*256+$4)}'`
+NUMMAC=`echo $MAC |sed "s/://g"`
+ENTRY1="${NUMIP}_${NUMMAC}"
+if ! [ -d "$ENTRY1" ] ; then
+  mv "$ENTRY" "$ENTRY1"
+fi
+echo $IP > $ENTRY1/IP
+echo $MAC > $ENTRY1/MAC
+echo "$DESC" > $ENTRY1/Desc
+echo "$PARAMETERS" > $ENTRY1/Parameters
+$SCRIPTS/dhcp_start

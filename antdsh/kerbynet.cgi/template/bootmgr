@@ -1,0 +1,65 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>BootMGR</title>
+<script>
+function loaded() {
+  X=document.data;
+  if (isInputDisabled) {
+    DisableInput();
+  }
+}
+function NotSaved() {
+  document.getElementById('SaveTab').innerHTML="<font color=#FF4040><b>Not saved</b></font>";
+}
+function SaveSetup() {
+  X=document.data;
+  X.submit(); 
+}
+function DisableInput() {
+  X=document.data;
+  X.SaveBt.disabled=true; 
+  X.RebootBt.disabled=true; 
+  X.Slot.disabled=true; 
+  X.Console.disabled=true; 
+  X.Kernel1.disabled=true; 
+  X.Parameters1.disabled=true; 
+  X.Kernel2.disabled=true; 
+  X.Parameters2.disabled=true; 
+}
+function doreboot() {
+     location="kerbynet?STk=<xvar STk>&Action=Reboot";
+}
+var isInputDisabled=false;
+</script>
+</head>
+<body onload="loaded()" style="color:#606060">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value=AutoUpdate>
+<input type=hidden name=Action value="SaveBootMGR"><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr><td><font class=Bigger2 color=#3030f0><b>Boot Manager</b></font></td><td align=right><span id=SaveTab></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=SaveBt value=Save onclick="SaveSetup()">&nbsp;<input type=button value=Close onclick="window.close()">&nbsp;<input type=button name=RebootBt value=Reboot onclick="doreboot()"></td></tr></table>
+<hr>
+<script>document.data.RebootBt.disabled=true;</script> 
+<xvar +slot_status><br>
+<table width=100% cellpadding=3>
+<tr><td width=30% nowrap>BOOT IMAGE</td><td align=right><select name="Slot" onchange="NotSaved()"><xvar +slot_list></select></td></tr>
+<tr><td width=30% nowrap>CONSOLE</td><td align=right><select name="Console" onchange="NotSaved()"><xvar +slot_console_list></select></td></tr>
+</table>
+<br>
+<table width=100% cellpadding=0><tr><td nowrap width=1%><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;SLOT 1 - <xvar +slot_desc 1>&nbsp;&nbsp;</font></span></td><td align=right><xvar +slot_status 1>&nbsp;</td></tr></table>
+<table width=100% border=1 cellpadding=5><tr><td>
+<table width=100% cellpadding=3>
+<tr><td nowrap>Kernel Version</td><td><select name="Kernel1" onchange="NotSaved()"><xvar +slot_kernel_list 1 select></select></td></tr>
+<tr><td nowrap>Parameters</td><td align=right width=1%><input type=text name=Parameters1 size=55 value="<xvar +slot_parameters 1>" onchange="NotSaved()"></td></tr>
+</table>
+</td></tr></table>
+<br><br>
+<table width=100% cellpadding=0><tr><td nowrap width=1%><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;SLOT 2 - <xvar +slot_desc 2>&nbsp;&nbsp;</font></span></td><td align=right><xvar +slot_status 2>&nbsp;</td></tr></table>
+<table width=100% border=1 cellpadding=5><tr><td>
+<table width=100% cellpadding=3>
+<tr><td nowrap>Kernel Version</td><td><select name="Kernel2" onchange="NotSaved()"><xvar +slot_kernel_list 2 select></select></td></tr>
+<tr><td nowrap>Parameters</td><td align=right width=1%><input type=text name=Parameters2 size=55 value="<xvar +slot_parameters 2>" onchange="NotSaved()"></td></tr>
+</table>
+</td></tr></table>
+</form>
+</body>
+</html>

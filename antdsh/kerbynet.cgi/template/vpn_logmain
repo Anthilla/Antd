@@ -1,0 +1,20 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title><xvar _Interface> LOG</title>
+<script>
+  setInterval("window.location.reload(true)",5000);
+</script>
+</head>
+<body>
+<table width=100%><tr>
+<td>
+<font color=#000090 face=Arial class=Bigger1><xvar _Interface></font>&nbsp;&nbsp;
+<font color=#009000 face=Arial class=Bigger1><xvar _LinkStatus></font><br>
+<font color=#0000f0 face=Arial><xvar _Description></font>
+</td><td align=right>
+<input type=button value=Close onclick="window.close()">
+</td>
+</tr></table>
+<iframe name="I1" width="100%" height="400" src="kerbynet?Section=VPN&STk=<xvar STk>&Action=LOG&Interface=<xvar _Interface>#END" border=0 frameborder=0>
+</body>
+</html>

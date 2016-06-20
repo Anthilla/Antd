@@ -1,0 +1,226 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+function pingDOWN {
+  GW=$1
+  echo PROBEDOWN
+  TC=`cat $GW/TC 2>/dev/null`
+  [ -z "$TC" ] && TC=1
+  TO=$((Timeout*TC))
+  SRC=""
+  WX=`cat $GW/IP 2>/dev/null`
+  if [ -z "$WX" ] ; then
+    WX="`cat $GW/Interface 2>/dev/null`"
+    SRC="-I $WX"
+  else
+    SRC="`ip route get $WX | grep ^$WX |sed -r 's/.* src (.*)/\1/'`"
+    if [ -n "$SRC" ] ; then
+       SRC="-I $SRC"
+    fi
+  fi
+  echo "SRC=$SRC" 
+  for R in `seq 1 $ProbesDOWN` ; do
+    for I in ${SUCCESS[1$GW]} $IPS ; do
+      
+      iptables -t mangle --flush NB_FO_PRE
+      iptables -t mangle -I NB_FO_PRE 1 -p icmp --icmp-type echo-request -d ${IP[$I]} -j MARK --set-mark 2$G
+      if ping $SRC -c 1 -w $TO ${IP[$I]}  ; then
+        iptables -t mangle --flush NB_FO_PRE
+        SUCCESS[1$GW]=$I
+        return 0
+      fi
+      iptables -t mangle --flush NB_FO_PRE
+    done
+  done
+  return 1
+}
+function pingUP {
+  GW=$1
+  echo PROBEUP
+  SRC=""
+  WX=`cat $GW/IP 2>/dev/null`
+  if [ -z "$WX" ] ; then
+    WX="`cat $GW/Interface 2>/dev/null`"
+    SRC="-I $WX"
+  else
+    SRC="`ip route get $WX | grep ^$WX |sed -r 's/.* src (.*)/\1/'`"
+    if [ -n "$SRC" ] ; then
+       SRC="-I $SRC"
+    fi
+  fi
+  echo "SRC=$SRC" 
+  for I in ${SUCCESS[1$GW]} $IPS ; do
+    iptables -t mangle --flush NB_FO_PRE
+    iptables -t mangle -I NB_FO_PRE 1 -p icmp --icmp-type echo-request -d ${IP[$I]} -j MARK --set-mark 2$G
+    R=0
+    ERROR=""
+    while [ $R -lt $ProbesUP -a -z "$ERROR" ] ; do
+      if ! ping $SRC -c 1 -w $Timeout ${IP[$I]}  ; then
+        ERROR=yes
+      else
+        R=$((R+1))
+      fi
+      
+    done
+    iptables -t mangle --flush NB_FO_PRE
+    if [ -z "$ERROR" ] ; then
+      SUCCESS[1$GW]=$I
+      return 0
+    fi
+  done
+  return 1
+}
+function KillPPPD {
+  xPPP="$1"
+  xI=0
+  PID=`ps -ef |grep -w pppd |grep $xPPP| awk '{print $2}'`
+  while [ -n "$PID" -a $xI -lt 15 ] ; do
+    kill $PID
+    sleep 1
+    xI=$((xI+1))
+    PID=`ps -ef |grep -w pppd |grep $xPPP| awk '{print $2}'`
+  done
+  if [ -n "$PID" ] ; then
+     kill -9 $PID
+     sleep 1
+     rm -f /var/run/$xPPP.pid
+  fi
+}
+function SetTime {
+  NOW=`date +%s`
+  TIME=`cat $STATUSDIR/$G/Time 2>/dev/null`
+  echo $NOW > $STATUSDIR/$G/Time
+  if [ -n "$TIME" ] ; then
+     TIME=$((NOW-TIME))
+  else
+     TIME=0
+  fi
+  [ -r $STATUSDIR/Outage ] || echo 0 > $STATUSDIR/Outage
+  [ -r $STATUSDIR/UpTime ] || echo 0 > $STATUSDIR/UpTime
+}
+function SetFailure {
+  SetTime
+  UPTIME=`cat $STATUSDIR/$G/UpTime 2>/dev/null`
+  [ -z "$UPTIME" ] && UPTIME=0
+  UPTIME=$((UPTIME+TIME))
+  echo $UPTIME > $STATUSDIR/$G/UpTime
+  FAILURE=`cat $STATUSDIR/$G/Failure 2>/dev/null`
+  [ -z "$FAILURE" ] && FAILURE=0
+  FAILURE=$((FAILURE+1))
+  echo $FAILURE > $STATUSDIR/$G/Failure
+  W=`cat $G/IP 2>/dev/null`
+  if [ -z "$W" ] ; then
+    W="Interface: `cat $G/Interface 2>/dev/null`"
+  else
+    W="Gateway: $W"
+  fi
+  DESCRIPTION="`cat $G/Description 2>/dev/null` ($W) [Last Uptime: `$SCRIPTS/tick2time $TIME`]"
+  echo "DOWN: $DESCRIPTION"
+  logger -t NetBalancer "[ICMP] FAULT: $DESCRIPTION"
+  $SCRIPTS/nb_setnexthop
+  $SCRIPTS/alert GWFAULT $G DOWN &
+}
+PIDS=`ps -e |egrep -w 'failoverd|gw_l2checkd' |awk '{print $1}'`
+for P in $PIDS ; do
+  if [ "$P" != "$$" ] ; then
+    kill $P 2>/dev/null
+  fi
+done
+while ps -e | grep -w -v $$ | egrep -q -w 'failoverd|gw_l2checkd' ; do
+  sleep 0.5
+done
+[ "$NBSTARTUP" = yes ] && sleep 30
+
+
+CONFIG=$REGISTER/system/net/nb
+STATUSDIR=/tmp/nb/Gateways
+if [ "`cat $CONFIG/Enabled 2>/dev/null`" != yes ] ; then
+  exit
+fi
+
+if [ "`cat $CONFIG/FO/ICMPCheck 2>/dev/null`" != yes ] ; then
+  exit
+else
+  logger -t NetBalancer "[ICMP] Failover monitor has started"
+fi
+ProbesDOWN="`cat $CONFIG/FO/ProbesDOWN 2>/dev/null`"
+ProbesUP="`cat $CONFIG/FO/ProbesUP 2>/dev/null`"
+Timeout="`cat $CONFIG/FO/Timeout 2>/dev/null`"
+Pause="`cat $CONFIG/FO/Pause 2>/dev/null`"
+PPPDRestart="`cat $CONFIG/FO/PPPDRestart 2>/dev/null`"
+IP[1]="`cat $CONFIG/FO/IP1 2>/dev/null`"
+IP[2]="`cat $CONFIG/FO/IP2 2>/dev/null`"
+IP[3]="`cat $CONFIG/FO/IP3 2>/dev/null`"
+EnabledIP[1]="`cat $CONFIG/FO/EnabledIP1 2>/dev/null`"
+EnabledIP[2]="`cat $CONFIG/FO/EnabledIP2 2>/dev/null`"
+EnabledIP[3]="`cat $CONFIG/FO/EnabledIP3 2>/dev/null`"
+cd $CONFIG/Gateways
+GWS=""
+for G in `ls -d *` ; do
+  if [ "`cat $G/Enabled 2>/dev/null`" = yes ] ; then
+    GWS="$GWS $G"
+  else
+    rm -f $STATUSDIR/$G/{Fault,Time,Outage,UpTime}
+  fi
+  SUCCESS[1$G]=""
+done
+IPS=""
+for I in 1 2 3 ; do
+  if [ "${EnabledIP[$I]}" = yes ] ; then
+    IPS="$IPS $I"
+  fi
+done
+if [ -z "$IPS" ] ; then
+  logger -t NetBalancer "[ICMP] Failover monitor has not started because no Failover IP are enabled"
+  exit
+fi
+while true ; do
+  for G in $GWS ; do
+    echo "++++++++ TESTING `cat $G/Description 2>/dev/null`"
+    if ip ro sh ta 1$G | grep -q ^default  ; then
+      if [ -r $STATUSDIR/$G/Fault ] ; then
+         if pingUP $G ; then
+           rm -f $STATUSDIR/$G/Fault
+           W=`cat $G/IP 2>/dev/null`
+           if [ -z "$W" ] ; then
+             W="Interface: `cat $G/Interface 2>/dev/null`"
+           else
+             W="Gateway: $W"
+           fi
+           SetTime
+           OUTAGE=`cat $STATUSDIR/$G/Outage 2>/dev/null`
+           [ -z "$OUTAGE" ] && OUTAGE=0
+           OUTAGE=$((OUTAGE+TIME))
+           echo $OUTAGE > $STATUSDIR/$G/Outage
+           DESCRIPTION="`cat $G/Description 2>/dev/null` ($W) [Last Downtime: `$SCRIPTS/tick2time $TIME`]"
+           echo "UP: $DESCRIPTION"
+           logger -t NetBalancer "[ICMP] RECOVERED: $DESCRIPTION"
+           $SCRIPTS/nb_setnexthop
+           $SCRIPTS/alert GWFAULT $G UP &
+           $SCRIPTS/alert CONNECTIVITY UP &
+         fi
+      else
+         if ! pingDOWN $G ; then
+           touch $STATUSDIR/$G/Fault
+           SetFailure 
+           if [ "$PPPDRestart" = yes ] ; then
+              INTERFACE=`cat $G/Interface 2>/dev/null`
+              if [ "${INTERFACE:0:3}" = ppp ] ; then 
+                KillPPPD $INTERFACE
+                logger -t NetBalancer "[ICMP] Restarting $INTERFACE (`cat $REGISTER/system/net/interfaces/$INTERFACE/Description 2>/dev/null`) PPPoE/3G connection"
+              fi
+           fi
+         else
+           [ -r "$STATUSDIR/$G/Time" ] || SetTime 
+         fi
+      fi
+    else
+      echo no default
+      if ! [ -r $STATUSDIR/$G/Fault ] ; then
+        touch $STATUSDIR/$G/Fault
+        logger -t NetBalancer "[ICMP] No link detected with the gateway (`cat $G/Description 2>/dev/null`)"
+        SetFailure
+      fi
+    fi
+  done
+  sleep $Pause
+done

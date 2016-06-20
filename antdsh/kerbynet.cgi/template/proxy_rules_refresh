@@ -1,0 +1,8 @@
+<script>
+var WO=window.opener;
+if (WO!=null) {
+  if (!WO.closed) {
+     WO.Capturing.location.reload(true);
+  }
+}
+</script>

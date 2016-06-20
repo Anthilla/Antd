@@ -1,0 +1,32 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DDNS Registered Hosts</title>
+<script>
+function hostselected() {
+  X=document.data;
+  H=""
+  if (X.Hostname.length == undefined) {
+    H=X.Hostname.value;
+  } else {
+    for (i=0; i<X.Hostname.length; i++) {
+      if (X.Hostname[i].checked) {
+        H=X.Hostname[i].value;
+      }
+    }
+  }
+  opener.SplitHostname(H);
+
+}
+</script>
+</head>
+<body>
+<form name=data method=post action=kerbynet>
+<table width=100%>
+<tr><td><font color=#2020f0 class=Bigger2><b>DDNS Registered Hosts</b></font></td><td nowrap align=right><input type=button value="Close" onclick="window.close()"></td></tr>
+</table>
+<hr>
+<xvar U><br>
+<xvar +ddns-listregistered (U) (P)>
+</form>
+</body>
+</html>

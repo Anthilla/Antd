@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib;
-using antdlib.Network;
+using Antd.Network;
 using Nancy;
 using WebSocket = antdlib.Websocket.Client.WebSocket;
 

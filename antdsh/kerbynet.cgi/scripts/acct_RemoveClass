@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CLASS="$1"
+[ -z "$CLASS" ] && exit 1
+CONFIG=$REGISTER/system/acct/classes
+rm -rf "$CONFIG/$CLASS"
+

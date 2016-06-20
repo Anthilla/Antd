@@ -29,7 +29,7 @@
 
 using System;
 using System.IO;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {
@@ -86,58 +86,58 @@ namespace antdlib.Certificate {
             _caEmail = caEmail;
             _caIntermediateCommonName = $"Intermediate {caCommonName}";
 
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/certs");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/crl");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/newcerts");
-            Terminal.Terminal.Execute($"mkdir -p {CaDirectory}/private");
-            Terminal.Terminal.Execute($"chmod 700 {CaDirectory}/private");
-            Terminal.Terminal.Execute($"touch {CaDirectory}/index.txt");
-            Terminal.Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
-            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{passphrase} 4096");
-            Terminal.Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
-            Terminal.Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey} -new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caCommonName}/emailAddress={_caEmail}\"");
-            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
+            Terminal.Execute($"mkdir -p {CaDirectory}");
+            Terminal.Execute($"mkdir -p {CaDirectory}/certs");
+            Terminal.Execute($"mkdir -p {CaDirectory}/crl");
+            Terminal.Execute($"mkdir -p {CaDirectory}/newcerts");
+            Terminal.Execute($"mkdir -p {CaDirectory}/private");
+            Terminal.Execute($"chmod 700 {CaDirectory}/private");
+            Terminal.Execute($"touch {CaDirectory}/index.txt");
+            Terminal.Execute($"echo 1000 > {CaDirectory}/serial");
+            Terminal.Execute($"cp {Parameter.Resources}/openssl.cnf {CaRootConfFile}");
+            Terminal.Execute($"openssl genrsa -aes256 -out {CaRootPrivateKey} -passout pass:{passphrase} 4096");
+            Terminal.Execute($"chmod 400 {CaRootPrivateKey}");
+            Terminal.Execute($"openssl req -config {CaRootConfFile} -key {CaRootPrivateKey} -new -x509 -days 10950 -sha256 -extensions v3_ca -out {CaRootCertificate} -passin pass:{passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caCommonName}/emailAddress={_caEmail}\"");
+            Terminal.Execute($"openssl x509 -noout -text -in {CaRootCertificate}");
 
             ConsoleLogger.Log("setting up intermediate ca structure");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/certs");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/crl");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/csr");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/newcerts");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/private");
-            Terminal.Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/params");
-            Terminal.Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
-            Terminal.Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
-            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
-            Terminal.Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
-            Terminal.Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
-            Terminal.Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{passphrase} 4096");
-            Terminal.Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
-            Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey} -new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caIntermediateCommonName}/emailAddress={_caEmail}\"");
-            Terminal.Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{passphrase} -in {CaIntermediateCertificateReq} -out {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"chmod 444 {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}");
-            Terminal.Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}");
-            Terminal.Terminal.Execute($"chmod 444 {CaIntermediateChain}");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/certs");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/crl");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/csr");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/newcerts");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/private");
+            Terminal.Execute($"mkdir -p {CaIntermediateDirectory}/params");
+            Terminal.Execute($"chmod 700 {CaIntermediateDirectory}/private");
+            Terminal.Execute($"touch {CaIntermediateDirectory}/index.txt");
+            Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/serial");
+            Terminal.Execute($"echo 1000 > {CaIntermediateDirectory}/crlnumber");
+            Terminal.Execute($"cp {Parameter.Resources}/openssl-intermediate.cnf {CaIntermediateConfFile}");
+            Terminal.Execute($"openssl genrsa -aes256 -out {CaIntermediatePrivateKey} -passout pass:{passphrase} 4096");
+            Terminal.Execute($"chmod 400 {CaIntermediatePrivateKey}");
+            Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {CaIntermediatePrivateKey} -new -sha256 -out {CaIntermediateCertificateReq} -passin pass:{passphrase} -subj \"/C={_caCountry}/ST={_caProvince}/L={_caLocality}/O={_caOrganization}/OU={_caOrganizationalUnit}/CN={_caIntermediateCommonName}/emailAddress={_caEmail}\"");
+            Terminal.Execute($"openssl ca -batch -config {CaRootConfFile} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{passphrase} -in {CaIntermediateCertificateReq} -out {CaIntermediateCertificate}");
+            Terminal.Execute($"chmod 444 {CaIntermediateCertificate}");
+            Terminal.Execute($"openssl x509 -noout -text -in {CaIntermediateCertificate}");
+            Terminal.Execute($"openssl verify -CAfile {CaRootCertificate} {CaIntermediateCertificate}");
+            Terminal.Execute($"cat {CaIntermediateCertificate} {CaRootCertificate} > {CaIntermediateChain}");
+            Terminal.Execute($"chmod 444 {CaIntermediateChain}");
 
             ConsoleLogger.Log("setting up crl");
-            Terminal.Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{passphrase} -out {CaIntermediateRevocationList}");
-            ConsoleLogger.Log(Terminal.Terminal.Execute($"openssl crl -in {CaIntermediateRevocationList} -noout -text"));
+            Terminal.Execute($"openssl ca -config {CaIntermediateCertificate} -gencrl -batch -passin pass:{passphrase} -out {CaIntermediateRevocationList}");
+            ConsoleLogger.Log(Terminal.Execute($"openssl crl -in {CaIntermediateRevocationList} -noout -text"));
 
             if (File.Exists(SambaCaCert)) {
                 File.Delete(SambaCaCert);
             }
-            Terminal.Terminal.Execute($"cp {CaIntermediateChain} {SambaCaCert}");
+            Terminal.Execute($"cp {CaIntermediateChain} {SambaCaCert}");
 
             if (File.Exists(SambaCaCrl)) {
                 File.Delete(SambaCaCrl);
             }
-            Terminal.Terminal.Execute($"cp {CaIntermediateRevocationList} {SambaCaCrl}");
+            Terminal.Execute($"cp {CaIntermediateRevocationList} {SambaCaCrl}");
 
-            Terminal.Terminal.Execute("systemctl restart samba");
+            Terminal.Execute("systemctl restart samba");
 
             //todo associa path e configurazione di NGINX al distribution point...
             //todo salva da qualche parte l'url della possibile crldtrpt
@@ -145,8 +145,8 @@ namespace antdlib.Certificate {
             if (File.Exists(NginxCrl)) {
                 File.Delete(NginxCrl);
             }
-            Terminal.Terminal.Execute($"cp {CaIntermediateRevocationList} {NginxCrl}");
-            Terminal.Terminal.Execute("systemctl restart nginx");
+            Terminal.Execute($"cp {CaIntermediateRevocationList} {NginxCrl}");
+            Terminal.Execute("systemctl restart nginx");
 
             ApplicationSetting.EnableCertificateAuthority();
         }
@@ -173,35 +173,34 @@ namespace antdlib.Certificate {
                     var certificateKeyPath = $"{CaIntermediateDirectory}/private/dc-{domainGuid}.key.pem";
                     var certificateRequestPath = $"{CaIntermediateDirectory}/csr/dc-{domainGuid}.csr.pem";
                     var certificatePath = $"{CaIntermediateDirectory}/certs/dc-{domainGuid}.cert.pem";
-                    Terminal.Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={commonName}/emailAddress={emailAddress}\"");
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
+                    Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={commonName}/emailAddress={emailAddress}\"");
+                    Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
                     var privDcKey = $"{CaIntermediateDirectory}/private/dc-privkey.pem";
-                    Terminal.Terminal.Execute($"openssl rsa -in {certificateKeyPath} -inform PEM -out {privDcKey} -outform PEM -passin pass:{ApplicationSetting.X509()}");
+                    Terminal.Execute($"openssl rsa -in {certificateKeyPath} -inform PEM -out {privDcKey} -outform PEM -passin pass:{ApplicationSetting.X509()}");
                     var paramFile = $"{CaIntermediateDirectory}/params/dc-dhparams.pem";
-                    Terminal.Terminal.Execute($"openssl dhparam 2048 -outform PEM -out {paramFile}");
+                    Terminal.Execute($"openssl dhparam 2048 -outform PEM -out {paramFile}");
 
                     if (File.Exists(SambaDcCert)) {
                         File.Delete(SambaDcCert);
                     }
-                    Terminal.Terminal.Execute($"cp {certificatePath} {SambaDcCert}");
+                    Terminal.Execute($"cp {certificatePath} {SambaDcCert}");
 
                     if (File.Exists(SambaDcParams)) {
                         File.Delete(SambaDcParams);
                     }
-                    Terminal.Terminal.Execute($"cp {paramFile} {SambaDcParams}");
+                    Terminal.Execute($"cp {paramFile} {SambaDcParams}");
 
                     if (File.Exists(SambaDcKey)) {
                         File.Delete(SambaDcKey);
                     }
-                    Terminal.Terminal.Execute($"cp {privDcKey} {SambaDcKey}");
+                    Terminal.Execute($"cp {privDcKey} {SambaDcKey}");
 
-                    Terminal.Terminal.Execute("systemctl restart samba");
+                    Terminal.Execute("systemctl restart samba");
 
                     var dt = DateTime.Now;
                     var model = new CertificateModel {
                         IsPresent = true,
                         IsRevoked = false,
-                        _Id = Guid.NewGuid().ToString(),
                         CertificateGuid = Guid.NewGuid().ToString(),
                         CertificatePath = certificatePath,
                         CertificateCountryName = countryName,
@@ -218,7 +217,7 @@ namespace antdlib.Certificate {
                         ReleaseDateTime = dt,
                         ExpirationDateTime = dt.AddDays(days)
                     };
-                    DeNSo.Session.New.Set(model);
+                    //DeNSo.Session.New.Set(model);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -246,19 +245,18 @@ namespace antdlib.Certificate {
                     var certificateKeyPath = $"{CaIntermediateDirectory}/private/dc-{userPrincipalName}.key.pem";
                     var certificateRequestPath = $"{CaIntermediateDirectory}/csr/dc-{userPrincipalName}.csr.pem";
                     var certificatePath = $"{CaIntermediateDirectory}/certs/dc-{userPrincipalName}.cert.pem";
-                    Terminal.Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={userPrincipalName}/emailAddress={userPrincipalName}\"");
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
+                    Terminal.Execute($"openssl req -new -newkey rsa:2048 -keyout {certificateKeyPath} -out {certificateRequestPath} -config {_certCurrentConfigurationFile} -passout pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={userPrincipalName}/emailAddress={userPrincipalName}\"");
+                    Terminal.Execute($"openssl ca -batch -config {_certCurrentConfigurationFile} -days {days} -in {certificateRequestPath} -out {certificatePath} -passin pass:{ApplicationSetting.X509()}");
                     var certificateDerPath = $"{CaIntermediateDirectory}/certs/{userPrincipalName}.cert.cer";
-                    Terminal.Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
-                    Terminal.Terminal.Execute($"chmod 444 {certificateDerPath}");
+                    Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
+                    Terminal.Execute($"chmod 444 {certificateDerPath}");
                     var certificatePfxPath = $"{CaIntermediateDirectory}/certs/{userPrincipalName}.cert.pfx";
-                    Terminal.Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase} -nodes");
-                    Terminal.Terminal.Execute($"chmod 444 {certificatePfxPath}");
+                    Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase} -nodes");
+                    Terminal.Execute($"chmod 444 {certificatePfxPath}");
                     var dt = DateTime.Now;
                     var model = new CertificateModel {
                         IsPresent = true,
                         IsRevoked = false,
-                        _Id = Guid.NewGuid().ToString(),
                         CertificateGuid = Guid.NewGuid().ToString(),
                         CertificatePath = certificatePath,
                         CertificateDerPath = certificateDerPath,
@@ -277,7 +275,7 @@ namespace antdlib.Certificate {
                         ReleaseDateTime = dt,
                         ExpirationDateTime = dt.AddDays(days)
                     };
-                    DeNSo.Session.New.Set(model);
+                    //DeNSo.Session.New.Set(model);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -294,34 +292,33 @@ namespace antdlib.Certificate {
                     var certificateRequestPath = $"{CaIntermediateDirectory}/csr/{certName}.csr.pem";
                     var certificatePath = $"{CaIntermediateDirectory}/certs/{certName}.cert.pem";
                     if (usePassphraseForPrivateKey == false) {
-                        Terminal.Terminal.Execute($"openssl genrsa -out {certificateKeyPath} {bytesLength}");
-                        Terminal.Terminal.Execute($"chmod 400 {certificateKeyPath}");
-                        Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {certificateKeyPath} -new -sha256 -out {certificateRequestPath} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={certName}/emailAddress={emailAddress}\"");
+                        Terminal.Execute($"openssl genrsa -out {certificateKeyPath} {bytesLength}");
+                        Terminal.Execute($"chmod 400 {certificateKeyPath}");
+                        Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {certificateKeyPath} -new -sha256 -out {certificateRequestPath} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={certName}/emailAddress={emailAddress}\"");
                     }
                     else {
-                        Terminal.Terminal.Execute(
+                        Terminal.Execute(
                             $"openssl genrsa -aes256 -passout pass:{passphrase} -out {certificateKeyPath} {bytesLength}");
-                        Terminal.Terminal.Execute($"chmod 400 {certificateKeyPath}");
-                        Terminal.Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {certificateKeyPath} -new -sha256 -out {certificateRequestPath} -passin pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={certName}/emailAddress={emailAddress}\"");
+                        Terminal.Execute($"chmod 400 {certificateKeyPath}");
+                        Terminal.Execute($"openssl req -config {CaIntermediateConfFile} -key {certificateKeyPath} -new -sha256 -out {certificateRequestPath} -passin pass:{passphrase} -subj \"/C={countryName}/ST={stateProvinceName}/L={localityName}/O={organizationName}/OU={organizationalUnitName}/CN={certName}/emailAddress={emailAddress}\"");
                     }
                     var certExtension = "usr_cert";
                     if (assignment == CertificateAssignment.Service) {
                         certExtension = "server_cert";
                     }
                     const int days = 375;
-                    Terminal.Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{ApplicationSetting.X509()} -in {certificateRequestPath} -out {certificatePath}");
-                    Terminal.Terminal.Execute($"chmod 444 {certificatePath}");
+                    Terminal.Execute($"openssl ca -batch -config {CaIntermediateConfFile} -extensions {certExtension} -days {days} -notext -md sha256 -passin pass:{ApplicationSetting.X509()} -in {certificateRequestPath} -out {certificatePath}");
+                    Terminal.Execute($"chmod 444 {certificatePath}");
                     var certificateDerPath = $"{CaIntermediateDirectory}/certs/{certName}.cert.cer";
-                    Terminal.Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
-                    Terminal.Terminal.Execute($"chmod 444 {certificateDerPath}");
+                    Terminal.Execute($"openssl x509 -in {certificatePath} -inform PEM -out {certificateDerPath} -outform DER");
+                    Terminal.Execute($"chmod 444 {certificateDerPath}");
                     var certificatePfxPath = $"{CaIntermediateDirectory}/certs/{certName}.cert.pfx";
-                    Terminal.Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase} -nodes");
-                    Terminal.Terminal.Execute($"chmod 444 {certificatePfxPath}");
+                    Terminal.Execute($"openssl pkcs12 -export -in {certificatePath} -inkey {certificateKeyPath} -out {certificatePfxPath} -passin pass:{passphrase} -passout pass:{passphrase} -nodes");
+                    Terminal.Execute($"chmod 444 {certificatePfxPath}");
                     var dt = DateTime.Now;
                     var model = new CertificateModel {
                         IsPresent = true,
                         IsRevoked = false,
-                        _Id = Guid.NewGuid().ToString(),
                         CertificateGuid = Guid.NewGuid().ToString(),
                         CertificatePath = certificatePath,
                         CertificateDerPath = certificateDerPath,
@@ -345,7 +342,7 @@ namespace antdlib.Certificate {
                         ReleaseDateTime = dt,
                         ExpirationDateTime = dt.AddDays(days)
                     };
-                    DeNSo.Session.New.Set(model);
+                    //DeNSo.Session.New.Set(model);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);

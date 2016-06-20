@@ -1,0 +1,27 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+TO="$1"
+DEVICE="`cat $REGISTER/system/alerts/SMS/SMSDevice 2>/dev/null`"
+if [ -z "$DEVICE" ] ; then
+   echo "Undefined Modem Define"  1>&2
+   exit 10
+fi
+[ -z "$TO" ] && exit 2
+DEVICE="/dev/$DEVICE"
+if [ ! -c "$DEVICE" ] ; then
+   echo "No modem device found ($DEVICE)" 1>&2
+   exit 11
+fi
+TEXT="`cat`"
+LAST="`cat $REGISTER/system/alerts/SMS/LAST 2>/dev/null`"
+[ -z "$LAST" ] && LAST=0
+NOW=`date +%s`
+DELAY=5
+SLEEP=$((DELAY-NOW+LAST))
+[ $SLEEP -lt 0 ] && SLEEP=0
+sleep $SLEEP
+chat -E -s TIMEOUT 10 "" "AT&F" "OK" "AT+CMGF=1" "OK" "AT+CMGS=\"$TO\"" "" "$TEXT\032"  "\n+CMGS" "AT" < $DEVICE >$DEVICE
+EXIT=$?
+date +%s > $REGISTER/system/alerts/SMS/LAST
+exit $EXIT
+

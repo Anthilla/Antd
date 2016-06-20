@@ -1,0 +1,9 @@
+#/bin/sh
+. /etc/kerbynet.conf
+ZONE="$1"
+if ! named-compilezone -f raw -F text -o - "$ZONE" "$REGISTER/system/dns/data/slaves/${ZONE}.zone" ; then
+  if ! cat "$REGISTER/system/dns/data/slaves/${ZONE}.zone" ; then
+    echo
+    echo "<font color=#ff0000>Slave zone not available</font>"
+  fi
+fi

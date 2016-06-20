@@ -1,21 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading;
 using antdlib;
 using antdlib.Antdsh;
 using antdlib.Apps;
-using antdlib.Common;
-using antdlib.Config;
-using antdlib.Directories;
-using antdlib.Firewall;
-using antdlib.Info;
-using antdlib.Log;
-using antdlib.MountPoint;
-using antdlib.Network;
-using antdlib.Scheduler;
-using antdlib.Terminal;
-using antdlib.Users;
+using antdlib.common;
+using antdlib.common.Helpers;
+using Antd.Database;
+using Antd.MountPoint;
+using Antd.Scheduler;
+using Antd.Users;
 
 namespace Antd {
     public class AntdBoot {
@@ -34,27 +28,6 @@ namespace Antd {
         public static void SetCoreParameters() {
             ApplicationSetting.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
-        }
-
-        public static void StartDatabase() {
-            var databaseName = Parameter.AntdCfgDatabaseName;
-            var databasePaths = new[] { ApplicationSetting.DatabasePath() };
-            foreach (var dbPath in databasePaths) {
-                Terminal.Execute($"mkdir -p {dbPath}");
-                Terminal.Execute($"mkdir -p {dbPath}/{databaseName}");
-                Directory.CreateDirectory(dbPath);
-                Directory.CreateDirectory($"{dbPath}/{databaseName}");
-            }
-            DeNSo.Configuration.BasePath = databasePaths;
-            DeNSo.Configuration.EnableJournaling = true;
-            DeNSo.Configuration.EnableDataCompression = false;
-            DeNSo.Configuration.ReindexCheck = new TimeSpan(0, 1, 0);
-            DeNSo.Configuration.EnableOperationsLog = false;
-            DeNSo.Session.DefaultDataBase = databaseName;
-            DeNSo.Session.Start();
-            var y = databasePaths.Length > 1 ? "ies" : "y";
-            ConsoleLogger.Log($"database director{y}: {string.Join(", ", databasePaths)}");
-            ConsoleLogger.Log("database ready");
         }
 
         public static void CheckCertificate() {
@@ -80,11 +53,11 @@ namespace Antd {
                 Terminal.Execute($"touch {Parameter.AuthKeys}");
             }
             const string dir = "/etc/ssh";
-            var mntDir = Mount.SetDirsPath(dir);
+            var mntDir = Mounts.SetDirsPath(dir);
             if (!Directory.Exists(mntDir)) {
                 Terminal.Execute($"cp -fR {dir} {mntDir}");
             }
-            Mount.Umount(dir);
+            Mounts.Umount(dir);
             Mount.Dir(dir);
             Terminal.Execute("ssh-keygen -A");
             Terminal.Execute("systemctl restart sshd.service");
@@ -109,13 +82,13 @@ namespace Antd {
         public static void SetOsMount() {
             if (!Parameter.IsUnix)
                 return;
-            if (Mount.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+            if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                 Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Terminal.Execute("uname -r").Trim();
             var linkedRelease = Terminal.Execute($"file {module}").Trim();
-            if (Mount.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+            if (Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
                 ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
@@ -128,7 +101,6 @@ namespace Antd {
         public static void LaunchDefaultOsConfiguration() {
             if (!Parameter.IsUnix)
                 return;
-            ConfigManagement.FromFile.ApplyForAll();
             ConsoleLogger.Log("default os configuration ready");
         }
 
@@ -151,8 +123,8 @@ namespace Antd {
                 return;
             }
             File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
-            var realFileName = Mount.GetFilesPath("FILE_etc_systemd_journald.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = Mounts.GetFilesPath("FILE_etc_systemd_journald.conf");
+            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart systemd-journald.service");
@@ -171,19 +143,14 @@ namespace Antd {
         public static void SetFirewall() {
             if (!Parameter.IsUnix)
                 return;
-            FirewallLists.SetDefaultLists();
-            NfTables.Export.ExportTemplate();
             ConsoleLogger.Log("firewall ready");
         }
 
         public static void ImportSystemInformation() {
             if (!Parameter.IsUnix)
                 return;
-            if (!NetworkInterface.GetAll().Any()) {
-                NetworkInterface.ImportNetworkInterface();
-            }
-            if (!SystemInfo.GetAll().Any()) {
-                SystemInfo.Import();
+            if (!new NetworkInterfaceRepository().GetAll().Any()) {
+                new NetworkInterfaceRepository().Import();
             }
             ConsoleLogger.Log("network interfaces imported");
         }
@@ -232,8 +199,8 @@ namespace Antd {
         public static void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
-            var realFileName = Mount.GetFilesPath("FILE_etc_collectd.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
+            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart collectd.service");
@@ -242,8 +209,8 @@ namespace Antd {
         public static void LoadWpaSupplicant() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
-            var realFileName = Mount.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
-            if (Mount.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
+            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");

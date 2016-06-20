@@ -1,0 +1,9 @@
+<script>
+var WO=window.opener;
+if (WO!=null) {
+  if (!WO.closed) {
+     //WO.location.reload(true);
+     WO.location="/cgi-bin/kerbynet?Section=Proxy&STk=<xvar STk>&Action=Manage";
+  }
+}
+</script>

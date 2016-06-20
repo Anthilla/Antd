@@ -32,14 +32,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using antdlib.Common;
+using antdlib.common;
 
 namespace antdlib.Systemd {
 
     public class Units {
 
         private static List<UnitModel> GetAllUnits() {
-            var command = Terminal.Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
+            var command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             if (output == null)
                 return null;

@@ -1,0 +1,8 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+while true; do
+  sleep 18
+  if [ "`pidof syslogd logmanager |wc -w`" != "      2" ] ; then
+    /etc/init.d/sysklogd restart >/dev/null
+  fi
+done

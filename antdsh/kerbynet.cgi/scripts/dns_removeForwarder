@@ -1,0 +1,8 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FORWARDER="$1"
+[ -z "$FORWARDER" ] && exit 1
+[ -d "$REGISTER/system/dns/Forwarders/$FORWARDER" ] || exit 2
+rm -rf "$REGISTER/system/dns/Forwarders/$FORWARDER"
+$SCRIPTS/dns_start
+

@@ -1,0 +1,35 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+DESCRIPTION="$2"
+ETHERNET="$3"
+USERNAME="$4"
+PW="$5"
+DEFAULTROUTE="$6"
+AUTO="$7"
+SERVICENAME="$8"
+NAT="$9"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+PPPDIR="$CONFIG/$NAME"
+echo "$DESCRIPTION" > $PPPDIR/Description
+echo "$ETHERNET" > $PPPDIR/ETHERNET
+echo "$SERVICENAME" > $PPPDIR/Servicename
+echo "$USERNAME" > $PPPDIR/USER
+echo "$PW" > $PPPDIR/PW
+echo "$DEFAULTROUTE" > $PPPDIR/DEFAULTROUTE
+echo "$AUTO" > $PPPDIR/Auto
+if [ "$NAT" == yes ] ; then
+  mkdir -p $PPPDIR/NAT/Masquerade
+  iptables -t nat -A POSTROUTING -o $NAME -j MASQUERADE
+else
+  rm -rf $PPPDIR/NAT/Masquerade
+  iptables -t nat -D POSTROUTING -o $NAME -j MASQUERADE 2>/dev/null
+fi
+if ps -ef |grep pppoe-connect |grep -q $NAME ; then
+  $SCRIPTS/pppoe_stop $NAME
+  $SCRIPTS/pppoe_start $NAME
+fi
+
+

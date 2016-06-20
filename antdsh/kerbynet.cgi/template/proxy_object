@@ -1,0 +1,93 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Proxy Rule</title>
+<script>
+<xinclude ip_utility.inc>
+function ValidateIP(ipobj) {
+  ipobj.value=ipobj.value.replace(/[ ]+/g,"");
+  if (ipobj.value=="") return true;
+  if (!isValidIP(ipobj.value)) {
+    if ((p=ipobj.value.indexOf('-'))!=-1) {
+      IP1=ipobj.value.substr(0,p);
+      IP2=ipobj.value.substr(p+1);
+      if (!isValidIP(IP1)) {
+        alert("The first IP address of the range "+ipobj.value+" is not valid.");
+        ipobj.focus();
+        ipobj.select();
+        return false;
+      }
+      if (!isValidIP(IP2)) {
+        alert("The second IP address of the range "+ipobj.value+" is not valid.");
+        ipobj.focus();
+        ipobj.select();
+        return false;
+      }
+      if (ip2num(IP1)>=ip2num(IP2)) {
+        alert("The second IP address of the range must be greater than the first one");
+        ipobj.focus();
+        ipobj.select();
+        return false;
+      }
+      return true;
+    }
+    if ((p=ipobj.value.indexOf('/'))!=-1) {
+      Network=ipobj.value.substr(0,p);
+      Netmask=ipobj.value.substr(p+1);
+      if (!isValidNetworkCIDR(Network,Netmask)) {
+        alert(ipobj.value+" is not a valid network.");
+        ipobj.focus();
+        ipobj.select();
+        return false;
+      }
+      return true;
+    }
+    alert("The IP address is not valid.");
+    ipobj.focus();
+    ipobj.select();
+    return false;
+  } else {
+    return true;
+  }
+}
+function loaded() {
+  X=document.data;
+}
+function Submitted() {
+  X=document.data;
+  if (X.Interface.value=="" && X.SourceIP.value=="" && X.DestinationIP.value=="") {
+    alert("You should select at least a condition.");
+    return;
+  };
+  X.submit();
+}
+function Changed() {
+  X=document.data;
+}
+</script>
+</head>
+<body style="color: #303030" onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Proxy">
+<input type=hidden name=Action value="SaveObject"><input type=hidden name=STk value=<xvar STk>>
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td><font color=#2020D0 class=Bigger2><b>Proxy Capturing Rule</b></font></td><td align=right><input type=button value=Save onclick="Submitted()"><input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<hr>
+<br>
+
+<table width=100%>
+<tr><td>Action</td><td><select name=RuleAction><option value=Capture>Capture Request</option><option value=NotCapture>Do not Capture Request</option></select></td></tr>
+<tr><td>Source Interface/VLAN</td><td><select name=Interface><option value=""></option><xvar !fw_interfaces></select></td></tr>
+<tr><td>Source IP (*)</td><td><input type=text name=SourceIP size=31 maxlength=31 onchange="ValidateIP(this)"</td></tr>
+<tr><td>Destination IP (*)</td><td><input type=text name=DestinationIP size=31 maxlength=31 onchange="ValidateIP(this)"</td></tr>
+</table>
+<br>
+
+<br>
+<hr>
+<br>
+<font class=Smaller1><b>NOTES:</b><br>
+(*) The IP addresses can be single IP (ex. 192.168.0.15), network address<br>(ex. 192.168.0.0/255.255.255.0 or 192.168.0.0/24) and IP range (ex. 192.168.0.19-192.168.0.73)
+</form>
+</body>
+</html>

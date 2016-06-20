@@ -1,0 +1,180 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Port Forwarding</title>
+<script>
+<xinclude ip_utility.inc>
+function isValidIPRange(Range) {
+  if (isValidIP(Range)) return true;
+  if ((p=Range.indexOf('-'))!=-1) {
+    IP1=Range.substr(0,p);
+    IP2=Range.substr(p+1);
+    if (!isValidIP(IP1)) {
+      alert("The first IP address of the range "+Range+" is not valid.");
+      return false;
+    }                                              
+    if (!isValidIP(IP2)) {
+      alert("The second IP address of the range "+Range+" is not valid.");
+      return false;
+    }
+    if (ip2num(IP1)>=ip2num(IP2)) {
+        alert("The second IP address of the range must be greater than the first one");
+        return false;
+    }                            
+    return true;
+  }
+  alert("The remote IP address is not valid.");
+  return false;
+}
+
+function isMultiPort(Range) { 
+ MPORT=Range.split(",");
+  if (MPORT.length==1) { if (!isValidPortRange(Range)) return false; }
+  else { for (i=0; i<MPORT.length; i++) if (!isValidPortRange(MPORT[i])) return false; }
+
+  return true;
+}
+
+function CountNrPort(LOCAL,REMOTE) {
+ LOCAL=LOCAL.split(",");
+ REMOTE=REMOTE.split(",");
+ if (LOCAL.length < REMOTE.length) { alert("Local port are less then Remote port."); return false; } 
+ if (LOCAL.length > REMOTE.length) { alert("Remote port are less then Local port."); return false; }
+ return true;
+}
+
+function isValidPortRange(Range) {
+  if (isValidPort(Range)) return true;
+  if ((p=Range.indexOf('-'))!=-1) {
+    PORT1=Range.substr(0,p);
+    PORT2=Range.substr(p+1);
+    if ((PORT1 <= 9999) && (PORT2 >= 10000)) PORT1="0"+PORT1
+    if (!isValidPort(PORT1)) {
+      alert("The first PORT number of the range "+Range+" is not valid.");
+      return false;
+    }                                              
+    if (!isValidPort(PORT2)) {
+      alert("The second PORT number of the range "+Range+" is not valid.");
+      return false;
+    }
+    if (PORT1>=PORT2) {
+        alert("The second PORT number of the range must be greater than the first one");
+        return false;
+    }                            
+    return true;
+  }
+  alert("The Port number must be in the range 0-65535.");
+  return false;
+}
+
+function add() {
+  X=document.data;
+  X.RemoteIP.value=X.RemoteIP.value.replace(/[ ]+/g,"");
+  X.VirtualIP.value=X.VirtualIP.value.replace(/[ ]+/g,"");
+  if (X.VirtualIP.value=="") X.VirtualIP.value="ANY";
+  if (X.VirtualIP.value!="ANY" && !isValidIP(X.VirtualIP.value)) {
+     alert("IP address non valid");
+     X.VirtualIP.select();
+     X.VirtualIP.focus();
+     return false;
+  }
+  if (!isMultiPort(X.LocalPort.value)) {
+      X.LocalPort.select();
+      X.LocalPort.focus();
+      return false;
+  }
+  if (!isValidIPRange(X.RemoteIP.value)) {
+      X.RemoteIP.select();
+      X.RemoteIP.focus();
+      return false;
+  }
+  if (!isMultiPort(X.RemotePort.value)) {
+      X.RemotePort.select();
+      X.RemotePort.focus();
+      return false;
+  }
+  if (!CountNrPort(X.LocalPort.value,X.RemotePort.value)) return false;
+  
+  X.Action.value="PatAdd";
+  X.submit();
+}
+function selected_entry() {
+   X=document.data.Entry;
+   if (X==undefined) {
+     return "";
+   }
+   if (X.length!=undefined) {
+     for (i=0; i<X.length; i++) {
+       if (X[i].checked) return X[i].value;
+     }
+   } else {
+       if (X.checked) return X.value;
+   }
+   return "";
+}
+function deleteEntry() {
+  X2=document.data;
+  if (selected_entry()=="") {
+    alert("You should select an entry to delete.");
+    return false;
+  }
+  if (confirm("Are you sure you want to remove the selected Virtual Server?")) {
+    X2.Action.value="PatDelete";
+    X2.submit();
+  }
+}
+function LocalPortChanged() {
+  if (document.data.RemotePort.value=="") {
+    document.data.RemotePort.value=document.data.LocalPort.value;
+  }
+}
+function view() {
+    var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=NatView&Type=PAT","NatView","top=200,left=100,width=800,height=650,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+</script>
+</head>
+<body>
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='Router'>
+<input type=hidden name=Action value=''><input type=hidden name=STk value=<xvar STk>>
+<table width=100%>
+<tr><td><font class=Bigger2 color=#4040B0><b>VIRTUAL SERVERS&nbsp;&nbsp;(TCP/UDP Port Forwarding)</b></font></td><td align=right><input type=button value="  View  " onclick="view()"><input type=button value="  Close  " onclick="window.close()"></td></tr>
+</table>
+<hr>
+<table width=100% border=0>
+<tr style="color: #000090">
+<td nowrap width=1%>Input Interface<br>
+<select name=Interface>
+<option value="ALL">ANY --------------</option>
+<xvar !router_interfacesforPAT>
+</select>&nbsp;&nbsp;&nbsp;</td>
+<td width=1% nowrap>IP Address<br><input type=text name=VirtualIP value="ANY" size=15>&nbsp;&nbsp;&nbsp;</td>
+
+<td width=1% nowrap>Protocol<br><select name=Protocol><option value="tcp">TCP</option><option value="udp">UDP</option><option value="tcp/udp">TCP/UDP</option></select>&nbsp;&nbsp;&nbsp;</td>
+<td width=1% nowrap>Local Port<br><input type=text name=LocalPort size=8 onchange="LocalPortChanged()"></td><td>&nbsp;</td>
+<td width=1% nowrap>Remote IP<br><input type=text name=RemoteIP size=15>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td width=1% nowrap>Remote Port<br><input type=text name=RemotePort size=10>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td width=1% nowrap><input type=button value="+" style="width: 25" onclick="add()"><input type=button value="-" style="width: 25" onclick="deleteEntry()"></td>
+</tr>
+</table>
+<hr>
+<br>
+<table width=100% border=1>
+<tr style="color: #4040B0" bgcolor="#d0d0FF"><th width=1%>&nbsp;</th><th>Interface / IP Address</th><th>Protocol</th><th>Local Port</th><th>&nbsp;<font class=Bigger1 color=#4040B0>Real Servers</font></th></tr>
+<xvar !router_patlist>
+</table>
+<br><br><br><br><br><br><hr><br>
+<font color=#303030 class=Smaller1><font class=Smaller1 color=#2020a0><b>Notes:</b></font><br>Remote IP field can be the IP address of a single real server or the IP range (ex. 192.168.0.100-192.168.0.110) of a server farm. In the latter case, Round Robin algorithm is used to distribute the requests to all the real servers. It is important note that only load balancing is guaranteed and not fault tolerance<br><br>
+<font color=#2020a0 class=Smaller1><b>Multiport Forwarding</b></font>&nbsp;&nbsp;&nbsp;(Thanks to Massimiliano Cianelli)<br>
+To forward a range of ports, you have to write STARTPORT-ENDPORT (ex. 80-90).<br>
+To forward different ports, you have to split it using comma FIRSTPORT,SECONDPORT,THIRDPORT... (ex. 20-22,80,8080).<br>
+
+
+The Local and Remote port fields must have the same number of values, if you write five ports in "Local Port" splitted by the comma, in the "Remote Port" you need to have other 5 ports.<br>
+<b>Example:</b><br>
+If you want to forward 20-22,80,8080 but the port 8080 forwarded to the port 80 of the real server, you have to write:<br>
+Local Port = 20-22,80,8080<br>
+Remote Port = 20-22,80,80<br><font>
+</form>
+</body>
+</html>

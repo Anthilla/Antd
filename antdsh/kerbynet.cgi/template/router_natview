@@ -1,0 +1,15 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>NAT View</title>
+<body>
+<form name=data method=post action="kerbynet">
+<table width=100%><tr>
+<td><font color="#2020D0" class=Bigger2><b>Port Forwarding and Source NAT (<xvar Type>)</b></font></td><td align=right><input type=button name=refresh value=Refresh onclick="location.reload(true)">&nbsp;<input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<pre>
+<xvar !router_natview (Type)>
+</pre>
+</form>
+</body>
+</html>

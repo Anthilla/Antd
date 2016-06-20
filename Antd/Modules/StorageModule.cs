@@ -27,59 +27,53 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
-using antdlib.CCTable;
+using System.Collections.Generic;
 using antdlib.Install;
 using antdlib.Storage;
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
-using antdlib.Zfs;
 
 namespace Antd.Modules {
     public class StorageModule : CoreModule {
+
+        private readonly RsyncRepository _rsyncRepositoryRepo = new RsyncRepository();
+
         public StorageModule() {
             this.RequiresAuthentication();
 
-            Get["/storage"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.VolumesInfo = Volumes.BlocksFromDd();
-                vmod.IsOsRemovable = InstallCheck.IsOsRemovable;
-                vmod.Mounts = antdlib.MountPoint.MountRepository.Get();
-                vmod.CurrentContext = Request.Path;
-                vmod.CCTable = CCTableRepository.GetAllByContext(Request.Path);
-                vmod.Count = CCTableRepository.GetAllByContext(Request.Path).ToArray().Length;
-                return View["_page-storage", vmod];
-            };
-
             Get["/storage/reload/volumes"] = x => {
                 Volumes.PopulateBlocks();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/storage/install"] = x => {
                 new InstallOperativeSystem((string)Request.Form.DiskName).SetDiskAndInstall();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/rsync/add"] = x => {
                 var source = (string)Request.Form.Source;
                 var destination = (string)Request.Form.Destination;
                 var options = (string)Request.Form.Options;
-                var type = (string)Request.Form.Type.Value;
-                Rsync.Create(source, destination, options, type);
+                _rsyncRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Source", source },
+                    { "Destination", destination },
+                    { "Options", options }
+                });
                 return Response.AsRedirect("/");
             };
 
             Post["/zfs/reload"] = x => {
-                ZpoolManagement.UpdateInfo();
-                return Response.AsJson(true);
+                //ZpoolManagement.UpdateInfo();
+                return HttpStatusCode.OK;
             };
 
             Post["/backup"] = x => {
                 var source = (string)Request.Form.Source;
                 var destination = (string)Request.Form.Destination;
                 Backup.LaunchBackupJob(source, destination);
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
         }
     }

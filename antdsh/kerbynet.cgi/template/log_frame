@@ -1,0 +1,9 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Log Viewer</title>
+</head>
+<frameset framespacing="1" border="0" frameborder="0" rows="80,*">
+<frame name="Header" scrolling="no" noresize  src="kerbynet?Section=LOG&STk=<xvar STk>&Action=Header&Process=<xvar Process>&Filter=<xvar Filter>">
+<frame name="Log" scrolling="yes" noresize" src="kerbynet?STk=<xvar STk>&Action=Render&Object=blank">
+</frameset>
+</html>

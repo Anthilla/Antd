@@ -27,8 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Dynamic;
-using antdlib.Terminal;
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
 
@@ -36,12 +37,14 @@ namespace Antd.Modules {
 
     public class CommandModule : CoreModule {
 
+        private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
+
         public CommandModule() {
             this.RequiresAuthentication();
 
             Get["/command/mgmt"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.list = CommandRepository.GetAll();
+                vmod.list = _commandRepositoryRepo.GetAll();
                 return View["page-command-mgmt", vmod];
             };
 
@@ -49,34 +52,36 @@ namespace Antd.Modules {
                 string command = Request.Form.Command;
                 string layout = Request.Form.CommandLayout;
                 string notes = Request.Form.Notes;
-                string inputid = Request.Form.InputID;
-                string inputlocation = Request.Url;
-                CommandRepository.Create(antdlib.CCTableCommandType.Direct, inputid, command, "", "", layout, inputlocation, notes);
+                _commandRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Command", command },
+                    { "Layout", layout },
+                    { "Notes", notes }
+                });
                 return Response.AsRedirect("/");
             };
 
-            Post["/command/mgmt/Launch/{guid}"] = x => {
+            Post["/command/mgmt/launch/{guid}"] = x => {
                 string guid = x.guid;
-                var result = CommandRepository.LaunchAndGetOutput(guid);
+                var result = _commandRepositoryRepo.Launch(guid);
                 return Response.AsJson(result);
             };
 
             Post["/command/mgmt/delete/{guid}"] = x => {
                 string guid = x.guid;
-                CommandRepository.Delete(guid);
-                return Response.AsJson(true);
+                _commandRepositoryRepo.Delete(guid);
+                return HttpStatusCode.OK;
             };
 
             Get["/command/mgmt/ex/{inputid}"] = x => {
                 string inputid = x.inputid;
-                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid);
+                var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid);
                 return Response.AsJson(r);
             };
 
             Get["/command/mgmt/ex/{inputid}/{Value}"] = x => {
                 string inputid = x.inputid;
                 string value = x.value;
-                var r = CommandRepository.LaunchAndGetOutputUsingNewValue(inputid, value);
+                var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid, value);
                 return Response.AsJson(r);
             };
         }

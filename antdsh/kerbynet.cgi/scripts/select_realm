@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LOCALREALM=`cat $REGISTER/system/k5/realm`
+cd "$REGISTER/system/k5/client/realms" || exit 1
+for T in `ls -d ??` ; do
+  NAME=`cat $T/name`
+  KDC=`cat $T/KDC`
+  echo "<option value='$T'>$NAME (KDC: $KDC)</option>"
+done
+

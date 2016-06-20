@@ -1,0 +1,59 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>File Editor</title>
+<script>
+isChanged=false;
+function loaded() {
+  X=document.data;
+}
+function SaveFile() {
+  X=document.data;
+  X.save.disabled=true;
+  ReloadMsg();
+  X.submit();
+}
+function Changed() {
+  X=document.data;
+  X.save.disabled=false;
+  isChanged=true;
+  document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+}
+function CloseWindow() {
+  if (isChanged) {
+    if (!confirm("Last changes have not been saved and will be lost if you continue. Are you sure you want to continue?")) {
+      return 1;
+    }
+  }
+  window.close();
+}
+function ReloadMsg() {
+var WO=window.opener;
+if (WO!=null) {
+  if (!WO.closed) {
+     WO.ReloadMsg();
+  }
+}
+}
+</script>
+</head>
+<body style="color: #404040" topmargin=5 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Common">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="SaveFile">
+<input type=hidden name=FileName value="<xvar FileName>">
+<table width=100%><tr>
+<td><font color=#3030d0 class=Bigger2><b>FILE EDITOR</b></font></td><td id=savetab align=right></td><td align=right><input type=button value=Save onclick="SaveFile()" name=save>&nbsp;<input type=button value=Close onclick="CloseWindow()"></td>
+</tr></table>
+<hr>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff" id=ScriptTitle><font color=#FFFFFF>&nbsp;<xvar FileName>&nbsp;&nbsp;</span></td><td align=right></td></tr></table>
+  <table width=100% border=1 cellpadding=0 cellspacing=0 bordercolor=#4040d0><tr><td>
+<textarea name=FileText style="width: 100% ; height: 420" onclick="Changed()">
+<xvar !viewfile (FileName)>
+</textarea>
+  </td></tr></table>
+<hr>
+</form>
+</body>
+</html>

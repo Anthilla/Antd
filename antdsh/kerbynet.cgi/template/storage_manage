@@ -1,0 +1,12 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Storage Manager</title>
+</head>
+<frameset framespacing="1" border="0" frameborder="0" rows="50,*">
+<frame name="Commands" scrolling="no" noresize  src="/cgi-bin/kerbynet?Section=Storage&STk=<xvar STk>&Action=Commands">
+<frame name="List" scrolling="yes" noresize  src="/cgi-bin/kerbynet?Section=Storage&STk=<xvar STk>&Action=List">
+</frameset>
+
+
+
+</html>

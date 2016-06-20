@@ -1,0 +1,134 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Create Profile</title>
+<script>
+<xinclude ip_utility.inc>
+function CreateDB() {
+  X=document.data;
+  
+  if (X.Description.value=='') {
+    alert('Description cannot be empty.');
+    X.Description.focus();
+    return;
+  }
+  if (X.Hostname.value=='') {
+    alert('Hostname cannot be empty.');
+    X.Hostname.focus();
+    return;
+  }
+  if (!X.Hostname.value.match(/.+\..+/)) {
+    alert('Hostname is not a Fully Qualified Domain Name (ex. server.example.com).');
+    X.Hostname.focus();
+    return;
+  }
+  if (X.K5Realm.value=='') {
+    alert('Kerberos 5 Realm cannot be empty.');
+    X.K5Realm.focus();
+    return;
+  }
+  if (X.LDAPBase.value=='') {
+    alert('LDAP Base cannot be empty.');
+    X.LDAPBase.focus();
+    return;
+  }
+  if (X.PW.value=='') {
+    alert('The Admin password cannot be empty.');
+    X.PW.focus();
+    return;
+  } else {
+    if (X.PW.value!=X.PW2.value) {
+      alert('The Admin password does not match.');
+      X.PW2.focus();
+      return;
+    }
+  }
+  if (X.IP.value=='') {
+    alert('IP Address cannot be empty.');
+    X.IP.focus();
+    return;
+  } else {
+    if (!isValidIP(X.IP.value)) {
+      alert('IP Address not valid');
+      X.IP.focus();
+      X.IP.select();
+      return;
+    }
+  }
+  if (X.Netmask.value=='') {
+    X.Netmask.value=standardNetmask(X.IP.value)
+  } else {
+    if (!isValidNetmask(X.Netmask.value)) {
+      alert('Netmask not valid');
+      X.Netmask.focus();
+      X.Netmask.select();
+      return;
+    }
+  }
+  if (X.GW.value!="" && !isValidIP(X.GW.value)) {
+      alert('The Default Gateway is not a valid IP Address');
+      X.GW.focus();
+      X.GW.select();
+      return;
+  } else {
+      if (X.GW.value!="" && !ip_belongs_network(X.GW.value,NetworkFromIP(
+X.IP.value,X.Netmask.value),X.Netmask.value)) {
+        alert("The Default Gateway is not on the subnet "+NetworkFromIP(X.IP.value,X.Netmask.value)+"/"+X.Netmask.value);
+        X.GW.focus();
+        X.GW.select();
+        return;
+      }
+  }
+  PleaseWait();
+}
+function HostnameChanged() {
+  document.data.Hostname.value=document.data.Hostname.value.replace(/[ ]+/g,"");
+}
+function K5RealmChanged() {
+  document.data.K5Realm.value=document.data.K5Realm.value.replace(/[ ]+/g,"").toUpperCase();
+}
+function LDAPBaseChanged() {
+  if (!document.data.LDAPBase.value.match(/.*\=.*/)) {
+    document.data.LDAPBase.value=document.data.LDAPBase.value.replace(/\.$/g,"");
+    if (document.data.LDAPBase.value.match(/^[^.].+\..+/)) {
+        document.data.LDAPBase.value="dc="+document.data.LDAPBase.value.replace(/\./g,",dc=");
+    } else {
+      document.data.LDAPBase.value="o="+document.data.LDAPBase.value;  
+    }
+  }
+}
+</script>
+</head>
+<body>
+<form name=data action=kerbynet method=post>
+<input type=hidden name=Section value=Storage>
+<input type=hidden name=Action value=MakeDB>
+<input type=hidden name=STk value="<xvar _STk>">
+<input type=hidden name=Part value="<xvar _PartName>">
+<input type=hidden name=What value="<xvar _What>">
+<table width=100%><tr>
+<td><font color=#60r6F0 class=Bigger2><b><xvar _Model>&nbsp;(<xvar _DiskName>)</b></font><br><font color=#2020a0 class=Bigger1>New Profile on partition <xvar _PartName></font></td>
+<td align=right><input type=button value="Create" onclick="CreateDB()"><input type=button name=bclose value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<xvar _errormsg>
+<br>
+<table width=100% style="color: #606060">
+<tr><td width=30%>&nbsp;Description</td><td><input type=text name=Description size=50 value="<xvar _Description>"></td></tr>
+<tr><td width=30%>&nbsp;Hostname (FQDN)</td><td><input type=text name=Hostname size=30 value="<xvar _Hostname>" onchange="HostnameChanged()"></td></tr>
+<tr><td width=30%>&nbsp;Kerberos 5 Realm</td><td><input type=text name=K5Realm size=30 value="<xvar _K5Realm>" onchange="K5RealmChanged()"></td></tr>
+<tr><td width=30%>&nbsp;LDAP Base</td><td><input type=text name=LDAPBase size=50 value="<xvar _LDAPBase>" onchange="LDAPBaseChanged()"></td></tr>
+<tr><td width=30%>&nbsp;Admin password</td><td><input type=password name=PW size=20  autocomplete="off"></td></tr>
+<tr><td width=30%>&nbsp;Confirm password</td><td><input type=password name=PW2 size=20  autocomplete="off"></td></tr>
+<tr><td width=30%><font color=#4040c0><b>NETWORK CONFIG<b></font></td><td><hr></td></tr>
+<tr><td width=30%>&nbsp;Ethernet Interface</td><td><select name=Interface style="width: 95%"><xvar !getethoption (Interface)></select></td></tr>
+<tr><td width=30%>&nbsp;IP Address / Netmask</td><td><input type=text name=IP value="<xvar _IP>" size=15>&nbsp;/&nbsp;<input type=text name=Netmask value="<xvar _Netmask>" size=15></td></tr>
+<tr><td width=30%>&nbsp;Default Gateway</td><td><input type=text name=GW value="<xvar _GW>" size=15></td></tr>
+</table>
+<hr>
+<xinclude pleasewait>
+</form>
+</body>
+</html>
+
+
+

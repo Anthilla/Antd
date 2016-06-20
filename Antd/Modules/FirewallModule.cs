@@ -27,85 +27,49 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Linq;
-using antdlib.Firewall;
+using System.Collections.Generic;
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class FirewallModule : CoreModule {
+
+        private readonly FirewallListRepository _firewallRepo = new FirewallListRepository();
+
         public FirewallModule() {
             this.RequiresAuthentication();
-            Post["/firewall/addrule"] = x => {
-                var command = (string)Request.Form.Command;
-                var rule = (string)Request.Form.Rule;
-                NfTables.AddNftRule(command, rule);
-                return Response.AsRedirect("/");
-            };
 
-            Post["/firewall/stoprule"] = x => {
-                NfTables.DeleteNftRule((string)Request.Form.Guid);
-                return Response.AsRedirect("/");
-            };
+            Get["/firewall/getrule/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(_firewallRepo.GetForRule((string)x.table, (string)x.type, (string)x.hook));
 
-            Get["/firewall/checkdefault"] = x => Response.AsJson(FirewallLists.GetAll().Count());
-
-            Get["/firewall/getrule/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(FirewallLists.GetForRule((string)x.table, (string)x.type, (string)x.hook));
-
-            Get["/firewall/getruleset/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(FirewallLists.GetRuleSet((string)x.table, (string)x.type, (string)x.hook));
+            Get["/firewall/getruleset/{table}/{type}/{hook}"] = x => JsonConvert.SerializeObject(_firewallRepo.GetForRule((string)x.table, (string)x.type, (string)x.hook));
 
             Post["/firewall/add/list"] = x => {
-                var guid = Guid.NewGuid().ToString();
                 var table = (string)Request.Form.Table;
                 var type = (string)Request.Form.Type;
                 var hook = (string)Request.Form.Hook;
                 var label = (string)Request.Form.Label;
-                FirewallLists.AddList(guid, table, type, hook, label);
                 var values = (string)Request.Form.Elements;
-                if (values.Length <= 0)
-                    return Response.AsRedirect("/");
-                var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                FirewallLists.AddValueToList(guid, valueList);
+                _firewallRepo.Create(new Dictionary<string, string> {
+                    { "TableId", table },
+                    { "TypeId", type },
+                    { "HookId", hook },
+                    { "Rule", "" },
+                    { "Label", label },
+                    { "Values", values }
+                });
                 return Response.AsRedirect("/");
             };
 
             Post["/firewall/add/value"] = x => {
                 var guid = (string)Request.Form.Guid;
                 var values = (string)Request.Form.Elements;
-                if (values.Length <= 0)
-                    return Response.AsJson(true);
-                var valueList = values.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                FirewallLists.AddValueToList(guid, valueList);
-                return Response.AsJson(true);
-            };
-
-            Post["/firewall/conf/export"] = x => {
-                NfTables.Export.ExportNewFirewallConfiguration();
-                return Response.AsJson(true);
-            };
-
-            Post["/firewall/conf/apply"] = x => {
-                NfTables.Export.ApplyConfiguration();
-                return Response.AsJson(true);
-            };
-
-            Post["/firewall/discover/macadd"] = x => {
-                MacAddressDiscovery.Discover();
-                return Response.AsJson(true);
-            };
-
-            Post["/firewall/enable/macadd"] = x => {
-                var guid = (string)Request.Form.Guid;
-                MacAddressDiscovery.Unlock(guid);
-                return Response.AsJson(true);
-            };
-
-            Post["/firewall/disable/macadd"] = x => {
-                var guid = (string)Request.Form.Guid;
-                MacAddressDiscovery.Block(guid);
-                return Response.AsJson(true);
+                _firewallRepo.Edit(new Dictionary<string, string> {
+                    { "Id", guid },
+                    { "Values", values }
+                });
+                return HttpStatusCode.OK;
             };
         }
     }

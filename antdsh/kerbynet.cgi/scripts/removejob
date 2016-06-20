@@ -1,0 +1,11 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+SCRIPTNAME="$1"
+[ -z "$SCRIPTNAME" ] && exit 
+DIR=$REGISTER/system/startup/scripts/$SCRIPTNAME
+if [ -d "$DIR" ] ; then 
+  rm -rf $DIR
+  $SCRIPTS/crontabgen
+  rm -f $REGISTER/system/startup/Last
+fi
+

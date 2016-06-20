@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/cp"
+INTERFACE=`cat $CONFIG/Interface 2>/dev/null`
+if [ -z "$INTERFACE" -o "$INTERFACE" == NONE ] ; then
+  exit
+fi
+
+#This script is useless

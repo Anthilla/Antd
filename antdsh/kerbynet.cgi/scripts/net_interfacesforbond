@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES=`ls | grep -v BOND |grep -v BRIDGE |grep -v ppp | grep -v VPN99`
+for I in $INTERFACES ; do
+   if ! [ -d $I/Bridge/  -o -d $I/Bond/ ] ; then
+      echo "<option value='$I'>$I</option>" 
+   fi
+
+done
+
+

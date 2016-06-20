@@ -1,0 +1,29 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ACLs="$1"
+HTTP="$2"
+HTTPS="$3"
+LOCAL="$4"
+mkdir -p $REGISTER/system/httpd/
+if [ "$HTTP" != "`cat $REGISTER/system/httpd/HTTP 2>/dev/null`" ] ; then
+  if ! netstat -ntl |grep -w -q "$HTTP" ; then
+    echo "$HTTP" > $REGISTER/system/httpd/NEWHTTP
+  else
+    echo "TCP port $HTTP is already used by another service" >&2
+    exit 3
+  fi
+  if ! netstat -ntl |grep -w -q "$HTTPS" ; then
+    echo "$HTTPS" > $REGISTER/system/httpd/NEWHTTPS
+  else
+    echo "the TCP port $HTTPS is already used by another service" >&2
+    exit 4
+  fi
+fi
+
+if ! [ -z "$ACLs" ] ; then
+  echo "$ACLs" | tr " " "\n" >$REGISTER/system/httpd/ACL
+else
+  echo -n > $REGISTER/system/httpd/ACL
+fi
+echo $LOCAL > $REGISTER/system/httpd/Local
+$SCRIPTS/fw_https_chain

@@ -1,0 +1,233 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Recipients</title>
+<script language=Javascript>
+function notSaved() {
+   document.getElementById("NotSaved").innerHTML="Not Saved";
+   document.data.Saved.value="no";
+}
+function TypeChanged() {
+   X=document.data;
+   if (X.Type.value=="SMS") {
+     document.getElementById("RecipientDesc").innerHTML="Mobile Number";
+   } else {
+     document.getElementById("RecipientDesc").innerHTML="e-Mail Address";
+   }
+}
+function TestRecipient() {
+  X=document.data;
+  Selected=false;
+  if (X.Recipients!=undefined) {
+    if (X.Recipients.length!=undefined) {
+      for (i=0; i<X.Recipients.length; i++)  {
+        if (X.Recipients[i].checked) {
+          Selected=true;
+          Recipient=X.Recipients[i].value;
+        }
+      }
+    } else {
+      if (X.Recipients.checked) {
+        Selected=true;
+        Recipient=X.Recipients.value;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a recipient to test.");
+    return;
+  }
+  newwin=open("kerbynet?Action=Render&STk=<xvar STk>&Object=alerts_test&EventID=TEST&Type=Recipient&Recipient="+Recipient, "alertstest","top=300,left=300,width=720,height=400,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function DeleteRecipient() {
+  X=document.data;
+  Selected=false;
+  if (X.Recipients!=undefined) {
+    if (X.Recipients.length!=undefined) {
+      for (i=0; i<X.Recipients.length; i++)  {
+        if (X.Recipients[i].checked) {
+          Selected=true;
+        }
+      }
+    } else {
+      if (X.Recipients.checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a recipient to remove.");
+    return;
+  }
+  
+  if (confirm("Are you sure you want to remove the selected recipient?")) {
+    X.Action.value="RecipientDelete";
+    X.submit();
+  }
+}
+function validateData() {
+  X=document.data;
+  if (X.Description.value=="") {
+    alert("The description cannot be empty.");
+    X.Description.focus();
+    return false;
+  }
+  if (X.Type.value=="e-Mail") {
+    xType="e-Mail Address"
+  } else {
+    xType="Mobile Number"
+  }
+  X.xRecipient.value=X.xRecipient.value.replace(/[ ]+/g,"")
+  if (X.xRecipient.value=="") {
+    alert("The "+xType+" cannot be empty.");
+    X.xRecipient.focus();
+    return false;
+  }
+  if (X.Type.value=="e-Mail") {
+    if (X.xRecipient.value.indexOf("@")<0) {
+      alert("e-Mail Address malformed");
+      X.xRecipient.focus();
+      X.xRecipient.select();
+      return false;
+    }
+  } else {
+    if (!X.xRecipient.value.match(/^[+0123456789]+$/)) {
+      alert("Mobile Number malformed");
+      X.xRecipient.focus();
+      X.xRecipient.select();
+      return false;
+    }
+
+  }
+  return true;
+}
+function SaveData() {
+  X=document.data;
+  if (X.Saved.value=="yes") {
+    alert("Nothing to save.");
+    return;
+  }
+  if (validateData()) {
+    X.Action.value="RecipientSave";
+    X.submit();
+  }
+}
+function RecipientSelected(obj) {
+  X=document.data;
+  X.Action.value="RecipientManager";
+  X.RecipientName.value=obj.value;
+  X.submit();
+}
+function ChangeStatus(obj) {
+  X=document.data;
+  if (obj.checked) {
+    X.Status.value="enable";
+  } else {
+    X.Status.value="disable";
+  }
+  if (confirm("Are you sure you want to "+X.Status.value+" the selected recipient?")) {
+    X.Action.value="ChangeStatus";
+    X.RecipientName.value=obj.value;
+    X.submit();
+  } else {
+    obj.checked=!obj.checked;
+  }
+}
+
+function loaded() {
+  X=document.data;
+  if (X.RecipientName.value=="") {
+    X.Severity.value="Warning"
+    X.Description.disabled=true;
+    X.Type.disabled=true;
+    X.xRecipient.disabled=true;
+    X.Severity.disabled=true;
+  }
+  if ("<xvar Type>"=="SMS") {
+    X.Type.value="SMS";
+  } else {
+    X.Type.value="e-Mail";
+  }
+  X.xRecipient.value="<xvar Recipient>";
+  X.Severity.value="<xvar Severity>";
+  TypeChanged();
+}
+function newRecipient() {
+  Num=1;
+  var i;
+  X=document.data;
+  if (X.Recipients!=undefined) {
+    if (X.Recipients.length!=undefined) {
+       Num=X.Recipients[X.Recipients.length-1].value;    
+    } else {
+       Num=X.Recipients.value;
+    }
+    if (Num.substring(0,0)=="0") {
+      Num=Num.substring(1,1);
+    }
+    Num++
+  }
+  if (Num<10) {
+    RecipientName="0"+Num;
+  } else {
+    RecipientName=Num;
+  }
+  X.RecipientName.value=RecipientName;
+  if (X.Recipients!=undefined) {
+    if (X.Recipients.length!=undefined) {
+      for (i=0; i<X.Recipients.length; i++)  {
+        if (X.Recipients[i].checked) {
+          X.Recipients[i].checked=false;
+        }
+      }
+    } else {
+      if (X.Recipients.checked) {
+        X.Recipients.checked=false;
+      }
+    }
+  }
+  notSaved();
+  X.Description.value=""
+  X.xRecipient.value=""
+  X.Severity.value="Warning"
+  X.Description.disabled=false;
+  X.Type.disabled=false;
+  X.xRecipient.disabled=false;
+  X.Severity.disabled=false;
+  X.Description.focus();
+}
+
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Alerts">
+<input type=hidden name=Action value=""><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=RecipientName value="<xvar _RecipientName>">
+<input type=hidden name=Status value="">
+<input type=hidden name=Saved value="yes">
+<table width=100%><tr><td><font face="Arial" color="#3030f0" class=Bigger2><b>Alert Recipients</b></font></td><td nowrap width=1% id="NotSaved" style="color: #F00000" class=Bigger1></td><td align=right nowrap width=1%>&nbsp;&nbsp;&nbsp;<input type=button name=Save value=Save onclick="SaveData()">&nbsp;&nbsp;&nbsp;<input type=button value=New onclick="newRecipient()">&nbsp;<input type=button value=Delete onclick="DeleteRecipient()">&nbsp;&nbsp;&nbsp;<input type=button name=TestRT value=Test onclick="TestRecipient()">&nbsp;&nbsp;<input type=button value=Close onclick="window.close()"></td></tr></table>
+<hr>
+<table width=100%>
+<tr>
+<td width=1% nowrap>Description<br><input type=text name=Description size=30 maxlength=30 value="<xvar _Description>" onchange="notSaved()">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td nowrap width=1%>Type<br><select name=Type onchange="TypeChanged();notSaved()"><option value="e-Mail">e-Mail</option><option value="SMS">SMS</option></select>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td width=1% nowrap><span id=RecipientDesc></span><br><input type=text name=xRecipient size=35 maxlength=35 value="<xvar _Recipient>" onchange="notSaved()">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td nowrap width=1%>Severity<br><select name=Severity onchange="notSaved()"><option value="Info">Info</option><option value="Warning">Warning</option><option value="Critical">Critical</option><option value="Emergency">Emergency</option></select>&nbsp;&nbsp;&nbsp;</td>
+<td nowrap></td>
+</tr>
+</table>
+<hr>
+<br>
+<table width=100% bordercolor=#FFFFFF border=1 cellspacing=0 cellpadding=0>
+<tr bgcolor=#8080f0 style='color: #ffffff'><td nowrap width=1%></td><td width=34%>&nbsp;&nbsp;<b>Description</b></td><td nowrap width=1%>&nbsp;&nbsp;&nbsp;<b>Type</b>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;<b>e-Mail Address/Mobile Number</b></td><td nowrap align=center width=1%>&nbsp;&nbsp;&nbsp;<b>Severity</b>&nbsp;&nbsp;&nbsp;</td><td nowrap width=1%>&nbsp;<b>On</b>&nbsp;</td></tr>
+<xvar +alerts_recipient_list (RecipientName)>
+</table>
+<script>
+if (document.data.Recipients==undefined) {
+  document.write("<br><b>&nbsp;&nbsp;&nbsp;No recipient defined.</b>");
+}
+</script>
+</form>
+</body>
+</html>

@@ -58,11 +58,4 @@ namespace antdlib {
         Networkd = 3,
         Other = 99
     }
-
-    public enum NetworkInterfaceType : byte {
-        Physical = 1,
-        Virtual = 2,
-        Fake = 3,
-        Other = 99
-    }
 }

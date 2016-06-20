@@ -1,0 +1,59 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Storage List</title>
+<script language=Javascript>
+
+function cellWrite(n,msg) {
+   tableElem = parent.Commands.document.getElementById('TableCommands');
+   rowElem = tableElem.rows[0];
+   rowElem.cells[n].innerHTML=msg;
+}
+function selected() {
+   if (document.data.obj.length==undefined) {
+     obj=document.data.obj.value;
+   } else {
+     for (i=0;i<document.data.obj.length;i++) {
+       if (document.data.obj[i].checked=="1") {
+         obj=document.data.obj[i].value;
+       }
+     }
+   }
+   
+   components=obj.split(",");
+   type=components[0];
+   disk=components[1];
+   if (type=="disk") {
+      cellWrite(0,"<font color=#A0A0A0 face=Arial><b>&nbsp;&nbsp;Storage Device: "+disk.substr(5)+"</b></font>");
+      cellWrite(1,"<input type=button value=\"Raw view\" onclick=rawview(\""+disk+"\")>&nbsp;&nbsp;<input type=button value=\"New partition\" onclick=newpartition(\""+disk+"\")>");
+
+   } else if (type=="part") {
+      part=components[2];
+      ID=components[3];
+      ptype=components[4];
+      cellWrite(0,"<font color=#A0A0A0 face=Arial><b>&nbsp;&nbsp;Partition: "+part.substr(5)+"</b></font>");
+      cellWrite(1,"<input type=button value=\"Create Profile\" onclick=createdb(\""+disk+"\",\""+part+"\",\""+ptype+"\")>&nbsp;<input type=button value=\"Restore Profile\" onclick=restoredb(\""+disk+"\",\""+part+"\",\""+ptype+"\")>&nbsp;<input type=button value=\"View FS\" onclick=viewfs(\""+disk+"\",\""+part+"\",\""+ID+"\")>&nbsp;<input type=button value=\"Delete\" onclick=deletepartition(\""+disk+"\",\""+part+"\",\""+ID+"\",\""+ptype+"\")>&nbsp;<input type=button value=\"Format\" onclick=formatpartition(\""+disk+"\",\""+part+"\",\""+ID+"\",\""+ptype+"\")>");
+   } else if (type=="db") {
+      part=components[2];
+      db=components[3];
+      cellWrite(0,"<font color=#A0A0A0 face=Arial><b>&nbsp;&nbsp;Profile: "+db+" ("+part.substr(5)+")</b></font>");
+      cellWrite(1,"<input type=button value=\"Activate\" onclick=activatedb(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Deactivate\" onclick=deactivatedb(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Info\" onclick=showInfoDB(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Delete\" onclick=deletedb(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Backup\" onclick=backupdb(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Backup without Logs\" onclick=backupdbnologs(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Copy\" onclick=copydb(\""+disk+"\",\""+part+"\",\""+db+"\")>&nbsp;<input type=button value=\"Create\" onclick=\"alert('You should select the Partition where to create the new Profile')\">");
+   }
+}
+function loaded() { 
+   var obj=document.data.obj;
+   if (Activated=="Yes") {
+     selected();
+   } else {
+     for (i=0; i<document.data.obj.length; i++) {
+         document.data.obj[i].checked=false;
+     }
+     cellWrite(0,"<font color=#a0a0a0><b>&nbsp;&nbsp;Select the disk, partition or profile on which you have to operate.</b></font>");
+   }
+   cellWrite(2,"<input type=button name=Rescan value=RESCAN onclick=parent.location.reload(true)>");
+}
+var ActivePartition="";
+var Activated="No";
+</script>
+</head>
+<body onload=loaded()>
+<form name=data method=post>

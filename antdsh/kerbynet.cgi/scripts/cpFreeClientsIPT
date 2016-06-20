@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/cp
+[ -d $CONFIG/FreeClients ] || mkdir -p $CONFIG/FreeClients
+cd $CONFIG/FreeClients
+CLIENTS=`ls -d * 2>/dev/null`
+iptables -F CapPortFC
+for C in $CLIENTS ; do
+  IP=`cat $C/IP`
+  MAC=`cat $C/MAC`
+  $SCRIPTS/cpAddClientIPT "$IP" "$MAC" 
+done

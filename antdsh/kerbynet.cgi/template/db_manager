@@ -1,0 +1,50 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<script language=Javascript>
+function deleteAll() {
+   if (!document.db.Sel_Delete[0].checked && !document.db.Sel_Delete[1].checked) {
+      alert ("<xvar #NoDBSelected>");
+      return false;
+   }
+   document.db.Section.value="LDAP";
+   document.db.Action.value="Reset";
+   document.db.submit();  
+}
+function importdb() {
+   if (!document.db.Sel_Import[0].checked && !document.db.Sel_Import[1].checked) {
+      alert ("<xvar #NoDBSelected>");
+      return false;
+   }
+   document.db.Section.value="LDAP";
+   document.db.Action.value="Import";
+   document.db.submit();  
+}
+</script>
+</head>
+<body>
+   <table width=100%><tr>
+   <td><font color=#0000a0 class=Bigger2><b>Directory Service Import Utility</b></font></td>
+   <td align=right><input type=button onclick="importdb()" name=Import value=" Import " enctype="multipart/form-data"><input type=button value=Close onclick="parent.close()"></td>
+   </tr></table>
+   <form name=db action="kerbynet" method=post enctype="multipart/form-data">
+   <input type=hidden Name=Action>
+   <input type=hidden Name=STk value="<xvar _STk>">
+   <input type=hidden Name=Section>
+   <table width="100%" border=1 bordercolor=#c0c0c0 cellspacing=0>
+      <tr>       
+          <td>
+              &nbsp;&nbsp;<input type=radio name=Sel_Import value=People>
+               Import users into LDAP Users database 
+              <br>
+              &nbsp;&nbsp;<input type=radio name=Sel_Import value=Group>
+              Import groups into LDAP Group database 
+          </td>
+          <td>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File format: &nbsp;&nbsp;<input type=radio name=Format_Import value=LDIF checked>  LDIF <input type=radio name=Format_Import value=NIS> NIS<br>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input File &nbsp;&nbsp;<input type=file name=FileImport>
+          </td>
+      </tr>
+   </table>
+   </form>
+</body>
+</html>

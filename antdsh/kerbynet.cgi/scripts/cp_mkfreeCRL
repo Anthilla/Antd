@@ -1,0 +1,23 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+function PROCESS_CERT {
+  for I in `openssl x509 -in "$CERT" -noout -text |grep -v "CA Issuers" |grep -w URI| sed 's/ //g' |sed 's/\r//g'` ; do
+    if ! $SCRIPTS/cp_freeCRL "$I" "$OFFLINE" ; then
+      rm -f "$OFFLINE"
+      exit 1
+    fi
+done
+}
+
+OFFLINE=/tmp/IPTfreeCRL.$$
+touch $OFFLINE
+CERT="/var/register/system/cp/Auth/TLS/cert.pem"
+while [ -r "$CERT" ] ; do
+  PROCESS_CERT
+  OLD="$CERT"
+  ISSUER_HASH=`openssl x509 -in "$OLD" -noout -issuer_hash`
+  CERT="/etc/ssl/certs/trusted_CAs/$ISSUER_HASH.0"
+  [ "$CERT" = "$OLD" ] && CERT="/etc/ssl/certs/trusted_CAs/LastIssuerCA"
+done
+mv "$OFFLINE" "$REGISTER/system/cp/Auth/FreeCRL.iptables"
+$SCRIPTS/cp_create_CRL_ipt

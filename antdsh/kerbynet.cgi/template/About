@@ -1,0 +1,23 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>About ZeroShell - Net Services</title>
+</head>
+<body>
+<table width=100%>
+<tr>
+<td>
+<img src="/kerbynet/Zeroshell.gif">
+</td>
+<td></td>
+<td align=center class=Smaller1 nowrap width=10% style="color: #505050">Copyright (C) 2006-2016 Fulvio Ricciardi - Lecce (ITALY)<br>
+Email <a href="mailto: fulvio.ricciardi@zeroshell.net">Fulvio.Ricciardi@zeroshell.net</a><br>
+Web site <a href="http://www.zeroshell.org" target="_blank">http://www.zeroshell.org</a></td>
+</tr>
+
+</table>
+<pre>
+<xinclude gpl.txt>
+</pre>
+</body>
+</html>

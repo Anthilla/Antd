@@ -1,0 +1,6 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+BOND="$1"
+[ -z "$BOND" ] && exit 1
+cat "$REGISTER/system/net/interfaces/$BOND/Type" 2>/dev/null
+

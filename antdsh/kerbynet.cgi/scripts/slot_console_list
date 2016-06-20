@@ -1,0 +1,18 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+BOOTCONSOLE="`cat /etc/slots/conf/Console 2>/dev/null`"
+[ -z "$BOOTCONSOLE" ] && BOOTCONSOLE=VGA
+for C in VGA 9600 19200 38400 57600 115200 ; do
+  if [ "$C" = "$BOOTCONSOLE" ] ; then
+    SELECTED=selected
+  else
+    SELECTED=""
+  fi
+  if [ "$C" = VGA ] ; then
+    PREFIX=""
+  else
+    PREFIX="Serial "
+  fi
+  echo -n "<option value='$C' $SELECTED>$PREFIX$C</option>"
+done
+

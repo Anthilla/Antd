@@ -1,0 +1,43 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Copy Profile</title>
+<script>
+function CopyDB() {
+//  if (Info.Active) {
+//    alert("<xvar #NoCopyActiveDB>");
+//    return;
+//  } else {
+//    PleaseWait();
+//  }
+  PleaseWait();
+}
+</script>
+</head>
+<body>
+<form name=data action=kerbynet method=post>
+<input type=hidden name=Section value=Storage>
+<input type=hidden name=Action value=CopyDB>
+<input type=hidden name=STk value="<xvar _STk>">
+<input type=hidden name=Part value="/dev/<xvar _PartName>">
+<input type=hidden name=DB value="<xvar _DB>">
+<table width=100%><tr>
+<td>
+<font color=#0000D0 class=Bigger2><b>&nbsp;<xvar _Model>&nbsp;(<xvar _DiskName>)</b></font><br><font color=#000080 class=Bigger1>&nbsp;Profile <xvar _DB> on partition <xvar _PartName></font>
+</td>
+<td align=right>
+<input type=button value="Copy" onclick="CopyDB()"><input type=button name=bclose value=Close onclick="window.close()">
+</td>
+</tr></table>
+<br>
+<font color=#404040>&nbsp;&nbsp;&nbsp;Destination&nbsp;&nbsp;</font><select name=Destination>
+<xinclude /storage/INFO/ValidPartition>
+</select>
+<br>
+<iframe name=Info border=0 frameborder=0 width=100% height=60% src='kerbynet?Section=Storage&STk=<xvar _STk>&Action=InfoDB&Part=<xvar _Part>&DB=<xvar _DB>&Disk=<xvar _Disk>'>Not compatible Browser</iframe>
+<xinclude pleasewait>
+</form>
+</body>
+</html>
+
+
+

@@ -1,0 +1,36 @@
+#!/bin/awk -f
+BEGIN {
+  RouteType=ENVIRON["RouteType"];
+  Dest=ENVIRON["Dest"];
+  Netmask=ENVIRON["Netmask"];
+  Via=ENVIRON["Via"];
+  Gateway=ENVIRON["Gateway"];
+  Metric=ENVIRON["Metric"];
+  Interface=ENVIRON["Interface"];
+}
+{
+  while (getline) {
+    Dest_=$1;
+    Gateway_=$2;
+    Netmask_=$3;
+    Flags_=$4;
+    Metric_=$5;
+    Interface_=$8;
+    if (Dest==Dest_ && Metric==Metric_ && Netmask==Netmask_) {
+       
+      if (Via=="GW") {
+         if (Gateway==Gateway_) {
+           print "Up";
+           exit;
+         }
+      } else {
+         if (Interface==Interface_) {
+           print "Up";
+           exit;
+         }
+      }
+    }
+  }
+  print "Down"
+}
+

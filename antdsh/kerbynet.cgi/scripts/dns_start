@@ -1,0 +1,37 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+PARAM="$1"
+function TERMNAMED () {
+  I=0
+  ps -e |grep -w -q named || return 0
+  while [ $I -lt 30 ] ; do
+    if ps -e |grep -w -q named ; then
+      killall -TERM named 2>/dev/null >/dev/null
+    else 
+      return 0
+    fi
+    I=$((I+1))
+  done
+  return 1
+}
+if [ "$PARAM" != NOCONFIG ] ; then 
+  $SCRIPTS/dns_zoneconfig
+  if named-checkconf /tmp/named.conf >/tmp/named.conf.error ; then
+    cp /tmp/named.conf /etc
+  else
+    CONFIGERROR=1  
+  fi
+fi
+TERMNAMED
+ifconfig dummy0 2>/dev/null >/dev/null || modprobe dummy numdummies=2
+L2TPDNS=$(cat $REGISTER/system/l2tp/DNS)
+ifconfig dummy0 $L2TPDNS
+/usr/local/sbin/named
+ifconfig dummy0 down
+if ! [ -z "$CONFIGERROR" ] ; then
+  logger -t named "CONFIGURATION ERROR:"
+  logger -t named < /tmp/named.conf.error
+  logger -t named "DNS server started with old configuration"
+  echo "DNS configuration error. View named daemon logs." >&2
+  exit 5
+fi

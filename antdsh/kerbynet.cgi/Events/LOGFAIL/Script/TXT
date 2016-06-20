@@ -1,0 +1,23 @@
+VIA="$2"
+IP="$3"
+
+MAXFAILURES=3
+MINUTES=2
+
+FAILDIR="/tmp/Auth_Failures"
+mkdir -p "$FAILDIR"
+find "$FAILDIR" -cmin +$MINUTES -type f -exec rm {} \;
+touch "$FAILDIR/${VIA}_${IP}_$(rand)"
+FAILURES=$(ls $FAILDIR/${VIA}_${IP}_* 2>/dev/null |wc -l|tr -d " ") 
+if [ $FAILURES -gt $MAXFAILURES ] ; then
+  if [ -z "$IP" ] ; then
+    MSG="$FAILURES failures via $VIA in the last $MINUTES minutes" 
+  else
+    MSG="$FAILURES failures via $VIA ($IP) in the last $MINUTES mins"
+  fi
+  echo "$MSG"         | VIEWER
+  echo "$MSG"         | MAIL
+  echo "$MSG"         | SMS
+else
+  CANCEL
+fi

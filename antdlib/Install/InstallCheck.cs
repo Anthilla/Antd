@@ -30,12 +30,12 @@
 using System;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
+using antdlib.common;
 
 namespace antdlib.Install {
     public class InstallCheck {
         private static bool IsOnUsb() {
-            var cmdResult = Terminal.Terminal.Execute("lsblk -npl | grep /mnt/cdrom");
+            var cmdResult = Terminal.Execute("lsblk -npl | grep /mnt/cdrom");
             var deviceName = cmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
             if (deviceName == null)
                 throw new ArgumentNullException(nameof(deviceName));
@@ -56,7 +56,7 @@ namespace antdlib.Install {
         public static bool IsOsRemovable => IsOnUsb();
 
         public static bool IsDiskEligibleForOs(string disk) {
-            var diskSizeCmdResult = Terminal.Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
+            var diskSizeCmdResult = Terminal.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
             var size = diskSizeCmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             if (size != null && !size.Contains("G")) {
                 //var num = Convert.ToInt32(size.Replace("M", ""));
@@ -65,11 +65,11 @@ namespace antdlib.Install {
                     return false;
                 }
             }
-            var isPartitionCmdResult = Terminal.Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep \"{disk} \"");
+            var isPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep \"{disk} \"");
             if (isPartitionCmdResult.Contains("part") && !isPartitionCmdResult.Contains("disk")) {
                 return false;
             }
-            var hasPartitionCmdResult = Terminal.Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
+            var hasPartitionCmdResult = Terminal.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
             var results = hasPartitionCmdResult.Split(new [] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
             return results <= 1;
         }

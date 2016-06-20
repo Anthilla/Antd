@@ -1,0 +1,106 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>OpenVPN Domain</title>
+<script>
+var tmpDomain;
+function crossauth_k5() {
+  var newwin=window.open("kerbynet?Section=K5&STk=<xvar STk>&Action=CrossAuth","CrossAuth","top=100,left=275,width=650,height=500,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function loaded() {
+  X=document.data;
+  RadiusReq="<xvar /system/openvpn/RadiusReq>";
+  if (RadiusReq=="") {
+    RadiusReq="PAP";
+  }
+  X.RadiusReq.value=RadiusReq;
+  X.RadiusReq.disabled=true;
+  tmpDomain="";
+}
+function Submitted() {
+  X=document.data;
+  K5RealmChanged();
+  if (X.DomainName.value=="") {
+    alert("Domain Name cannot be empty.");
+    X.DomainName.focus();
+    return;
+  }
+  if (!(X.Type[0].checked || X.Type[1].checked || X.Type[2].checked || X.Type[3].checked)) {
+    alert("You should select a domain type.");
+    return;
+  }
+  X.DomainName.disabled=false;
+  X.submit();
+}
+function Changed() {
+  X=document.data;
+  //K5RealmChanged();
+  if (X.Type[0].checked) {
+    tmpDomain=X.DomainName.value;
+    X.DomainName.disabled=true;
+    X.DomainName.value="<xvar /system/k5/realm>";
+    X.RadiusReq.disabled=true;
+  } else if (X.Type[1].checked) {
+    if (X.DomainName.value=="<xvar /system/k5/realm>") {
+      X.DomainName.value=tmpDomain;
+    }
+    X.DomainName.disabled=false;
+    X.RadiusReq.disabled=true;
+  } else if (X.Type[2].checked) {
+    if (X.DomainName.value=="<xvar /system/k5/realm>") {
+      X.DomainName.value=tmpDomain;
+    }
+    X.DomainName.disabled=false;
+    X.RadiusReq.disabled=true;
+  } else if (X.Type[3].checked) {
+    if (X.DomainName.value=="<xvar /system/k5/realm>") {
+      X.DomainName.value=tmpDomain;
+    }
+    X.DomainName.disabled=false;
+    X.RadiusReq.disabled=false;
+  }
+}
+function K5RealmChanged() {
+  X=document.data;
+  if (X.Type[0].checked || X.Type[1].checked || X.Type[2].checked) {
+    X.DomainName.value=X.DomainName.value.replace(/[ ]+/g,"").toUpperCase();
+  } else {
+    X.DomainName.value=X.DomainName.value.replace(/[ ]+/g,"");
+  } 
+}
+function  ProxyRadius() {
+  var newwin=window.open("kerbynet?Section=Radius&STk=<xvar STk>&Action=Proxy","ProxyRadius","top=70,left=70,width=950,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+</script>
+</head>
+<body style="color: #303030" onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="VPN">
+<input type=hidden name=Action value="SaveDomain"><input type=hidden name=STk value
+=<xvar STk>>
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td><font color=#2020D0 class=Bigger2><b>OpenVPN Authentication Domain</b></font></td><td align=right><input type=button value=Save onclick="Submitted()"><input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<hr>
+<br>
+Domain Name&nbsp;&nbsp;&nbsp;<input type=text name=DomainName size=60 onchange="K5RealmChanged()"><br>
+<br>
+<b><font color=#3030d0>Domain Type</font></b><br>
+<table width=100%>
+<tr><td align=center width=50><input type=radio name=Type value=Local onclick="Changed()"></td><td>Local Kerberos 5 Realm</td><td></td></tr>
+<tr><td align=center width=50><input type=radio name=Type value=External onclick="Changed()"></td><td>External Kerberos 5 Realm</td><td></td></tr>
+<tr><td align=center width=50><input type=radio name=Type value=Trusted onclick="Changed()"></td><td>Trusted Kerberos 5 Realm (*)</td><td></td></tr>
+<tr><td align=center width=50><input type=radio name=Type value=Radius onclick="Changed()"></td><td>RADIUS Proxy Domain (**)</td><td>Radius Request&nbsp;<select name=RadiusReq><option value='PAP' selected>PAP</option><option value='EAP-TTLS'>EAP-TTLS with PAP</option><option value='PEAP'>PEAP with MsCHAPv2</option></select></td></tr>
+</table>
+<br>
+<hr>
+<br>
+<b><font color=#3030d0>Notes:</font></b><br>
+<font class=Smaller1>
+(*) To create a Trusted Kerberos 5 Realm use <a href="#" onclick="crossauth_k5()">K5 Cross-Realm Setup</a> and add an <i>Outgoing</i> trust relationship. The same operation you have to do in the foreign KDC but adding an <i>Incoming</i> trust relationship with the same password.<br><br>
+(**) RADIUS authentication uses the local RADIUS server to proxy the authentication requests to an external server. To configure the RADIUS Proxy Domains use <a href="#" onclick="ProxyRadius()">Proxy Setup</a>
+</font>
+</form>
+</body>
+</html>

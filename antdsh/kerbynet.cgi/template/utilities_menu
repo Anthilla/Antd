@@ -1,0 +1,36 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function ip_check() {
+   top.body.location="kerbynet?Section=Router&STk=<xvar STk>&Action=CheckIP";
+}
+function query() {
+   newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=Lookup&DNS=localhost", "dnsquery","top=200,left=150,width=800,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function manpage(ManualPage) {
+   newwin=open("kerbynet?Action=Render&Object=man_page&STk=<xvar STk>&Page="+ManualPage, "Manual: "+ManualPage,"top=250,left=200,width=850,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+</script>
+
+</script>
+</head>
+<body topmargin="0" text="#000000" onload="ip_check()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23" bgcolor="#6060FF" width=100%>
+  <tr>
+    <td width="136" bgcolor="#FFFFFF">
+    <p align="center"><b><font color="#4040f0">UTILITIES</font></b></td>
+    <td width="135" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="ip_check()"><font color="#FFFFFF"><b>
+    IP Check</b></font></td>
+    <td nowrap  align="center" width="135" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="query()"><font color="#FFFFFF"><b>DNS Lookup</b></font></td>
+    <td nowrap  align="center" width="135" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="manpage('')"><font color="#FFFFFF"><b>Man Pages</b></font></td>
+    <td align="center" width=120></td>
+    <td align="center"></td>
+  </tr>
+</table>
+</body>
+</html>

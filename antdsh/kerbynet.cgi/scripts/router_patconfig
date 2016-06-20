@@ -1,0 +1,66 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ENTRY="$1"
+[ -z "$ENTRY" ] && exit 1
+CONFIG="$REGISTER/system/net/router/PAT/$ENTRY"
+cd $CONFIG || exit 1
+INTERFACE=`cat Interface` 
+VIRTUALIP=`cat VirtualIP 2>/dev/null`
+[ -z "$VIRTUALIP" ] && VIRTUALIP=ANY 
+PROTOCOL=`cat Protocol`
+LOCALPORT=`cat LocalPort`
+REMOTEIP=`cat RemoteIP`
+REMOTEPORT=`cat RemotePort`
+if [ "$INTERFACE" != ALL ] ; then
+  INT="-i $INTERFACE"
+fi
+if [ "$VIRTUALIP" != ANY ] ; then
+  VIP="-d $VIRTUALIP"
+fi
+if echo $REMOTEIP |grep -q "\-" ; then
+  DST="-miprange --dst-range $REMOTEIP"
+else
+  DST="-d $REMOTEIP"
+fi
+#if ! iptables -t nat -A SNATVS $DST -p $PROTOCOL --dport $REMOTEPORT -j MASQUERADE ; then
+#  exit 2
+#fi
+###################################################################
+# Multiport Router PAT patch v0.3-r14.12.08 for ZeroShell v1.0b11 #
+# by Massimiliano Cianelli <info at it-connect dot it>            #
+###################################################################
+if echo $LOCALPORT | grep -q "-"; then
+ LOCALPORT=`echo $LOCALPORT | sed -e 's#-#:#g'`
+fi
+
+if echo $LOCALPORT | grep -q ","; then
+ i=0
+ for f in `echo $LOCALPORT | sed -e 's#,#\n#g' `; do
+  LOCALPORT[$i]=$f
+  let i=$i+1
+ done
+ im=$i
+ i=0
+ for f in `echo $REMOTEPORT | sed -e 's#,#\n#g' `; do
+  REMOTEPORT[$i]=$f
+  let i=$i+1
+ done
+ i=0
+ while [ $i -lt $im ]; do
+  if [ $PROTOCOL == "tcp/udp" ]; then
+   iptables -t nat -A PREROUTING $INT $VIP -p tcp --dport ${LOCALPORT[$i]} -j DNAT --to $REMOTEIP:${REMOTEPORT[$i]}
+   iptables -t nat -A PREROUTING $INT $VIP -p udp --dport ${LOCALPORT[$i]} -j DNAT --to $REMOTEIP:${REMOTEPORT[$i]}
+  else
+   iptables -t nat -A PREROUTING $INT $VIP -p $PROTOCOL --dport ${LOCALPORT[$i]} -j DNAT --to $REMOTEIP:${REMOTEPORT[$i]}
+  fi
+  let i=$i+1
+ done
+else
+ if [ $PROTOCOL == "tcp/udp" ]; then
+  iptables -t nat -A PREROUTING $INT $VIP -p tcp --dport $LOCALPORT -j DNAT --to $REMOTEIP:$REMOTEPORT
+  iptables -t nat -A PREROUTING $INT $VIP -p udp --dport $LOCALPORT -j DNAT --to $REMOTEIP:$REMOTEPORT
+ else
+  iptables -t nat -A PREROUTING $INT $VIP -p $PROTOCOL --dport $LOCALPORT -j DNAT --to $REMOTEIP:$REMOTEPORT
+ fi
+fi
+###################################################################

@@ -1,0 +1,4 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+TPL="$1"
+sed 's/<xvar /<ZS_TAG /g' <"$TEMPLATE/$TPL"

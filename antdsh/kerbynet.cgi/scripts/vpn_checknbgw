@@ -1,0 +1,13 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+VPN="$1"
+CONFIG="$REGISTER/system/net/interfaces/$VPN"
+GW="`cat $CONFIG/Gateway 2>/dev/null`"
+if [ "`cat $REGISTER/system/net/nb/Enabled 2>/dev/null`" = yes ] ; then
+  if [ -n "$GW" -a "$GW" != Auto ] ; then
+    if ! ip ro sh ta 1$GW 2>/dev/null |grep -q -w ^default ; then
+      GWDESC="`cat $REGISTER/system/net/nb/Gateways/$GW/Description 2>/dev/null`"
+      exit 25
+    fi
+  fi
+fi

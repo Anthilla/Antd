@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+removezombievlan $INTERFACE
+CONFIG="$REGISTER/system/net/interfaces/"
+if ! [ -r "$CONFIG/$INTERFACE/Bridge/Name" -o -r "$CONFIG/$INTERFACE/Bond/Name" ] ; then
+  if cd "$CONFIG/$INTERFACE/VLAN" 2>/dev/null ; then
+    VLANS=`ls`
+    for VLAN in $VLANS ; do
+        $SCRIPTS/setinterface $INTERFACE.$VLAN
+    done
+  fi
+fi
+

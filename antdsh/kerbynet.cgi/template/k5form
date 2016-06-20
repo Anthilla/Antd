@@ -1,0 +1,230 @@
+<html>
+
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>K5 Form</title>
+<base target="_self">
+<script Language="Javascript">
+<!--
+function nochangeprincipal() {
+   if (document.k5data.Principal.value!="<xvar Principal>" && document.k5data.Action.value=="SaveEdit") {
+    alert("<xvar #NoChangePrincipal>");
+    document.k5data.Principal.value="<xvar Principal>";
+    return false;
+   }
+}
+function validate() {
+   if (document.k5data.Principal.value=="" && document.k5data.Action.value=="SaveAdd") {
+     alert("<xvar #NoPrincipalEmpty>");
+     return false;
+   }
+   if (document.k5data.Action.value=="SaveEdit") {
+     document.k5data.Principal.value="<xvar Principal>";
+     REALM="<xvar /system/k5/realm>";
+     PRINC=document.k5data.Principal.value;
+     if (PRINC=="K/M@"+REALM) {
+       alert("You cannot change the principal "+PRINC+" because it is related to the Master Key.");
+       return false;
+     }
+     if (PRINC=="kadmin/admin@"+REALM || PRINC=="kadmin/changepw@"+REALM || PRINC=="kadmin/history@"+REALM) {
+       alert("You cannot change the principal "+PRINC+" because it is related to the Kerberos kadmin service.");
+       return false;
+     }
+   }
+   if (document.k5data.pw.value=="" && !document.k5data.Randkey.checked && document.k5data.Action.value=="SaveAdd") {
+     alert("<xvar #NoPasswdEmpty>");
+     return false;
+   }
+   if (document.k5data.pw.value!=document.k5data.pw2.value && !document.k5data.Randkey.checked) {
+     alert("<xvar #PasswordMismatch>");
+     document.k5data.pw.focus();
+     return false;
+   }
+   if (document.k5data.Principal.value.indexOf("@")>0) {
+     PrincNoRealm=document.k5data.Principal.value.substr(0,document.k5data.Principal.value.indexOf("@"));
+   } else {
+     PrincNoRealm=document.k5data.Principal.value;
+   }
+   if (document.k5data.pw.value==PrincNoRealm && !document.k5data.Randkey.checked) {
+     alert("Password cannot be the same as username because is easy to guess.");
+     document.k5data.pw.focus();
+     return false;
+   }
+   key="";
+   for (i=0; i<document.k5data.Encryption.length; i++) {
+      key+=document.k5data.Encryption.options[i].value;
+      if (i<document.k5data.Encryption.length-1)
+         key+="|";
+   }
+   if (key=="") {
+     alert("<xvar #NoEncryptionSelected>");
+     document.k5data.Encryption.focus();
+     return false;
+   }
+   if (key!=document.k5data.Key.value && document.k5data.pw.value=="" && !document.k5data.Randkey.checked && document.k5data.Action.value=="SaveEdit") {
+      alert("<xvar #YouNeedPasswordChange>");
+      document.k5data.pw.focus();
+      return false;
+   }
+   document.k5data.Key.value=key;
+}
+
+function writeSelect(begin,end,selected) {
+   document.write("<option></option>");
+   for (i=begin;i<=end;i++) {
+      document.write("<option"+(i==selected?" selected":"")+">"+(i<10?"0":"")+i+"</option>");
+   }
+}
+function searchEncryption(E) {
+   for (i=0; i<document.k5data.Encryption.length; i++) {
+      if (E==document.k5data.Encryption.options[i].value) 
+          return i;       
+   }
+   return -1;
+}
+function addEncryption() {
+   if (document.k5data.SupportedEncryption.selectedIndex>-1 && document.k5data.SupportedSalt.selectedIndex>-1) {
+      if (document.k5data.SupportedSalt.options[document.k5data.SupportedSalt.selectedIndex].value.substr(0,3)=="AFS" && document.k5data.SupportedEncryption.options[document.k5data.SupportedEncryption.options.selectedIndex].value!="DES cbc mode with CRC-32") {
+        alert("AFS salt can be used only with DES cbc mode with CRC-32 encryption.");
+        return;
+      }
+      KeyEnc=document.k5data.SupportedEncryption.options[document.k5data.SupportedEncryption.options.selectedIndex].value+", "+document.k5data.SupportedSalt.options[document.k5data.SupportedSalt.selectedIndex].value;
+    if (searchEncryption(KeyEnc)==-1) { 
+      document.k5data.Encryption.options[document.k5data.Encryption.length]=new Option(KeyEnc,KeyEnc,true,true);
+    } else {
+      alert("<xvar #EncryptionAlreadyPresent>");
+    }
+   }
+}
+function delEncryption() {
+  if (document.k5data.Encryption.selectedIndex>-1) {
+     document.k5data.Encryption.options[document.k5data.Encryption.selectedIndex]=null;
+  }
+}
+function loaded() {
+}
+//-->
+</script>
+</head>
+
+<body onload="loaded()" topmargin=0>
+<font color="#FF0000"><xvar errormsg></font>
+<hr>
+<font class=Bigger1 color=#4040e0>&nbsp;&nbsp;<b><xvar Principal><script>if ("<xvar _Principal>"=="") document.write("New Kerberos 5 Principal");</script></b></font>
+<hr>
+<form name="k5data" method="post" action="kerbynet" onsubmit="return validate()">
+    <input type=hidden name=Section value=K5>
+    <input type=hidden name=Action value=<xvar _Action>><input type=hidden name=STk value=<xvar STk>>
+    <input type=hidden name=principal_sel value="<xvar _principal_sel>">
+    <input type=hidden name=user_sel value="<xvar _user_sel>">
+    <input type=hidden name=host_sel value="<xvar _host_sel>">
+    <input type=hidden name=x509cn value="<xvar _x509cn>">
+    <input type=hidden name=Key value="<xvar _Key>">
+    <input type=hidden name=type value="<xvar _type>">
+<br>
+    Principal <input type=text size=50 name=Principal value="<xvar _Principal>"><br>
+<table width=100% cellspacing=0><tr>
+<td>
+<table cellpadding=0>
+<tr><td>
+Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font class=Smaller1><input type=checkbox name=Randkey value=Yes <xvar RandKeyChecked>><i>Randkey</i></font><br><input type=password name=pw class=Smaller12 style="height: 20;"  autocomplete="off" onfocus="select()">&nbsp;
+</td></tr><tr><td>
+<table width=100%><tr><td>Confirm<br><input type=password name=pw2 size=12 style="height: 20;" onfocus="select()"  autocomplete="off">&nbsp;</td><td>Kvno<br><input type=text name=Kvno style="height: 20;" value="<xvar _Kvno>" size=3></td></tr></table>
+</td></tr></table>
+</td>
+<td>
+<span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;Time Limits&nbsp;</font></span>
+<table border=1 cellpadding=0 width=100%>
+  <tr>
+     <td align=center>&nbsp;Max Ticket life&nbsp;</td>
+      <td width=5%>   
+        <table cellpadding=0 cellspacing=0>
+          <tr>
+          
+             <td><font class=Smaller1 color=#000000>Days<br><select name=Maximum_ticket_life_days  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,99,"<xvar Maximum_ticket_life_days>"==""?"0":"<xvar Maximum_ticket_life_days>");</script></select></font></td>
+             <td><font class=Smaller1 color=#000000>Hours<br><select name=Maximum_ticket_life_hours  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,23,"<xvar Maximum_ticket_life_hours>"==""?"0":"<xvar Maximum_ticket_life_hours>");</script></select></font></td>
+             <td><font class=Smaller1 color=#000000>Minutes<br><select name=Maximum_ticket_life_minutes  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,59,"<xvar Maximum_ticket_life_minutes>"==""?"0":"<xvar Maximum_ticket_life_minutes>");</script></select></font></td>
+           </tr>
+         </table>
+     </td>
+     <td align=center>&nbsp;Max Renewable Time&nbsp;</td>
+      <td width=5%>   
+        <table cellpadding=0 cellspacing=0>
+          <tr>
+             <td><font class=Smaller1 color=#000000>Days<br><select name=Maximum_renewable_life_days  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,99,"<xvar Maximum_renewable_life_days>"==""?"0":"<xvar Maximum_renewable_life_days>");</script></select></font></td>
+             <td><font class=Smaller1 color=#000000>Hours<br><select name=Maximum_renewable_life_hours  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,23,"<xvar Maximum_renewable_life_hours>"==""?"0":"<xvar Maximum_renewable_life_hours>");</script></select></font></td>
+             <td><font class=Smaller1 color=#000000>Minutes<br><select name=Maximum_renewable_life_minutes  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,59,"<xvar Maximum_renewable_life_minutes>"==""?"0":"<xvar Maximum_renewable_life_minutes>");</script></select></font></td>
+          </tr>  
+        </table>
+     </td>
+  </tr>
+</table>
+<table border=1 cellpadding=0 width=100%>
+  <tr>
+     <td align=center>&nbsp;Principal Expiration&nbsp;</td>
+      <td width=5%i nowrap>   
+         <font class=Smaller1 color=#000000>
+             <select name=Expiration_date_mm  style="font-size: 8pt;"><script language=Javascript>writeSelect(1,12,"<xvar Expiration_date_mm>"==""?"0":"<xvar Expiration_date_mm>");</script></select></font> /
+             <select name=Expiration_date_dd  style="font-size: 8pt;"><script language=Javascript>writeSelect(1,31,"<xvar Expiration_date_dd>"==""?"0":"<xvar Expiration_date_dd>");</script></select> /
+             <select name=Expiration_date_yyyy  style="font-size: 8pt;"><script language=Javascript>writeSelect(2000,2037,"<xvar Expiration_date_yyyy>"==""?"0":"<xvar Expiration_date_yyyy>");</script></select>
+         </font>
+     </td>
+     <td align=center>&nbsp;Pw Expiration&nbsp;</td>
+      <td width=5% nowrap>
+         <font class=Smaller1 color=#000000>
+             <select name=Password_expiration_date_mm  style="font-size: 8pt;"><script language=Javascript>writeSelect(1,12,"<xvar Password_expiration_date_mm>"==""?"0":"<xvar Password_expiration_date_mm>");</script></select></font> / <select name=Password_expiration_date_dd  style="font-size: 8pt;"><script language=Javascript>writeSelect(1,31,"<xvar Password_expiration_date_dd>"==""?"0":"<xvar Password_expiration_date_dd>");</script></select> / <select name=Password_expiration_date_yyyy  style="font-size: 8pt;"><script language=Javascript>writeSelect(2000,2037,"<xvar Password_expiration_date_yyyy>"==""?"0":"<xvar Password_expiration_date_yyyy>");</script></select></font>
+      </td>
+   </tr>
+</table>
+</td>
+
+
+</tr>
+</table>
+<br>
+    <span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;Attributes&nbsp;</font></span> 
+    <table width=100% border=1 style="color: #303030;">
+       <tr>
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_postdated value=Checked <xvar allow_postdated>>&nbsp;Allow Postdated</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_forwardable value=Checked <xvar allow_forwardable>>&nbsp;Allow Forwardable</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_tgs_req value=Checked <xvar allow_tgs_req>>&nbsp;Allow TGS Request</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_renewable value=Checked <xvar allow_renewable>>&nbsp;Allow Renewable</font></td>       
+       </tr>
+       <tr>
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_proxiable value=Checked <xvar allow_proxiable>>&nbsp;Allow Proxiable</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_dup_skey value=Checked <xvar allow_dup_skey>>&nbsp;Allow User-to-User Authentication</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_tix value=Checked <xvar allow_tix>>&nbsp;Allow Authentication</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=allow_svr value=Checked <xvar allow_svr>>&nbsp;Allow Service Tickets</font></td>       
+       </tr>
+       <tr>
+           <td nowrap><font class=Smaller1><input type=checkbox name=requires_preauth value=Checked <xvar requires_preauth>>&nbsp;Require Preauthentication</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=requires_hwauth value=Checked <xvar requires_hwauth>>&nbsp;Require Hardware Authentication</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=needchange value=Checked <xvar needchange>>&nbsp;Require a Password Change</font></td>       
+           <td nowrap><font class=Smaller1><input type=checkbox name=password_changing_service value=Checked <xvar password_changing_service>>&nbsp;Password Change Service</font></td>       
+       </tr>
+    </table>
+<br>
+<span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;Encryption Keys&nbsp;</font></span> 
+    <table border=1 width=100%>
+      <tr>
+        <td width=446>
+            <select name=SupportedEncryption style="width: 245;  font-size: 8pt; color: #0000FF">
+               <xvar _SupportedEncryption>
+            </select>
+            <select name=SupportedSalt style="width: 140; font-size: 8pt; color: #0000FF">
+               <xvar _SupportedSalt>
+            </select>
+            <input type=button name=B1 value=" + " onclick="addEncryption()" style="height:20; width:25;"><input type=button name=B1 value=" - " onclick="delEncryption ()" style="height:20; width:25;">
+            <select name=Encryption size=5 style="width: 446">
+               <xvar _ComboEncryption>
+            </select>
+        </td>
+        <td>
+             <p align="center"><xvar _subres></p>
+        </td>
+      </tr>
+    </table>
+</form>
+
+</body>
+
+</html>

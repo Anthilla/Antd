@@ -1,0 +1,21 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USER="$1"
+PW="$2"
+if [ -z "$PW" ] ; then
+  echo "Password cannot be empty." >&2
+  exit 1
+fi
+if [ "`echo "$USER" | awk '{print tolower($0)}'`" == admin ] ; then
+   ADMIN=yes
+   USER=admin
+fi
+cat <<EOF | ldapmodify -x -D"cn=Manager,`$SCRIPTS/getkey /system/ldap/base`" -w "`$SCRIPTS/getkey /system/ldap/rootpw`" >/dev/null
+DN: cn=$USER,ou=Radius,`cat $REGISTER/system/ldap/base`
+replace: sn
+sn: $PW
+EOF
+if [ "$ADMIN" == yes ] ; then 
+    echo "$PW" > $REGISTER/system/ldap/rootpw
+    $SCRIPTS/slapdrestart
+fi

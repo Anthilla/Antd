@@ -1,0 +1,253 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>User Form</title>
+<script>
+function expireChanged() {
+  document.userdata.UpdateExpire.value="yes";
+}
+function DisplayAccounting() {
+  X=document.userdata;
+  C=X.ClassName.value;
+  document.getElementById("idMB").innerHTML="&nbsp;"+MB_[C]+" MB&nbsp;"; 
+  document.getElementById("idHOURS").innerHTML="&nbsp;"+HOURS_[C]+" h&nbsp;"; 
+  document.getElementById("idMBITS").innerHTML="&nbsp;"+MBITS_[C]+" Mb/s&nbsp;"; 
+  document.getElementById("idCOSTM").innerHTML="&nbsp;"+COSTM_[C]+"/MB&nbsp;"; 
+  document.getElementById("idCOSTH").innerHTML="&nbsp;"+COSTH_[C]+"/h&nbsp;"; 
+  document.getElementById("idTYPE").innerHTML="&nbsp;"+TYPE_[C]+"&nbsp;"; 
+}
+function nochangeuid() {
+   if (document.userdata.uid.value!="<xvar uid>" && document.userdata.Action.value=="SaveEdit") {
+    alert("<xvar #NoChangeUsername>");
+    document.userdata.uid.value="<xvar uid>";
+    return false;
+   }
+   return true;
+}
+function AutoHome() {
+  Prefix="<xvar /system/users/HomeDirPrefix>";
+  if (document.userdata.homeDirectory.value=="" && document.userdata.uid.value!="" && Prefix!="") {
+     document.userdata.homeDirectory.value=Prefix+"/"+document.userdata.uid.value;
+  }
+}
+function AutoDesc() {
+  X=document.userdata;
+  if (X.gecos.value=="") {
+    if (X.givenName.value!="") {
+        X.gecos.value=X.givenName.value+" "+X.sn.value;
+        if (X.o.value!="") X.gecos.value+=" - "+X.o.value;
+    }
+  }
+}
+function writeSelect(begin,end,selected) {
+   document.write("<option></option>");
+   for (i=begin;i<=end;i++) {
+      document.write("<option value='"+(i<10?"0":"")+i+"' "+(i==selected?" selected":"")+">"+(i<10?"0":"")+i+"</option>");
+   }
+}
+
+function validate() {
+   if (document.userdata.uid.value=="" && document.userdata.Action.value=="SaveAdd") {
+    alert("<xvar #NoUsernameEmpty>");
+    document.userdata.uid.select();
+    return false;
+   }
+   AutoHome();
+   AutoDesc();
+   document.userdata.vlan.value=document.userdata.vlan.value.replace(/(^\s+)|(\s+$)/g,"");
+   if (document.userdata.vlan.value!="" && (document.userdata.vlan.value<1 || document.userdata.vlan.value>4094 || ! /^[0123456789]*$/.test(document.userdata.vlan.value))) {
+    alert("VLAN ID must be between 1 and 4094.");
+    document.userdata.vlan.select();
+    return false;
+   }
+   if (document.userdata.givenName.value=="") {
+     alert("Fistname cannot be empty.");
+     document.userdata.givenName.focus();
+     return false;
+   }
+   if (document.userdata.sn.value=="") {
+     alert("Lastname cannot be empty.");
+     document.userdata.sn.focus();
+     return false;
+   }
+   if (document.userdata.PW.value=="" && document.userdata.Action.value=="SaveAdd") {
+     alert("Password cannot be empty.");
+     document.userdata.PW.focus();
+     return false;
+   }
+   if (document.userdata.PW.value!=document.userdata.CoPW.value) {
+     alert("<xvar #PasswordMismatch>");
+     document.userdata.PW.focus();
+     document.userdata.PW.select();
+     return false;
+   }
+   if (document.userdata.PW.value.toUpperCase()==document.userdata.uid.value.toUpperCase()) {
+     alert("Password cannot be the same as username because is easy to guess.");
+     document.userdata.PW.focus();
+     document.userdata.PW.select();
+     return false;
+   }
+   if (document.userdata.Expiration_date_mm.value!="" || document.userdata.Expiration_date_dd.value!="" || document.userdata.Expiration_date_yyyy.value!="") {
+      if (document.userdata.Expiration_date_mm.value=="" || document.userdata.Expiration_date_dd.value=="" || document.userdata.Expiration_date_yyyy.value=="") {
+        alert("Account expiration is not a valid date.");
+        document.userdata.Expiration_date_mm.focus();
+        return false;
+      }
+      document.userdata.shadowExpire.value=document.userdata.Expiration_date_mm.value+"/"+document.userdata.Expiration_date_dd.value+"/"+document.userdata.Expiration_date_yyyy.value;
+   }
+   return true;
+}
+function loaded() {
+   //document.userdata.Expiration_date_mm.value="<xvar Expiration_date_mm>"
+   //document.userdata.Expiration_date_dd.value="<xvar Expiration_date_dd>";
+   //document.userdata.Expiration_date_yyyy.value="<xvar Expiration_date_yyyy>";
+   if ("<xvar _radiusUserCategory>"!="") {
+     document.userdata.ClassName.value="<xvar _radiusUserCategory>";
+   } else {
+     document.userdata.ClassName.value="DEFAULT";
+   }
+   if (document.userdata.loginShell.value=="") {
+      document.userdata.loginShell.value="<xvar /system/users/DefaultShell>";
+   }
+   if (document.userdata.loginShell.value=="/bin/bash") {
+      document.userdata.shell[0].checked=true;
+   } else if (document.userdata.loginShell.value=="/bin/sh") {
+      document.userdata.shell[1].checked=true;
+   } else if (document.userdata.loginShell.value=="/bin/tcsh") {
+      document.userdata.shell[2].checked=true;
+   } else {
+      document.userdata.shell[3].checked=true;
+   }  
+   if (document.userdata.Action.value!="SaveAdd") {
+     if ("<xvar WIFI>"=="yes") {
+       document.userdata.WIFI.checked=true;
+     }
+     if ("<xvar K5>"=="yes") {
+       document.userdata.K5.checked=true;
+     }
+   } else {
+     document.userdata.WIFI.checked=true;
+     document.userdata.K5.checked=true;
+   }
+   MB_=new Array();
+   HOURS_=new Array();
+   MBITS_=new Array();
+   COSTM_=new Array();
+   COSTH_=new Array();
+   TYPE_=new Array();
+   <xvar +acctClassArray>
+   DisplayAccounting();
+}
+</script>
+</head>
+<body onload="loaded()" topmargin=0>
+<form name="userdata" method="post" action="kerbynet" onsubmit="return validate()">
+<p><font color="#FF0000"><xvar errormsg> </font></p>
+<hr>
+<table width=100%><tr>
+<td nowrap><font class=Bigger2 color=#4040e0><b><xvar gecos> (<xvar uid><script>if ("<xvar _gecos>"=="") document.write("New User");</script>)</b></font></td>
+<td nowrap align=right width=1%><xvar _subres>&nbsp;&nbsp;</td>
+</tr></table>
+<hr><br>
+<input type=hidden name=Section value=User>
+<input type=hidden name=Action value=<xvar _Action>><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=user_sel value="<xvar _user_sel>">
+<input type=hidden name=type value="user">
+<input type=hidden name=x509cn value="<xvar _x509cn>">
+<input type=hidden name=shadowExpire value="">
+<input type=hidden name=UpdateExpire value="no">
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Account Information&nbsp;</span>
+<table width=100% border=1 style="color: #404040" cellpadding=6>
+<tr>
+<td width=10% nowrap>
+&nbsp;Username&nbsp;&nbsp;<input type="text" name="uid" value="<xvar _uid>" size="25" onchange="nochangeuid()">
+&nbsp;&nbsp;&nbsp;<font class=Smaller1>UID</font>&nbsp;&nbsp;<input type="text" name="uidNumber" value="<xvar _uidNumber>"  size="10">
+</td>
+<td nowrap align=right>&nbsp;Primary&nbsp;Group&nbsp;&nbsp;<xvar _comboboxgroup>
+&nbsp;&nbsp;&nbsp;<font class=Smaller1>GID</font>&nbsp;&nbsp;<input type="text" name="gidNumber" value="<xvar _gidNumber>"  size="10">
+</td>
+</tr>
+</table>
+<table border=1 style="color: #404040" width=100% cellpadding=6 >
+<tr>
+<td nowrap>
+&nbsp;Home Directory&nbsp;&nbsp;<input type="text" name="homeDirectory" value="<xvar _homeDirectory>" size="28" onfocus="AutoHome()">
+</td>
+<td nowrap width=1% align=right>&nbsp;Default Shell&nbsp;&nbsp;
+<font color=#008000>
+<input type="radio" value="bash"  name="shell" onclick="document.userdata.loginShell.value='/bin/bash'">&nbsp;bash&nbsp;&nbsp;
+<input type="radio" name="shell" value="sh" onclick="document.userdata.loginShell.value='/bin/sh'">&nbsp;sh&nbsp;&nbsp;
+<input type="radio" name="shell" value="tcsh" onclick="document.userdata.loginShell.value='/bin/tcsh'">&nbsp;tcsh&nbsp;&nbsp;
+<input type="radio" name="shell" value="other" onclick="document.userdata.loginShell.select()">&nbsp;other&nbsp;&nbsp;
+<input type="text" name="loginShell" value="<xvar _loginShell>" size="12">
+</font>
+</td>
+</tr>
+</table>
+<br><br>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;User Information&nbsp;</span>
+<table width=100% border=1 style="color: #404040" cellpadding=6>
+<tr>
+<td nowrap>
+&nbsp;Firstname&nbsp;&nbsp;<input type="text" name="givenName" value="<xvar _givenName>" size="19">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lastname&nbsp;&nbsp;<input type="text" name="sn" value="<xvar _sn>" size="19">
+</td>
+<td nowrap align=right>
+&nbsp;Organization&nbsp;&nbsp;<input type="text" name="o" value="<xvar _o>" size="28">
+</td>
+</tr>
+</table>
+<table border=1 style="color: #404040" width=100% cellpadding=6>
+<tr>
+<td nowrap>
+&nbsp;Description&nbsp;&nbsp;<input type="text" name="gecos" value="<xvar _gecos>" size="32" onfocus="AutoDesc()">
+</td>
+<td nowrap>
+&nbsp;E-Mail&nbsp;&nbsp;<input type="text" name="mail" value="<xvar _mail>" size="28">
+</td>
+<td nowrap align=right>
+&nbsp;Phone&nbsp;&nbsp;<input type="text" name="telephoneNumber" value="<xvar _telephoneNumber>" size="14">
+</td>
+</tr>
+</table>
+<br><hr>
+<table width=100% cellpadding=6><tr valign=bottom>
+
+
+<td>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;RADIUS Accounting&nbsp;</span>
+<table border=1 width=100%><tr><td>
+<table style="color: #404040" width=100% cellpadding=4><tr><td nowrap>&nbsp;Expiration (mm/dd/yyyy)</td><td></td>
+
+<td align=right nowrap>
+        <select name=Expiration_date_mm  style="font-size: 8pt;" onchange="expireChanged()"><script language=Javascript>writeSelect(1,12,"<xvar Expiration_date_mm>"==""?"0":"<xvar Expiration_date_mm>");</script></select>&nbsp;/&nbsp;<select name=Expiration_date_dd  style="font-size: 8pt;" onchange="expireChanged()"><script language=Javascript>writeSelect(1,31,"<xvar Expiration_date_dd>"==""?"0":"<xvar Expiration_date_dd>");</script></select>&nbsp;/&nbsp;<select name=Expiration_date_yyyy  style="font-size: 8pt;" onchange="expireChanged()"><script language=Javascript>writeSelect(2000,2037,"<xvar Expiration_date_yyyy>"==""?"0":"<xvar Expiration_date_yyyy>");</script></select>&nbsp;
+<tr><td nowrap>&nbsp;Accounting Class</td><td></td><td align=right><select name=ClassName width=100% onchange="DisplayAccounting()"><xvar +acctSelectClass></select>&nbsp;</td></tr>
+</td>
+</tr>
+<tr>
+<td><iframe name=UserCredit width=100% height=40 marginwidth=0 src="kerbynet?Section=Acct&STk=<xvar STk>&Action=ViewCredit&Username=<xvar _uid>" border=0 frameborder=0>iframe not supported</iframe></td>
+<td nowrap width=1%>&nbsp;Limits<br><table border=1><tr><td id="idMB" nowrap></td><td id="idHOURS" nowrap></td><td id="idMBITS" nowrap></td></tr></table></td><td width=1%>&nbsp;Costs&nbsp;<span id=idTYPE class=Smaller1></span><br><table border=1><tr><td id="idCOSTM" nowrap></td><td id="idCOSTH" nowrap></td></tr></table></td>
+</tr>
+</table>
+</td></tr></table>
+</td>
+
+
+<td width=1%>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;User Password&nbsp;</span>
+<table border=1 style="color: #404040" cellpadding=6>
+<tr><td width=1% nowrap>&nbsp;Password<br>&nbsp;<input type=password name=PW size=25 autocomplete="off">&nbsp;<br>
+&nbsp;Confirm<br>&nbsp;<input type=password name=CoPW size=25  autocomplete="off">&nbsp;</td></tr>
+</table>
+</td>
+<td>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Authentication Protocol&nbsp;</span>
+<table width=100% border=1 style="color: #606060" cellpadding=6>
+<tr><td nowrap>&nbsp;Kerberos 5</td><td width=1%><input type=checkbox name=K5 value=yes></td></tr>
+<tr><td nowrap>&nbsp;RADIUS&nbsp;&nbsp;(<font class=Smaller1>VLAN</font>&nbsp;<input type=text size=4 maxlength=4 name=vlan value="<xvar vlan>">)</td><td width=1%><input type=checkbox name=WIFI value=yes></td></tr>
+</table>
+</td>
+
+</tr></table>
+<hr>
+</body>
+</html>

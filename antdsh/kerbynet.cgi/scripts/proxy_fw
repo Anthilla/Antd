@@ -1,0 +1,64 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/havp/redirects
+cd "$CONFIG" || exit 0
+$SCRIPTS/proxy_fw_reset
+if [ "`cat $REGISTER/system/havp/Enabled`" != yes ] ; then
+  exit
+fi
+PORT="`cat $REGISTER/system/havp/PORT 2>/dev/null`"
+if ! iptables -t nat -L Proxy -n >/dev/null 2>/dev/null ; then
+  iptables -t nat -N Proxy
+  iptables -N Proxy
+  iptables -t nat -I CapPortProxy 1 -p tcp --dport 80 -j Proxy 2>/dev/null
+fi
+iptables -t nat -F Proxy
+iptables -t nat -D PREROUTING -p tcp --dport 80 -j Proxy 2>/dev/null
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j Proxy
+iptables -F Proxy
+iptables -A Proxy -j DROP
+iptables -D INPUT -p tcp --dport $PORT -j Proxy 2>/dev/null
+iptables -A INPUT -p tcp --dport $PORT -j Proxy
+OBJECTS=`ls -d * 2>/dev/null`
+for O in $OBJECTS ; do
+  ACTION=`cat $O/Action`
+  INTERFACE=`cat $O/Interface`
+  DESTINATIONIP=`cat $O/DestinationIP`
+  SOURCEIP=`cat $O/SourceIP`
+  if [ "$ACTION" == Capture ] ; then
+    IPT="iptables -t nat -A Proxy -p tcp"
+    TARGET="REDIRECT --to-ports $PORT"
+    TARGET2="ACCEPT"
+  else
+    IPT="iptables -t nat -I Proxy 1 -p tcp"
+    TARGET="ACCEPT"
+    TARGET2="DROP"
+  fi
+  IF=""
+  if [ -n "$INTERFACE" ] ; then
+    if [ -f $REGISTER/system/net/interfaces/$INTERFACE/Bridge/Name ] ; then    
+      IF="-m physdev --physdev-in $INTERFACE"
+    else
+      IF="-i $INTERFACE"
+    fi
+  fi
+  SRC=""
+  if [ -n "$SOURCEIP" ] ; then
+    if echo "$SOURCEIP" | grep -q  '-' ; then
+      SRC="-m iprange --src-range $SOURCEIP"
+      echo $SRC
+    else
+      SRC="-s $SOURCEIP"
+    fi
+  fi 
+  DST=""
+  if [ -n "$DESTINATIONIP" ] ; then
+    if echo "$DESTINATIONIP" | grep -q  '-' ; then
+      DST="-m iprange --dst-range $DESTINATIONIP"
+    else
+      DST="-d $DESTINATIONIP"
+    fi
+  fi 
+  $IPT $IF $SRC $DST -j $TARGET
+  iptables -I Proxy 1 $IF $SRC $DST -j $TARGET2
+done

@@ -27,8 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
-using antdlib.Terminal;
+using antdlib.common;
 using Nancy;
 using Nancy.Security;
 
@@ -40,17 +39,17 @@ namespace Antd.Modules {
 
             Get["/autoupdate"] = x => {
                 Terminal.Execute($"mono {Parameter.RootFrameworkAntdsh}/{Parameter.ExeAntdsh} update antd");
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Get["/update/{context}"] = x => {
                 antdlib.Antdsh.UpdateObject.Update((string)x.context);
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/update/{context}"] = x => {
                 antdlib.Antdsh.UpdateObject.Update((string)x.context);
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
         }
     }

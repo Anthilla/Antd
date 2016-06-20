@@ -1,0 +1,6 @@
+#!/bin/sh
+if ps -e |grep -w -q pptpd ; then
+  echo "<font color=#00b000>ACTIVE</font>"
+else
+  echo "<font color=#ff0000>DOWN</font>"
+fi

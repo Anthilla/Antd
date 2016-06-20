@@ -1,0 +1,59 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/net/nb
+STATUSDIR=/tmp/nb/Gateways
+Timeout="`cat $CONFIG/FO/Timeout 2>/dev/null`"
+IP[1]="`cat $CONFIG/FO/IP1 2>/dev/null`"
+IP[2]="`cat $CONFIG/FO/IP2 2>/dev/null`"
+IP[3]="`cat $CONFIG/FO/IP3 2>/dev/null`"
+EnabledIP[1]="`cat $CONFIG/FO/EnabledIP1 2>/dev/null`"
+EnabledIP[2]="`cat $CONFIG/FO/EnabledIP2 2>/dev/null`"
+EnabledIP[3]="`cat $CONFIG/FO/EnabledIP3 2>/dev/null`"
+cd $CONFIG/Gateways
+GWS=""
+for G in `ls -d *` ; do
+  [ "`cat $G/Enabled 2>/dev/null`" = yes ] && GWS="$GWS $G"
+done
+IPS=""
+for I in 1 2 3 ; do
+  if [ "${EnabledIP[$I]}" = yes ] ; then
+    IPS="$IPS $I"
+  fi
+done
+ERROR=""
+killall -w failoverd 2>/dev/null
+logger -t NetBalancer "(TEST) =============================================================="
+for G in $GWS ; do
+  W=`cat $G/IP 2>/dev/null`
+  SRC=""
+  if [ -z "$W" ] ; then
+    W="`cat $G/Interface 2>/dev/null`"
+    SRC="-I $W"
+  else
+    SRC="`ip route get $W | grep ^$W |sed -r 's/.* src (.*)/\1/'`"
+    if [ -n "$SRC" ] ; then
+       SRC="-I $SRC"
+    fi
+  fi
+  echo "(TEST) GATEWAY : `cat $G/Description 2>/dev/null` ($W)" | logger -t NetBalancer
+  for I in $IPS ; do
+    IPP=${IP[$I]}
+    iptables -t mangle --flush NB_FO_PRE
+    iptables -t mangle -I NB_FO_PRE 1 -p icmp --icmp-type echo-request -d $IPP -j MARK --set-mark 2$G
+    if ping $SRC -c 1 -w $Timeout $IPP 2>/dev/null > /tmp/nb_ping_test ; then
+      logger -t NetBalancer "(TEST) => [${IP[$I]}] : Success (Round Trip Time: `grep "time=" /tmp/nb_ping_test |awk -F"time=" '{print $2}'`)"
+    else
+      logger -t NetBalancer "(TEST) => [${IP[$I]}] : ERROR"
+      ERROR=yes
+    fi
+  done
+
+done
+iptables -t mangle --flush NB_FO_PRE
+logger -t NetBalancer "(TEST) =============================================================="
+$SCRIPTS/nb_startfo
+if [ -z "$ERROR" ] ; then
+  exit 0
+else
+  exit 1
+fi

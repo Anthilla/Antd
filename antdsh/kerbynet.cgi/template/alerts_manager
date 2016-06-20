@@ -1,0 +1,204 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Alerts</title>
+<script>
+<xinclude ip_utility.inc>
+function ListEvents () {
+  document.getElementById('FrameEvents').contentDocument.location="kerbynet?STk=<xvar STk>&Action=Render&Object=alerts_event_list";
+}
+function AlertsLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=Alerts","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function EnabledAlerts() {
+  X=document.data;
+  SaveMsg();
+}
+function Recipients() {
+   newwin=open("kerbynet?Action=Render&STk=<xvar STk>&Object=alerts_recipients", "alertsrecipients","top=200,left=200,width=800,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function AlertTest(Type) {
+   newwin=open("kerbynet?Action=Render&STk=<xvar STk>&Object=alerts_test&EventID=TEST&Type="+Type, "alertstest","top=300,left=300,width=720,height=400,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function savedata(obj) {
+   X=document.data;
+   if (X.Identity.value.replace(/(^\s+)|(\s+$)/g,"")=="") {
+     alert("The identity field cannot be emty");
+     X.Identity.focus();
+     X.Identity.select();
+     return;
+   }
+   if (isNaN(X.MaxAge.value)) {
+     alert("Invalid Max Age. Leave blank for No Limit.");
+     X.MaxAge.focus();
+     X.MaxAge.select();
+     return;
+   }
+   if (X.SMTPPort.value.replace(/(^\s+)|(\s+$)/g,"")!="" && !isValidPort(X.SMTPPort.value)) {
+     alert("Invalid SMTP port");
+     X.SMTPPort.focus();
+     X.SMTPPort.select();
+     return;
+   }
+   if (X.SMTPEnabled.checked) {
+     if (X.SMTPSender.value.indexOf("@")<0) {
+       if (X.SMTPUsername.value.indexOf("@")>0) {
+          if (X.SMTPSender.value.replace(/(^\s+)|(\s+$)/g,"")!="") {
+            X.SMTPSender.value=X.SMTPSender.value+" <"+X.SMTPUsername.value+">"
+          } else {
+            X.SMTPSender.value=X.Identity.value+" <"+X.SMTPUsername.value+">"
+          }
+       } else {
+         alert("Invalid Sender e-Mail address");
+         X.SMTPSender.focus();
+         X.SMTPSender.select();
+         return;
+       }
+     }
+     if (X.SMTPUsername.value.replace(/(^\s+)|(\s+$)/g,"")!="" && X.SMTPPassword.value.replace(/(^\s+)|(\s+$)/g,"")=="") {
+       alert("The password cannot be empty");
+       X.SMTPPassword.focus();
+       X.SMTPPassword.select();
+       return;
+
+     }
+     if (X.SMTPServer.value.replace(/(^\s+)|(\s+$)/g,"")=="") {
+       alert("SMTP server cannot be empty");
+       X.SMTPServer.focus();
+       X.SMTPServer.select();
+       return;
+     }
+     if (X.SMTPPort.value.replace(/(^\s+)|(\s+$)/g,"")=="") {
+       alert("SMTP port cannot be empty");
+       X.SMTPPort.focus();
+       X.SMTPPort.select();
+       return;
+     }
+   }
+   if (X.SMSEnabled.checked) {
+     if (X.SMSDevice.value=="NotDetected") {
+       alert("A Modem/Phone device must be selected");
+       X.SMSDevice.focus();
+       X.SMSDevice.select();
+       return;
+     }
+   }
+   if (isNaN(X.SMSRateLimit.value)) {
+     alert("Invalid SMS Rate Limit. Leave blank for No Limit.");
+     X.SMSRateLimit.focus();
+     X.SMSRateLimit.select();
+     return;
+   }
+
+   SavingMsg();
+   X.submit();
+}
+function SavingMsg () {
+   X=document.data;
+   X.save.disabled=true;
+   document.getElementById('savetab').innerHTML="<font color=#0000FF>Saving....</font>";
+}
+function SaveMsg () {
+   X.save.disabled=false;
+   if (document.getElementById('savetab').innerHTML.indexOf("Saving")<0) {
+      document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b></font>";
+   }
+}
+function Changed() {
+  SaveMsg();
+}
+function SecurityChanged() {
+  X=document.data;
+  if (X.SMTPSecurity.value=="") {
+    X.SMTPPort.value="25";
+  } else if (X.SMTPSecurity.value=="STARTTLS") {
+    X.SMTPPort.value="587";
+  } else if (X.SMTPSecurity.value=="SSL") {
+    X.SMTPPort.value="465";
+  }
+  Changed();  
+}
+function loaded() {
+  X=document.data;
+  if ("<xvar /system/alerts/Enabled>"=="yes") {
+    X.Enabled.checked=true;
+  }
+  if ("<xvar /system/alerts/EMAIL/SMTPEnabled>"=="yes") {
+    X.SMTPEnabled.checked=true;
+  }
+  if ("<xvar /system/alerts/SMS/SMSEnabled>"=="yes") {
+    X.SMSEnabled.checked=true;
+  }
+  X.SMTPSecurity.value="<xvar /system/alerts/EMAIL/SMTPSecurity>"
+  X.SMTPPort.value="<xvar /system/alerts/EMAIL/SMTPPort>"
+  X.SMSDevice.value="<xvar /system/alerts/SMS/SMSDevice>"
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="Alerts">
+<input type=hidden name=Action value="Save"><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1>
+<tr><td nowrap><font class=Bigger1 color=#5050ff><b>&nbsp;&nbsp;Alert Manager</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=#909090>&nbsp;<input type=checkbox name=Enabled value=yes onclick="EnabledAlerts()">&nbsp;&nbspMessage Spooler:&nbsp;&nbsp;<b><xvar +alert_status></b></font></td>
+<td width=1% nowrap align=right>&nbsp;&nbsp;<span id=savetab></span>&nbsp;&nbsp;</td>
+<td width=1% nowrap align=right>&nbsp;&nbsp;&nbsp;<input type=button Name=save value="Save" onclick="savedata(this)">&nbsp;<input type=button value="Recipients" onclick="Recipients()">&nbsp;<input type=button value="Show Log" onclick="AlertsLOG()">&nbsp;&nbsp;<input type=button name=TestAll value=Test onclick="AlertTest('')">&nbsp;</td></tr>
+</table>
+<hr>
+<table width=100% border=1 cellspacing=1 cellpadding=3>
+<tr>
+<td valign=top>
+
+<table width=100%><tr><td nowrap><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Event List&nbsp;&nbsp;</font></span></td><td width=1% nowrap><input type=button value="Reset" style="font-size: 10;" onclick="Events.ResetEvent()">&nbsp;&nbsp;&nbsp;<input type=button value="Configure" style="font-size: 10;" onclick="Events.ChangeEvent()">&nbsp;&nbsp;&nbsp;<input type=button value="New" style="font-size: 10;" onclick="Events.NewEvent()">&nbsp;<input type=button value="Remove" style="font-size: 10;" onclick="Events.RemoveEvent()"></td></tr></table>
+<table width=100% height=325 border=0 cellspacing=1 cellpadding=1><tr><td>
+<iframe name=Events id="FrameEvents" width=100% height=100% frameborder=0 scrolling=yes src="kerbynet?STk=<xvar STk>&Action=Render&Object=alerts_event_list">IFRAME not supported</iframe>
+</td></tr></table>
+</td>
+<td valign=top width=38%>
+
+
+<table width=100%><tr><td nowrap><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Global Settings&nbsp;&nbsp;</font></span></td><td width=1% nowrap></td></tr></table>
+<table width=100% border=1 cellpadding=5><tr><td>
+<table width=100% cellpadding=1 style="color: #606060">
+<tr><td nowrap>Identity</td><td align=right><input type=text name=Identity Size=25 value="<xvar /system/alerts/Identity>" onchange="Changed()"></td></tr>
+<tr><td nowrap>Max Age (Secs)</td><td align=right><input type=text name=MaxAge Size=6 maxlength=6 value="<xvar /system/alerts/Spooler/MaxAge>" onchange="Changed()"></td></tr>
+</table>
+</td></tr></table>
+<hr><br>
+
+
+<table width=100%><tr><td nowrap><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;E-Mail Settings&nbsp;&nbsp;</font></span></td><td width=1% nowrap><input type=checkbox name=SMTPEnabled value=yes onchange="Changed()">&nbsp;&nbsp;<font color=#808080>Status:&nbsp;&nbsp;<xvar +alert_smtp_status></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=TestEMail value=Test onclick="AlertTest('e-Mail')"></td></tr></table>
+<table width=100% border=1 cellpadding=5><tr><td>
+<table width=100% cellpadding=1 style="color: #606060">
+<tr><td nowrap>Sender</td><td align=right width=1%><input type=text name=SMTPSender Size=33 value="<xvar /system/alerts/EMAIL/SMTPSender>" onchange="Changed()"></td></tr>
+<tr><td nowrap>SMTP Server</td><td align=right><input type=text name=SMTPServer Size=33 value="<xvar /system/alerts/EMAIL/SMTPServer>" onchange="Changed()"></td></tr>
+<tr><td nowrap>Security</td><td nowrap><table width=100% cellpadding=0><tr><td nowrap><select name=SMTPSecurity onchange="SecurityChanged()"><option value="">None</option><option value=SSL>SSL</option><option value=STARTTLS>STARTTLS</option></select></td><td align=right nowrap style="color: #606060">&nbsp;&nbsp;Port&nbsp;&nbsp;<input type=text Name=SMTPPort size=5 onchange="Changed()"></td></tr></table></td></tr>
+<tr><td nowrap>Username</td><td align=right><input type=text name=SMTPUsername Size=33 value="<xvar /system/alerts/EMAIL/SMTPUsername>" onchange="Changed()"></td></tr>
+<tr><td nowrap>Password</td><td align=right><input type=password name=SMTPPassword Size=33 value="<xvar /system/alerts/EMAIL/SMTPPassword>" onchange="Changed()" autocomplete="off"></td></tr>
+</table>
+</td></tr></table>
+<hr>
+<br>
+<table width=100%><tr><td nowrap><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;SMS Settings&nbsp;&nbsp;</font></span></td><td width=1% nowrap><input type=checkbox name=SMSEnabled value=yes onchange="Changed()">&nbsp;&nbsp;<font color=#808080>Status:&nbsp;&nbsp;<xvar +alert_sms_status></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=TestSMS value=Test onclick="AlertTest('SMS')"></td></tr></table>
+<table width=100% border=1 cellspacing=1 cellpadding=5><tr><td>
+<table width=100% cellpadding=1  style="color: #606060">
+<tr><td nowrap>Modem/Phone Device</td><td align=right><select name=SMSDevice onchange="Changed()"><xvar +3g_tty_list></select></td></tr>
+<tr><td nowrap>Rate Limit (SMS/Day)</td><td align=right><input type=text name=SMSRateLimit Size=3 value="<xvar /system/alerts/SMS/SMSRateLimit>" onchange="Changed()"></td></tr>
+</table>
+</td></tr></table>
+
+</td>
+</tr>
+</table>
+<hr>
+<table width=100%><tr><td nowrap><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Event Viewer&nbsp;&nbsp;</font></span></td><td width=1% nowrap></td></tr></table>
+<table width=100% border=1 cellspacing=0 cellpadding=3><tr><td>
+<iframe name=Viewer width=100% height=62 frameborder=0 scrolling=yes src="kerbynet?STk=<xvar STk>&Action=Render&Object=alerts_viewer">IFRAME not supported</iframe>
+</td></tr></table>
+<hr>
+
+
+</body>
+</html>

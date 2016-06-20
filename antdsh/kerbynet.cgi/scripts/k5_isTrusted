@@ -1,0 +1,33 @@
+#!/bin/sh
+DOMAIN="$1"
+DIRECTION="$2"
+. /etc/kerbynet.conf
+LOCALREALM=`cat $REGISTER/system/k5/realm`
+kadmin.local -q listprincs | egrep "^krbtgt/" |egrep -v  "^krbtgt/$LOCALREALM@$LOCALREALM$" | sed -r "s/^krbtgt\/(.*)@(.*)$/\1:\2/" > /tmp/k5_trust_list
+for T in `cat /tmp/k5_trust_list` ; do
+  FIRST=`echo $T | awk -F: '{print $1}'`
+  SECOND=`echo $T | awk -F: '{print $2}'`
+  if [ "$DIRECTION" == "O" -a "$FIRST" == "$LOCALREALM" ] ; then
+    if [ "$SECOND" == "$DOMAIN" ] ; then
+      echo "Trusted O"
+      exit
+    fi
+  fi
+  if [ "$DIRECTION" == "I" -a "$SECOND" == "$LOCALREALM" ] ; then
+    if [ "$FIRST" == "$DOMAIN" ] ; then
+      echo "Trust I"
+      exit
+    fi
+  fi
+  if [ -z "$DIRECTION" ] ; then
+    if [ "$FIRST" == "$LOCALREALM" -o "$SECOND" == "$LOCALREALM" ] ; then
+      echo .. $FIRST $SECOND
+      if [ "$FIRST" == "$DOMAIN" -o "$SECOND" == "$DOMAIN" ] ; then 
+        echo "Trust $FIRST $SECOND ($LOCALREALM)"
+        exit
+      fi
+    fi
+  fi
+done
+exit 1
+

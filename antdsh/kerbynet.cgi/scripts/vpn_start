@@ -1,0 +1,74 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function TERM () {
+  killall -w -TERM vpn 2> /dev/null
+}
+ENABLED=`cat $REGISTER/system/openvpn/Enabled 2>/dev/null`
+TERM
+NETMASK=`cat $REGISTER/system/openvpn/Netmask 2>/dev/null`
+GW=`cat $REGISTER/system/openvpn/Gateway 2>/dev/null`
+if [ -n "$GW" ] ; then
+  if [ "$GW" != "`cat $REGISTER/system/net/interfaces/VPN99/IP/00/IP 2>/dev/null`" -o "$NETMASK" != "`cat $REGISTER/system/net/interfaces/VPN99/IP/00/Netmask 2>/dev/null`" ] ; then
+    if ! [ -r $REGISTER/system/net/interfaces/VPN99/Bridge/Name ] ; then
+      mkdir -p $REGISTER/system/net/interfaces/VPN99/IP/00/
+      echo $GW > $REGISTER/system/net/interfaces/VPN99/IP/00/IP
+      echo $NETMASK > $REGISTER/system/net/interfaces/VPN99/IP/00/Netmask
+      echo up > $REGISTER/system/net/interfaces/VPN99/IP/00/STATUS
+      $SCRIPTS/setinterface VPN99
+    fi
+  fi
+  $SCRIPTS/dns_hup
+fi
+iptables -t nat -D POSTROUTING -j OpenVPN 2>/dev/null
+iptables -t nat -F OpenVPN 2>/dev/null
+iptables -t nat -X OpenVPN 2>/dev/null
+if [ "$ENABLED" == yes ] ; then
+   $SCRIPTS/vpn_restart_x509
+   PROTO=`cat $REGISTER/system/openvpn/Proto 2>/dev/null`
+   PORT=`cat $REGISTER/system/openvpn/Port 2>/dev/null`
+   PARAM=`cat $REGISTER/system/openvpn/Parameters 2>/dev/null`
+   AUTHENTICATION=`cat $REGISTER/system/openvpn/Authentication 2>/dev/null`
+   IPMIN=`cat $REGISTER/system/openvpn/IPMin 2>/dev/null`
+   IPMAX=`cat $REGISTER/system/openvpn/IPMax 2>/dev/null`
+   DNS=`cat $REGISTER/system/openvpn/DNS 2>/dev/null`
+   NAT=`cat $REGISTER/system/openvpn/NAT 2>/dev/null`
+
+   if [ "$AUTHENTICATION" == Password ] ; then
+     NOCERTREQ="--client-cert-not-required"
+   fi
+   if [ "$AUTHENTICATION" != X509 ] ; then
+     AUTHSCRIPT="--auth-user-pass-verify $SCRIPTS/ov_pw_auth via-env --username-as-common-name"
+     PUSHAUTH="auth-user-pass"
+   fi
+   if [ -n "$IPMIN" -a -n "$IPMAX" ] ; then
+     POOL="--ifconfig-pool $IPMIN $IPMAX $NETMASK"
+     if [ "$NAT" == yes ] ; then
+       iptables -t nat -N OpenVPN
+       iptables -t nat -A OpenVPN -m iprange --src-range $IPMIN-$IPMAX -j MASQUERADE
+       iptables -t nat -A POSTROUTING -j OpenVPN
+     fi
+   fi
+   if [ -n "$DNS" ] ; then
+     RESOLVER="dhcp-option DNS $DNS"
+   fi
+   
+   if [ -n "$GW" ] ; then
+     NETS=`cat $REGISTER/system/openvpn/Nets 2>/dev/null`
+     PUSHGW="route-gateway $GW"
+     if [ -z "$NETS" ] ; then
+       REDIRECTGW="redirect-gateway"
+     else
+       PUSHNETS0="route remote_host 255.255.255.255 net_gateway 1"
+       for NET in $NETS ; do
+          IPNET=`echo $NET | awk -F/ '{print $1}'`
+          MASKNET=`echo $NET | awk -F/ '{print $2}'`
+          if ! echo $MASKNET |grep -q '\.' ; then
+            MASKNET=`$SCRIPTS/netmask $MASKNET`
+          fi 
+          PUSHNETS="$PUSHNETS --push \"route $IPNET $MASKNET\""
+       done
+     fi
+   fi
+   MGT=34099
+     bash -c "vpn --dev-type tap --dev VPN99 --mode server --tls-server --proto $PROTO --port $PORT --dh /etc/ssl/dh.pem --ca $REGISTER/system/openvpn/Auth/X509/CAFile --cert $REGISTER/system/openvpn/TLS/cert.pem --key $REGISTER/system/openvpn/TLS/key.pem $NOCERTREQ $AUTHSCRIPT --daemon VPN99_H2L --comp-lzo $POOL --push '$PUSHGW' --push '$REDIRECTGW' --push '$RESOLVER'  --push '$PUSHNETS0' $PUSHNETS  --client-connect $SCRIPTS/ov_connect --client-disconnect $SCRIPTS/ov_disconnect --mute 3 --management 127.0.0.1 $MGT --keepalive 5 60 --duplicate-cn --script-security 3 $PARAM --mute-replay-warnings"
+fi

@@ -1,0 +1,32 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function TERM () {
+  I=0
+  ps -e |grep -w -q pptpd || return 0
+  while [ $I -lt 30 ] ; do
+    if ps -e |grep -w -q pptpd ; then
+      killall -TERM  pptpd 2>/dev/null >/dev/null
+    else 
+       return 0
+    fi
+    I=$((I+1))
+  done
+  return 1
+}
+TERM
+MAXIP=`cat $REGISTER/system/l2tp/MaxIP 2>/dev/null`
+MINIP=`cat $REGISTER/system/l2tp/MinIP 2>/dev/null`
+iptables -t nat -D SNATVS -m iprange --src-range $MINIP-$MAXIP -j MASQUERADE  2>/dev/null
+if [ -r "$REGISTER/system/pptp/Enabled" -o -r "$REGISTER/system/ipsec/Enabled" ] ; then
+  if [ "`cat $REGISTER/system/l2tp/Routing`" == NAT ] ; then
+    iptables -t nat -A SNATVS -m iprange --src-range $MINIP-$MAXIP -j MASQUERADE
+  fi
+fi
+
+if [ -r "$REGISTER/system/pptp/Enabled" ] ; then
+  $SCRIPTS/rendertemplate options.pptpd
+  if [ "`cat $REGISTER/system/l2tp/Routing`" == ProxyARP ] ; then
+    echo proxyarp >> /etc/ppp/options.pptpd
+  fi
+  pptpd -d
+fi

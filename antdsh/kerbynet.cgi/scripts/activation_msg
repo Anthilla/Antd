@@ -1,0 +1,23 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+PRE="$1";
+NET="$2";
+FEATURE="`$SCRIPTS/getfeature $PRE $NET`"
+checkfeature "$FEATURE"
+ERROR="$?"
+case "$ERROR" in
+  0 )
+        echo "The feature [$FEATURE] has been successfully activated." ;;
+  12)
+        echo "Feature [$FEATURE] not active. No Key found." ;;
+  13 )
+        echo "Feature [$FEATURE] not activated. Invalid Key found." ;;
+  14 )
+        echo "Feature [$FEATURE] not active. A hardware identification mismatch occurred." ;;
+  55 )
+        echo "Feature [$FEATURE] not active. The key has EXPIRED." ;;
+  *)
+        echo "Feature $FEATURE not active." ;;
+
+esac
+

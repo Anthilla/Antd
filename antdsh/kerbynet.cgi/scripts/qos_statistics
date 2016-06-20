@@ -1,0 +1,51 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+IDIR="$REGISTER/system/net/interfaces"
+if [ -z "$INTERFACE" -o "$INTERFACE" == ALL ] ; then
+  cd $IDIR
+  INTERFACE=`ls`
+fi
+echo "<table width=100%>"
+echo "<tr bgcolor=#9090f0 style='color: #FFFFFF'><th align=left width=1% nowrap>Interface/Class</th><th>Priority</th><th>DSCP</th><th>Maximum</th><th>Guaranteed</th><th>Traffic Sent (bytes)</th><th>Rate</th></tr>"
+for I in $INTERFACE ; do
+
+  QDIR="$IDIR/$I/QoS"
+  if [ "`cat $IDIR/$I/QoS/Enabled 2>/dev/null`" == yes ] ; then
+    MAX="`cat $QDIR/Max 2>/dev/null`"
+    MAXUNIT="`cat $QDIR/MaxUnit 2>/dev/null`"
+    GUARANTEED="`cat $QDIR/Guaranteed 2>/dev/null`"
+    GUARANTEEDUNIT="`cat $QDIR/GuaranteedUnit 2>/dev/null`"
+    if [ "$GUARANTEEDUNIT" == "Mbit/s" ] ; then
+      GK=`echo $GUARANTEED | awk '{print $0 * 1024}'`
+    else
+      GK="$GUARANTEED"
+    fi
+    SENT="`$SCRIPTS/qos_getstat $I | awk -F: '{print $1}'`"
+    RATE="`$SCRIPTS/qos_getstat $I | awk -F: '{print $2}'`"
+    echo "<tr><td align=left><font color=#3030c0><b>$I</b></font></td><td align=center>--</td><td align=center>--</td><td align=center>$MAX$MAXUNIT</td><td align=center>$GUARANTEED$GUARANTEEDUNIT</td><td align=center>$SENT</td><td align=center>$RATE</td></tr>" 
+    CDIR="$QDIR/Class"
+    cd $CDIR
+    CLASSES="`ls`"
+    for C in $CLASSES ; do
+      if [ "`$SCRIPTS/qos_ison $I $C`" == yes ] ; then
+        MAX="`$SCRIPTS/qos_getbw "$I" "$C" Max F`"
+        GUARANTEED="`$SCRIPTS/qos_getbw "$I" "$C" Guaranteed F`"
+        if [ -z "$MAX" ] ; then
+          MAX="--"
+        fi
+        if [ -z "$GUARANTEED" ] ; then
+          GUARANTEED="--"
+        fi
+        PRIORITY="`$SCRIPTS/qos_getpriority $I $C`"
+        PRIORITY="`$SCRIPTS/qos_printpriority $PRIORITY`"
+        DSCP="`$SCRIPTS/qos_getdscp $I $C`"
+        SENT="`$SCRIPTS/qos_getstat $I $C | awk -F: '{print $1}'`"
+        RATE="`$SCRIPTS/qos_getstat $I $C | awk -F: '{print $2}'`"
+        echo "<tr><td align=right><font><b>$C</b></font></td><td align=center>$PRIORITY</td><td align=center>$DSCP</td><td align=center>$MAX</td><td align=center>$GUARANTEED</td><td align=center>$SENT</td><td align=center>$RATE</td></tr>"
+      fi
+    done
+    echo "<tr><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr>"
+  fi
+done
+echo "</table>"

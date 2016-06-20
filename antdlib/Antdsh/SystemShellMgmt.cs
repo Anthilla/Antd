@@ -29,8 +29,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
-using static antdlib.Terminal.Terminal;
+using antdlib.common;
+using static antdlib.common.Terminal;
 using static antdlib.Antdsh.Execute;
 using static System.Console;
 

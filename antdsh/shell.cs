@@ -27,9 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
 using System;
-using antdlib.Terminal;
+using antdlib.common;
 using static System.Console;
 
 namespace antdsh {

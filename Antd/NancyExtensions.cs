@@ -34,9 +34,26 @@ using Nancy.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
+using System.Xml;
 
 namespace Antd {
+
+    public class RssResponse : Response {
+        public RssResponse(SyndicationFeed feed) {
+            StatusCode = HttpStatusCode.OK;
+            ContentType = "application/rss+xml";
+            Contents = stream => {
+                using (var writer = XmlWriter.Create(stream)) {
+                    var formatter = new Atom10FeedFormatter(feed);
+                    formatter.WriteTo(writer);
+                }
+            };
+        }
+    }
+
     public static class RequestHandling {
+
         public static Func<NancyContext, string, Response> AddDirectoryWithExpiresHeader(string requestedPath, string contentPath, TimeSpan expiresTimeSpan, params string[] allowedExtensions) {
             var responseBuilder = StaticContentConventionBuilder.AddDirectory(requestedPath, contentPath, allowedExtensions);
             return (context, root) => {
@@ -82,7 +99,7 @@ namespace Antd {
             CompressResponse(context.Response);
         }
 
-        static void CompressResponse(Response response) {
+        private static void CompressResponse(Response response) {
             response.Headers.Add("Expires", DateTime.Now.Add(TimeSpan.FromDays(365)).ToString("R"));
             response.Headers["Transfer-Encoding"] = "chunked";
             response.Headers["Content-Encoding"] = "gzip";
@@ -97,15 +114,11 @@ namespace Antd {
             };
         }
 
-        static bool ContentLengthIsTooSmall(Response response) {
+        private static bool ContentLengthIsTooSmall(Response response) {
             string contentLength;
-            if (response.Headers.TryGetValue("Content-Length", out contentLength)) {
-                var length = long.Parse(contentLength);
-                if (length < 4096) {
-                    return true;
-                }
-            }
-            return false;
+            if (!response.Headers.TryGetValue("Content-Length", out contentLength)) return false;
+            var length = long.Parse(contentLength);
+            return length < 4096;
         }
 
         public static List<string> ValidMimes = new List<string> {
@@ -117,14 +130,16 @@ namespace Antd {
                                                     "application/json",
                                                     "application/xaml+xml",
                                                     "application/x-javascript",
-                                                    "application/javascript"
+                                                    "application/javascript",
+                                                    "application/atom+xml",
+                                                    "application/rss+xml"
                                                 };
 
-        static bool ResponseIsCompatibleMimeType(Response response) {
+        private static bool ResponseIsCompatibleMimeType(Response response) {
             return ValidMimes.Any(x => x == response.ContentType);
         }
 
-        static bool RequestIsGzipCompatible(Request request) {
+        private static bool RequestIsGzipCompatible(Request request) {
             return request.Headers.AcceptEncoding.Any(x => x.Contains("gzip"));
         }
     }

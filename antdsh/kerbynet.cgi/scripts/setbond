@@ -1,0 +1,117 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+. $SCRIPTS/wifi.inc
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+BONDDIR="$CONFIG/$NAME"
+TYPE=`cat $BONDDIR/Type`
+BONDLIST=`cat $BONDDIR/BondList`
+$SCRIPTS/mkbonddev $NAME $TYPE
+for I in $BONDLIST ; do
+  if [ -d "$REGISTER/system/net/interfaces/$I/WiFi/" ] ; then
+    $SCRIPTS/set-wifi $I
+  fi
+  if [ "${I:0:3}" = VPN ] ; then
+    if ifconfig $I 2>/dev/null |grep -q -w UP ; then
+      STATUS=up
+    else
+      STATUS=down
+    fi
+  else
+    STATUS=`cat $REGISTER/system/net/interfaces/$I/STATUS 2>/dev/null`
+  fi
+  ifenslave  $NAME $I 2>/dev/null
+  ifconfig $I $STATUS
+done
+COMPONENTS="`$SCRIPTS/net_interfacesbonded $NAME`"
+for I in $BONDLIST ; do
+   if echo $COMPONENTS |grep -v -q -w $I ; then
+      ADDBONDED="$ADDBONDED $I"
+   fi 
+done
+for I in $COMPONENTS ; do
+   if echo $BONDLIST |grep -v -q -w $I ; then
+      DELBONDED="$DELBONDED $I"
+   fi 
+done
+for I in $DELBONDED ; do
+    if [ "${I:0:3}" = VPN ] ; then
+      if ifconfig $I 2>/dev/null |grep -q -w UP ; then
+        STATUS=up
+      else
+        STATUS=down
+      fi
+    else
+      STATUS=`cat $REGISTER/system/net/interfaces/$I/STATUS 2>/dev/null`
+    fi
+    ifenslave -d $NAME $I
+    rm -rf $CONFIG/$I/Bond
+    RDIR=$CONFIG/$I
+    IPs=`( cd $RDIR/IP 2>/dev/null && ls -d ?? 2>/dev/null )`
+    for ipDIR in $IPs ; do
+      ip=`cat $RDIR/IP/$ipDIR/IP`
+      if [ -n "`$SCRIPTS/getipdir $NAME $ip`" ] ; then
+        $SCRIPTS/removeip $NAME "`$SCRIPTS/getipdir $NAME $ip`"
+      fi
+    done
+    if [ -d "$REGISTER/system/net/interfaces/$I/WiFi/" ] ; then
+      $SCRIPTS/set-wifi $I
+    else
+      $SCRIPTS/setinterface $I
+      $SCRIPTS/setvlans $I
+    fi
+    $SCRIPTS/router_natcheck $I
+    if [ "${I:0:3}" = VPN ] ; then
+      ifconfig $I $STATUS
+    fi
+done 
+for I in $ADDBONDED ; do
+  if [ "`cat $CONFIG/$I/Bond/Name`" != "$NAME" ] ; then
+    mkdir $CONFIG/$I/Bond 2>/dev/null
+    echo $NAME > $CONFIG/$I/Bond/Name
+  fi
+  if [ -d "$REGISTER/system/net/interfaces/$I/WiFi/" ] ; then
+       $SCRIPTS/set-wifi $I
+  fi
+  if [ "${I:0:3}" = VPN ] ; then
+    if ifconfig $I 2>/dev/null |grep -w -q  UP ; then
+      STATUS=up
+    else
+      STATUS=down
+    fi
+  else
+    STATUS=`cat $REGISTER/system/net/interfaces/$I/STATUS 2>/dev/null`
+  fi
+  ifenslave $NAME $I
+  $SCRIPTS/router_natcheck $I
+  $SCRIPTS/setinterfaceforbond $I
+  if [ "${I:0:3}" = VPN ] ; then
+    ifconfig $I $STATUS
+  fi
+done
+PRIMARY=`cat $BONDDIR/Primary`
+if ! [ -z "$PRIMARY" -o "$TYPE" == 0 ] ; then
+ echo $PRIMARY > /sys/class/net/$NAME/bonding/primary 2>/dev/null
+fi
+WAITING=yes
+for I in $BONDLIST $ADDBONDED $DELBONDED ; do
+  if [ -d "$REGISTER/system/net/interfaces/$I/WiFi/" ] ; then
+    DEV=`wifi-getdev $I`    
+    DBM=`cat $REGISTER/system/net/WiFi/DEVS/$DEV/TXPOWER 2>/dev/null`
+    if [ -n "$DBM" ] ; then
+      [ "$WAITING" == yes ] && sleep 10
+      WAITING=no
+      iwconfig $I txpower $DBM 2>/dev/null
+    fi
+  fi
+done
+if [ "$TYPE" = 7 ] ; then
+  for I in $BONDLIST ; do
+    getInterfaceWeight $NAME $I > /proc/dyn_bonding/$NAME/$I/Weight
+  done
+fi
+$SCRIPTS/setinterface $NAME
+$SCRIPTS/setvlans $NAME
+$SCRIPTS/bondwatch $NAME 2>/dev/null >/dev/null &

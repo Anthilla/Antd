@@ -1,0 +1,18 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+#printenv >> /tmp/RadiusLog.env
+if [ "$FREERADIUS_PROXIED_TO" == "127.0.0.1" -a "$EAP_TYPE" == "" ] ; then
+  logger -t 802.1X "EAP-TTLS: inner authentication for $USER_NAME successfully passed"
+  exit
+fi
+if [ "$EAP_TYPE" != "" ] ; then
+  if [ "$FREERADIUS_PROXIED_TO" != "127.0.0.1" ] ; then
+    logger -t 802.1X "$EAP_TYPE: $USER_NAME successfully authenticated on Access Point $NAS_IP_ADDRESS"
+  fi
+  exit
+fi
+if [ "$SERVICE_TYPE" == "Framed-User" -a "$NAS_IP_ADDRESS" == "127.0.0.1" ] ; then
+  IP=`cat "/tmp/VPN_IP_$USER_NAME"`
+  logger -t VPN "User $USER_NAME successfully authenticated (IP: $IP)"
+  exit
+fi 

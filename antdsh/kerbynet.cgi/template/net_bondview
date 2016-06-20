@@ -1,0 +1,21 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Bond View</title>
+</head>
+<body>
+<table width=100%><tr>
+<td>
+<font color=#3030f0 face=Arial class=Bigger2><b><xvar _Interface></b><font> (<xvar !ext_bondname (Interface)>)</font></font>&nbsp;&nbsp;
+<font color=#10c010 face=Arial class=Bigger1><xvar _LinkStatus></font><br>
+
+<font color=#0000f0 face=Arial><xvar _Description></font>
+</td><td align=right>
+<input type=button value=Refresh onclick="location.reload(true)"><input type=button value=Close onclick="window.close()">
+</td>
+</tr></table>
+<pre>
+<xvar _RawView>
+</pre>
+<script>setInterval("window.location.reload(true)",5000);</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Free Authorized Services</title>
+<script>
+function Remove() {
+  X=document.data;
+  NoDNS=false;
+  if (X.SRV.length!=undefined) {
+    if (X.SRV[0].checked) {
+      NoDNS=true;
+    }
+  } else {
+    NoDNS=true;
+  }
+//  if (NoDNS) {
+//    alert("You cannot remove DNS service from Free Authorized Services.");
+//    return;
+//  }
+
+  Selected=false;
+  if (X.SRV==undefined) {
+    alert("No object to remove");
+    return;
+  }
+  if (X.SRV.length==undefined) {
+    if (X.SRV.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.SRV.length; s++) {
+      if (X.SRV[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a service to remove.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected service?")) {
+    X.Action.value="RemoveFreeService";
+    X.submit();
+  }
+  
+}
+</script>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0>
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="CP">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<table width=100% cellpadding=0>
+<tr bgcolor=#d0d0d0 align=center><td width=1%>&nbsp;&nbsp;&nbsp;</td><td align=left>Description</td><td>IP Address</td><td>Port</td></tr>
+<xvar !cpListFreeServices>
+
+</table>
+</form>
+</body>
+</html>

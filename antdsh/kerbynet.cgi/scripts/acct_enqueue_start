@@ -1,0 +1,22 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+ID="$1"
+USERNAME="$2"
+MAC="$3"
+IP="$4"
+[ -z "$ID" ] && exit 2
+[ -z "$USERNAME" ] && exit 3
+MAC=`echo $MAC |sed 'y/:ABCDEF/-abcdef/'`
+cat <<EOF | $SCRIPTS/acct_enqueue Start "$ID" "$USERNAME" 
+Acct-Status-Type = Start
+Acct-Session-Id = "$ID"
+Acct-Authentic = RADIUS
+Acct-Multi-Session-Id = "$USERNAME"
+User-Name = "$USERNAME"
+Calling-Station-Id = "$MAC"
+Framed-Ip-Address = "$IP"
+NAS-Identifier = "`hostname`"
+EOF
+
+
+

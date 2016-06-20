@@ -1,0 +1,56 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+if cd "/sys/class/net" ; then
+  VLANS=`ls -d $INTERFACE.* 2>/dev/null`
+  for VLAN in $VLANS ; do
+    ifconfig $VLAN down
+    vconfig rem $VLAN 
+  done
+fi
+if [ -r $CONFIG/$INTERFACE/Bridge/Name ] ; then
+  VDIR=$CONFIG/`cat $CONFIG/$INTERFACE/Bridge/Name`/VLAN
+  SLAVE=TRUE
+else
+  if [ -r $CONFIG/$INTERFACE/Bond/Name ] ; then
+    BONDNAME=`cat $CONFIG/$INTERFACE/Bond/Name`
+    if [ -r $CONFIG/$BONDNAME/Bridge/Name ] ; then
+      VDIR=$CONFIG/`cat $CONFIG/$BONDNAME/Bridge/Name`/VLAN
+      SLAVE=TRUE
+    else
+      VDIR=$CONFIG/$BONDNAME/VLAN
+      SLAVE=TRUE
+    fi
+  else
+    VDIR=$CONFIG/$INTERFACE/VLAN
+  fi
+fi
+#echo $VDIR $SLAVE
+if cd "$VDIR" 2>/dev/null ; then
+  VLANS=`ls`
+  for VLAN in $VLANS ; do
+    if [ "$SLAVE" == TRUE ] ; then
+      :
+      # vconfig add $INTERFACE $VLAN
+      # ifconfig $INTERFACE.$VLAN up
+    else
+      $SCRIPTS/setinterface $INTERFACE.$VLAN
+    fi
+  done
+fi
+if [ -r $CONFIG/$INTERFACE/BridgeList ] ; then 
+  for I in `cat $CONFIG/$INTERFACE/BridgeList` ; do
+    $SCRIPTS/resetvlans $I
+  done
+fi
+if [ -r $CONFIG/$INTERFACE/BondList ] ; then 
+  for I in `cat $CONFIG/$INTERFACE/BondList` ; do
+    $SCRIPTS/resetvlans $I
+  done
+fi
+
+
+

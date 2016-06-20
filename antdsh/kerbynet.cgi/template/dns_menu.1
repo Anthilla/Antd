@@ -1,0 +1,38 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function manage() {
+   top.body.location="/cgi-bin/kerbynet?Section=DNS&STk=<xvar STk>&Action=Manage";
+};
+function ddns() {
+   newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=DDNS", "ddnsconfig","top=200,left=250,width=500,height=350,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function query() {
+   newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=Lookup&DNS=localhost", "dnsquery","top=200,left=150,width=800,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function slavezones() {
+  newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=SlaveZones", "slavezones","top=200,left=150,width=600,height=450,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+</script>
+</head>
+<body bgcolor="#CCFFCC" topmargin="0" leftmargin="0" text="#000000" onload="manage()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23">
+  <tr>
+    <td  bgcolor="#FFFFFF" nowrap>
+    <p align="center"><b><font face="Arial">&nbsp;&nbsp;DOMAIN NAME SYSTEM&nbsp;&nbsp;&nbsp;&nbsp;</font></b></td>
+    <td width="160" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="manage()"><font color="#808080"><b>Master Zones</b></font></td>
+    <td width="160" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="slavezones()"><font color="#808080"><b>Slave Zones</b></font></td>
+    <td width="160" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="query()"><font color="#808080"><b>DNS Lookup</b></font></td>
+    <td width="160" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="ddns()"><font color="#808080"><b>Dynamic DNS</b></font></td>
+    <td width="80" align="center"></td>
+    <td width="80" align="center"></td>
+    <td width="80" align="center"></td>
+  </tr>
+</table>
+</body>
+</html>

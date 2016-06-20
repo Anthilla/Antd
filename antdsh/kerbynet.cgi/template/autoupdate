@@ -1,0 +1,179 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>AutoUpdate</title>
+<script>
+function AutoUpdateLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=PkgManager","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function LoadMsgBoard() {
+   msgboard.location="kerbynet?Section=AutoUpdate&STk=<xvar _STk>&Action=LoadMsgBoard";
+}
+function CheckNow() {
+   location="kerbynet?Section=AutoUpdate&STk=<xvar _STk>&Action=CheckNow";
+}
+function loaded() {
+  X=document.data;
+X.Every.value="<xvar /system/AutoUpdate/Every>";
+X.Type.value="<xvar _Type>";
+var Language;
+if ("<xvar /system/AutoUpdate/Language>"=="Ita") {
+X.Language[0].checked=true;
+} else {
+X.Language[1].checked=true;
+}
+LoadMsgBoard();
+}
+function StatusChange() {
+X=document.data;
+//Save();
+}
+function CheckIntervalChange() {
+Save();
+}
+function TypeChange() {
+X=document.data;
+location="kerbynet?STk=<xvar STk>&Action=Render&Object=autoupdate&Type="+X.Type.value;
+}
+function LanguageChange() {
+Save();
+}
+function Save() {
+X=document.data;
+X.Action.value="AutoUpdateSave";
+X.submit(); 
+}
+function isSelected(obj) {
+X=document.data;
+Selected=false;
+if (obj==undefined) {
+return false;
+}
+if (obj.length==undefined) {
+if (obj.checked) {
+Selected=true;
+}
+} else {
+for (s=0; s<obj.length; s++) {
+if (obj[s].checked) {
+Selected=true;
+}
+}
+}
+return Selected;
+}
+function SelectedUpdate(obj) {
+
+X=document.data;
+Selected="";
+if (obj==undefined) {
+return;
+}
+if (obj.length==undefined) {
+if (obj.checked) {
+Selected=obj.value;
+}
+} else {
+for (s=0; s<obj.length; s++) {
+if (obj[s].checked) {
+Selected=obj[s].value;
+}
+}
+}
+return (Selected);
+}
+
+function FixManage() {
+X=document.data;
+if (!isSelected(X.Available)) {
+alert("No available package selected.");
+return;
+}
+ID=SelectedUpdate(X.Available);
+ShowInfo(ID);
+}
+function FixManageInstalled() {
+X=document.data;
+if (!isSelected(X.Installed)) {
+alert("No installed package selected.");
+return;
+}
+ID=SelectedUpdate(X.Installed);
+ShowInfo(ID);
+}
+function ShowInfo(xID) {
+newwin=open("kerbynet?Action=Render&Object=autoupdate-info&STk=<xvar STk>&ID="+xID, "AutoupdateInstall","top=200,left=300,width=800,height=550,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+newwin.focus();
+}
+function Configure() {
+newwin=open("kerbynet?Action=Render&Object=autoupdate-conf&STk=<xvar STk>", "UpdaterSetup","top=320,left=400,width=600,height=420,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+newwin.focus();
+}
+function BootMGR() {
+newwin=open("kerbynet?Action=Render&Object=bootmgr&STk=<xvar STk>", "BootSetup","top=250,left=450,width=575,height=390,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+newwin.focus();
+}
+function Subscription() {
+newwin=open("kerbynet?Action=Render&Object=autoupdate-sub&STk=<xvar STk>", "Subscription","top=300,left=380,width=620,height=425,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+newwin.focus();
+}
+</script>
+</head>
+<body onload="loaded()" style="color:#707070">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value=AutoUpdate>
+<input type=hidden name=Action value="">
+<input type=hidden name=STk value=<xvar STk>>
+
+<table width=100% cellspacing=0 cellpadding=2 border=1><tr><td>
+<table width=100% cellspacing=0 cellpadding=0><tr><td nowrap><font class=Bigger1 color=#5050ff>&nbsp;<b>Package Manager&nbsp;&nbsp;&nbsp;&nbsp;</b></font></td><td align=right nowrap><input type=button value="Setup" onclick="Configure()">&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=right nowrap width=1%><font>Check Interval</font>&nbsp;&nbsp;<select name=Every onchange="CheckIntervalChange()"><option value=12>12 hours</option><option value=18>18 hours</option><option value=24>24 hours</option></select>&nbsp;&nbsp;&nbsp;<input type=button value="Check" onclick="CheckNow()">&nbsp;<input type=button value="Logs" onclick="AutoUpdateLOG()">&nbsp;<input type=button value="Subscription" onclick="Subscription()">&nbsp;<input type=button value="Boot" onclick="BootMGR()">&nbsp;&nbsp;</td></tr></table>
+</td></tr></table>
+<br>
+    <table width=100% cellspacing=5 cellpadding=5 border=1><tr>
+    <td valign=top>
+
+  <table width=100% cellpadding=0 cellspacing=0><tr>
+  <td nowrap>
+<font color=#707070>Show&nbsp;</font>
+<select name=Type onchange="TypeChange()">
+<option value="">All Packages</option>
+<option value="Security">Security Fixes</option>
+<option value="BugFix">Bug Fixes</option>
+<option value="Add-On">Add-Ons</option>
+<option value="Feature">New Features</option>
+<option value="Release">New Releases</option>
+</select>
+  </td><td align=right nowrap width=1%>
+&nbsp;&nbsp;Last connection: <font color=#00a060><xvar +lastUpdateCheck></font><hr style="background-color: #9090ff;">
+  </td>
+  </tr>
+<tr><td></td><td nowrap><font class=Smaller2>&nbsp;&nbsp;<xvar +rebootRequired></font></td></tr>
+</table>
+<table width=100%>
+<tr><td><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Available Packages&nbsp;&nbsp;</font></span></td><td align=right width=1% nowrap><input type=button value=Manage onclick="FixManage(document.data.Installed)" style="font-size: 10;"></td></tr>
+</table>
+
+<table width=100% border=1 cellspacing=0 style="color: #404040">
+<tr align=center style="color: #000090"><td width=1% nowrap>&nbsp;&nbsp;</td><td nowrap width=1%>&nbsp;ID&nbsp;</td><td>Description</td><td nowrap width=1%>&nbsp;Date&nbsp;</td><td width=1% nowrap>Type</td></tr>
+<xvar +tableFixesA (Type)>
+
+<br>
+<table width=100%>
+<tr><td><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Installed Packages&nbsp;&nbsp;</font></span></td><td nowrap align=right></td><td align=right width=1%><input type=button value=Manage onclick="FixManageInstalled()" style="font-size: 10;"></td></tr>
+</table>
+
+<table width=100% border=1 cellspacing=0 style="color: #404040">
+<tr align=center style="color: #000090"><td width=1% nowrap>&nbsp;&nbsp;</td><td nowrap width=1%>&nbsp;ID&nbsp;</td><td> Description</td><td width=1%>&nbsp;Status&nbsp;</td><td nowrap width=1%>&nbsp;Date&nbsp;</td><td width=1% nowrap>Type</td></tr>
+
+<xvar +tableFixesI (Type)>
+
+
+    </td><td width=40% nowrap valign=top>
+
+<table width=100% cellspacing=0 cellpadding=0 border=0><tr><td><span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Message Board&nbsp;&nbsp;</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=radio name=Language value=Ita onclick="LanguageChange()">&nbsp;<img src=/kerbynet/italian.gif>&nbsp;&nbsp;&nbsp;<input type=radio name=Language value=Eng onclick="LanguageChange()">&nbsp<img src=/kerbynet/english.gif></td><td align=right><input type=button value="Refresh" onclick="LoadMsgBoard()" style="font-size: 10;">&nbsp;&nbsp;</td></tr></table>
+<table width=100% border=1 cellspacing=0><tr><td><iframe name=msgboard width=100% height=400 src="kerbynet?STk=<xvar _STk>&Action=Render&Object=MsgBoardWait"  frameborder=0 scrolling=yes>iframe not supported</iframe></td></tr></table>
+    </td>
+    </tr></table>
+</form>
+</body>
+</html>

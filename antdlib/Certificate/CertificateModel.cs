@@ -29,13 +29,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace antdlib.Certificate {
     public class CertificateRepository {
-        public static IEnumerable<CertificateModel> GetAll() => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent);
+        //public static IEnumerable<CertificateModel> GetAll() => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent);
 
-        public static CertificateModel GetByGuid(string guid) => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent && _.CertificateGuid == guid).FirstOrDefault();
+        //public static CertificateModel GetByGuid(string guid) => DeNSo.Session.New.Get<CertificateModel>(_ => _.IsPresent && _.CertificateGuid == guid).FirstOrDefault();
     }
 
     public enum CertificateAuthorityLevel : byte {
@@ -54,7 +53,6 @@ namespace antdlib.Certificate {
     }
 
     public class CertificateModel {
-        public string _Id { get; set; }
         public bool IsPresent { get; set; }
         public bool IsRevoked { get; set; } = false;
         public string CertificateGuid { get; set; }
@@ -82,7 +80,5 @@ namespace antdlib.Certificate {
 
         public string AssignmentServiceGuid { get; set; }
         public string AssignmentServiceAlias { get; set; }
-
-        //public string CertificateValue => File.ReadAllText(CertificatePath);
     }
 }

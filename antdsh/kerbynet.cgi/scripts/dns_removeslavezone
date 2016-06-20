@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ZONE="$1"
+[ -z "$ZONE" ] && exit 1
+[ "$ZONE" == "." ] && exit 1
+[ "$ZONE" == ".." ] && exit 1
+rm -rf "$REGISTER/system/dns/SlaveZones/$ZONE"
+if $SCRIPTS/dns_start ; then
+  rm -f "$REGISTER/system/dns/data/slaves/${ZONE}.zone"
+else
+  exit 1
+fi
+

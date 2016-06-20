@@ -1,0 +1,176 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>SOA</title>
+<script>
+function loaded() {
+  X=document.data;
+  if (X.Action.value=="EditZoneSubmit") {
+    X.Domain.disabled=true;
+    X.ZoneType[0].disabled=true;  
+    X.ZoneType[1].disabled=true;  
+  }
+  
+  if (X.Domain.value.match(/in-addr.arpa$/i)) {
+    X.ZoneType[1].checked=true;
+  } else {
+    X.ZoneType[0].checked=true;
+  }
+  loadDefault();
+}
+function submitdata() {
+  X.document;
+  loadDefault();
+  if (validateData()) {
+    X.SelectedZone.value=X.Domain.value;
+    X.submit();
+  }
+}
+function validateData() {
+  X=document.data;
+  Domain=X.Domain;
+  Domain.value=Domain.value.replace(/[ ]+/g,"");
+  if (Domain.value=="") {
+    alert("Domain name cannot be null.");
+    return false;
+  }
+  if (!(X.Refresh.value>=0 && X.Refresh.value<=4294967295)) {
+    alert("Value out of range!!!");
+    X.Refresh.focus();
+    X.Refresh.select();
+    return false;
+  }
+  if (!(X.Retry.value>=0 && X.Retry.value<=4294967295)) {
+    alert("Value out of range!!!");
+    X.Retry.focus();
+    X.Retry.select();
+    return false;
+  }
+  if (!(X.Expire.value>=0 && X.Expire.value<=4294967295)) {
+    alert("Value out of range!!!");
+    X.Expire.focus();
+    X.Expire.select();
+    return false;
+  }
+  if (!(X.DefaultTTL.value>=1 && X.DefaultTTL.value<=4294967295)) {
+    alert("Value out of range!!!");
+    X.DefaultTTL.focus();
+    X.DefaultTTL.select();
+    return false;
+  }
+  if (!(X.Serial.value>=0 && X.Serial.value<=4294967295)) {
+    alert("Value out of range!!!");
+    X.Serial.focus();
+    X.Serial.select();
+    return false;
+  }
+  if (!Domain.value.match(/in-addr.arpa$/i)) {
+    if (X.ZoneType[1].checked) {
+      if (Domain.value.match(/^[0123456789]{1,3}$/)) {
+         Domain.value=Domain.value+".in-addr.arpa"
+      } else if (Domain.value.match(/^[0123456789]{1,3}\.[0123456789]{1,3}$/)) {
+         filter=/^([0123456789]{1,3})\.([0123456789]{1,3})$/;
+         comp=filter.exec(Domain.value);
+         Domain.value=comp[2]+"."+comp[1]+".in-addr.arpa"
+      } else if (Domain.value.match(/^[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}$/) || Domain.value.match(/^[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}\.[0]{1,3}$/)) {
+          filter=/^([0123456789]{1,3})\.([0123456789]{1,3})\.([0123456789]{1,3})/
+	  comp=filter.exec(Domain.value);
+          Domain.value=comp[3]+"."+comp[2]+"."+comp[1]+".in-addr.arpa"
+      } else {
+        alert("Domain not valid for reverse resolution. For example, to resolve the subnet 192.168.0.0/24 you have to specify the domain 0.168.192.in-addr.arpa or more briefly 192.168.0");
+        Domain.select();
+        Domain.focus();
+        return false;
+      }
+    }
+  }
+  return true;
+}
+function loadDefault() {
+  X=document.data;
+  X.Domain.value=X.Domain.value.replace(/[ ]+/g,"");
+  X.MasterServer.value=X.MasterServer.value.replace(/[ ]+/g,"");
+  if (X.MasterServer.value=="") {
+    X.MasterServer.value="<xvar /system/misc/hostname>.";
+  }
+  if (!X.MasterServer.value.match(/\.$/)) {
+    X.MasterServer.value+='.';
+  }
+  X.Email.value=X.Email.value.replace(/[ ]+/g,"");
+  X.Email.value=X.Email.value.replace(/@/g,".");
+  if (X.Email.value=="") {
+    if (X.ZoneType[1].checked) {
+         X.Email.value="hostmaster."+X.MasterServer.value;
+    } else {
+      if (X.Domain.value!="") {
+         X.Email.value="hostmaster."+X.Domain.value;
+      }
+    }
+  }
+  if (X.Email.value!="" && !X.Email.value.match(/\.$/)) {
+    X.Email.value+='.';
+  }
+  X.Serial.value=X.Serial.value.replace(/[ ]+/g,"");
+  if (X.Serial.value=="") {
+    X.Serial.value="<xvar _DefaultSerial>";
+  }
+  X.Refresh.value=X.Refresh.value.replace(/[ ]+/g,"");
+  if (X.Refresh.value=="") {
+    X.Refresh.value="86400";
+  }
+  X.Retry.value=X.Retry.value.replace(/[ ]+/g,"");
+  if (X.Retry.value=="") {
+    X.Retry.value="7200";
+  }
+  X.Expire.value=X.Expire.value.replace(/[ ]+/g,"");
+  if (X.Expire.value=="") {
+    X.Expire.value="3600000";
+  }
+  X.DefaultTTL.value=X.DefaultTTL.value.replace(/[ ]+/g,"");
+  if (X.DefaultTTL.value=="") {
+    X.DefaultTTL.value="172800";
+  }
+}
+</script>
+</head>
+<body text=#404040 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value='DNS'>
+<input type=hidden name=STk value='<xvar STk>'>
+<input type=hidden name=Action>
+<input type=hidden name=SelectedZone value='<xvar _SelectedZone>'>
+<input type=hidden name=MasterServerOld value='<xvar _MasterServer>'>
+<input type=hidden name=SerialOld value='<xvar _Serial>'>
+<script>
+if ("<xvar _Action>" == "CreateZone") {
+  document.data.Action.value="CreateZoneSubmit";
+  document.write("<font color=#000090 class=Bigger1><b>Create new DNS zone</b></font>");
+} else {
+  document.data.Action.value="EditZoneSubmit";
+  document.write("<font color=#000090 class=Bigger2><b><xvar _SelectedZone></b></font>");
+}
+</script>
+<hr>
+<table width=100%>
+<tr>
+<td>&nbsp;Domain Name<br>&nbsp;<input type=text name=Domain value="<xvar _SelectedZone>" size=40></td>
+<td nowrap width=1%><input type=radio name=ZoneType value=Forward>&nbsp;Forward&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><input type=radio name=ZoneType value=Reverse>&nbsp;Reverse</td>
+</tr>
+</table>
+<table width=100%>
+<tr>
+<td>&nbsp;Master Server<br>&nbsp;<input type=text name=MasterServer value="<xvar _MasterServer>" size=30></td>
+<td>&nbsp;E-mail Contact<br>&nbsp;<input type=text name=Email value="<xvar _Email>" size=30></td>
+</tr>
+</table>
+<hr>
+<font color=#000090 class=Bigger1>&nbsp;Time Parameters</font>
+<table width=100%>
+<tr><td>&nbsp;Serial</td><td><input type=text name=Serial value="<xvar _Serial>" size=12></td><td></td></tr>
+<tr><td>&nbsp;Refresh</td><td><input type=text name=Refresh value="<xvar _Refresh>" size=12></td><td></td></tr>
+<tr><td>&nbsp;Retry</td><td><input type=text name=Retry value="<xvar _Retry>" size=12></td><td><input type=button value=Submit onclick="submitdata()"><input type=button value=Close onclick="window.close()"></td></tr>
+<tr><td>&nbsp;Expire</td><td><input type=text name=Expire value="<xvar _Expire>" size=12></td><td></td></tr>
+<tr><td>&nbsp;Default TTL</td><td><input type=text name=DefaultTTL value="<xvar _DefaultTTL>" size=12></td><td></td></tr>
+</table>
+</form>
+</body>
+</html>

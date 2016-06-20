@@ -1,0 +1,22 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+[ -z "$ID" ] && exit 1
+STATUS="`$SCRIPTS/getFixStatus $ID`"
+case $STATUS in
+	"NOT INSTALLED")
+		echo "<option value=INSTALL selected>Install</option>"
+       		;;
+	ENABLED)
+		echo "<option value=REMOVE selected>Remove</option>"
+		echo "<option value=DISABLE>Disable</option>"
+                ;;
+	DISABLED)
+		echo "<option value=ENABLE selected>Enable</option>"
+		echo "<option value=REMOVE>Remove</option>"
+                ;;
+esac
+
+
+
+

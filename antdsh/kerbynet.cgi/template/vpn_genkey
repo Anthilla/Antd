@@ -1,0 +1,23 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>VPN Key Generation</title>
+
+</head>
+<body onload="data.Keystring.select()">
+<form name=data action=kerbynet method=post>
+<input type=hidden name=Section value=VPN>
+<input type=hidden name=Action value="">
+<input type=hidden name=STk value="<xvar _STk>">
+<table width=100%><tr><td><font class=Bigger1 color=#3030f0>VPN Pre-Shared Key Generation</font></td><td align=right><input type=button value=Close onclick="window.close()"></td></tr></table>
+<hr>
+<table border=1 cellspacing=0 cellpadding=10 width=100% style="border-collapse: collapse" bordercolor="#f04040"><tr><td>
+<textarea name=Keystring style="width:100% ; height:200"><xvar +vpn_genkey></textarea>
+</td></tr></table>
+<hr>
+<table width=100%><tr><td width=1% valign=top><font color=#404040><b>Note</b>:</td><td><font color=#404040>copy the Key into the clipboard and past it in the local and remote PSK field.</font></td><tr></table>
+</form>
+</body>
+</html>
+
+
+

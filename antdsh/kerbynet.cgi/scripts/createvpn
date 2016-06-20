@@ -1,0 +1,45 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+DESCRIPTION="$2"
+REMOTEIP="$3"
+PORT="$4"
+PROTO="$5"
+TLSROLE="$6"
+REMOTECN="$7"
+COMPRESSION="$8"
+CRYPTO="$9"
+PARAMETERS="${10}"
+AUTHENTICATION="${11}"
+PSK="${12}"
+GATEWAY="${13}"
+LOCALIP="${14}"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+VPNDIR="$CONFIG/$NAME"
+if openvpn --dev-type tap --dev $NAME --mktun 1>&2 ; then
+   mkdir -p $VPNDIR/TUNNEL
+   echo "$DESCRIPTION" > $VPNDIR/Description
+   echo "$REMOTEIP" > $VPNDIR/TUNNEL/RemoteIP
+   echo "$LOCALIP" > $VPNDIR/TUNNEL/LocalIP
+   echo "$PORT" > $VPNDIR/TUNNEL/Port
+   echo "$PROTO" > $VPNDIR/TUNNEL/Proto
+   echo "$TLSROLE" > $VPNDIR/TUNNEL/TLSRole
+   echo "$REMOTECN" > $VPNDIR/TUNNEL/RemoteCN
+   echo "$COMPRESSION" > $VPNDIR/TUNNEL/Compression
+   echo "$CRYPTO" > $VPNDIR/TUNNEL/Crypto
+   echo "$AUTHENTICATION" > $VPNDIR/TUNNEL/Authentication
+   echo "$REMOTECN" > $VPNDIR/TUNNEL/RemoteCN
+   echo "$PSK" > $VPNDIR/TUNNEL/PSK
+   echo "$GATEWAY" > $VPNDIR/Gateway
+   echo "$PARAMETERS" > $VPNDIR/TUNNEL/Parameters
+   echo up > $VPNDIR/STATUS
+   $SCRIPTS/vpn_ctl $NAME up && $SCRIPTS/mrtg_reload
+else
+   exit 3
+fi
+
+
+
+

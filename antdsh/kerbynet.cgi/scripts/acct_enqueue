@@ -1,0 +1,23 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+TYPE="$1"
+ID="$2"
+USERNAME="$3"
+[ -z "$TYPE" ] && exit 1
+[ -z "$ID" ] && exit 2
+[ -z "$USERNAME" ] && exit 3
+cd $REGISTER/system/acct/requests/ || exit 3
+mkdir -p tmp/$ID/$TYPE
+date +%s > tmp/$ID/$TYPE/Time
+cat > tmp/$ID/$TYPE/Value
+echo "$USERNAME" > tmp/$ID/$TYPE/Username
+echo 0 >tmp/$ID/$TYPE/Retry
+mkdir -p toprocess/$ID/
+rm -rf toprocess/$ID//$TYPE
+mv tmp/$ID/$TYPE/ toprocess/$ID/
+rm -rf tmp/$ID
+
+
+
+
+

@@ -1,0 +1,20 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/net/interfaces"
+cd "$CONFIG"
+INTERFACES=`ls -d ppp[0123456789] 2>/dev/null`
+for i in $INTERFACES ; do
+   if [ "`cat $i/Auto 2>/dev/null`" == yes ] ; then
+      if [ -r $CONFIG/$i/ETHERNET ] ; then
+        $SCRIPTS/pppoe_start $i
+      else
+        $SCRIPTS/3Gconnect $i &
+      fi
+   fi
+done
+
+
+
+
+

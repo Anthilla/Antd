@@ -1,0 +1,79 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Start Session</title>
+<script>
+function CheckEnterKey(FieldObj,Event) {
+  var keycode;
+  if (window.event) {
+    keycode = window.event.keyCode;
+  } else {
+    if (Event) {
+      keycode = Event.which;
+    } else {
+      return true;
+    }
+  }
+  if (keycode == 13) {
+   if (FieldObj==document.data.User) {
+     document.data.PW.select();
+     document.data.PW.focus();
+     return false;
+   }
+   return true;
+  } else {
+   return true;
+  }
+}
+function loaded() {
+  if (top.superiore.document.title!="Empty")
+    top.superiore.location.reload(true);
+  if (top.sommario.document.title!="Empty")
+    top.sommario.location.reload(true);
+  if (top.menu.document.title!="Empty")
+    top.menu.location.reload(true);
+  if (top.log.document.title!="Empty")
+    top.log.location.reload(true);
+  document.data.User.focus();
+  //document.data.User.select();
+}
+function x509Users() {
+  newwin=open("kerbynet?Section=NoAuthREQ&Action=x509List&type=user","x509List","top=100,left=200,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function x509Hosts() {
+  newwin=open("kerbynet?Section=NoAuthREQ&Action=x509List&type=host","x509List","top=100,left=200,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function x509CA() {
+  newwin=open("kerbynet?Section=NoAuthREQ&Action=x509view&User=%s&x509type=CA","509List","top=100,left=200,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function x509CRL() {
+  newwin=open("kerbynet?Section=NoAuthREQ&Action=x509view&User=%s&x509type=CRL","509List","top=100,left=200,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Action value="StartSessionSubmit">
+<table width=100% border=0>
+<tr>
+<td><img border="0" src="/kerbynet/Zeroshell.gif" width="172" height="63"></td>
+<td valign=top width=1% align=center nowrap><hr><font color=#2020e0><b>X.509 certificates</b></font><br>&nbsp;&nbsp;<a href=# onclick="x509CA()">CA</a>&nbsp;&nbsp;<a href=# onclick="x509Users()">Users</a>&nbsp;&nbsp;<a href=# onclick="x509Hosts()">Hosts</a>&nbsp;&nbsp;<a href=# onclick="x509CRL()">CRL</a>&nbsp;&nbsp;<hr></td>
+</tr>
+<tr><td><font color="#FF0000" class=Bigger1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<xvar errormsg></font></td></tr>
+<tr>
+<td>
+<table border=0>
+
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;</td><td><input type=text name=User size=30 onKeyPress="return CheckEnterKey(this,event)" tabindex=1></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Password&nbsp;&nbsp;</td><td><input type=password name=PW size=30 tabindex=2></td></tr>
+<tr><td></td><td align=center><br><input type=submit value="   Login   "> <input type=button value="Password" onclick="alert('Login required to change password.')"></td></tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

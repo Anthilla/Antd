@@ -30,45 +30,50 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Threading;
 using antdlib;
-using antdlib.Common;
-using antdlib.Log;
+using antdlib.common;
+using antdlib.views;
 using Owin;
 using Microsoft.Owin.Hosting;
 using Antd.Middleware;
 using Nancy;
 using Nancy.Owin;
+using RaptorDB;
 
 namespace Antd {
     internal static class AntdApplication {
+        public static RaptorDB.RaptorDB Database;
+
         private static void Main() {
-            try {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                var startTime = DateTime.Now;
-                Console.Title = "antd";
-                if (Parameter.IsUnix == false) {
-                    Directory.CreateDirectory("/cfg/antd");
-                    Directory.CreateDirectory("/cfg/antd/database");
-                    Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                    ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
-                }
-                Configuration();
-                var port = Convert.ToInt32(ApplicationSetting.HttpPort());
-                using (WebApp.Start<Startup>($"http://+:{port}/")) {
-                    ConsoleLogger.Log("loading service");
-                    ConsoleLogger.Log($"http port: {port}");
-                    ConsoleLogger.Log("antd is running");
-                    ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-                    do {
-                        Thread.Sleep(60000);
-                    } while (!Console.KeyAvailable);
-                }
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            var startTime = DateTime.Now;
+            Console.Title = "antd";
+            if (Parameter.IsUnix == false) {
+                Directory.CreateDirectory("/cfg/antd");
+                Directory.CreateDirectory("/cfg/antd/database");
+                Directory.CreateDirectory("/mnt/cdrom/DIRS");
+                ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
             }
-            catch (Exception ex) {
-                Directory.CreateDirectory($"{Parameter.AntdCfgReport}");
-                File.WriteAllText($"{Parameter.AntdCfgReport}/{Timestamp.Now}-crash-report.txt", ex.ToString());
-                DeNSo.Session.ShutDown();
+
+            Configuration();
+
+            var port = Convert.ToInt32(ApplicationSetting.HttpPort());
+            using (var host = WebApp.Start<Startup>($"http://+:{port}/")) {
+                ConsoleLogger.Log("loading service");
+                ConsoleLogger.Log($"http port: {port}");
+                ConsoleLogger.Log("antd is running");
+                ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+                KeepAlive();
+                ConsoleLogger.Log("antd is closing");
+                host.Dispose();
+                Database.Shutdown();
+            }
+        }
+
+        private static void KeepAlive() {
+            var r = Console.ReadLine();
+            while (r != "quit") {
+                r = Console.ReadLine();
             }
         }
 
@@ -76,7 +81,23 @@ namespace Antd {
             AntdBoot.CheckOsIsRw();
             AntdBoot.SetWorkingDirectories();
             AntdBoot.SetCoreParameters();
-            AntdBoot.StartDatabase();
+
+            var path = ApplicationSetting.DatabasePath();
+            Database = RaptorDB.RaptorDB.Open(path);
+            Global.RequirePrimaryView = false;
+            Database.RegisterView(new CommandView());
+            Database.RegisterView(new CommandValuesView());
+            Database.RegisterView(new CustomTableView());
+            Database.RegisterView(new FirewallListView());
+            Database.RegisterView(new JobView());
+            Database.RegisterView(new LogView());
+            Database.RegisterView(new MountView());
+            Database.RegisterView(new NetworkInterfaceView());
+            Database.RegisterView(new ObjectView());
+            Database.RegisterView(new RsyncView());
+            Database.RegisterView(new UserClaimView());
+            Database.RegisterView(new UserView());
+
             AntdBoot.CheckCertificate();
             AntdBoot.ReloadUsers();
             AntdBoot.ReloadSsh();
@@ -89,7 +110,7 @@ namespace Antd {
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.ImportSystemInformation();
-            AntdBoot.StartScheduler(true);
+            AntdBoot.StartScheduler(false);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
             //AntdBoot.StartWebsocketServer();
@@ -99,20 +120,18 @@ namespace Antd {
 
     internal class Startup {
         public void Configuration(IAppBuilder app) {
-            ConsoleLogger.Log("loading app configuration");
             object httpListener;
             if (app.Properties.TryGetValue(typeof(HttpListener).FullName, out httpListener) && httpListener is HttpListener) {
                 ((HttpListener)httpListener).IgnoreWriteExceptions = true;
             }
             app.UseDebugMiddleware();
             app.UseNancy();
-            app.UseDebugMiddleware(new DebugMiddlewareOptions() {
+            app.UseDebugMiddleware(new DebugMiddlewareOptions {
                 OnIncomingRequest = context => context.Response.WriteAsync("## Beginning ##"),
                 OnOutGoingRequest = context => context.Response.WriteAsync("## End ##")
             });
             StaticConfiguration.DisableErrorTraces = false;
             app.UseNancy(options => options.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound));
-            ConsoleLogger.Log("nancyfx ready");
         }
     }
 }

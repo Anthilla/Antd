@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DOMAIN="$1"
+[ -z "$DOMAIN" ] && exit 1
+CONFIG=$REGISTER/system/cp/Auth/Domains
+cd "$CONFIG" || exit 2
+if [ -d "$DOMAIN" ] ; then
+  find . -type f -name 'Default' -exec rm -f {} \;
+  touch $DOMAIN/Default
+else
+  exit 3
+fi
+
+
+

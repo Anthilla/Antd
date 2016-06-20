@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.IO;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Install {
     public class InstallOperativeSystem {
@@ -54,25 +54,25 @@ namespace antdlib.Install {
             ConsoleLogger.Log($"creating partitions on: {_diskname}");
             const string n = "\n";
             var fdiskOptions1 = $"p{n}n{n}1{n}1M{n}{n}{n}t{n}1{n}4{n}{n}{n}w{n}";
-            Terminal.Terminal.Execute($"echo -e \"{fdiskOptions1}\" | fdisk {_diskname}");
+            Terminal.Execute($"echo -e \"{fdiskOptions1}\" | fdisk {_diskname}");
             ConsoleLogger.Log($"{_diskBiosBoot} created");
             var fdiskOptions2 = $"p{n}n{n}2{n}-512M{n}{n}{n}t{n}2{n}1{n}{n}{n}w{n}";
-            Terminal.Terminal.Execute($"echo -e \"{fdiskOptions2}\" | fdisk {_diskname}");
+            Terminal.Execute($"echo -e \"{fdiskOptions2}\" | fdisk {_diskname}");
             ConsoleLogger.Log($"{_diskEfi} created");
             var fdiskOptions3 = $"p{n}n{n}3{n}-32G{n}{n}{n}t{n}3{n}15{n}{n}{n}w{n}";
-            Terminal.Terminal.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {_diskname}");
+            Terminal.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {_diskname}");
             ConsoleLogger.Log($"{_diskData} created");
 
-            Terminal.Terminal.Execute($"parted -a optimal -s {_diskname} name 2 \"EFI System Partition\"");
-            Terminal.Terminal.Execute($"parted -a optimal -s {_diskname} name 3 BootExt");
+            Terminal.Execute($"parted -a optimal -s {_diskname} name 2 \"EFI System Partition\"");
+            Terminal.Execute($"parted -a optimal -s {_diskname} name 3 BootExt");
 
-            Terminal.Terminal.Execute($"mkfs.ext4 {_diskData} -L BootExt");
-            Terminal.Terminal.Execute($"mkfs.fat -n EFI {_diskEfi}");
+            Terminal.Execute($"mkfs.ext4 {_diskData} -L BootExt");
+            Terminal.Execute($"mkfs.fat -n EFI {_diskEfi}");
 
             ConsoleLogger.Log("Copying files (this step will take a few minutes)");
-            Terminal.Terminal.Execute($"mount -o discard,noatime,rw {_diskData} {_tmpDataFolder}");
-            Terminal.Terminal.Execute($"rsync -aHAz /mnt/cdrom/ {_tmpDataFolder}");
-            Terminal.Terminal.Execute($"grub2-install {_diskname}");
+            Terminal.Execute($"mount -o discard,noatime,rw {_diskData} {_tmpDataFolder}");
+            Terminal.Execute($"rsync -aHAz /mnt/cdrom/ {_tmpDataFolder}");
+            Terminal.Execute($"grub2-install {_diskname}");
             ConsoleLogger.Log("INSTALLATION DONE");
         }
     }

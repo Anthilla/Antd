@@ -1,0 +1,81 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Router Manage</title>
+<script language=Javascript>
+<xinclude ip_utility.inc>
+function RTLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=Routing","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+function CheckIP() {
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=CheckIP","CheckIP","top=50,left=200,width=800,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+};
+function EnableForwarding() {
+  document.data.Action.value="EnableForwarding";
+  document.data.submit();
+}
+function DefaultGW() {
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=DefaultGW","DefaultW","top=450,left=400,width=350,height=120,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function AddStatic() {
+      var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=AddStatic","StaticConfig","top=350,left=400,width=550,height=230,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function ChangeStatic() {
+  se=selected_entry();
+  if (se=="") {
+    alert("You should select a static route to change.");
+    return false;
+  }
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=ChangeStatic&Entry="+se,"StaticConfig","top=350,left=400,width=550,height=230,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function RouteTable() {
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=RouteTable&Dynamic=yes&Static=yes&Auto=yes","RouteTable","top=120,left=150,width=860,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+};
+function selected_entry() {
+   X=document.data.Entry;
+   if (X==undefined) {
+     return "";
+   }
+   if (X.length!=undefined) {
+     for (i=0; i<X.length; i++) {
+       if (X[i].checked) return X[i].value;
+     }
+   } else {
+       if (X.checked) return X.value;
+   }
+   return "";
+}
+function DeleteStatic() {
+  se=selected_entry();
+  if (se=="") {
+    alert("You should select a static route to remove.");
+    return false;
+  }
+  if (confirm("Are you sure you want to remove the static route?")) {
+    location="kerbynet?Section=Router&STk=<xvar STk>&Action=DeleteStaticRoute&Entry="+se;
+  }
+}
+</script>
+</head>
+<body>
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="Router">
+<input type=hidden name=Action value="Manage"><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1>
+<tr><td width="1%" nowrap><b><font color=#808080>&nbsp;Forwarding:</font><font color=#008000>&nbsp;&nbsp;<xvar _Forwarding>&nbsp;</font></b></td><td align="right">
+&nbsp;<font color=#0000f0 face=Arial><input name=EnabledForwarding type=checkbox value="yes" onclick="EnableForwarding()" <xvar ForwardingChecked>> Enabled</font>&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Default GW" onclick="DefaultGW()"><input type=button value="Routing Table" onclick="RouteTable()"><input type=button value="Check IP" onclick="CheckIP()"><input type=button value="Show Log" onclick="RTLOG()"></td></tr>
+</table>
+<br>
+<table width="100%"><tr><td bgcolor=#6666ff>&nbsp;<font color=#ffffff><b>STATIC ROUTES</b></font></td><td align=right><input type=button value="Add" onclick="AddStatic()" style="font-size: 10;"><input type=button value="Change" onclick="ChangeStatic()" style="font-size: 10;"><input type=button value="Delete" onclick="DeleteStatic()" style="font-size: 10;"></td></tr></table>
+<table bordercolor=#ffffff border=2 width=100% bgcolor=#f0f0ff style="border-collapse: collapse; font-family: courier; color: #0000A0; font-size: 10pt;">
+<tr><th width=1%>&nbsp;&nbsp;&nbsp;</th><th>Destination</th><th>Netmask</th><th>Type</th><th>Metric</th><th>Gateway</th><th>Interface</th><th>State</th></tr>
+<xvar !router_liststatic>
+</table>
+</body>
+</html>

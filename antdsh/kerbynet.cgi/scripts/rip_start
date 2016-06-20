@@ -1,0 +1,106 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function InterfaceConfig() {
+  echo "interface $NAME" >> "$TMP2"
+  if [ "`cat Authentication`" == MD5 -a "`cat Secret`" != "" ] ; then
+    echo "key chain Key$NAME" >> "$TMP1"
+    echo " key 1" >> "$TMP1"
+    echo "  key-string `cat Secret`" >> "$TMP1"
+    echo " ip rip authentication mode md5 auth-length rfc" >> "$TMP2"
+    echo " ip rip authentication key-chain Key$NAME" >> "$TMP2"
+  fi
+  if [ "`cat Authentication`" == PlainText -a "`cat Secret`" != "" ] ; then
+    echo " ip rip authentication mode text" >> "$TMP2"
+    echo " ip rip authentication string `cat Secret`" >> "$TMP2"
+  fi
+  if [ "`cat SplitHorizon`" == yes ] ; then
+    if [ "`cat PoisonedReverse`" == yes ] ; then
+      PR=" poisoned-reverse"
+    else
+      PR=""
+    fi
+    echo " ip rip split-horizon$PR" >> "$TMP2"
+  else
+    echo " no ip rip split-horizon" >> "$TMP2"   
+  fi
+  echo " network $NAME" >> "$TMP3"
+  if [ "`cat PassiveMode`" == yes ] ; then
+    echo " passive-interface $NAME" >> "$TMP3"
+  fi
+
+}
+function CreateConfig {
+TMP1="`tempfile`"
+TMP2="`tempfile`"
+TMP3="`tempfile`"
+cat <<EOF > "$TMP1" 
+hostname ripd
+password zebra
+log stdout
+!
+EOF
+echo > "$TMP2"
+cat <<EOF  > "$TMP3"
+router rip
+ redistribute kernel
+ redistribute connected
+ redistribute static
+EOF
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES=`ls`
+for I in $INTERFACES ; do
+   cd $CONFIG
+   if ! [ -d $I/Bridge/ -o -d $I/Bond/ ] ; then
+     if [ -r $I/RIP/Enabled ] ; then
+       cd $I/RIP
+       NAME="$I"
+       InterfaceConfig      
+     fi
+   fi
+   if [ -d "$CONFIG/$I/VLAN" ] ; then
+      cd $CONFIG/$I/VLAN
+      VLANS=`ls`
+      for V in $VLANS ; do
+        if [ -r $V/RIP/Enabled ] ; then
+          cd $V/RIP
+          NAME="$I.$V"
+          InterfaceConfig
+        fi
+      done
+   fi
+done
+cat "$TMP1" "$TMP2" "$TMP3" 2>/dev/null > /etc/ripd.conf
+rm -f "$TMP1" "$TMP2" "$TMP3"
+
+}
+function TERM () {
+  I=0
+  while [ $I -lt 30 ] ; do
+    if pidof ripd >/dev/null ; then
+      killall -TERM ripd 2> /dev/null
+    else
+      I=0
+      while [ $I -lt 30 ] ; do
+        if pidof zebra >/dev/null ; then
+          killall -TERM zebra 2> /dev/null
+        else
+          return 0
+        fi
+        I=$((I+1))
+      done
+      return 1
+    fi
+    I=$((I+1))
+  done
+  return 1
+}
+if [ -r "$REGISTER/system/net/router/RIP/ENABLED" ] ; then
+   TERM 
+   zebra -d -A 127.0.0.1
+   CreateConfig
+   ripd -d -A 127.0.0.1
+else
+   TERM
+fi
+

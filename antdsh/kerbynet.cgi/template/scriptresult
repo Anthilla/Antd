@@ -1,0 +1,27 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Script Test</title>
+<script>
+function loaded() {
+  X=document.data;
+}
+</script>
+</head>
+<body style="color: #404040" topmargin=5 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Setup">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<input type=hidden name=ScriptName value="<xvar ScriptName>">
+<table width=100%>
+<tr><td><font color=#3030f0 class=Bigger2><b>Output of the <xvar ScriptName> script</b></td><td align=right><input type=button value=close onclick="window.close()"></td></tr>
+
+</table>
+<hr>
+<pre>
+<xvar _Result>
+</pre>
+</form>
+</body>
+</html>

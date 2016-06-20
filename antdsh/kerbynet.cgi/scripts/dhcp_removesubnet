@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SUBNET="$1"
+[ -z "$SUBNET" ] && exit 1
+CONFIG="$REGISTER/system/dhcp"
+cd $CONFIG/subnets
+if [ -d $CONFIG/subnets/$SUBNET ] ; then
+  echo $CONFIG/subnets/$SUBNET
+  rm -rf $CONFIG/subnets/$SUBNET
+  $SCRIPTS/dhcp_start
+  SELECTEDSUBNET=`ls -d [0123456789][0123456789] 2>/dev/null | head -1`
+  echo $SELECTEDSUBNET >$CONFIG/SelectedSubnet
+else
+  echo "Subnet does not exist." 1>&2 && exit 5
+fi

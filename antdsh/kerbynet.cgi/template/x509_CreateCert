@@ -1,0 +1,50 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Create new certificate</title>
+<script>
+function loaded() {
+  if ("<xvar type>"=="user") {
+     document.data.type[0].checked=true;
+  } else {
+     document.data.type[1].checked=true;
+  }
+}
+function typeChanged() {
+  if (document.data.type[0].checked) {
+    location="kerbynet?Section=x509&STk=<xvar STk>&Action=NotAvailableCerts&type=user"  
+  } else {
+    location="kerbynet?Section=x509&STk=<xvar STk>&Action=NotAvailableCerts&type=host"  
+  }
+}
+function CreateCert() {
+  if (document.data.x509cn.selectedIndex>-1) {
+    document.data.Action.value="CreateCert";
+    document.data.submit();
+  } else {
+    alert("You have to select an user/host to create a certificate.");
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='x509'>
+<input type=hidden name=STk value='<xvar STk>'>
+<input type=hidden name=Action value=''>
+<table width=100%>
+<tr><td><font color="#000080" class=Bigger1 face="Arial">Create new Certificate</font></td><td align=right><input type=button value="Create" onclick="CreateCert()"><input type=button value="Close" onclick="window.close()"></td></tr>
+</table>
+<hr>
+<table width=100%>
+<tr>
+<td nowrap>
+<font color=#0000D0><script>("<xvar type>"=="user")?document.write("Users"):document.write("Hosts");</script> available</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=radio name=type value="user" onclick="typeChanged()"> Users&nbsp;&nbsp;<input type=radio name=type value="host" onclick="typeChanged()"> Hosts<br>
+<select name=x509cn size=11 style="width: 100%">
+<xvar !optionByLDAP (type)>
+</select>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REBOOT="$1"
+ISECURITY="$2"
+IBUG="$3"
+IADDON="$4"
+IFEATURE="$5"
+IRELEASE="$6"
+USECURITY="$7"
+UBUG="$8"
+UADDON="$9"
+UFEATURE="${10}"
+DIR="$REGISTER/system/AutoUpdate/Automatic"
+echo "$REBOOT" > "$DIR/Reboot"
+echo "$ISECURITY" > "$DIR/ISecurity"
+echo "$IBUG" > "$DIR/IBug"
+echo "$IADDON" > "$DIR/IAddOn"
+echo "$IFEATURE" > "$DIR/IFeature"
+echo "$IRELEASE" > "$DIR/IRelease"
+echo "$USECURITY" > "$DIR/USecurity"
+echo "$UBUG" > "$DIR/UBug"
+echo "$UADDON" > "$DIR/UAddOn"
+echo "$UFEATURE" > "$DIR/UFeature"
+
+

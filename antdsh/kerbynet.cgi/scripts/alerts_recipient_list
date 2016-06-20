@@ -1,0 +1,31 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+RECIPIENTNAME="$1"
+QDIR="$REGISTER/system/alerts/"
+if ! [ -d "$QDIR/Recipients" ] ; then
+  mkdir -p "$QDIR/Recipients"
+fi
+cd "$QDIR/Recipients"
+RECIPIENTS=`ls -d * 2>/dev/null`
+if [ -n "$RECIPIENTS" ] ; then
+  for C in $RECIPIENTS ; do
+    NAME="$C"
+    DESC="`cat $C/Description`"
+    TYPE="`cat $C/Type`"
+    RECIPIENT="`cat $C/Recipient`"
+    SEVERITY="`cat $C/Severity`"
+    ENABLED="`cat $C/Enabled`"
+    if [ "$ENABLED" == yes ] ; then
+       CHECKED=checked
+    else
+       CHECKED=""
+    fi
+    if [ "$C" == "$RECIPIENTNAME" ] ; then
+      CHK=checked
+    else
+      CHK=""
+    fi
+    echo "<tr bgcolor=#e8e8e8><td width=1% nowrap align=center><input type=radio name='Recipients' value='$C' $CHK onclick='RecipientSelected(this)'>&nbsp;</td><td nowrap>&nbsp;&nbsp;$DESC</td><td align=center>$TYPE</td><td>&nbsp;&nbsp;$RECIPIENT&nbsp;</td><td align=center>$SEVERITY</td><td width=1% align=center><input type=checkbox name=Enabled$C value=$C $CHECKED onclick='ChangeStatus(this)'></td></tr>"
+  done
+fi
+

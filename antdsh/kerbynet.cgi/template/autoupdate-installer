@@ -1,0 +1,64 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Installer</title>
+<script>
+var ID,TYPE;
+function writeMsg(M) {
+  document.getElementById("Msg").innerHTML=M;
+}
+function loaded() {
+  X=document.data;
+  ID=X.ID.value.substr(0,X.ID.value.indexOf(":")); 
+  TYPE=X.ID.value.substr(X.ID.value.indexOf(":")+1);
+  Op=X.Op.value;
+  if (Op=="INSTALL") {
+    writeMsg("<font color=#6060F0 class=Bigger2>Installing ...</font>");
+  }
+  if (Op=="REMOVE") {
+    X.AbortBtn.disabled=true;
+    writeMsg("<font color=#6060F0 class=Bigger2>Removing ...</font>");
+  }
+  if (Op=="DISABLE") {
+    X.AbortBtn.disabled=true;
+    writeMsg("<font color=#6060F0 class=Bigger2>Disabling ...</font>");
+  }
+  if (Op=="ENABLE") {
+    X.AbortBtn.disabled=true;
+    writeMsg("<font color=#6060F0 class=Bigger2>Enabling ...</font>");
+  }
+}
+var P=0;
+
+function incProgress(Elapsed) {
+  document.getElementById("Elapsed").innerHTML=Elapsed+"&nbsp;&nbsp;";
+  if (P>9) {
+    for (i=1; i<P ;i++) document.getElementById("Progress").rows[0].cells[i].bgColor='#ffffff';
+    P=1;
+  } else {
+    document.getElementById("Progress").rows[0].cells[P++].bgColor='#e0e0ff';
+  }
+}
+function incProgress100(Elapsed) {
+  document.getElementById("Elapsed").innerHTML=Elapsed+"&nbsp;&nbsp;";
+  for (i=0; i<10 ;i++) document.getElementById("Progress").rows[0].cells[i].bgColor='#e0e0ff';
+}
+function Abort() {
+  location="kerbynet?STk=<xvar _STk>&Action=Render&Object=autoupdate-installer&ID=<xvar ID>&Op=ABORT";
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="AutoUpdate">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=ID value="<xvar ID>">
+<input type=hidden name=Op value="<xvar Op>">
+
+<table width=100%><tr><td id=Msg>&nbsp;</td><td id=Elapsed nowrap width=1% style="color:#6060f0"></td><td width=1% nowrap><table id=Progress border=2><tr><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;&nbsp;</td></tr></table></td><td width=1% nowrap>&nbsp;&nbsp;&nbsp;<input type=button name=AbortBtn value="Abort" onclick="Abort()"></td></tr></table>
+<hr>
+<iframe name=Output border=0 frameborder=0 width=100% height=210 src='kerbynet?STk=<xvar _STk>&Action=Render&Object=autoupdate-output&ID=<xvar ID>&Op=<xvar Op>'>Not compatible Browser</iframe>
+<xvar !autoupdate-installer (ID) (Op) (FLAGS)>
+
+</form>
+</body>
+</html>

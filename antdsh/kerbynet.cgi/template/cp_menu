@@ -1,0 +1,44 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function gateway() {
+   top.body.location="/cgi-bin/kerbynet?Section=CP&STk=<xvar STk>&Action=Gateway";
+};
+function WebLogin() {
+   top.body.location="/cgi-bin/kerbynet?Section=CP&STk=<xvar STk>&Action=WebLogin";
+};
+function Language() {
+   top.body.location="/cgi-bin/kerbynet?Section=CP&STk=<xvar STk>&Action=Language";
+}
+function accounting() {
+   top.body.location="/cgi-bin/kerbynet?Section=Acct&STk=<xvar STk>&Action=Manage";
+};
+function CPMRTG() {
+   newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=mrtg_show&Type=CP", "MRTG","top=200,left=200,width=800,height=480,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function CPBWD() {
+   newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=bwd_show", "BWD","top=100,left=100,width=1024,height=650,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+</script>
+</head>
+<body topmargin="0" text="#000000" onload="gateway()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23" bgcolor="#6060FF" width=100%>
+  <tr>
+    <td  bgcolor="#FFFFFF" nowrap width="180">
+    <p align="center"><b><font color="#4040f0">&nbsp;&nbsp;CAPTIVE PORTAL&nbsp;&nbsp;</font></b></td>
+    <td width="130" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="gateway()"><font color="#ffffff"><b>Gateway</b></font></td>
+    <td width="140" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="WebLogin()"><font color="#ffffff"><b>Authentication</b></font></td>
+    <td width="120" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="accounting()"><font color="#ffffff"><b>Accounting</b></font></td>
+    <td width="120" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="Language()"><font color="#ffffff"><b>Language</b></font></td>
+    <td width="120" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="CPMRTG()"><font color="#ffffff"><b>Graphics</b></font></td>
+    <td width="120" align="center" onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="CPBWD()"><font color="#ffffff"><b>Bandwidthd</b></font></td>
+    <td align="center"> </td>
+  </tr>
+</table>
+</body>
+</html>

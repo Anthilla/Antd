@@ -1,0 +1,6 @@
+#!/bin/bash
+TIME="$1"
+[ -z "$TIME" ] && exit
+[ "$TIME" = 0 ] && echo 0s
+echo $TIME | awk '{H=$0/3600 ; if (H>=1) printf ("%dh ",H) ; S=$0%3600 ; M=S/60 ;  if (M>=1)  printf ("%dm ",M) ; S=S%60 ; if (S>=1) printf ("%ds\n",S);}'
+

@@ -1,0 +1,22 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+cd "$SSLDIR/certs/trusted_CAs/"
+LAST=`ls [0123456789][0123456789].pem 2>/dev/null |tail -1`
+LAST=${LAST%.pem}
+if [ -z "$LAST" ] ; then
+  FILE=00
+else
+  if [ "${LAST:0:1}" == 0 ] ; then
+    U="${LAST:1:1}"
+    FILE=$(( U + 1 ))
+    if [ $FILE -lt 10 ] ; then
+      FILE=0$FILE
+    fi   
+  else
+    FILE=$((LAST+1))
+  fi
+fi
+/usr/local/ssl/bin/openssl x509 -out "$SSLDIR/certs/trusted_CAs/${FILE}.pem" >/dev/null && $SCRIPTS/c_rehashCA >/dev/null && /usr/local/ssl/bin/openssl x509 -in "$SSLDIR/certs/trusted_CAs/${FILE}.pem" -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'| awk -F'CN=' '{print $2}' |sed -r 's/(.*).*, [A-Z]{1,2}=.*/\1/'
+
+
+ 

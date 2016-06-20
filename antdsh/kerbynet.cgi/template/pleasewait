@@ -1,0 +1,12 @@
+<table id=TablePleaseWait><tr><td></td></tr></table>
+<script>
+function PleaseWait() {
+  tableElem = document.getElementById('TablePleaseWait');
+  rowElem = tableElem.rows[0];
+  rowElem.cells[0].innerHTML='<blink><font class=Bigger1 color=#0000d0><b><xvar #PleaseWait></b></font></blink>';  
+  document.data.submit();
+  for (i=0; i<document.data.elements.length; i++) {
+    document.data.elements[i].disabled=true;
+  }  
+}
+</script>

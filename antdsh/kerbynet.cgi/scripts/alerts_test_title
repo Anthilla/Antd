@@ -1,0 +1,7 @@
+#!/bin/bash
+TYPE="$1"
+if [ -z "$TYPE" ] ; then
+  echo "SMS and e-Mail"
+else
+  echo "$TYPE"
+fi

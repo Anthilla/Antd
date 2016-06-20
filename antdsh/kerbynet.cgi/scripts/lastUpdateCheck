@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+LIST="$REGISTER/system/AutoUpdate/Releases/$RELEASE.$PATCHLEVEL/UpdateList"
+LastUpdate=`ls -l --time-style=+"#%B %d, %Y  %R#" $LIST 2>/dev/null |sed -r 's/.*#(.*)#.*/\1/g'`
+if [ -n "$LastUpdate" ] ; then
+  if [ -f $LIST.err ] ; then
+    echo "<font color=#f05050>$LastUpdate</font>"
+  else
+    echo $LastUpdate
+  fi
+else
+  echo "<font color=#F03030><b>&nbsp;&nbsp;&nbsp;NEVER</b></font>"
+fi

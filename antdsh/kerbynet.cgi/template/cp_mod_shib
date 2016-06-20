@@ -1,0 +1,174 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Shibboleth Module Configuration</title>
+<script>
+function loaded() {
+  X=document.data;
+  X.Ext.value="<xvar Ext>";
+  if ("<xvar +shib_release>"=="Native") {
+    X.Native.disabled=true;
+  }
+  Msg="<xvar _Msg>";
+  if (Msg!="") {
+    writeMsg(Msg);
+  }
+  Msg="<xvar _Msg2>";
+  if (Msg!="") {
+    writeMsg2(Msg);
+  }
+}
+function ExtChanged() {
+  X=document.data;
+  location="kerbynet?STk=<xvar STk>&Action=Render&Object=cp_mod_shib&Ext="+X.Ext.value;
+}
+function AuthzFilter() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Section=CP&Action=ShibAuthz","ShibAuthz","top=250,left=200,width=700,height=420,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function IdPWL(FileName) {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=shib_whitelist","IdPWL","top=250,left=350,width=550,height=350,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function FileEditor(FileName) {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Section=Common&Action=FileEditor&FileName="+FileName,"FileEditor","top=100,left=100,width=820,height=530,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function EditFile() {
+   FileOption=document.data.Filename;
+   if (FileOption.selectedIndex<0) {
+      alert("You have to select a file to edit");
+   } else {
+      fname=FileOption.options[FileOption.selectedIndex].value;
+   }
+   FileEditor(fname);
+}
+function RemoveFile() {
+   FileOption=document.data.Filename;
+   if (FileOption.selectedIndex<0) {
+      alert("You have to select a file to remove");
+   } else {
+      fname=FileOption.options[FileOption.selectedIndex].value;
+      if (confirm("Are you sure you want to remove the file "+fname+"?")) {
+         location="kerbynet?STk=<xvar STk>&Section=CP&Action=ShibRemoveFile&Ext=<xvar Ext>&FileName="+fname;
+      }
+   }
+}
+function CopyFile() {
+   FileOption=document.data.Filename;
+   if (FileOption.selectedIndex<0) {
+      alert("You have to select a file to copy");
+   } else {
+      fname=FileOption.options[FileOption.selectedIndex].value.replace(/\/etc\/shibboleth\//,"");
+      if (destination=prompt("Destination filename",fname)) {
+         if (fname==destination) {
+	   alert("Source and destination file cannot be the same");
+           return;
+         }
+         location="kerbynet?STk=<xvar STk>&Section=CP&Action=ShibCopyFile&Ext=<xvar Ext>&FileName="+fname+"&Destination="+destination;
+      }
+   }
+}
+function UpgradeRelease() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&&Action=Render&Object=cp_shibupgrade","ShibUpgrade","top=350,left=350,width=550,height=250,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function UseNative() {
+   if (confirm("Are you sure you want to remove the update of the Shibboleth Module?")) {
+     location="kerbynet?STk=<xvar STk>&Section=CP&Action=UseNativeShib";
+   }
+}
+function NewFile() {
+   if (FileName=prompt("File to create")) {
+     if (FileName!="") {
+       if (FileName.indexOf("/")<0) {
+         Ext=document.data.Ext.value;
+         if (FileName.indexOf(".")<0) {
+           if (Ext!="") { 
+             FileName=FileName+Ext;
+           }
+         } else {
+           Ext=FileName.substr(FileName.indexOf("."))
+           if (Ext!=".xml" && Ext!=".html" && Ext!=".pem") {
+             Ext=""
+           }
+         }
+         location="kerbynet?STk=<xvar STk>&Section=CP&Action=ShibNewFile&Ext="+Ext+"&FileName="+FileName;
+       } else {
+         alert("The / is not allowed in the filename. The destination directory is /etc/shibboleth/");
+       }
+     }
+   }
+}
+function ReloadModule() {
+   if ("<xvar /system/cp/Auth/Shibboleth/Enabled>" == "yes") {
+     writeMsg2("<font color=#20e020 class=Bigger1><blink>Shibboleth is being reloaded. Please wait ...</blink></font>")
+     location="kerbynet?STk=<xvar STk>&Section=CP&Action=ShibReload";
+   } else {
+      alert("Shibboleth has not been enabled");
+   }
+}
+function writeMsg(Msg) {
+ document.getElementById("Msg").innerHTML=Msg;
+}
+function writeMsg2(Msg) {
+ document.getElementById("Msg2").innerHTML=Msg;
+}
+function ReloadMsg() {
+ document.getElementById("MsgReload").innerHTML="<font color=#ff8040>Reload needed</font>&nbsp;&nbsp;&nbsp;";
+}
+function getSPMetadata() {
+   STATUS="<xvar +shibd_status>";
+   if (STATUS.indexOf("Running")>=0) {
+     var newwin=window.open("kerbynet?STk=<xvar STk>&Section=CP&Action=GetSPMetadata","GetSPMetadata","top=200,left=350,width=700,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+     newwin.focus();
+   } else {
+     alert("You cannot get the metadata because the Shibboleth module is not running.");
+   }
+   
+}
+function TryAuthentication() {
+   STATUS="<xvar +shibd_status>";
+   if (STATUS.indexOf("Running")>=0) {
+     var newwin=window.open("kerbynet?STk=<xvar STk>&Section=CP&Action=ShibTryAuth","ShibTryAuth","top=100,left=100,width=900,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+     newwin.focus();
+   } else {
+     alert("You cannot try the authentication because the Shibboleth module is not running.");
+   }
+}
+function CheckConfig() {
+     var newwin=window.open("kerbynet?STk=<xvar STk>&Section=CP&Action=ShibCheckConfig","GetSPMetadata","top=200,left=350,width=700,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+     newwin.focus();
+}
+function CronJob() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Section=Setup&Action=Startup&ScriptName=Shibboleth-Cron","StartUp","top=100,left=100,width=820,height=530,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+</script>
+</script>
+</head>
+<body onload="loaded()">
+<form name=data action="kerbynet" method=post>
+<input type=hidden name=Section value="CP">
+<input type=hidden name=Action value=""><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr><td><font face="Arial" color="#2020f0" class=Bigger2><b>Shibboleth Module Configuration</b></font></td><td align=right nowrap width=1%>[ <xvar +shibd_status> ]&nbsp;&nbsp;&nbsp;<span id=savetab></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Close" onclick="window.close()"></td></tr></table>
+<hr><br>
+<span id="Msg"></span>
+<table width=100%><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Software Release&nbsp;</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=#808080>[ <xvar +shib_release> ]</font></td><td align=right><input type=button value="Upgrade" style="font-size: 10;" onclick="UpgradeRelease()">&nbsp;<input type=button name=Native value="Native" style="font-size: 10;" onclick="UseNative()"></td>
+  <table border=1 width=100% cellspacing=0 cellpadding=5 bordercolor=#4040d0 style="color: #606060;"><tr><td>
+    <xvar +cp_shib_release>
+  </td></tr></table>
+<hr>
+<table width=100%><tr><td nowrap width=1%><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Configuration Files&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name=Ext style="font-size:10" onchange="ExtChanged()"><option value=".xml">xml</option><option value=".html">html</option><option value=".pem">pem</option><option value="">ALL</option></select></td><td nowrap width=1%>&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Edit" style="font-size: 10;" onclick="EditFile()">&nbsp;<input type=button value="New" style="font-size: 10;" onclick="NewFile()">&nbsp;<input type=button value="Remove" style="font-size: 10;" onclick="RemoveFile()">&nbsp;<input type=button value="Copy" style="font-size: 10;" onclick="CopyFile()">&nbsp;</td><td align=right id=MsgReload>&nbsp;</td><td align=right nowrap width=1%>&nbsp;&nbsp;&nbsp;<input type=button value="Verify" style="font-size: 10;" onclick="CheckConfig()">&nbsp;<input type=button value="Reload" style="font-size: 10;" onclick="ReloadModule()">&nbsp;&nbsp;</td>
+  <table border=1 width=100% cellspacing=0 cellpadding=2 bordercolor=#4040d0><tr><td>
+    <xvar +cp_shib_lsconfig (Ext)>
+  </td></tr></table>
+<hr>
+<table width=100%><tr>
+<td><a href="#" onclick="getSPMetadata()">SP Metadata</a>&nbsp;&nbsp;&nbsp;<a href="#" onclick="TryAuthentication()">Try Authentication</a></td><td align=right><input type=button value="Authorization Filter" onclick="AuthzFilter()">&nbsp;<input type=button value="WAYF / IdP Whitelist" onclick="IdPWL()">&nbsp;<input type=button value="Cron Job" onclick="CronJob()"></td>
+</tr></table>
+<br><br>
+<span id=Msg2></span>
+</form>
+</body>
+</html>

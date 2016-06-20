@@ -1,0 +1,12 @@
+#!/bin/sh
+PART=`df | grep  -w "/DB" |grep -v "/DB/" | cut -f1 -d' '`
+if ! [ -z "$PART" ] ; then
+   DB=`df  | grep -w /Database$ | cut -f1 -d' '`
+   DB=`basename "$DB"` 
+   DB=${DB%.AUX}
+   if ! [ -z "$DB" ] ; then
+      echo "$PART:$DB"
+      exit 
+   fi
+fi
+echo No

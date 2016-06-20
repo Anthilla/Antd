@@ -1,0 +1,5 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+PROTOCOLS="/etc/protocols"
+grep -v ^# /etc/protocols  |sed -r 's/[^ ]+[ ]+([^ ]+)[ ]+([^ ]+).*/ \1 \2/' | awk '{printf "<option value=%s>%s</option>\n",$1,$2}'
+

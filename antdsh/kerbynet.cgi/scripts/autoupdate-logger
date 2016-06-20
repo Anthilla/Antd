@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+OP="$2"
+MSG="$3"
+[ -z "$ID" ] && exit 1
+[ -z "$OP" ] && exit 2
+[ -z "$MSG" ] && exit 3
+TYPE=`echo "$ID" |awk -F: '{print $2}'`
+ID=`echo "$ID" |awk -F: '{print $1}'`
+logger -t PkgManager "$OP: $ID: $MSG"

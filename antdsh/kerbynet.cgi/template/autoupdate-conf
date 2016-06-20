@@ -1,0 +1,60 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Updater Setup</title>
+<script>
+function loaded() {
+  X=document.data;
+  X.Reboot.value="<xvar /system/AutoUpdate/Automatic/Reboot>"; 
+  X.ISecurity.value="<xvar /system/AutoUpdate/Automatic/ISecurity>"; 
+  X.IBug.value="<xvar /system/AutoUpdate/Automatic/IBug>"; 
+  X.IAddOn.value="<xvar /system/AutoUpdate/Automatic/IAddOn>"; 
+  X.IFeature.value="<xvar /system/AutoUpdate/Automatic/IFeature>"; 
+  X.IRelease.value="<xvar /system/AutoUpdate/Automatic/IRelease>"; 
+  X.USecurity.value="<xvar /system/AutoUpdate/Automatic/USecurity>"; 
+  X.UBug.value="<xvar /system/AutoUpdate/Automatic/UBug>"; 
+  X.UAddOn.value="<xvar /system/AutoUpdate/Automatic/UAddOn>"; 
+  X.UFeature.value="<xvar /system/AutoUpdate/Automatic/UFeature>"; 
+}
+function NotSaved() {
+  document.getElementById('SaveTab').innerHTML="<font color=#FF4040><b>Not saved</b></font>";
+
+}
+function SaveSetup() {
+  X=document.data;
+  X.submit(); 
+
+}
+</script>
+</head>
+<body onload="loaded()" style="color:#606060">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value=AutoUpdate>
+<input type=hidden name=Action value="AutoUpdateSaveSetup"><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr><td><font class=Bigger2 color=#3030f0><b>Updater Setup</b></font></td><td align=right><span id=SaveTab></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value=Save onclick="SaveSetup()">&nbsp;&nbsp;<input type=button value=Close onclick="window.close()"></td></tr></table>
+<hr><br>
+
+<table width=100%>
+<tr><td>Automatic System Reboot if required</td><td align=right width=1%><select name="Reboot" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+</table>
+<br>
+<span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Auto Install&nbsp;&nbsp;</font></span>
+<table width=100% border=1>
+<tr><td>&nbsp;&nbsp;&nbsp;Security Fixes</td><td align=right width=1%><select name="ISecurity" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Bug Fixes</td><td align=right width=1%><select name="IBug" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Add-Ons</td><td align=right width=1%><select name="IAddOn" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;New Features</td><td align=right width=1%><select name="IFeature" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;New Releases</td><td align=right width=1%><select name="IRelease" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+
+</table>
+<br>
+<span style="background-color: #6666ff"><font color=#ffffff>&nbsp;&nbsp;Auto Update&nbsp;&nbsp;</font></span>
+<table width=100% border=1>
+<tr><td>&nbsp;&nbsp;&nbsp;Security Fixes</td><td align=right width=1%><select name="USecurity" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Bug Fixes</td><td align=right width=1%><select name="UBug" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;Add-Ons</td><td align=right width=1%><select name="UAddOn" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+<tr><td>&nbsp;&nbsp;&nbsp;New Features</td><td align=right width=1%><select name="UFeature" onchange="NotSaved()"><option value="no">No</option><option value="yes">Yes</option></select></td></tr>
+
+</table>
+</form>
+</body>
+</html>

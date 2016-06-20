@@ -1,0 +1,13 @@
+#!/bin/bash
+TYPE="$1"
+IDP="$2"
+if [ "`cat /var/register/system/cp/Auth/Shibboleth/AutoDiscovery 2>/dev/null`" = yes ] ; then
+  if echo "$IDP" | grep -q -v ":12081" ; then
+    /root/kerbynet.cgi/scripts/shib_freeIdP "$IDP"
+    IDP=`echo "$IDP" | sed -r 's/(.*:\/\/)([^/?]+)[/?].*/\1\2/'`
+    if ! grep -q -w "$IDP$" /var/register/system/cp/Auth/Shibboleth/WhiteList 2>/dev/null ; then
+      echo "$IDP" >> /var/register/system/cp/Auth/Shibboleth/WhiteList
+    fi
+  fi
+fi
+

@@ -1,0 +1,19 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Alert Test</title>
+</head>
+<body>
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Alerts">
+<input type=hidden name=Action value="Test"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Type value="<xvar _Type>">
+<table width=100%><tr><td><font face="Arial" color="#3030f0" class=Bigger2><b><xvar +alerts_test_title (Type)> Test</b></font></td><td align=right nowrap width=1%><input type=button value=Close onclick="window.close()"></td></tr></table>
+<hr>
+<xvar +alerts_recipient_desc (Recipient)>
+<br>
+<table width=100% border=1><tr><td>
+<iframe name=AlertTest border=0 frameborder=0 width=100% height=300 src='kerbynet?STk=<xvar STk>&Action=Render&Object=alerts_test_logs&ID=<xvar !alert_spool (EventID) (Type) (Recipient)>'>Not compatible Browser</iframe>
+</td></tr></table>
+</form>
+</body>
+</html>

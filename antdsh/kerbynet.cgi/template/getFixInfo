@@ -1,0 +1,20 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<script>
+var ID,TYPE,MSG1;
+function loaded() {
+    X=document.data;
+}
+
+
+</script>
+</head>
+<body onload="loaded()" style="color:#404040">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="AutoUpdate">
+<input type=hidden name=STk value=<xvar STk>>
+<span id=Msg1>Waiting for downloading details ...</span>
+<xvar !getFixInfo (ID)>
+</form>
+</body>
+</html>

@@ -27,10 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using antdlib.Scheduler;
 using System.IO;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Overlayfs {
 
@@ -51,7 +49,6 @@ namespace antdlib.Overlayfs {
             }
             else {
                 ConsoleLogger.Log("Overlayfs -> Mount");
-                Job.Schedule(Guid.NewGuid().ToString(), "Mount Overlayfs", "Mount -t overlay -o lowerdir=" + lower + ",upperdir=" + upper + ",workdir=" + work + " overlay " + merged);
             }
         }
 

@@ -1,0 +1,44 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/dhcp"
+SUBNET="`cat $CONFIG/SelectedSubnet`"
+NW=`cat $CONFIG/subnets/$SUBNET/Network 2>/dev/null`
+NM=`cat $CONFIG/subnets/$SUBNET/Netmask 2>/dev/null`
+[ -z "$NW" -o -z "$NM" ] && exit 1
+TMP=/tmp/dhcpd_tmp
+if ps -e |grep -q -w dhcpd ; then
+  DHCPD=ACTIVE
+fi
+dhcpd -cf $REGISTER/system/dhcp/dhcpd.conf -lf $REGISTER/system/dhcp/dhcpd.leases 2>&1 |egrep "^Listening on" |awk -F/ '{printf "%s/%s/%s\n",$2,$4,$5}' > $TMP
+for LINE in `cat $TMP` ; do
+   NETWORK=`echo $LINE | awk -F"/" '{print $2}'` 
+   NETMASK=`echo $LINE | awk -F"/" '{print $3}'` 
+   N1=`echo $NETWORK | awk -F"." '{print $1}'`
+   N2=`echo $NETWORK | awk -F"." '{print $2}'`
+   N3=`echo $NETWORK | awk -F"." '{print $3}'`
+   N4=`echo $NETWORK | awk -F"." '{print $4}'`
+   [ -z "$N1" ] && N1=0
+   [ -z "$N2" ] && N2=0
+   [ -z "$N3" ] && N3=0
+   [ -z "$N4" ] && N4=0
+   NETWORK=$N1.$N2.$N3.$N4
+   NETMASK=`ipcalc -b -n $NETWORK/$NETMASK |grep Netmask: |awk '{print $2}'`
+   if [ "$NETWORK" == "$NW" -a "$NETMASK" == "$NM" ] || echo $LINE | grep -q "${NW}M$NM" ; then
+     INTERFACE=`echo $LINE | awk -F"/" '{print $1}'`
+     VLAN=`echo $INTERFACE | awk -F. '{print $2}'`
+     if ! [ -z "$VLAN" ] ; then
+        INTERFACE="`echo $INTERFACE | awk -F. '{print $1}'`<font class=Smaller1>(vlan $VLAN)</font>"
+     fi
+     OUTPUT="$OUTPUT$INTERFACE "
+   fi
+done
+if [ -z "$OUTPUT" ] ; then
+  exit 5 
+else
+  echo $OUTPUT
+fi
+
+rm -f $TMP
+if [ "$DHCPD" != ACTIVE ] ; then
+  killall dhcpd 2> /dev/null
+fi

@@ -1,0 +1,101 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>GW List</title>
+<script>
+BODY=window.top.body;
+function loaded() {
+   BODY.show_Status();
+}
+function UpGW(obj) {
+  GW=obj.name.substr(2,2);
+  if (obj.checked) {
+    Enabled="yes";
+  } else {
+    Enabled="no";
+  }
+  location="kerbynet?Section=NetBalancer&STk=<xvar STk>&Action=EnableGW&GW="+GW+"&Enabled="+Enabled; 
+}
+function isSelected() {
+  X=document.data;
+  Selected=false;
+  if (X.GW==undefined) {
+    return false;
+  }
+  if (X.GW.length==undefined) {
+    if (X.GW.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.GW.length; s++) {
+      if (X.GW[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  return Selected;
+}
+function RemoveGW() {
+  X=document.data;
+  if (!isSelected()) {
+    alert("You should select a gateway to remove.");
+    return;
+  }
+  if (_GW()=="00") {
+    alert("You cannot remove the default routing path.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected Gateway?")) {
+    X.Action.value="RemoveGW";
+    X.submit();
+  }
+}
+function RefreshList() {
+  location="kerbynet?STk=<xvar STk>&Action=Render&Object=nb_gwlist";
+}
+function _GW() {
+
+  X=document.data;
+  Selected="";
+  if (X.GW==undefined) {
+    return;
+  }
+  if (X.GW.length==undefined) {
+    if (X.GW.checked) {
+      Selected=X.GW.value;
+    }
+  } else {
+    for (s=0; s<X.GW.length; s++) {
+      if (X.GW[s].checked) {
+        Selected=X.GW[s].value;
+      }
+    }
+  }
+  return (Selected);
+}
+
+function AddGW() {
+  var newwin=window.open("kerbynet?Section=NetBalancer&STk=<xvar STk>&Action=AddGW","GWForm","top=300,left=350,width=500,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function ChangeGW() {
+   if (!isSelected()) {
+    alert("You should select a gateway to change.");
+    return;
+  }
+  var newwin=window.open("kerbynet?Section=NetBalancer&STk=<xvar STk>&Action=ChangeGW&GW="+_GW(),"GWForm","top=300,left=350,width=500,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+</script>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="NetBalancer">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<table width=99% cellpadding=0>
+<tr bgcolor=#d0d0d0 align=center><td width=1%>&nbsp;&nbsp;&nbsp;</td><td>Gateway Description</td><td>IP Address</td><td>Interface</td><td>Weight</td><td>Status</td><td>Faults</td><td width=1%>UP</td></tr>
+<xvar +nb_gwlist>
+</table>
+</form>
+</body>
+</html>

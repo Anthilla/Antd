@@ -1,0 +1,33 @@
+# ALERT CONDITION: Load Average (15min) > CORES*OVERHEAD
+
+OVERHEAD=1.5
+
+LOADAVG=$(LOAD15)
+NCORES=$(NCORES)
+
+LIMIT=$(echo "$OVERHEAD $NCORES" | awk '{print $1*$2}')
+OVERLOAD=$(echo "$LOADAVG $OVERHEAD $NCORES" | awk '{if ($1>$2*$3) print "TRUE"; else print "FALSE"}')
+
+function REPORT {
+  VIEWER "Load Average (15 min): $LOADAVG Limit=$LIMIT ($NCORES Cores x $OVERHEAD)"
+  MAIL "Load Average (15 min): $LOADAVG"
+  MAIL "Limit: $LIMIT ($NCORES Cores x $OVERHEAD)"
+  SMS "Load Average (15 min): $LOADAVG"
+  SMS "Limit: $LIMIT ($NCORES Cores x $OVERHEAD)"
+}
+
+if IS_ALERT ; then
+  if [ "$OVERLOAD" = FALSE ] ; then
+    RECOVERED
+    REPORT
+  else
+    CANCEL
+  fi
+else
+  if [ "$OVERLOAD" = TRUE ] ; then
+    ALERT
+    REPORT
+  else
+    CANCEL
+  fi
+fi

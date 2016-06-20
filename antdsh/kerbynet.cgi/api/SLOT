@@ -1,0 +1,8 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+if [ -d /etc/slots ] ; then
+  echo -n "SLOT "
+  cat /etc/slots/current/Slot
+else
+  echo "Live CD"
+fi

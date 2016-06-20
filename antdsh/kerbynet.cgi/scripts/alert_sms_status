@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+
+if [ "`cat $REGISTER/system/alerts/SMS/SMSEnabled 2>/dev/null`" = yes ] ; then
+  DEVICE="/dev/`cat $REGISTER/system/alerts/SMS/SMSDevice 2>/dev/null`"
+  if ! [ -c "$DEVICE" ] ; then
+
+    echo "<font color=#ff4040>NO DEVICE</font>"
+  else 
+    echo "<font color=#00d000>ACTIVE</font>"
+  fi
+else
+  echo "<font color=#ff4040>DOWN</font>"
+fi

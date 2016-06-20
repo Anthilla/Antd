@@ -1,0 +1,33 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+FORCEGET=yes
+LIST="$REGISTER/system/AutoUpdate/Releases/$RELEASE.$PATCHLEVEL/UpdateList"
+sleep 46
+MINDELAY=2
+MAXDELAY=1850
+DELAY=$MINDELAY
+while true ; do
+  hEVERY=`cat $REGISTER/system/AutoUpdate/Every 2>/dev/null`
+  [ -z "$hEVERY" ] && hEVERY=24
+  mEVERY=$(( hEVERY * 60 ))
+  if [ -f "$LIST" ] ; then
+    Z="`find $LIST -cmin +$mEVERY 2>/dev/null`"
+  else
+    Z="$LIST"
+  fi
+  
+  if  [ -n "$Z" -o "$FORCEGET" = yes ] ; then
+     if $SCRIPTS/downloadUpdateList 2>/dev/null >/dev/null ; then
+       DELAY=$MAXDELAY
+       FORCEGET=no
+     else
+       DELAY=$((DELAY*2))
+       if [ $DELAY -gt $MAXDELAY ] ; then
+         DELAY=$MAXDELAY 
+       fi
+     fi
+  fi
+  sleep $DELAY
+done

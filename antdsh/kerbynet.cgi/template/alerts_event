@@ -1,0 +1,171 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Event Editor</title>
+<script>
+isChanged=false;
+function loaded() {
+  X=document.data;
+  X.Severity.value="<xvar Severity>"
+  X.Processing.value="<xvar Processing>"
+  X.Minute.value="<xvar Minute>";
+  X.Hour.value="<xvar Hour>";
+  X.DoM.value="<xvar DoM>";
+  X.Month.value="<xvar Month>";
+  X.DoW.value="<xvar DoW>";
+  X.Step.value="<xvar _Step>";
+  StepChanged();
+}
+function SaveEvent() {
+  X=document.data;
+  if (X.Event.value=="") {
+    alert("The Event Name cannot be empty");
+    X.Event.focus();
+    return;
+  }
+  Names="<xvar +alerts_event_names (Event)>"
+  if (Names.indexOf(" "+X.Event.value+" ")>-1) {
+    alert("The event "+X.Event.value+" already exists");
+    X.Event.focus();
+    X.Event.select();
+    return;
+  }
+  if (X.Subsystem.value.replace(/[ ]+/g,"")=="") {
+    alert("The Subsystem cannot be empty");
+    X.Subsystem.focus();
+    return;
+  }
+  if (X.Description.value.replace(/[ ]+/g,"")=="") {
+    alert("The Description cannot be empty");
+    X.Description.focus();
+    return;
+  }
+  X.save.disabled=true;
+  X.submit();
+}
+function Changed() {
+  X=document.data;
+  X.save.disabled=false;
+  X.Event.value=X.Event.value.toUpperCase().replace(/[ ]+/g,"");
+  if ("<xvar Event>"!="") {
+     if (X.Event.value!="<xvar Event>") {
+       alert("You cannot change the Event Name")
+       X.Event.value="<xvar Event>"
+     }
+  }
+  isChanged=true;
+  document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+}
+function ChangeScript() {
+  X=document.data;
+  if (isChanged) {
+    if (!confirm("Last changes have not been saved and will be lost if you continue. Are you sure you want to continue?")) {
+      X.ScriptName.value=SelectedScript;
+      return 1;
+    }
+  }
+  location="/cgi-bin/kerbynet?STk=<xvar STk>&Section=Alert&Action=&ScriptName="+X.ScriptName.value; 
+}
+function CloseWindow() {
+  if (isChanged) {
+    if (!confirm("Last changes have not been saved and will be lost if you continue. Are you sure you want to continue?")) {
+      return 1;
+    }
+  }
+  window.close();
+}
+function writeSelect(begin,end,selected) {
+   document.write("<option value='*'>Any</option>");
+   for (i=begin;i<=end;i++) {
+      document.write("<option value='"+i+"'>"+(i<10?"0":"")+i+"</option>");
+   }
+}
+function manpage(ManualPage) {
+   newwin=open("kerbynet?Action=Render&Object=man_page&STk=<xvar STk>&Page="+ManualPage, "Manual: "+ManualPage,"top=250,left=200,width=850,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function StepChanged() {
+  X=document.data;
+  if (X.Processing.value!="OnSchedule") {
+    X.Minute.disabled=true;
+    X.Hour.disabled=true;
+    X.DoM.disabled=true;
+    X.Month.disabled=true;
+    X.DoW.disabled=true;
+    X.Step.disabled=true;
+  } else {
+    if (X.Step.value!="") {
+       X.Minute.disabled=true;
+       X.Hour.disabled=true;
+       X.DoM.disabled=true;
+       X.Month.disabled=true;
+       X.DoW.disabled=true;
+    } else {
+       X.Minute.disabled=false;
+       X.Hour.disabled=false;
+       X.DoM.disabled=false;
+       X.Month.disabled=false;
+       X.DoW.disabled=false;
+    }
+    X.Step.disabled=false;
+  }
+}
+function TestScript() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=TestingEvent&ScriptName=<xvar Event>","TestEvent","top=200,left=200,width=700,height=400,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+
+
+</script>
+</head>
+<body style="color: #404040" topmargin=5 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Alerts">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="SaveEvent">
+<input type=hidden name=UserDefined value="<xvar UserDefined>">
+<table width=100%><tr>
+<td><font color=#4040e0 class=Bigger2><b>Event Setup</b></font></td><td id=savetab align=right></td><td align=right><input type=button name=save value=Save onclick="SaveEvent()">&nbsp;<input type=button value=Close onclick="CloseWindow()"></td>
+</tr></table>
+<hr>
+<table width=100%><tr><td nowrap width=1%>Name<br><input type=text name=Event size=12 maxlength=12 onchange="Changed()" value="<xvar Event>">&nbsp;&nbsp;&nbsp;</td><td nowrap width=1%>Subsystem<br><input type=text name=Subsystem size=12 maxlength=12 onchange="Changed()" value="<xvar _Subsystem>">&nbsp;&nbsp;&nbsp;</td><td nowrap>Description<br><input type=text name=Description size=50 maxlength=35 onchange="Changed()" value="<xvar _Description>">&nbsp;&nbsp;&nbsp;</td><td width=1%>Severity<br><select name=Severity onchange="Changed()" ><option value="Info">Info</option><option value="Warning">Warning</option><option value="Critical">Critical</option><option value="Emergency">Emergency</option></select></td></tr></table>
+<hr>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;&nbsp;Event Handler&nbsp;&nbsp;</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;&nbsp;<select name=Processing onchange="StepChanged();Changed()"><option value=Disabled>Disabled</option><option value=OnEvent>On Event</option><option value=OnSchedule>On Time Schedule</option></select></td><td align=right nowrap><input type=button value=Test onclick="TestScript()">&nbsp;<input type=button value="Manual" onclick="manpage('bash')" tyle="font-size: 10;"></td></tr></table>
+  <table width=100% border=1 cellpadding=0 cellspacing=0 bordercolor=#4040d0><tr><td>
+<textarea name=Script style="width: 100% ; height: 250" onclick="Changed()">
+<xvar +alerts_viewscript (Event)>
+</textarea>
+  </td></tr></table>
+<br>
+<hr>
+  <table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Time Schedule&nbsp;&nbsp;&nbsp;</font></span></td><td align=right></td></tr></table>
+  <table width=100% border=1 cellpadding=0 cellspacing=0 bordercolor=#4040d0><tr><td>
+  
+    <table width=100% border=0><tr>
+    
+    <td width="1%" nowrap>
+    &nbsp;&nbsp;Hour<br>&nbsp;<select name=Hour onchange="Changed()"><script>writeSelect(0,23,"");</script></select>&nbsp;&nbsp;
+    </td>
+    <td width="1%" nowrap>
+    Minute<br><select name=Minute onchange="Changed()"><script>writeSelect(0,59,"");</script></select>&nbsp;&nbsp;
+    </td>
+    <td width="1%" nowrap>
+    Day<br><select name=DoM onchange="Changed()"><script>writeSelect(1,31,"<xvar DoM>");</script></select>&nbsp;&nbsp;
+    </td>
+    <td width="1%" nowrap>
+    Month<br><select name=Month onchange="Changed()"><option value='*'>Any</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>&nbsp;&nbsp;
+    </td>
+    <td width="1%" nowrap>
+    Day of the week<br><select name=DoW onchange="Changed()" style="width: 120"><option value='*'>Any</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td width="1%" nowrap>
+    Every<br><select name=Step onchange="StepChanged();Changed()"><option value=""></option><option value="1 m">1 minute</option><option value="2 m">2 minutes</option><option value="5 m">5 minutes</option><option value="10 m">10 minutes</option><option value="15 m">15 minutes</option><option value="30 m">30 minutes</option><option value="1 h">1 hour</option><option value="2 h">2 hours</option><option value="4 h">4 hours</option><option value="8 h">8 hours</option><option value="12 h">12 hours</option><option value="1 d">1 day</option><option value="7 d">1 week</option></select>
+    </td>
+    <td align="right" nowrap><b><br><font color=#3030c0><xvar ?date></font>&nbsp;&nbsp;</b></td>
+
+    <tr></table>
+  </td></tr></table>
+</form>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Installer Output</title>
+<script>
+function loaded() {
+  parent.document.data.AbortBtn.disabled=true;
+  parent.incProgress100("<xvar +autoupdate-elapsed (ID) (Op)>");
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="AutoUpdate">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=ID value="<xvar ID>">
+<input type=hidden name=Op value="<xvar Op>">
+<pre>
+<xvar +autoupdate-output-finished (ID) (Op)>
+</pre>
+<a name='BOTTOM'></a>
+</form>
+</body>
+</html>

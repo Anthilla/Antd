@@ -1,0 +1,18 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Proxy Objects</title>
+<script>
+</script>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0>
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Proxy">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<table width=100% cellpadding=0>
+<tr bgcolor=#d0d0d0><td width=1%>&nbsp;&nbsp;&nbsp;</td><td width=70%>&nbsp;Rule</td><td align=center>Action</td></tr>
+<xvar +proxyObjectList>
+</table>
+</form>
+</body>
+</html>

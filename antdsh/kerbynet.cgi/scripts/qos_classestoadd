@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CLASSNAME="$1"
+QDIR="$REGISTER/system/net/QoS/"
+if ! [ -d "$QDIR/Class" ] ; then
+  mkdir -p "$QDIR/Class"
+fi
+cd "$QDIR/Class"
+CLASSES=`ls -d * 2>/dev/null`
+if [ -n "$CLASSES" ] ; then
+  for C in $CLASSES ; do
+    NAME="$C"
+    DESC="`cat $C/Description`"
+    echo "<option value='$C'>$C ($DESC)</option>"
+  done
+fi
+

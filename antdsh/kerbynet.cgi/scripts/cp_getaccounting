@@ -1,0 +1,75 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USERNAME="$1"
+REALM="$2"
+IP="$3"
+NOUPDATE="$4"
+[ -n "$REALM" ] && USERNAME="$USERNAME@$REALM"
+ACCT="`cat $REGISTER/system/acct/Enabled 2>/dev/null`"
+DECIMALS=`cat $REGISTER/system/acct/Decimals`
+if cd "$REGISTER/system/cp/Connected/$IP" 2>/dev/null ; then
+  NOW=`date +%s`
+  STARTED=`cat Started 2>/dev/null`
+  TIME=$((NOW-STARTED))
+  echo -n "$((TIME/60))" | awk '{printf "%2d:%02d#",$0/60,$0%60}'
+  RXTX=`$SCRIPTS/cp_getRXTX "$IP"`
+  RXP=`echo $RXTX|cut -d ' ' -f 1`
+  RX=`echo $RXTX|cut -d ' ' -f 2`
+  TXP=`echo $RXTX|cut -d ' ' -f 3`
+  TX=`echo $RXTX|cut -d ' ' -f 4`
+  TRAFFIC=$((RX+TX))
+  echo -n "$TRAFFIC" |awk '{printf "%.2f#",$1/1048576}'
+  if [ "$ACCT" = yes ] ; then
+    COSTH=`cat "$REGISTER/system/cp/Limits/$USERNAME/CostH" 2>/dev/null`
+    [ -z "$COSTH" ] && COSTH=0
+    COSTM=`cat "$REGISTER/system/cp/Limits/$USERNAME/CostM" 2>/dev/null`
+    [ -z "$COSTM" ] && COSTM=0
+    PTIME=`cat PTime 2>/dev/null`
+    [ -z "$PTIME" ] && PTIME=0
+    echo "$TIME" > PTime
+    PTRAFFIC=`cat PTraffic 2>/dev/null`
+    [ -z "$PTRAFFIC" ] && PTRAFFIC=0
+    echo "$TRAFFIC" > PTraffic
+    DELTACOST=`echo "$TIME" "$PTIME" "$COSTH" "$TRAFFIC" "$PTRAFFIC" "$COSTM" | awk '{print ($1-$2)*$3/3600+($4-$5)*$6/1048576}'`
+    COST=`cat Cost 2>/dev/null`
+    [ -z "$COST" ] && COST=0
+    COST=`echo "$COST" "$DELTACOST" |awk '{print $1+$2}'`
+    echo "$COST" > Cost
+    printf "%.${DECIMALS}f#" $COST
+    CREDIT=`cat "$REGISTER/system/cp/Limits/$USERNAME/Credit" 2>/dev/null`
+    if [ -n "$CREDIT" ] ; then
+      CREDIT=`echo "$CREDIT" "$DELTACOST" |awk '{print $1-$2}'`
+      rm -f "$REGISTER/system/cp/Limits/$USERNAME/Credit"
+      printf "%.${DECIMALS}f#" $CREDIT
+    else
+      printf "#"
+    fi
+    if [ -z "$NOUPDATE" ] ; then
+      echo "$RXP" > RX-Packets
+      echo "$RX" > RX-Octets
+      echo "$TXP" > TX-Packets
+      echo "$TX" > TX-Octets
+      echo "$NOW" > Updated
+      LCODE=`cat "$REGISTER/system/cp/Limits/$USERNAME/LCode" 2>/dev/null`
+      if [ -z "$LCODE" ] ; then
+        [ -n "$CREDIT" ] && [ "$CREDIT" -le 0 ] && LCODE=C
+      fi
+      if [ -z "$LCODE" ] ; then 
+        UUID=`cat UUID`
+        MAC=` cat MAC 2>/dev/null`
+        $SCRIPTS/acct_enqueue_update "$UUID" "$USERNAME" "$MAC" "$TX" "$RX" "$TXP" "$RXP" "$TIME"
+      else
+        LMSG=`$SCRIPTS/acct_limit_msg $LCODE`
+        logger -t CaptivePortal "Connection limit reached by the user $USERNAME (Client: $IP): $LMSG"
+        $SCRIPTS/cp_disconnect $IP "$LCODE"
+      fi
+    fi 
+  else
+    printf "%.${DECIMALS}f#" 0 
+  fi
+else
+  cat "$REGISTER/system/cp/Disconnected/$IP/Accounting" 2>/dev/null  
+fi
+
+
+ 

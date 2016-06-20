@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+AUTHORIZED="$1"
+iptables -N SYS_DNS 2> /dev/null
+iptables -F SYS_DNS
+
+if [ "`cat $REGISTER/system/dns/Clients/Reject 2>/dev/null`" = Cache ] ; then
+  iptables -A SYS_DNS -j ACCEPT
+else
+  for IP in `echo $AUTHORIZED | tr ';' ' '` ; do
+    iptables -A SYS_DNS -s $IP -j ACCEPT
+  done
+  iptables -A SYS_DNS -j DROP
+fi
+

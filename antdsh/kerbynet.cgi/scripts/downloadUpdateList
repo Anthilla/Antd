@@ -1,0 +1,42 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TMPLIST="/tmp/UpdateList"
+export HW=`ls $REGISTER/system/net/interfaces/ETH00/MAC`
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+LIST="$REGISTER/system/AutoUpdate/Releases/$RELEASE.$PATCHLEVEL/UpdateList"
+export CPU=`grep "model name" /proc/cpuinfo |head -1 | cut -d: -f2|sed "s/^ *//g"|tr -d '\n'|$SCRIPTS/escape`
+export MHZ=`grep "cpu MHz" /proc/cpuinfo | cut -d: -f2 | head -1 | cut -d. -f1|sed "s/^ *//g"`
+export NCPU=`$API/NCORES`
+export MEMORY=`grep "MemTotal" /proc/meminfo |cut -d: -f2|sed "s/^ *//g"`
+if [ -d /etc/slots/ ] ; then
+  IMAGE=HD
+else
+  IMAGE=CD
+fi
+KERNEL="`uname -r`"
+INSTALLED="`$SCRIPTS/getFixInstalled`"
+REPO="`cat /etc/updates.rep`"
+URL="http://$REPO/updatelist.php?Version=$RELEASE.$PATCHLEVEL&CPU=$CPU&MHZ=$MHZ&NCPU=$NCPU&HW=$HW&MEMORY=$MEMORY&IMAGE=$IMAGE&KERNEL=$KERNEL&PKGS=$INSTALLED"
+if wget --timeout=10 -t 1 -O "$TMPLIST" "$URL" >/dev/null ; then
+  MD5A=`grep '^_MD5>' "$TMPLIST" |awk -F'>' '{print $2}'`
+  MD5B=`grep -v '^_MD5>' "$TMPLIST" |md5sum|awk '{print $1}'`
+  if [ "$MD5A" = "$MD5B" ] ; then
+    grep '^_ON>' "$TMPLIST" |awk -F">" '{print $2}' > "$LIST"
+    NUM=`wc -l < "$LIST"`
+    logger -t PkgManager "Package List successfully downloaded ($NUM packages available)"
+    rm -f $LIST.err
+    ( DELAY=$((RANDOM%480+1800)) ; logger -t PkgManager "Autoupdater starting postponed of $DELAY seconds" ;sleep $DELAY ; $SCRIPTS/startautoupdater) &
+    echo $NUM
+  else
+     logger -t PkgManager "Package List has not been downloaded: CHECKSUM ERROR"
+     rm -f "$TMPLIST"
+     touch $LIST.err
+     exit 2
+  fi
+  rm -f "$TMPLIST"
+else
+  logger -t PkgManager "Failed to download the Package List"
+  touch $LIST.err
+  exit 1
+fi

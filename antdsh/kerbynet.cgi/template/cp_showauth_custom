@@ -1,0 +1,206 @@
+<!--
+**
+**  ZEROSHELL Captive Portal Login Page  
+**
+**          (Customizable Interface)
+**
+-->
+
+<html>
+<head>
+<title>Web Login</title>
+<meta Http-Equiv="Pragma" Content="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<meta http-equiv="Cache-control" content="no-cache">
+<style type="text/css">
+<!--
+body,td,th,tr,table,font,p,div,span {
+ font-family: verdana,sans-serif ;
+ font-size: 12px ;
+}
+body.Smaller1,td.Smaller1,th.Smaller1,tr.Smaller1,table.Smaller1,font.Smaller1,p.Smaller1,div.Smaller1,span.Smaller1 {
+  font-size: 10px ;
+}
+body.Smaller2,td.Smaller2,th.Smaller2,tr.Smaller2,table.Smaller2,font.Smaller2,p.Smaller2,div.Smaller2,span.Smaller2 {
+  font-size: 9px ;
+}
+body.Bigger1,td.Bigger1,th.Bigger1,tr.Bigger1,table.Bigger1,font.Bigger1,p.Bigger1,div.Bigger1,span.Bigger1 {
+  font-size: 14px ;
+}
+body.Bigger2,td.Bigger2,th.Bigger2,tr.Bigger2,table.Bigger2,font.Bigger2,p.Bigger2,div.Bigger2,span.Bigger2 {
+  font-size: 16px ;
+}
+h1 {
+  font-size: 24px ;
+}
+h2 {
+  font-size: 20px ;
+}
+h2 {
+  font-size: 18px ;
+}
+input[type=text],select,input[type=password],input[type=file] {
+  border-style: solid;
+  border-color: #ff00ff;
+  border-width: 1px;
+}
+input[type=button],input[type=submit],input[type=reset] {
+  color: #0000d0;
+}
+-->
+</style>
+<script>
+function OpenAuthWin(URL) {
+   return (open(URL,"ClientCTRL","top=400,left=500,width=450,height=250,scrollbars=no,menubar=no,toolbar=no,statusbar=no"));
+}
+function Authenticate() {
+  if ("<xvar _ThisIsAPreview>"=="yes") {
+     alert("This is a Captive Portal Web Login preview.");
+     return;
+  }
+  X=document.data;
+  if (X.U.value=="") {
+    alert("<xvar +cp_msg UserNameNoEmpty>");
+    X.U.focus();
+    return;
+  }
+  if (X.P.value=="") {
+    alert("<xvar +cp_msg PwNoEmpty>");
+    X.P.focus();
+    return;
+  }
+  if (X.Popup.value=="yes") {
+    newwin=OpenAuthWin("");
+  }
+  X.submit();
+  if (X.Popup.value=="yes") {
+    newwin.focus();
+  }
+  
+}
+function loaded() {
+  ImgLoaded();
+  X=document.data;
+  if ("<xvar _ThisIsAPreview>"=="yes") {
+     X.U.disabled=true;    
+     X.P.disabled=true;    
+  } else {
+    X.U.focus();
+    X.ZSCPRedirect.value=unescape(X.ZSCPRedirect.value);
+    X.RND.value=Math.random();
+  }
+  
+}
+function CheckEnterKey(FieldObj,Event) {
+  var keycode;
+  if (window.event) {
+    keycode = window.event.keyCode;
+  } else {
+    if (Event) {
+      keycode = Event.which;
+    } else {
+      return true;
+    }
+  }
+  if (keycode == 13) {
+   if (FieldObj==document.data.P) {
+     Authenticate();
+     return false;
+   } else if (FieldObj==document.data.U) {
+     document.data.P.focus();
+     return false;
+   } 
+   return true;
+  } else {
+   return true;
+  }
+}
+function ImgLoaded() {
+  document["Immagine"].src="/cp_image";
+  largo=parseInt("<xvar /system/cp/Auth/Custom/Image/Width>");
+  if (largo=="NaN") {
+    largo=240;
+  }
+  alto=parseInt("<xvar /system/cp/Auth/Custom/Image/Height>");
+  if (alto=="NaN") {
+    alto=160;
+  } 
+  document["Immagine"].width=largo;
+  document["Immagine"].height=alto;
+}
+function ShowInfo() {
+   if ("<xvar _ThisIsAPreview>"=="yes") {
+     alert("This is a Captive Portal Web Login preview.");
+     return;
+   }
+   var newwin=window.open("zscp?Section=CPAuth&Action=ShowInfo&Type=General","ShowInfo","top=200,left=300,width=550,height=400,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function x509auth() {
+  if ("<xvar _ThisIsAPreview>"=="yes") {
+     alert("This is a Captive Portal Web Login preview.");
+     return;
+  }
+  X=document.data;
+  DURL="/SSLAuthClient/cgi-bin/zscp?Section=CPAuth&Action=Authenticate&ZSCPRedirect="+escape(X.ZSCPRedirect.value)+"&Powered="+X.Powered.value+"&RND="+X.RND.value+"&Popup=<xvar Popup>";
+  location=DURL;
+  if (X.Popup.value=="yes") {
+    newwin=OpenAuthWin("");
+    newwin.focus();
+  }
+}
+function AAIauth() {
+  if ("<xvar _ThisIsAPreview>"=="yes") {
+     alert("This is a Captive Portal Web Login preview.");
+     return;
+  }
+  X=document.data;
+  DURL="https://<xvar /system/cp/Auth/Shibboleth/FQDN>:12081/secure/cgi-bin/zscp?Section=CPAuth&Action=Authenticate&ZSCPRedirect="+escape(X.ZSCPRedirect.value)+"&Powered="+X.Powered.value+"&RND="+X.RND.value+"&Popup=<xvar Popup>";
+  location=DURL;
+  if (X.Popup.value=="yes") {
+    newwin=OpenAuthWin("");
+    newwin.focus();
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=zscp>
+<input type=hidden name=Section value=CPAuth> 
+<input type=hidden name=Action value=Authenticate> 
+<input type=hidden name=ZSCPRedirect value="<xvar _ZSCPRedirect>">
+<input type=hidden name=Powered value="<xvar /system/cp/Auth/Custom/Powered>">
+<input type=hidden name=RND value="">
+<input type=hidden name=Popup value="<xvar Popup>">
+<br><br>
+<table width=100%>
+<tr>
+<td width=15%>
+<br><br>
+</td>
+<td>
+<hr color=#ff00ff>
+  <table width=100%><tr>
+  <td width=1%><img name=Immagine border=0><br><font class=Smaller1><xvar /system/cp/Auth/Custom/Image/Description></font></td><td align=center><font color=#8080c0><xvar /system/cp/Auth/Custom/NetDescription></font></td>
+  </tr></table>
+<hr color=#ff00ff>
+<table width=100%><tr><td align=right><input type=button name=AAILogin value="<xvar /system/cp/Auth/Shibboleth/Button>" onclick="AAIauth()">&nbsp;<input type=button name=x509login value="Cert" onclick="x509auth()"><script>if ("<xvar /system/cp/Auth/X509/Enabled>" != "yes" || "<xvar /system/cp/Auth/NoSSL>" == "yes") { document.data.x509login.disabled=true; };if ("<xvar /system/cp/Auth/Shibboleth/Enabled>" != "yes") { document.data.AAILogin.disabled=true; }</script></td></tr></table>
+<br><br>
+  <table width=100% cellspacing=2 cellpadding=2>
+  <tr><td width=35% align=right><xvar +cp_msg USERNAME>&nbsp;&nbsp;</td><td><input type=text name=U size=35 onKeyPress="return CheckEnterKey(this,event)"></td></tr>
+  <tr><td align=right><xvar +cp_msg PASSWORD>&nbsp;&nbsp;</td><td><input type=password name=P size=35 onKeyPress="return CheckEnterKey(this,event)"></td></tr>
+  <tr><td align=right><xvar +cp_msg DOMAIN>&nbsp;&nbsp;</td><td><select name=Realm><xvar +cpListDomainsOptions></select></td></tr>
+  <tr><td align=right></td><td><br><input type=button value="<xvar +cp_msg NetworkAccess>" onclick="Authenticate()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<script>if ("<xvar /system/cp/Auth/Custom/GeneralInfoVisible>"=="yes") {document.write("<a href='javascript:ShowInfo()'>Info</a>");}</script></td></tr>
+  </table>
+<br><br><br>
+<hr color=#ff00ff>
+<table width=100% cellpadding=0 cellspacing=0><tr><td bgcolor=#ff00ff><hr></td><td align=right nowrap width=10%><font class=Smaller1 color=#0000a0>&nbsp;&nbsp;&nbsp;&nbsp;<b><script>document.write(document.data.Powered.value);</script></b>&nbsp;&nbsp;</font></td></tr></table>
+</td>
+<td width=15%>
+<br>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

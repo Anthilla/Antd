@@ -1,0 +1,94 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Time and Date</title>
+<script>
+function writeSelect(begin,end) {
+  for (i=begin;i<=end;i++) {
+    v=(i<10?"0":"")+i;
+    document.write("<option value='"+v+"'>"+v+"</option>");
+  }
+}
+function LastDay(Last) {
+  Day=document.data.Day;
+  Sel=Day.value;
+  for (d=Day.length+1;d<=Last;d++) Day.options[d-1]=new Option (d,d,false,false);
+  while (Day.options[Last]!=null) Day.options[Last]=null;
+  if (Sel>Last) Day.value=Last;
+}
+function MonthChanged() {
+   X=document.data;
+   M=X.Month.value;
+   if (M=="01" || M=="03" || M=="05" || M=="07" || M=="08" || M=="10" || M=="12") {
+     LastDay(31);
+   } else {
+     if (M=="02") {
+       if (X.Year.value%4==0) {
+         LastDay(29);
+       } else {
+         LastDay(28);
+       }
+     } else {
+         LastDay(30);
+     }
+   }
+}
+function loaded() {
+  X=document.data;
+  NOW="<xvar ?date '+%Y %m %d %H %M %S'>";
+  Vec=NOW.split(" ");
+  X.Year.value=Vec[0];
+  X.Month.value=Vec[1];
+  X.Day.value=Vec[2];
+  X.HH.value=Vec[3];
+  X.MM.value=Vec[4];
+  X.SS.value=Vec[5];
+  MonthChanged();
+}
+</script>
+</head>
+<body onload="loaded()" >
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Time">
+<input type=hidden name=Action value="ChangeTimeSave">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Servers value="ChangeTimeSave">
+<table width=100%><tr>
+<td>
+<font class=Bigger1 color=#0000D0><b>Date and Time</b></font>
+</td>
+<td align=right>
+<input type=submit value=Save><input type=button value=Close onclick="window.close()">
+</td>
+</table>
+<hr>
+<br>
+<table border=1>
+<tr align=center bgcolor=#c0c0ff><th>Year</th><th>Month</th><th>Day</th><th>hh</th><th>mm</th><th>ss</th></tr>
+<tr>
+<td><select name=Year onchange="MonthChanged()"><script>writeSelect(2000,2037);</script></select></td>
+<td>
+<select name=Month onchange="MonthChanged()">
+<option value="01">Jan</option>
+<option value="02">Feb</option>
+<option value="03">Mar</option>
+<option value="04">Apr</option>
+<option value="05">May</option>
+<option value="06">Jun</option>
+<option value="07">Jul</option>
+<option value="08">Aug</option>
+<option value="09">Sep</option>
+<option value="10">Oct</option>
+<option value="11">Nov</option>
+<option value="12">Dec</option>
+</select>
+</td>
+<td><select name=Day><script>writeSelect(1,31);</script></select></td>
+
+<td><select name=HH><script>writeSelect(0,23);</script></select></td>
+<td><select name=MM><script>writeSelect(0,59);</script></select></td>
+<td><select name=SS><script>writeSelect(0,59);</script></select></td>
+</tr>
+</table>
+</form>
+</body>
+</html>

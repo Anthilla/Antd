@@ -1,0 +1,155 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Radius Management</title>
+<script>
+function RadiusLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=radiusd","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function view8021x() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=802.1X","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function EnableRadius() {
+  if (document.data.EnabledRadius.checked) {
+    document.data.Action.value="EnableRadius";
+  } else {
+    document.data.Action.value="DisableRadius";
+  }
+  document.data.submit();
+}
+function Changed() {
+   var tableElem = document.getElementById('savetab');
+   tableElem.innerHTML="<font color=#FF0000>Warning: changes not saved&nbsp;&nbsp;</font>";
+   document.data.Changed.value="true";
+   document.data.save.disabled=false;
+   document.data.cancel.disabled=false;
+}
+function Refresh() {
+  document.data.Action.value="Refresh";
+  document.data.submit();
+}
+function Save() {
+  if (document.data.Cert.value!="") {
+    document.data.save.disabled=true;
+    document.data.cancel.disabled=true;
+    document.data.Action.value="Save";
+    document.data.submit();
+  } else {
+    alert("Before to save you have to select a certificate.");
+    document.data.Cert.focus();
+  }
+}
+function CertTypeChanged() {
+  Changed();
+  Refresh();
+}
+function CertChanged() {
+  Changed();
+  Refresh();
+}
+function CheckCRLChanged() {
+  Changed();
+}
+function loaded() {
+  X=document.data;
+  //X.save.disabled=true;
+  X.cancel.disabled=true;
+  if ("<xvar _CertType>"=="Local") {
+    X.CertType.options[0].selected=true;
+  } else {
+    X.CertType.options[1].selected=true;
+  }
+  if (X.Changed.value=="true") {
+    Changed();    
+  } 
+  if ("<xvar _CheckCRL>"=="yes") {
+    X.CheckCRL.checked=true;    
+  } 
+}
+function trustedCAs() {
+   newwin=open("kerbynet?Section=x509&STk=<xvar STk>&Action=ShowTrustedCAs","TrustedCAs","top=150,left=100,width=750,height=500,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+};
+function importedCerts() {
+   newwin=open("kerbynet?Section=x509&STk=<xvar STk>&Action=ShowImported","ImportedCerts","top=80,left=150,width=750,height=500,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+};
+function View() {
+  var type;
+  if (document.data.Cert.value!="") {
+    if ("<xvar _CertType>"=="Local") {
+      type="host";
+    } else {
+      type="Imported";
+    }
+    newwin=open("kerbynet?Section=x509&STk=<xvar STk>&Action=ViewCert&Type="+type+"&Cert="+document.data.Cert.value,"x509viewtext","top=120,left=220,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+    newwin.focus();
+  } else {
+    alert("No certificate selected!!!");
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data action=kerbynet method=post>
+<input type=hidden name=Section value=Radius>
+<input type=hidden name=Action>
+<input type=hidden name=Changed value="<xvar _Changed>"> 
+<input type=hidden name=STk value=<xvar STk>>
+<hr>
+<font color=#4040f0 class=Bigger1><b>&nbsp;RADIUS Server for Wireless and Identity Based Networking Services</b></font>
+<hr>
+<table width=100% border=1>
+<tr>
+<td width="1%" nowrap><b><font color=#808080>&nbsp;Status:&nbsp;&nbsp;&nbsp;<xvar !radius_status>&nbsp;&nbsp;&nbsp;</font></td>
+<td align=right>
+<font color=#0000f0 face=Arial><input name=EnabledRadius type=checkbox value="yes" onclick="EnableRadius()" <xvar /system/radius/Enabled>> Enabled</font>&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Show Requests" onclick="RadiusLOG()">&nbsp;<input type=button value="802.1x" onclick="view8021x()">
+</td>
+</tr>
+</table>
+<br>
+<table width=100%><tr>
+<td>
+<span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;802.1x Configuration&nbsp;</font></span>
+</td>
+<td id=savetab align=right></td>
+<td align=right width=1% nowrap>
+<input type=button name=save value=Save onclick="Save()">
+<input type=button name=cancel value=Cancel onclick="location='kerbynet?Section=Radius&STk=<xvar STk>&Action=Manage'">
+</td>
+</tr></table>
+<table border=1 width=100%>
+<tr>
+<td>
+<font color=#000090>X.509 Host Certificate</font><br>
+<select name=CertType onchange="CertTypeChanged()">
+<option value=Local>Local CA</option>
+<option value=Imported>Imported</option>
+</select>
+<select name=Cert onchange="CertChanged()">
+<xvar !SelectHostCert (TLSconfig) (CertType) (Cert)>
+</select>
+</td>
+</tr>
+<tr>
+<td>
+<table width=100%>
+<tr><td><font color=#404040><input type=button name=view value=View onclick="View()">&nbsp;&nbsp;&nbsp;Status:&nbsp;&nbsp;</font><xvar !StatusHostCert (TLSconfig) (CertType) (Cert)></td><td align=right><input type=checkbox name=CheckCRL value=yes onclick="CheckCRLChanged()">&nbsp;<font color=#505050>Check CRL</font>&nbsp;&nbsp;&nbsp;<input type=button value="Imported" onclick="importedCerts()"><input type=button value="Trusted CAs" onclick="trustedCAs()"></td></tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<hr>
+<br>
+<span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;Some Notes&nbsp;</font></span>
+<br>
+<font face=Arial class=Smaller1 color="#505050">
+This RADIUS server supports EAP-TLS, PEAP and EAP-TTLS because through TLS they guarantee a strong authentication and key management for Wi-Fi Protected Access (WPA). In order to encrypt the communication between the RADIUS server and the clients you need to select an X.509 host certificate and the related private key. EAP-TLS also needs to use X.509 user certificates and related keys on the client-side in order to authenticate the users. In PEAP and EAP-TTLS the only tunnelled authentication supported is MSCHAPv2 that authenticate the clients with the same usernames and passwords used with Kerberos 5. In any case LDAP user authorization is needed to associate to the WLAN. Don't forget to set a shared secret beetwen the Authorized Clients (Access Points and Proxy Clients) and the RADIUS server in order to permit them to communicate.
+<hr>
+</font>
+</form>
+</body>
+</html>

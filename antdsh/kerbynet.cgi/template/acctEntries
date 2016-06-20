@@ -1,0 +1,77 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Accounting Entries</title>
+<script>
+function OpenDetails(E) {
+  var newwin=window.open("kerbynet?Section=Acct&STk=<xvar STk>&Action=ShowDetails&Entry="+E,"AccountingDetails","top=150,left=20,width=1000,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function ShowDetails() {
+  X=document.data;
+  Selected=false;
+  if (X.CLT==undefined) {
+    alert("No account info to show");
+    return;
+  }
+  if (X.CLT.length==undefined) {
+    if (X.CLT.checked) {
+      se=X.CLT.value;
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.CLT.length; s++) {
+      if (X.CLT[s].checked) {
+        se=X.CLT[s].value;
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select an user to view.");
+    return;
+  }
+  OpenDetails(se);
+}
+function Remove() {
+  X=document.data;
+  Selected=false;
+  if (X.CLT==undefined) {
+    alert("No accounting entry to remove.");
+    return;
+  }
+  if (X.CLT.length==undefined) {
+    if (X.CLT.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.CLT.length; s++) {
+      if (X.CLT[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select an accounting entry to remove.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected entry?")) {
+    X.Action.value="RemoveEntry";
+    X.submit();
+  }
+
+}
+</script>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0>
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Acct">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<input type=hidden name=Filter value="<xvar Filter>">
+<table width=100% cellpadding=0 border=1>
+<tr bgcolor=#e0e0ff align=center style="color:#000000"><td width=1%>&nbsp;&nbsp;&nbsp;</td><td class=Smaller1>Username</td><td nowrap class=Smaller1>Traffic (MB)</td><td nowrap class=Smaller1>Time</td><td nowrap class=Smaller1>Cost (<xvar /system/acct/Currency>)</td><td nowrap class=Smaller1>Credit (<xvar /system/acct/Currency>)</td><td nowrap class=Smaller1>Last Update</td></tr>
+<xvar +acctEntries.pl (Filter)>
+</table>
+</form>
+</body>
+</html>

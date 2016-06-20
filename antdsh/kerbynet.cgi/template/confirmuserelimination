@@ -1,0 +1,16 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'></head>
+<body>
+<br>
+<font class=Bigger2><font color="#ff0000" class=Bigger2><blink>WARNING:</blink></font><br> The user <xvar user_sel> will be deleted if you confirm.</font>
+
+<script language=Javascript> 
+    if (confirm("<xvar #ConfirmUserElimination>")) {
+       location="/cgi-bin/kerbynet?Section=User&STk=<xvar STk>&Action=SaveDelete&uid=<xvar %user_sel>";
+
+    } else {
+      history.go(-1);
+      //location="/cgi-bin/kerbynet?Section=User&STk=<xvar STk>&Action=List";     
+    }
+</script>
+</body>

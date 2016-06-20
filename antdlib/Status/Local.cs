@@ -31,12 +31,12 @@ using antdlib.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Status {
     public class Local {
         private static string GetSystemVersion() {
-            var sq = Terminal.Terminal.Execute("losetup | grep /dev/loop0");
+            var sq = Terminal.Execute("losetup | grep /dev/loop0");
             var sqSplt = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             if (sqSplt.Length <= 1)
                 return "";
@@ -48,12 +48,12 @@ namespace antdlib.Status {
 
         private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
             var list = new List<SystemComponentModel>();
-            var activeLinkData = Terminal.Terminal.Execute($"find {Parameter.Repo} -type l | grep active");
+            var activeLinkData = Terminal.Execute($"find {Parameter.Repo} -type l | grep active");
             ConsoleLogger.Warn(activeLinkData);
             var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var link in activeLinks) {
                 ConsoleLogger.Warn(link);
-                var linkInfoData = Terminal.Terminal.Execute($"file {link}");
+                var linkInfoData = Terminal.Execute($"file {link}");
                 ConsoleLogger.Warn(linkInfoData);
                 var linkInfos = linkInfoData.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var sc = new SystemComponentModel() {

@@ -1,0 +1,155 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>RADIUS Authorized Clients</title>
+<script language=Javascript>
+<xinclude ip_utility.inc>
+function selected() {
+  document.pick_nas.submit();
+}
+function isNasSelected() {
+   var i;
+   if (document.pick_nas.nas_sel.length!=undefined) {
+      for (i=0; i<document.pick_nas.nas_sel.length; i++)  {
+         if (document.pick_nas.nas_sel[i].checked=="1") {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+function change_n() {
+   if (document.pick_nas.nas_sel==undefined)
+      return false;
+   if (!validateData()) return false;
+   var checkedvalue = "";
+   var i;
+   if (document.pick_nas.nas_sel.length!=undefined) {
+      for (i=0; i<document.pick_nas.nas_sel.length; i++)  {
+         if (document.pick_nas.nas_sel[i].checked=="1") {
+            checkedvalue=document.pick_nas.nas_sel[i].value;
+         }
+      }
+   } else {
+      if (document.pick_nas.nas_sel.checked=="1") {
+          checkedvalue=document.pick_nas.nas_sel.value;
+      }
+
+   };
+   if (checkedvalue=="") {
+      alert("<xvar #NoNASSelected>");
+      return false;
+   };
+   if (document.pick_nas.cn.value!=checkedvalue) {
+     alert("<xvar #NoChangeNAS>");
+     return false;
+   }
+   document.pick_nas.Action.value="ChangeNas";
+   document.pick_nas.submit();
+}
+function add_n() {
+   if (document.pick_nas.cn.value=="") {
+     alert("<xvar #NasNameEmpty>");
+     return false;
+   }
+   if (!validateData()) return false;
+   var i,esists=false;
+   if (document.pick_nas.nas_sel!=undefined) {
+      var L=document.pick_nas.nas_sel.length==undefined?1:document.pick_nas.nas_sel.length;
+      if (L==1) {
+         if (document.pick_nas.nas_sel.value==document.pick_nas.cn.value) 
+	       esists=true;
+      } else {
+         for (i=0; i<L; i++)  
+            if (document.pick_nas.nas_sel[i].value==document.pick_nas.cn.value) 
+         	 esists=true;
+      }
+   }
+   if (esists) {
+        alert("You cannot add an Authorized Client called "+document.pick_nas.cn.value+" because it already exists.");
+        return false;
+   }
+   document.pick_nas.Action.value="AddNas";
+   document.pick_nas.submit();
+}
+function delete_n() {
+   if (document.pick_nas.nas_sel==undefined)
+      return false;
+   var checkedvalue = "";
+   var i;
+   if (document.pick_nas.nas_sel.length!=undefined) {
+      for (i=0; i<document.pick_nas.nas_sel.length; i++)  {
+         if (document.pick_nas.nas_sel[i].checked=="1") {
+            checkedvalue=document.pick_nas.nas_sel[i].value;
+         }
+      }
+   } else {
+      if (document.pick_nas.nas_sel.checked=="1") {
+          checkedvalue=document.pick_nas.nas_sel.value;
+      }
+   }
+   if (checkedvalue=="") {
+      alert("<xvar #NoNASSelected>");
+      return false;
+   };
+   if (confirm("<xvar #ConfirmNASElimination>")) {
+       location="/cgi-bin/kerbynet?Section=Radius&STk=<xvar STk>&Action=DeleteNas&cn="+checkedvalue;
+   }
+}
+function validateData() {
+  X=document.pick_nas;
+  X.IP.value=X.IP.value.replace(/[ ]+/g,"");
+  if (X.IP.value=="") {
+    alert("IP field cannot be empty!!!")
+    return false;
+  }
+
+  X.netmask.value=X.netmask.value.replace(/[ ]+/g,"");
+  if (X.netmask.value=="") {
+    if (!isValidIP(X.IP.value)) {
+      alert(X.IP.value+" is not a valid IP!!!");
+      return false;
+    }
+  } else {
+    if (!isValidNetworkCIDR(X.IP.value,X.netmask.value)) {
+       alert(X.IP.value+"/"+X.netmask.value+" is not a valid subnet!!!");
+       return false;
+    }
+  }
+  if (X.secret.value=="") {
+    alert("Shared Secret cannot be empty!!!")
+    return false;
+  }
+  return true;
+}
+</script>
+</head>
+<body>
+<p><font color="#FF0000"><xvar errormsg> </font></p>
+<form name=pick_nas method=post action="kerbynet">
+<input type=hidden name=Section value=Radius>
+<input type=hidden name=Action value=ListNas><input type=hidden name=STk value=<xvar STk>>
+
+<table width=100%>
+<tr><td><font class=Bigger2 color=#3030f0><b>RADIUS AUTHORIZED CLIENTS</b></font></td
+><td align=right><input type=button name=b1 value=" + " onclick="add_n()">&nbsp;<input type=button name=b3 value=" - " onclick="delete_n()">&nbsp;<input type=button name=b2 value=Change onclick="change_n()">&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="  Close  " onclick="window.close()"></td></tr>
+</table>
+<hr>
+<br>
+<table width="100%">
+<tr style="color: #808080">
+<td nowrap>&nbsp;Client Name<br>&nbsp;<input type=text name=cn size=25></td>
+<td nowrap>&nbsp;IP or Subnet<br>&nbsp;<input type=text name=IP size=15> / <input type=text name=netmask size=2></td>
+<td nowrap>&nbsp;Shared Secret&nbsp;<br>&nbsp;<input type=text name=secret size=30></td>
+</tr>
+</table>
+<hr>
+<br>
+<table border=1 width=%100>
+<tr style="color: #2020f0">
+<th width=1%>&nbsp;</th>
+<th>Client Name</th>
+<th>IP or Subnet</th>
+<th>Shared Secret</th>
+</tr>
+

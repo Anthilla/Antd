@@ -1,0 +1,232 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/wifi.inc
+export ALIASNAME="$1"
+OPT="$2"
+[ -z "$ALIASNAME" ] && exit 1
+SWCONFIG="$REGISTER/system/net/interfaces/$ALIASNAME/WiFi/"
+if [ -d "$SWCONFIG" ] ; then
+  STATUS="`cat $REGISTER/system/net/interfaces/$ALIASNAME/STATUS 2>/dev/null`"
+  INTERFACE=`wifi-getdev $ALIASNAME`
+  if [ -n "$INTERFACE" ] ; then
+    export SSID="`cat $SWCONFIG/SSID 2>/dev/null`"
+    MODE="`cat $SWCONFIG/Mode 2>/dev/null`"
+    HIDE="`cat $SWCONFIG/Hide 2>/dev/null`"
+    WDS="`cat $SWCONFIG/WDS 2>/dev/null`"
+    ENCRYPTION="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/Encryption 2>/dev/null`"
+    [ -z "$ENCRYPTION" ] && ENCRYPTION=plaintext
+    echo "$ALIASNAME($INTERFACE) (Mode:$MODE  Sec:$ENCRYPTION  SSID:$SSID Status:$STATUS)"
+    [ -z "$HIDE" ] && HIDE=0
+    wifi-destroy-interface $ALIASNAME
+    if [ "$MODE" == sta ] ; then
+      BEACON="nosbeacon"
+    else
+      BEACON=""
+    fi
+    wifi-create-interface $INTERFACE managed $ALIASNAME $BEACON 2>/dev/null >/dev/null 
+    STD=`cat $REGISTER/system/net/WiFi/DEVS/$INTERFACE/Standard 2>/dev/null`
+    [ -z "$STD" ] && STD=2
+    case $STD in
+      0)
+        export HW_MODE=g
+	if [ "`cat $REGISTER/system/net/WiFi/DEVS/$INTERFACE/11n 2>/dev/null`" = yes ] ; then
+	  export IEEE80211N=1
+	  export HT_CAPAB=""
+	else
+	  export IEEE80211N=0
+	  export HT_CAPAB=""
+	fi
+      ;;
+      1)
+        export HW_MODE=a
+	export IEEE80211N=0
+	export HT_CAPAB=""
+      ;;
+      2)
+        export HW_MODE=b
+	export IEEE80211N=0
+	export HT_CAPAB=""
+      ;;
+      3)
+        export HW_MODE=g
+	export IEEE80211N=0
+	export HT_CAPAB=""
+      ;;
+      4)
+        export HW_MODE=g
+	export IEEE80211N=1
+	export HT_CAPAB=""
+	#export HT_CAPAB="ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
+      ;;
+      5)
+        export HW_MODE=a
+	export IEEE80211N=1
+	export HT_CAPAB=""
+	#export HT_CAPAB="ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
+      ;;
+    esac
+#    iwpriv $ALIASNAME mode $STD
+    export CH=`cat $REGISTER/system/net/WiFi/DEVS/$INTERFACE/CHANNEL 2>/dev/null`
+    if [ -n "$CH" -a "$CH" != 0 ] ; then
+      export CH
+    else 
+      export CH=6
+    fi
+ 
+    BRIDGENAME="`cat $REGISTER/system/net/interfaces/$ALIASNAME/Bridge/Name 2>/dev/null`"
+    BONDNAME="`cat $REGISTER/system/net/interfaces/$ALIASNAME/Bond/Name 2>/dev/null`"
+    if [ -n "$BRIDGENAME" ] ; then
+       export BRIDGE="bridge=$BRIDGENAME"
+       STABRIDGE=-b$BRIDGENAME
+       iw dev $ALIASNAME set 4addr on 
+       if ifconfig $BRIDGENAME 2>/dev/null >/dev/null ; then
+         brctl addif $BRIDGENAME $ALIASNAME 2>/dev/null
+         $SCRIPTS/setpathcost $ALIASNAME 2>/dev/null
+       fi
+    #   iwpriv $ALIASNAME wds 1
+     #   iw dev $ALIASNAME set type wds 
+    else
+       export BRIDGE=""
+    fi
+
+
+    export QUERY_STRING="onlyrender"
+    if [ "$MODE" == ap ] ; then 
+      export HIDE
+#      iwpriv $ALIASNAME hide_ssid $HIDE
+      case $ENCRYPTION in
+        plaintext)
+          # RADIUS only for accounting
+          export RADIUS=127.0.0.1
+          export SECRET=ZeroShell
+          export PORT=1812
+        ;;
+        wpa-eap)
+          RADIUSTYPE="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/RadiusType 2>/dev/null`"
+          if [ "$RADIUSTYPE" == External ] ; then
+            export RADIUS="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/Radius 2>/dev/null`"
+            export SECRET="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/Secret 2>/dev/null`"
+            export PORT=`echo "$RADIUS" | awk -F: '{print $2}'` 
+            [ -z "$PORT" ] && export PORT=1812 
+            export RADIUS=`echo "$RADIUS" | awk -F: '{print $1}'` 
+          
+          else
+            export RADIUS=127.0.0.1
+            export SECRET=ZeroShell
+            export PORT=1812
+          fi
+        ;;
+        wpa-psk)
+          WPA_PSK="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/PSK 2>/dev/null`"
+          LN=`echo -n "$WPA_PSK" | wc -c`
+          if [ $LN -eq 64 ] ; then
+            export WPA_PSK="wpa_psk=$WPA_PSK"
+          else
+            export WPA_PSK="wpa_passphrase=$WPA_PSK"
+          fi
+          # RADIUS only for accounting
+          export RADIUS=127.0.0.1
+          export SECRET=ZeroShell
+          export PORT=1812
+        ;;
+        wep)
+          WEPKEY="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/WEPKEY 2>/dev/null`"
+          WEPIDX="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/WEPIDX 2>/dev/null`"
+	  WEP_KEY="wep_key"$WEPIDX"="'"'$WEPKEY'"'
+	  export WEP_KEY
+	  export WEPIDX
+          LN=`echo -n "$WEPKEY" | wc -c`
+	  export LN
+          # RADIUS only for accounting
+          export RADIUS=127.0.0.1
+          export SECRET=ZeroShell
+          export PORT=1812
+        ;;
+      esac
+      if [ "$STATUS" == up ] ; then
+        NAS=`hostname`
+        export NAS="$NAS<br>$SSID"
+        render $TEMPLATE/hostapd-config/$ENCRYPTION.conf > /tmp/wifi-$ALIASNAME.conf
+        hostapd -B /tmp/wifi-$ALIASNAME.conf |grep -v "Configuration file"
+        $SCRIPTS/set-txpower $ALIASNAME
+      else
+	kill -w `ps -ef |grep -w hostapd |grep -w $ALIASNAME |awk '{print $2}'` 2>/dev/null
+      fi
+      vconfig set_name_type DEV_PLUS_VID_NO_PAD >/dev/null
+    else
+      ifconfig  $ALIASNAME up
+      case $ENCRYPTION in
+        plaintext)
+          :
+        ;;
+        wpa-eap)
+           EAPUSER="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/EAP-User 2>/dev/null`"
+           EAPPASSWORD="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/EAP-Password 2>/dev/null`"
+           EAPTYPE="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/EAPType 2>/dev/null`"
+           [ -z "$EAPUSER" ] && EAPUSER="admin@example.com"
+           [ -z "$EAPPASSWORD" ] && EAPPASSWORD="zeroshell"
+           [ -z "$EAPTYPE" ] && EAPTYPE="TTLS"
+           if [ "$EAPTYPE" == TTLS ] ; then
+             PHASE2="auth=PAP"
+           else
+             PHASE2="auth=MSCHAPV2"
+           fi
+           export EAPUSER
+           export EAPPASSWORD
+           export EAPTYPE
+           export PHASE2
+        ;;
+        wpa-psk)
+          export PASSPHRASE="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/PSK 2>/dev/null`"
+          LN=`echo -n "$PASSPHRASE" | wc -c`
+          if ! [ $LN -eq 64 ] ; then
+            export PASSPHRASE="\"$PASSPHRASE\""
+          fi
+        ;;
+        wep)
+          export WEPKEY="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/WEPKEY 2>/dev/null`"
+          LN=`echo -n "$WEPKEY" | wc -c`
+          if [ $LN -eq 5 -o $LN -eq 13 ] ; then
+            export WEPKEY="\"$WEPKEY\""
+          fi
+          export WEPIDX="`cat $REGISTER/system/net/interfaces/$ALIASNAME/WiFi/WEPIDX 2>/dev/null`"
+        ;;
+      esac
+      render $TEMPLATE/wpa_supplicant-config/$ENCRYPTION.conf > /tmp/wifi-$ALIASNAME.conf
+      wpa_supplicant -B -i $ALIASNAME -Dnl80211 -c /tmp/wifi-$ALIASNAME.conf $STABRIDGE
+      #$SCRIPTS/set-txpower $ALIASNAME
+    fi
+    if [ "$WDS" = yes ] ; then
+      iw dev $ALIASNAME set type wds 2>/dev/null
+    fi
+    rm -f $REGISTER/system/net/interfaces/$ALIASNAME/MAC/*
+    touch $REGISTER/system/net/interfaces/$ALIASNAME/MAC/`sed 's/://g' < /sys/class/net/$ALIASNAME/address 2>/dev/null | awk '{print toupper($0)}'`
+    $SCRIPTS/getintdesc $ALIASNAME > "$REGISTER/system/net/interfaces/$ALIASNAME/Description"
+    $SCRIPTS/setinterface $ALIASNAME
+    if [ "$STATUS" == up ] ; then
+      ifconfig $ALIASNAME up
+    else
+      ifconfig $ALIASNAME down
+    fi
+    $SCRIPTS/qos_setinterface $ALIASNAME
+    if [ -n "$BRIDGENAME" ] ; then
+       $SCRIPTS/setpathcost $ALIASNAME 2>/dev/null
+    fi
+    if [ -n "$BONDNAME" ] ; then
+      if [ -f /proc/net/bonding/$BONDNAME ] ; then 
+        if ! grep -w -q $ALIASNAME /proc/net/bonding/$BONDNAME ; then
+          echo "Bonding $ALIASNAME into $BONDNAME ..."
+          ifenslave $BONDNAME $ALIASNAME 2>/dev/null
+          if [ -n "$DBM" ] ; then
+            sleep 10
+            iwconfig $ALIASNAME txpower $DBM 2>/dev/null
+          fi          
+          ifconfig $ALIASNAME $STATUS 
+        fi
+      fi
+    fi
+    if [ "$OPT" == restart ] ; then
+      $SCRIPTS/dhcp_start noconfig      
+    fi
+  fi
+fi

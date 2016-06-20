@@ -1,0 +1,34 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+IP="$1"
+[ -z "$IP" ] && exit 1
+CONFIG=$REGISTER/system/cp
+INTERFACES=`cat $CONFIG/Interface 2>/dev/null`
+I=1
+while [ $I -le 3 ] ; do
+ for INTERFACE in $INTERFACES ; do
+   MAC=`arp -n | grep -w "^$IP" |awk '{print $3}'|uniq`
+   #MAC=`arp -i $INTERFACE -n | grep -w "^$IP" |awk '{print $3}'`
+   if [ -n "$MAC" ] ; then
+     echo "$MAC"
+     exit  
+   fi
+   VLAN=`echo $INTERFACE | awk -F. '{print $2}'`
+   MODE=Routed
+   if [ -z "$VLAN" ] ; then
+     [ -f "$REGISTER/system/net/interfaces/$INTERFACE/Bridge/Name" ] && MODE=Bridged
+   else
+     INTERFACE=`echo $INTERFACE | awk -F. '{print $1}'`
+     [ -f "$REGISTER/system/net/interfaces/$INTERFACE/VLAN/$VLAN/Bridge/Name" ] && MODE=Bridged
+   fi
+   if [ "$MODE" == Bridged ] ; then
+     BRIDGE=`cat $REGISTER/system/net/interfaces/$INTERFACE/Bridge/Name 2>/dev/null`
+     if ! [ -z "$BRIDGE" ] ; then
+       INTERFACE="$BRIDGE" 
+     fi
+   fi
+   arping -c1 -w1 -I $INTERFACE $IP 2>/dev/null >/dev/null
+ done
+ I=$((I+1))
+done
+

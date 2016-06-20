@@ -1,0 +1,4 @@
+#!/bin/bash
+openssl x509 -in /var/register/system/cp/Auth/TLS/cert.pem -text > /etc/shibboleth/.CapPort-cert.pem 2>/dev/null
+openssl rsa -in /var/register/system/cp/Auth/TLS/key.pem > /etc/shibboleth/.CapPort-key.pem 2>/dev/null
+

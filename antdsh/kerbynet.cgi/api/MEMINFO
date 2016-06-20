@@ -1,0 +1,62 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REQUEST="$1"
+OPT="$2"
+[ -z "$REQUEST" ] && REQUEST=ALL
+function TOTAL {
+  grep ^Mem: $MEMINFO |awk  '{print $2}'
+}
+function FREE {
+  grep "buffers/cache:" $MEMINFO |awk  '{print $4}'
+}
+function USED {
+  grep "buffers/cache:" $MEMINFO |awk  '{print $3}'
+}
+function USEDSWAP {
+  grep "Swap:" $MEMINFO |awk  '{print $3}'
+}
+function FREESWAP {
+  grep "Swap:" $MEMINFO |awk  '{print $4}'
+}
+function ALL {
+  XFREE=$(FREE)
+  XTOTAL=$(TOTAL)
+  XFREESWAP=$(FREESWAP)
+  XUSEDSWAP=$(USEDSWAP)
+  XTOTALSWAP=$((XFREESWAP+XUSEDSWAP))
+  if [ $XTOTALSWAP -eq 0 ] ; then 
+    XPERCSWAP=0
+  else
+    XPERCSWAP=$((XFREESWAP*100/XTOTALSWAP))
+  fi
+  if echo "$OPT" | grep -q -w MLines ; then
+    echo "Total: ${XTOTAL}MB"
+    echo "Free: ${XFREE}MB ($((XFREE*100/XTOTAL))%)"
+    echo "Free Swap: ${XFREESWAP}MB ($XPERCSWAP%)"
+  else
+    echo "Total ${XTOTAL}MB  Free ${XFREE}MB ($((XFREE*100/XTOTAL))%)  Free Swap ${XFREESWAP}MB ($XPERCSWAP%)"
+  fi  
+}
+MEMINFO=/tmp/meminfo.$$
+free -m  > $MEMINFO
+case "$REQUEST" in
+  ALL)
+      ALL
+      ;;
+  TOTAL)
+      TOTAL
+      ;;
+  FREE)
+      FREE
+      ;;
+  USED)
+      USED
+      ;;
+  USEDSWAP)
+      USEDSWAP
+      ;;
+  FREESWAP)
+      FREESWAP
+      ;;
+esac
+rm "$MEMINFO"

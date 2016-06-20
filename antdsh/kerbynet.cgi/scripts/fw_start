@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/net/FW"
+cd "$CONFIG/Chains/"
+if iptables -L CapPort -n 2>/dev/null >/dev/null ; then
+  CPGW=yes
+fi
+iptables -F
+iptables -X
+iptables -t mangle -F NetBalancer 2>/dev/null
+iptables -t mangle -X NetBalancer 2>/dev/null
+iptables -t mangle -N NetBalancer 2>/dev/null
+iptables -t mangle -F OpenVPN 2>/dev/null
+iptables -t mangle -X OpenVPN 2>/dev/null
+iptables -t mangle -N OpenVPN 2>/dev/null
+iptables -t mangle -F QoS 2>/dev/null
+iptables -t mangle -X QoS 2>/dev/null
+iptables -t mangle -N QoS 2>/dev/null
+iptables -t mangle -F NB_CT_PRE 2>/dev/null
+iptables -t mangle -X NB_CT_PRE 2>/dev/null
+iptables -t mangle -N NB_CT_PRE 2>/dev/null
+iptables -t mangle -A NB_CT_PRE -j CONNMARK --save-mark
+iptables -t mangle -F NB_FO_PRE 2>/dev/null
+iptables -t mangle -X NB_FO_PRE 2>/dev/null
+iptables -t mangle -N NB_FO_PRE 2>/dev/null
+[ "$CPGW" == yes ] && iptables -N CapPort
+$SCRIPTS/fw_https_chain
+$SCRIPTS/fw_ssh_chain
+$SCRIPTS/fw_sys_chain
+CHAINS=`ls`
+for C in $CHAINS ; do
+  if ! [ "$C" == FORWARD -o "$C" == INPUT -o "$C" == OUTPUT -o "$C" == QoS ] ; then
+    iptables -N $C
+  fi
+done
+for C in $CHAINS ; do
+  $SCRIPTS/fw_initrules $C
+done
+$SCRIPTS/nb_fw

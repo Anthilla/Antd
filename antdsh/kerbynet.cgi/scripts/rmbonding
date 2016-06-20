@@ -1,0 +1,21 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/net/interfaces/"
+cd $CONFIG
+BONDS=`ls -d BOND* 2>/dev/null`
+for BOND in $BONDS ; do
+  INTERFACES=$(cat /sys/class/net/$BOND/bonding/slaves 2>/dev/null)  
+  for I in $INTERFACES ; do
+      if ifconfig $I 2>/dev/null |grep -q -w UP ; then
+        STATUS=up
+      else
+        STATUS=down
+      fi
+ 
+     ifenslave -d $BOND $I 
+     if [ "$STATUS" = up ] ; then
+        ifconfig $I up
+     fi
+  done
+done
+modprobe -r bonding

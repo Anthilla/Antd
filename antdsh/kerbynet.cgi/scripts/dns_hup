@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+$SCRIPTS/dns_zoneconfig
+if named-checkconf /tmp/named.conf >/tmp/named.conf.error ; then
+  cp /tmp/named.conf /etc
+  killall -HUP named
+else 
+  exit 1
+fi
+
+

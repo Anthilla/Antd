@@ -1,0 +1,51 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>X509 List</title>
+<script>
+types=new Array (<xvar numEntries>+1);
+function NewCert() {
+   if (document.pick_x509.ListUsers.checked) {
+     newwin=open("kerbynet?Section=x509&STk=<xvar STk>&Action=NotAvailableCerts&type=user","NotAvailableCert","top=300,left=400,width=400,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   } else {
+     newwin=open("kerbynet?Section=x509&STk=<xvar STk>&Action=NotAvailableCerts&type=host","NotAvailableCert","top=300,left=400,width=400,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   }
+   newwin.focus();
+};
+
+</script>
+</head>
+<body>
+<p><font color="#FF0000"><xvar errormsg> </font></p>
+<form name=pick_x509 method=post action="kerbynet">
+<input type=hidden name=Section value=x509>
+<input type=hidden name=Action value=List><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=type value="">
+<table width="100%" border=1>
+<tr>
+<td width="5%" bgcolor="#c0c0ff" style='color: #ffffff' nowrap><b>&nbsp;Total entries:&nbsp;&nbsp;&nbsp;<xvar numEntries>&nbsp;&nbsp;</b></td>
+<td align=right nowrap style="color: #606060">
+<input type=checkbox name=ListUsers Value=checked <xvar ListUsers> onclick="document.pick_x509.submit()">&nbsp;Users Certificates&nbsp;&nbsp;
+</td>
+<td align=right nowrap style="color: #606060">
+<input type=checkbox name=ListHosts Value=checked <xvar ListHosts> onclick="document.pick_x509.submit()">&nbsp;Hosts Certificates&nbsp;&nbsp;
+</td>
+<td align=right nowrap style="color: #606060">
+<input type=checkbox name=NotValid Value=checked <xvar NotValid> onclick="document.pick_x509.submit()">&nbsp;Only not valid Certificates&nbsp;&nbsp;
+</td>
+<td width=1% nowrap style="color: #606060">
+&nbsp;<input type=button value=Create onclick="NewCert()">&nbsp;<input type=button value=Manage onclick="top.menu.manage_x509()">&nbsp;
+</td>
+</tr>
+</table>
+<br>
+<table border=1 bordercolor=#c0c0c0 cellspacing=0 width=100% style="color:#606060">
+<tr style="color: #1010d0">
+<td width=1%>&nbsp;</td>
+<td><b>&nbsp;Common Name (CN)</b></td>
+<td align=center><b>&nbsp;Serial</b></td>
+<td align=center><b>&nbsp;Type</b></td>
+<td align=center><b>&nbsp;Validity Status</b></td>
+<td align=center><b>&nbsp;Expiration Date</b></td>
+</tr>
+<script language=Javascript>i=0;</script>
+

@@ -1,0 +1,38 @@
+#!/bin/bash
+IP="$1"
+INTERFACE="$2"
+function RENEW {
+  if [ -f "/var/register/system/cp/Connected/$IP/User" ] ; then
+    USER=`cat /var/register/system/cp/Connected/$IP/User 2>/dev/null`
+    /root/kerbynet.cgi/scripts/cp_getaccounting "$USER" "" "$IP" 2>/dev/null >/dev/null
+    touch "/var/register/system/cp/Connected/$IP/User" 2>/dev/null
+    touch "/var/register/system/cp/Connected/$IP/NoPopup" 2>/dev/null
+  fi
+}
+PREV_OUTGOING=`cat /tmp/cp_outgoing_traffic/$IP 2>/dev/null`
+OUTGOING=`iptables -L CapPortWL -n -v -x |grep -w "$IP" |awk '{printf "%s",$1}'`
+if [ "$OUTGOING" != "$PREV_OUTGOING" ] ; then 
+  echo "$OUTGOING" > /tmp/cp_outgoing_traffic/$IP
+  RENEW
+  exit
+fi
+if ping  -c 1 -w 1 "$IP" 2>/dev/null >/dev/null ; then
+  RENEW
+  exit
+fi
+for I in $INTERFACE ; do
+  VLAN=`echo $I | awk -F. '{print $2}'`
+  if [ -z "$VLAN" ] ; then
+    [ -f "/var/register/system/net/interfaces/$I/Bridge/Name" ] && I="`cat /var/register/system/net/interfaces/$I/Bridge/Name`"
+  else
+     M=`echo $I | awk -F. '{print $1}'`
+     [ -f "/var/register/system/net/interfaces/$M/VLAN/$VLAN/Bridge/Name" ] && I="`cat /var/register/system/net/interfaces/$M/VLAN/$VLAN/Bridge/Name`"
+  fi
+  if arping -f -I "$I" -w 1 "$IP" 2>/dev/null >/dev/null ; then
+    RENEW
+    exit
+  fi
+done
+
+
+exit 1 

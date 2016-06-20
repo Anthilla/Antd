@@ -1,0 +1,78 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Network Address Translation</title>
+<script>
+function add() {
+   available=document.data.Available;
+   if (available.selectedIndex<0) {
+      alert("You have to select an available interface to enable for NAT.");
+   } else {
+      netname=available.options[available.selectedIndex].value;
+      text=available.options[available.selectedIndex].text;
+      NAT=document.data.NAT;
+      NAT.options[NAT.options.length]=new Option(text,netname,false,true);
+      available.options[available.selectedIndex]=null;
+   }
+}
+function Remove() {
+   NAT=document.data.NAT;
+   if (NAT.selectedIndex<0) {
+      alert("You have to select a NAT enabled interface to remove.");
+   } else {
+      netname=NAT.options[NAT.selectedIndex].value;
+      text=NAT.options[NAT.selectedIndex].text;
+      available=document.data.Available;
+      available.options[available.options.length]=new Option(text,netname,false,true);
+      selected=NAT.selectedIndex;
+      NAT.options[selected]=null;
+   }
+}
+function submitdata() {
+   NAT=document.data.NAT;
+   document.data.NATList.value="";
+   for (i=0; i < NAT.options.length; i++) {
+     document.data.NATList.value+=" "+NAT.options[i].value;
+   }
+   if (document.data.NATList.value.substr(0,1)==" ") document.data.NATList.value=document.data.NATList.value.substr(1);
+   document.data.submit();
+}
+function view() {
+    var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=NatView&Type=NAT","NatView","top=200,left=100,width=800,height=650,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus(); 
+}
+
+</script>
+</head>
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='Router'>
+<input type=hidden name=Action value='NatSave'><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=NATList value=''>
+<table width=100%>
+<tr><td><font color="#3030f0" class=Bigger2><b>Network Address Translation</b></font></td><td align=right><input type=button value=Save onclick="submitdata()">&nbsp;<input type=button value="View" onclick="view()">&nbsp;<input type=button value="  Close  " onclick="window.close()"></td></tr>
+</table>
+<hr>
+<table width=100%>
+<tr>
+<td nowrap>
+<font color=#0000D0>Available Interfaces</font><br>
+<select name=Available size=10 style="width: 100%">
+<xvar !router_interfacesforNAT>
+</select>
+</td>
+<td align=center nowrap>
+<input type=button value=">>>" onclick="add()">&nbsp;<br><br>
+<input type=button value="<<<" onclick="Remove()">
+</td>
+<td nowrap>
+<font color=#0000D0>NAT Enabled Interfaces</font><br>
+<select name=NAT size=10 style="width: 100%">
+<xvar !router_interfacesNAT>
+</select>
+</td>
+</tr>
+</table>
+<hr>
+<font color=#303030 class=Smaller1><b>Note</b>:<br>the source IP of outgoing packets from the enabled NAT interfaces will be automatic translated using routing table (MASQUERADE)</font>
+<hr>
+</form>
+</html>

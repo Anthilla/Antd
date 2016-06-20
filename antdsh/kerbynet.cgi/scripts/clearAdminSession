@@ -1,0 +1,3 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+iptables -F SYS_GUI

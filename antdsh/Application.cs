@@ -27,11 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using antdlib.Antdsh;
+using antdlib.common;
 
 namespace antdsh {
     internal class Application {
@@ -72,6 +72,9 @@ namespace antdsh {
         private static void Command(string command) {
             if (command == "help") {
                 Help();
+            }
+            else if (command == "test") {
+                Console.WriteLine(Terminal.Execute(".kerbynet.cgi/scripts/wifi-scanning"));
             }
             else if (command == "start") {
                 Shell.Start();

@@ -1,0 +1,184 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Firewall Manage</title>
+<script language=Javascript>
+<xinclude ip_utility.inc>
+function fwLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=kernel&Filter=OUT%3D","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function ActivateRule(RuleObj) {
+  Rule=RuleObj.value;
+  Activate=RuleObj.checked?"yes":"no";
+  if (confirm("Are you sure you want to "+(Activate=="yes"?"activate":"deactivate")+" the Rule?")) {
+      location="kerbynet?Section=FW&STk=<xvar STk>&Action=ActivateRule&Chain=<xvar Chain>"+"&Rule="+Rule+"&Activate="+Activate;
+  } else {
+    RuleObj.checked=!RuleObj.checked;
+  }
+}
+function selected_entry() {
+   X=document.data.Rule;
+   if (X==undefined) {
+     return "";
+   }
+   if (X.length!=undefined) {
+     for (i=0; i<X.length; i++) {
+       if (X[i].checked) return X[i].value;
+     }
+   } else {
+       if (X.checked) return X.value;
+   }
+   return "";
+}
+function AddRule() {
+  Rule=selected_entry();
+  if (Rule=="") {
+    Rule=document.data.maxSequence.value;
+    if (parseInt(Rule)<10) {
+      Rule="00"+Rule;
+    } else {
+      if (parseInt(Rule)<100) {
+        Rule="0"+Rule;
+      }
+    }
+  }
+  var newwin=window.open("kerbynet?Section=FW&STk=<xvar STk>&Action=AddRule&Chain=<xvar Chain>"+"&Rule="+Rule+"&maxSequence="+document.data.maxSequence.value,"RuleConfig","top=100,left=50,width=950,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function ChangeRule() {
+  Rule=selected_entry();
+  if (Rule=="") {
+    alert("You should select a rule to change.");
+  } else {
+    var newwin=window.open("kerbynet?Section=FW&STk=<xvar STk>&Action=ChangeRule&Chain=<xvar Chain>"+"&Rule="+Rule+"&maxSequence="+document.data.maxSequence.value,"RuleConfig","top=100,left=50,width=950,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+    newwin.focus();
+  }
+}
+function DeleteRule() {
+  Rule=selected_entry();
+  if (Rule=="") {
+    alert("You should select a rule to delete.");
+  } else {
+    if (confirm("Are you sure you want to delete the selected Rule?")) {
+      location="kerbynet?Section=FW&STk=<xvar STk>&Action=DeleteRule&Chain=<xvar Chain>"+"&Rule="+Rule;
+    }
+  }
+}
+function requery() {
+  location="kerbynet?Section=FW&STk=<xvar STk>&Action=Manage&Chain="+document.data.Chain.value;
+}
+function NewChain() {
+  Name=prompt("Insert the name of the new Chain","","New Chain");
+  if (Name==null) return;
+  Name=Name.toLowerCase().replace(/[^a-z0-9_]/g,"");
+  Z=document.data.Chain;
+  for (i=0; i<Z.length; i++) {
+    if (Z.options[i].value==Name) {
+       alert("The chain "+Name+" already exists!");
+       return;
+    }
+  }
+  maxlen=30;
+  if (Name.length>maxlen) {
+    alert("Chain name too long (max "+maxlen+" characters).");
+    return;
+  }
+  location="kerbynet?Section=FW&STk=<xvar STk>&Action=NewChain&Chain="+document.data.Chain.value+"&ChainName="+Name;
+}
+function RemoveChain() {
+  Name=document.data.Chain.value;
+  if (Name=="FORWARD" || Name=="INPUT" || Name=="OUTPUT") {
+    alert("You cannot remove a built-in chain.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the chain "+document.data.Chain.value+"?")) {
+    location="kerbynet?Section=FW&STk=<xvar STk>&Action=RemoveChain&Chain="+Name;    
+  }
+}
+function PolicyChanged() {
+  Name=document.data.Chain.value;
+  Policy=document.data.Policy.value;
+  if (!(Name=="FORWARD" || Name=="INPUT" || Name=="OUTPUT")) {
+    alert("User created chains have not policy.");
+    return;
+  }
+  if (confirm("Are you sure you want to change the default policy of the chain "+document.data.Chain.value+" to "+Policy+"?")) {
+    if (!(document.data.EnabledChain.checked || document.data.Policy.value=="ACCEPT")) {
+      alert("WARNING: DROP policy will be actually activated when you enable the chain.");
+    }    
+    location="kerbynet?Section=FW&STk=<xvar STk>&Action=ChangePolicy&Chain="+Name+"&Policy="+Policy;
+  } else {
+    if (Policy=="DROP") {
+      document.data.Policy.value="ACCEPT";
+    } else {
+      document.data.Policy.value="DROP";
+    } 
+  }
+}
+function EnableChain() {
+  Name=document.data.Chain.value;
+  EnabledChain=document.data.EnabledChain.checked;
+  if (confirm("Are you sure you want to "+(EnabledChain?"enable":"disable")+" the chain "+document.data.Chain.value+"?")) {
+    location="kerbynet?Section=FW&STk=<xvar STk>&Action=EnableChain&Chain="+Name+"&Enabled="+EnabledChain;    
+  } else {
+      document.data.EnabledChain.checked=!EnabledChain;
+  }
+}
+function ViewChain() {
+  Name=document.data.Chain.value;
+  var newwin=window.open("kerbynet?Section=FW&STk=<xvar STk>&Action=ViewChain&Chain="+Name,"IPTABLESView","top=100,left=100,width=850,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function saverules() {
+  document.data.save.disabled=true;
+  document.data.CancelC.disabled=true;
+  location="kerbynet?Section=FW&STk=<xvar STk>&Action=SaveRules&Chain=<xvar Chain>";
+}
+function CancelChanges() {
+  if (confirm("Are you sure you want to cancel last changes to the chain "+document.data.Chain.value+"?")) {
+    document.data.save.disabled=true;
+    document.data.CancelC.disabled=true;
+    location="kerbynet?Section=FW&STk=<xvar STk>&Action=CancelChanges&Chain=<xvar Chain>";
+  }
+}
+function loaded() {
+  if ("<xvar _NotSaved>"=="") {
+    document.data.save.disabled=true;
+    document.data.CancelC.disabled=true;
+  } else {
+    document.data.EnabledChain.disabled=true;
+  }
+  if ("<xvar _Chain>"=="QoS" || "<xvar _Chain>"=="NetBalancer") {
+    document.data.NewB.disabled=true;
+    document.data.RemoveB.disabled=true;
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="FW">
+<input type=hidden name=Action value="Manage"><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1>
+<tr><td width="1%" nowrap><b><font color=#808080>&nbsp;Chain: </font><script>"<xvar CheckedEnabledChain>"!="checked"?document.write("<font color=#FF0000>"):document.write("<font color=#00d000>")</script>&nbsp;<xvar _Chain>&nbsp;</font></b></td><td align="right">Policy <select name=Policy onchange="PolicyChanged()"><option value=ACCEPT>ACCEPT<option value=DROP>DROP</select></td><td align=right width=1% nowrap>&nbsp;Chain&nbsp;<select name=Chain onchange="requery()"><xvar !fw_listchains option (Chain)></select></td><td width=1% nowrap align=right><input type=button name=NewB value="New" onclick="NewChain()"><input type=button name=RemoveB value="Remove" onclick="RemoveChain()"><input type=button value="View" onclick="ViewChain()"></td><td width=1%><input type=button value="Show Log" onclick="fwLOG()"></td></tr>
+</table>
+<script>
+  document.data.Chain.value="<xvar _Chain>";
+  P="<xvar !fw_getpolicy (Chain)>";
+  if (P!="") {
+    document.data.Policy.value=P;
+  } else {
+    document.data.Policy.disabled=true;
+    document.data.Policy.options[0].text='None';
+    document.data.Policy.options[0].value='None';
+    document.data.Policy.value='None';
+  }
+</script>
+<table width=100% id=savetab><tr><td width=1% nowrap><input type=button Name=save value="Save" onclick="saverules()">&nbsp;<input type=button Name=CancelC value="Cancel" onclick="CancelChanges()"></td><td><font color=#ff0000><xvar _NotSaved></font></td><td align=right><font color=#0000f0 face=Arial>Enabled </font><input type=checkbox name=EnabledChain value=yes <xvar CheckedEnabledChain> onclick="EnableChain()"></td></tr></table>
+<table width="100%"><tr><td bgcolor=#6666ff>&nbsp;<font color=#ffffff><b><xvar _Chain> Rules</b></font></td><td align=right><input type=button value="Add" onclick="AddRule()" style="font-size: 10;"><input type=button value="Change" onclick="ChangeRule()" style="font-size: 10;"><input type=button value="Delete" onclick="DeleteRule()" style="font-size: 10;"></td></tr></table>
+<table width=100% border=1 bordercolor=#c0c0c0 cellspacing=0>
+<tr style="color: #0000a0"><th width=1% align=center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th width=1% align=right>Seq</th><th width=1% align=center>Input</th><th width=1% align=center>Output</th><th>&nbsp;Description</th><xvar _ClassTH><th width=1% align=center>Log</th><th width=1% align=center>Active</th></tr>
+<xvar !fw_listrules (Chain)>
+</table>
+</body>
+</html>

@@ -1,0 +1,75 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/wifi.inc
+OPT="$1"
+if [ -d "/Database/opt/wifi/" ] ; then
+   mv /Database/opt/wifi/ /Database/opt/wifi.disabled
+fi
+echo "Starting WiFi subsystem ..."
+mkdir -p $REGISTER/system/net/WiFi/
+rm -f $REGISTER/system/net/WiFi/module
+MODULE=`lsmod |grep ^mac80211 |awk '{print $4}'`
+if [ -n "$MODULE" ] ; then
+  echo "$MODULE" > $REGISTER/system/net/WiFi/module 
+  if [ "$OPT" != norestart ] ; then
+    #echo "--> Reloading Wi-Fi Kernel module ($MODULE) ..."
+    #for M in $(echo $MODULE|tr "," " ") ; do
+    #  echo $M
+    #  modprobe -r $M
+    #  modprobe $M
+    #done
+    setregdomain 
+  else
+    setregdomain 
+    ldevs=`wifi-list`
+    if [ -n "$ldevs" ] ; then
+      echo -n "--> Configuring physical WiFi devices ( "
+      for ldev in $ldevs ; do
+        echo -n "$ldev "
+        mkdir -p $REGISTER/system/net/WiFi/DEVS/$ldev
+        ID=`sed 's/://g' < /sys/class/net/$ldev/address 2>/dev/null | awk '{print toupper($0)}'`
+        OLDID="`cat $REGISTER/system/net/WiFi/DEVS/$ldev/ID 2>/dev/null`"
+        if [ "$OLDID" != "$ID" ] ; then
+          echo -n "<Hardware changed> "
+          for W in `wifi-listvapsbymac $OLDID` ; do
+            echo "$ID" >$REGISTER/system/net/interfaces/$W/WiFi/DevID
+          done 
+          echo "$ID" > "$REGISTER/system/net/WiFi/DEVS/$ldev/ID"
+        fi
+        if ! [ -f "$REGISTER/system/net/WiFi/DEVS/$ldev/TXPOWER" ] ; then
+	  echo auto > "$REGISTER/system/net/WiFi/DEVS/$ldev/TXPOWER"
+        fi
+        if ! [ -f "$REGISTER/system/net/WiFi/DEVS/$ldev/CHANNEL" ] ; then
+          wifiN=`echo $ldev |sed -r "s/wlan(.*)/\1/"`
+          echo "$(($wifiN%3*5+1))" > "$REGISTER/system/net/WiFi/DEVS/$ldev/CHANNEL"
+        fi
+	PHY=`echo $ldev | sed 's/wlan/phy/'`
+        if iw $PHY info | grep -q -w "Band 2:" ; then
+	  echo yes > "$REGISTER/system/net/WiFi/DEVS/$ldev/11a"
+        else
+	  echo no  > "$REGISTER/system/net/WiFi/DEVS/$ldev/11a"
+        fi
+        if iw $PHY info | grep -q -w HT20 ; then
+	  echo yes > "$REGISTER/system/net/WiFi/DEVS/$ldev/11n"
+        else
+	  echo no  > "$REGISTER/system/net/WiFi/DEVS/$ldev/11n"
+        fi
+      done
+      echo ")"
+    fi
+ 
+  fi
+else
+  echo "--> No supported Wi-Fi hardware has been found."
+  exit 1
+fi 
+if ls /sys/class/net/wlan? 2>/dev/null >/dev/null || ([ -f /$REGISTER/system/net/WiFi/module ] && ! ls /sys/class/net/WLAN?? 2>/dev/null >/dev/null ); then
+  wifi-create-vaps "$OPT"
+  if ls  /sys/class/net/wlan? 2>/dev/null >/dev/null ; then
+    if ( ls /sys/class/net/WLAN?? 2>/dev/null >/dev/null && [ -f /$REGISTER/system/net/WiFi/module ]); then
+      [ -r /etc/rc.wifi ] || touch $REGISTER/system/net/WiFi/rc.wifi
+      $SCRIPTS/runscript wireless
+    fi
+  fi
+fi
+

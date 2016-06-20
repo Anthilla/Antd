@@ -1,0 +1,38 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+SLOT="$1"
+if [ -d /etc/slots ] ; then
+ if [ -n "$SLOT" ] ; then 
+   ACTIVE=`cat /etc/slots/conf/Slot 2>/dev/null`
+   CURRENT=`cat /etc/slots/current/Slot`
+   STATUS=`cat /etc/slots/$SLOT/conf/Status 2>/dev/null`
+   [ -z "$ACTIVE" ] && ACTIVE="$CURRENT" 
+   if [ "$SLOT" = "$CURRENT" ] ; then
+     echo "<font color=#00a060>Active&nbsp;&nbsp;<font>(Current Kernel: `uname -r`)</font></font>"
+   else
+     if [ "$STATUS" = "Flashing" ] ; then
+       echo "<font color=#f06030>Flashing Image ...</font>"
+     else  
+       if [ "$STATUS" = "Corrupted" ] ; then
+         echo "<font color=#f03030>Corrupted Image</font>"
+       else
+         if [ "$STATUS" = Ready ] ; then
+           if [ "$SLOT" = "$ACTIVE" ] ; then
+             echo "<font color=#00a060>Active at the next boot</font>"
+           else
+             echo "<font color=#00a060>Ready to be selected for boot</font>"
+           fi
+         fi
+       fi
+     fi
+   fi
+ else
+   if [ -f /tmp/reboot-required-grub ] ; then
+     echo "<script>document.data.RebootBt.disabled=false;</script><font color=#f06030>Reboot required for new boot configuration to take effect</font>"
+   fi
+ fi
+else
+  if [ -z "$SLOT" ] ; then
+    echo "<script>isInputDisabled=true;</script><font color=#f06030>WARNING: Boot Manager cannot act on Live CD version. No Slots available.</font>"
+  fi
+fi

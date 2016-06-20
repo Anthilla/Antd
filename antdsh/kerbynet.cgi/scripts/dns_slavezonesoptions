@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+mkdir $REGISTER/system/dns/SlaveZones 2>/dev/null
+cd $REGISTER/system/dns/SlaveZones
+for ZONE in `ls` ; do
+  MASTER=`cat $ZONE/master 2>/dev/null`
+  if ! [ -z "$MASTER" ] ; then
+    echo "<option value=$ZONE>$ZONE (master server: $MASTER)</option>"
+  fi
+done

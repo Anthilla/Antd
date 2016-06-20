@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+A=""
+for A in `cat $REGISTER/system/dns/Clients/ACL 2>/dev/null` ; do
+  TXT=""
+  if ! [ -z "$A" ] ; then
+     if echo "$A" | grep -q "/" ; then
+       TXT="Subnet $A"
+     else
+       TXT="IP $A"
+     fi
+  fi
+  echo "<option value='$A'>$TXT</option>"
+done

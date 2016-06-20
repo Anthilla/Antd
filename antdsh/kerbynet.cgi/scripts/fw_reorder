@@ -1,0 +1,28 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+[ -z "$CHAIN" ] && exit 1
+CONFIG="$REGISTER/system/net/FW/tmp/Chains/"
+if [ -d $CONFIG/$CHAIN/Rules/ ] ; then
+  cd $CONFIG/$CHAIN/Rules
+  rm -rf REORDER
+  RULES=`ls`
+  [ -z "$RULES" ] && exit 0
+  mkdir REORDER || exit 1
+  NUM=0
+  for RULE in $RULES ; do
+    NUM=$((NUM+1))
+    if [ $NUM -lt 10 ] ; then
+      xNUM=00$NUM  
+    else
+      if [ $NUM -lt 100 ] ; then
+        xNUM=0$NUM  
+      else
+        xNUM=$NUM  
+      fi
+    fi
+    mv $RULE REORDER/$xNUM
+  done
+  mv REORDER/* .
+  rm -rf REORDER
+fi

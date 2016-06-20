@@ -1,0 +1,93 @@
+<html>
+<head>
+<style type="text/css">
+<!--
+body,td,th,tr,table,font,p,div,span {
+ font-family: verdana,sans-serif ;
+ font-size: 12px ;
+}
+body.Smaller1,td.Smaller1,th.Smaller1,tr.Smaller1,table.Smaller1,font.Smaller1,p.Smaller1,div.Smaller1,span.Smaller1 {
+  font-size: 10px ;
+}
+body.Smaller2,td.Smaller2,th.Smaller2,tr.Smaller2,table.Smaller2,font.Smaller2,p.Smaller2,div.Smaller2,span.Smaller2 {
+  font-size: 9px ;
+}
+body.Bigger1,td.Bigger1,th.Bigger1,tr.Bigger1,table.Bigger1,font.Bigger1,p.Bigger1,div.Bigger1,span.Bigger1 {
+  font-size: 14px ;
+}
+body.Bigger2,td.Bigger2,th.Bigger2,tr.Bigger2,table.Bigger2,font.Bigger2,p.Bigger2,div.Bigger2,span.Bigger2 {
+  font-size: 16px ;
+}
+input[type=text],select,input[type=password],input[type=file] {
+  border-style: solid;
+  border-color: #6060ff;
+  border-width: 1px;
+}
+input[type=button],input[type=submit],input[type=reset] {
+  color: #0000d0;
+}
+-->
+</style>
+<title>Renew</title>
+<script>
+function Refresh() {
+  if (STATUS=="C") {
+    parent.ReNew(); 
+  } else {
+    alert("<xvar _U>@<xvar _Realm> <xvar +cp_msg NotConnected>");
+  }
+}
+function loaded () {
+  if (STATUS=="C") {
+    parent.document.data.Authenticator.value=document.data.Authenticator.value;
+    parent.setNormalRenew()
+  } else {
+    parent.clearRenew();
+    parent.document.data.DisconnectButton.value="<xvar +cp_msg CLOSE>";
+    parent.document.data.DisconnectButton.onclick=parent.Wclose;
+    parent.NoDisconnectionWarning=true;
+  }
+  AcctSTR="<xvar !cp_getaccounting (U) (Realm) (IP)>";
+  Acct=AcctSTR.split("#")
+  document.getElementById("TimeValue").innerHTML=Acct[0];
+  document.getElementById("TrafficValue").innerHTML=Acct[1];
+  document.getElementById("CostValue").innerHTML=Acct[2];
+  if (Acct[3]!="") {
+    document.getElementById("CreditMsg").innerHTML="<xvar +cp_msg Credit>";
+    document.getElementById("CreditDelimiter").innerHTML=":";
+    document.getElementById("CreditValue").innerHTML=Acct[3];
+    document.getElementById("CreditCurrency").innerHTML="&nbsp;<xvar /system/acct/Currency>";
+  }
+  parent.nRenew=0;
+  parent.PwMsg();
+}
+var STATUS="<xvar +cp_getstatus (U) (Realm) (IP)>";
+var StatusDesc;
+if (STATUS=="C") {
+  StatusDesc="<b><xvar _U>@<xvar _Realm></b>&nbsp;<xvar +cp_msg Connected>&nbsp;- IP:<xvar _IP>";
+} else {
+  StatusDesc="<font color=#f00000><b><xvar _U>@<xvar _Realm></b>&nbsp;<xvar +cp_msg NotConnected></font>";
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post>
+<input type=hidden name=Section value="CPGW">
+<input type=hidden name=Action value="Renew">
+<input type=hidden name=U value="<xvar _U>">
+<input type=hidden name=Realm value="<xvar _Realm>">
+<input type=hidden name=Authenticator value="<xvar _Authenticator>">
+<font color=#2020a0>
+<script>document.write(StatusDesc);</script>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td><hr></td><td><hr></td><td><hr></td><td><hr></td></td></tr>
+<tr><td>&nbsp;<font color="#ff3030"><xvar +cp_lmsg (IP)></font></td><td></td><td></td><td></td></td></tr>
+<tr><td width=40% nowrap align=right>&nbsp;&nbsp;<xvar +cp_msg Time><td align=right width=10%>:</td></td><td align=right nowrap id=TimeValue></td><td></td><td align=right><a href="#" onclick="Refresh()"><font class=Smaller1>Refresh</font></a></td></tr>
+<tr><td align=right>&nbsp;&nbsp;<xvar +cp_msg Traffic></td><td align=right>:</td><td align=right id=TrafficValue><td width=%1>&nbsp;MB</td><td></td></tr>
+<tr><td align=right>&nbsp;&nbsp;<xvar +cp_msg Cost></td><td align=right>:</td><td align=right id=CostValue></td><td>&nbsp;<xvar /system/acct/Currency></td><td></td></tr>
+<tr><td id=CreditMsg align=right></td><td id=CreditDelimiter align=right></td><td align=right id=CreditValue></td><td id=CreditCurrency></td><td></td></tr>
+
+</table>
+</form>
+</body>
+</html>

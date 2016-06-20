@@ -1,0 +1,31 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DOMAIN="$1"
+SERVER="$2"
+[ -z "$DOMAIN" ] && exit 1
+[ -z "$SERVER" ] && exit 2
+cd $REGISTER/system/dns/Forwarders/ || exit 2
+if grep -i -q -w "^$DOMAIN\$" [0123456789][0123456789]/Domain ; then
+  echo "Forwarder already configured" >&2
+  exit 10
+fi
+if grep -i zone /etc/named.conf | grep -i -q -w "\"$DOMAIN\"" ; then
+  echo "Domain already configured as master or slave zone" >&2
+  exit 11
+fi
+
+
+NUM=`ls -d [0123456789][0123456789] 2>/dev/null | tail -1`
+if [ "$NUM" == "" ] ; then
+  NUM=00
+else
+  if [ "${NUM:0:1}" == 0 ] ; then
+    NUM=${NUM:1:1}
+  fi
+  NUM=`echo $((NUM+1)) | awk '{printf "%02s",$0 }'`
+fi
+mkdir $NUM
+echo $DOMAIN > $NUM/Domain
+echo $SERVER > $NUM/Server
+$SCRIPTS/dns_start
+

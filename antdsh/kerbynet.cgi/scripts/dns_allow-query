@@ -1,0 +1,17 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+CONF=$REGISTER/system/dns/Clients
+cd $CONF
+for C in `cat ACL` ; do
+   if echo "$C" |grep -q "/" ; then
+      C=`$SCRIPTS/netmask2cidr "$C"`
+   fi
+   echo -n "$C; "
+done
+
+if [ "`cat $REGISTER/system/dns/Clients/Local 2>/dev/null`" = yes ] ; then
+  for C in `$SCRIPTS/list_local_subnet` ; do
+    C=`$SCRIPTS/netmask2cidr "$C"`;
+    echo -n "$C; "
+  done
+fi 

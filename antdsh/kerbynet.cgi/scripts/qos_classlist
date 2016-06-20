@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+DIR="$REGISTER/system/net/interfaces/$INTERFACE/QoS/Class"
+if ! [ -d "$DIR" ] ; then
+  exit
+fi
+cd "$DIR"
+CL=""
+CLASSES=`ls`
+for C in $CLASSES ; do
+  CL=" $CL $C "
+done
+echo "$CL"

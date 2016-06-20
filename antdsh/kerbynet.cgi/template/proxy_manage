@@ -1,0 +1,463 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>H2L OpenVPN</title>
+<script>
+<xinclude ip_utility.inc>
+function ShowParameters() {
+   newwin=open("kerbynet?Action=Render&Object=OpenVPNParameters&STk=<xvar STk>", "OpenVPNParameters","top=250,left=200,width=700,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function loaded() {
+  X=document.data;
+  X.save.disabled=true;
+  if ("<xvar /system/havp/Enabled>"=="yes") {
+     X.EnabledHAVP.checked=true;
+  }
+  X.AccessLog.value="<xvar /system/havp/AccessLog>";
+  if (X.AccessLog.value=="" || X.AccessLog.value=="no") {
+    X.AccessLog.value="OnlyVirus";
+  }
+  X.VirusCheck.value="<xvar /system/ClamAV/VirusCheck>";
+  
+  X.CheckImages.value="<xvar /system/ClamAV/CheckImages>";
+  X.AutoUpdate.value="<xvar /system/ClamAV/AutoUpdate>";
+  X.AutoUpdateInterval.value="<xvar /system/ClamAV/AutoUpdateInterval>";
+  X.CountryMirror.value="<xvar /system/ClamAV/CountryMirror>";
+  X.BlackList.value="<xvar /system/havp/BlackList>";
+  X.WhiteList.value="<xvar /system/havp/WhiteList>";
+}
+function validateIP(IP) {
+  if (!isValidIP(IP.value)) {
+    alert("ERROR: \""+IP.value+"\" is not a valid IP address.");
+    IP.focus();
+    IP.select();
+    return false;
+  }
+  return true;
+}
+function savedata(obj) {
+   X=document.data;
+   SavingMsg();
+   X.submit();
+}
+function SavingMsg () {
+   X=document.data;
+   X.save.disabled=true;
+   document.getElementById('savetab').innerHTML="<font color=#0000FF>Saving....&nbsp;&nbsp;&nbsp;</font>";
+}
+function SaveMsg () {
+   X=document.data;
+   X.save.disabled=false;
+   if (document.getElementById('savetab').innerHTML.indexOf("Saving")<0) {
+      document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+   }
+}
+function changed() {
+  X.save.disabled=false;
+  SaveMsg();
+  
+}
+function changed_reload() {
+  document.data.Reload.value="yes";
+  changed();
+}
+function AddObject() {
+  var newwin=window.open("kerbynet?Section=Proxy&STk=<xvar STk>&Action=AddObject","ProxyObject","top=250,left=300,width=480,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function RemoveObject() {
+  X=Capturing.document.data;
+  Selected=false;
+  if (X.Sel==undefined) {
+    alert("No object to remove");
+    return;
+  }
+  if (X.Sel.length==undefined) {
+    if (X.Sel.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.Sel.length; s++) {
+      if (X.Sel[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a object to remove.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected object?")) {
+    X.Action.value="RemoveObject"; 
+    X.submit();
+  }
+}
+function ProxyLog() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=proxy","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function ClamAVLog() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=proxy&Filter=ClamAV:","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function FreshClamLog() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=freshclam","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+function View() {
+    var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=NatView&Type=Proxy","NatView","top=200,left=100,width=800,height=650,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function manageBlackList() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=proxy_blacklist","ProxyBL","top=150,left=150,width=600,height=450,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function manageWhiteList() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=proxy_whitelist","ProxyWL","top=150,left=150,width=600,height=450,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function ChangedHAVP() {
+   document.data.HAVP.value="yes";
+   changed();
+}
+function ChangedClamAV() {
+   document.data.ClamAV.value="yes";
+   changed();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="Proxy">
+<input type=hidden name=Action value="Save"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Reload value="no">
+<input type=hidden name=ClamAV value="No">
+<input type=hidden name=HAVP value="No">
+<table width=100% cellspacing=0 cellpadding=0><tr><td><font color=#2020d0 class=Bigger1><b>&nbsp;Transparent Proxy with Web Antivirus</b></font></td><td nowrap align=right><xvar +clamav_update_status>&nbsp;&nbsp;&nbsp;<input type=button value="Update Log" style="font-size: 10;" onclick="FreshClamLog()">&nbsp;&nbsp;</td></tr></table>
+<hr>
+<table width=100% border=1>
+<tr>
+<td width="1%" nowrap><b><font color=#808080>&nbsp;Status:&nbsp;&nbsp;&nbsp;<xvar +proxy_status>&nbsp;&nbsp;&nbsp;</font></b></td>
+<td align=right>
+<span id=savetab></span>&nbsp;&nbsp;&nbsp;&nbsp;
+<font color=#0000f0 face=Arial><input name=EnabledHAVP type=checkbox value="yes" onclick="ChangedHAVP();ChangedClamAV()"> Enabled</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type=button value="Save" name=save onclick="savedata()">
+</td>
+
+<td width=1% nowrap>
+<input type=button value="Proxy Log" onclick="ProxyLog()"><input type=button value="AntiVirus Log" onclick="ClamAVLog()">
+</td>
+</tr>
+</table>
+
+<hr>
+<table width=100% border=1 cellspacing=1 cellpadding=5>
+<tr>
+<td width=40%>
+
+
+           <table cellspacing=0 cellpadding=0 width=100%><tr>
+           <td nowrap>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;HTTP Capturing Rules&nbsp;&nbsp;</span>
+           </td><td align=right nowrap>
+<input type=button value="+" style="font-size: 10;" onclick="AddObject()"><input type=button value="-" style="font-size: 10;" onclick="RemoveObject()"><input type=button value="View" style="font-size: 10;" onclick="View()"></td>
+           </tr></table>
+  <table border=1 width=100% height=300 cellspacing=0 bordercolor=#4040d0><tr><td valign=top nowrap>
+<iframe name=Capturing width=100% height=75% frameborder=0 scrolling=yes src="kerbynet?STk=<xvar STk>&Action=Render&Object=proxy_capturing">IFRAME not supported</iframe><br>
+  </td></tr></table>
+</td>
+<td valign=top>
+  <table width=100% cellspacing=0 cellpadding=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;HAVP Configuration&nbsp;</span></td><td align=right></td></tr></table>
+  <table border=1 width=100% cellspacing=0 cellpadding=5 bordercolor=#4040d0><tr><td style="color: #404040" nowrap>
+  <table width=100% cellspacing=1 cellpadding=0 style="color: #404040">
+  <tr><td wrap>Access Logging&nbsp;&nbsp;<font class=Smaller1>(check the law in your country)</font></td><td align=right><select name=AccessLog onchange="ChangedHAVP()"><option value=OnlyVirus>Only URL containing Virus</option><option value=AnyAccess>Any Access</option></select></td></tr>
+  </table>  
+
+  </td></tr></table>
+  <hr>
+  <table width=100% cellspacing=0 cellpadding=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;ClamAV Antivirus Configuration&nbsp;</span></td><td align=right></td></tr></table>
+  <table border=1 width=100% cellspacing=0 cellpadding=5 bordercolor=#4040d0><tr><td style="color: #404040" nowrap>
+  <table width=100% cellspacing=1 cellpadding=0 style="color: #404040">
+  <tr><td>Virus Scanning</td><td align=right><select name=VirusCheck onchange="ChangedHAVP()"><option value=Enabled>Enabled</option><option value=Disabled>Disabled</option></select></td></tr>
+  <tr><td>Check Images (jpg, gif, png)</td><td align=right><select name=CheckImages onchange="ChangedHAVP()"><option value=yes>Enabled</option><option value=no>Disabled</option></select></td></tr>
+  </table>
+<hr>
+  <table width=100% cellspacing=1 cellpadding=0 style="color: #404040">
+  <tr><td nowrap>AutoUpdate Virus Signatures</td><td align=right nowrap width=1%><select name=AutoUpdate onchange="ChangedClamAV()"><option value=yes>Enabled</option><option value=no>Disabled</option></select></td></tr>
+  <tr><td nowrap>Number of Checks per Day</td><td align=right><select name=AutoUpdateInterval onchange="ChangedClamAV()"><option value=1>1</option><option value=2>2</option><option value=4>4</option><option value=6>6</option><option value=12>12</option><option value=24>24</option><option value=48>48</option></select></td></tr>
+  <tr><td nowrap>Country of the Mirror</td><td align=right>
+<select name=CountryMirror onchange="ChangedClamAV()">
+<option value="AF">Afghanistan</option>
+<option value="AX">Aland Islands</option>
+<option value="AL">Albania</option>
+<option value="DZ">Algeria</option>
+<option value="AS">American Samoa</option>
+<option value="AD">Andorra</option>
+<option value="AO">Angola</option>
+<option value="AI">Anguilla</option>
+<option value="AQ">Antarctica</option>
+<option value="AG">Antigua and Barbuda</option>
+<option value="AR">Argentina</option>
+<option value="AM">Armenia</option>
+<option value="AW">Aruba</option>
+<option value="AC">Ascension Island</option>
+<option value="AU">Australia</option>
+<option value="AT">Austria</option>
+<option value="AZ">Azerbaijan</option>
+<option value="BS">Bahamas</option>
+<option value="BH">Bahrain</option>
+<option value="BD">Bangladesh</option>
+<option value="BB">Barbados</option>
+<option value="BY">Belarus</option>
+<option value="BE">Belgium</option>
+<option value="BZ">Belize</option>
+<option value="BJ">Benin</option>
+<option value="BM">Bermuda</option>
+<option value="BT">Bhutan</option>
+<option value="BO">Bolivia</option>
+<option value="BA">Bosnia and Herzegovina</option>
+<option value="BW">Botswana</option>
+<option value="BV">Bouvet Island</option>
+<option value="BR">Brazil</option>
+<option value="IO">British Indian Ocean Territory</option>
+<option value="BN">Brunei Darussalam</option>
+<option value="BG">Bulgaria</option>
+<option value="BF">Burkina Faso</option>
+<option value="BI">Burundi</option>
+<option value="KH">Cambodia</option>
+<option value="CM">Cameroon</option>
+<option value="CA">Canada</option>
+<option value="CV">Cape Verde</option>
+<option value="KY">Cayman Islands</option>
+<option value="CF">Central African Republic</option>
+<option value="TD">Chad</option>
+<option value="CL">Chile</option>
+<option value="CN">China</option>
+<option value="CX">Christmas Island</option>
+<option value="CC">Cocos (Keeling) Islands</option>
+<option value="CO">Colombia</option>
+<option value="KM">Comoros</option>
+<option value="CG">Congo</option>
+<option value="CD">Congo, The Democratic Republic of the</option>
+<option value="CK">Cook Islands</option>
+<option value="CR">Costa Rica</option>
+<option value="CI">Cote d'Ivoire</option>
+<option value="HR">Croatia</option>
+<option value="CU">Cuba</option>
+<option value="CY">Cyprus</option>
+<option value="CZ">Czech Republic</option>
+<option value="DK">Denmark</option>
+<option value="DJ">Djibouti</option>
+<option value="DM">Dominica</option>
+<option value="DO">Dominican Republic</option>
+<option value="EC">Ecuador</option>
+<option value="EG">Egypt</option>
+<option value="SV">El Salvador</option>
+<option value="GQ">Equatorial Guinea</option>
+<option value="ER">Eritrea</option>
+<option value="EE">Estonia</option>
+<option value="ET">Ethiopia</option>
+<option value="FK">Falkland Islands (Malvinas)</option>
+<option value="FO">Faroe Islands</option>
+<option value="FJ">Fiji</option>
+<option value="FI">Finland</option>
+<option value="FR">France</option>
+<option value="GF">French Guiana</option>
+<option value="PF">French Polynesia</option>
+<option value="TF">French Southern Territories</option>
+<option value="GA">Gabon</option>
+<option value="GM">Gambia</option>
+<option value="GE">Georgia</option>
+<option value="DE">Germany</option>
+<option value="GH">Ghana</option>
+<option value="GI">Gibraltar</option>
+<option value="GR">Greece</option>
+<option value="GL">Greenland</option>
+<option value="GD">Grenada</option>
+<option value="GP">Guadeloupe</option>
+<option value="GU">Guam</option>
+<option value="GT">Guatemala</option>
+<option value="GG">Guernsey</option>
+<option value="GN">Guinea</option>
+<option value="GW">Guinea-Bissau</option>
+<option value="GY">Guyana</option>
+<option value="HT">Haiti</option>
+<option value="HM">Heard Island and McDonald Islands</option>
+<option value="VA">Holy See (Vatican City State)</option>
+<option value="HN">Honduras</option>
+<option value="HK">Hong Kong</option>
+<option value="HU">Hungary</option>
+<option value="IS">Iceland</option>
+<option value="IN">India</option>
+<option value="ID">Indonesia</option>
+<option value="IR">Iran, Islamic Republic of</option>
+<option value="IQ">Iraq</option>
+<option value="IE">Ireland</option>
+<option value="IM">Isle of Man</option>
+<option value="IL">Israel</option>
+<option value="IT" selected>Italy</option>
+<option value="JM">Jamaica</option>
+<option value="JP">Japan</option>
+<option value="JE">Jersey</option>
+<option value="JO">Jordan</option>
+<option value="KZ">Kazakhstan</option>
+<option value="KE">Kenya</option>
+<option value="KI">Kiribati</option>
+<option value="KP">Korea, Democratic People's Republic of</option>
+<option value="KR">Korea, Republic of</option>
+<option value="KW">Kuwait</option>
+<option value="KG">Kyrgyzstan</option>
+<option value="LA">Lao People's Democratic Republic</option>
+<option value="LV">Latvia</option>
+<option value="LB">Lebanon</option>
+<option value="LS">Lesotho</option>
+<option value="LR">Liberia</option>
+<option value="LY">Libyan Arab Jamahiriya</option>
+<option value="LI">Liechtenstein</option>
+<option value="LT">Lithuania</option>
+<option value="LU">Luxembourg</option>
+<option value="MO">Macao</option>
+<option value="MK">Macedonia, The Former Yugoslav Republic of</option>
+<option value="MG">Madagascar</option>
+<option value="MW">Malawi</option>
+<option value="MY">Malaysia</option>
+<option value="MV">Maldives</option>
+<option value="ML">Mali</option>
+<option value="MT">Malta</option>
+<option value="MH">Marshall Islands</option>
+<option value="MQ">Martinique</option>
+<option value="MR">Mauritania</option>
+<option value="MU">Mauritius</option>
+<option value="YT">Mayotte</option>
+<option value="MX">Mexico</option>
+<option value="FM">Micronesia, Federated States of</option>
+<option value="MD">Moldova, Republic of</option>
+<option value="MC">Monaco</option>
+<option value="MN">Mongolia</option>
+<option value="ME">Montenegro</option>
+<option value="MS">Montserrat</option>
+<option value="MA">Morocco</option>
+<option value="MZ">Mozambique</option>
+<option value="MM">Myanmar</option>
+<option value="NA">Namibia</option>
+<option value="NR">Nauru</option>
+<option value="NP">Nepal</option>
+<option value="NL">Netherlands</option>
+<option value="AN">Netherlands Antilles</option>
+<option value="NC">New Caledonia</option>
+<option value="NZ">New Zealand</option>
+<option value="NI">Nicaragua</option>
+<option value="NE">Niger</option>
+<option value="NG">Nigeria</option>
+<option value="NU">Niue</option>
+<option value="NF">Norfolk Island</option>
+<option value="MP">Northern Mariana Islands</option>
+<option value="NO">Norway</option>
+<option value="OM">Oman</option>
+<option value="PK">Pakistan</option>
+<option value="PW">Palau</option>
+<option value="PS">Palestinian Territory, Occupied</option>
+<option value="PA">Panama</option>
+<option value="PG">Papua New Guinea</option>
+<option value="PY">Paraguay</option>
+<option value="PE">Peru</option>
+<option value="PH">Philippines</option>
+<option value="PN">Pitcairn</option>
+<option value="PL">Poland</option>
+<option value="PT">Portugal</option>
+<option value="TP">Portuguese Timor (being phased out)</option>
+<option value="PR">Puerto Rico</option>
+<option value="QA">Qatar</option>
+<option value="RE">Reunion</option>
+<option value="RO">Romania</option>
+<option value="RU">Russian Federation</option>
+<option value="RW">Rwanda</option>
+<option value="BL">Saint Barthelemy</option>
+<option value="SH">Saint Helena</option>
+<option value="KN">Saint Kitts and Nevis</option>
+<option value="LC">Saint Lucia</option>
+<option value="MF">Saint Martin (French part)</option>
+<option value="PM">Saint Pierre and Miquelon</option>
+<option value="VC">Saint Vincent and the Grenadines</option>
+<option value="WS">Samoa</option>
+<option value="SM">San Marino</option>
+<option value="ST">Sao Tome and Principe</option>
+<option value="SA">Saudi Arabia</option>
+<option value="SN">Senegal</option>
+<option value="RS">Serbia</option>
+<option value="SC">Seychelles</option>
+<option value="SL">Sierra Leone</option>
+<option value="SG">Singapore</option>
+<option value="SK">Slovakia</option>
+<option value="SI">Slovenia</option>
+<option value="SB">Solomon Islands</option>
+<option value="SO">Somalia</option>
+<option value="ZA">South Africa</option>
+<option value="GS">South Georgia and the South Sandwich Islands</option>
+<option value="SU">Soviet Union (being phased out)</option>
+<option value="ES">Spain</option>
+<option value="LK">Sri Lanka</option>
+<option value="SD">Sudan</option>
+<option value="SR">Suriname</option>
+<option value="SJ">Svalbard and Jan Mayen</option>
+<option value="SZ">Swaziland</option>
+<option value="SE">Sweden</option>
+<option value="CH">Switzerland</option>
+<option value="SY">Syrian Arab Republic</option>
+<option value="TW">Taiwan</option>
+<option value="TJ">Tajikistan</option>
+<option value="TZ">Tanzania, United Republic of</option>
+<option value="TH">Thailand</option>
+<option value="TL">Timor-Leste</option>
+<option value="TG">Togo</option>
+<option value="TK">Tokelau</option>
+<option value="TO">Tonga</option>
+<option value="TT">Trinidad and Tobago</option>
+<option value="TN">Tunisia</option>
+<option value="TR">Turkey</option>
+<option value="TM">Turkmenistan</option>
+<option value="TC">Turks and Caicos Islands</option>
+<option value="TV">Tuvalu</option>
+<option value="UG">Uganda</option>
+<option value="UA">Ukraine</option>
+<option value="AE">United Arab Emirates</option>
+<option value="GB">United Kingdom</option>
+<option value="UK">United Kingdom</option>
+<option value="UM">United States Minor Outlying Islands</option>
+<option value="US">United States</option>
+<option value="UY">Uruguay</option>
+<option value="UZ">Uzbekistan</option>
+<option value="VU">Vanuatu</option>
+<option value="VE">Venezuela</option>
+<option value="VN">Viet Nam</option>
+<option value="VG">Virgin Islands, British</option>
+<option value="VI">Virgin Islands, U.S.</option>
+<option value="WF">Wallis and Futuna</option>
+<option value="EH">Western Sahara</option>
+<option value="YE">Yemen</option>
+<option value="YU">Yugoslavia</option>
+<option value="ZM">Zambia</option>
+<option value="ZW">Zimbabwe</option>
+</select></td></tr>
+  </table>
+  
+  </td></tr></table>
+<hr>
+<br>
+<table width=100% cellspacing=0 cellpadding=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;URL Management&nbsp;</span></td><td align=right></td></tr></table>
+  <table border=1 width=100% cellspacing=0 cellpadding=5 bordercolor=#4040d0><tr><td style="color: #404040" nowrap>
+
+  <table width=100% cellspacing=1 cellpadding=0 style="color: #404040">
+    <tr><td width=1% nowrap>Blacklist (<xvar /system/havp/BlackList.N> items)</td><td align=right><input type=button value=Manage onclick="manageBlackList()" style="font-size: 10;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name=BlackList onchange="ChangedHAVP()"><option value=yes>Enabled</option><option value=no>Disabled</option></select></td></tr>
+    <tr><td width=1% nowrap>Whitelist (<xvar /system/havp/WhiteList.N> items)</td><td align=right><input type=button value=Manage onclick="manageWhiteList()" style="font-size: 10;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name=WhiteList onchange="ChangedHAVP()"><option value=yes>Enabled</option><option value=no>Disabled</option></select></td></tr>
+  </table>
+
+
+  </td></tr></table>
+</td>
+</tr>
+</table>
+<hr>
+</body>
+</html>

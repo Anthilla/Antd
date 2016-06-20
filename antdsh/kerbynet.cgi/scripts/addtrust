@@ -1,0 +1,24 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FOREIGNREALM="$1"
+DIRECTION="$2"
+PW="$3"
+[ -z "$FOREIGNREALM" ] && exit 1
+[ -z "$DIRECTION" ] && exit 1
+[ -z "$PW" ] && exit 1
+LOCALREALM="`cat $REGISTER/system/k5/realm`"
+[ "$FOREIGNREALM" == "$LOCALREALM" ] && exit 2
+$SCRIPTS/removetrust "$FOREIGNREALM" > /dev/null
+if [ "$DIRECTION" == Incoming -o "$DIRECTION" == Bidirectional ] ; then
+  if ! kadmin.local -q "addprinc -clearpolicy -pw \"$PW\" krbtgt/$FOREIGNREALM" | grep -q -w "created." ; then
+     exit 3
+  fi
+fi
+if [ "$DIRECTION" == Outgoing -o "$DIRECTION" == Bidirectional ] ; then
+  if ! kadmin.local -q "addprinc -clearpolicy -pw \"$PW\" krbtgt/$LOCALREALM@$FOREIGNREALM" | grep -q -w "created." ; then
+    $SCRIPTS/removetrust "$FOREIGNREALM" > /dev/null
+    exit 4
+  fi
+fi
+
+

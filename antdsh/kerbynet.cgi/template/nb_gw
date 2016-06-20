@@ -1,0 +1,89 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Gateway Configuration</title>
+<script>
+<xinclude ip_utility.inc>
+function loaded() {
+  X=document.data;
+  if ("<xvar Enabled>" == "yes") {
+    X.Enabled.value="yes";
+  } else {
+    X.Enabled.value="no";
+  }
+  X.Interface.value="<xvar Interface>";
+  X.TC.value="<xvar TC>";
+  if (X.GW.value=="") {
+    X.Action.value="SaveAddGW";
+  }
+  if (X.GW.value=="00") {
+    X.Description.disabled=true;
+  }
+
+}
+function Submitted() {
+  X=document.data;
+  if (X.Description.value=="") {
+    alert("Description cannot be empty");
+    X.Description.focus();
+    X.Description.select();
+    return;
+  }
+  if (X.IP.value=="" && X.Interface.value=="") {
+    alert("IP address and Network Interface cannot be simultaneously empty.");
+    X.IP.focus();
+    X.IP.select();
+    return;
+  }
+ 
+  X.Weight.value=parseInt(X.Weight.value);
+  if (X.Weight.value=="Na") X.Weight.value=1; 
+  if (X.Weight.value<1 || X.Weight.value>99) {
+    alert("The Weight must be in the range 1-99.");
+    X.Weight.focus();
+    X.Weight.select();
+    return;
+  }
+  if (X.IP.value!="") {
+    if (!isValidIP(X.IP.value)) {
+      alert('IP Address not valid');
+      X.IP.focus();
+      X.IP.select();
+      return;
+    }
+    X.Interface.value="";
+  }
+  
+  X.Description.disabled=false;
+  X.submit();
+
+}
+function Changed() {
+  X=document.data;
+}
+</script>
+</head>
+<body style="color: #303030" onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="NetBalancer">
+<input type=hidden name=Action value="SaveChangeGW"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=GW value="<xvar GW>">
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td><font color=#2020D0 class=Bigger2><b>Gateway Configuration</b></font></td><td align=right><input type=button value=Save onclick="Submitted()"><input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<hr>
+<table width=100%>
+<tr><td>Description<br><input type=text name=Description value="<xvar _Description>" style="width: 100%" maxlength=25></td></tr>
+</table>
+<hr>
+<table width=100%>
+<tr><td>Status</td><td align=right><select name=Enabled><option value=yes>Enabled</option><option value=no>Disabled</option></select></td></tr>
+<tr><td>Weight</td><td align=right><input type=text name=Weight value="<xvar Weight>" size=3 maxlength=2></td></tr>
+<tr><td>IP Address</td><td align=right><input type=text name=IP value="<xvar IP>" size=15 maxlength=15></td></tr>
+<tr><td>Network Interface</td><td align=right><select name=Interface><option value="">------------</option><xvar +fw_interfaces></select></td></tr>
+<tr><td>Timeout Coefficient</td><td align=right><select name=TC><option value="1">x1 (Fast)</option><option value="2">x2</option><option value="4">x4</option><option value="8">x8 (Slow)</option></select></td></tr>
+</table>
+<br>
+<hr>
+</form>
+</body>
+</html>

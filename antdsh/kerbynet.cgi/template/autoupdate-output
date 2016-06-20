@@ -1,0 +1,24 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Installer Output</title>
+<meta http-equiv="refresh" content="2;">
+<script>
+function loaded() {
+  parent.incProgress("<xvar +autoupdate-elapsed (ID) (Op)>");
+  location='#BOTTOM';
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="AutoUpdate">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=ID value="<xvar ID>">
+<input type=hidden name=Op value="<xvar Op>">
+<pre>
+<xvar +autoupdate-output (ID) (Op)>
+</pre>
+<a name='BOTTOM'></a>
+</form>
+</body>
+</html>

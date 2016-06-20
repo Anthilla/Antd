@@ -1,0 +1,36 @@
+#!/bin/awk -f
+BEGIN {
+  MAXHOURS=ARGV[1]
+  MAXMB=ARGV[2]
+  EXPIRE=ARGV[3]
+  CREDIT=ARGV[4]
+  TRAFFIC=ARGV[5]
+  TIME=ARGV[6]
+  NOW=ARGV[7]
+  if (EXPIRE!="") {
+    if (EXPIRE*86400-NOW+86400<=0) {
+      printf("E");
+      exit 1
+    }
+  }
+  if (MAXHOURS!="") {
+    if (TIME/3600>MAXHOURS) {
+      printf("T");
+      exit 2
+    }
+  }
+  if (MAXMB!="") {
+    if (TRAFFIC>MAXMB*1048576) {
+      printf("M");
+      exit 3
+    }
+  }
+  if (CREDIT!="") {
+    if (CREDIT<=0) {
+      printf("C");
+      exit 3
+    }
+  }
+  
+
+}

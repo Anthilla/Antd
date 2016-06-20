@@ -1,0 +1,16 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Empty</title>
+<script>
+function loaded() {
+  i=0;
+  while (i<100000 && top.body.document == null) {
+    i++;
+  }
+  if (top.body.document.title!="Start Session") top.body.location='kerbynet?Action=Render&Object=StartSession';
+}
+</script>
+</head>
+<body onload="loaded()">
+</body>
+</html>

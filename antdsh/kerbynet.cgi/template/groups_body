@@ -1,0 +1,134 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Group List</title>
+<script language=Javascript>
+function selected() {
+  document.pick_group.submit();
+}
+function isGroupSelected() {
+   var i;
+   if (document.pick_group.group_sel.length!=undefined) {
+      for (i=0; i<document.pick_group.group_sel.length; i++)  {
+         if (document.pick_group.group_sel[i].checked=="1") {
+            return true;
+         }
+      }
+   }
+   if (document.pick_group.group_sel!=undefined) {
+     if (document.pick_group.group_sel.checked=="1") {
+       return true;
+     }
+   }
+   return false;
+}
+
+function add_secondary() {
+   if (!isGroupSelected() || document.pick_group.UserToAdd.value=="") {
+      return false;
+   }
+   document.pick_group.Action.value="AddSecondary";
+   document.pick_group.submit();
+}
+function remove_secondary() {
+   if (!isGroupSelected() || document.pick_group.UserToAdd.value=="") {
+      return false;
+   }
+   document.pick_group.Action.value="RemoveSecondary";
+   document.pick_group.submit();
+}
+function change_g() {
+   if (document.pick_group.group_sel==undefined)
+      return false;
+   var checkedvalue = "";
+   var i;
+   if (document.pick_group.group_sel.length!=undefined) {
+      for (i=0; i<document.pick_group.group_sel.length; i++)  {
+         if (document.pick_group.group_sel[i].checked=="1") {
+            checkedvalue=document.pick_group.group_sel[i].value;
+         }
+      }
+   } else {
+      if (document.pick_group.group_sel.checked=="1") {
+          checkedvalue=document.pick_group.group_sel.value;
+      }
+
+   };
+   if (checkedvalue=="") {
+      alert("<xvar #NoGroupSelected>");
+      return false;
+   };
+   if (document.pick_group.cn.value!=checkedvalue) {
+     alert("<xvar #NoChangeGroupname>");
+     return false;
+   }
+   document.pick_group.Action.value="Change";
+   document.pick_group.submit();
+}
+function add_g() {
+   if (document.pick_group.cn.value=="") {
+     alert("<xvar #GroupNameEmpty>");
+     return false;
+   }
+   var i;
+   if (document.pick_group.group_sel!=undefined) {
+      for (i=0; i<document.pick_group.group_sel.length; i++)  {
+         if (document.pick_group.group_sel[i].value==document.pick_group.cn.value) {
+            alert("You cannot add a group called "+document.pick_group.cn.value+" because the group already exists.");
+            return false;
+         }
+      }
+   }
+   document.pick_group.Action.value="Add";
+   document.pick_group.submit();
+}
+function delete_g() {
+   if (document.pick_group.group_sel==undefined)
+      return false;
+   var checkedvalue = "";
+   var i;
+   if (document.pick_group.group_sel.length!=undefined) {
+      for (i=0; i<document.pick_group.group_sel.length; i++)  {
+         if (document.pick_group.group_sel[i].checked=="1") {
+            checkedvalue=document.pick_group.group_sel[i].value;
+         }
+      }
+   } else {
+      if (document.pick_group.group_sel.checked=="1") {
+          checkedvalue=document.pick_group.group_sel.value;
+      }
+   }
+   if (checkedvalue=="") {
+      alert("<xvar #NoGroupSelected>");
+      return false;
+   };
+   if (confirm("<xvar #ConfirmGroupElimination>")) {
+       location="/cgi-bin/kerbynet?Section=Group&STk=<xvar STk>&Action=Delete&cn="+checkedvalue;
+   }
+}
+</script>
+</head>
+<body>
+<p><font color="#FF0000"><xvar errormsg> </font></p>
+<form name=pick_group method=post action="kerbynet">
+<input type=hidden name=Section value=Group>
+<input type=hidden name=Action value=List><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1>
+<tr>
+<td width="10%" bgcolor="#c0c0ff" nowrap style='color:#ffffff'><b>&nbsp;Entries found:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<xvar numEntries>&nbsp;&nbsp;</b></td>
+<td nowrap>&nbsp;&nbsp;Group&nbsp;&nbsp;<input type=text name=cn></td>
+<td nowrap>&nbsp;&nbsp;GID&nbsp;&nbsp;<input type=text name=gidNumber> </td>
+<td width="10%" nowrap>
+<input type=button name=b1 value=Add onclick="add_g()">
+<input type=button name=b2 value=Change onclick="change_g()">
+<input type=button name=b3 value=Delete onclick="delete_g()">
+</td>
+</tr>
+</table>
+<br>
+<table border=1 bordercolor=#c0c0c0 cellspacing=0 width=100% style="color:#606060">
+<tr style="color: #1010d0">
+<td width=1%><b>&nbsp;</td>
+<td width=20%><b>&nbsp;Group</b></td>
+<td width=10%><b>&nbsp;GID</b></td>
+<td align="right"><b>&nbsp;Secondary Group's Members &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <xvar _comboBoxUser><input type=button name=AddUser value=" + " onclick="add_secondary()"><input type=button name=RemoveUser value=" - " onclick="remove_secondary()"></b></td>
+</tr>

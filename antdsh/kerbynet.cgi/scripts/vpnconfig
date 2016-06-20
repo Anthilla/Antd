@@ -1,0 +1,34 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/net/interfaces"
+export NOVPNWAIT=yes
+cd "$CONFIG"
+if ! [ -d VPN99 ] ; then
+  mkdir VPN99
+  echo up > VPN99/STATUS
+  echo "Host-to-LAN OpenVPN Interface" > VPN99/Description
+  VPNGW="`cat $REGISTER/system/openvpn/Gateway 2>/dev/null`"
+  VPNNM="`cat $REGISTER/system/openvpn/Netmask 2>/dev/null`"
+  mkdir -p VPN99/IP/00
+  if [ -z "$VPNGW" ] ; then
+    VPNGW=192.168.250.254
+    VPNNM=255.255.255.0
+  fi
+  echo $VPNGW > VPN99/IP/00/IP
+  echo $VPNNM > VPN99/IP/00/Netmask
+  echo up > VPN99/IP/00/STATUS
+fi
+INTERFACES=`ls -d VPN[0123456789][01234567890] 2>/dev/null`
+for i in $INTERFACES ; do
+   if ifconfig $i 2>/dev/null >/dev/null || openvpn --dev-type tap --dev $i --mktun ; then
+     $SCRIPTS/setinterface $i
+#     $SCRIPTS/setvlans $i
+     $SCRIPTS/vpn_ctl $i
+   fi
+done
+
+
+
+
+

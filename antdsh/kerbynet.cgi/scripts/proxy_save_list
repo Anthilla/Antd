@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LIST=$1
+[ -z "$LIST" ] && exit 1
+sed 's/\r//' > /var/register/system/havp/$LIST
+ENABLED=`cat $REGISTER/system/havp/Enabled`
+if [ "$ENABLED" == yes ] ; then
+  if [ "$LIST" == BlackList.txt -a "`cat $REGISTER/system/havp/BlackList 2>/dev/null`" != yes ] ; then
+    exit
+  fi
+  if [ "$LIST" == WhiteList.txt -a "`cat $REGISTER/system/havp/WhiteList 2>/dev/null`" != yes ] ; then
+    exit
+  fi
+  $SCRIPTS/proxy_start
+fi 
+

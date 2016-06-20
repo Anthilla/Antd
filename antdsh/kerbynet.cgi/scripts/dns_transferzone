@@ -1,0 +1,4 @@
+#/bin/sh
+. /etc/kerbynet.conf
+ZONE="$1"
+rndc retransfer "$ZONE"

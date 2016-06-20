@@ -1,0 +1,79 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+BY="$1"
+CONFIG=$REGISTER/system/net/router
+TMP=/tmp/route.tmp
+route -n  > "$TMP"
+ip ro sh | grep nexthop > "$TMP.ip.ro" && LBNEXTHOP=yes
+NLINE=`wc -l < "$TMP"`
+if [ "$NLINE" -gt 2 ] ; then
+  for I in `seq 3 $NLINE` ; do
+    LINE=`head -$I "$TMP" |tail -1` 
+    Dest=`echo $LINE | awk '{print $1}'`
+    Netmask=`echo $LINE | awk '{print $3}'`
+    Metric=`echo $LINE | awk '{print $5}'`
+    Gateway=`echo $LINE | awk '{print $2}'`
+    Interface=`echo $LINE | awk '{print $8}'`
+    Flags=`echo $LINE | awk '{print $4}'`
+    if echo $Flags | grep -q U ; then
+      State=Up
+    else
+      State=Down
+    fi
+    if echo $Flags | grep -q H ; then
+      Type=Host
+    else
+      Type=Net
+    fi
+    if echo $Flags | grep -v -q G ; then
+      Gateway=none
+    fi
+    VLAN="`echo $Interface | awk -F. '{print $2}'`"
+    if ! [ -z "$VLAN" ] ; then
+       Interface="`echo $Interface | awk -F. '{print $1}'` vlan $VLAN"
+    fi
+    #if [ "$Gateway" != none -a "$Netmask" == "0.0.0.0" -a "$Dest" == "0.0.0.0" -a "$Metric" == "0" ] ; then
+    if [ "$Netmask" == "0.0.0.0" -a "$Dest" == "0.0.0.0" -a "$Metric" == "0" ] ; then
+      Dest="DEFAULT GATEWAY"
+      [ "$LBNEXTHOP" == yes ] && Dest="$Dest (LB)"
+    fi
+    
+    NUMDEST=`echo $Dest | awk -F"." '{printf "%010d",($1*256*256*256+$2*256*256+$3*256+$4)}'`
+    NUMNETMASK=`echo $Netmask | awk -F"." '{printf "%010d",($1*256*256*256+$2*256*256+$3*256+$4)}'`
+    NUMMETRIC=`echo $Metric | awk '{printf "%010d",(2147483648-$0)}'`
+    ENTRY=${NUMNETMASK}_${NUMDEST}_${NUMMETRIC}
+    if [ -d "$CONFIG/Statics/$ENTRY" ] ; then
+      Source=Static
+    else
+      TARGET=`ipcalc -b -n $Dest/$Netmask |grep -w Network: |awk '{print $2}'`
+      if ip route show proto zebra | egrep  ^$TARGET | grep -q "metric $Metric" ; then
+         Source=RIP
+      else
+         Source=Auto
+      fi
+    fi
+    if echo $BY | grep -q "$Source" ; then
+      if [ "$Source" == RIP ] ; then
+        BGCOLOR="bgcolor=#d0d0ff"
+      else
+        BGCOLOR=""
+      fi
+
+      if [ "$Dest" != "DEFAULT GATEWAY (LB)" ] ; then 
+        echo "<tr $BGCOLOR ><td align=center>$Dest</td><td align=center>$Netmask</td><td align=center>$Type</td><td align=center>$Metric</td><td align=center>$Gateway</td><td nowrap align=center>$Interface</td><td nowrap align=center>$Flags</td><td nowrap align=center>$State</td><td nowrap align=center>$Source</td></tr>"
+      else
+        NNEXTHOP=`wc -l < $TMP.ip.ro`
+        for NLINE in `seq 1 $NNEXTHOP` ; do
+          LINE=`head -$NLINE $TMP.ip.ro | tail -1`
+          Interface=`echo $LINE | sed -r "s/nexthop.*dev (.*) .*weight.*/\1/"`
+          Gateway=`echo $LINE | sed -r "s/nexthop.* via (.*) .*dev .*weight.*/\1/"|grep -v nexthop`
+          Weight=`echo $LINE | sed -r "s/nexthop .*weight (.*).*/\1/"`
+          Metric="W.$Weight"
+          echo "<tr $BGCOLOR ><td align=center>$Dest</td><td align=center>$Netmask</td><td align=center>$Type</td><td align=center>$Metric</td><td align=center>$Gateway</td><td nowrap align=center>$Interface</td><td nowrap align=center>$Flags</td><td nowrap align=center>$State</td><td nowrap align=center>$Source</td></tr>"
+          
+        done        
+      fi
+    fi
+  done
+
+fi

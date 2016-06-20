@@ -1,0 +1,182 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+export ID="$1"
+export OP="$2"
+FLAGS="$3"
+[ -z "$ID" ] && exit 1
+[ -z "$OP" ] && exit 2
+if  ps -ef |grep -w autoupdate-installer-bg |grep -w -v "$$" |grep -q "$ID" ; then
+  echo "WARNING: the installer is already processing this package. New istance has been aborted."
+  exit 35
+fi
+export TYPE=`echo "$ID" |awk -F: '{print $2}'`
+export ID=`echo "$ID" |awk -F: '{print $1}'`
+
+if [ "$OP" = INSTALL ] ; then
+  FEATURE="`$SCRIPTS/getfeature LU`"
+  HW=${FEATURE:2:12}
+  SALT="`$SCRIPTS/get_salt $FEATURE`" 
+  if [ "$TYPE" != Security -a "$TYPE" != BugFix ] ; then
+     PACKAGER=zspkg
+     if ! checkfeature $FEATURE ; then
+       $SCRIPTS/autoupdate-error  "$ID:$TYPE" "$OP" "Operation not allowed without a valid Repository Subscription"
+       exit 50
+     fi
+  else
+    PACKAGER=cat
+  fi
+   
+  echo  "<font color=#5050D0><b>Checking for previous installed version of $ID:$TYPE ...</b></font>"
+  MJ=${ID:0:3}  
+  PRES=`( cd $REGISTER/system/AutoUpdate/pkgs/ && ls ${MJ}??/pkg/Installed 2>/dev/null )`
+  if [ -n "$PRES" ] ; then
+    for P in $PRES ; do
+       PRE=`echo $P | awk -F/ '{print $1}'`
+       if [[ 0x${PRE:3:2} -lt 0x${ID:3:2} ]] ; then
+         echo "The package $PRE:$TYPE has to be removed"
+         echo
+         if ! [ -f $REGISTER/system/AutoUpdate/pkgs/$PRE/Enabled ] ; then
+            DISABLEPKG=yes
+         fi
+         if ! $SCRIPTS/autoupdate-installer-bg "$PRE:$TYPE" REMOVE "$FLAGS" ; then
+            exit 41
+         fi
+         
+       else
+         $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: the package $PRE:$TYPE already installed is newer than the package $ID:$TYPE." 
+         exit 67
+       fi
+    done
+  else
+    echo "No previous version installed"
+  fi
+  echo
+  echo  "<font color=#5050D0><b>Checking for incompatible packages for $ID:$TYPE ...</b></font>"
+  if $SCRIPTS/autoupdate-check-incompatible "$ID:$TYPE" ; then
+    echo "No incompatible packages found"
+    echo
+  else
+    exit 39
+  fi
+  echo
+  echo  "<font color=#5050D0><b>Checking prerequisites for $ID:$TYPE ...</b></font>"
+  if $SCRIPTS/autoupdate-check-prerequisites "$ID:$TYPE" ; then
+    echo "All prerequisites satisfied"
+    echo
+  else
+    exit 34
+  fi
+  echo  "<font color=#5050D0><b>Checking dependencies for $ID:$TYPE ...</b></font>"
+  DEPS=`$SCRIPTS/autoupdateGetField "$ID" DEPS`
+  TBI=""
+  if [ -n "$DEPS" ] ; then
+    DEPS=`echo $DEPS|tr ',' ' '`
+    for D in $DEPS ; do
+       DTYPE="`$SCRIPTS/autoupdateGetField $D TYPE`"
+       if [ -f "$REGISTER/system/AutoUpdate/pkgs/$D/pkg/Installed" ] ; then
+         echo "$D:$DTYPE installed"
+       else
+         echo "$D:$DTYPE requires to be installed"
+         TBI="$TBI $D:$DTYPE"
+       fi 
+    done
+    echo
+    if [ -n "$TBI" ] ; then
+      $SCRIPTS/autoupdate-logger "$ID:$TYPE" "$OP" "Dependencies: $TBI"
+      if echo "$FLAGS" | grep -q -w D ; then 
+        for D in $TBI ; do
+          if ! $SCRIPTS/autoupdate-installer-bg "$D" INSTALL "$FLAGS" ; then
+            exit 40
+          fi
+        done
+      else
+        $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: Dependencies not satisfied ($TBI)"
+        $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP" INSTALLER
+        exit 28
+      fi
+    fi
+  else
+    echo "The package has no dependencies"
+  fi
+  echo
+  REPO="`cat /etc/updates.rep`"
+  mkdir -p $REGISTER/system/AutoUpdate/pkgs/$ID/Cache
+  echo  "<font color=#5050D0><b>Downloading and extracting the package $ID:$TYPE ...</b></font>"
+  if ! wget -O - "http://$REPO/getpkg.php?ID=$ID&HW=$HW&SALT=$SALT" | $PACKAGER |bunzip2 -q |tar -C $REGISTER/system/AutoUpdate/pkgs/$ID/Cache -x ; then
+    $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: Downloading process has failed"
+    $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP" INSTALLER
+    exit 10
+  fi
+  if ! [ -x "$REGISTER/system/AutoUpdate/pkgs/$ID/Cache/installer/install.sh" ] ; then
+    $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: Installer not found"
+    $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP" INSTALLER
+    exit 8
+  fi
+  cd $REGISTER/system/AutoUpdate/pkgs/$ID/Cache/installer
+  echo
+  echo  "<font color=#5050D0><b>Executing the installation process for the package $ID:$TYPE ...</b></font>"
+
+  if ./install.sh ; then
+    cd  ../../pkg
+    touch $REGISTER/system/AutoUpdate/pkgs/$ID/pkg/Installed
+    $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP" INSTALLER
+    if [ "$DISABLEPKG" != yes ] ; then
+      touch $REGISTER/system/AutoUpdate/pkgs/$ID/Enabled 
+    fi
+    if [ -x "starter" ] ; then
+      if ! $SCRIPTS/autoupdateGetField $ID FLAGS |grep -w -q R ; then
+        echo
+        echo  "<font color=#5050D0><b>Activating the package $ID:$TYPE ...</b></font>"
+        ./starter
+      fi
+      echo "<script>parent.parent.Deps.location.reload(true);</script>"
+    else 
+      $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: Installer has failed to activate the package"
+      cd ..
+      $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP"
+      exit 17
+
+    fi
+  else
+    $SCRIPTS/autoupdate-error "$ID:$TYPE" "$OP" "ERROR: Installer has failed to complete"
+    $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP" 
+    exit 11
+  fi 
+fi
+
+
+if [ "$OP" = REMOVE ] ; then 
+  echo  "<font color=#5050D0><b>Removing the package $ID:$TYPE ...</b></font>"
+  if [ -x "$REGISTER/system/AutoUpdate/pkgs/$ID/pkg/scripts/$OP" ] ; then
+    echo "Found $OP script to be processed ..."
+    pushd $REGISTER/system/AutoUpdate/pkgs/$ID/pkg/ >/dev/null
+    scripts/$OP
+    popd >/dev/null
+  fi
+  $SCRIPTS/autoupdate-cleanup "$ID:$TYPE" "$OP"
+  touch $REGISTER/system/AutoUpdate/pkgs/$ID/NoAuto
+fi
+if [ "$OP" = DISABLE ] ; then 
+  echo  "<font color=#5050D0><b>Disabling the package $ID:$TYPE ...</b></font>"
+  rm $REGISTER/system/AutoUpdate/pkgs/$ID/Enabled 
+fi
+if [ "$OP" = ENABLE ] ; then 
+  echo  "<font color=#5050D0><b>Enabling the package $ID:$TYPE ...</b></font>"
+  touch $REGISTER/system/AutoUpdate/pkgs/$ID/Enabled 
+
+  if ! $SCRIPTS/autoupdateGetField $ID FLAGS |grep -w -q R ; then
+    echo
+    cd "$REGISTER/system/AutoUpdate/pkgs/$ID/pkg"
+    ./starter
+  fi
+fi
+echo
+if [ "$OP" = REMOVE -o "$OP" = DISABLE ] || $SCRIPTS/autoupdateGetField $ID FLAGS |grep -w -q R  ; then
+  touch /tmp/reboot-required
+
+fi
+if [ -x "$REGISTER/system/AutoUpdate/pkgs/$ID/pkg/scripts/$OP" ] ; then
+  echo "Found $OP script to be processed ..."
+  cd $REGISTER/system/AutoUpdate/pkgs/$ID/pkg/
+  scripts/$OP
+fi

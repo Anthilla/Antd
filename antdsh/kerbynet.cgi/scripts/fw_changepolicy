@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+POLICY="$2"
+[ -z "$CHAIN" -o -z "$POLICY" ] && exit 1
+CONFIG="$REGISTER/system/net/FW"
+echo $POLICY > $CONFIG/Chains/$CHAIN/Policy
+if [ "$POLICY" == ACCEPT -o "`cat $CONFIG/Chains/$CHAIN/Enabled 2> /dev/null`" == yes ] ; then 
+  if ! iptables -P "$CHAIN" $POLICY ; then
+    exit 2
+  fi
+fi

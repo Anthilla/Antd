@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REGEXPR="`cat $REGISTER//system/net/FW/ConnTrackView/RegExpr 2>/dev/null`"
+FILTERACTION="`cat $REGISTER//system/net/FW/ConnTrackView/FilterAction 2>/dev/null`"
+if [ -z "$REGEXPR" ] ; then
+  conntrack -L
+else
+  if [ "$FILTERACTION" == Exclude  ] ; then
+    conntrack -L | grep -v -e "$REGEXPR"
+  else
+    conntrack -L | grep -e "$REGEXPR"
+  fi
+fi
+if [ $? -ne 0 ] ; then
+  echo "<font color=#FF3030><b>No connections match the filter criterias</b></font>"
+fi

@@ -1,0 +1,29 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DNS Query: <xvar _What></title>
+<script>
+function loaded() {
+  if (document.data.Action.value=="Lookup") {
+    document.data.What.focus();
+    document.data.What.select();
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Action value=<xvar _Action>>
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Section value=DNS>
+<table width=100% border=1>
+<tr><td style="color: #404040">Name <input type=text name=What value="<xvar _What>" size=40>&nbsp;&nbsp;Server <input type=text name=DNS value="<xvar _DNS>"></td><td align=right width=1% nowrap><input type=submit value=Submit><input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<font color=#0000b0 class=Bigger2><xvar _What></font><br>
+<pre>
+<font color=#404040>
+<xvar !dns_query (DNS) (What) (Type) (ERROR)>
+</font>
+</pre>
+</form>
+</body>
+</html>

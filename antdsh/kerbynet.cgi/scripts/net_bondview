@@ -1,0 +1,5 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+BOND=$1
+echo "<hr>"
+cat /proc/net/bonding/$BOND 

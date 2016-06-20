@@ -1,0 +1,7 @@
+#!/bin/bash
+ID="$1"
+MSG="$2"
+[ -z "$ID" ] && exit 1
+echo "[$ID]:::$MSG" >> /tmp/spooler_log
+logger -t Alerts "Message Spooler [$ID]: $MSG"
+

@@ -1,0 +1,18 @@
+Listen <xvar *GWPORT>
+<VirtualHost *:<xvar *REMOTESSL>>
+    DocumentRoot /usr/local/apache2/htdocs
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} !^/cgi-bin/zscp$
+    RewriteRule ^.*$ http://%{SERVER_ADDR}:<xvar *REMOTESSL>/cgi-bin/zscp?%{QUERY_STRING} [L]
+</VirtualHost>
+Listen <xvar *GWPORTSSL> 
+<VirtualHost *:<xvar *REMOTESSL>>
+   SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:!SSLv2:+EXP:+eNULL
+   SSLCertificateFile /var/register/system/cp/Auth/TLS/cert.pem
+   SSLCertificateKeyFile /var/register/system/cp/Auth/TLS/key.pem
+   SSLEngine on
+   DocumentRoot /usr/local/apache2/htdocs
+   RewriteEngine on
+   RewriteCond %{REQUEST_URI} !^/cgi-bin/zscp$
+   RewriteRule ^.*$ https://%{SERVER_ADDR}:<xvar *REMOTESSL>/cgi-bin/zscp?%{QUERY_STRING} [L]
+</VirtualHost>

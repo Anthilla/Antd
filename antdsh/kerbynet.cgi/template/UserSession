@@ -1,0 +1,93 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title><xvar _User> user session</title>
+<script>
+function logout() {
+  document.data.Action.value="Logout";
+  document.data.submit();
+}
+function x509view() {
+  newwin=open("kerbynet?Section=NoAuthREQ&Action=x509view&User=<xvar _User>&x509type=user","x509viewtext","top=100,left=200,width=750,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function clickKeyFormat() {
+   if (document.data.IncludeKey.checked && document.data.Format.value=="der") {
+      alert("<xvar #X509WarningDerKey>");
+      document.data.IncludeKey.checked=false;
+   }
+   if (document.data.IncludeKey.checked) {
+      document.data.Protected.disabled=false;
+   } else {
+      document.data.Protected.checked=false;
+      document.data.Protected.disabled=true;
+   }
+}
+function x509export() {
+  if ("<xvar _x509Status>"=="OK") {
+    document.data.Action.value="x509export";
+    document.data.submit();
+  } else {
+    alert("<xvar #X509OnlyValid>");
+  }
+}
+function ChangePassword() {
+  newwin=open("kerbynet?Section=NoAdminSession&STk=<xvar STk>&Action=CPW&User=<xvar _User>","CPW","top=300,left=400,width=450,height=300,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();  
+}
+function loaded() {
+  clickKeyFormat();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value=NoAdminSession>
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<input type=hidden name=User value="<xvar _User>">
+<input type=hidden name=x509type value="user">
+<table width=100% border=0>
+<tr>
+<td><img border="0" src="/kerbynet/Zeroshell.gif" width="172" height="63"></td>
+<td align=right><font color=#0000d0 class=Bigger1><i><b><xvar _User></b> session</i></font><br><a href=# onclick="logout()">Logout</a></td>
+</tr>
+</table>
+<hr>
+<br>
+<table width=100%>
+<tr>
+<td>
+<br><br>
+<table border=0>
+<tr><td bgcolor="#c0c0ff"><font color=#000090><b>&nbsp;X.509 user certificate</b></td></tr>
+<tr><td>
+<hr>
+&nbsp;Subject: <xvar x509Subject><br>
+&nbsp;Status : <xvar x509Status><br>
+&nbsp;Expiration : <xvar x509Expiration>
+
+<hr>
+<input type=button value=View onclick="x509view()">&nbsp;
+<input type=button value=Export onclick="x509export()">&nbsp;
+<input type=checkbox name=IncludeKey value=Yes checked onclick="clickKeyFormat()">&nbsp;
+Key&nbsp;&nbsp;
+<select name=Format onchange="clickKeyFormat()">
+<option value=pem>PEM</option>
+<option value=der>DER</option>
+<option value=pfx selected>PKCS#12 (PFX)</option>
+</select>
+&nbsp;&nbsp;&nbsp;
+<input type=checkbox name=Protected value=yes>&nbsp;<font color=#404040 class=Smaller1>Protected by password</font>&nbsp;&nbsp;
+
+</td></tr>
+</table>
+</td><td align=right>
+<input type=button value="Change Password" onclick="ChangePassword()">
+
+</td>
+</tr>
+</table>
+
+</form>
+</body>
+</html>

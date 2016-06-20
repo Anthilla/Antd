@@ -1,0 +1,33 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>User List</title>
+<script language=Javascript>
+function relist() {
+   document.pick_user.Section.value="User";
+   document.pick_user.Action.value="List";
+   document.pick_user.submit();
+}
+function search() {
+   document.pick_user.isSearch.value="Yes";
+   relist();
+}
+</script>
+</head>
+<body>
+<form name=pick_user method=post action="kerbynet">
+<input type=hidden name=Section value="User">
+<input type=hidden name=Action value="List"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=isSearch value="No">
+<input type=hidden name=type value="user">
+<table width="100%" border=1>
+<tr><td width="1%" bgcolor="#c0c0ff" nowrap style='color: #ffffff'><b>&nbsp;Entries found:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<xvar numEntries>&nbsp;&nbsp;</b></td><td align="right"><input type=button name=Search value=Search onclick="search()"> <input type=text name=searchString>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Primary Group <xvar _comboboxgroup></td></tr>
+</table>
+<br>
+<table border=1 bordercolor=#c0c0c0 cellspacing=0 width=100% style='color: #606060'>
+<tr style="color: #1010d0">
+<td width=1%>&nbsp;</td>
+<td>&nbsp;<b>Username</b></td>
+<td>&nbsp;<b>Group</b></td>
+<td>&nbsp;<b>Description</b></td>
+<td>&nbsp;<b>E-mail</b></td>
+</tr>

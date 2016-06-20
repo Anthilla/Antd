@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+$SCRIPTS/umountstorage
+DEV="$1"
+PART=`echo "$2" | sed -r 's/.*[^0123456789]([0123456789]+)/\1/'`
+ID=`fdisk -l "$DEV"  |grep -w ^$2 | sed 's/*/ /' | awk '{print $2 $3}'`
+COD="$3"
+[ "$COD" != "$ID" ] && exit 1
+[ -z "$DEV" -o -z "PART" ] && exit 1
+
+echo -e "d\n${PART}\nw" | fdisk $DEV
+partprobe $DEV
+

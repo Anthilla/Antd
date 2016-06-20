@@ -1,0 +1,22 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+SLOT="$1"
+OPT="$2"
+[ -z "$SLOT" ] && exit 1
+if [ -d /etc/slots ] ; then
+   cd /etc/slots/$SLOT || exit 5
+   SELECTED="`cat conf/Kernel 2>/dev/null`"
+   KERNELS=`ls -d *.*.*`
+   for K in $KERNELS ; do
+     [ -z "$SELECTED" ] && SELECTED="$K" 
+     if [ "$OPT" = select ] ; then
+       if [ "$K" = "$SELECTED" ] ; then
+         echo -n "<option value='$K' selected>$K</option>"
+       else
+         echo -n "<option value='$K'>$K</option>"
+       fi
+     else
+       echo $K
+     fi
+   done
+fi

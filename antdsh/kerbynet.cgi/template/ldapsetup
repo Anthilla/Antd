@@ -1,0 +1,92 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>LDAP</title>
+<script>
+function NotReady() {
+  alert("This feature is not yet included in this beta release.");
+}
+function loaded() {
+   X=document.data;
+   //X.save.disabled=true;
+   if ("<xvar /system/ldap/LDAPACTIVE>" == "yes") {
+     X.LDAPACTIVE.checked=true; 
+     document.getElementById("LDAPSTATUS").innerHTML="<font color=#00d000><b>ACTIVE</b></font>";
+   } else {
+     document.getElementById("LDAPSTATUS").innerHTML="<font color=#ff0000><b>DISABLED</b></font>";
+   }
+   if ("<xvar /system/ldap/LDAPSACTIVE>" == "yes") {
+     X.LDAPSACTIVE.checked=true; 
+     document.getElementById("LDAPSSTATUS").innerHTML="<font color=#00d000><b>ACTIVE</b></font>";
+   } else {
+     document.getElementById("LDAPSSTATUS").innerHTML="<font color=#ff0000><b>DISABLED</b></font>";
+   }
+   if ("<xvar /system/ldap/NISACTIVE>" == "yes") {
+     X.NISACTIVE.checked=true; 
+     document.getElementById("NISSTATUS").innerHTML="<font color=#00d000><b>ACTIVE</b></font>";
+   } else {
+     document.getElementById("NISSTATUS").innerHTML="<font color=#ff0000><b>DISABLED</b></font>";
+   }
+   if ("<xvar /system/ldap/AD/AutoSync>" == "yes") {
+     X.AutoSync.checked=true; 
+     document.getElementById("AUTOSYNCH").innerHTML="<font color=#00d000><b>ACTIVE</b></font>";
+   } else {
+     document.getElementById("AUTOSYNCH").innerHTML="<font color=#ff0000><b>DISABLED</b></font>";
+   }
+  
+}
+function SaveMsg () {
+   document.getElementById('savecell').innerHTML="<font color=#FF0000>Warning: changes not saved&nbsp;&nbsp;</font>";
+}
+function changed() {
+  document.data.save.disabled=false;
+  SaveMsg();
+}
+function SaveSetup() {
+  X=document.data;
+  if (X.ADPW.value!=X.ADPW2.value) {
+     alert('The Administrator password does not match.');
+     X.ADPW.focus();
+     X.ADPW.select();
+     return;
+  }
+ 
+  X.save.disabled=true;
+  x509frame.Save();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="LDAP">
+<input type=hidden name=Action value="Save">
+<input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr><td><font class=Bigger1 color=#4040e0><b>Directory Services Setup</b></font></td><td id=savecell nowrap width=1% align=right></td><td align=right width=1%><input type=button name=save value=Save onclick="SaveSetup()"></td></tr></table>
+<table width=100% border=1>
+<tr><td>&nbsp;<input type=checkbox name=LDAPACTIVE value=yes onclick="changed()"> LDAP: <span id=LDAPSTATUS></span></td><td>&nbsp;<input type=checkbox name=LDAPSACTIVE value=yes onclick="changed()"> LDAP over SSL: <span id=LDAPSSTATUS></span></td><td>&nbsp;<input type=checkbox name=NISACTIVE value=yes onclick="NotReady();this.checked=false;"> NIS: <span id=NISSTATUS></span></td></tr>
+</table>
+<hr>
+<iframe name=x509frame width=100% height=140 marginwidth=0 src="kerbynet?Section=LDAP&STk=<xvar STk>&Action=X509View" border=0 frameborder=0 scrolling=no>iframe not supported</iframe>
+<hr>
+<table width=100%><tr>
+<td nowrap width=1%><span style="background-color: #4040f0"><font color="#FFFFFF">&nbsp;Active Directory Synchronization&nbsp;</font></span></td>
+<td align=left>&nbsp;&nbsp;&nbsp;<input type=checkbox name=AutoSync value=yes onclick="NotReady();this.checked=false;"> Auto Sync: <span id=AUTOSYNCH></span></td>
+<td align=right><input type=button value="Synchronize" onclick="NotReady()"><input type=button value="Show Log" onclick="NotReady()"></td>
+</tr></table>
+<table width=100% border=1><tr><td>
+  <table width=100%><tr>
+  <td width=50%>
+     <table width=100%>
+     <tr><td>AD Domain</td><td><input type=text name=ADDomain value="<xvar /system/ldap/AD/Domain>" size=30 onclick="changed()"></td></tr>     
+     <tr><td>Domain Controller</td><td><input type=text name=DomainController value="<xvar /system/ldap/AD/DomainController>" size=30 onclick="changed()"></td></tr>     
+     <tr><td>Organization Unit</td><td><input type=text name=ADOU value="<xvar /system/ldap/AD/OU>" size=20 onclick="changed()"></td></tr>     
+     <tr><td>Administrator Password</td><td><input type=password name=ADPW size=25 onclick="changed()"  autocomplete="off"></td></tr>     
+     <tr><td>Confirm Password</td><td><input type=password name=ADPW2 size=25 onclick="changed()"  autocomplete="off"></td></tr>     
+     </table>
+  </td><td>
+  </td>
+  </tr></table>
+</td></tr></table>
+</form>
+</body>
+</html>
+

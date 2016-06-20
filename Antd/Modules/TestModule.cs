@@ -27,16 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Dynamic;
-using antdlib.Users;
+using Antd.Ssh;
 using Nancy;
 
 namespace Antd.Modules {
     public class TestModule : CoreModule {
         public TestModule() {
-
-            Before += y => null;
 
             Get["Test page", "/test"] = x => Response.AsText("Hello World!");
 
@@ -45,84 +41,8 @@ namespace Antd.Modules {
             Get["/test/vnc"] = x => View["page-vnc"];
 
             Get["/test/ssh"] = x => {
-                antdlib.Ssh.Test.Start("aos003", "root", "root");
+                Test.Start("aos003", "root", "root");
                 return View["page-test"];
-            };
-
-            Get["/test/2"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.Name = "Rendered with SSVE! ☻";
-                var list = new List<string> { "uno", "due", "tre" };
-                var list2 = new List<List<string>> {list, list, list};
-                vmod.List = list2;
-                return View["page-empty", vmod];
-            };
-
-            Post["/sp/users/identity"] = x => {
-                var guid = UserEntity.Repository.GenerateGuid();
-                string spUserAlias = Request.Form.UserAlias;
-                string spUserFirstName = Request.Form.UserFirstName;
-                string spUserLastName = Request.Form.UserLastName;
-                string spUserGuid = Request.Form.UserGuid;
-                string spUserEmail = Request.Form.UserEmail;
-                var userIdentity = spUserFirstName + " " + spUserLastName;
-                var alias = UserEntity.Repository.GenerateUserAlias(userIdentity);
-                var claims = new List<UserEntity.UserEntityModel.Claim> {
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.Antd,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "antd-master-id",
-                        Value = guid
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "anthillasp-alias",
-                        Value = spUserAlias
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "anthillasp-first-name",
-                        Value = spUserFirstName
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "anthillasp-last-name",
-                        Value = spUserLastName
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "anthillasp-guid",
-                        Value = spUserGuid
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "anthillasp-email",
-                        Value = spUserEmail
-                    }
-                };
-                string spUserToken = Request.Form.UserToken;
-                if (!string.IsNullOrEmpty(spUserToken) && spUserToken != "null") {
-                    claims.Add(new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.AnthillaSP,
-                        Type = UserEntity.ClaimType.UserToken,
-                        Key = "anthillasp-token",
-                        Value = spUserToken
-                    });
-                }
-                UserEntity.Repository.Create(guid, userIdentity, alias, claims);
-                return Response.AsJson(true);
             };
         }
     }

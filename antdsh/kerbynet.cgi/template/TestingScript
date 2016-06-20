@@ -1,0 +1,24 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Script Test</title>
+<script>
+function loaded() {
+  X=document.data;
+  X.Script.value=window.opener.document.data.Script.value; 
+  X.submit();
+}
+</script>
+</head>
+<body style="color: #404040" topmargin=5 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Setup">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="RunScript">
+<input type=hidden name=Script value="">
+<input type=hidden name=ScriptName value="<xvar ScriptName>">
+<font color=#3030d0 class=Bigger2><b>Please wait: running the <xvar ScriptName> script ...</b>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FEATURE="$1"
+KEY="$2"
+STk="`rand``cat /tmp/STk_Admin 2>/dev/null`"
+if [ -z "$FEATURE" -o -z "$KEY" ] ; then
+  exit 1
+fi
+$SCRIPTS/setfeature "$FEATURE" "$KEY"
+if ! checkfeature $FEATURE ; then
+  
+  echo "<script>parent.location.reload(true);</script>"
+  echo "<script>parent.opener.parent.top.log.location='kerbynet?STk=$STk&Action=LogError&Object=Invalid Key: Repository Subscription not activated'</script>";
+else
+  echo "<script>parent.location.reload(true);</script>"
+  echo "<script>parent.opener.parent.top.log.location='kerbynet?STk=$STk&Action=LogSuccess&Object=The Key is valid: Repository Subscription successfully activated'</script>";
+fi

@@ -31,8 +31,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
 using System.Security.Cryptography;
+using antdlib.common;
 
 namespace antdlib.Antdsh {
     public class UpdateObject {
@@ -222,7 +222,7 @@ namespace antdlib.Antdsh {
         private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
-            Terminal.Terminal.Execute($"ln -s {newVersionPath} {activeVersionPath}");
+            Terminal.Execute($"ln -s {newVersionPath} {activeVersionPath}");
         }
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
@@ -239,7 +239,7 @@ namespace antdlib.Antdsh {
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
             try {
                 FileSystem.Download2($"{PublicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
-                Terminal.Terminal.Execute($"bunzip2 -k {TmpDirectory}/{RepositoryFileNameZip}");
+                Terminal.Execute($"bunzip2 -k {TmpDirectory}/{RepositoryFileNameZip}");
                 var list = File.ReadAllLines($"{TmpDirectory}/{RepositoryFileName}");
                 var files = new List<FileInfoModel>();
                 foreach (var f in list) {

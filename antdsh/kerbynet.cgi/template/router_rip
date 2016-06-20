@@ -1,0 +1,291 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>RIP</title>
+<script language=Javascript>
+function RIPLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=Routing&Filter=zebra","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function CheckIP() {
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=CheckIP","CheckIP","top=50,left=200,width=800,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+};
+function MakeStatic() {
+  Entry=selected_entry();
+  if (Entry=="") {
+    alert("You should select a dynamic route to make it static.");
+    return;
+  }
+  if (confirm("Are you sure you want to make permanently static the dynamic route?")) {
+    location="kerbynet?Section=Router&STk=<xvar STk>&Action=MakeStatic&Route="+Entry;
+  }
+}
+function selected_entry() {
+   X=document.data.SelectDyn;
+   if (X==undefined) {
+     return "";
+   }
+   if (X.length!=undefined) {
+     for (i=0; i<X.length; i++) {
+       if (X[i].checked) return X[i].value;
+     }
+   } else {
+       if (X.checked) return X.value;
+   }
+   return "";
+}
+function add() {
+   available=document.data.Available;
+   if (available.selectedIndex<0) {
+      alert("You have to select an available interface to configure for RIP.");
+   } else {
+      netname=available.options[available.selectedIndex].value;
+      RIPPED=document.data.RIPPED;
+      RIPPED.options[RIPPED.options.length]=new Option(available.options[available.selectedIndex].text,netname,false,false);
+      CONFIGURE=document.data.configure;
+      CONFIGURE.options[CONFIGURE.options.length]=new Option(available.options[available.selectedIndex].text,netname,false,false);
+      available.options[available.selectedIndex]=null;
+      CONFIGURE.value=netname; 
+      configureChanged();
+      DataChanged();
+   }
+}
+function Remove() {
+   RIPPED=document.data.RIPPED;
+   if (RIPPED.selectedIndex<0) {
+      alert("You have to select an interface to remove from RIP ");
+   } else {
+      netname=RIPPED.options[RIPPED.selectedIndex].value;
+      available=document.data.Available;
+      available.options[available.options.length]=new Option(RIPPED.options[RIPPED.selectedIndex].text,netname,false,false);
+      RIPPED.options[RIPPED.selectedIndex]=null;
+      DataChanged();
+   }
+}
+function submitdata() {
+  if (!checkSecret()) document.data.Secret.value=document.data.Secret.value.substr(0,16);
+  SavingMsg();
+  configureChanged();
+  RIPPED=document.data.RIPPED;
+  document.data.RIPPEDLIST.value="";
+  for (i=0; i < RIPPED.options.length; i++) {
+    document.data.RIPPEDLIST.value+=" "+RIPPED.options[i].value;
+  }
+  if (document.data.RIPPEDLIST.value.substr(0,1)==" ") document.data.RIPPEDLIST.value=document.data.RIPPEDLIST.value.substr(1);
+  W="";
+  for (L=0; L<Interfaces.length; L++) {
+    Name=Interfaces[L];
+    W+=Name+"~";
+    W+="x"+"~";
+    W+=SplitHorizon[Name]+"~";
+    W+=PoisonedReverse[Name]+"~";
+    W+=PassiveMode[Name]+"~";
+    W+=Authentication[Name]+"~";
+    W+=Secret[Name]+"~";
+    W+="|";
+  }
+  if (W.charAt(W.length-1)=='|') W=W.substr(0,W.length-1);
+  document.data.CONFIGURATION.value=W;
+}
+function checkSecret() {
+  if (document.data.AuthenticationType[1].checked && document.data.Secret.value.length>16) {
+    alert("In Plain Text authentication mode the secret cannot be bigger than 16 characters.");
+    document.data.Secret.focus();
+    document.data.Secret.select();
+    return false;
+  } else {
+    return true;
+  }
+}
+function SecretChanged() {
+  document.data.Secret.value=document.data.Secret.value.replace(/[\s|~]+/g,"");
+  if (checkSecret()) {
+    DataChanged();
+  }
+}
+function EnableRIP() {
+  document.data.Action.value="EnableRIP";
+  document.data.submit();
+}
+function RouteTable() {
+  var newwin=window.open("kerbynet?Section=Router&STk=<xvar STk>&Action=RouteTable&Dynamic=yes&Static=yes&Auto=yes","RouteTable","top=150,left=120,width=860,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+};
+var Interfaces=new Array();
+var SelectedInterface="";
+var EnabledRIP=new Array();
+var SplitHorizon=new Array();
+var PoisonedReverse=new Array();
+var PassiveMode=new Array();
+var Authentication=new Array();
+var Secret=new Array();
+function loaded() {
+  var LINES=document.data.CONFIGURATION.value.split('|');
+  for (L=0; L<LINES.length; L++) {
+    FIELDS=LINES[L].split('~');
+    Name=FIELDS[0];
+    Interfaces[L]=Name;
+    EnabledRIP[Name]=FIELDS[1];
+    SplitHorizon[Name]=FIELDS[2];
+    PoisonedReverse[Name]=FIELDS[3];
+    PassiveMode[Name]=FIELDS[4];
+    Authentication[Name]=FIELDS[5];
+    Secret[Name]=FIELDS[6];
+  }
+  if (document.data.configure.value!="") showconf(document.data.configure.value);
+}
+function configureChanged() {
+   X=document.data;
+   if (SelectedInterface!="") {
+     if (X.SplitHorizon.checked) {
+       SplitHorizon[SelectedInterface]="yes";
+     } else {
+       SplitHorizon[SelectedInterface]="no";
+     }
+     if (X.PoisonedReverse.checked) {
+       PoisonedReverse[SelectedInterface]="yes";
+     } else {
+       PoisonedReverse[SelectedInterface]="no";
+     }
+     if (X.PassiveMode.checked) {
+       PassiveMode[SelectedInterface]="yes";
+     } else {
+       PassiveMode[SelectedInterface]="no";
+     }
+     if (X.AuthenticationType[0].checked) {
+       Authentication[SelectedInterface]="no";
+     } else if (X.AuthenticationType[1].checked) {
+       Authentication[SelectedInterface]="PlainText";
+     } else {
+       Authentication[SelectedInterface]="MD5";
+     }
+     Secret[SelectedInterface]=X.Secret.value;
+   }
+   X.RIPPED.value=document.data.configure.value;
+   showconf(document.data.configure.value);
+}
+function showconf(Interface) {
+  X=document.data;
+  SelectedInterface=Interface;
+  if (SplitHorizon[Interface]=="yes") {
+    X.SplitHorizon.checked=true;
+  } else {
+    X.SplitHorizon.checked=false;
+  }
+  if (PoisonedReverse[Interface]=="yes") {
+    X.PoisonedReverse.checked=true;
+  } else {
+    X.PoisonedReverse.checked=false;
+  }
+  if (PassiveMode[Interface]=="yes") {
+    X.PassiveMode.checked=true;
+  } else {
+    X.PassiveMode.checked=false;
+  }
+  if (Authentication[Interface]=="no") {
+    X.AuthenticationType[0].checked=true;
+  } else if (Authentication[Interface]=="PlainText") {
+    X.AuthenticationType[1].checked=true;
+  } else {
+    X.AuthenticationType[2].checked=true;
+  }
+  X.Secret.value=Secret[Interface];
+  if (X.AuthenticationType[0].checked) {
+    X.Secret.disabled=true;
+  } else {
+    X.Secret.disabled=false;
+  }
+  if (!X.SplitHorizon.checked) {
+    X.PoisonedReverse.disabled=true;
+  } else {
+    X.PoisonedReverse.disabled=false;
+  }
+}
+function RIPPEDClick() {
+  X=document.data;
+  SelectedINT=X.RIPPED.value;
+  X.configure.value=SelectedINT;
+  configureChanged();
+}
+function DataChanged() {
+  SaveMsg();
+  if (!document.data.SplitHorizon.checked) {
+    document.data.PoisonedReverse.disabled=true;
+  } else {
+    document.data.PoisonedReverse.disabled=false;
+  }
+  document.data.Save.disabled=false;
+  if (document.data.AuthenticationType[0].checked) {
+    document.data.Secret.disabled=true;
+  } else {
+    document.data.Secret.disabled=false; 
+  }
+
+}
+function SavingMsg() {
+   var tableElem = document.getElementById('savetab');
+   var rowElem = tableElem.rows[0];
+   rowElem.cells[1].innerHTML="<font color=#0000FF>&nbsp;&nbsp;Saving....</font>";
+}
+function SaveMsg () {
+   var tableElem = document.getElementById('savetab');
+   var rowElem = tableElem.rows[0];
+   if (rowElem.cells[1].innerHTML.indexOf("Saving")<0) {
+      rowElem.cells[1].innerHTML="<font color=#FF0000>&nbsp;&nbsp;Changes not saved</font>";
+   }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet" onsubmit="submitdata()">
+<input type=hidden name=Section value="Router">
+<input type=hidden name=Action value="ConfigRIP"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=RIPPEDLIST value="">
+<input type=hidden name=CONFIGURATION value="<xvar !rip_getconfig>">
+<table width="100%" border=1>
+<tr><td width="1%" nowrap><b><font color=#808080>&nbsp;RIPv2:</font><font color=#008000>&nbsp;&nbsp;<xvar $checkrip>&nbsp;</font></b></td><td align="right">
+&nbsp;<font color=#0000f0 face=Arial><input name=EnabledRIP type=checkbox value="yes" onclick="EnableRIP()" <xvar /system/net/router/RIP/ENABLED>> Enabled</font>&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Routing Table" onclick="RouteTable()"><input type=button value="Check IP" onclick="CheckIP()"><input type=button value="Show Log" onclick="RIPLOG()"></td></tr>
+</table>
+<br>
+<table width="100%" id=savetab><tr><td bgcolor=#6666ff width=30%>&nbsp;<font color=#ffffff>Configuration</font></td><td align=right></td><td align=right width=1%><input type=submit Name=Save value="Save"></td></tr></table><script>document.data.Save.disabled=true;</script>
+<table bordercolor=#ffffff border=2 width=100% bgcolor=#f0f0ff style="border-collapse: collapse;"><tr><td>
+<table>
+<tr>
+<td><font color=#0000f0>Available Interfaces</font>&nbsp;&nbsp;&nbsp;&nbsp;</td><td></td><td><font color=#0000f0>RIP Enabled Interfaces</font></td>
+<td>
+</td>
+</tr>
+<tr>
+<td nowrap>
+<select name=Available size=8 style="width: 100%">
+<xvar !rip_interfacesforRIP>
+</select>
+</td><td nowrap>
+&nbsp;&nbsp;&nbsp;<input type=button value=">>>" onclick="add()">&nbsp;&nbsp;&nbsp;<br><br>
+&nbsp;&nbsp;&nbsp;<input type=button value="<<<" onclick="Remove()">
+</td><td nowrap>
+<select name=RIPPED size=8 style="width: 100%" onchange="RIPPEDClick()">
+<xvar !rip_interfacesRIPPED>
+</select>
+</td>
+<td>
+<table width=100%>
+<tr><td align=right>Interface</td><td>&nbsp;&nbsp;&nbsp;<select name=configure onchange='configureChanged()'><xvar !rip_interfacesRIPPED></select></td></tr>
+<tr><td align=right>Split Horizon</td><td>&nbsp;&nbsp;&nbsp;<input type=checkbox name=SplitHorizon onclick="DataChanged()"></td></tr>
+<tr><td align=right>&nbsp;&nbsp;&nbsp;&nbsp;Poisoned Reverse</td><td>&nbsp;&nbsp;&nbsp;<input type=checkbox name=PoisonedReverse onclick="DataChanged()"></td></tr>
+<tr><td align=right>&nbsp;&nbsp;&nbsp;&nbsp;Passive Mode</td><td>&nbsp;&nbsp;&nbsp;<input type=checkbox name=PassiveMode onclick="DataChanged()"></td></tr>
+<tr><td align=right>Authentication</td><td>&nbsp;&nbsp;&nbsp;<input type=radio name=AuthenticationType value=no onclick="DataChanged()">None&nbsp;&nbsp<input type=radio name=AuthenticationType value=PlainText onclick="DataChanged()">Plain Text&nbsp;&nbsp;<input type=radio name=AuthenticationType value=MD5 onclick="DataChanged()">MD5</td></tr>
+<tr><td align=right>Secret</td><td>&nbsp;&nbsp;&nbsp;<input type=text name=Secret onchange="SecretChanged()"></td></tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+<table width="100%"><tr><td bgcolor=#6666ff>&nbsp;<font color=#ffffff>Learned by RIP</font></td><td align=right><input type=button value="Make Static" onclick="MakeStatic()"><input type=button value="Refresh" onclick="location='kerbynet?Section=Router&STk=<xvar STk>&Action=RIP'"></td></tr></table>
+<table bordercolor=#ffffff border=2 width=100% bgcolor=#f0f0ff style="border-collapse: collapse; font-family: courier; color: #0000A0; font-size: 10pt;">
+<tr><th width=1%>&nbsp;&nbsp;&nbsp;</th><th>Destination</th><th>Netmask</th><th>Type</th><th>Metric</th><th>Gateway</th><th>Learned From</th><th>State</th><th>Time</th></tr>
+<xvar !rip_listlearned>
+</table>
+</body>
+</html>

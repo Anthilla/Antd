@@ -1,0 +1,162 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Kerberos 5 Setup </title>
+<script>
+function writeSelect(begin,end,selected) {
+   for (i=begin;i<=end;i++) {
+      document.write("<option"+(i==selected?" selected":"")+">"+(i<10?"0":"")+i+"</option>");
+   }
+}
+function searchEncryption(E) {
+   for (i=0; i<document.data.Encryption.length; i++) {
+      if (E==document.data.Encryption.options[i].value)
+          return i;
+   }
+   return -1;
+}
+function addEncryption() {
+   if (document.data.SupportedEncryption.selectedIndex>-1 && document.data.SupportedSalt.selectedIndex>-1) {
+      if (document.data.SupportedSalt.options[document.data.SupportedSalt.selectedIndex].value.substr(0,3)=="AFS" && document.data.SupportedEncryption.options[document.data.SupportedEncryption.options.selectedIndex].value!="DES cbc mode with CRC-32") {
+        alert("AFS salt can be used only with DES cbc mode with CRC-32 encryption.");
+        return;
+      }
+      KeyEnc=document.data.SupportedEncryption.options[document.data.SupportedEncryption.options.selectedIndex].value+", "+document.data.SupportedSalt.options[document.data.SupportedSalt.selectedIndex].value;
+    if (searchEncryption(KeyEnc)==-1) {
+      document.data.Encryption.options[document.data.Encryption.length]=new Option(KeyEnc,KeyEnc,true,true);
+    } else {
+      alert("<xvar #EncryptionAlreadyPresent>");
+    }
+   }
+}
+function delEncryption() {
+  if (document.data.Encryption.selectedIndex>-1) {
+     document.data.Encryption.options[document.data.Encryption.selectedIndex]=null;
+  }
+}
+function loaded() {
+  X=document.data;
+  if (X.Maximum_password_life.value=="0") {
+     X.Maximum_password_life.value="";
+  }
+  if (X.Minimum_password_life.value=="0") {
+     X.Minimum_password_life.value="";
+  }
+  X.Minimum_number_of_password_character_classes.value="<xvar _Minimum_number_of_password_character_classes>";
+
+}
+function SaveSetup() {
+  X=document.data;
+  if (parseInt(X.Maximum_password_life.value)<parseInt(X.Minimum_password_life.value)) {
+    alert("The minimum Password Life cannot be greater than the maximum Password Life.");
+    return;
+  }
+  key="";
+  for (i=0; i<X.Encryption.length; i++) {
+    key+=X.Encryption.options[i].value;
+    if (i<X.Encryption.length-1)
+       key+="|";
+  }
+  if (key=="") {
+    alert("<xvar #NoEncryptionSelected>");
+    X.Encryption.focus();
+    return false;
+  }
+  X.Key.value=key;
+  X.Action.value="SaveSetup";
+  X.submit();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="K5">
+<input type=hidden name=Action value="">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Key value="">
+<table width=100%><tr>
+<td><font class=Bigger2 color=#000090><b>Kerberos 5 Setup</b></font></td><td align=right><input type=button value=Save onclick="SaveSetup()"><input type=button value=Close onclick="window.close()"></td>
+
+</tr></table>
+<hr>
+<table width=100%><tr><td>
+<font color=#0000f0>&nbsp;Password Policies&nbsp;</font>
+<table width=100% border=1>
+<tr>
+<td>
+<table width=100%>
+<tr><td>Maxlife (days)</td><td align=right><input type=text size=3 name=Maximum_password_life value="<xvar _Maximum_password_life>"></td>
+<td>Minlife (days)</td><td align=right><input type=text size=3 name=Minimum_password_life value="<xvar _Minimum_password_life>"></td></tr>
+<tr><td>History</td><td align=right><input type=text size=3 name=Number_of_old_keys_kept value="<xvar _Number_of_old_keys_kept>"></td></tr>
+<tr><td>Min. Length</td><td align=right><input type=text size=3 name=Minimum_password_length value="<xvar _Minimum_password_length>"></td>
+<td>Complexity</td><td align=right><select name=Minimum_number_of_password_character_classes><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option></select></td></tr>
+</table>
+</td>
+</tr>
+</table>
+</td><td>
+<font color=#0000f0>&nbsp;Ticket Parameters&nbsp;</font>
+<table width=100% border=1><tr><td>
+<table width=100%>
+<tr><td>Max Lifetime</td><td align=right>
+
+<table cellpadding=0 cellspacing=0>
+<tr>
+<td><font size=2 color=#000000>Days<br><select name=Maximum_ticket_life_days  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,99,"<xvar Maximum_ticket_life_days>"==""?"0":"<xvar Maximum_ticket_life_days>");</script></select></font></td>
+<td><font size=2 color=#000000>Hours<br><select name=Maximum_ticket_life_hours  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,23,"<xvar Maximum_ticket_life_hours>"==""?"0":"<xvar Maximum_ticket_life_hours>");</script></select></font></td>
+<td><font size=2 color=#000000>Minutes<br><select name=Maximum_ticket_life_minutes  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,59,"<xvar Maximum_ticket_life_minutes>"==""?"0":"<xvar Maximum_ticket_life_minutes>");</script></select></font></td>
+</tr>
+</table>
+
+
+
+
+
+
+</td></tr>
+<tr><td>Max Renew time</td><td align=right>
+
+
+
+<table cellpadding=0 cellspacing=0>
+<tr>
+<td><font size=2 color=#000000>Days<br><select name=Maximum_renewable_life_days  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,99,"<xvar Maximum_renewable_life_days>"==""?"0":"<xvar Maximum_renewable_life_days>");</script></select></font></td>
+<td><font size=2 color=#000000>Hours<br><select name=Maximum_renewable_life_hours  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,23,"<xvar Maximum_renewable_life_hours>"==""?"0":"<xvar Maximum_renewable_life_hours>");</script></select></font></td>
+<td><font size=2 color=#000000>Minutes<br><select name=Maximum_renewable_life_minutes  style="font-size: 8pt;"><script language=Javascript>writeSelect(0,59,"<xvar Maximum_renewable_life_minutes>"==""?"0":"<xvar Maximum_renewable_life_minutes>");</script></select></font></td>
+</tr>
+</table>
+
+
+
+
+</td></tr>
+</table>
+</td></tr></table>
+
+</td></tr></table>
+<hr>
+<font color=#0000f0>&nbsp;Default Encryption Keys&nbsp;</font>
+<table width=100% border=1>
+<tr>
+<td>
+<table width=100% cellpadding="0" cellspacing="0"><tr><td nowrap>
+<select name=SupportedEncryption style="width: 230pt;">
+<xvar _SupportedEncryption>
+</select>
+<select name=SupportedSalt style="width: 140pt;">
+<xvar _SupportedSalt>
+</select>
+</td><td nowrap width=1%>
+
+&nbsp;<input type=button name=B1 value=" + " onclick="addEncryption()"><input type=button name=B1 value=" - " onclick="delEncryption ()">
+</td></tr></table>
+<select name=Encryption size=7 style="width: 100%">
+<xvar _ComboEncryption>
+</select>
+</td>
+</tr>
+</table>
+
+
+</form>
+</body>
+</html>

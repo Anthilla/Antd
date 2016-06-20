@@ -1,0 +1,26 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/wifi.inc
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+OPT="$2"
+TMP="/tmp/wifi-list-sta-$$"
+#wlanconfig $INTERFACE list sta |grep -v ADDR | grep "..:..:..:..:..:.." > "$TMP"
+iw dev $INTERFACE station dump >$TMP
+NUM=`grep Station "$TMP"|wc  -l`
+if [ "$OPT" == html ] ; then
+  echo "<font color=#3030d0><b>Stations: $NUM</b></font>"
+  echo "<table width=60%>"
+  echo "<tr><td><b>Associated Station</b></td><td><b>Signal</b></td><td><b>Rate</b></td></tr>"
+  awk '/Station/ {printf "<tr><td>%s</td>",$2 } /tx bitrate/ {printf "<td>%s %s</td></tr>\n",$3,$4 } /signal:/ {printf "<td>%s dBm</td>",$2 }'  <"$TMP"
+  echo "</table>"
+else
+  echo "Stations: $NUM"
+  echo
+  echo "[Associated Station]       [Signal]       [Rate]"
+  awk '/Station/ {printf " %s   ",$2 } /tx bitrate/ {printf "     %s %s\n",$3,$4 } /signal:/ {printf "      %s dBm ",$2 }'  <"$TMP"
+
+fi
+rm -f "$TMP"
+
+

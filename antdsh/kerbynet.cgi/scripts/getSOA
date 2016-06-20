@@ -1,0 +1,6 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ZONE="$1"
+ldapsearch -LLL -x -h 127.0.0.1 -b "ou=DNS,`$SCRIPTS/getkey /system/ldap/base`" "(&(relativeDomainName=@)(zoneName=$ZONE))" sOARecord | egrep ^sOARecord: | awk -F"sOARecord: " '{print $2}'
+
+

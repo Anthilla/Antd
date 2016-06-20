@@ -28,33 +28,38 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using antdlib.Scheduler;
+using System.Collections.Generic;
+using System.Threading;
+using Antd.Database;
+using Antd.Scheduler;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class SchedulerModule : CoreModule {
+
+        private readonly JobRepository _jobRepositoryRepo = new JobRepository();
+
         public SchedulerModule() {
             this.RequiresAuthentication();
 
             Post["/cron"] = x => {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
-                var minutes = (string)Request.Form.Minutes;
-                if (minutes == "0") {
-                    Job.Schedule(Guid.NewGuid().ToString(), alias, command);
+                var cron = (string)Request.Form.CronExValue;
+                var guid = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(alias.Trim() + command.Trim())) {
+                    alias = guid;
                 }
-                else {
-                    var cron = $"0/{minutes} * * 1/1 * ? *";
-                    Job.Schedule(Guid.NewGuid().ToString(), alias, command, cron);
-                }
-                return Response.AsRedirect("/");
-            };
-
-            Post["/scheduler/now"] = x => {
-                var alias = (string)Request.Form.Alias;
-                var command = (string)Request.Form.Command;
-                Job.Schedule(Guid.NewGuid().ToString(), alias, command);
+                _jobRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Guid", guid },
+                    { "Alias", alias },
+                    { "Data", command },
+                    { "IntervalSpan", cron },
+                    { "CronExpression", cron }
+                });
+                Thread.Sleep(20);
+                JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 return Response.AsRedirect("/");
             };
 
@@ -62,32 +67,51 @@ namespace Antd.Modules {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
                 var cron = (string)Request.Form.CronResult;
-                Job.Schedule(alias, command, cron);
+                var guid = Guid.NewGuid().ToString();
+                _jobRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Guid", guid },
+                    { "Alias", alias },
+                    { "Data", command },
+                    { "IntervalSpan", "1" },
+                    { "CronExpression", cron }
+                });
+                Thread.Sleep(20);
+                JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 return Response.AsRedirect("/");
             };
 
             Post["/scheduler/enable"] = x => {
                 string guid = Request.Form.Guid;
-                JobRepository.Enable(guid);
-                return Response.AsJson(true);
+                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
+                    { "Id", guid },
+                    { "IsEnabled", "true" }
+                });
+                return HttpStatusCode.OK;
             };
 
             Post["/scheduler/disable"] = x => {
                 string guid = Request.Form.Guid;
-                JobRepository.Disable(guid);
-                return Response.AsJson(true);
-            };
-
-            Post["/scheduler/launch"] = x => {
-                string guid = Request.Form.Guid;
-                Job.ReSchedule(guid);
-                return Response.AsJson(true);
+                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
+                    { "Id", guid },
+                    { "IsEnabled", "false" }
+                });
+                return HttpStatusCode.OK;
             };
 
             Post["/scheduler/delete"] = x => {
                 string guid = Request.Form.Guid;
-                JobRepository.Delete(guid);
-                return Response.AsJson(true);
+                _jobRepositoryRepo.Delete(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/scheduler/edit"] = x => {
+                var id = (string)Request.Form.Guid;
+                var command = (string)Request.Form.Command;
+                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
+                    { "Id", id },
+                    { "Data", command }
+                });
+                return HttpStatusCode.OK;
             };
         }
     }

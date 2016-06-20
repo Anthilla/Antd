@@ -1,0 +1,155 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+ACTIVELABEL="<font color=#2020c0><b>Active</b></font>"
+NEVERLABEL="<font class=Bigger1>Never</font>"
+function INFOPART() {
+   INFO="/storage/INFO/DISK/$W/PART/$X"
+   mkdir -p $INFO
+   df -T -P |grep -w ^$DEV  > /tmp/part_info
+   awk '{print $2}' < /tmp/part_info > $INFO/Type
+   awk '{print $3}' < /tmp/part_info > $INFO/Blocks
+   awk '{print $4}' < /tmp/part_info > $INFO/Used
+   awk '{print $5}' < /tmp/part_info > $INFO/Available
+   awk '{print $6}' < /tmp/part_info > $INFO/Percent
+   echo $ID > $INFO/ID
+   echo "Yes" > $INFO/Known
+}
+function INFOLABEL() {
+   INFO="/storage/INFO/DISK/$W/PART/$X"
+   mkdir -p $INFO
+   if egrep -q ^ext[234]$ $INFO/Type ; then
+      e2label $DEV > $INFO/Label 2>/dev/null
+   elif egrep -q ^reiserfs$ $INFO/Type ; then
+      $SCRIPTS/getreiserfslabel $DEV > $INFO/Label
+   else
+      touch $INFO/Label
+   fi
+   mkdir -p /storage/LABEL
+   cp $INFO/Label /storage/LABEL/$X
+}
+function INFOPART_UNK() {
+   INFO="/storage/INFO/DISK/$W/PART/$X"
+   mkdir -p $INFO
+   fdisk -l "$DK" |grep -w ^$DEV |sed 's/*/ /' > /tmp/part_info
+   awk '{print $6 $7 $8 $9 $10}' < /tmp/part_info > $INFO/Type
+   awk '{print $4}' < /tmp/part_info > $INFO/Blocks
+   touch $INFO/Used
+   touch $INFO/Available
+   touch $INFO/Percent
+   touch $INFO/Label
+   echo $ID > $INFO/ID
+   echo "No" > $INFO/Known
+}
+function INFODB() {
+   DBLS=`ls -d /storage/$X/_DB\.[0123456789][0123456789][0123456789] 2>/dev/null`
+   for DB in $DBLS; do  
+#echo $DB
+      DB_SHORT=`basename $DB`
+      if ! [ -d "$DB/.settings/" ] ; then
+         mount -o loop "${DB}.AUX" "$DB" 
+      fi
+      if [ -d "$DB/.settings/" ] ; then
+        INFO=/storage/INFO/DISK/$W/PART/$X/DB/$DB_SHORT
+        mkdir -p $INFO
+        if [ -r "$DB/.settings/Active" ] ; then
+           TS=`date +"%s" -r "$DB/.settings/LastActivation" 2>/dev/null`
+           if [ "$TS" -gt `cat /tmp/DBTIMESTAMP`  ] 2>/dev/null ; then
+             date +"%s" -r "$DB/.settings/LastActivation" > /tmp/DBTIMESTAMP
+             echo "$DK:$DEV:$DB_SHORT" > /tmp/LASTACTIVEDB
+           fi
+        fi
+        [ -r "$DB/.settings/Description" ] && cp "$DB/.settings/Description" $INFO/Description || touch "$INFO/Description"
+        if [ -r "$DB/.settings/LastActivation" ] ; then 
+           date +"%d %b %Y %H:%M" -r "$DB/.settings/LastActivation" > $INFO/LastActivation
+           TIMESTAMP=`date +"%s" -r "$DB/.settings/LastActivation"`
+        else
+           echo $NEVERLABEL > $INFO/LastActivation
+        fi
+        if [ -r "$DB/.settings/LastBackup" ] ; then 
+           cp "$DB/.settings/LastBackup"  $INFO/LastBackup
+        else
+           echo Never > $INFO/LastBackup
+        fi
+        if [ "$ACTIVE" == "$DEV:$DB_SHORT" ] ; then 
+           echo "$ACTIVELABEL" > $INFO/LastActivation
+        fi
+        cp "$DB/var/register/system/ldap/base" $INFO/LDAPBASE 2>/dev/null
+        cp "$DB/var/register/system/k5/realm" $INFO/K5REALM 2>/dev/null
+        cp "$DB/var/register/system/misc/hostname" $INFO/ 2>/dev/null
+        cp -a "$DB/var/register/system/net/interfaces" $INFO/ 2>/dev/null
+        cp -a "$DB/var/register/system/net/router" $INFO/ 2>/dev/null
+        
+      fi
+      umount "$DB" 2> /dev/null 
+   done  
+}
+DK="$1"
+[ "$DK" == "" ] && exit 
+NODEV=${DK:2}
+ACTIVE=`$SCRIPTS/getactivedb`
+W=`echo $DK | sed -e "s/\//_/g"`;
+PARTITIONS=`fdisk -l "$DK" 2>/dev/null |grep ^$1 |cut -f1 -d" "`;
+if ! [ -z "$PARTITIONS" ] ; then
+   for DEV in $PARTITIONS ; do
+      X=`echo $DEV | sed -e "s/\//_/g"`; 
+      NODEV=${DEV:2}
+      if ! df | grep -q "$NODEV " ; then 
+            if ! grep -q $DEV /etc/nomount ; then
+               mkdir /storage/$X 2>/dev/null 
+               ID=`fdisk -l "$1" 2>/dev/null |grep -w ^$DEV | sed 's/*/ /' | awk '{print $2 $3}'`
+               if mount -oro $DEV /storage/$X 2>/dev/null ; then
+                  INFOPART 
+                  INFODB
+                  umount /storage/$X 2> /dev/null
+		  INFOLABEL
+		  LB3="`cat $INFO/Label 2>/dev/null`"
+                  if [ "`cat $INFO/Type 2>/dev/null`" = iso9660 -o "${LB3:0:3}" = "ZS-" ] ; then
+                    rm -rf "$INFO"
+		  else
+                    echo "<option value='$DEV'>${DEV:5}   `cat $INFO/Label`</option>" >> /storage/INFO/ValidPartition
+                  fi
+               else
+                  rmdir /storage/$X 2> /dev/null
+		  INFOPART_UNK $1
+               fi
+            fi
+      else
+         if [ "`df | grep   -w ^$DEV  | awk '{print $6}'`" == "/DB" ] ; then 
+            rmdir /storage/$X 2>/dev/null
+            ln -s /DB /storage/$X
+            INFOPART
+            INFODB
+            cp /storage/LABEL/$X /storage/INFO/DISK/$W/PART/$X/Label 2>/dev/null
+            echo "<option value='$DEV'>${DEV:5}   `cat /storage/LABEL/$X`</option>" >> /storage/INFO/ValidPartition
+            rm -f /storage/$X
+         fi
+      fi
+   done
+else
+   DEV="$DK"
+   NODEV=${DEV:2} 
+   if ! df | grep  -q "$NODEV" ; then 
+     mkdir /storage/$W 2>/dev/null
+     if mount -oro $DEV /storage/$W 2>/dev/null ; then
+        X=$W
+        INFOPART
+        INFODB
+        umount /storage/$W
+        INFOLABEL
+        echo "<option value='$DEV'>${DEV:5}   `cat $INFO/Label`</option>" >> /storage/INFO/ValidPartition
+     else
+        rmdir /storage/$W 2>/dev/null
+     fi
+   else  
+      if [ "`df | grep   -w ^$DEV  | awk '{print $6}'`" == "/DB" ] ; then 
+         rmdir /storage/$W 2>/dev/null
+         ln -s /DB /storage/$W
+         X=$W
+         INFOPART
+         INFODB
+         cp /storage/LABEL/$X /storage/INFO/DISK/$W/PART/$X/Label 2>/dev/null
+         echo "<option value='$DEV'>${DEV:5}   `cat /storage/LABEL/$X`</option>" >> /storage/INFO/ValidPartition
+         rm -f /storage/$W
+      fi
+   fi
+fi

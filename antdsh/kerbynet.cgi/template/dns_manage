@@ -1,0 +1,13 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DNS Manager</title>
+</head>
+<frameset framespacing="1" border="0" frameborder="0" rows="55,45%,*">
+<frame name="zone" scrolling="no" noresize  src="kerbynet?Section=DNS&STk=<xvar STk>&Action=ZoneSelection">
+<frame name="entry" scrolling="no" noresize src="kerbynet?STk=<xvar STk>&Action=Render&Object=blank">
+<frame name="list" scrolling="yes" noresize src="kerbynet?STk=<xvar STk>&Action=Render&Object=blank2">
+</frameset>
+
+
+
+</html>

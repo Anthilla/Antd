@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TLSconfig="$REGISTER/$1"
+CertType="$2"
+CertSelected="$3"
+[ -z "$TLSconfig" ] && exit 2
+cd "$TLSconfig" || ( mkdir -p "$TLSconfig" ; echo Local > "$TLSconfig/CertType" ; echo .default.pem > "$TLSconfig/CertSelected" )
+[ -z "$CertType" ] && CertType=`cat $TLSconfig/CertType`
+[ -z "$CertSelected" ] && CertSelected=`cat $TLSconfig/CertSelected`
+
+if [ "$CertType" == Local ] ; then
+  if [ "$CertSelected" != ".default.pem" ] ; then
+    CERT="$SSLDIR/certs/${CertSelected}_host.pem"
+    KEY="$SSLDIR/private/${CertSelected}_host.pem"
+  else
+    CERT="$SSLDIR/certs/.default.pem"
+    KEY="$SSLDIR/private/.default.pem"
+  fi
+fi
+if [ "$CertType" == Imported ] ; then
+  CERT="$SSLDIR/certs/imported_Certs/${CertSelected}.pem"
+  KEY="$CERT"
+fi
+ln -sf "$CERT" "$TLSconfig/cert.pem"
+ln -sf "$KEY" "$TLSconfig/key.pem"

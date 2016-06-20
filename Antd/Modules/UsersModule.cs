@@ -27,34 +27,40 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using antdlib.Security;
-using antdlib.Users;
+using antdlib.common;
+using Antd.Database;
 using Antd.Helpers;
+using Antd.Users;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class UsersModule : CoreModule {
+
+        private readonly UserRepository _userRepositoryRepo = new UserRepository();
+        private readonly UserClaimRepository _userClaimRepositoryRepo = new UserClaimRepository();
+
         public UsersModule() {
             this.RequiresAuthentication();
 
-            Get["/users/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(UserEntity.Repository.GetAll()));
+            Get["/users/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(_userRepositoryRepo.GetAll()));
 
             Post["/users/refresh/users"] = x => {
-                SystemUser.ImportUsersToDatabase();
-                return Response.AsJson(true);
+                _userRepositoryRepo.Import();
+                return HttpStatusCode.OK;
             };
 
             Post["/users/refresh/group"] = x => {
                 SystemGroup.ImportGroupsToDatabase();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/users/create"] = x => {
                 string name = Request.Form.Name;
-                SystemUser.CreateUser(name);
+                UserRepository.Shadow.Create(name);
                 return Response.AsRedirect("/");
             };
 
@@ -73,48 +79,57 @@ namespace Antd.Modules {
 
             Get["/users/identity"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Users = UserEntity.Repository.GetAll();
+                vmod.Users = _userRepositoryRepo.GetAll();
                 return View["_page-users", vmod];
             };
 
             Post["/users/identity"] = x => {
-                var guid = System.Guid.NewGuid().ToString();
-                var rGuid = UserEntity.Repository.GenerateGuid(guid);
-                string userIdentity = Request.Form.UserEntity;
-                string userPassword = Request.Form.UserPassword;
-                var alias = UserEntity.Repository.GenerateUserAlias(userIdentity);
+                var guid = Guid.NewGuid().ToString();
+                string firstName = Request.Form.UserEntity;
+                string lastName = Request.Form.UserEntity;
+                string password = Request.Form.UserPassword;
+                _userRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Guid", guid },
+                    { "FirstName", firstName },
+                    { "LastName", lastName },
+                    { "Password", password },
+                    { "Role", "" },
+                    { "Email", "" },
+                    { "CompanyGuid", "" },
+                    { "Projects", "" },
+                    { "Usergroups", "" },
+                    { "Resources", "" },
+                    { "Users", "" },
+                    { "Tags", "" }
+                });
 
-                var claims = new List<UserEntity.UserEntityModel.Claim> {
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = rGuid,
-                        Mode = UserEntity.ClaimMode.Antd,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "antd-master-id",
-                        Value = rGuid
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = rGuid,
-                        Mode = UserEntity.ClaimMode.Antd,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "antd-master-identity",
-                        Value = userIdentity
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = guid,
-                        Mode = UserEntity.ClaimMode.Antd,
-                        Type = UserEntity.ClaimType.UserIdentity,
-                        Key = "antd-master-alias",
-                        Value = alias
-                    },
-                    new UserEntity.UserEntityModel.Claim {
-                        ClaimGuid = rGuid,
-                        Mode = UserEntity.ClaimMode.Antd,
-                        Type = UserEntity.ClaimType.UserPassword,
-                        Key = "antd-master-password",
-                        Value = Cryptography.Hash256ToString(userPassword)
-                    }
-                };
-                UserEntity.Repository.Create(guid, userIdentity, alias, claims);
+                _userClaimRepositoryRepo.Create(new Dictionary<string, string> {
+                    {"Guid", Guid.NewGuid().ToString() },
+                    {"UserGuid", guid},
+                    {"Type", "UserIdentity"},
+                    {"Mode", "Antd"},
+                    {"Label", "antd-master-id"},
+                    {"Value", guid},
+                });
+
+                _userClaimRepositoryRepo.Create(new Dictionary<string, string> {
+                    {"Guid", Guid.NewGuid().ToString() },
+                    {"UserGuid", guid},
+                    {"Type", "UserIdentity"},
+                    {"Mode", "Antd"},
+                    {"Label", "antd-master-identity"},
+                    {"Value", firstName + " " +  lastName},
+                });
+
+                _userClaimRepositoryRepo.Create(new Dictionary<string, string> {
+                    {"Guid", Guid.NewGuid().ToString() },
+                    {"UserGuid", guid},
+                    {"Type", "UserIdentity"},
+                    {"Mode", "Antd"},
+                    {"Label", "antd-master-password"},
+                    {"Value", Encryption.XHash(password)},
+                });
+
                 return Response.AsRedirect("/");
             };
 
@@ -124,14 +139,20 @@ namespace Antd.Modules {
                 string mode = Request.Form.Mode.Value;
                 string key = Request.Form.Key;
                 string val = Request.Form.Value;
-                UserEntity.Repository.AddClaim(userGuid, UserEntity.ConvertClaimType(type), UserEntity.ConvertClaimMode(mode), key, val);
+                _userClaimRepositoryRepo.Create(new Dictionary<string, string> {
+                    {"Guid", Guid.NewGuid().ToString() },
+                    {"UserGuid", userGuid},
+                    {"Type", type},
+                    {"Mode", mode},
+                    {"Label", key},
+                    {"Value", val}
+                });
                 return Response.AsRedirect("/");
             };
 
             Post["/users/identity/delclaim"] = x => {
-                string userGuid = Request.Form.Userguid;
                 string guid = Request.Form.Guid;
-                UserEntity.Repository.RemoveClaim(userGuid, guid);
+                _userClaimRepositoryRepo.Delete(guid);
                 return Response.AsRedirect("/");
             };
         }

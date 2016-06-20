@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd /sys/class/net/
+WL=`ls -d wlan* 2>/dev/null`
+for W in $WL ; do 
+  DBM=`cat /var/register/system/net/WiFi/DEVS/$W/TXPOWER 2>/dev/null`    
+  [ -z "$DBM" ] && DBM=auto    
+  if [ "$DBM" != auto ] ; then
+      DBMCURRENT=`iwconfig $W |grep Tx-Power= | sed -r 's/.*Tx-Power=(.*) dBm.*/\1/'`
+      if [ "$DBMCURRENT" != "$DBM" ] ; then
+         if iwconfig $W txpower $DBM 2>/dev/null ; then
+           logger -t "WiFi_txpower" "The Tx Power of $W ($DBMCURRENT dBm) has been corrected to $DBM dBm"
+         else
+           logger -t "WiFi_txpower" "WARNING: the  Tx Power of $W ($DBMCURRENT dBm) cannot be corrected to $DBM dBm."
+         fi
+         
+      fi
+  fi
+done

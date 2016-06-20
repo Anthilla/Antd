@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Linq;
-using antdlib.Common;
+using antdlib.common;
 
 namespace antdlib.Info {
 
@@ -36,7 +36,7 @@ namespace antdlib.Info {
 
         public static string GetEther() {
             const string dir = "/sys/devices";
-            var find = Terminal.Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
+            var find = Terminal.Execute("find ./ -name address", dir).ConvertCommandToModel();
             if (find.isError()) {
                 return find.error;
             }
@@ -45,7 +45,7 @@ namespace antdlib.Info {
                        select i).FirstOrDefault();
             if (row == null)
                 return null;
-            var cat = Terminal.Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
+            var cat = Terminal.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
             return cat.outputTable.FirstOrDefault();
         }
     }

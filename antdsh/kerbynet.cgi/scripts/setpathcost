@@ -1,0 +1,28 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+PATHCOST="$2"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces"
+if echo $INTERFACE | grep -q '\.' ; then
+  TAG=`echo $INTERFACE | awk -F. '{print $2}'`
+  U=`echo $INTERFACE | awk -F. '{print $1}'`
+  IDIR="$CONFIG/$U/VLAN/$TAG/"
+else
+  IDIR="$CONFIG/$INTERFACE/"
+fi
+BRIDGE=`cat $IDIR/Bridge/Name`
+if [ -z "$PATHCOST" ] ; then 
+  PATHCOST="`cat $IDIR/Bridge/PathCost 2>/dev/null`"
+fi 
+[ -z "$PATHCOST" ] && exit 1
+if brctl setpathcost $BRIDGE $INTERFACE $PATHCOST ; then
+   echo $PATHCOST > $IDIR/Bridge/PathCost   
+else
+  exit 1
+fi
+
+
+
+

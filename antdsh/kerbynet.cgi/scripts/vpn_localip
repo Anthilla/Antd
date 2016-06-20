@@ -1,0 +1,25 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+VPN="$1"
+LOCALIP="`cat $REGISTER/system/net/interfaces/$VPN/TUNNEL/LocalIP 2>/dev/null`"
+if [ -n "$LOCALIP" ] ; then
+  if ifconfig |grep -F -q -w "$LOCALIP" ; then
+    echo $LOCALIP
+    exit 0
+  fi
+fi
+
+
+
+[ "`cat $REGISTER/system/net/nb/Enabled 2>/dev/null`" != yes ] && exit 2
+GW="`cat $REGISTER/system/net/interfaces/$VPN/Gateway 2>/dev/null`"
+
+[ -z "$GW" ] && exit 1
+[ "$GW" = Auto ] && exit 1
+[ "`cat $REGISTER/system/net/nb/Gateways/$GW/Enabled 2>/dev/null`" != yes ] && exit 3
+HEX=`echo 1$GW |awk '{printf "0x%x",$0}'`
+LOCALIP=`iptables -L NB_CT_PRE -n -v -t mangle 2>/dev/null |grep -w "$HEX" |awk '{print $9}'|head -1`
+[ -z "$LOCALIP" ] && exit 10
+echo $LOCALIP
+
+

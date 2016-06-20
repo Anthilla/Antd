@@ -1,0 +1,118 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DHCP Static Entry</title>
+<script language=Javascript>
+<xinclude ip_utility.inc>
+function validateIP(IP) {
+  IP.value=IP.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (! isValidIP(IP.value) && IP.value!="") {
+    alert("ERROR: "+IP.value+" is not a valid IP address.");
+    IP.focus();
+    IP.select();
+    return false;
+  }
+  return true;
+}
+function validateMAC(MAC) {
+  MAC.value=MAC.value.replace(/(^\s+)|(\s+$)/g,"");
+  MAC.value=MAC.value.toUpperCase();
+  filter=/^([0123456789ABCDEF]{2})([0123456789ABCDEF]{2})([0123456789ABCDEF]{2})([0123456789ABCDEF]{2})([0123456789ABCDEF]{2})([0123456789ABCDEF]{2})$/
+  comp=filter.exec(MAC.value);
+  if (comp!=undefined) {
+    MAC.value=comp[1]+":"+comp[2]+":"+comp[3]+":"+comp[4]+":"+comp[5]+":"+comp[6];
+  }
+  MAC.value=MAC.value.replace(/\W/g,":");
+  if (! isValidMAC(MAC.value) && MAC.value!="") {
+    alert("ERROR: "+MAC.value+" is not a valid MAC address (ex. 01:AB:00:48:EF:3B).");
+    MAC.focus();
+    MAC.select();
+    return false;
+  }
+  return true;
+}
+function validateData() {
+  X=document.data;
+  if (! validateIP(X.IP)) {
+    return false;
+  }
+  if (!ip_belongs_network(X.IP.value,"<xvar Network>","<xvar Netmask>")) {
+     alert("The IP address must be on the subnet <xvar Network>/<xvar Netmask>");
+     X.IP.focus();
+     X.IP.select();
+     return false;
+  }
+  if (! validateMAC(X.MAC)) {
+    return false;
+  }
+  return true;
+}
+function SubmitData() {
+  document.data.IP.value=document.data.IP.value.replace(/(^\s+)|(\s+$)/g,"");
+  document.data.MAC.value=document.data.MAC.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (document.data.IP.value=="") {
+     alert("IP field cannot be empty!!!");
+     return false;
+  }
+  if (document.data.MAC.value=="") {
+     alert("MAC field cannot be empty!!!");
+     return false;
+  }
+  if (validateData()) {
+     if ("<xvar Action>"=="AddStatic" || "<xvar Action>"=="AddStaticSubmit") {
+        document.data.Action.value="AddStaticSubmit";
+     } else {
+        document.data.Action.value="EditStaticSubmit";
+     }
+     document.data.submit();
+  }
+}
+function Details() {
+      var newwin=window.open("kerbynet?Section=DHCP&STk=<xvar STk>&Action=Details&Type=TMP","DHCPDetails","top=350,left=400,width=600,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+      newwin.focus();
+}
+function manpage(ManualPage) {
+   newwin=open("kerbynet?Action=Render&Object=man_page&STk=<xvar STk>&Page="+ManualPage, "Manual: "+ManualPage,"top=250,left=200,width=850,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+</script>
+</head>
+<body onload="window.focus()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="DHCP">
+<input type=hidden name=Action value=""><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Subnet value="<xvar Subnet>">
+<input type=hidden name=Entry value="<xvar Entry>">
+<input type=hidden name=Network value="<xvar Network>">
+<input type=hidden name=Netmask value="<xvar Netmask>">
+<table width=100%><tr>
+<td><font face="Arial" color="#3030f0" class=Bigger1><b>DHCP STATIC ENTRY</b></font></td><td align=right><font face="Arial" color="#30c030" class=Smaller1><b><xvar Network>/<xvar Netmask></b></font></td>
+</tr></table>
+<hr>
+<br>
+<table width=100% style="font-family: courier; color: #0000A0" cellpadding=3>
+<tr>
+<td>Description</td><td align=right><input type=text name=Desc value="<xvar _Desc>" style="font-family: courier; color: #000080" size=40 maxlength=35></td>
+</tr><tr>
+<tr>
+<td>Fixed IP</td><td align=right><input type=text name=IP value="<xvar IP>" onchange="validateData()" style="font-family: courier; color: #000080"></td>
+</tr><tr>
+<td>MAC Address</td><td align=right><input type=text name=MAC value="<xvar MAC>" onchange="validateData()" style="font-family: courier; color: #000080"></td>
+</tr>
+</table>
+<br>
+<font color=#FF0000><xvar _ERROR></font>
+<table width=100% cellspacing=0 cellpadding=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;&nbsp;Options&nbsp;&nbsp;</font></span></td><td align=right><font class=Smaller1>Look at the <a href="#" onclick="manpage('dhcp-options')">dhcp-options manual page</a> for details</font></td></tr></table>
+<table border=1 cellspacing=0 cellpadding=0 width=100%><tr><td>
+<textarea name=Parameters style="width: 100% ; height: 120">
+<xvar _Parameters>
+</textarea>
+</td></tr></table>
+<hr>
+<center>
+
+<input type=button value=" OK " onclick="SubmitData()" style="font-family: courier; color: #0000A0">
+<input type=button value="Cancel" onclick="window.close()" style="font-family: courier; color: #0000A0">
+</center>
+</form>
+</body>
+</html>

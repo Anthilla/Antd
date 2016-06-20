@@ -1,0 +1,75 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>X509 User</title>
+<script language=Javascript>
+function GenerateUser() {
+   document.x509.Action.value="GenerateUser";
+   document.x509.submit();
+}
+function RevokeUser() {
+   document.x509.Action.value="RevokeUser";
+   document.x509.submit();
+}
+function RenewUser() {
+   document.x509.Action.value="RenewUser";
+   document.x509.submit();
+}
+</script>
+</head>
+<body>
+<p><font color="#FF0000"><xvar errormsg></font></p>
+<table width=100%>
+<tr>
+<td><font face=arial size=4 color=#000080><xvar gecos> (<xvar uid>)</font></td>
+<td align=right><font face=arial size=4 color=#008000>Status: <xvar _Status></font></td>
+
+</tr>
+</table><br>
+<form name=x509 method=post action=kerbynet>
+    <input type=hidden name=user_sel value="<xvar _user_sel>">
+    <input type=hidden name=Action value=<xvar _Action>><input type=hidden name=STk value=<xvar STk>>
+    <input type=hidden name=Section value=x509>
+    <table width=100% border=1 cellpadding=5>
+      <tr>
+        <td align=center nowrap>
+           Validity <input type=text name=Validity value=365 size=4>&nbsp;&nbsp;
+           <select name=nbit>
+                <option value=512>512 bits</option>
+                <option value=1024>1024 bits</option>
+                <option value=2048 selected>2048 bits</option>
+                <option value=4096>4096 bits</option>
+           </select>&nbsp;&nbsp;&nbsp;
+           <input type=button name=b1 value="Generate" onclick="GenerateUser()">
+           <input type=button name=b1bis value="Renew" onclick="RenewUser()">
+	</td>
+        <td align=center nowrap>
+	   &nbsp;&nbsp;
+           <input type=button name=b3 value="Export">&nbsp;&nbsp;&nbsp;
+           <input type=checkbox name=IncludeKey value=Yes checked>&nbsp;Key
+           &nbsp;&nbsp;&nbsp;
+           <select name=format>
+                <option value=pem>PEM</option>
+                <option value=1024>DER</option>
+                <option value=2048 selected>PKCS12</option>
+           </select>
+
+        </td>
+        <td align=center nowrap>
+ 
+           <input type=button name=b2 value="Revoke" onclick="RevokeUser()">
+	</td>
+
+      </tr>
+    </table>
+    <br>
+    &nbsp;<span style="font-weight: 700; background-color: #0000FF"><font face="Arial" size="2" color="#FFFFFF">&nbsp;Current Certificate&nbsp;</font></span>
+    <table width=100% height=60% border=1>
+      <tr>
+         <td align=center>
+		<iframe name="rawview" width="100%" height="100%" src="/cgi-bin/kerbynet?Section=x509&STk=<xvar STk>&Action=PreUser&user_sel=<xvar _user_sel>">
+         </td>
+      </tr>
+    </table>
+</form>
+</body>
+</html>

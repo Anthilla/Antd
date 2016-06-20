@@ -1,0 +1,24 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+VPNDIR="$CONFIG/$NAME"
+if [ -r $VPNDIR/Bridge/Name ] ; then
+  BR=`cat $VPNDIR/Bridge/Name`
+  echo "device member of $BR (`ext_bridgename $BR`)" >&2
+  exit 2
+else
+  if [ -r $VPNDIR/Bond/Name ] ; then
+    BD=`cat $VPNDIR/Bond/Name`
+    echo "device member of $BD (`ext_bondname $BD`)" >&2
+    exit 2
+  else
+    $SCRIPTS/vpn_ctl $NAME down
+    ifconfig $NAME down
+    openvpn --rmtun --dev-type tap --dev $NAME
+    rm -rf $VPNDIR
+    $SCRIPTS/nb_vpn
+  fi
+fi

@@ -1,0 +1,41 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+BONDDIR="$CONFIG/$NAME"
+if [ -r $BONDDIR/Bridge/Name ] ; then
+  BR=`cat $BONDDIR/Bridge/Name`
+  echo "device member of $BR (`ext_bridgename $BR`)" >&2
+  exit 2
+else
+  BONDLIST=`cat $BONDDIR/BondList`
+  ifconfig $NAME up
+  for I in $BONDLIST ; do
+    rm -rf $CONFIG/$I/Bond
+    if [ "${I:0:3}" = VPN ] ; then
+      if ifconfig $I 2>/dev/null |grep -q RUNNING ; then
+        STATUS=up
+      else
+        STATUS=down
+      fi
+    else
+      STATUS=`cat $REGISTER/system/net/interfaces/$I/STATUS 2>/dev/null`
+    fi
+    ifenslave -d $NAME $I 
+    $SCRIPTS/setinterface $I
+    $SCRIPTS/setvlans $I
+    if [ "${I:0:3}" = VPN ] ; then
+      ifconfig $I $STATUS
+    fi
+  done
+  $SCRIPTS/deletevlan $NAME
+  ip addr flush dev $NAME
+  ifconfig $NAME down
+  #modprobe -r bonding -o$NAME
+  #rmmod $NAME 
+  DEV=`cat /tmp/$NAME.dev 2>/dev/null`
+  ip link set name $DEV dev $NAME 
+  rm -rf $BONDDIR
+fi

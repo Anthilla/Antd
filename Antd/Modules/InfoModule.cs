@@ -26,10 +26,11 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
+using antdlib.common;
 using antdlib.Status;
 using Nancy;
 using Nancy.Security;
-using antdlib.Terminal;
 
 namespace Antd.Modules {
     public class InfoModule : CoreModule {

@@ -1,0 +1,18 @@
+#!/bin/bash
+USERNAME="$1"
+PASSWORD="$2"
+TMP=/tmp/noip-$$
+if ! wget --timeout=10 -t 1 -O $TMP  "http://dynupdate.no-ip.com/settings.php?username=$USERNAME&pass=$PASSWORD" 2>/dev/null ; then
+  echo "<font color=#E03030>"
+  echo "Connectivity issues occurred."
+  echo "</font>"
+
+fi 
+if grep -q "<domain" $TMP ; then
+   cat $TMP |awk -F'name="' '/<host/ {printf "host=%s\n",$2} /<domain/ {printf "domain=%s\n",$2}' | awk -F'"' '{print $1}' | awk -F= '/domain=/ {printf "<hr><font color=#20a020><b>%s</b></font><br><br>\n",$2;domain=$2} /host=/ {printf "<input type=radio name=Hostname value=\"%s.%s\" onclick=\"hostselected()\">&nbsp;&nbsp;&nbsp;%s.%s<br>\n",$2,domain,$2,domain}'
+else
+  echo "<font color=#E03030>"
+  cat $TMP
+  echo "</font>"
+fi
+rm $TMP

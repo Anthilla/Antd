@@ -1,0 +1,32 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>DNS List</title>
+<meta Http-Equiv="Cache-Control" Content="no-cache">
+<meta Http-Equiv="Pragma" Content="no-cache">
+<meta Http-Equiv="Expire" Content="0">
+<script language=Javascript>
+function load() {
+   if ("<xvar Entry>"!="") 
+      window.location.hash="<xvar Entry>";
+}
+function selected() {
+    for (i=0; i<document.pick.relativeDomainName.length; i++) { 
+       if (document.pick.relativeDomainName[i].checked=="1") {
+          return document.pick.relativeDomainName[i].value;
+       }
+    }
+    return "";
+}
+function selectEvent() {
+    for (i=0; i<document.pick.relativeDomainName.length; i++) { 
+       if (document.pick.relativeDomainName[i].checked=="1") {
+          top.body.entry.location="/cgi-bin/kerbynet?Section=DNS&STk=<xvar STk>&Action=Edit&Entry="+document.pick.relativeDomainName[i].value+"&SelectedZone=<xvar _SelectedZone>";
+          return;
+       }
+    }
+}
+</script>
+</head>
+<body onload="load()">
+<form name=pick method=post action="kerbynet">
+<table width="100%" border=0 style="border-collapse: collapse; font-family: arial; font-size: 10pt; color: #404040" cellpadding=0 cellspacing=0>

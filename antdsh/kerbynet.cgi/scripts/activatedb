@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DEV="$1"
+DB="$2"
+[ -z "$DEV" -o -z "$DB" ] && exit 1
+ACTIVE=`$SCRIPTS/getactivedb`
+$SCRIPTS/deactivatedb >/dev/null || exit 1
+NODEV=${DEV:2}
+LINE=`df -T -P | grep "$NODEV "`
+if [ -z "$LINE" ] ; then
+  mount -o rw,noatime "$DEV" "/DB" || exit 2
+fi
+mount -obind,noatime /DB/$DB /Database && touch /Database/.settings/Active && touch /Database/.settings/LastActivation || exit 4

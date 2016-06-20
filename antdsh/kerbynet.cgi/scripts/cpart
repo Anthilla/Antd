@@ -1,0 +1,82 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+$SCRIPTS/umountstorage
+rm -f /tmp/storage.out
+touch /tmp/storage.out
+DEV="$1"
+DIM="$2"
+[ -z "$DEV" ] && exit 1
+[ "$DIM" -eq 0 ] 2>/dev/null 2>/dev/null && DIM=""
+if fdisk -l $DEV > /dev/null ; then
+   PLIST=$( fdisk -l $DEV | egrep ^$DEV | cut -f 1 -d' ' | sed  -r "s/.*[^0123456789]([0123456789]+)/\1/" )
+   NP=`echo $PLIST | wc -w`
+   FREE=`for p in 1 2 3 4 ; do echo $PLIST | grep -w -q $p || echo $p ; done` 
+   NFREE=`echo $FREE | wc -w`
+   fdisk -l $DEV | grep -q Extended && EXTENDED=TRUE
+   if [ $NFREE -eq 0 ]; then
+      if [ "$EXTENDED" == TRUE ] ; then   
+         NEW=0
+      else   
+         echo "No partition available" >> /tmp/storage.out
+         exit 1
+      fi
+   elif [ $NFREE -eq 1 ] ; then
+      if [ "$EXTENDED" == TRUE ] ; then
+         NEW=$FREE
+      else
+         echo "Create Extended"
+         echo -e "n\ne\n\n\nw" | fdisk $DEV >> /tmp/storage.out  
+         NEW=0
+      fi
+   else
+      NEW=`echo $FREE | cut -f1 -d' '`   
+   fi 
+   if [ $NEW -eq 0 ] ; then   
+      echo -e "n\n\n+${DIM}M\nw" |fdisk $DEV >> /tmp/storage.out
+   else
+      echo -e "n\np\n${NEW}\n\n+${DIM}M\nw" | fdisk $DEV >> /tmp/storage.out
+   fi
+   PLIST2=$( fdisk -l $DEV | egrep ^$DEV | cut -f 1 -d' ' | sed  -r "s/.*[^0123456789]([0123456789]+)/\1/" )
+   NEW=`for p in $PLIST2 ; do echo $PLIST | grep -w -q $p || echo -n " $p"; done| sed -r 's/.*[ ]([0123456789]+)/\1/'` 
+   if [ -z "$NEW" ] ; then 
+      echo -e "n\nl\n\n+${DIM}M\nw" | fdisk $DEV >> /tmp/storage.out
+      PLIST2=$( fdisk -l $DEV | egrep ^$DEV | cut -f 1 -d' ' | sed  -r "s/.*[^0123456789]([0123456789]+)/\1/" )
+      NEW=`for p in $PLIST2 ; do echo $PLIST | grep -w -q $p || echo -n " $p"; done| sed -r 's/.*[ ]([0123456789]+)/\1/'`
+   fi
+   if [ -z "$NEW" ] ; then
+      if ! [ -z "$DIM" ] ; then
+         if $SCRIPTS/cpart $DEV ; then
+            echo "RequestedBlocks: No"
+            exit 0 
+         else 
+            exit 1
+         fi
+
+      else 
+        exit 1
+      fi
+   fi
+fi
+partprobe $DEV >> /tmp/storage.out
+N=0
+while ! [ -r  ${DEV}$NEW -o $N -gt 15 ] ; do
+   N=$(( N + 1 ))
+   sleep 1
+done
+
+if echo $DEV | egrep -q "/c[0123456789]d[0123456789]$" ; then
+  SEP=p
+else
+  SEP=""
+fi
+if [ -r  ${DEV}${SEP}$NEW ] ; then 
+  echo "Success: ${DEV}${SEP}$NEW"
+  BLOCKS=`fdisk -s ${DEV}${SEP}$NEW`
+  echo "Size: $BLOCKS"
+  ID=`fdisk -l "$DEV"  |grep -w ^${DEV}${SEP}$NEW | sed 's/*/ /' | awk '{print $2 $3}'`
+  echo "ConfirmCode: $ID"
+else 
+  echo "ERROR:${DEV}${SEP}$NEW"
+  exit 1
+fi 
+

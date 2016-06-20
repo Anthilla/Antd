@@ -1,0 +1,176 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>LogManager Setup</title>
+<script>
+<xinclude ip_utility.inc>
+function loaded() {
+  X=document.data;
+  if ("<xvar /system/logs/Remote>"=="yes") {
+    X.RemoteReceive.checked=true;
+  } else {
+    X.RemoteReceive.checked=false;
+  }
+  if ("<xvar /system/logs/RemoteSend>"=="yes") {
+    X.RemoteSend.checked=true;
+  } else {
+    X.RemoteSend.checked=false;
+  }
+  if ("<xvar /system/logs/Auto/Compress>"=="yes") {
+    X.Compress.checked=true;
+  } else {
+    X.Compress.checked=false;
+  }
+  if ("<xvar /system/logs/Auto/Delete>"=="yes") {
+    X.Delete.checked=true;
+  } else {
+    X.Delete.checked=false;
+  }
+  if ("<xvar /system/logs/Auto/Stop>"=="yes") {
+    X.Stop.checked=true;
+  } else {
+    X.Stop.checked=false;
+  }
+  X.Stop.disabled=true; 
+  X.StopTS.disabled=true; 
+}
+function Changed() {
+  X=document.data;
+  X.save.disabled=false;
+  document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+}
+function CheckTS(tsobj) {
+  tsobj.value=tsobj.value.replace(/[ ]+/g,"");
+  if (tsobj.value=="") {
+     alert("Threshold value cannot be empty.");
+     tsobj.focus();
+     return false;
+  }
+  if (tsobj.value.match(/[^0123456789]/)) {
+    alert("Threshold must be an integer number.")
+    tsobj.focus();
+    tsobj.select();
+    return false;
+  }
+  if (parseInt(tsobj.value)<15 || parseInt(tsobj.value)>90) {
+    alert("Threshold must be in the range 15-90 %.")
+    tsobj.focus();
+    tsobj.select();
+    return false;
+  }
+  return true; 
+}
+function Save() {
+  X=document.data;
+  if (!ValidateIP(X.SyslogServer)) {
+    return;
+  }
+  if (X.RemoteSend.checked && X.SyslogServer.value=="") {
+    alert("Remote syslog server to send logs not specified.");
+    X.SyslogServer.focus();
+    return;
+  }
+  if (!CheckTS(X.CompressTS)) {
+    return;
+  }
+  if (!CheckTS(X.DeleteTS)) {
+    return;
+  }
+  if (!CheckTS(X.StopTS)) {
+    return;
+  }
+  if (parseInt(X.CompressTS.value)>=parseInt(X.DeleteTS.value)) {
+    alert("The compress threshold must be less than the delete threshold.");
+    X.CompressTS.focus();
+    X.CompressTS.select();
+ 
+    return;
+  }
+  if (parseInt(X.DeleteTS.value)>=parseInt(X.StopTS.value)) {
+    alert("The delete threshold must be less than the stop threshold.");
+    X.DeleteTS.focus();
+    X.DeleteTS.select();
+    return;
+  }
+  
+  X.submit();
+}
+function ValidateIP(ipobj) {
+  ipobj.value=ipobj.value.replace(/[ ]+/g,"");
+  if (ipobj.value=="") return true;
+  if (!isValidIP(ipobj.value)) {
+    alert("The IP address is not valid.");
+    ipobj.focus();
+    ipobj.select();
+    return false;
+  } else {
+    return true;
+  } 
+}
+function ExportLogs() {
+  alert("This feature is not yet included in this beta release.");
+}
+</script>
+
+</head>
+<body onload="loaded()" onsubmit="Save()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="LOG">
+<input type=hidden name=Action value="SaveSetup">
+<input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr>
+<td><font class=Bigger1 color=#4040ff><b>LOGMANAGER SETUP</b></font></td><td id=savetab></td><td align=right><input type=button name=save value=Save onclick="Save()"><input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<br>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Remote Syslog&nbsp;</font></span></td></tr></table>
+<table width="100%" border=1 cellpadding=0 cellspacing=0>
+<tr><td>
+<table width=100%>
+<tr><td>&nbsp;&nbsp;<input type=checkbox name=RemoteReceive value=yes onclick="Changed ()">&nbsp;Accept remote logs </td></tr>
+<tr><td>&nbsp;&nbsp;<input type=checkbox name=RemoteSend value=yes onclick="Changed ()">&nbsp;Send logs to remote Syslog</td><td align=right nowrap>Remote Syslog IP &nbsp;<input type=text name=SyslogServer value="<xvar /system/logs/SyslogServer>" onchange="Changed()">&nbsp;&nbsp;&nbsp;</td></tr>
+</table>
+</td></tr>
+</table>
+<br>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Auto Management&nbsp;</font></span></td><td align=right nowrap><font color=#606060>Used storage space: <b><xvar ?df -h |grep /Database | awk '{printf "%s (%s)",$3,$5 }'></b></font>&nbsp;</td></tr></table>
+<table width="100%" border=1 cellpadding=0 cellspacing=0>
+<tr><td>
+<table width=100%>
+<tr><td>&nbsp;&nbsp;<input type=checkbox name=Compress value=yes onclick="Changed()">&nbsp;Compress the oldest logs</td><td align=right>Threshold <input type=text name=CompressTS size=3 maxlength=3 value="<xvar /system/logs/Auto/CompressTS>" onchange="Changed()"> %&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;<input type=checkbox name=Delete value=yes onclick="Changed ()">&nbsp;Delete the oldest logs</td><td align=right>Threshold <input type=text name=DeleteTS size=3 maxlength=3 value="<xvar /system/logs/Auto/DeleteTS>" onchange="Changed()"> %&nbsp;</tr>
+<tr><td>&nbsp;&nbsp;<input type=checkbox name=Stop value=yes checked onchange="Changed()">&nbsp;Stop to log&nbsp;&nbsp;<font class=Smaller1>(this option is always active)</font></td><td align=right>Threshold <input type=text name=StopTS size=3 maxlength=3 value="<xvar /system/logs/Auto/StopTS>" onchange="Changed()"> %&nbsp;</tr>
+</table>
+</td></tr>
+</table>
+<br>
+<br>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Export Logs&nbsp;</font></span></td></tr></table>
+<table width="100%" border=1 cellpadding=5 cellspacing=5>
+<tr><td>
+
+
+<table width=100% cellpadding=0 cellspacing=0>
+<tr valign=bottom style="color: #404040"><td valign=center><font color=#0000A0><b>Starting Date</b></font></td><td>Host</td><td>Section</td></tr>
+<tr>
+<td>
+<select name=Year onchange="ChangeSelection()"></select>
+<select name=Month onchange="ChangeSelection()"><xvar _Months></select>
+<select name=Day onchange="ChangeSelection()"><xvar _Days></select>
+</td><td>
+<select name=Host onchange="ChangeSelection()"><xvar _Hosts></select>
+</td><td>
+<select name=Process onchange="ChangeSelection()"><xvar _Processes></select>
+</td><td align=right>
+<input type=button value=Export onclick="ExportLogs()">&nbsp;
+</td>
+</tr>
+</table>
+
+
+
+</td></tr>
+</table>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,37 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+DESCRIPTION="$2"
+TTY="$3"
+APN="$4"
+DIAL="$5"
+OPTIONAL="$6"
+DEFAULTROUTE="$7"
+AUTO="$8"
+NAT="$9"
+
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+PPPDIR="$CONFIG/$NAME"
+echo "$DESCRIPTION" > $PPPDIR/Description
+echo "$TTY" > $PPPDIR/TTY
+echo "$APN" > $PPPDIR/APN
+echo "$DIAL" > $PPPDIR/Dial
+echo "$OPTIONAL" > $PPPDIR/Optional
+echo "$DEFAULTROUTE" > $PPPDIR/DEFAULTROUTE
+echo "$AUTO" > $PPPDIR/Auto
+if [ "$NAT" == yes ] ; then
+  mkdir -p $PPPDIR/NAT/Masquerade
+  iptables -t nat -D POSTROUTING -o $NAME -j MASQUERADE 2> /dev/null
+  iptables -t nat -A POSTROUTING -o $NAME -j MASQUERADE
+else
+  rm -rf $PPPDIR/NAT/Masquerade
+  iptables -t nat -D POSTROUTING -o $NAME -j MASQUERADE 2>/dev/null
+fi
+if ps -ef |grep 3Gconnect |grep -q $NAME || [ "$AUTO" == yes ] ; then
+  $SCRIPTS/3Gconnect_stop $NAME
+  $SCRIPTS/3Gconnect $NAME &
+fi
+
+

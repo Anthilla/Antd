@@ -29,6 +29,7 @@
 
 using System.Diagnostics;
 using System.Net.Sockets;
+using antdlib.common;
 using antdlib.Websocket.WebSocketProtocol;
 
 namespace antdlib.Websocket.Client {

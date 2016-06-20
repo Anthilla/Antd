@@ -32,35 +32,23 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib;
-using antdlib.CCTable;
+using antdlib.common;
 using antdlib.Certificate;
-using antdlib.Config;
-using antdlib.Firewall;
 using antdlib.Info;
 using antdlib.Log;
-using antdlib.MountPoint;
-using antdlib.Network;
-using antdlib.Scheduler;
 using antdlib.Status;
-using antdlib.Storage;
-using antdlib.Terminal;
-using antdlib.Users;
+using Antd.Database;
+using Antd.Svcs.Dhcp;
+using Nancy;
 using Nancy.Security;
-using antdlib.Vnc;
-using antdlib.Zfs;
 
 namespace Antd.Modules {
     public class HomeModule : CoreModule {
-        private const string CctableContextName = "system";
+
+        private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
 
         public HomeModule() {
             this.RequiresAuthentication();
-            Before += x => {
-                if (CCTableRepository.GetByContext(CctableContextName) == null) {
-                    CCTableRepository.CreateTable("System Configuration", "4", CctableContextName);
-                }
-                return null;
-            };
 
             Get["/"] = x => {
                 dynamic viewModel = new ExpandoObject();
@@ -76,7 +64,6 @@ namespace Antd.Modules {
                     "Acl",
                     "Cron",
                     "Storage",
-                    "Zfs",
                     "VM",
                     "Mount",
                     "Rsync",
@@ -85,61 +72,46 @@ namespace Antd.Modules {
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
-                if (SystemInfo.Get() == null) {
-                    viewModel.VersionOS = "";
-                    viewModel.VersionAOS = "";
-                }
-                else {
-                    viewModel.VersionOS = SystemInfo.Get().VersionOs;
-                    viewModel.VersionAOS = SystemInfo.Get().VersionAos;
-                }
+                var os = Terminal.Execute("uname -a");
+                var aos = Terminal.Execute("cat /etc/aos-release");
+
+                viewModel.VersionOS = os;
+                viewModel.VersionAOS = aos;
 
                 viewModel.ActiveKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.RecoveryKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.ActiveSystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.RecoverySystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.Cpuinfo = Cpuinfo.Get();
-                viewModel.NetworkPhysicalIf = NetworkInterface.Physical;
-                viewModel.NetworkVirtualIf = NetworkInterface.Virtual;
-                viewModel.NetworkBondIf = NetworkInterface.Bond;
-                viewModel.NetworkBridgeIf = NetworkInterface.Bridge;
-                viewModel.FirewallCommands = NfTables.GetNftCommandsBundle();
-                viewModel.FirewallMacAddressEnabled = MacAddressDiscovery.GetEnabled();
-                viewModel.FirewallMacAddressDisabled = MacAddressDiscovery.GetDisabled();
-                viewModel.FirewallMacAddressNew = MacAddressDiscovery.GetNew();
-                viewModel.DhcpdStatus = antdlib.Svcs.Dhcp.DhcpConfig.IsActive;
-                var dhcpdModel = antdlib.Svcs.Dhcp.DhcpConfig.MapFile.Get();
-                if (dhcpdModel != null) {
-                    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
-                    viewModel.DhcpdGetPrefix6 = dhcpdModel.DhcpPrefix6;
-                    viewModel.DhcpdGetRange = dhcpdModel.DhcpRange;
-                    viewModel.DhcpdGetRange6 = dhcpdModel.DhcpRange6;
-                    viewModel.DhcpdGetKeys = dhcpdModel.DhcpKey;
-                    viewModel.DhcpdGetSubnet = dhcpdModel.DhcpSubnet;
-                    viewModel.DhcpdGetSubnet6 = dhcpdModel.DhcpSubnet6;
-                    viewModel.DhcpdGetHost = dhcpdModel.DhcpHost;
-                    viewModel.DhcpdGetFailover = dhcpdModel.DhcpFailover;
-                    viewModel.DhcpdGetSharedNetwork = dhcpdModel.DhcpSharedNetwork;
-                    viewModel.DhcpdGetGroup = dhcpdModel.DhcpGroup;
-                    viewModel.DhcpdGetClass = dhcpdModel.DhcpClass;
-                    viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
-                    viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
-                }
-                //viewModel.SambaStatus = antdlib.Svcs.Samba.SambaConfig.IsActive;
-                //viewModel.SambaStructure = antdlib.Svcs.Samba.SambaConfig.SimpleStructure;
-                //var sambaModel = antdlib.Svcs.Samba.SambaConfig.MapFile.Get();
-                //if (sambaModel != null) {
-                //    viewModel.SambaGetData = sambaModel.Data;
-                //    viewModel.SambaGetShare = sambaModel.Share;
+                viewModel.NetworkPhysicalIf = new NetworkInterfaceRepository().Physical();
+                viewModel.NetworkVirtualIf = new NetworkInterfaceRepository().Virtual();
+                viewModel.NetworkBondIf = new NetworkInterfaceRepository().Bond();
+                viewModel.NetworkBridgeIf = new NetworkInterfaceRepository().Bridge();
+                viewModel.FirewallCommands = new FirewallListRepository().GetAll();
+                viewModel.DhcpdStatus = DhcpConfig.IsActive;
+                //var dhcpdModel = DhcpConfig.MapFile.Get();
+                //if (dhcpdModel != null) {
+                //    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
+                //    viewModel.DhcpdGetPrefix6 = dhcpdModel.DhcpPrefix6;
+                //    viewModel.DhcpdGetRange = dhcpdModel.DhcpRange;
+                //    viewModel.DhcpdGetRange6 = dhcpdModel.DhcpRange6;
+                //    viewModel.DhcpdGetKeys = dhcpdModel.DhcpKey;
+                //    viewModel.DhcpdGetSubnet = dhcpdModel.DhcpSubnet;
+                //    viewModel.DhcpdGetSubnet6 = dhcpdModel.DhcpSubnet6;
+                //    viewModel.DhcpdGetHost = dhcpdModel.DhcpHost;
+                //    viewModel.DhcpdGetFailover = dhcpdModel.DhcpFailover;
+                //    viewModel.DhcpdGetSharedNetwork = dhcpdModel.DhcpSharedNetwork;
+                //    viewModel.DhcpdGetGroup = dhcpdModel.DhcpGroup;
+                //    viewModel.DhcpdGetClass = dhcpdModel.DhcpClass;
+                //    viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
+                //    viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
                 //}
-                viewModel.Mounts = MountRepository.Get();
 
-                viewModel.Jobs = JobRepository.GetAll();
+                viewModel.Mounts = new MountRepository().GetAll();
 
-                viewModel.Zpool = ZpoolManagement.GetZpoolInfo();
-                viewModel.Zdataset = ZpoolManagement.GetDatasetInfo();
+                viewModel.Jobs = new JobRepository().GetAll();
 
-                viewModel.RsyncDirectories = Rsync.GetAll();
+                viewModel.RsyncDirectories = new RsyncRepository().GetAll();
                 viewModel.RsyncOptions = new List<Tuple<string, string>> {
                     new Tuple<string, string>("--checksum", "skip based on checksum"),
                     new Tuple<string, string>("--archive", "archive mode"),
@@ -160,18 +132,12 @@ namespace Antd.Modules {
                     new Tuple<string, string>("--group", "preserve group"),
                     new Tuple<string, string>("--times", "preserve modification times")
                 };
-                viewModel.UserEntities = UserEntity.Repository.GetAll();
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
 
                 //todo check next parameters
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
 
-                viewModel.CCTableContext = CctableContextName;
-                var table = CCTableRepository.GetByContext2(CctableContextName);
-                viewModel.CommandDirect = table.Content.Where(_ => _.CommandType == CCTableCommandType.Direct);
-                viewModel.CommandText = table.Content.Where(_ => _.CommandType == CCTableCommandType.TextInput);
-                viewModel.CommandBool = table.Content.Where(_ => _.CommandType == CCTableCommandType.BooleanPair);
                 return View["antd/page-antd", viewModel];
             };
 
@@ -183,7 +149,7 @@ namespace Antd.Modules {
                     "LogReport",
                 };
 
-                viewModel.LOGS = Logger.GetAll();
+                viewModel.Logs = ConsoleLogger.GetAll();
                 viewModel.LogReports = Journalctl.Report.Get();
                 return View["antd/page-log", viewModel];
             };
@@ -206,29 +172,29 @@ namespace Antd.Modules {
                     viewModel.CaStatus = "Disabled";
                 }
                 viewModel.CaIsActive = CertificateAuthority.IsActive;
-                viewModel.Certificates = CertificateRepository.GetAll();
+                //viewModel.Certificates = CertificateRepository.GetAll();
 
                 return View["antd/page-ca", viewModel];
             };
 
             Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.ValueBundle = ConfigManagement.GetValuesBundle();
-                vmod.EnabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled).OrderBy(_ => _.Index);
-                vmod.DisabledCommandBundle = ConfigManagement.GetCommandsBundle().Where(_ => _.IsEnabled == false).OrderBy(_ => _.Index);
+                var values = _commandRepositoryRepo.GetAll().ToList();
+                vmod.ValueBundle = values;
+                vmod.EnabledCommandBundle = values.Where(_ => _.IsEnabled == true);
+                vmod.DisabledCommandBundle = values.Where(_ => _.IsEnabled == false);
                 return View["antd/page-cfg", vmod];
             };
 
             Get["/vnc"] = x => {
                 dynamic vmod = new ExpandoObject();
-                var userGuid = Request.Cookies.FirstOrDefault(_ => _.Key == "antd-session").Value;
-                if (!string.IsNullOrEmpty(userGuid)) {
-                    vmod.Connections = VncManagement.GetQueryStrings(userGuid);
-                }
-                else {
-                    vmod.Connections = new Dictionary<string, string>();
-                }
+                vmod.Connections = new Dictionary<string, string>();
                 return View["antd/page-vnc", vmod];
+            };
+
+            Post["/network/import/if"] = x => {
+                new NetworkInterfaceRepository().Import();
+                return HttpStatusCode.OK;
             };
         }
     }

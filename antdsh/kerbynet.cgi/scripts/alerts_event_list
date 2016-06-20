@@ -1,0 +1,37 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+NAME="$1"
+DIR="$REGISTER/system/alerts/"
+ALERTSEQ=/tmp/AlertSeq
+echo > $ALERTSEQ
+cd "$DIR/Events"
+EVENTS=`ls -d * 2>/dev/null`
+if [ -n "$EVENTS" ] ; then
+  for E in $EVENTS ; do
+    DESC="`cat $E/Description`"
+    SEVERITY="`cat $E/Severity`"
+    SUBSYSTEM="`cat $E/Subsystem`"
+    ENABLED="`cat $E/Enabled`"
+    if [ "$ENABLED" == yes ] ; then
+       CHECKED=checked
+    else
+       CHECKED=""
+    fi
+    if [ "$E" == "$NAME" ] ; then
+      CHK=checked
+    else
+      CHK=""
+    fi
+    if [ "`cat $E/State/Status 2>/dev/null`" = ALERT ] ; then
+      STYLE="style='background-color:#ffd0d0'"
+      ANCHOR='<a name=ALERT></a>'
+      echo -n $E >> $ALERTSEQ
+    else
+      STYLE=""
+      ANCHOR=""
+    fi
+    echo "<tr $STYLE><td width=1% nowrap align=center><input type=radio name='Events' value='$E' $CHK>&nbsp;</td><td nowrap>&nbsp;&nbsp;<a name=ALERT></a><a href=#$E onclick=\"OpenEvent('$E')\"><font class=Smaller1>$E</font></a>&nbsp;&nbsp;</td><td nowrap class=Smaller1>&nbsp;&nbsp;$DESC</td><td nowrap align=center class=Smaller1>&nbsp;&nbsp;$SUBSYSTEM&nbsp;&nbsp;</td><td align=center class=Smaller1>&nbsp;&nbsp;$SEVERITY&nbsp;&nbsp;</td><td width=1% align=center><input type=checkbox name=Enabled_$E value=yes $CHECKED onclick='ChangeStatus(this)'></td></tr>"
+  done
+fi
+
+

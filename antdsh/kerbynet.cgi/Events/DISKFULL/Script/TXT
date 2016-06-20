@@ -1,0 +1,34 @@
+# ALERT CONDITION: Profile Partition Usage % > LIMIT
+
+LIMIT=87
+
+USAGE=$(DISKSPACE USAGE)
+TOTAL=$(DISKSPACE TOTAL) 
+FREE=$(DISKSPACE FREE)
+
+function REPORT {
+  VIEWER "Partition Size: $TOTAL   Free: $FREE ($USAGE%)  Limit: $LIMIT%"
+  MAIL "Partition Size: $TOTAL"
+  MAIL "Free: $FREE ($USAGE%)"
+  MAIL "Limit: $LIMIT%"
+  SMS "Partition Size: $TOTAL"
+  SMS "Free: $FREE ($USAGE%)"
+  SMS "Limit: $LIMIT%"
+}
+
+[ -z "$USAGE" ] && USAGE=0
+if IS_ALERT ; then
+  if [ $USAGE -lt $((LIMIT-2)) ] ; then
+    RECOVERED
+    REPORT
+  else
+    CANCEL
+  fi
+else
+  if [ $USAGE -gt $LIMIT ] ; then
+    ALERT
+    REPORT
+  else
+    CANCEL
+  fi
+fi

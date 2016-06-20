@@ -29,8 +29,7 @@
 
 using System.Dynamic;
 using antdlib.Apps;
-using antdlib.Log;
-using antdlib.Terminal;
+using antdlib.common;
 using Nancy;
 using Nancy.Security;
 
@@ -58,12 +57,12 @@ namespace Antd.Modules {
             //        AnthillaSp.CreateUnits();
             //    }
             //    AnthillaSp.Start();
-            //    return Response.AsJson(true);
+            //    return HttpStatusCode.OK;
             //};
 
             Get["/apps/apply/anthillasp"] = x => {
                 AnthillaSp.Start();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Get["/apps/Launch"] = x => {
@@ -78,7 +77,7 @@ namespace Antd.Modules {
                 ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
                 //AnthillaSp.CreateUnits();
                 AnthillaSp.Start();
-                return Response.AsJson(true);
+                return HttpStatusCode.OK;
             };
 
             Post["/apps/start/sp"] = x => {

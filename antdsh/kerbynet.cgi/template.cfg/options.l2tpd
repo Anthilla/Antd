@@ -1,0 +1,12 @@
+/etc/ppp/options.l2tpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+192.168.141.142:
+lcp-echo-interval 15
+lcp-echo-failure 3
+ms-dns 192.168.141.142
+plugin radius.so
+#mtu 1200
+#mru 1200

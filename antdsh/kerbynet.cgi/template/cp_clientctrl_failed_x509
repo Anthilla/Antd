@@ -1,0 +1,90 @@
+<html>
+<head>
+<style type="text/css">
+<!--
+body,td,th,tr,table,font,p,div,span {
+ font-family: verdana,sans-serif ;
+ font-size: 12px ;
+}
+body.Smaller1,td.Smaller1,th.Smaller1,tr.Smaller1,table.Smaller1,font.Smaller1,p.Smaller1,div.Smaller1,span.Smaller1 {
+  font-size: 10px ;
+}
+body.Smaller2,td.Smaller2,th.Smaller2,tr.Smaller2,table.Smaller2,font.Smaller2,p.Smaller2,div.Smaller2,span.Smaller2 {
+  font-size: 9px ;
+}
+body.Bigger1,td.Bigger1,th.Bigger1,tr.Bigger1,table.Bigger1,font.Bigger1,p.Bigger1,div.Bigger1,span.Bigger1 {
+  font-size: 14px ;
+}
+body.Bigger2,td.Bigger2,th.Bigger2,tr.Bigger2,table.Bigger2,font.Bigger2,p.Bigger2,div.Bigger2,span.Bigger2 {
+  font-size: 16px ;
+}
+input[type=text],select,input[type=password],input[type=file] {
+  border-style: solid;
+  border-color: #6060ff;
+  border-width: 1px;
+}
+input[type=button],input[type=submit],input[type=reset] {
+  color: #0000d0;
+}
+-->
+</style>
+<title><xvar +cp_msg NetworkAccess></title>
+<script>
+function SiteRedirect() {
+  R="<xvar _ZSCPRedirect>"
+  if (R.indexOf(":::")>0) {
+    R=R.substr(R.indexOf(":::")+3)
+  }
+  var WO=window.opener
+  if (WO==null) {
+    location=R;
+  } else {
+    if (navigator.userAgent.indexOf("MSIE")<0) {
+        WO.location=R
+    }
+  }
+}
+function loaded() {
+  setTimeout("SiteRedirect()",60000);
+  window.focus();
+}
+function CloseW() {
+  if ("<xvar _MainFocus>"=="yes") {
+    var WO=window.opener
+    if (WO!=null) {
+      WO.document.data.U.select();
+      WO.document.data.U.focus();
+    }
+  }
+  window.close();
+}
+function ShowInfo() {
+   var newwin=window.open("zscp?Section=CPAuth&Action=ShowInfo&Type=Account","ShowInfo","top=200,left=300,width=550,height=400,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+</script>
+</head>
+<body onload="loaded()" style="color: #404040" topmargin=0>
+<form name=data method=post action="/cgi-bin/zscp">
+<input type=hidden name=Section value="CPGW">
+<input type=hidden name=Action value="Disconnect">
+<input type=hidden name=U value="<xvar _U>">
+<input type=hidden name=Realm value="<xvar _Realm>">
+<input type=hidden name=IP value="<xvar _IP>">
+<input type=hidden name=Authenticator value="<xvar _Authenticator>">
+<input type=hidden name=Powered value="<xvar _Powered>">
+<hr color=#6060ff>
+<table width=100% cellpadding=0 cellspacing=0 bgcolor=#6060ff><tr>
+<td><font class=Bigger2 Color=#ffffff>&nbsp;<b><xvar +cp_msg NetworkAccess></b></font></td>
+<td align=right><input type=button value="Retry" onclick="SiteRedirect()" style="font-size: 10;">&nbsp;</td>
+</tr></table>
+<hr color=#6060ff>
+<font class=Bigger1 color=#f00000><b><xvar +cp_msg AccessDenied></b></font><br>
+<br>
+<font class=Smaller1><i><xvar _msg></i><br><xvar _link></font>
+<br><br>
+<hr color=#6060ff>
+<table width=100% cellpadding=0 cellspacing=0><tr><td bgcolor=#6060ff><hr></td><td align=right nowrap width=10%><font class=Smaller1 color=#0000a0>&nbsp;&nbsp;&nbsp;&nbsp;<b><script>document.write(document.data.Powered.value);</script></b>&nbsp;&nbsp;</font></td></tr></table>
+</form>
+</body>
+</html>

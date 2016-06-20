@@ -1,0 +1,50 @@
+# ALERT CONDITION: STATUS = DOWN
+
+BOND=$2
+MEMBER=$3
+STATUS=$4
+
+function REPORT {
+  echo "$BOND: $MEMBER is $STATUS" | VIEWER
+  echo "$BOND"                     | MAIL
+  echo "$MEMBER is $STATUS"        | MAIL
+  echo "$BOND"                     | SMS
+  echo "$MEMBER is $STATUS"        | SMS
+}
+
+if ! SYSTEM_STARTED ; then
+  sleep 75.23
+fi
+sleep 13.13
+if [ "$STATUS" = DOWN ] ; then
+   if BOND_STATUS $BOND $MEMBER ; then
+     CANCEL
+     exit
+   fi
+else
+   if ! BOND_STATUS $BOND $MEMBER ; then
+     CANCEL
+     exit
+   fi
+fi  
+
+if [ -f "$STATEDIR/Faults/${BOND}_${MEMBER}" ] ; then
+  if [ "$STATUS" = UP ] ; then
+    rm "$STATEDIR/Faults/${BOND}_${MEMBER}"
+    if ! ls $STATEDIR/Faults/* 2>/dev/null >/dev/null ; then
+      RECOVERED
+    fi
+    REPORT
+  else
+    CANCEL
+  fi
+else
+  if [ "$STATUS" = DOWN ] ; then
+    ALERT
+    mkdir -p $STATEDIR/Faults
+    touch "$STATEDIR/Faults/${BOND}_${MEMBER}"
+    REPORT
+  else
+    CANCEL
+  fi
+fi

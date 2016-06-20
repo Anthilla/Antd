@@ -1,0 +1,23 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+OPT="$2"
+TYPE=`echo "$ID" |awk -F: '{print $2}'`
+ID=`echo "$ID" |awk -F: '{print $1}'`
+if [ "$TYPE" = Release ] ; then
+  echo
+else
+  SIZE=`$SCRIPTS/autoupdateGetField "$ID" SIZE`
+  FREEM=`df |grep /Database |awk '{printf "%d",$4/1024}'`
+  if [ $SIZE -le $FREEM ] ; then
+    COLOR="#30C030"
+  else
+    COLOR="#F03030"
+  fi 
+  if [ "$OPT" = FREE ] ; then
+    echo "Size: <b><font color=$COLOR>$SIZE MB</font></b> (Free $FREEM MB)"
+  else
+    echo "Size: <b><font color=$COLOR>$SIZE MB</font></b>"
+  fi
+fi
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+WHAT="$1"
+[ -z "$WHAT" ] && WHAT=USAGE
+case "$WHAT"  in
+  FREE) 
+    df  -h|grep /DB$|awk '{print $4}'|sed -r 's/(.+)%/\1/'
+    ;;
+  USAGE)
+    df -h|grep /DB$|awk '{print $5}'|sed -r 's/(.+)%/\1/'
+    ;;
+  TOTAL)
+    df -h|grep /DB$|awk '{print $2}'|sed -r 's/(.+)%/\1/'
+    ;;
+  USED)
+    df -h|grep /DB$|awk '{print $3}'|sed -r 's/(.+)%/\1/'
+    ;;
+esac

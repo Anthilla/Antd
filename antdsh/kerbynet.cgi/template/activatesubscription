@@ -1,0 +1,52 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Activate Subscription</title>
+<script>
+var Feature;
+function loaded() {
+  X=document.data;
+  Feature=X.Feature.value;
+  printNotes();
+  X.Key.focus();
+   
+}
+function ActivateSubmit() {
+  X=document.data;
+  if (Feature!=X.Feature.value) {
+    X.Feature.value=Feature;
+  }
+  X.Key.value=X.Key.value.toLowerCase();
+  if (!X.Key.value.match(/^[0123456789abcdef]{32}$/) && !X.Key.value.match(/^[0123456789abcdef]{40}$/)) {
+    alert("Invalid Key !!!");
+    X.Key.focus();
+    X.Key.select();
+    return;
+  }
+  location="kerbynet?STk=<xvar STk>&Action=Render&Object=activatesubscription_confirm&Feature="+X.Feature.value+"&Key="+X.Key.value;
+
+}
+function printNotes() {
+  MSG="<xvar !activation_msg (PRE) (NET)>";
+  document.getElementById("Msg").innerHTML=MSG; 
+}
+</script>
+<body style="color: #404080" onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='Feature'>
+<input type=hidden name=Action value=''><input type=hidden name=STk value=<xvar STk>>
+
+<table width=100%>
+<tr><td><font color=#3030f0 class=Bigger1><b>Subscription Activation</b></font></td><td align=right><input type=button value=Activate onclick="ActivateSubmit()"></td></tr>
+<tr><td>
+<br>
+<table width=100%>
+<tr><td width=25%>Feature Code</td><td><input type=text name=Feature size=16 maxlength=14 value="<xvar +getfeature (PRE) (NET)>"</td></tr>
+<tr><td> Activation Key (*)</td><td><input type=text name=Key value="<xvar Key>" size=42 maxlength=40></td></tr>
+</table>
+</td></tr>
+</table>
+<br>
+&nbsp;<span id=Msg></span>
+</form>
+</body>
+</html>

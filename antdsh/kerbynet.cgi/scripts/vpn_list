@@ -1,0 +1,68 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+STk="`rand``cat /tmp/STk_Admin 2>/dev/null`"
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES=`ls -d VPN[0123456789][0123456789] 2>/dev/null`
+cat << EOF
+<html><head><link rel=stylesheet type=text/css href=/default.css><title>VPN List</title>
+<script>
+function Create() {
+   var newwin=window.open("kerbynet?Section=VPN&STk=$STk&Action=Create","VPNConfig","top=100,left=150,width=900,height=530,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+</script>
+</head><body>
+<table width=100% border=1><tr>
+<td><font color=#3030f0 class=Bigger1><b>&nbsp;&nbsp;&nbsp;OpenVPN Virtual Private Network LAN to LAN</b></font></td>
+<td width=10% nowrap><input type=button value='New VPN' onclick='Create()'><input type=button value='Refresh List' onclick='location.reload(true)'></td>
+</tr></table>
+<table width=100%>
+EOF
+if ! [ -z "$INTERFACES" ] ; then
+  for i in $INTERFACES ; do
+     echo "<tr><td><hr>"
+     echo "<iframe width=100% border=0 frameborder=0 src='kerbynet?Section=Network&STk=$STk&Action=ShowInterface&Interface=$i'>Browser not compatible</iframe>"
+     echo "</td></tr>"
+  done
+else
+  echo "<br><font class=Bigger1 color=#F00000>&nbsp;&nbsp;&nbsp;No VPN found.</font>"  
+
+fi
+echo "</table>"
+cat << EOF
+<hr>
+<br>
+<span style="font-weight: 700; background-color: #3030f0"><font face="Arial" size="2" color="#FFFFFF">&nbsp;OpenVPN Software&nbsp;</font></span>
+<br>
+<font face=Arial class=Smaller1 color="#505050">
+</p><p>Zeroshell uses OpenVPN to encapsulate Ethernet datagrams in TLS
+tunnels authenticated via X.509 certificates on both endpoints as a
+solution to the site-to-site VPNs. This non-standardized solution
+requires the use of a Zeroshell box in both LANs or another system
+using the OpenVPN. This type of LAN-to-LAN VPN has been chosen
+because it has the following advantages:
+</p><ul>
+<li>By creating an Ethernet (Layer 2) connection between the two LANs,
+in addition to routing, bridging of the networks is made possible
+guaranteeing the passage of any layer 3 protocol (IP, IPX, Apple Talk);
+</li><li>The 802.1Q VLAN protocol is supported. This means that if a
+network is broken into Virtual LANs, the latter can also be transported
+on the peer network with a single VPN tunnel;
+</li><li>Bonding of two or more VPNs is supported in load balancing or
+fault tolerance configuration. This means, for example, that if there
+are two or more ADSL connections, a VPN can be created for each
+connection and they can be combined increasing the bandwidth or reliability
+</li><li>Thanks to the LZO real-time compression algorithm, data is
+compressed in an adaptive manner. In other words, compression only
+occurs when the data on the VPN really can be compressed;
+</li><li>The use of TLS tunnels on TCP or UDP ports makes it possible to transit the router where the NAT is enabled without problems. 
+</li></ul>
+<br><hr>
+EOF
+echo "</body></html>"
+
+
+
+

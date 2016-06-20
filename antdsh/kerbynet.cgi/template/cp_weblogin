@@ -1,0 +1,285 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>WebLogin</title>
+<script>
+<xinclude ip_utility.inc>
+var  TPL="<xvar /system/cp/Auth/Template/Template>";
+function ImageLoad() {
+  var newwin=window.open("kerbynet?Section=CP&STk=<xvar STk>&Action=ImageLoad","ImageLoad","top=200,left=300,width=500,height=475,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function WLPreview() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=cp_showauth_"+TPL+"&ThisIsAPreview=yes","WLPreview","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function Template() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=cp_template","WLTemplate","top=50,left=80,width=870,height=700,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function SetInfo() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=cp_setinfo","SetInfo","top=150,left=150,width=600,height=450,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function SetMod_Shib() {
+   var newwin=window.open("kerbynet?STk=<xvar STk>&Action=Render&Object=cp_mod_shib&Ext=.xml","ModShib","top=100,left=150,width=800,height=560,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+
+function cpLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=CaptivePortal","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function loaded() {
+  X=document.data;
+  if ("<xvar _Enabled>"=="yes") {
+     X.Enabled.checked=true;
+  }
+  RadiusReq="<xvar /system/cp/Auth/RadiusReq>";
+  if (RadiusReq=="") {
+    RadiusReq="PAP";
+  }
+  X.RadiusReq.value=RadiusReq;
+  if ("<xvar /system/cp/Auth/AutoTrust>"=="yes") {
+     X.AutoTrust.checked=true;
+  }
+  if ("<xvar /system/cp/Auth/AutoProxy>"=="yes") {
+     X.AutoProxy.checked=true;
+  }
+  if ("<xvar /system/cp/Auth/RedirectionMode>"!="") {
+     X.RedirectionMode.value="<xvar /system/cp/Auth/RedirectionMode>";
+  } else {
+     X.RedirectionMode.value="Requested";
+  }
+  if ("<xvar /system/cp/Auth/Shibboleth/Enabled>"=="yes") {
+     X.ShibStatus.value="yes";
+  } else {
+     X.ShibStatus.value="no";
+  }
+  if ("<xvar /system/cp/Auth/Shibboleth/Mode>"=="Auto") {
+     X.ShibMode.value="Auto";
+  } else {
+     X.ShibMode.value="OnDemand";
+  }
+  changedRedirection();
+}
+function EnabledCP() {
+  if (!CheckEnabled()) return;
+  X=document.data;
+  document.data.Reload.value="yes";
+  SaveMsg();
+}
+function CheckEnabled () {
+  X=document.data;
+  if ("<xvar /system/cp/Enabled>"=="yes" && !X.Enabled.checked && "<xvar /system/cp/WebLogin>"!="Remote") {
+    alert("You cannot disable the authentication server because the captive gateway is enabled in local authentication mode.");
+    X.Enabled.checked=true;
+    return false;
+  }
+  return true;
+}
+function SetFQDN() {
+  X=document.data;
+  EID=X.ShibEntityID.value;
+  EID=EID.replace(/.*:\/\//,"");
+  EID=EID.replace(/:12081.*/,"");
+  X.ShibFQDN.value=EID;
+
+}
+function savedata(obj) {
+   X=document.data;
+   X.TargetURL.disabled=false;
+   CheckEnabled();
+   X.NetDescription.value=X.NetDescription.value.replace(/\"/g,"&quot;");
+   X.Powered.value=X.Powered.value.replace(/\"/g,"&quot;");
+   if (X.RedirectionMode.value=="Target" && X.TargetURL.value=="") {
+     alert("Target URL cannot be empty");
+     X.TargetURL.focus();
+     return false;
+   }
+   if (X.ShibEntityID.value.indexOf("://")<0) {
+     alert("Service Provider EntityID is not valid. It should begin with https://");
+     X.ShibEntityID.focus();
+     X.ShibEntityID.select();
+     return false;
+   }
+   if (X.ShibEntityID.value.indexOf(":12081")<0) {
+     alert("Service Provider EntityID is not valid. It should include the port 12081");
+     X.ShibEntityID.focus();
+     X.ShibEntityID.select();
+     return false;
+   }
+   SetFQDN();
+   SavingMsg();
+   x509frame.Save();
+   return true;
+}
+function SavingMsg () {
+   X=document.data;
+   X.save.disabled=true;
+   document.getElementById('savetab').innerHTML="<font color=#0000FF>Saving....&nbsp;&nbsp;&nbsp;</font>";
+}
+function SaveMsg () {
+   X=document.data;
+   X.save.disabled=false;
+   if (document.getElementById('savetab').innerHTML.indexOf("Saving")<0) {
+      document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+   }
+}
+function changed() {
+  SaveMsg();
+}
+function changedRedirection() {
+   X=document.data;
+   if (X.RedirectionMode.value=="Requested") {
+     X.TargetURL.disabled=true;
+   } else {
+     X.TargetURL.disabled=false;
+   }
+}
+function changedTargetURL() {
+  X=document.data;
+  X.TargetURL.value=X.TargetURL.value.replace(/ /g,""); 
+  if (X.TargetURL.value.indexOf("://")<0 && X.TargetURL.value!="") {
+    X.TargetURL.value="http://"+X.TargetURL.value;    
+  }
+  changed();
+}
+function changed_reload() {
+  document.data.Reload.value="yes";
+  changed();
+}
+function  ProxyRadius() {
+  var newwin=window.open("kerbynet?Section=Radius&STk=<xvar STk>&Action=Proxy","ProxyRadius","top=70,left=70,width=950,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function AddDomain() {
+  var newwin=window.open("kerbynet?Section=CP&STk=<xvar STk>&Action=AddDomain","cpDomain","top=250,left=250,width=600,height=380,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function RemoveDomain() {
+  X=Domains.document.data;
+  Selected=false;
+  if (X.Sel==undefined) {
+    alert("No domain to remove");
+    return;
+  }
+  if (X.Sel.length==undefined) {
+    if (X.Sel.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.Sel.length; s++) {
+      if (X.Sel[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a domain to remove.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected authorized domain?")) {
+    X.Action.value="RemoveDomain"; 
+    X.submit();
+  }
+}
+function DefaultDomain() {
+  X=Domains.document.data;
+  Selected=false;
+  if (X.Sel==undefined) {
+    alert("No domain available.");
+    return;
+  }
+  if (X.Sel.length==undefined) {
+    if (X.Sel.checked) {
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.Sel.length; s++) {
+      if (X.Sel[s].checked) {
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a domain.");
+    return;
+  }
+  if (confirm("Are you sure you want the selected domain is the default domain?")) {
+    X.Action.value="DefaultDomain"; 
+    X.submit();
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="CP">
+<input type=hidden name=Action value="SaveWebLogin"><input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Reload value="no">
+<input type=hidden name=Secret value="<xvar _Secret>">
+<input type=hidden name=HTTPPT value="<xvar /system/cp/Auth/Port>">
+<input type=hidden name=HTTPSPT value="<xvar /system/cp/Auth/PortSSL>">
+<input type=hidden name=ShibFQDN value="">
+<table width="100%" border=1>
+<tr><td><font class=Bigger1 color=#3030E0><b>&nbsp;&nbsp;Web Login Authentication Server</b></font></td><td width="1%" nowrap><b><font color=#808080>&nbsp;<input type=checkbox name=Enabled value=yes onclick="EnabledCP()">&nbsp;Status: <xvar +cp_auth_status></font>&nbsp;&nbsp;</td><td align="right" nowrap style="color: #303030" width=150><span id=savetab></span></td>
+<td width=1% nowrap align=right>&nbsp;<input type=button Name=save value="Save" onclick="savedata(this)">&nbsp;<input type=button value="Show Log" onclick="cpLOG()">&nbsp;</td></tr>
+</table>
+<br>
+<table width=100% border=1 cellspacing=1 cellpadding=2>
+<tr>
+<td valign=top>
+   <table width=100% cellspacing=0 cellpadding=0><tr>
+   <td>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Web Login Page Customization&nbsp;</font></span>
+   </td><td align=right>
+<input type=button value="Preview" style="font-size: 10;" onclick="WLPreview()">    
+   </td>
+   </tr></table>
+  <table border=1 width=100% cellspacing=0 cellpadding=2 bordercolor=#4040d0><tr><td style="color: #606060">
+  &nbsp;Network Title <font class=Smaller1>&nbsp;&nbsp;(html tags are allowed)</font><br>
+  &nbsp;<input type=text name=NetDescription size=70 value="<xvar /system/cp/Auth/Custom/NetDescription>" onchange="changed()"><br>
+  &nbsp;Powered by<br>
+  &nbsp;<input type=text name=Powered size=55 value="<xvar /system/cp/Auth/Custom/Powered>" onchange="changed()">&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Image" style="font-size: 10;" onclick="ImageLoad()">&nbsp;<input type=button value="Info" style="font-size: 10;" onclick="SetInfo()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value="Template" style="font-size: 10;" onclick="Template()">
+  </td></tr></table>
+<br>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Page Redirection&nbsp;</font></span>
+  <table border=1 width=100% cellspacing=0 cellpadding=2 bordercolor=#4040d0><tr><td>
+      <table width=100% style="color: #606060">
+      <tr><td nowrap>&nbsp;Redirection Mode</td><td><select name=RedirectionMode onchange="changedRedirection();changed()"><option value="Requested">Redirect to original user requested URL</option><option value="Target">Redirect to Target URL</option></select></td></tr>
+      <tr><td nowrap>&nbsp;Target URL</td><td width=1%><input type=text name=TargetURL size=65 value="<xvar /system/cp/Auth/TargetURL>" onchange="changedTargetURL()"></td></tr>
+      </table>
+  </td></tr></table>
+<br>
+<iframe name=x509frame width=100% height=100 marginwidth=0 src="kerbynet?Section=CP&STk=<xvar STk>&Action=X509View" border=0 frameborder=0 scrolling=no>iframe not supported</iframe>
+<br><br>
+<table width=100%><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Shibboleth Authentication&nbsp;</font></span></td><td align=right><input type=button value="Config" style="font-size: 10;" onclick="SetMod_Shib()"></td></tr></table>
+  <table border=1 width=100% cellspacing=0 cellpadding=2 bordercolor=#4040d0><tr><td>
+      <table width=100% style="color: #606060">
+      <tr><td nowrap>&nbsp;Status</td><td><select name=ShibStatus onchange="changed_reload()"><option value="no">Disabled</option><option value="yes">Enabled</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ <xvar +shibd_status> ]</td><td align=right nowrap>Mode&nbsp;&nbsp;<select name=ShibMode onchange="changed_reload()"><option value=OnDemand>On Demand</option><option value=Auto>Auto</option></select></td></tr>
+      <tr><td nowrap>&nbsp;SP EntityID&nbsp;&nbsp;</td><td><input type=text name=ShibEntityID value="<xvar /system/cp/Auth/Shibboleth/EntityID>" size=45 onchange="changed_reload()"></td><td align=right wrap>Button&nbsp;&nbsp;<input type=text name=ShibButton size=17 value="<xvar /system/cp/Auth/Shibboleth/Button>" onchange="changed()"></td></tr>
+      </table>
+  </td></tr></table>
+</td>
+<td valign=top>
+           <table cellspacing=0 cellpadding=0 width=100%><tr>
+           <td nowrap>
+<span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;Authorized Domains&nbsp;&nbsp;</font></span>
+           </td><td align=right nowrap>
+<input type=button value="+" style="font-size: 10;" onclick="AddDomain()"><input type=button value="-" style="font-size: 10;" onclick="RemoveDomain()"><input type=button value="D" style="font-size: 10;" onclick="DefaultDomain()">&nbsp;<input type=button value="Proxy RADIUS" style="font-size: 10;" onclick="ProxyRadius()">
+           </td>
+           </tr></table>
+  <table border=1 width=100% height=385 cellspacing=0 bordercolor=#4040d0><tr><td valign=top nowrap style="color: #606060">
+<iframe name=Domains width=100% height=80% frameborder=0 scrolling=yes src="kerbynet?STk=<xvar STk>&Action=Render&Object=cpDomainList">IFRAME not sup
+ported</iframe><br>
+<hr>
+&nbsp;&nbsp;<font class=Smaller1>Default RADIUS Request</font>&nbsp;&nbsp;&nbsp;&nbsp;<select name=RadiusReq style="font-size: 8pt;" onchange="changed()"><option value='PAP'>PAP</option><option value='EAP-TTLS'>EAP-TTLS with PAP</option><option value='PEAP'>PEAP with MsCHAPv2</option></select><br>
+&nbsp;<input type=checkbox name=AutoProxy value=yes onchange="changed()"><font class=Smaller1><i>Automatically authorize any Proxied RADIUS Domain</i></font>
+<br>
+&nbsp;<input type=checkbox name=AutoTrust value=yes onchange="changed()"><font class=Smaller1><i>Automatically authorize any Trusted Kerberos 5 Realm</i></font>
+  </td></tr></table>
+</td>
+</tr>
+</table>
+</body>
+</html>

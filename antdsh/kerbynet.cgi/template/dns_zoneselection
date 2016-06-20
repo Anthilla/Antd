@@ -1,0 +1,69 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Zone Selection</title>
+<style type="text/css">
+<!--
+td {
+  color: #404040;
+}
+-->
+</style>
+<script language=Javascript>
+function loaded() {
+  //alert("OK")
+  parent.entry.location="kerbynet?Section=DNS&STk=<xvar STk>&Action=Edit&SelectedZone="+document.pick.SelectedZone.value+"&Entry=@";
+  top.body.list.location="/cgi-bin/kerbynet?Section=DNS&STk=<xvar STk>&Action=List&SelectedZone="+document.pick.SelectedZone.value;
+}
+function dnsLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=named","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function query() {
+   newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=Lookup&DNS=localhost", "dnsquery","top=200,left=150,width=800,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function requery() {
+   document.pick.Section.value="DNS";
+   document.pick.Action.value="ZoneSelection";
+   document.pick.submit();
+}
+function EnableDNS() {
+   document.pick.Section.value="DNS";
+   if (document.pick.EnabledDNS.checked) {
+     document.pick.Action.value="EnableDNS";
+   } else {
+     document.pick.Action.value="DisableDNS";    
+   }
+   document.pick.submit();
+}
+function CreateZone() {
+  newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=CreateZone","Zone","top=200,left=250,width=600,height=400,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function RemoveZone() {
+  if (confirm("Are you sure you want to remove the domain "+document.pick.SelectedZone.value+" from this DNS server?")) {
+    location="kerbynet?Section=DNS&STk=<xvar STk>&Action=RemoveZone&SelectedZone="+document.pick.SelectedZone.value;   
+  }
+
+}
+function SOA() {
+  if (document.pick.SelectedZone.value!="") {
+    newwin=open("kerbynet?Section=DNS&STk=<xvar STk>&Action=EditZone&SelectedZone="+document.pick.SelectedZone.value,"Zone","top=200,left=250,width=600,height=400,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+    newwin.focus();
+  } else {
+    alert("You should select a DNS domain.");
+  }
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=pick method=post action="kerbynet">
+<input type=hidden name=Section value="DNS">
+<input type=hidden name=Action value="ZoneSelection"><input type=hidden name=STk value=<xvar STk>>
+<table width="100%" border=1>
+<tr><td width="1%" bgcolor="#c0c0ff" nowrap id=NumEntries style="color: #ffffff;"><b>&nbsp;Entries found:&nbsp;&nbsp;&nbsp;&nbsp;</b></td><td align=right><b><font color=#808080>&nbsp;&nbsp;Status:&nbsp;&nbsp;&nbsp;<xvar !dns_status>&nbsp;&nbsp;&nbsp;</font></b><input name=EnabledDNS type=checkbox  onclick="EnableDNS()" <xvar /system/dns/Enabled>>&nbsp;</td><td align="right" nowrap width=1%>
+&nbsp;Domain&nbsp;&nbsp;&nbsp;&nbsp;<xvar _combozone><input type=button value=SOA onclick="SOA()"><input type=button value=Create onclick="CreateZone()"><input type=button value=Remove onclick="RemoveZone()"></td><td width=1% nowrap><input type=button value="DNS Lookup" onclick="query()"><input type=button value="Show Log" onclick="dnsLOG()"></td></tr>
+</table>
+</form>
+</body>
+</html>

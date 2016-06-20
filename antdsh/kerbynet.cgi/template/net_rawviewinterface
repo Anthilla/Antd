@@ -1,0 +1,33 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Interface View</title>
+<script>
+  setInterval("window.location.reload(true)",5000);
+function Graphic() {
+    newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=mrtg_show&Type=Interface&Interface=<xvar _Interface>", "MRTG","top=200,left=200,width=800,height=480,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+    newwin.focus();
+}
+function Changed() {
+  X=document.data;
+  location="kerbynet?Section=Network&STk=<xvar STk>&Action=RawViewInterface&Interface="+X.Interface.value;
+}
+</script>
+</head>
+<body style="color:#404040">
+<form name=data>
+<table width=100%><tr>
+<td>
+<font color=#3030f0 class=Bigger2><script>I="<xvar _Interface>";document.write("<b>"+I.toUpperCase()+"</b>");</script></font>&nbsp;&nbsp;
+<font color=#10c010 class=Bigger1><xvar _LinkStatus></font><br>
+<font color=#0000f0><xvar _Description></font>
+</td><td align=right nowrap>
+
+<select name=Interface onchange="Changed()"><xvar +novlan_interfaces (Interface)></select>&nbsp;&nbsp;<input type=button value=Graphics onclick="Graphic()">&nbsp;<input type=button value=Close onclick="window.close()">
+</td>
+</tr></table>
+<pre>
+<xvar _RawView>
+</pre>
+</form>
+</body>
+</html>

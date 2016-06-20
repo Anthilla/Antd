@@ -1,0 +1,5 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+for T in `cat $REGISTER/system/time/NTP/ServerList` ; do
+  echo "<option value='$T'>$T</option>"
+done

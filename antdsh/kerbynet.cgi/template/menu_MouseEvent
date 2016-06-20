@@ -1,0 +1,8 @@
+function over(obj) {
+  obj.style.background='#b0b0e0';
+}
+function out(obj) {
+  obj.style.background='#6060FF';
+
+}
+

@@ -31,8 +31,7 @@ using antdlib.Systemd;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.Common;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Status {
 
@@ -76,7 +75,7 @@ namespace antdlib.Status {
         }
 
         private static void MountNetworkdDir() {
-            Terminal.Terminal.Execute("Mount --bind /etc/systemd/network " + Parameter.AntdCfgNetworkd);
+            Terminal.Execute("Mount --bind /etc/systemd/network " + Parameter.AntdCfgNetworkd);
         }
 
         private static void RestartNetworkdDir() {

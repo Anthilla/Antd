@@ -1,0 +1,32 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LEASESFILE="$1"
+export ONLYACTIVE="$2"
+[ -z "$LEASESFILE" ] && exit 1
+[ -r "$LEASESFILE" ] || exit 2
+$SCRIPTS/dhcp_start noconfig
+TMP=/tmp/leases.tmp
+$SCRIPTS/dhcp_showlease  < "$LEASESFILE" |tac > "$TMP"
+NLINE=`wc -l < "$TMP"`
+if [ "$NLINE" -gt 0 ] ; then
+  for I in `seq 1 $NLINE` ; do
+    LINE=`head -$I "$TMP" |tail -1` 
+    IP=`echo $LINE | awk -F"!" '{print $1}'`
+    MAC=`echo $LINE | awk -F"!" '{print $2}'`
+    HNAME=`echo $LINE | awk -F"!" '{print $3}'`
+    STATE=`echo $LINE | awk -F"!" '{print $4}'`
+    UTCSTARTS=`echo $LINE | awk -F"!" '{print $5}'`
+    UTCENDS=`echo $LINE | awk -F"!" '{print $6}'`
+    STARTS=`date -u +%s -d "$UTCSTARTS" | awk '{print strftime("%Y/%m/%d %H:%M:%S",$0)}'`
+    ENDS=`date -u +%s -d "$UTCENDS" | awk '{print strftime("%Y/%m/%d %H:%M:%S",$0)}'`
+    if [ "$STATE" == active ] ; then
+       BGCOLOR="bgcolor=#d0d0ff"
+    else
+       BGCOLOR=""
+    fi
+
+    echo "<tr $BGCOLOR ><td align=center>$IP</td><td align=center>$MAC</td><td align=center>$HNAME</td><td align=center>$STATE</td><td nowrap align=center>$STARTS</td><td nowrap align=center>$ENDS</td></tr>"
+    
+  done
+
+fi

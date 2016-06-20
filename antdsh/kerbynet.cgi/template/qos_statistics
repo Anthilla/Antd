@@ -1,0 +1,25 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>QoS Statistics</title>
+<script>
+function SubmitData() {
+  X=document.data;
+  X.submit(); 
+}
+function QoSMRTG() {
+   newwin=open("kerbynet?STk=<xvar STk>&Action=Render&Object=mrtg_show&Type=QoS", "MRTG","top=200,left=200,width=800,height=480,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+</script>
+<body style="color: #404080">
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value='QoS'>
+<input type=hidden name=Action value='Statistics'><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr>
+<td><font face="Arial" color="#4040F0" class=Bigger2><b>QoS STATISTICS</b></font></td><td align=right>Interface&nbsp;<select name=Interface onchange="SubmitData()"><xvar +qos_selectinterface (Interface)></select>&nbsp;&nbsp;</td><td align=right nowrap width=1%><input type=button name=Graphics value=Graphics onclick="QoSMRTG()">&nbsp;&nbsp;<input type=button name=refresh value=Refresh onclick="SubmitData()">&nbsp;<input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<xvar !qos_statistics (Interface)>
+</form>
+</body>
+</html>

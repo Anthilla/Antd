@@ -1,0 +1,48 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Routing Table</title>
+<script>
+function loaded() {
+  if ("<xvar Dynamic>"=="yes") {
+     document.data.Dynamic.checked=true;
+  }
+  if ("<xvar Static>"=="yes") {
+     document.data.Static.checked=true;
+  }
+  if ("<xvar Auto>"=="yes") {
+     document.data.Auto.checked=true;
+  }
+  document.data.refresh.disabled=false;
+}
+function SubmitData() {
+   document.data.submit();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data>
+<input type=hidden name=Section value=Router>
+<input type=hidden name=Action value=RouteTable><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr>
+<td><font face="Arial" color="#0000F0" class=Bigger1><b>ROUTING TABLE</b></font></td><td align=right><input type=checkbox name=Static value=yes onclick="SubmitData()"><font color="#404040"> Static&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox name=Dynamic value=yes onclick="SubmitData()"><font color="#404040"> Dynamic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox name=Auto value=yes onclick="SubmitData()"><font color="#404040"> Auto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=refresh value=Refresh onclick="SubmitData()">&nbsp;<input type=button value=Close onclick="window.close()"> </td>
+</tr></table>
+<script>
+  if ("<xvar Dynamic>"=="yes") {
+     document.data.Dynamic.checked=true;
+  }
+  if ("<xvar Static>"=="yes") {
+     document.data.Static.checked=true;
+  }
+  if ("<xvar Auto>"=="yes") {
+     document.data.Auto.checked=true;
+  }
+  document.data.refresh.disabled=true;
+</script>
+<hr>
+<table bordercolor=#ffffff border=2 width=100% bgcolor=#f0f0ff style="border-collapse: collapse; font-family: courier; color: #0000A0; font-size: 10pt;">
+<th>Destination</th><th>Netmask</th><th>Type</th><th>Metric</th><th>Gateway</th><th>Interface</th><th>Flags</th><th>State</th><th>Source</th>
+<xvar !router_showroutetable (BY)>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Slave Zone View</title>
+</head>
+<body>
+<form name=data method=post action="kerbynet">
+<table width=100%><tr>
+<td><font color="#0000b0" class=Bigger1><b><xvar _Domain> (master: <xvar _Master>)</b></font></td><td align=right><input type=button name=refresh value=Refresh onclick="location.reload(true)">&nbsp;<input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<pre>
+<xvar !dns_showslavezone (Domain)>
+</pre>
+</form>
+</body>
+</html>

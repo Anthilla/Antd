@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ACTION="$1"
+INTERFACE="$2"
+SOURCEIP="$3"
+DESTINATIONIP="$4"
+[ -z "$ACTION" ] && exit 1
+[ -z "$INTERFACE" -a -z "$SOURCEIP" -a -z "$DESTINATIONIP" ] && exit 2
+CONFIG=$REGISTER/system/havp/redirects/
+cd "$CONFIG" || exit 2
+NUM=`ls -d [0123456789][0123456789] 2>/dev/null | tail -1`
+if [ "$NUM" == "" ] ; then
+  NUM=00
+else
+  if [ "${NUM:0:1}" == 0 ] ; then
+    NUM=${NUM:1:1}
+  fi
+  NUM=`echo $((NUM+1)) | awk '{printf "%02s",$0 }'`
+fi
+mkdir $NUM
+echo "$ACTION" > $NUM/Action
+echo "$INTERFACE" > $NUM/Interface
+echo "$SOURCEIP" > $NUM/SourceIP
+echo "$DESTINATIONIP" > $NUM/DestinationIP
+$SCRIPTS/proxy_fw

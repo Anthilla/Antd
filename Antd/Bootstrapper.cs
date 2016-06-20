@@ -28,8 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using antdlib.Auth;
-using Antd2;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
@@ -37,6 +35,7 @@ using Nancy.Conventions;
 using Nancy.TinyIoc;
 using Nancy.ViewEngines.SuperSimpleViewEngine;
 using System;
+using Antd.Auth;
 
 namespace Antd {
 

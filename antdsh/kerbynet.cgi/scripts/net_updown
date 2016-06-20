@@ -1,0 +1,105 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+OBJ="$1"
+STATUS="$2"
+[ -z "$OBJ" -o -z "$STATUS" ] && exit 1
+ALREADYRESTARTED=no
+CONFIG="$REGISTER/system/net/interfaces/"
+TYPE=${OBJ:0:2}
+OBJ=${OBJ:3}
+INTERFACE=`echo $OBJ | cut -f1 -d/`
+if [ "$STATUS" == true ] ; then
+   STATUS=up
+else
+   STATUS=down
+fi
+if [ "`echo $OBJ | cut -f2 -d/`" == VLAN ] ; then
+   VLAN=`echo $OBJ | cut -f3 -d/`
+fi
+if [ "$TYPE" == IF ] ; then
+   if [ "${INTERFACE:0:3}" != ppp ] ; then
+     if ifconfig $INTERFACE $STATUS ; then
+       echo $STATUS > "$CONFIG/$INTERFACE"/STATUS
+       if [ "$STATUS" == up ] ; then
+         if cd "$CONFIG/$INTERFACE/VLAN" 2>/dev/null ; then
+            VLANS=`ls`
+            for VLAN in $VLANS ; do
+               VSTATUS=`cat $CONFIG/$INTERFACE/VLAN/$VLAN/STATUS`            
+               ifconfig $INTERFACE.$VLAN $VSTATUS
+            done
+         fi
+         $SCRIPTS/setinterface $INTERFACE
+       fi
+       if [ "${INTERFACE:0:3}" == VPN ] ; then
+          $SCRIPTS/vpn_ctl $INTERFACE
+       fi
+       if [ "${INTERFACE:0:4}" == BOND ] ; then
+          $SCRIPTS/bondwatch $INTERFACE 2>/dev/null >/dev/null &
+       fi
+       if [ "${INTERFACE:0:4}" == WLAN ] ; then
+          $SCRIPTS/set-wifi $INTERFACE
+       fi
+     else
+       exit 1
+     fi
+   else
+     if [ -r $CONFIG/$INTERFACE/ETHERNET ] ; then
+       if [ "$STATUS" == up ] ; then
+         $SCRIPTS/pppoe_start $INTERFACE
+       else
+         $SCRIPTS/pppoe_stop $INTERFACE
+       fi
+     else
+       if [ "$STATUS" == up ] ; then
+         $SCRIPTS/3Gconnect_stop $INTERFACE
+         $SCRIPTS/3Gconnect $INTERFACE &
+       else
+         $SCRIPTS/3Gconnect_stop $INTERFACE
+       fi
+
+
+     fi
+   fi
+   echo "Interface $INTERFACE is $STATUS"
+fi
+if [ "$TYPE" == VL ] ; then
+   if ifconfig $INTERFACE.$VLAN $STATUS ; then
+     echo $STATUS > "$CONFIG/$OBJ"/STATUS
+     echo "VLAN $VLAN on interface $INTERFACE is $STATUS"
+   else
+     exit 1   
+   fi  
+fi
+if [ "$TYPE" == IP ] ; then
+   if [ "$VLAN" == "" ] ; then
+      INTERFACENAME="$INTERFACE"
+   else
+      INTERFACENAME="$INTERFACE.$VLAN"
+   fi
+   IP=`cat $CONFIG/$OBJ/IP`
+   Netmask=`cat $CONFIG/$OBJ/Netmask`
+   if ! ifconfig $INTERFACENAME |grep -q -w UP ; then
+     if [ -z "$VLAN" ] ; then
+       T=interface
+     else
+       T=VLAN
+     fi
+     echo "You cannot change the IP status if the $T is Down" >&2
+     exit 6
+   fi
+   if $SCRIPTS/editip $INTERFACENAME $IP $Netmask $OBJ $STATUS ; then
+     ALREADYRESTARTED=yes
+     if [ "$VLAN" == "" ] ; then
+       echo "IP $IP/$Netmask on interface $INTERFACE is $STATUS"
+     else
+       echo "IP $IP/$Netmask on interface $INTERFACE vlan $VLAN is $STATUS"
+     fi
+   else
+     exit 1   
+   fi  
+fi
+if [ "$ALREADYRESTARTED" = no ] ; then
+  $SCRIPTS/ip_restart_daemon 2>/dev/null >/dev/null &
+fi
+

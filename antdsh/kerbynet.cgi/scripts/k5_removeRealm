@@ -1,0 +1,8 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REALM="$1"
+[ -z "$REALM" ] && exit 1
+[ -d "$REGISTER/system/k5/client/realms/$REALM" ] || exit 2
+rm -rf "$REGISTER/system/k5/client/realms/$REALM"
+$SCRIPTS/k5_createConf
+

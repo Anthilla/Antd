@@ -1,0 +1,19 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+TYPE=`echo "$ID" |awk -F: '{print $2}'`
+ID=`echo "$ID" |awk -F: '{print $1}'`
+if [ "$TYPE" = Release ] ; then
+  SIZE=`$SCRIPTS/autoupdateGetField "$ID" SIZE`
+  exit 0
+else
+  SIZE=`$SCRIPTS/autoupdateGetField "$ID" SIZE`
+  FREEM=`df |grep /Database |awk '{printf "%d",$4/1024}'`
+  if [ $SIZE -le $FREEM ] ; then
+     exit 0
+  else
+    $SCRIPTS/autoupdate-error "$ID:$TYPE" "INSTALL" "ERROR: disk space not available to install this package (Required: ${SIZE}MB Available: ${FREEM}MB)"
+     exit 10
+  fi 
+fi
+

@@ -1,0 +1,58 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Add Service</title>
+<script>
+<xinclude ip_utility.inc>
+function SaveService() {
+  X=document.data;
+  X.Desc.value=X.Desc.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (X.Desc.value=="") {
+    alert("The description cannot be empty.");
+    X.Desc.focus();
+    X.Desc.select();
+    return false;
+  }
+  X.IP.value=X.IP.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (X.IP.value=="" || X.IP.value.toUpperCase()=="ANY") {
+    X.IP.value="Any";
+  } else {
+    if (! isValidIP(X.IP.value)) {
+      alert("The IP is not a valid address.");
+      X.IP.focus();
+      X.IP.select();
+      return false;
+    }
+  }
+  X.Port.value=X.Port.value.replace(/(^\s+)|(\s+$)/g,"");
+  if (! isValidPort(X.Port.value)) {
+    alert("The Port is not in the range 0-65535.");
+    X.Port.focus();
+    X.Port.select();
+    return false;
+  }
+
+
+
+  X.submit();
+}
+</script>
+</head>
+<body topmargin=0 onload="document.data.Desc.focus()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="CP">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="SaveFreeService">
+<table width=100%><tr>
+<td><font color=#3030d0 class=Bigger1><b>Free Authorized Service</b></font></td><td align=right><input type=button value=Save onclick="SaveService()"><input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr><br>
+<table width=100%>
+<tr><td width=35%>Description</td><td><input type=text name=Desc size=20 maxlength=20></td></tr>
+<tr><td width=35%>IP Address</td><td><input type=text name=IP value=Any size=15 maxlength=15></td></tr>
+<tr><td width=35%>Port</td><td><input type=text name=Port size=5 maxlength=5>&nbsp;&nbsp;<select name=Proto><option value=tcp>TCP</option><option value=udp>UDP</option></select></td></tr>
+</table>
+<br><hr>
+</form>
+</body>
+</html>

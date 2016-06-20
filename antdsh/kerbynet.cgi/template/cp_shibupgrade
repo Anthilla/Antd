@@ -1,0 +1,47 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Shibboleth Upgrade</title>
+<script>
+function UploadRelease() {
+  X=document.data;
+
+  writeMsg("<font color=#20e020><blink>Shibboleth module is being upgraded. Please wait ...</bink></font>");
+  X.submit();
+}
+function loaded() {
+  X=document.data;
+  Msg="<xvar _Msg>";
+  if (<xvar +spaceAvailable> < 45000) {
+    writeMsg("<font color=#f03030>No free storage available for upgrading</font>");
+    X.Upgrade.disabled=true;
+    X.xx.disabled=true;
+  } else if (Msg!="") {
+    writeMsg(Msg);
+  }  
+}
+function writeMsg(Msg) {
+ document.getElementById("Msg").innerHTML=Msg; 
+}
+</script>
+</head>
+<body style="color: #303030" onload="loaded()">
+<form name=data method=post action=kerbynet enctype="multipart/form-data">
+<input type=hidden name=Section value="CP">
+<input type=hidden name=Action value="ShibUpload"><input type=hidden name=STk value=<xvar STk>>
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td><font color=#3030f0 class=Bigger2><b>Shibboleth Upgrading</b></font></td><td align=right><input type=button name=Upgrade value=Upgrade onclick="UploadRelease()">&nbsp;<input type=button value=Close onclick="window.close()"></td></tr>
+</table>
+<hr>
+<br><br>
+<br>
+
+&nbsp;&nbsp;Package&nbsp;&nbsp;<input type=file size=35 name=xx>
+
+<br><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id=Msg></span>
+<br><br>
+<hr>
+<font>Check the page http://www.zeroshell.org/shibboleth to get the updates</font>
+</form>
+</body>
+</html>

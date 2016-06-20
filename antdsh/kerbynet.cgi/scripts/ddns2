@@ -1,0 +1,107 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+sleep 35
+RESOLUTION=1.1.1.1
+while true ; do
+CHANGED=no
+EXPIRED=no
+SKIP=no
+if [ "`cat $REGISTER/system/ddnsclient/Enabled 2>/dev/null`" == yes ] ; then
+  OLDHOST="$REGISTER/system/ddnsclient/OldHOST"
+  OLDIP="$REGISTER/system/ddnsclient/OldIP"
+  LASTUPDATE="$REGISTER/system/ddnsclient/LastUpdate"
+  STATUS="$REGISTER/system/ddnsclient/Status"
+  CHECKIP_URL="`cat $REGISTER/system/ddnsclient/CheckIP`"
+  IP=`wget --timeout=15 -t 1 -O - -o /dev/null $CHECKIP_URL  |egrep  '[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}'|head -1|sed -r 's/.* ([0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}).*/\1/'`
+  if ! echo $IP | egrep -q '^[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}$'; then
+    logger -t DDNS "ERROR: IP checker not available ($CHECKIP_URL)"
+    SKIP=yes 
+  fi
+
+  PROVIDER="`cat $REGISTER/system/ddnsclient/Provider 2>/dev/null`"
+  HOST="`cat $REGISTER/system/ddnsclient/Host 2>/dev/null`"
+  [ -z "$HOST" ] && SKIP=yes
+  if [ "$HOST" != "`cat $OLDHOST 2>/dev/null`" ] ; then
+    CHANGED=yes
+  fi
+  if [ "$IP" != "`cat $OLDIP 2>/dev/null`" ] ; then
+    CHANGED=yes
+  fi
+  TIMESTAMP=`date +%s`
+  OLDTS="`cat $LASTUPDATE 2>/dev/null`"
+  if ! [ -z "$OLDTS" ] ; then
+    if [ "$(( TIMESTAMP - OLDTS ))" -gt 2073600 ] ; then
+      EXPIRED=yes
+    fi
+  fi
+  if [ "$PROVIDER" = ".OpenDNS" ] ; then
+     RESOLUTION=1.1.1.1
+  else
+     RESOLUTION=`host $HOST 2>/dev/null |egrep '[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}\.[0123456789]{1,3}'|head -1|awk '{print $4}'`
+  fi
+  if [ "$IP" != "$RESOLUTION" ] ; then
+    CHANGED=yes
+    echo "<font color=#e03030>WAITING TO BE UPDATED</font>" > $STATUS
+  else
+     echo "<font color=#20e020>UPDATED</font>" > $STATUS
+  fi
+  if [ "$SKIP" != yes ] ; then
+    if [ "$CHANGED" == yes -o "$EXPIRED" == yes -o "$PROVIDER" = "OpenDNS" ] ; then
+      if [ "$CHANGED" != yes -a "$EXPIRED" == yes ] ; then
+         logger -t DDNS "WARNING: Update is needed to prevent $HOST expiration"
+      fi
+      if [ "$IP" != "$RESOLUTION" -o "$EXPIRED" == yes ] ; then
+        if [ "$PROVIDER" != "OpenDNS" ] ; then
+          logger -t DDNS "WAN IP=$IP $HOST=$RESOLUTION (Update is needed)"
+        else
+          logger -t DDNS "WAN IP=$IP"
+        fi       
+        ERROR="/tmp/dyndns.err"
+        RESULT="/tmp/dyndns.out"
+        USERNAME="`$SCRIPTS/getkey /system/ddnsclient/Username`"
+        PASSWORD="`$SCRIPTS/getkey /system/ddnsclient/Password`"
+        logger -t DDNS "Dynamic DNS updating $HOST ($USERNAME)"
+        
+        if [ "$PROVIDER" = "OpenDNS" ] ; then
+	  OPT="--http-user=$USERNAME --http-passwd=$PASSWORD"
+	  WGET="https://updates.opendns.com/nic/update?"
+        elif [ "$PROVIDER" = "DynDNS" ] ; then
+	  OPT="--http-user=$USERNAME --http-passwd=$PASSWORD"
+          WGET="http://members.dyndns.org/nic/update?system=dyndns&hostname=$HOST&mx=$HOST"
+        else  
+          # No-IP
+          OPT="--http-user=$USERNAME --http-passwd=$PASSWORD"
+          WGET="http://dynupdate.no-ip.com/nic/update?hostname=$HOST&mx=$HOST"
+        fi
+        if ! wget --timeout=15 -t 1 -o "$ERROR" -O "$RESULT" $OPT "$WGET" ; then
+          if grep -q "Authorization failed" "$ERROR" ; then
+            WGETERROR="Authorization failed. BAD Username/Password"
+          else
+            WGETERROR="Connectivity ERROR"
+	  fi
+        else 
+          WGETERROR=""
+	fi
+        if [ -z "$WGETERROR" ] ; then
+          logger -t DDNS "==> `cat $RESULT`"
+          if grep -q "\!yours\|notfqdn\|abuse\|nohost\|badagent\|badauth\|badsys\|dnserr\|numhost\|911\|\!donator" $RESULT  ; then
+	    echo "<font color=#e03030>Disabled for fatal ERROR. Please check the logs</font>" > $STATUS
+            logger -t DDNS "==> A fatal error occurs and the DDNS client is now disabled. Please solve the problem and enable the Dynamic DNS Client."
+            echo no > $REGISTER/system/ddnsclient/Enabled
+          else
+	    echo "<font color=#20e020>UPDATED</font>" > $STATUS
+            echo $HOST > $OLDHOST
+            echo $IP > $OLDIP
+            echo $TIMESTAMP > $LASTUPDATE
+          fi
+        else
+	  echo "<font color=#e03030>$WGETERROR</font>" > $STATUS
+          logger -t DDNS "ERROR:"
+          grep -v " => " "$ERROR" | logger -t DDNS 
+        fi
+      fi
+    fi
+  fi
+fi
+sleep 304
+done

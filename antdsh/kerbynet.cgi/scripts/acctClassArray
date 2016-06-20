@@ -1,0 +1,33 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/acct
+if ! [ -d $CONFIG/classes ] ; then
+   mkdir -p $CONFIG/classes
+fi
+cd $CONFIG/classes
+CURRENCY=`cat $REGISTER/system/acct/Currency`
+DECIMALS=`cat $REGISTER/system/acct/Decimals`
+FORMAT="%.${DECIMALS}f"
+CLASSES=`ls -d *`
+for C in $CLASSES ; do
+  MB=`cat $C/MB`
+  HOURS=`cat $C/Hours`
+  MBITS=`cat $C/Mbits`
+  COSTM=`cat $C/CostM`
+  COSTH=`cat $C/CostH`
+  CHARGETYPE=`cat $C/ChargeType`
+  [ -z "$MB" ] && MB="-"
+  [ -z "$HOURS" ] && HOURS="-"
+  [ -z "$MBITS" ] && MBITS="-"
+  [ -z "$COSTM" ] && COSTM="0"
+  [ -z "$COSTH" ] && COSTH="0"
+  [ -z "$CHARGETYPE" ] && CHARGETYPE="post"
+  COSTM=`printf "$FORMAT" $COSTM`
+  COSTH=`printf "$FORMAT" $COSTH`
+  echo "MB_[\"$C\"]=\"$MB\";"
+  echo "HOURS_[\"$C\"]=\"$HOURS\";"
+  echo "MBITS_[\"$C\"]=\"$MBITS\";"
+  echo "COSTM_[\"$C\"]=\"$COSTM$CURRENCY\";"
+  echo "COSTH_[\"$C\"]=\"$COSTH$CURRENCY\";"
+  echo "TYPE_[\"$C\"]=\"(${CHARGETYPE}paid)\";"
+done

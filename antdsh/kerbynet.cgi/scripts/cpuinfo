@@ -1,0 +1,7 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+CPU=`grep "model name" /proc/cpuinfo |head -1 | cut -d: -f2`
+MHZ=`grep "cpu MHz" /proc/cpuinfo | cut -d: -f2 | head -1 | cut -d. -f1`
+NCPU=`$SCRIPTS/cpus`
+echo "CPU ($NCPU) : $CPU $MHZ MHz"
+

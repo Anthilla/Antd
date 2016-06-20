@@ -35,43 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\MimeKit.1.2.21\lib\net45\BouncyCastle.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="C5, Version=2.4.5827.29227, Culture=neutral, PublicKeyToken=282361b99ded7e8e, processorArchitecture=MSIL">
-      <HintPath>..\packages\C5.2.4.5827.29151\lib\net40\C5.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DeNSo.v3.Client.InProcess, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Client.InProcess.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DeNSo.v3.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DeNSo.v3.Meta, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78b1681666962540, processorArchitecture=MSIL">
-      <HintPath>..\packages\densodb.v3.3.1.0\lib\net45\DeNSo.v3.Meta.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="INIFileParser, Version=2.2.4.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
-      <HintPath>..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="library.u2f">
       <HintPath>..\libraries\library.u2f.dll</HintPath>
     </Reference>
-    <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
-      <HintPath>..\packages\MailKit.1.2.19\lib\net45\MailKit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MimeKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
-      <HintPath>..\packages\MimeKit.1.2.21\lib\net45\MimeKit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -90,12 +58,16 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Quartz">
-      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+    <Reference Include="RaptorDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
+      <HintPath>..\packages\RaptorDB_doc.3.3.5\lib\net40\RaptorDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Renci.SshNet">
-      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
+    <Reference Include="RaptorDB.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
+      <HintPath>..\packages\RaptorDB_doc.3.3.5\lib\net40\RaptorDB.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleLogger.1.0.0\lib\net40\SimpleLogger.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -123,48 +95,27 @@
     <Compile Include="Antdsh\NewUpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
-    <Compile Include="Auth\AuthenticateUserEntity.cs" />
-    <Compile Include="Auth\T2FA\Authentication.cs" />
-    <Compile Include="Auth\TokenAuthentication.cs" />
-    <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileSystem.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Storage\Backup.cs" />
     <Compile Include="Boot.cs" />
     <Compile Include="ApplicationSetting.cs" />
-    <Compile Include="CCTable\CCTableConf.cs" />
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />
     <Compile Include="CCTable\CCTableRepository.cs" />
     <Compile Include="Certificate\CertificateAuthority.cs" />
     <Compile Include="Certificate\CertificateModel.cs" />
-    <Compile Include="Collectd\CollectdModel.cs" />
-    <Compile Include="Collectd\CollectdRepo.cs" />
-    <Compile Include="Common\Extensions.cs" />
-    <Compile Include="Common\FileSystem.cs" />
-    <Compile Include="Common\Helper.cs" />
-    <Compile Include="Config\ConfigManagement.cs" />
-    <Compile Include="Firewall\FirewallLists.cs" />
-    <Compile Include="Firewall\MacAddressDiscovery.cs" />
-    <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Network\PortManagement.cs" />
-    <Compile Include="Parameter.cs" />
-    <Compile Include="Common\Timestamp.cs" />
-    <Compile Include="Common\XmlWriter.cs" />
     <Compile Include="Info\Dmidecode.cs" />
     <Compile Include="Info\Ifconfig.cs" />
-    <Compile Include="Info\SystemInfo.cs" />
     <Compile Include="Info\Meminfo.cs" />
     <Compile Include="Info\Proc.cs" />
     <Compile Include="Directories\DirectoryFinder.cs" />
     <Compile Include="Directories\DirectoryLister.cs" />
-    <Compile Include="Directories\DirectoryWatcher.cs" />
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
-    <Compile Include="Log\ConsoleLogger.cs" />
     <Compile Include="Log\Journalctl.cs" />
-    <Compile Include="Log\Logger.cs" />
-    <Compile Include="Mail\IMAP.cs" />
-    <Compile Include="Mail\SMTP.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\ConfigFileModel.cs" />
     <Compile Include="Models\CpuinfoModel.cs" />
@@ -173,75 +124,27 @@
     <Compile Include="Models\MeminfoModel.cs" />
     <Compile Include="Models\NetworkdModel.cs" />
     <Compile Include="Models\NetworkInfoModel.cs" />
-    <Compile Include="Models\NetworkInterfaceModel.cs" />
     <Compile Include="Models\SysctlModel.cs" />
     <Compile Include="Models\UnitFileModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Models\SystemComponentModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
-    <Compile Include="MountPoint\Mount.cs" />
-    <Compile Include="MountPoint\MountModel.cs" />
-    <Compile Include="MountPoint\MountLocal.cs" />
-    <Compile Include="MountPoint\MountRepository.cs" />
-    <Compile Include="MountPoint\Dfp.cs" />
-    <Compile Include="Network\NetworkFirstConfiguration.cs" />
-    <Compile Include="Network\NetworkConfig.cs" />
-    <Compile Include="Network\NetworkInterface.cs" />
     <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduler\Job.cs" />
-    <Compile Include="Scheduler\JobList.cs" />
-    <Compile Include="Scheduler\JobModel.cs" />
-    <Compile Include="Scheduler\JobRepository.cs" />
-    <Compile Include="Scheduler\JobScheduler.cs" />
-    <Compile Include="Security\Cryptography.cs" />
     <Compile Include="Security\RSA.cs" />
     <Compile Include="Security\RSACore.cs" />
     <Compile Include="Security\RSAKeys.cs" />
-    <Compile Include="Security\Token.cs" />
-    <Compile Include="Ssh\Test.cs" />
     <Compile Include="Status\Cpuinfo.cs" />
     <Compile Include="Status\Local.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
     <Compile Include="Status\Uptime.cs" />
-    <Compile Include="Storage\Rsync.cs" />
     <Compile Include="Storage\Volumes.cs" />
-    <Compile Include="Svcs\Bind\BindConfig.cs" />
-    <Compile Include="Svcs\Bind\BindStatement.cs" />
-    <Compile Include="Svcs\Dhcp\DhcpStatement.cs" />
-    <Compile Include="Svcs\Dhcp\DhcpConfig.cs" />
-    <Compile Include="Svcs\Glusterfs\GlusterfsConfig.cs" />
-    <Compile Include="Svcs\Lxc\LxcConfig.cs" />
-    <Compile Include="Svcs\Libvirt\LibvirtConfig.cs" />
-    <Compile Include="Svcs\Nfs\NfsConfig.cs" />
-    <Compile Include="Svcs\Nftable\NftableConfig.cs" />
-    <Compile Include="Svcs\Nginx\NginxConfig.cs" />
-    <Compile Include="Svcs\Ntpd\NtpdConfig.cs" />
-    <Compile Include="Svcs\Qemu\QemuConfig.cs" />
-    <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
-    <Compile Include="Svcs\Samba\SambaConfig.cs" />
-    <Compile Include="Svcs\Squid\SquidConfig.cs" />
-    <Compile Include="Ssh\SshConfig.cs" />
-    <Compile Include="Svcs\Syslogng\SyslogngConfig.cs" />
-    <Compile Include="Svcs\Systemd\Hostnamectl\HostnamectlConfig.cs" />
-    <Compile Include="Svcs\Systemd\Journald\JournaldConfig.cs" />
-    <Compile Include="Svcs\Systemd\Networkd\NetworkdConfig.cs" />
-    <Compile Include="Svcs\Zfs\ZfsConfig.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
-    <Compile Include="Systemd\UnitRepo.cs" />
     <Compile Include="Systemd\Units.cs" />
-    <Compile Include="Terminal\CommandRepository.cs" />
-    <Compile Include="Terminal\Terminal.cs" />
-    <Compile Include="Users\SystemGroup.cs" />
-    <Compile Include="Users\UserEntity.cs" />
-    <Compile Include="Users\SystemUser.cs" />
-    <Compile Include="Users\GroupModel.cs" />
-    <Compile Include="Users\UserModel.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Virsh\Virsh.cs" />
-    <Compile Include="Vnc\VncManagement.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ConnectionFactory.cs" />
@@ -264,20 +167,23 @@
     <Compile Include="Websocket\WebSocketProtocol\WebSocketFrameWriter.cs" />
     <Compile Include="Websocket\WebSocketProtocol\WebSocketHandshakeHelper.cs" />
     <Compile Include="Websocket\WebSocketProtocol\WebSocketOpCode.cs" />
-    <Compile Include="Zfs\ZpoolManagement.cs" />
-    <Compile Include="Zfs\ZpoolModel.cs" />
+    <Compile Include="XmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="job_scheduling_data_2_0.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Svcs\Samba\json-schema1.json" />
-    <None Include="Svcs\Samba\samba.command.list" />
-    <None Include="Svcs\Samba\samba.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
+      <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
+      <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
+      <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>
+      <Name>antdlib.views</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

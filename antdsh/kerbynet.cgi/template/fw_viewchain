@@ -1,0 +1,27 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>View Chain</title>
+<script>
+function fwLOG() {
+   var newwin=window.open("kerbynet?Section=LOG&STk=<xvar STk>&Action=Manage&Process=kernel&Filter=OUT%3D","ManageLog","top=100,left=100,width=850,height=600,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+   newwin.focus();
+}
+function requery() {
+  location="kerbynet?Section=FW&STk=<xvar STk>&Action=ViewChain&Chain="+document.data.Chain.value;
+}
+</script>
+</head>
+<body>
+<form name=data method=post action="kerbynet">
+<table width=100%><tr>
+<td><font face="Arial" color="#0000F0" class=Bigger1><b><xvar Chain></b></font></td><td align=right>Chain&nbsp;<select name=Chain onchange="requery()"><xvar !fw_listchains option (Chain)></select><input type=button name=refresh value=Refresh onclick="location.reload(true)">&nbsp;<input type=button value=Close onclick="window.close()"></td>
+<td width=1%><input type=button value="Show Log" onclick="fwLOG()"></td>
+</tr></table>
+<script>document.data.Chain.value="<xvar Chain>";</script>
+<hr>
+<pre>
+<xvar !fw_viewchain (Chain)>
+</pre>
+</form>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>CNTop</title>
+<script>
+PortFilter="";
+function loaded() {
+   X=document.data;
+   if ("<xvar /system/cntop/Mode>"=="Bitrate") {
+      X.Mode.value="Bitrate";
+   } else {
+      X.Mode.value="Connections";
+   }
+   if ("<xvar /system/cntop/OrderBy>"=="Connections") {
+      X.OrderBy.value="Connections";
+   } else {
+      X.OrderBy.value="Bitrate";
+   }
+   if ("<xvar /system/cntop/DNS>"=="no") {
+      X.DNS.value="no";
+   } else {
+      X.DNS.value="yes";
+   }
+   if ("<xvar /system/cntop/FilterStatus>"=="on") {
+      X.FilterStatus.value="on";
+   } else {
+      X.FilterStatus.value="off";
+   }
+   if ("<xvar /system/cntop/FilterProtocol>"=="tcp") {
+      X.FilterProtocol.value="tcp";
+   } else if ("<xvar /system/cntop/FilterProtocol>"=="udp") {
+      X.FilterProtocol.value="udp";
+   } else if ("<xvar /system/cntop/FilterProtocol>"=="icmp") {
+      X.FilterProtocol.value="icmp";
+   } else if ("<xvar /system/cntop/FilterProtocol>"=="unknown") {
+      X.FilterProtocol.value="unknown";
+   } else {
+      X.FilterProtocol.value="";
+   }
+   changed();
+}
+function changed() {
+  X=document.data;
+  if (X.FilterProtocol.value=="tcp" || X.FilterProtocol.value=="udp" || X.FilterProtocol.value=="") {
+    X.FilterPort.disabled=false;
+    FilterPort=X.FilterPort.value;
+  } else {
+    X.FilterPort.disabled=true;
+    FilterPort="";
+  }
+  if (X.Mode.value=="Connections") {
+    X.OrderBy.disabled=false;
+    OrderBy=X.OrderBy.value;
+  } else {
+    OrderBy=X.OrderBy.value;
+    X.OrderBy.disabled=true;
+  }
+  cntoplist.location=encodeURI("kerbynet?STk=<xvar STk>&Action=Render&Object=cntoplist&Mode="+X.Mode.value+"&OrderBy="+OrderBy+"&DNS="+X.DNS.value+"&FilterStatus="+X.FilterStatus.value+"&FilterProtocol="+X.FilterProtocol.value+"&FilterIP="+X.FilterIP.value+"&FilterPort="+FilterPort);
+}
+function ResetFilter() {
+   X=document.data;
+   X.FilterStatus.value="off";
+   X.FilterProtocol.value="";
+   X.FilterIP.value="";
+   X.FilterPort.value="";
+   changed();
+}
+
+</script>
+</head>
+<body onload="loaded()" style="color:#606060">
+<form name=data method=post action="kerbynet">
+<table width=100%><tr><td><font class=Bigger2 color=#3030f0><b>CONNECTION TOP LIST</b></font></td><td align=right nowrap>Mode&nbsp;&nbsp;&nbsp;<select name=Mode onchange="changed()"><option value=Connections>Compact</option><option value=Bitrate>Detailed</option></select>&nbsp;&nbsp;&nbsp;<select name=OrderBy onchange="changed()"><option value=Bitrate>Order by Bitrate</option><option value=Connections>Order by Connections</option></select>&nbsp;&nbsp;&nbsp;<select name=DNS onchange="changed()"><option value=yes>Use DNS</option><option value=no>Do not use DNS</option></select>&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value=Close onclick="window.close()"></td></tr></table>
+<hr>
+<iframe name=cntoplist border=0 frameborder=0 width=100% height=480 src='about:blank'>Not compatible Browser</iframe>
+<hr>
+<table width=100%><tr><td></td><td align=right nowrap><font color=#3030f0><b>FILTER</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name=FilterStatus onchange="changed()"><option value=off>OFF</option><option value=on>ON</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP Address&nbsp;&nbsp;&nbsp;<input type=text name=FilterIP value="<xvar /system/cntop/FilterIP>" size=15 maxlength=15 onchange="changed()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Protocol&nbsp;&nbsp;&nbsp;<select name=FilterProtocol onchange="changed()"><option value="">ALL</option><option value=tcp>TCP</option><option value=udp>UDP</option><option value=icmp>ICMP</option><option value=unknown>UNKNOWN</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Port&nbsp;&nbsp;&nbsp;<input type=text name=FilterPort value="<xvar /system/cntop/FilterPort>" size=5 maxlength=5 onchange="changed()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value=Apply onclink="changed()">&nbsp;&nbsp;<input type=button value=Reset onclick="ResetFilter()"></td></tr></table>
+</form>
+</body>
+</html>

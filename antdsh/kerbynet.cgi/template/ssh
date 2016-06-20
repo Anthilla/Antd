@@ -1,0 +1,140 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>SSH Settings</title>
+<script>
+<xinclude ip_utility.inc>
+function loaded() {
+  X=document.data;
+  X.save.disabled=true;
+  if ("<xvar /system/ssh/Enabled>"=="yes") {
+    X.Enabled.checked=true;
+  } else {
+    X.Enabled.checked=false;
+  }
+}
+function Changed() {
+  X=document.data;
+  X.save.disabled=false;
+  document.getElementById('savetab').innerHTML="<font color=#FF0000><b>Not saved</b>&nbsp;&nbsp;&nbsp;</font>";
+}
+function Save() {
+  X=document.data;
+  X.save.disabled=true;
+  ACLs=""
+  if (X.ACL.options[0].value!="any") {
+    for (a=0; a<X.ACL.options.length; a++) {
+      ACLs+=" "+X.ACL.options[a].value;
+    }
+  }
+  X.ACLs.value=ACLs.substr(1);
+  X.submit();
+}
+function ValidateIP(ipobj) {
+  ipobj.value=ipobj.value.replace(/[ ]+/g,"");
+  if (ipobj.value=="") return true;
+  if (!isValidIP(ipobj.value)) {
+    if ((p=ipobj.value.indexOf('/'))!=-1) {
+      Network=ipobj.value.substr(0,p);
+      Netmask=ipobj.value.substr(p+1);
+      if (!isValidNetworkCIDR(Network,Netmask)) {
+        alert(ipobj.value+" is not a valid network.");
+        ipobj.focus();
+        ipobj.select();
+        return false;
+      }
+      return true;
+    }
+    alert("The IP address is not valid.");
+    ipobj.focus();
+    ipobj.select();
+    return false;
+  } else {
+    return true;
+  } 
+}
+function addACL() {
+  X=document.data;
+  X.IP.value=X.IP.value.replace(/[ ]+/g,"");
+  IP=X.IP.value;
+  Interface=X.Interface.value;
+  acl=IP+":"+Interface;
+  if (acl==":") {
+    alert("Nothing to add! You should specify an IP address and/or a network Interface.");
+    return;
+  }
+  TXT=""
+  if (IP!="") {
+    if (!ValidateIP(X.IP)) return;
+    if (IP.indexOf("/")!=-1) {
+      TXT="Subnet "+IP;
+    } else {
+      TXT="IP "+IP;
+    }
+  }
+  if (Interface!="") {
+    if (TXT!="") {
+      TXT=TXT+" from ";
+    } 
+    if ((p=Interface.indexOf("."))!=-1) {
+      VLAN=Interface.substr(p+1); 
+      Interface=Interface.substr(0,p);
+      TXT=TXT+"Interface "+Interface+" VLAN "+VLAN;
+    } else {
+      TXT=TXT+"Interface "+Interface;
+    }
+
+  }
+  if (X.ACL.options[0].value=="any") {
+    X.ACL.options[0]=null;
+  }
+  X.ACL.options[X.ACL.options.length]=new Option(TXT,acl,false,true);
+  X.IP.value="";
+  X.Interface.value="";
+  Changed();
+}
+function delACL() {
+  X=document.data;
+  if (X.ACL.options.selectedIndex<0) {
+    alert("You should select an IP address and/or a network Interface to remove.");
+    return;
+  }
+  X.ACL.options[X.ACL.options.selectedIndex]=null;
+  if (X.ACL.options[0]==null) {
+    X.ACL.options[0]=new Option("Any IP address from any network interface","any",false,false);
+  }
+  Changed();
+}
+
+
+
+</script>
+
+</head>
+<body onload="loaded()" onsubmit="Save()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="SSH">
+<input type=hidden name=Action value="Save">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=ACLs value="">
+<table width=100%><tr>
+<td><font class=Bigger1 color=#3030f0><b>Secure Shell Settings</b></font></td><td id=savetab></td><td align=right><input type=checkbox name=Enabled onclick="Changed()" value="yes">&nbsp;Enabled&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button name=save value=Save onclick="Save()"><input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<table width=100% border=1><tr>
+<td bgcolor=#a0a0f0><font color=#ffffff>&nbsp;Allow access only from</font></td>
+<td align=right>
+<font>IP</font>&nbsp;&nbsp;<input type=text name=IP>
+&nbsp;&nbsp;&nbsp;<font>Interface</font>&nbsp;&nbsp;<select name=Interface><option value=""></option><xvar !fw_interfaces></select>
+<input type=button value="+" onclick="addACL()"><input type=button value="-" onclick="delACL()">
+</td>
+</tr></table>
+<table width=100% border=1><tr><td>
+<select name=ACL size=9 style="width: 100%"><xvar +select_ssh_allow></select>
+</td></tr></table>
+<hr>
+<font color=#404040 class=Smaller1><b>Notes:</b><br>The IP addresses can be a single IP (ex. 192.168.0.15) or a subnet (ex. 192.168.0.0/255.255.255.0 or 192.168.0.0/24).<br>To login with SSH you must use the user <b>admin</b> and its Kerberos 5 password.</font>
+<br>
+<hr>
+</form>
+</body>
+</html>

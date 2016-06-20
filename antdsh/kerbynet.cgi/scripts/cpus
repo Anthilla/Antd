@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -f "/tmp/CPUS" ] ; then
+  cat /tmp/CPUS
+  exit
+fi
+CORES=$(lscpu |grep "Core(s) per socket:"|awk -F: '{print $2}')
+SOCKETS=$(lscpu |grep "Socket(s):"|awk -F: '{print $2}')
+[ -z "$CORES" ] && CORES=1
+[ -z "$SOCKETS" ] && SOCKETS=1
+CPUS=$((CORES*SOCKETS))
+echo $CPUS
+echo $CPUS > /tmp/CPUS

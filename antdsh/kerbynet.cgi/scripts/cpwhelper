@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+PRINC="$1"
+PW="$2"
+USER="`echo $PRINC | awk -F@ '{printf $1}'`"
+REALM="`echo $PRINC | awk -F@ '{printf $2}'`"
+if [ "$REALM" == "`cat $REGISTER/system/k5/realm`" ] ; then
+  $SCRIPTS/cpwldap "$USER" "$PW"
+fi
+

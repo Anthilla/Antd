@@ -1,0 +1,11 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/net/nb
+if [ "`cat $CONFIG/Enabled 2>/dev/null`" != yes ] ; then
+  killall ipmonitor -w 2>/dev/null
+  exit
+fi
+if ! ps -e | grep -q -w ipmonitor ; then
+  ip ro sh | $SCRIPTS/routeupd "" flush
+   ipmonitor -4 link address route 2>/dev/null | $SCRIPTS/routeupd 2>/dev/null >/dev/null &
+fi

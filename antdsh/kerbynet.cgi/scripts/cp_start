@@ -1,0 +1,196 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/cp"
+killall -w cp_auto 2>/dev/null >/dev/null
+killall -w cp_renew 2>/dev/null >/dev/null
+cd "$CONFIG"  
+iptables -D FORWARD -j CapPort 2>/dev/null
+iptables -t nat -D PREROUTING -j CapPort 2>/dev/null
+iptables -F CapPort 2>/dev/null
+iptables -X CapPort 2>/dev/null
+iptables -F CapPortACL 2>/dev/null
+iptables -X CapPortACL 2>/dev/null
+iptables -F CapPortFS 2>/dev/null
+iptables -X CapPortFS 2>/dev/null
+iptables -F CapPortFC 2>/dev/null
+iptables -X CapPortFC 2>/dev/null
+iptables -F CapPortWL 2>/dev/null
+iptables -X CapPortWL 2>/dev/null
+iptables -F CapPortOut 2>/dev/null
+iptables -X CapPortOut 2>/dev/null
+iptables -D SYS_INPUT -p tcp --dport 55559 -j CapProxyIn 2>/dev/null
+iptables -D SYS_OUTPUT -p tcp --sport 55559 -j CapProxyOut 2>/dev/null
+iptables -F CapProxyIn 2>/dev/null
+iptables -X CapProxyIn 2>/dev/null
+iptables -F CapProxyOut 2>/dev/null
+iptables -X CapProxyOut 2>/dev/null
+iptables -t nat -F CapPort 2>/dev/null
+iptables -t nat -X CapPort 2>/dev/null
+iptables -t nat -F CapPortHTTP 2>/dev/null
+iptables -t nat -X CapPortHTTP 2>/dev/null
+iptables -t nat -F CapPortHTTPS 2>/dev/null
+iptables -t nat -X CapPortHTTPS 2>/dev/null
+iptables -t nat -F CapPortGW 2>/dev/null
+iptables -t nat -X CapPortGW 2>/dev/null
+iptables -t nat -F CapPortProxy 2>/dev/null
+iptables -t nat -X CapPortProxy 2>/dev/null
+[ "`cat RemotePT 2>/dev/null`" !=  "`cat Auth/Port 2>/dev/null`" ] && cat Auth/Port > RemotePT
+[ "`cat RemoteSSL 2>/dev/null`" !=  "`cat Auth/PortSSL 2>/dev/null`" ] && cat Auth/PortSSL > RemoteSSL
+ENABLED=`cat Enabled 2>/dev/null`
+if [ "$ENABLED" != yes -a "`cat $REGISTER/system/cp/Auth/Enabled 2>/dev/null`" != yes ] ; then
+  $SCRIPTS/terminate CapPortAS 15 2>/dev/null
+fi
+
+if [ "$ENABLED" == yes ] ; then
+  WEBLOGIN=`cat WebLogin 2>/dev/null`
+  
+  if [ "$WEBLOGIN" == Remote ] ; then
+    REMOTEPT=`cat RemotePT 2>/dev/null`
+  else
+    echo yes > $REGISTER/system/cp/Auth/Enabled
+    export REMOTEPT=`cat Auth/Port 2>/dev/null`
+  fi
+  [ -z "$REMOTEPT" ] && REMOTEPT=12080
+  export REMOTESSL=$((REMOTEPT+1))
+  export GWPORT=$((REMOTEPT+2))
+  echo $GWPORT > GWPort
+  export GWPORTSSL=$((REMOTEPT+3))
+  echo $GWPORTSSL > GWPortSSL
+  export QUERY_STRING="onlyrender"
+  if [ "`cat Auth/NoSSL 2>/dev/null`" == yes ] ; then 
+    HTTPCONF=cp_gw-httpd.nossl
+  else
+    HTTPCONF=cp_gw-httpd.ssl
+  fi
+  render "$TEMPLATE/$HTTPCONF" > /var/register/system/cp/cp_gw-httpd
+  export PATH="/usr/local/ssl/bin:$PATH"
+  if ! $SCRIPTS/cp_auth_start ; then
+    logger -t "CaptivePortal" "GW: ERROR: Captive Portal Gateway failed to start: `cat /tmp/CapPortAS.err`"
+    exit 10
+  fi
+  iptables -N CapPort
+  iptables -N CapPortACL
+  iptables -N CapPortFS
+  iptables -N CapPortIdP 2>/dev/null
+  iptables -N CapPortCRL 2>/dev/null
+  iptables -N CapPortFC
+  iptables -N CapPortWL
+  iptables -N CapPortOut
+  iptables -N CapProxyIn 
+  iptables -N CapProxyOut
+  iptables -t nat -N CapPort
+  iptables -t nat -N CapPortHTTP
+  iptables -t nat -N CapPortHTTPS
+  iptables -t nat -N CapPortGW
+  iptables -t nat -N CapPortProxy
+  iptables -t nat -N CapPortIdP80 2>/dev/null
+  iptables -t nat -N CapPortIdP443 2>/dev/null
+  iptables -t nat -N CapPortCRL80 2>/dev/null
+  iptables -t nat -A CapPortHTTP -j CapPortCRL80
+  iptables -t nat -A CapPortHTTP -j CapPortIdP80 
+  iptables -t nat -A CapPortHTTPS -j CapPortIdP443
+  iptables -t nat -A CapPortProxy -p tcp --dport 80 -j Proxy 2>/dev/null
+  iptables -t nat -A CapPortProxy -j ACCEPT
+  $SCRIPTS/fw_sys_chain
+  if [ "$WEBLOGIN" == Remote ] ; then
+    REMOTEIP=`cat RemoteIP 2>/dev/null`
+    CAPTUREHTTP="DNAT --to-destination $REMOTEIP:$REMOTEPT"
+    CAPTUREHTTPS="DNAT --to-destination $REMOTEIP:$REMOTESSL"
+  else
+    REMOTEIP=127.0.0.1
+    CAPTUREHTTP="REDIRECT --to-ports $REMOTEPT"
+    CAPTUREHTTPS="REDIRECT --to-ports $REMOTESSL"
+  fi
+  #MODE=`cat Mode 2>/dev/null`
+  iptables -A CapPort -j CapPortOut
+  INTERFACES=`cat Interface 2>/dev/null`
+  for INTERFACE in $INTERFACES ; do
+    VLAN=`echo $INTERFACE | awk -F. '{print $2}'`
+    MODE=Routed
+    if [ -z "$VLAN" ] ; then
+      if [ -f "$REGISTER/system/net/interfaces/$INTERFACE/Bridge/Name" ] ; then
+        MODE=Bridged
+        BRIDGENAME=`cat "$REGISTER/system/net/interfaces/$INTERFACE/Bridge/Name"`
+      fi 
+    else
+      INTERFACE=`echo $INTERFACE | awk -F. '{print $1}'`
+      if [ -f "$REGISTER/system/net/interfaces/$INTERFACE/VLAN/$VLAN/Bridge/Name" ] ; then
+        MODE=Bridged
+        BRIDGENAME=`cat "$REGISTER/system/net/interfaces/$INTERFACE/VLAN/$VLAN/Bridge/Name"`
+      fi
+    fi
+    [ -n "$VLAN" ] && INTERFACE=$INTERFACE.$VLAN
+    if [ "$MODE" == Bridged ] ; then
+      #iptables -A CapPort -m physdev --physdev-out $INTERFACE -j CapPortOut
+      #iptables -A CapPort  -o $BRIDGENAME -j CapPortOut
+      iptables -A CapPort -m physdev --physdev-in $INTERFACE -j CapPortACL
+      iptables -t nat -A CapPort -m physdev --physdev-in $INTERFACE -p tcp --dport 80 -j CapPortHTTP
+      iptables -t nat -A CapPort -m physdev --physdev-in $INTERFACE -p tcp --dport 443 -j CapPortHTTPS
+      iptables -t nat -A CapPort -m physdev --physdev-in $INTERFACE -p tcp --dport $REMOTEPT -j CapPortGW
+      iptables -t nat -A CapPort -m physdev --physdev-in $INTERFACE -p tcp --dport $REMOTESSL -j CapPortGW
+    else
+      #iptables -A CapPort -o $INTERFACE -j CapPortOut
+      iptables -A CapPort -i $INTERFACE -j CapPortACL
+      iptables -t nat -A CapPort -i $INTERFACE -p tcp --dport 80 -j CapPortHTTP
+      iptables -t nat -A CapPort -i $INTERFACE -p tcp --dport 443 -j CapPortHTTPS
+      iptables -t nat -A CapPort -i $INTERFACE -p tcp --dport $REMOTEPT -j CapPortGW
+      iptables -t nat -A CapPort -i $INTERFACE -p tcp --dport $REMOTESSL -j CapPortGW
+    fi
+  done
+  if [ "$WEBLOGIN" == Remote ] ; then
+    iptables -A CapPortACL -d $REMOTEIP -p tcp --dport $REMOTEPT -j ACCEPT
+    iptables -A CapPortACL -d $REMOTEIP -p tcp --dport $REMOTESSL -j ACCEPT
+  fi
+  iptables -A CapPortACL -j CapPortFS  
+  iptables -A CapPortACL -j CapPortCRL
+  iptables -A CapPortACL -j CapPortIdP  
+  iptables -A CapPortACL -j CapPortFC
+  iptables -A CapPortACL -j CapPortWL
+  iptables -A CapPortACL -j REJECT
+  $SCRIPTS/cp_auto &
+  $SCRIPTS/cp_renew &
+  $SCRIPTS/cpFreeServicesIPT 
+  $SCRIPTS/cpFreeClientsIPT 
+  while [ -f /tmp/cp_auto_starting ] ; do
+   sleep 0.5 
+  done
+  NCLIENTS=`$SCRIPTS/cpConnectedClientsIPT`
+  DOSPROTECTION="`cat $REGISTER/system/cp/DoSProtection 2>/dev/null`"
+  if ! [ "$DOSPROTECTION" = no ] ; then
+    [ "$DOSPROTECTION" = low ] && XMINUTE=75
+    [ "$DOSPROTECTION" = medium ] && XMINUTE=40
+    [ "$DOSPROTECTION" = high ] && XMINUTE=10
+    BURST=10
+    HASHLIMIT=" -mhashlimit --hashlimit-name Redirect_HTTP --hashlimit-mode srcip --hashlimit $XMINUTE/minute --hashlimit-burst $BURST"
+    iptables -t nat -A CapPortHTTP -p tcp --syn $HASHLIMIT -j $CAPTUREHTTP 
+    HASHLIMIT=" -mhashlimit --hashlimit-name Redirect_HTTPS --hashlimit-mode srcip --hashlimit $XMINUTE/minute --hashlimit-burst $BURST"
+    iptables -t nat -A CapPortHTTPS -p tcp --syn $HASHLIMIT -j $CAPTUREHTTPS
+    iptables -t nat -A CapPortHTTP -p tcp --syn -j DNAT --to-destination 127.0.0.1:54911
+    iptables -t nat -A CapPortHTTPS -p tcp --syn -j DNAT --to-destination 127.0.0.1:54911
+  fi
+  iptables -t nat -A CapPortHTTP -p tcp -j $CAPTUREHTTP
+  iptables -t nat -A CapPortHTTPS -p tcp -j $CAPTUREHTTPS
+  if [ "$WEBLOGIN" == Remote ] ; then
+    iptables -t nat -A CapPortGW -p tcp -dport $REMOTESSL -j DNAT --to-destination $REMOTEIP:$REMOTESSL
+    iptables -t nat -A CapPortGW -p tcp -dport $REMOTEPT -j DNAT --to-destination $REMOTEIP:$REMOTEPT
+  else
+    if ! [ "$DOSPROTECTION" = no ] ; then
+      HASHLIMIT=" -mhashlimit --hashlimit-name Redirect_GW --hashlimit-mode srcip --hashlimit $XMINUTE/minute --hashlimit-burst $BURST"
+      iptables -t nat -A CapPortGW -p tcp --syn $HASHLIMIT -j REDIRECT
+      iptables -t nat -A CapPortGW -p tcp --syn -j DNAT --to-destination 127.0.0.1:54911
+    fi
+    iptables -t nat -A CapPortGW -p tcp -j REDIRECT
+
+  fi
+  $SCRIPTS/cp_activatechain
+  logger -t "CaptivePortal" "GW: Success: Captive Portal Gateway started ($NCLIENTS clients connected)"
+   if [ "`cat $REGISTER/system/radius/Enabled 2>/dev/null`" != checked ] ; then
+     echo checked > "$REGISTER/system/radius/Enabled"
+     $SCRIPTS/radius_start
+     
+   fi
+   $SCRIPTS/runscript cpgw >/dev/null
+else
+  logger -t "CaptivePortal" "GW: Captive Portal Gateway is disabled"
+fi
+

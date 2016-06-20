@@ -1,0 +1,23 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function accounting() {
+   top.body.location="/cgi-bin/kerbynet?Section=Acct&STk=<xvar STk>&Action=Manage";
+};
+</script>
+</head>
+<body topmargin="0" text="#000000" onload="accounting()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23" bgcolor="#6060FF" width=100%>
+  <tr>
+    <td width="120" bgcolor="#FFFFFF">
+    <p align="center"><b><font color="#4040f0">ACCOUNTING</font></b></td>
+    <td width="120" align="center"  nowrap onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="accounting()"><font color="#FFFFFF"><b>Manage</b></font></td>
+    <td width="120" align="center"></td>
+    <td width="120" align="center"></td>
+    <td align="center"></td>
+  </tr>
+</table>
+</body>
+</html>

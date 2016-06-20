@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" = "-r" ] ; then
+  ( sleep 2 ; reboot 2>/dev/null >/dev/null ) &
+else
+  ( sleep 2 ; poweroff 2>/dev/null >/dev/null ) &
+fi

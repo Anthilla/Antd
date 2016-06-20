@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+GRP="$1"
+[ -z "$GRP" ] && GRP=all
+CONFIG="$REGISTER/system/net/L7"
+L7="/tmp/L7"
+if ! [ -d "$L7/Groups/$GRP" ] ; then
+  exit
+fi
+cd "$L7/Groups/$GRP"
+PROTOCOLS=`ls`
+for P in $PROTOCOLS ; do
+  echo echo "<option value='$P'>`cat $L7/Data/$P/Description`</option>"
+done
+
+

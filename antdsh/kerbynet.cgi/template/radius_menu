@@ -1,0 +1,37 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<base target="body">
+<script language="JavaScript">
+<xinclude menu_MouseEvent>
+function  ProxyRadius() {
+  var newwin=window.open("kerbynet?Section=Radius&STk=<xvar STk>&Action=Proxy","ProxyRadius","top=70,left=70,width=950,height=550,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+}
+function list_nas() {
+  var newwin=window.open("kerbynet?Section=Radius&STk=<xvar STk>&Action=ListNas","RadiusAP","top=70,left=150,width=770,height=500,scrollbars=yes,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+};
+function manage() {
+  top.body.location="kerbynet?Section=Radius&STk=<xvar STk>&Action=Manage";
+};
+function accounting() {
+   top.body.location="/cgi-bin/kerbynet?Section=Acct&STk=<xvar STk>&Action=Manage";
+};
+</script>
+</head>
+<body topmargin="0" text="#000000" onload="manage()">
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#C0C0C0" height="23" bgcolor="#6060FF" width=100%>
+  <tr>
+    <td width="120" bgcolor="#FFFFFF">
+    <p align="center"><b><font color="#4040f0">RADIUS</font></b></td>
+    <td width="120" align="center"  nowrap onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="manage()"><font color="#FFFFFF"><b>Manage</b></font></td>
+    <td width="140" align="center"  nowrap onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="accounting()"><font color="#FFFFFF"><b>Accounting</b></font></td>
+    <td width="170" align="center" nowrap onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="list_nas()"><font color="#FFFFFF"><b>Authorized Clients</b></font></td>
+    <td width="150" align="center"  nowrap onmouseover="over(this)" onmouseout="out(this)" style="cursor: pointer" onclick="ProxyRadius()"><font color="#FFFFFF"><b>Proxy Domains</b></font></td>
+    <td width="120" align="center"></td>
+    <td width="120" align="center"></td>
+    <td align="center"></td>
+  </tr>
+</table>
+</body>
+</html>

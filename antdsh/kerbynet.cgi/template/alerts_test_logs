@@ -1,0 +1,19 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Testing</title>
+<meta http-equiv="refresh" content="1;">
+<script>
+</script>
+</head>
+<body>
+<form name=data method=post action="kerbynet">
+<input type=hidden name=Section value="AutoUpdate">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=ID value="<xvar ID>">
+<pre>
+<xvar +alerts_test_logs (ID)>
+</pre>
+<a name='BOTTOM'></a>
+</form>
+</body>
+</html>

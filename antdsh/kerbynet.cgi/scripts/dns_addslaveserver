@@ -1,0 +1,8 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SERVER="$1"
+[ -z "$SERVER" ] && exit 1
+mkdir "$REGISTER/system/dns/SlaveServer/" 2>/dev/null 
+touch "$REGISTER/system/dns/SlaveServer/$SERVER"
+$SCRIPTS/dns_start
+

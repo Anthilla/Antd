@@ -1,0 +1,285 @@
+#!/usr/bin/perl
+# CNTop (Connection Top List for Zeroshell)
+# GPLv2
+# by Fulvio Ricciardi (December 28, 2014)
+
+use warnings;
+use Scalar::Util qw(looks_like_number);
+sub readkey {
+  my $key=shift;
+  my $value="";
+  if (open KEY,"<","/var/register/$key") {
+    $value=<KEY>;
+    close KEY;
+    chomp ($value);
+  }
+  return $value;
+}
+sub writekey {
+  my $key=shift;
+  my $value=shift;
+  mkdir "/var/register/system/cntop";
+  if (open KEY,">","/var/register/$key") {
+    print KEY "$value\n";
+    close KEY;
+  }
+}
+sub bits2Xbits {
+  my $bits=shift;
+  if($bits > 1000000000) { 
+    $bits = ( sprintf( "%0.2f", $bits/1000000000 )). " Gb";                   
+  } elsif ($bits > 1000000) {       
+    $bits = ( sprintf( "%0.2f", $bits/1000000 )). " Mb"; 
+  } elsif ($bits > 1000) {
+    $bits = ( sprintf( "%0.2f", $bits/1000 )). " Kb"; 
+  } else { 
+    $bits = sprintf( "%0.2f", $bits ). "  b";
+  }
+  return $bits;
+}
+sub bytes2Xbytes {
+  my $bytes=shift;
+  if($bytes > 1000000000) { 
+    $bytes = ( sprintf( "%0.2f", $bytes/1000000000 )). " GB";                   
+  } elsif ($bytes > 1000000) {       
+    $bytes = ( sprintf( "%0.2f", $bytes/1000000 )). " MB"; 
+  } elsif ($bytes > 1000) {
+    $bytes = ( sprintf( "%0.2f", $bytes/1000 )). " KB"; 
+  } else { 
+    $bytes = sprintf( "%0.2f", $bytes ). "  B";
+  }
+  return $bytes;
+}
+sub processConnections {
+  open PREV,"/tmp/cntop-prev";
+  while ($entry=<PREV>) {
+    ($Proto,$sIP,$dIP,$sPort,$dPort,$RX,$TX) = split(':',$entry);
+    $PTraffic{"$Proto:$sIP:$dIP:$sPort:$dPort"}=$RX+$TX; 
+  }
+  close PREV;
+  open PREV,">","/tmp/cntop-prev";
+  open TS,"<","/tmp/cntop-ts";
+  $TS1=<TS>;
+  close TS;
+  chomp($TS1);
+  $TS2=time();
+  if (!looks_like_number($TS1)) {
+    $TS1=$TS2-10;
+  }
+  $Delta=$TS2-$TS1;
+  if ($Delta<1) {
+    $Delta=1;
+  }
+  open TS,">","/tmp/cntop-ts";
+  print TS "$TS2";
+  close TS;
+  open CONNTRACK,"conntrack -L 2>/dev/null|awk -F= ' /^(udp|tcp)/ {printf \"%s:%s:%s:%s:%s:%s:%s\\n\",substr(\$1,0,index(\$1,\" \")-1),substr(\$2,0,index(\$2,\" \")-1),substr(\$3,0,index(\$3,\" \")-1),substr(\$4,0,index(\$4,\" \")-1),substr(\$5,0,index(\$5,\" \")-1),substr(\$7,0,index(\$7,\" \")-1),substr(\$13,0,index(\$13,\" \")-1)} /^icmp/ {printf \"%s:%s:%s:type=%s:code=%s:%s:%s\\n\",substr(\$1,0,index(\$1,\" \")-1),substr(\$2,0,index(\$2,\" \")-1),substr(\$3,0,index(\$3,\" \")-1),substr(\$4,0,index(\$4,\" \")-1),substr(\$5,0,index(\$5,\" \")-1),substr(\$8,0,index(\$8,\" \")-1),substr(\$15,0,index(\$15,\" \")-1)} /^unknown/ {printf \"%s:%s:%s:::%s:%s\\n\",substr(\$1,0,index(\$1,\" \")-1),substr(\$2,0,index(\$2,\" \")-1),substr(\$3,0,index(\$3,\" \")-1),substr(\$5,0,index(\$5,\" \")-1),substr(\$9,0,index(\$9,\" \")-1)}'|";
+  if ($DNS ne "no") {
+    open DC,"/tmp/dc";
+    while ($entry=<DC>) {
+      ($IP,$FQDN) = split(':',$entry);
+      chomp($FQDN);
+      $DC{"$IP"}=$FQDN; 
+    }
+    close DC;
+  }
+  $Throughput=0;
+  $Conn=0;
+  while ($entry=<CONNTRACK>) {
+    ($Proto,$sIP,$dIP,$sPort,$dPort,$RX,$TX) = split(':',$entry);
+    if ($dIP ne "127.0.0.1") {
+      chomp($TX);
+      if (looks_like_number($TX) && looks_like_number($RX)) {
+        print PREV "$Proto:$sIP:$dIP:$sPort:$dPort:$RX:$TX\n";
+        if (!defined ($PBytes=$PTraffic{"$Proto:$sIP:$dIP:$sPort:$dPort"})) {
+          $PBytes=0;
+        }
+        if ($RX+$TX-$PBytes<0) {
+          $PBytes=0;
+        }
+        $Tx{"$Proto:$sIP:$dIP:$sPort:$dPort"}=$TX;
+        $Rx{"$Proto:$sIP:$dIP:$sPort:$dPort"}=$RX;
+        if (($FilterStatus ne "on" ) || (($FilterProtocol eq "" || $FilterProtocol eq $Proto) && ($FilterIP =~ m/^[ ]*$/ || $sIP =~ /$FilterIP/ || $dIP =~ /$FilterIP/) && ($FilterPort =~ /^[ ]*$/ || $sPort eq $FilterPort || $dPort eq $FilterPort))) {
+          $Conn++;
+          $Bytes{"$Proto:$sIP:$dIP:$sPort:$dPort"}=$RX+$TX-$PBytes;
+          $Throughput+=$RX+$TX-$PBytes;
+          if (defined ($IP_CONN{"$sIP"})) {
+            $IP_CONN{"$sIP"}++;
+            $IP_RX{"$sIP"}+=$RX;
+            $IP_TX{"$sIP"}+=$TX;
+            $IP_Bytes{"$sIP"}+=$RX+$TX-$PBytes;
+          } else {
+            $IP_CONN{"$sIP"}=1;
+            $IP_RX{"$sIP"}=$RX;
+            $IP_TX{"$sIP"}=$TX;
+            $IP_Bytes{"$sIP"}=$RX+$TX-$PBytes;
+          }
+        }
+      }
+    }
+  }
+  close PREV;
+  close CONNTRACK;
+}
+sub viewSummary {
+  open SHELL,"uptime|awk -F'average:' '{print \$2}'|awk -F',' '{print \$1}'|";
+  $LOAD=<SHELL>;
+  close SHELL;
+  open SHELL,"/root/kerbynet.cgi/scripts/cpus|"; 
+  $LOAD=int($LOAD*100/<SHELL>);
+  close SHELL;
+  open READ,"</proc/sys/net/netfilter/nf_conntrack_count";
+  $CONN=<READ>;
+  close READ;
+  $Bitrate=bits2Xbits($Throughput*8/$Delta);
+  printf "<table width=30%%>";
+  printf "<tr><td width=1%%>Connections&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>:</td><td align=right>%s/%s</td></tr>",$Conn,$CONN;
+  printf "<tr><td nowrap>Load Avg</td><td>:</td><td align=right>%d%%</td></tr>\n",$LOAD;
+  printf "<tr><td>Throughput</td><td>:</td><td align=right>%s/s</td></tr>\n",$Bitrate;
+  printf "</table>";
+  printf "<br>";
+}
+sub viewBitrate {
+  processConnections();
+  viewSummary();
+  print "<table width=100%>\n";
+  print "<tr style='color:#3030f0'><th align=left nowrap width=1%>Proto&nbsp;&nbsp;&nbsp;</th><th align=left nowrap width=1%>Source IP</th><th align=left nowrap>&nbsp;&nbsp;&nbsp;Port</th><th align=left nowrap width=1%>&nbsp;&nbsp;&nbsp;Destination IP</th><th align=left nowrap>&nbsp;&nbsp;&nbsp;Port</th><th align=right nowrap width=1%>Data =></th><th align=right nowrap width=1%>Data <=</th><th align=right nowrap width=1%>Bitrate</th></tr>";
+  for ($I=1; $I<=18 ; $I++) {
+    $Max=0;
+    $Cn="";
+    foreach $K (keys %Bytes) {
+      if ($Bytes{"$K"}>$Max) {
+        $Max=$Bytes{"$K"};
+        $Cn=$K;
+      }
+    }
+    if ($Cn ne "") {
+      ($Proto,$sIP,$dIP,$sPort,$dPort)=split(":",$Cn);
+      if ($DNS ne "no") {
+        if (defined ($DC{"$sIP"})) {
+          $sHost=substr($DC{"$sIP"},0,33);
+          if ($sHost ne $DC{"$sIP"}) {
+            $sHost="$sHost+";
+          }
+        } else {
+          $sHost=$sIP;
+          if (!defined ($resolv{"$sIP"})) {
+	    $resolv{"$sIP"}=$sIP;
+          }
+        }
+        if (defined ($DC{"$dIP"})) {
+          $dHost=substr($DC{"$dIP"},0,33);
+          if ($dHost ne $DC{"$dIP"}) {
+            $dHost="$dHost+";
+          }
+        } else {
+          $dHost=$dIP;
+          if (!defined ($resolv{"$dIP"})) {
+	    $resolv{"$dIP"}=$dIP;
+          }
+        }
+      } else {
+        $sHost=$sIP;
+	$dHost=$dIP;
+      }
+      printf("<tr><td nowrap>%s&nbsp;&nbsp;</td><td nowrap>%s</td><td nowrap>&nbsp;&nbsp;&nbsp;%s</td><td nowrap>&nbsp;&nbsp;&nbsp;%s</td><td nowrap>&nbsp;&nbsp;&nbsp;%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s/s</td>\n",$Proto,$sHost,$sPort,$dHost,$dPort,bytes2Xbytes($Rx{"$Cn"}),bytes2Xbytes($Tx{"$Cn"}),bits2Xbits($Bytes{"$Cn"}*8/$Delta));
+      delete $Bytes{"$Cn"};
+    }
+  }
+  print "</table>\n";
+  if ($DNS ne "no") {
+    $Resolving="";
+    foreach $K (keys %resolv) {
+      $Resolving="$Resolving $K";
+    }
+    system("/root/kerbynet.cgi/scripts/dnscache $Resolving &");
+  }
+}
+
+
+sub viewConnections {
+  processConnections();
+  viewSummary();
+  print "<table width=90%>\n";
+  print "<tr style='color:#3030f0'><th align=left width=50%>Host</th><th align=center witdh=1%>Connections</th><th align=right>Tx Data</th><th align=right>Rx Data</th><th align=right>Bitrate</th></tr>";
+  for ($I=1; $I<=18 ; $I++) {
+    $Max=0;
+    $IP="";
+    foreach $K (keys %IP_CONN) {
+      if ($OrderBy eq "Bitrate") {
+        if ($IP_Bytes{"$K"}>$Max) {
+          $Max=$IP_Bytes{"$K"};
+          $IP=$K;
+        }
+      } else {
+        if ($IP_CONN{"$K"}>$Max) {
+          $Max=$IP_CONN{"$K"};
+          $IP=$K;
+        }
+      }
+    }
+    if ($IP ne "") {
+      if ($DNS ne "no") {
+        if (defined ($DC{"$IP"})) {
+          $Host=$DC{"$IP"};
+        } else {
+          $Host=$IP;
+          if (!defined ($resolv{"$IP"})) {
+	    $resolv{"$IP"}=$IP;
+          }
+        }
+      } else {
+        $Host=$IP;
+      }
+      printf("<tr><td>%s</td><td align=center>%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s</td><td align=right nowrap>&nbsp;&nbsp;&nbsp;%s/s</td>\n",$Host,$IP_CONN{$IP},bytes2Xbytes($IP_RX{"$IP"}),bytes2Xbytes($IP_TX{"$IP"}),bits2Xbits($IP_Bytes{"$IP"}*8/$Delta));
+      delete $IP_CONN{"$IP"};
+    }
+  }
+  print "</table>\n";
+  if ($DNS ne "no") {
+    $Resolving="";
+    foreach $K (keys %resolv) {
+      $Resolving="$Resolving $K";
+    }
+    system("/root/kerbynet.cgi/scripts/dnscache $Resolving &");
+  }
+}
+
+if (@ARGV==0) {
+  system("/root/kerbynet.cgi/scripts/cntop.sh");
+  exit;
+}
+$Mode=$ARGV[0];
+$OrderBy=$ARGV[1];
+$DNS=$ARGV[2];
+$FilterStatus=$ARGV[3];
+$FilterProtocol=$ARGV[4];
+$FilterIP=$ARGV[5];
+$FilterPort=$ARGV[6];
+if ($Mode ne readkey("/system/cntop/Mode")) {
+   writekey("/system/cntop/Mode",$Mode);
+}
+if ($OrderBy ne readkey("/system/cntop/OrderBy")) {
+   writekey("/system/cntop/OrderBy",$OrderBy);
+}
+if ($DNS ne readkey("/system/cntop/DNS")) {
+   writekey("/system/cntop/DNS",$DNS);
+}
+if ($FilterStatus ne readkey("/system/cntop/FilterStatus")) {
+   writekey("/system/cntop/FilterStatus",$FilterStatus);
+}
+if ($FilterProtocol ne readkey("/system/cntop/FilterProtocol")) {
+   writekey("/system/cntop/FilterProtocol",$FilterProtocol);
+}
+if ($FilterIP ne readkey("/system/cntop/FilterIP")) {
+   writekey("/system/cntop/FilterIP",$FilterIP);
+}
+if ($FilterPort ne readkey("/system/cntop/FilterPort")) {
+   writekey("/system/cntop/FilterPort",$FilterPort);
+}
+
+if ($Mode eq "Bitrate") {
+  viewBitrate();
+} else {
+  viewConnections();
+}

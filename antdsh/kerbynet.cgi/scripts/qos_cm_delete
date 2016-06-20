@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CDIR="$REGISTER/system/net/QoS/Class/$NAME"
+DSCP=`cat $CDIR/DSCP 2>/dev/null`
+if [ -n "$DSCP" ] ; then
+  $SCRIPTS/fw_initrules QoS 2>/dev/null >/dev/null
+fi
+rm -rf $REGISTER/system/net/interfaces/*/QoS/Class/$NAME 
+rm -rf "$CDIR"
+$SCRIPTS/fw_initrules QoS 2>/dev/null >/dev/null

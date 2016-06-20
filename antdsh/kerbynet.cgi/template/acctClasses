@@ -1,0 +1,83 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>AcctClasses</title>
+<script>
+function Remove() {
+  X=document.data;
+  Selected=false;
+  if (X.CLASS==undefined) {
+    alert("No class to remove.");
+    return;
+  }
+  if (X.CLASS.length==undefined) {
+    if (X.CLASS.checked) {
+      Name=X.CLASS.value;
+      Selected=true;
+    }
+  } else {
+    for (s=0; s<X.CLASS.length; s++) {
+      if (X.CLASS[s].checked) {
+        Name=X.CLASS[s].value;
+        Selected=true;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a class to remove.");
+    return;
+  }
+  if (Name=="DEFAULT") {
+    alert("The DEFAULT class cannot be removed.");
+    return;
+  }
+  if (confirm("Are you sure you want to remove the selected class?")) {
+    X.Action.value="RemoveClass";
+    X.submit();
+  }
+  
+}
+function EditClass() {
+  X=document.data;
+  Selected=false;
+  if (X.CLASS==undefined) {
+    alert("No class to change.");
+    return;
+  }
+  if (X.CLASS.length==undefined) {
+    if (X.CLASS.checked) {
+      Selected=true;
+      ClassName=X.CLASS.value;
+    }
+  } else {
+    for (s=0; s<X.CLASS.length; s++) {
+      if (X.CLASS[s].checked) {
+        Selected=true;
+        ClassName=X.CLASS[s].value;
+      }
+    }
+  }
+  if (!Selected) {
+    alert("You should select a class to change.");
+    return;
+  }
+  newwin=window.open("kerbynet?Section=Acct&STk=<xvar STk>&Action=ChangeClass&ClassName="+ClassName,"AcctAddClass","top=200,left=250,width=540,height=360,scrollbars=no,menubar=no,toolbar=no,statusbar=no");
+  newwin.focus();
+
+
+}
+
+</script>
+</head>
+<body topmargin=0 leftmargin=0 rightmargin=0>
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Acct">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="">
+<table width=100% cellpadding=0 class=Smaller1>
+<tr bgcolor=#e0e0ff align=center><td width=1% class=Smaller1>&nbsp;&nbsp;&nbsp;</td><td align=left class=Smaller1>Name</td><td class=Smaller1>MBytes</td><td class=Smaller1>Hours</td><td class=Smaller1>Mbit/s</td><td class=Smaller1>Cost/MB</td><td class=Smaller1>Cost/H</td></tr>
+<xvar +acctClassList>
+
+</table>
+</form>
+</body>
+</html>

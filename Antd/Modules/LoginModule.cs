@@ -29,10 +29,8 @@
 
 using System;
 using System.Dynamic;
-using antdlib;
-using antdlib.Auth;
-using antdlib.Auth.T2FA;
-using antdlib.Common;
+using antdlib.common;
+using Antd.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;
@@ -76,20 +74,8 @@ namespace Antd.Modules {
                 var cookies = Request.Cookies;
                 cookies.Clear();
                 cookies.Remove("antd-session");
-                var sessionCoockie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                if (ApplicationSetting.TwoFactorAuth() == false) {
-                    return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(sessionCoockie);
-                }
-                var validationEmail = UserDatabase.GetUserEmail(validationGuid.ToGuid());
-                var requestEmail = (string)Request.Form.Email;
-                if (validationEmail == null && requestEmail == "") {
-                    return Response.AsRedirect("/");
-                }
-                var email = validationEmail ?? requestEmail;
-                if (email != null) {
-                    Authentication.SendNotification(validationGuid.ToGuid().ToString(), username, email);
-                }
-                return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(sessionCoockie);
+                var sessionCookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
+                return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(sessionCookie);
             };
 
             Get["/logout"] = x => {
@@ -115,27 +101,27 @@ namespace Antd.Modules {
                 return View["login-token", model];
             };
 
-            Post["/token"] = x => {
-                var token = (string)Request.Form.Token;
-                var session = (string)Request.Form.Session;
-                var validation = Authentication.Confirm(session, token);
-                var username = (string)Request.Form.Username;
-                var password = (string)Request.Form.Password;
-                var validationGuid = UserDatabase.ValidateUser(username, password);
-                DateTime? expiry = DateTime.Now.AddHours(100);
-                if (Request.Form.RememberMe.HasValue) {
-                    expiry = DateTime.Now.AddHours(8);
-                }
+            //Post["/token"] = x => {
+            //    var token = (string)Request.Form.Token;
+            //    var session = (string)Request.Form.Session;
+            //    var validation = Authentication.Confirm(session, token);
+            //    var username = (string)Request.Form.Username;
+            //    var password = (string)Request.Form.Password;
+            //    var validationGuid = UserDatabase.ValidateUser(username, password);
+            //    DateTime? expiry = DateTime.Now.AddHours(100);
+            //    if (Request.Form.RememberMe.HasValue) {
+            //        expiry = DateTime.Now.AddHours(8);
+            //    }
 
-                if (validation == false) {
-                    return Context.GetRedirect("/login");
-                }
-                if (validationGuid == null) {
-                    return Context.GetRedirect("/login");
-                }
-                var cookie = new NancyCookie("antd-session", session);
-                return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
-            };
+            //    if (validation == false) {
+            //        return Context.GetRedirect("/login");
+            //    }
+            //    if (validationGuid == null) {
+            //        return Context.GetRedirect("/login");
+            //    }
+            //    var cookie = new NancyCookie("antd-session", session);
+            //    return this.LoginAndRedirect(Guid.Parse(session), expiry).WithCookie(cookie);
+            //};
 
             Post["/login/verify"] = x => {
                 var username = (string)Request.Form.Username;

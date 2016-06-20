@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SCRIPTNAME="$1"
+OPT="$2"
+[ -z "$SCRIPTNAME" ] && SCRIPTNAME=postboot
+DIR=$REGISTER/system/startup/scripts
+if ! cd $DIR/$SCRIPTNAME 2>/dev/null ; then
+  echo "# Bash script: $SCRIPTNAME" 
+  exit
+fi
+if [ "$OPT" == status ] ; then
+  cat Enabled 2>/dev/null
+else
+  cat File 2>/dev/null
+fi
+exit 0

@@ -1,0 +1,25 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<title>OpenVPN Clients </title>
+<script language>
+</script>
+</head>
+<body>
+  <form name=data action=kerbynet method=post>
+   <input type=hidden name=Section value=VPN>
+   <input type=hidden name=Action><input type=hidden name=STk value=<xvar STk>>
+<table width=100%><tr>
+   <td nowrap>
+     <font class=Bigger2 color=#0000c0>
+       <b>OpenVPN Connected Clients</b>
+     </font>
+   </td><td align=right nowrap>
+   <input type=button value=Refresh onclick="location='kerbynet?Section=VPN&STk=<xvar STk>&Action=ShowOVClients'">&nbsp;<input type=button value=Close onclick="window.close()">     
+   </td>
+</tr></table>
+
+<hr>    
+<xvar +ov_clients>
+
+</body>
+</html>

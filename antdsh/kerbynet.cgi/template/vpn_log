@@ -1,0 +1,11 @@
+<html>
+<head><link rel='stylesheet' type='text/css' href='/default.css'>
+<script>
+  setInterval("window.location.reload(true)",5000);
+</script>
+</head>
+<body>
+<xvar _LOG>
+<a name=END></a>
+</body>
+</html>

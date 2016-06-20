@@ -1,0 +1,32 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+cd $REGISTER/system/acct/entries || exit 1
+USER_NAME=`echo "$USER_NAME" |sed 's/\"//g'`
+ACCT_SESSION_ID=`echo "$ACCT_SESSION_ID" |sed 's/\"//g'`
+if [ -n "$USER_NAME" -a -n "$ACCT_SESSION_ID" ] ; then
+  if ! [ -d "$USER_NAME" ] ; then
+    mkdir -p "$USER_NAME/sessions"
+  fi
+  if ! [ -d "$USER_NAME/sessions/$ACCT_SESSION_ID" ] ; then
+    mkdir "$USER_NAME/sessions/$ACCT_SESSION_ID"
+  fi
+  S="$USER_NAME/sessions/$ACCT_SESSION_ID"
+  DATE=`date +%s`
+  DATE=$((DATE-ACCT_DELAY_TIME))
+  echo $DATE > "$S/start"
+  cp "$S/start" "$S/Last"
+  cp "$S/start" "$USER_NAME/Last"
+  echo "$FRAMED_IP_ADDRESS" |sed 's/\"//g'> "$S/IP"
+  echo "$CALLING_STATION_ID" |sed 's/\"//g'|sed 's/-/:/g'> "$S/MAC"
+  if [ -n "$NAS_IDENTIFIER" ] ; then
+    if echo "$NAS_IDENTIFIER" | grep  -q '<br>' ; then
+      echo "$NAS_IDENTIFIER" | sed 's/\"//g'  > "$S/NAS"
+    else
+      echo "$NAS_IDENTIFIER" |sed 's/\"//g'|cut -f1 -d. > "$S/NAS"
+    fi
+  else
+    echo "$NAS_IP_ADDRESS" |sed 's/\"//g'> "$S/NAS"
+  fi
+  mkdir -p "$REGISTER/system/acct/credits/$USER_NAME"
+fi
+

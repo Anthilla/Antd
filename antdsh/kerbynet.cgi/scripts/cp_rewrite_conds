@@ -1,0 +1,12 @@
+#!/bin/bash
+cat <<EOF
+    RewriteCond %{REQUEST_URI} !/msdownload/update
+    RewriteCond %{REQUEST_URI} !/windowsupdate/
+    RewriteCond %{REQUEST_URI} !/favicon.ico
+    RewriteCond %{HTTP_USER_AGENT} !wispr$
+    RewriteCond %{HTTP_USER_AGENT} !WISPr$
+    RewriteCond %{HTTP_USER_AGENT} !NCSI
+    RewriteCond %{HTTP_USER_AGENT} !Apple-PubSub
+    RewriteCond %{REQUEST_URI} !crl
+    RewriteCond %{REQUEST_URI} !crt$
+EOF

@@ -1,0 +1,4 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+iptables -F SYS_GUI
+iptables -A SYS_GUI -p tcp --dport 12081 -s $REMOTE_ADDR -j ACCEPT

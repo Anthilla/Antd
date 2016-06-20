@@ -1,0 +1,14 @@
+#!/bin/sh
+DOMAIN="$1"
+. /etc/kerbynet.conf
+cd "$REGISTER/system/radius/proxy/realms" || exit 1
+DOMAINS=`ls`
+if [ -n "$DOMAINS" ] ; then
+  for D in $DOMAINS ; do
+    echo $D
+    if [ "$D" == DEFAULT -o "`echo $D | awk '{print tolower($0)}'`" == "`echo $DOMAIN | awk '{print tolower($0)}'`" ] ; then
+      exit
+    fi
+  done
+fi
+exit 2

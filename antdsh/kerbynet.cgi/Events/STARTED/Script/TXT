@@ -1,0 +1,8 @@
+
+echo "$(SLOT): $(ZEROSHELL) ($(KERNEL))"    | VIEWER
+echo "$(SLOT)"                              | MAIL
+echo "$(ZEROSHELL)"                         | MAIL
+echo "$(KERNEL)"                            | MAIL
+echo "$(SLOT)"                              | SMS
+echo "$(ZEROSHELL)"                         | SMS
+echo "$(KERNEL)"                            | SMS

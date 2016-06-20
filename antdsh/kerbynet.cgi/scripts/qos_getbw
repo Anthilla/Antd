@@ -1,0 +1,45 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+CLASS="$2"
+TYPE="$3"
+FORMAT="$4"
+CM="$5"
+[ -z "$INTERFACE" -o -z "$CLASS" ] && exit 1
+[ -z "$TYPE" ] && TYPE=Max
+[ -z "$FORMAT" ] && FORMAT=F
+DIR="$REGISTER/system/net/interfaces/$INTERFACE/QoS/Class/$CLASS"
+LOCAL="`cat $DIR/Local 2>/dev/null`"
+if [ "$LOCAL" != yes ] ; then
+  CM=CM
+fi
+if [ "$CM" == CM ] ; then
+  DIR="$REGISTER/system/net/QoS/Class/$CLASS"
+fi
+BW="`cat $DIR/$TYPE 2>/dev/null`"
+if [ -z "$BW" ] ; then
+  exit 
+fi
+UNIT="`cat $DIR/${TYPE}Unit 2>/dev/null`"
+if [ "$FORMAT" == F ] ; then
+  echo "$BW$UNIT"
+  exit
+fi
+if [ "$FORMAT" == K ] ; then
+  if [ "$UNIT" == "Mbit/s" ] ; then
+    echo "$BW" | awk '{print $0*1024}'
+    exit
+  else 
+    echo "$BW"
+    exit
+  fi
+else
+  if [ "$UNIT" == "Kbit/s" ] ; then
+    echo "$BW" | awk '{print $0/1024}'
+    exit
+  else
+    echo "$BW"
+    exit
+  fi
+fi
+

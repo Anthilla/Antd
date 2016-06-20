@@ -1,0 +1,22 @@
+<html>
+<head>
+<script>
+function loaded() {
+  document.data.submit();
+}
+</script>
+</head>
+<body onload="loaded()">
+<form name=data method=post action="<xvar GW>/cgi-bin/zscp">
+<input type=hidden name=Section value="CPGW">
+<input type=hidden name=Action value="ClientCTRL">
+<input type=hidden name=U value="<xvar _U>">
+<input type=hidden name=Realm value="<xvar _Realm>">
+<input type=hidden name=IP value="<xvar _IP>">
+<input type=hidden name=RS value="<xvar _RS>">
+<input type=hidden name=Powered value="<xvar _Powered>">
+<input type=hidden name=Authenticator value="<xvar _Authenticator>">
+<input type=hidden name=ZSCPRedirect value="<xvar _ZSCPRedirect>">
+</form>
+</body>
+</html>

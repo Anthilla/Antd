@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+OP="$2"
+[ -z "$ID" ] && exit 1
+[ -z "$OP" ] && exit 2
+TYPE=`echo "$ID" |awk -F: '{print $2}'`
+ID=`echo "$ID" |awk -F: '{print $1}'`
+if $SCRIPTS/autoupdate-checkInstallerActivity "$ID:$TYPE" "$OP" ; then
+  tail -25 /tmp/installer-$ID
+else
+  STk="`rand``cat /tmp/STk_Admin 2>/dev/null`"
+  echo "<script>location='kerbynet?STk=$STk&Action=Render&Object=autoupdate-output-finished&ID=$ID:$TYPE&Op=$OP#BOTTOM'</script>"
+fi

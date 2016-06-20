@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using antdlib.Log;
+using antdlib.common;
 
 namespace antdlib.Websocket.Client {
     public class WebSocket {

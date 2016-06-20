@@ -28,12 +28,11 @@
 //-------------------------------------------------------------------------------------
 
 using System.IO;
-using antdlib;
+using antdlib.common;
+using antdlib.common.Helpers;
 using antdlib.Certificate;
-using antdlib.Log;
-using antdlib.MountPoint;
-using antdlib.Terminal;
 using Antd.Helpers;
+using Antd.MountPoint;
 using Nancy;
 using Nancy.Security;
 
@@ -55,7 +54,7 @@ namespace Antd.Modules {
 
             Post["/dc/setup"] = x => {
                 foreach (var dir in _directories) {
-                    var mntDir = Mount.GetDirsPath(dir);
+                    var mntDir = Mounts.GetDirsPath(dir);
                     Terminal.Execute($"mkdir -p {mntDir}");
                     Terminal.Execute($"cp /mnt/livecd{dir} {mntDir}");
                     Mount.Dir(dir);
@@ -76,13 +75,13 @@ namespace Antd.Modules {
                 Terminal.Execute($"samba-tool domain provision --option=\"interfaces = lo br0\" --option=\"bind interfaces only = yes\" --use-rfc2307 --domain={domainName} --realm={domainRealmname} --host-name={domainHostname} --host-ip={domainHostip} --adminpass={domainAdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
                 ConsoleLogger.Log($"domain {domainName} created");
 
-                if (!Mount.IsAlreadyMounted("/etc/hosts")) {
+                if (!Mounts.IsAlreadyMounted("/etc/hosts")) {
                     Mount.File("/etc/hosts");
                 }
                 Terminal.Execute("echo 127.0.0.1 localhost.localdomain localhost > /etc/hosts");
                 Terminal.Execute($"echo {domainHostip} {domainHostname}.{domainRealmname} {domainHostname} >> /etc/hosts");
 
-                if (!Mount.IsAlreadyMounted("/etc/resolv.conf")) {
+                if (!Mounts.IsAlreadyMounted("/etc/resolv.conf")) {
                     Mount.File("/etc/resolv.conf");
                 }
                 Terminal.Execute(!File.Exists("/etc/resolv.conf")

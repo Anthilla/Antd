@@ -1,0 +1,40 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/default.css'>
+<title>Proxy WhiteList</title>
+<script>
+function loaded() {
+  X=document.data;
+}
+function SaveInfo() {
+  X=document.data;
+  X.save.disabled=true;
+//  X.GeneralInfo.value=X.GeneralInfo.value.replace(/\"/g,"&quot;");
+//  X.AccountInfo.value=X.AccountInfo.value.replace(/\"/g,"&quot;");
+  X.submit();
+}
+</script>
+</head>
+<body style="color: #404040" topmargin=5 onload="loaded()">
+<form name=data method=post action=kerbynet>
+<input type=hidden name=Section value="Proxy">
+<input type=hidden name=STk value=<xvar STk>>
+<input type=hidden name=Action value="SaveWhiteList">
+<table width=100%><tr>
+<td><font color=#3030d0 class=Bigger2><b>Proxy WhiteList</b></font></td><td align=right><input type=button value=Save onclick="SaveInfo()" name=save><input type=button value=Close onclick="window.close()"></td>
+</tr></table>
+<hr>
+<table width=100% cellpadding=0 cellspacing=0><tr><td><span style="background-color: #6666ff"><font color=#FFFFFF>&nbsp;HTTP URLs&nbsp;</font></span><font class=Smaller1></font></td><td align=right><font color=#20b020><xvar /system/havp/WhiteList.N> Items</font>&nbsp;&nbsp;</td></tr></table>
+  <table width=100% border=1 cellpadding=0 cellspacing=0 bordercolor=#4040d0><tr><td>
+<textarea name=URLS style="width: 100% ; height: 250">
+<xvar /system/havp/WhiteList.txt></textarea>
+  </td></tr></table>
+<hr>
+<b>Notes:</b><br>
+You can match multiple URLs by using the wildcard character <font class=Bigger1><b>*</b></font><br>
+<b>Examples:</b><br>
+<i>www.example.com</i> matches only the home page of the site http://www.example.com<br>
+<i>www.example.com/*</i> matches any URL of the site http://www.example.com
+</form>
+</body>
+</html>

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using antdlib.Log;
+using antdlib.common;
 using antdlib.Websocket.Connections;
 
 namespace antdlib.Websocket {
