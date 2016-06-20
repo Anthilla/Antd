@@ -1,6 +1,0 @@
-#!/bin/bash
-if ls -l /opt/shibboleth-sp | grep -w -q packages ; then
-  echo Upgraded
-else
-  echo Native
-fi

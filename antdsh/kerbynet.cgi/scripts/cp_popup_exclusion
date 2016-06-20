@@ -1,2 +1,0 @@
-#!/bin/bash
-echo "$HTTP_USER_AGENT" |egrep -w -q -f /var/register/system/cp/Popup/Exclusions

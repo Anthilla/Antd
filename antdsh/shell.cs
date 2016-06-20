@@ -39,12 +39,12 @@ namespace antdsh {
             if (IsAntdRunning()) return;
             WriteLine("Antd is not running, so we can start it.");
             WriteLine($"Looking for antds in {Parameter.AntdVersionsDir}");
-            var newestVersionFound = antdlib.Antdsh.Execute.GetNewestVersion();
+            var newestVersionFound = antdsh.Execute.GetNewestVersion();
             if (newestVersionFound.Key != null) {
-                antdlib.Antdsh.Execute.LinkVersionToRunning(newestVersionFound.Key);
+                antdsh.Execute.LinkVersionToRunning(newestVersionFound.Key);
                 WriteLine($"New antd '{newestVersionFound.Key}' linked to running version");
                 WriteLine("Restarting services now...");
-                antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
+                antdsh.Execute.RestartSystemctlAntdServices();
                 if (IsAntdRunning()) {
                     WriteLine("Antd is running now!");
                 }
@@ -66,10 +66,10 @@ namespace antdsh {
                 _startCount++;
                 WriteLine($"Retry #{_startCount}");
                 if (_startCount < 5) {
-                    antdlib.Antdsh.Execute.LinkVersionToRunning(versionToRun);
+                    antdsh.Execute.LinkVersionToRunning(versionToRun);
                     WriteLine($"New antd '{versionToRun}' linked to running version");
                     WriteLine("Restarting services now...");
-                    antdlib.Antdsh.Execute.RestartSystemctlAntdServices();
+                    antdsh.Execute.RestartSystemctlAntdServices();
                     if (IsAntdRunning()) {
                         WriteLine("Antd is running now!");
                     }
@@ -89,7 +89,7 @@ namespace antdsh {
             WriteLine("Checking whether antd is running or not");
             if (!IsAntdRunning()) return;
             WriteLine("Removing everything and stopping antd");
-            antdlib.Antdsh.Execute.StopServices();
+            antdsh.Execute.StopServices();
             UmountAll();
             if (IsAntdRunning() == false) {
                 WriteLine("Antd has been stopped now!");
@@ -108,7 +108,7 @@ namespace antdsh {
                 WriteLine($"Retry #{_stopCount}");
                 if (_stopCount < 5) {
                     WriteLine("Removing everything and stopping antd.");
-                    antdlib.Antdsh.Execute.StopServices();
+                    antdsh.Execute.StopServices();
                     UmountAll();
                     if (IsAntdRunning() == false) {
                         WriteLine("Antd has been stopped now!");
@@ -156,7 +156,7 @@ namespace antdsh {
 
         public static void CleanTmp() {
             WriteLine("Cleaning tmp.");
-            antdlib.Antdsh.Execute.CleanTmp();
+            antdsh.Execute.CleanTmp();
         }
 
         public static void Exit() {

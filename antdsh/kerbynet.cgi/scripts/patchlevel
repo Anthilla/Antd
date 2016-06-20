@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-PATCHLEVEL=0
-if [ -z "$PATCHLEVEL" ] ; then
-  echo 0
-else
-  echo $PATCHLEVEL
-fi

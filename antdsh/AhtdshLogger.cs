@@ -28,40 +28,25 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using antdlib.common;
 
-namespace antdlib.Apps {
-    public class Management {
-        public class AppInfo {
-            public string Name { get; set; }
-            public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>();
-        }
+namespace antdsh {
+    public class AntdshLogger {
+        private const string AntdshConfigRoot = "/cfg/antdsh";
+        private static readonly string AntdshReport = $"{AntdshConfigRoot}/report";
+        private static readonly string AntdshReportFile = $"{AntdshReport}/log.txt";
 
-        public static AppInfo[] DetectApps() {
-            var list = new List<AppInfo>();
-            var appinfoFiles = Directory.EnumerateFiles("/framework", "*.appinfo", SearchOption.AllDirectories).ToArray();
-            list.AddRange(appinfoFiles.Select(MapInfoFile));
-            return list.ToArray();
-        }
-
-        private static AppInfo MapInfoFile(string path) {
-            var text = FileSystem.ReadFile(path);
-            var rows = text.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            var appinfo = new AppInfo();
-            foreach (var kvp in from row in rows select row.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray() into pair where pair.Length > 1 select new KeyValuePair<string, string>(pair[0], pair[1])) {
-                appinfo.Values.Add(kvp);
+        public static void SetupFile() {
+            Directory.CreateDirectory(AntdshConfigRoot);
+            Directory.CreateDirectory(AntdshReport);
+            if (!File.Exists(AntdshReportFile)) {
+                File.WriteAllText(AntdshReportFile, "");
             }
-            if (appinfo.Values.Any()) {
-                appinfo.Name = appinfo.Values.FirstOrDefault(k => k.Key == "name").Value;
-            }
-            return appinfo;
         }
 
-        public static string[] GetWantedDirectories(AppInfo appinfo) {
-            return (from kvp in appinfo.Values where kvp.Key == "app_path" select kvp.Value).ToArray();
+        public static void WriteLine(string message) {
+            Console.WriteLine(message);
+            File.AppendAllLines(AntdshReportFile, new[] { $"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} - {message}" });
         }
     }
 }

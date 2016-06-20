@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-
-if [ "`cat $REGISTER/system/cp/Auth/Enabled 2>/dev/null`" = yes ] && ps -e |grep -w -q CapPortAS ; then
-  echo "<font color=#00d000>ACTIVE</font>"
-else
-  echo "<font color=#f00000>DOWN</font>"
-fi

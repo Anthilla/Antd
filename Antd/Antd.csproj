@@ -145,7 +145,6 @@
     <Compile Include="Middleware\DebugMiddlewareExtensions.cs" />
     <Compile Include="Middleware\DebugMiddlewareOptions.cs" />
     <Compile Include="Modules\CommandModule.cs" />
-    <Compile Include="Modules\UpdateModule.cs" />
     <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />

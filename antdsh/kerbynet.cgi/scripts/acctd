@@ -1,9 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-
-
-while true ; do
-  $SCRIPTS/acct_process_requests
-  sleep 19
-done
-

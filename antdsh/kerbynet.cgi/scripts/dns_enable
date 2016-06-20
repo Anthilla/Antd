@@ -1,5 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-echo checked > $REGISTER/system/dns/Enabled
-echo "any" > $REGISTER/system/dns/listen
-$SCRIPTS/dns_start

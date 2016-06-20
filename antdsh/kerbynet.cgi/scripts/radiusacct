@@ -1,2 +1,0 @@
-#!/bin/sh
-radclient 127.0.0.1 acct ZeroShell

@@ -30,7 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using antdlib.Antdsh;
+using antdlib;
 using antdlib.common;
 
 namespace antdsh {
@@ -65,9 +65,6 @@ namespace antdsh {
             if (command == "help") {
                 Help();
             }
-            else if (command == "test") {
-                Console.WriteLine(Terminal.Execute(".kerbynet.cgi/scripts/wifi-scanning"));
-            }
             else if (command == "start") {
                 Shell.Start();
             }
@@ -80,7 +77,7 @@ namespace antdsh {
             else if (command.StartsWith("update")) {
                 var context = command.Split(' ');
                 if (context.Length > 0) {
-                    UpdateObject.Update(context[1]);
+                    Update.LaunchUpdateFor(context[1]);
                 }
                 else {
                     Console.WriteLine("Check 'update' command usage:");

@@ -1,6 +1,0 @@
-#!/bin/sh
-source /etc/kerbynet.conf
-if df | grep -q -w "/DB" ; then
-   rm -f /Database/.settings/Active
-fi
-$SCRIPTS/umountdb || exit 1 

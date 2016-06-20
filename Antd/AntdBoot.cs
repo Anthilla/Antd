@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using antdlib;
-using antdlib.Antdsh;
 using antdlib.Apps;
 using antdlib.common;
 using antdlib.common.Helpers;
@@ -15,7 +14,7 @@ namespace Antd {
     public class AntdBoot {
 
         public static void CheckOsIsRw() {
-            Execute.RemounwRwOs();
+            Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
         }
 
         public static void SetWorkingDirectories() {

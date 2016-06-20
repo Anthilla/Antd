@@ -1,6 +1,0 @@
-#!/bin/sh
-source /etc/kerbynet.conf
-/usr/local/ssl/bin/openssl rsa -out "$SSLDIR/private/cakey.pem"
-
-
- 

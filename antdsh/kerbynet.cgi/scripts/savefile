@@ -1,7 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-FILENAME="$1"
-[ -z "$FILENAME" ] && exit 1 
-tr -d '\r' > "$FILENAME"
-
-

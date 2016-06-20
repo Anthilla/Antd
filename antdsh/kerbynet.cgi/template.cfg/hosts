@@ -1,3 +1,0 @@
-/etc/hosts
-127.0.0.1       localhost.localdomain localhost <xvar /system/misc/hostname>
-<xvar /system/k5/DummyIP> KDC.localdomain

@@ -1,5 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-CONFIG=$REGISTER/system/alerts/Events
-cd $CONFIG || exit 1
-cp -a /root/kerbynet.cgi/Events/* .

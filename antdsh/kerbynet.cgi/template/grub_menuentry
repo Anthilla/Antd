@@ -1,5 +1,0 @@
-menuentry "<xvar *DESC> (Kernel <xvar *KERNEL>)" {
-        <xvar *CAT>
-        linux /<xvar *SLOT>/<xvar *KERNEL>/vmlinuz root=HD=<xvar *LABEL>_<xvar *RELEASE>_<xvar *SLOT> <xvar *PARAMETERS> <xvar *CONSOLE>
-        initrd /<xvar *SLOT>/<xvar *KERNEL>/initrd.img
-}

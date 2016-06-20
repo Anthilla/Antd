@@ -1,9 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-if ! [ -f $REGISTER/system/ClamAV/db/main.cvd ] ; then
-  sleep 245
-  if [ -f /tmp/freshclam.pid ] ; then
-    rm -f $REGISTER/system/ClamAV/db/*
-    killall -1 freshclam 
-  fi
-fi

@@ -1,6 +1,0 @@
-#!/bin/sh
-if ps -e |grep -w -q bandwidthd ; then
-  echo "<font color=#00e000><b>ACTIVE</b></font>"
-else
-  echo "<font color=#ff2020><b>DOWN</b></font>"
-fi

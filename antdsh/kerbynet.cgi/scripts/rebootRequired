@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-if [ -f "/tmp/reboot-required" ] ; then
-    echo "<font color=#f06060 class=Smaller1><b>< < REBOOT REQUIRED > ></b></font>"
-fi
-

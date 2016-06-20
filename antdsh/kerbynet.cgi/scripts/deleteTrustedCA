@@ -1,9 +1,0 @@
-#!/bin/sh
-source /etc/kerbynet.conf
-ENTRY="$1"
-[ -z "$ENTRY" ] && exit 1
-cd "$SSLDIR/certs/trusted_CAs/" || exit 2
-SUBJECT=`/usr/local/ssl/bin/openssl x509 -in "$SSLDIR/certs/trusted_CAs/${ENTRY}.pem" -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'| awk -F'CN=' '{print $2}' |sed -r 's/(.*).*, [A-Z]{1,2}=.*/\1/'`
-HASH=`/usr/local/ssl/bin/openssl x509 -hash -noout -in "$SSLDIR/certs/trusted_CAs/${ENTRY}.pem"`
-
-rm -f "$ENTRY".pem "${HASH}.r0" && $SCRIPTS/c_rehashCA >/dev/null && echo $SUBJECT 

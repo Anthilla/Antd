@@ -1,7 +1,0 @@
-REASON="$2"
-
-echo "$REASON requested: $(UPTIME)"    | VIEWER
-echo "$REASON requested"               | MAIL
-echo "$(UPTIME)"                       | MAIL
-echo "$REASON requested"               | SMS
-echo "$(UPTIME)"                       | SMS

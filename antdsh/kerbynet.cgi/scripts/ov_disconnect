@@ -1,4 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-logger -t VPN99_H2L "$untrusted_ip:$untrusted_port [$common_name] Client disconnected"
-

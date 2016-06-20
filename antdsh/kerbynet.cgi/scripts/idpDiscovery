@@ -1,4 +1,0 @@
-#!/bin/bash
-TYPE="$1"
-IDP="$2"
-/etc/sudo /root/kerbynet.cgi/scripts/idpDiscoveryRoot "$TYPE" "$IDP"

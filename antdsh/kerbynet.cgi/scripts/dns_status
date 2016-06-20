@@ -1,7 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-if [ "`cat $REGISTER/system/dns/Enabled`" == checked ] ; then
-  echo "<font color=#00b000>ACTIVE</font>"
-else
-  echo "<font color=#ff0000>DOWN</font>"
-fi

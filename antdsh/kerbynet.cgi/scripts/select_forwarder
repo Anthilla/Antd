@@ -1,9 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-cd "$REGISTER/system/dns/Forwarders" || exit 1
-for T in `ls -d ??` ; do
-  DOMAIN=`cat $T/Domain`
-  SERVER=`cat $T/Server`
-  echo "<option value='$T'>$DOMAIN (Server: $SERVER)</option>"
-done
-

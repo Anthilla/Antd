@@ -89,10 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acl\AclManagement.cs" />
-    <Compile Include="Antdsh\AhtdshLogger.cs" />
-    <Compile Include="Antdsh\Execute.cs" />
-    <Compile Include="Antdsh\SystemShellMgmt.cs" />
-    <Compile Include="Antdsh\NewUpdateAntdsh.cs" />
     <Compile Include="Apps\AnthillaSP.cs" />
     <Compile Include="Apps\Manage.cs" />
     <Compile Include="Extensions.cs" />

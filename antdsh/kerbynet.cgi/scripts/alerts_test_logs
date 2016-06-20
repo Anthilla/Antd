@@ -1,4 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-ID="$1"
-grep "^\[$ID\]:::" /tmp/spooler_log | awk -F"]:::" '{print $2}'

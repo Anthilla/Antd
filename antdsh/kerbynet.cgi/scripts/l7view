@@ -1,9 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-PAT="$1"
-[ -z "$PAT" ] && exit 1
-CONFIG="$REGISTER/system/net/L7/l7-protocols/"
-cat $CONFIG/*/$PAT.pat |grep ^#
-
-
-

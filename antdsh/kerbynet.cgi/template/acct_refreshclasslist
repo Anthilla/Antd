@@ -1,9 +1,0 @@
-<script>
-   var WO=window.opener;
-   if (WO!=null) {
-      if (!WO.closed) {
-        WO.AcctClasses.location='kerbynet?STk=<xvar STk>&Action=Render&Object=acctClasses'
-      }
-   }
-   window.close()
-</script>

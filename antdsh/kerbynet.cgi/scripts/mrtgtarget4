@@ -1,6 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-cat /proc/sys/net/netfilter/nf_conntrack_count
-echo 0
-echo 100
-echo NA 

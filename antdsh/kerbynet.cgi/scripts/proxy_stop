@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-$SCRIPTS/proxy_fw_reset
-$SCRIPTS/terminate havp
-$SCRIPTS/terminate freshclam
-rm -rf $REGISTER/system/havp/clamav.tmp/* $REGISTER/system/havp/tmp/*

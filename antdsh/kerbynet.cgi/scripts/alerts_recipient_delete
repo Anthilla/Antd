@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-NAME="$1"
-[ -z "$NAME" ] && exit 1
-CDIR="$REGISTER/system/alerts/Recipients/$NAME"
-rm -rf "$CDIR"

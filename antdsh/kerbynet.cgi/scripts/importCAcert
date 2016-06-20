@@ -1,5 +1,0 @@
-#!/bin/sh
-source /etc/kerbynet.conf
-/usr/local/ssl/bin/openssl x509 -out "$SSLDIR/certs/cacert.pem"
-
- 

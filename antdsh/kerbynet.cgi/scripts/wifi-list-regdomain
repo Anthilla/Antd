@@ -1,4 +1,0 @@
-#!/bin/bash
-DB=/usr/share/wireless_regdb/db.txt
-grep country $DB |cut -d: -f1|cut -d' ' -f2
-

@@ -1,2 +1,0 @@
-#!/bin/bash
-df |grep -w /Database |awk '{print $4}'
