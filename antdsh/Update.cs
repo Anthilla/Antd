@@ -50,6 +50,7 @@ namespace antdsh {
         private const string UpdateVerbForAntdsh = "update.antdsh";
         private const string UpdateVerbForSystem = "update.system";
         private const string UpdateVerbForKernel = "update.kernel";
+        private const string UpdateVerbForUnits = "update.units";
         private const string UnitsTargetApp = "/mnt/cdrom/Units/applicative.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
         private static readonly string[] UnitsAntd = {
@@ -91,17 +92,17 @@ namespace antdsh {
             switch (context) {
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    UpdateUnits2(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    //UpdateUnits2(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    UpdateUnits(UnitsAntdsh, UnitsTargetApp);
+                    //UpdateUnits(UnitsAntdsh, UnitsTargetApp);
                     break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     break;
                 case "kernel":
-                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
+                    //UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
                     //UpdateUnits(UnitsKernel, UnitsTargetKpl);
                     break;
                 default:
@@ -153,71 +154,6 @@ namespace antdsh {
             InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
             Directory.Delete(TmpDirectory, true);
             _updateCounter = 0;
-        }
-
-        private static bool _updateRetry;
-        private static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
-            Directory.CreateDirectory(Parameter.RepoTemp);
-            Directory.CreateDirectory(TmpDirectory);
-            _updateCounter++;
-            if (_updateCounter > 5) {
-                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
-                return;
-            }
-            var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
-            var repositoryInfo = GetRepositoryInfo();
-            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
-            var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
-            if (latestFileInfo == null) {
-                AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
-                return;
-            }
-            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
-            if (!isUpdateNeeded) {
-                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
-                return;
-            }
-            AntdshLogger.WriteLine($"updating {currentContext}");
-
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
-                _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
-            Directory.Delete(TmpDirectory, true);
-        }
-
-        private static void UpdateUnits(IEnumerable<string> units, string target) {
-            Directory.CreateDirectory(Parameter.RepoTemp);
-            Directory.CreateDirectory(TmpDirectory);
-            foreach (var unit in units) {
-                var unitDownloadUrl = $"{PublicRepositoryUrl}/{unit}";
-                var unitTempPath = $"{TmpDirectory}/{unit}";
-                var unitPath = $"{target}/{unit}";
-                FileSystem.Download2(unitDownloadUrl, unitTempPath);
-                File.Copy(unitTempPath, unitPath, true);
-            }
-            Directory.Delete(TmpDirectory, true);
-            AntdshLogger.WriteLine("a systemctl daemon-reload may be needed...");
         }
 
         private static void UpdateUnits2(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
@@ -283,9 +219,13 @@ namespace antdsh {
                     var fi = new FileInfoModel {
                         FileHash = fileInfo[0],
                         FileContext = fileInfo[1],
-                        FileName = fileInfo[2],
-                        FileDate = GetVersionDateFromFile(fileInfo[2])
+                        FileDate = fileInfo[2],
+                        FileName = fileInfo[3]
                     };
+                    var date = GetVersionDateFromFile(fi.FileName);
+                    if (date != "00000000") {
+                        fi.FileDate = date;
+                    }
                     files.Add(fi);
                 }
                 return files;
@@ -323,24 +263,6 @@ namespace antdsh {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
             Terminal.Execute($"ln -s {newVersionPath} {activeVersionPath}");
-        }
-
-        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
-            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
-            if (latestFileInfo == null) {
-                AntdshLogger.WriteLine($"cannot retrieve a more recent version of {query}.");
-                return false;
-            }
-            if (DownloadLatestFile(latestFileInfo)) {
-                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
-                _updateRetry = true;
-                return false;
-            }
-            AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
-            var latestFileTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            var newFileVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
-            InstallDownloadedFile(latestFileTmpFilePath, newFileVersionPath, activePath);
-            return true;
         }
         #endregion
     }
