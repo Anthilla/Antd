@@ -46,15 +46,7 @@ namespace antdsh {
                 Directory.CreateDirectory(Parameter.AntdVersionsDir);
                 Directory.CreateDirectory(Parameter.AntdTmpDir);
                 if (args.Length == 0) {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(DateTime.Now.ToString("[dd-MM-yyyy] HH:mm"));
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write(" > ");
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("antdsh");
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write(" > ");
-                    Console.ResetColor();
+                    Console.Write($"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} > antdsh > ");
                     _command = Console.ReadLine();
                     if (_command != "") {
                         AddCommand(_command);
