@@ -106,14 +106,14 @@ namespace antdsh {
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    //UpdateUnits(UnitsAntdsh, UnitsTargetApp);
+                    //UpdateUnits2(UnitsAntdsh, UnitsTargetApp);
                     break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     break;
                 case "kernel":
-                    //UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    //UpdateUnits(UnitsKernel, UnitsTargetKpl);
+                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
+                    //UpdateUnits2(UnitsKernel, UnitsTargetKpl);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
@@ -166,6 +166,53 @@ namespace antdsh {
             _updateCounter = 0;
         }
 
+        private static bool _updateRetry;
+        private static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
+            _updateCounter++;
+            if (_updateCounter > 5) {
+                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                return;
+            }
+            var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
+            var repositoryInfo = GetRepositoryInfo();
+            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+            var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
+            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
+            if (!isUpdateNeeded) {
+                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                return;
+            }
+            AntdshLogger.WriteLine($"updating {currentContext}");
+
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
+                _updateRetry = true;
+                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            Directory.Delete(TmpDirectory, true);
+        }
+
         private static void UpdateUnits2(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
@@ -207,9 +254,7 @@ namespace antdsh {
             Directory.Delete(TmpDirectory, true);
             _updateCounter = 0;
         }
-        #endregion
 
-        #region More Private Methods
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
             var m = r.Match(path);
@@ -271,6 +316,20 @@ namespace antdsh {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
             Terminal.Execute($"ln -s {newVersionPath} {activeVersionPath}");
+        }
+
+        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
+            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
+            if (DownloadLatestFile(latestFileInfo)) {
+                AntdshLogger.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
+                _updateRetry = true;
+                return false;
+            }
+            AntdshLogger.WriteLine($"{latestFileInfo?.FileName} download complete");
+            var latestFileTmpFilePath = $"{TmpDirectory}/{latestFileInfo?.FileName}";
+            var newFileVersionPath = $"{contextDestinationDirectory}/{latestFileInfo?.FileName}";
+            InstallDownloadedFile(latestFileTmpFilePath, newFileVersionPath, activePath);
+            return true;
         }
         #endregion
     }
