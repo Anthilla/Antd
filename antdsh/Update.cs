@@ -89,7 +89,17 @@ namespace antdsh {
 
         #region Public Medhod
         public static void LaunchUpdateFor(string context) {
+            Terminal.Execute($"rm -fR {TmpDirectory}");
+            Directory.CreateDirectory(TmpDirectory);
             switch (context) {
+                case "list":
+                    var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
+                    Console.WriteLine("");
+                    foreach (var i in info) {
+                        AntdshLogger.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
+                    }
+                    Console.WriteLine("");
+                    break;
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     //UpdateUnits2(UpdateVerbForAntd, AntdActive, AntdDirectory);
@@ -208,14 +218,16 @@ namespace antdsh {
         }
 
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
-            try {
-                AntdshLogger.WriteLine($"Downloading: {PublicRepositoryUrl}/{RepositoryFileNameZip}");
-                FileSystem.Download2($"{PublicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
-                var tmpRepoListText = Terminal.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
-                var list = tmpRepoListText.SplitToList(Environment.NewLine);
-                var files = new List<FileInfoModel>();
-                foreach (var f in list) {
-                    var fileInfo = f.Split(new[] { ' ' }, 3);
+            FileSystem.Download2($"{PublicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
+            if (!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
+                return new List<FileInfoModel>();
+            }
+            var tmpRepoListText = Terminal.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
+            var list = tmpRepoListText.SplitToList(Environment.NewLine);
+            var files = new List<FileInfoModel>();
+            foreach (var f in list) {
+                var fileInfo = f.Split(new[] { ' ' }, 4);
+                if (fileInfo.Length > 3) {
                     var fi = new FileInfoModel {
                         FileHash = fileInfo[0],
                         FileContext = fileInfo[1],
@@ -228,12 +240,8 @@ namespace antdsh {
                     }
                     files.Add(fi);
                 }
-                return files;
             }
-            catch (Exception ex) {
-                AntdshLogger.WriteLine($"error while downloading repository info: {Environment.NewLine}\t{ex.Message}");
-                return new List<FileInfoModel>();
-            }
+            return files;
         }
 
         private static bool IsUpdateNeeded(string currentVersion, string lastVersionFound) {
