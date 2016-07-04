@@ -30,7 +30,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using antdlib;
 using antdlib.common;
 
 namespace antdsh {
