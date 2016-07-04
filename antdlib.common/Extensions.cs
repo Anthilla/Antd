@@ -64,6 +64,11 @@ namespace antdlib.common {
             return str.Split(new[] { separator }, options).ToList();
         }
 
+        public static T ToEnum<T>(this string str) {
+            if (str == null) return default(T);
+            return (T)Enum.Parse(typeof(T), str);
+        }
+
         public static Guid ToGuid(this Guid? source) {
             return source ?? Guid.Empty;
         }

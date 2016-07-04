@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using antdlib.common;
 using RaptorDB;
 
@@ -37,6 +38,22 @@ namespace antdlib.views {
             EntityCode = $"{Status}-{Guid}-{Timestamp}";
             IsEncrypted = false;
             Dump = new byte[] { 0 };
+        }
+        public MountModel(MountSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            DfpTimestamp = sourceModel.DfpTimestamp;
+            Device = sourceModel.Device;
+            Path = sourceModel.Path;
+            DirsPath = sourceModel.DirsPath;
+            HtmlStatusIcon = sourceModel.HtmlStatusIcon;
+            MountedPath = sourceModel.MountedPath;
+            MountStatus = sourceModel.MountStatus.ToEnum<MountStatus>();
+            MountContext = sourceModel.MountContext.ToEnum<MountContext>();
+            Type = sourceModel.Type;
+            Options = sourceModel.Options;
+            AssociatedUnits = sourceModel.AssociatedUnits.SplitToList();
+            MountEntity = sourceModel.MountEntity.ToEnum<MountEntity>();
         }
         public string DfpTimestamp { get; set; }
         public string Device { get; set; } = "";

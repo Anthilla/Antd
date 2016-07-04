@@ -65,7 +65,16 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
-
+        public UserClaimModel(UserClaimSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            UserGuid = sourceModel.UserGuid;
+            Type = ConvertClaimType(sourceModel.Type);
+            Mode = ConvertClaimMode(sourceModel.Mode);
+            Label = sourceModel.Label;
+            Value = sourceModel.Value;
+            IsEnabled = sourceModel.IsEnabled;
+        }
         public string UserGuid { get; set; }
         public ClaimType Type { get; set; }
         public ClaimMode Mode { get; set; }

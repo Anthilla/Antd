@@ -14,6 +14,15 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public CommandModel(CommandSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Command = sourceModel.Command;
+            Layout = sourceModel.Layout;
+            Notes = sourceModel.Notes;
+            LaunchAtBoot = sourceModel.LaunchAtBoot;
+            IsEnabled = sourceModel.IsEnabled;
+        }
         public string Command { get; set; }
         public string Layout { get; set; }
         public string Notes { get; set; }

@@ -18,7 +18,7 @@ namespace Antd.Users {
 
         public class Map {
             private static IEnumerable<SystemUserModel> DefaultMappedUsers() {
-                //var visorPassword = Terminal.Terminal.Execute("mkpasswd -m sha-512 Anthilla");
+                var visorPassword = Terminal.Execute("mkpasswd -m sha-512 Anthilla");
                 return new List<SystemUserModel>();
             }
 
@@ -36,15 +36,15 @@ namespace Antd.Users {
                 throw new NotImplementedException();
             }
 
-            public static void EditMapUser(string guid, string userAlias, string password) {
-                throw new NotImplementedException();
-                //model.Alias = userAlias;
-                //model.Password = Terminal.Execute($"mkpasswd -m sha-512 {password}");
-            }
+            //public static void EditMapUser(string guid, string userAlias, string password) {
+            //    throw new NotImplementedException();
+            //    //model.Alias = userAlias;
+            //    //model.Password = Terminal.Execute($"mkpasswd -m sha-512 {password}");
+            //}
 
-            public static void DeleteMapUser(string guid) {
-                throw new NotImplementedException();
-            }
+            //public static void DeleteMapUser(string guid) {
+            //    throw new NotImplementedException();
+            //}
         }
     }
 }

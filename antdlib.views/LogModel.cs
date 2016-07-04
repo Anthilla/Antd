@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 using antdlib.common;
 using RaptorDB;
 
@@ -13,6 +14,11 @@ namespace antdlib.views {
             EntityCode = $"{Status}-{Guid}-{Timestamp}";
             IsEncrypted = false;
             Dump = new byte[] { 0 };
+        }
+        public LogModel(LogSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Message = sourceModel.Message;
         }
         public string Message { get; set; }
     }

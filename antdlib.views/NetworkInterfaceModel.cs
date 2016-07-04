@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 using antdlib.common;
 using RaptorDB;
 
@@ -21,6 +22,12 @@ namespace antdlib.views {
             EntityCode = $"{Status}-{Guid}-{Timestamp}";
             IsEncrypted = false;
             Dump = new byte[] { 0 };
+        }
+        public NetworkInterfaceModel(NetworkInterfaceSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Name = sourceModel.Name;
+            Type = (NetworkInterfaceType)Enum.Parse(typeof(NetworkInterfaceType), sourceModel.Type);
         }
         public string Name { get; set; }
         public NetworkInterfaceType Type { get; set; }

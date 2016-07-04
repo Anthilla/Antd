@@ -14,6 +14,12 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public ObjectModel(ObjectSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Label = sourceModel.Label;
+            Value = sourceModel.Value;
+        }
         public string Label { get; set; }
         public string Value { get; set; }
     }

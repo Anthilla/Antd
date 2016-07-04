@@ -45,6 +45,14 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public CustomTableModel(CustomTableSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Alias = sourceModel.Alias;
+            Context = sourceModel.Context;
+            Type = sourceModel.Type.ToEnum<CustomTableType>();
+            Content = sourceModel.Content.SplitToList();
+        }
         public string Alias { get; set; }
         public string Context { get; set; }
         public CustomTableType Type { get; set; }

@@ -14,6 +14,14 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public RsyncModel(RsyncSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Source = sourceModel.Source;
+            Destination = sourceModel.Destination;
+            Options = sourceModel.Options;
+            IsEnabled = sourceModel.IsEnabled;
+        }
         public string Source { get; set; }
         public string Destination { get; set; }
         public string Options { get; set; }

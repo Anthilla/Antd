@@ -15,6 +15,22 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public UserModel(UserSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            FirstName = sourceModel.FirstName;
+            LastName = sourceModel.LastName;
+            Alias = sourceModel.Alias;
+            Password = sourceModel.Password;
+            Role = sourceModel.Role;
+            ProjectGuids = sourceModel.ProjectGuids.SplitToList();
+            UsergroupGuids = sourceModel.UsergroupGuids.SplitToList();
+            ResourceGuids = sourceModel.ResourceGuids.SplitToList();
+            UserGuids = sourceModel.UserGuids.SplitToList();
+            TokenGuid = sourceModel.TokenGuid;
+            IsInsider = sourceModel.IsInsider;
+            IsEnabled = sourceModel.IsEnabled;
+        }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Alias { get; set; }

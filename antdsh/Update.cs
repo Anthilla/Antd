@@ -89,8 +89,8 @@ namespace antdsh {
 
         #region Public Medhod
         public static void LaunchUpdateFor(string context) {
-            Terminal.Execute($"rm -fR {TmpDirectory}");
-            Directory.CreateDirectory(TmpDirectory);
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            //Terminal.Execute($"mkdir -p {TmpDirectory}");
             switch (context) {
                 case "list":
                     var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
@@ -125,45 +125,46 @@ namespace antdsh {
         #region Private Methods
         private static int _updateCounter;
         private static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
-            Directory.CreateDirectory(Parameter.RepoTemp);
-            Directory.CreateDirectory(TmpDirectory);
-            _updateCounter++;
-            if (_updateCounter > 5) {
-                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
-                return;
-            }
-            var linkedFile = Terminal.Execute($"file {activeVersionPath}");
-            var currentVersionDate = GetVersionDateFromFile(linkedFile);
-            var repositoryInfo = GetRepositoryInfo().ToList();
-            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
-            AntdshLogger.WriteLine($"found for: {currentContext}");
-            foreach (var cri in currentContextRepositoryInfo) {
-                AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
-            }
-            AntdshLogger.WriteLine("");
-            var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
-            if (latestFileInfo == null) {
-                AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
-                return;
-            }
-            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
-            if (!isUpdateNeeded) {
-                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
-                return;
-            }
-            AntdshLogger.WriteLine($"updating {currentContext}");
+            while (true) {
+                _updateCounter++;
+                if (_updateCounter > 5) {
+                    AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                    return;
+                }
+                Directory.CreateDirectory(Parameter.RepoTemp);
+                Directory.CreateDirectory(TmpDirectory);
+                var linkedFile = Terminal.Execute($"file {activeVersionPath}");
+                var currentVersionDate = GetVersionDateFromFile(linkedFile);
+                var repositoryInfo = GetRepositoryInfo().ToList();
+                var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+                AntdshLogger.WriteLine($"found for: {currentContext}");
+                foreach (var cri in currentContextRepositoryInfo) {
+                    AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
+                }
+                AntdshLogger.WriteLine("");
+                var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
+                if (latestFileInfo == null) {
+                    AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
+                    return;
+                }
+                var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
+                if (!isUpdateNeeded) {
+                    AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                    return;
+                }
+                AntdshLogger.WriteLine($"updating {currentContext}");
 
-            if (DownloadLatestFile(latestFileInfo)) {
+                var isDownloadValid = DownloadLatestFile(latestFileInfo);
+                if (isDownloadValid) {
+                    AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+                    var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
+                    var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
+                    InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
+                    _updateCounter = 0;
+                    return;
+                }
                 AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
-
-            var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
-            InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
-            Directory.Delete(TmpDirectory, true);
-            _updateCounter = 0;
         }
 
         private static bool _updateRetry;
@@ -210,7 +211,6 @@ namespace antdsh {
                 _updateRetry = true;
                 UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            Directory.Delete(TmpDirectory, true);
         }
 
         private static void UpdateUnits2(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
@@ -251,7 +251,6 @@ namespace antdsh {
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
             var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
             InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
-            Directory.Delete(TmpDirectory, true);
             _updateCounter = 0;
         }
 
@@ -315,7 +314,9 @@ namespace antdsh {
         private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
-            Terminal.Execute($"ln -s {newVersionPath} {activeVersionPath}");
+            Terminal.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
+            Terminal.Execute($"chown root:wheel {newVersionPath}");
+            Terminal.Execute($"chmod 664 {newVersionPath}");
         }
 
         private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {

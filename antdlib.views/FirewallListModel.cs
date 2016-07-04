@@ -15,6 +15,17 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public FirewallListModel(FirewallListSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            IsEnabled = sourceModel.IsEnabled;
+            TableId = sourceModel.TableId;
+            TypeId = sourceModel.TypeId;
+            HookId = sourceModel.HookId;
+            Rule = sourceModel.Rule;
+            Label = sourceModel.Label;
+            Values = sourceModel.Values.SplitToList();
+        }
         public bool? IsEnabled { get; set; } = true;
         public string TableId { get; set; }
         public string TypeId { get; set; }

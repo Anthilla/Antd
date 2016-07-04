@@ -14,6 +14,15 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
+        public JobModel(JobSchema sourceModel) {
+            Id = System.Guid.Parse(sourceModel.Id);
+            Guid = sourceModel.Guid;
+            Alias = sourceModel.Alias;
+            Data = sourceModel.Data;
+            IsEnabled = sourceModel.IsEnabled;
+            IntervalSpan = sourceModel.IntervalSpan;
+            CronExpression = sourceModel.CronExpression;
+        }
         public string Alias { get; set; }
         public string Data { get; set; }
         public bool? IsEnabled { get; set; } = true;

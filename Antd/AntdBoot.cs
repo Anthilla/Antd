@@ -40,7 +40,7 @@ namespace Antd {
         public static void ReloadUsers() {
             if (!Parameter.IsUnix)
                 return;
-            SystemUser.Config.ResetPasswordForUserStoredInDb();
+            //SystemUser.Config.ResetPasswordForUserStoredInDb();
             ConsoleLogger.Log("users config ready");
         }
 
