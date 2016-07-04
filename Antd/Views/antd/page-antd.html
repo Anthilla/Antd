@@ -78,12 +78,13 @@
     $(document).ready(function () {
         $('#CronSelector').cron({
             onChange: function () {
-                $('#CronExValue').val($(this).cron("value") + " ? *");
+                $('#CronExValue').val($(this).cron("value"));
             },
             customValues: {
-                "2 Hours": "0 */2 * * * ? *",
-                "5 Minutes": "*/5 * * * * ? *"
-            }
+                "2 Hours": "0 0 0/2 * * ?",
+                "5 Minutes": "0 0/5 * * * ?",
+                "10 Seconds": "0/10 * * * * ?"
+        }
         });
     });
 

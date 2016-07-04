@@ -35,9 +35,7 @@ using antdlib.common;
 using antdlib.views;
 using Owin;
 using Microsoft.Owin.Hosting;
-using Antd.Middleware;
 using Nancy;
-using Nancy.Owin;
 using RaptorDB;
 
 namespace Antd {
@@ -124,14 +122,8 @@ namespace Antd {
             if (app.Properties.TryGetValue(typeof(HttpListener).FullName, out httpListener) && httpListener is HttpListener) {
                 ((HttpListener)httpListener).IgnoreWriteExceptions = true;
             }
-            app.UseDebugMiddleware();
-            app.UseNancy();
-            app.UseDebugMiddleware(new DebugMiddlewareOptions {
-                OnIncomingRequest = context => context.Response.WriteAsync("## Beginning ##"),
-                OnOutGoingRequest = context => context.Response.WriteAsync("## End ##")
-            });
             StaticConfiguration.DisableErrorTraces = false;
-            app.UseNancy(options => options.PassThroughWhenStatusCodesAre(Nancy.HttpStatusCode.NotFound));
+            app.UseNancy();
         }
     }
 }

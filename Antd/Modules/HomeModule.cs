@@ -109,7 +109,8 @@ namespace Antd.Modules {
 
                 viewModel.Mounts = new MountRepository().GetAll();
 
-                viewModel.Jobs = new JobRepository().GetAll();
+                var scheduledJobs = new JobRepository().GetAll();
+                viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
 
                 viewModel.RsyncDirectories = new RsyncRepository().GetAll();
                 viewModel.RsyncOptions = new List<Tuple<string, string>> {

@@ -94,5 +94,13 @@ namespace Antd.Scheduler {
                 Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
             }
         }
+
+        public class Backup : IJob {
+            public void Execute(IJobExecutionContext context) {
+                var dataMap = context.JobDetail.JobDataMap;
+                var command = dataMap.GetString("data");
+                Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            }
+        }
     }
 }

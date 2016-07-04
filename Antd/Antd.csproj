@@ -141,9 +141,6 @@
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
-    <Compile Include="Middleware\DebugMiddleware.cs" />
-    <Compile Include="Middleware\DebugMiddlewareExtensions.cs" />
-    <Compile Include="Middleware\DebugMiddlewareOptions.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
@@ -210,6 +207,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery-2.2.0.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\jquery-cron-quartz.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery-cron-min.js">

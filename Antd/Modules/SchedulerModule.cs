@@ -48,18 +48,19 @@ namespace Antd.Modules {
                 var command = (string)Request.Form.Command;
                 var cron = (string)Request.Form.CronExValue;
                 var guid = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(alias.Trim() + command.Trim())) {
-                    alias = guid;
+                if (!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(cron)) {
+                    if (string.IsNullOrEmpty(alias.Trim() + command.Trim())) {
+                        alias = guid;
+                    }
+                    _jobRepositoryRepo.Create(new Dictionary<string, string> {
+                        { "Guid", guid },
+                        { "Alias", alias },
+                        { "Data", command },
+                        { "IntervalSpan", cron },
+                        { "CronExpression", cron }
+                    });
+                    JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 }
-                _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Guid", guid },
-                    { "Alias", alias },
-                    { "Data", command },
-                    { "IntervalSpan", cron },
-                    { "CronExpression", cron }
-                });
-                Thread.Sleep(20);
-                JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 return Response.AsRedirect("/");
             };
 
