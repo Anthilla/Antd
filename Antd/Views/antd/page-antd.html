@@ -82,7 +82,7 @@
                 "2 Hours": "0 0 0/2 * * ?",
                 "5 Minutes": "0 0/5 * * * ?",
                 "10 Seconds": "0/10 * * * * ?"
-        }
+            }
         });
     });
 
@@ -1052,17 +1052,40 @@
     });
     //END SSH
 </script>
-<script data-context="zfs" type="text/javascript">
-    $('#ReloadZfsInformation').click(function () {
-        jQuery.support.cors = true;
+<script data-context="storage" type="text/javascript">
+    $('[data-role="show-details"]').click(function () {
+        var g = $(this).attr('data-guid');
+        $('[data-row="' + g + '"]').toggle();
+    });
+
+    $('[data-role="EnablePoolSnap"]').click(function () {
+        var pool = $(this).attr('data-pool');
+        var interval = $(this).parents('td').find('select > option:selected').val();
         $.ajax({
-            url: '/zfs/reload',
-            type: 'POST',
+            url: "/zfs/snap",
+            type: "POST",
+            data: {
+                Pool: pool,
+                Interval: interval
+            },
             success: function () {
                 location.reload(true);
             }
         });
     });
 
+    $('[data-role="DisablePoolSnap"]').click(function () {
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url: "/zfs/snap/disable",
+            type: "POST",
+            data: {
+                Guid: id
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
 </script>
 @EndSection

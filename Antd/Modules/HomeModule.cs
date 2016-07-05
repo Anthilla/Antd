@@ -112,9 +112,9 @@ namespace Antd.Modules {
                 var scheduledJobs = new JobRepository().GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
 
-                viewModel.Zpool = Terminal.Execute("zpool status");
+                viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
-                viewModel.ZfsSnap = Terminal.Execute("zfs list -t snap");
+                viewModel.ZfsSnap = ZfsSnap.List();
 
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
 

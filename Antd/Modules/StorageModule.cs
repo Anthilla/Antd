@@ -54,23 +54,35 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
+            Get["/zfs/cron"] = x => {
+                var list = _jobRepositoryRepo.GetAll();
+                return Response.AsJson(list);
+            };
+
             Post["/zfs/snap"] = x => {
-                var pool = (string)Request.Form.Command;
-                var hourInterval = (string)Request.Form.Pool;
-                if (!string.IsNullOrEmpty(pool) && !string.IsNullOrEmpty(hourInterval)) {
-                    var alias = $"Scheduled snapshot for {pool} every {hourInterval} hours";
-                    var command = "*backup*" + pool;
-                    var cron = $"0 0 0/{hourInterval} * * ?";
-                    _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                        { "Guid", Guid.NewGuid().ToString()},
-                        { "Alias",  alias },
-                        { "Data", "*backup*" + pool },
-                        { "IntervalSpan", hourInterval },
-                        { "CronExpression", cron }
-                    });
-                    JobScheduler.LaunchJob<JobScheduler.Command>((string)Guid.NewGuid().ToString(), alias, command, cron);
+                var pool = (string)Request.Form.Pool;
+                var hourInterval = (string)Request.Form.Interval;
+                if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(hourInterval)) {
+                    return HttpStatusCode.InternalServerError;
                 }
-                return Response.AsRedirect("/");
+                var alias = $"Scheduled snapshot for {pool} every {hourInterval} hours";
+                var command = "*backup*" + pool;
+                var cron = $"0 0 0/{hourInterval} * * ?";
+                _jobRepositoryRepo.Create(new Dictionary<string, string> {
+                    { "Guid", Guid.NewGuid().ToString()},
+                    { "Alias",  pool },
+                    { "Data", "*backup*" + pool },
+                    { "IntervalSpan", hourInterval },
+                    { "CronExpression", cron }
+                });
+                JobScheduler.LaunchJob<JobScheduler.Command>(Guid.NewGuid().ToString(), alias, command, cron);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/zfs/snap/disable"] = x => {
+                var id = (string)Request.Form.Guid;
+                var r = _jobRepositoryRepo.Delete(id);
+                return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
             };
         }
     }
