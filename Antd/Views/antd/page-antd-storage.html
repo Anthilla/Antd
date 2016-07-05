@@ -1,15 +1,46 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend id="Storage">Storage</legend>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    <p>Backup Job</p>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
+    <div data-closeany="false" data-role="accordion" class="accordion span3 place-left margin10">
+        <div class="accordion-frame">
+            <a href="#" class="heading">Zpool</a>
+            <div class="content" style="display: block;">
+                <textarea readonly="readonly" style="width: 100%; height: auto; padding: 10px;" class="bg-anthilla-gray fg-white border-anthilla-green">@Model.Zpool</textarea>
+            </div>
+        </div>
+        <div class="accordion-frame">
+            <a href="#" class="heading collapsed">Zfs</a>
+            <div class="content" style="display: block;">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Used</td>
+                            <td>Available</td>
+                            <td>Refer</td>
+                            <td>Mountpoint</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.ZfsList
+                        <tr>
+                            <td>@Current.Name</td>
+                            <td>@Current.Used</td>
+                            <td>@Current.Available</td>
+                            <td>@Current.Refer</td>
+                            <td>@Current.Mountpoint</td>
+                            <td></td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="accordion-frame">
+            <a href="#" class="heading collapsed">Zfs Snapshot</a>
+            <div class="content" style="display: block;">
+                <textarea readonly="readonly" style="width: 100%; height: auto; padding: 10px;" class="bg-anthilla-gray fg-white border-anthilla-green">@Model.ZfsSnap</textarea>
+            </div>
+        </div>
+    </div>
 </div>

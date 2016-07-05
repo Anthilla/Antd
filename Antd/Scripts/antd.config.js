@@ -1,6 +1,6 @@
 $('input[data-role="command-place"]').keyup(function () {
     var thisValue = $(this).val();
-    if (thisValue.indexOf('[') > 0) {
+    if (thisValue.indexOf("[") > 0) {
         //todo: in questo caso prendere la stringa che si sta per scrivere dopo la [
         //      fare una query, tipo selectize, nei ValueBundle e mostrare tutt i valori appartenenti a quel tag
         //      con relativo indice
@@ -12,8 +12,8 @@ $('input[data-role="command-place"]').keyup(function () {
     if (thisValue.length > 0) {
         jQuery.support.cors = true;
         $.ajax({
-            url: '/cfg/layouts',
-            type: 'GET',
+            url: "/cfg/layouts",
+            type: "GET",
             success: function (layoutJson) {
                 var results = [];
                 $.each(layoutJson, function (i, item) {
@@ -38,7 +38,7 @@ $('input[data-role="command-place"]').keyup(function () {
 });
 
 function ShowDisplayer() {
-    $('#ResultsContainer').show();
+    $("#ResultsContainer").show();
 }
 
 function HideDisplayer() {
@@ -49,14 +49,14 @@ function DisplayResults(objectsToDisplay) {
     ShowDisplayer();
     CleanResults();
     $.each(objectsToDisplay, function (i, item) {
-        $('#ResultsContainer').append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + '</li>');
+        $("#ResultsContainer").append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + "</li>");
         SelectLayoutToEdit();
     });
 }
 
 function CleanResults() {
-    var container = $('#ResultsContainer');
-    container.html('');
+    var container = $("#ResultsContainer");
+    container.html("");
 }
 
 function SelectLayoutToEdit() {
@@ -76,13 +76,13 @@ $('i[data-role="show-all-command"]').mouseup(function () {
 });
 
 $('i[data-role="show-command"]').mousedown(function () {
-    var container = $(this).parents('li');
+    var container = $(this).parents("li");
     container.find('[data-role="command-saved"]').hide();
     container.find('[data-role="command-exd"]').show();
 });
 
 $('i[data-role="show-command"]').mouseup(function () {
-    var container = $(this).parents('li');
+    var container = $(this).parents("li");
     container.find('[data-role="command-saved"]').show();
     container.find('[data-role="command-exd"]').hide();
 });
@@ -94,27 +94,27 @@ $("#sortable").sortable({
     }
 }).disableSelection();
 
-$(document).on('click', 'body', function () {
+$(document).on("click", "body", function () {
     RefreshCommandIndexes();
 });
 
 $(document).ready(function () {
-    $('#valueBundleTag').hide();
+    $("#valueBundleTag").hide();
 });
 
 function RefreshCommandIndexes() {
-    $('input[name=Index]').each(function (index) {
-        $(this).val('');
+    $("input[name=Index]").each(function (index) {
+        $(this).val("");
         $(this).val(index);
     });
 }
 
 $('i[data-role="remove-command"]').click(function () {
-    var g = $(this).attr('data-guid');
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     $.ajax({
-        url: '/cfg/delcommand',
-        type: 'POST',
+        url: "/cfg/delcommand",
+        type: "POST",
         data: {
             Guid: g
         },
@@ -125,11 +125,11 @@ $('i[data-role="remove-command"]').click(function () {
 });
 
 $('i[data-role="disable-command"]').click(function () {
-    var g = $(this).attr('data-guid');
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     $.ajax({
-        url: '/cfg/disablecommand',
-        type: 'POST',
+        url: "/cfg/disablecommand",
+        type: "POST",
         data: {
             Guid: g
         },
@@ -140,11 +140,11 @@ $('i[data-role="disable-command"]').click(function () {
 });
 
 $('i[data-role="enable-command"]').click(function () {
-    var g = $(this).attr('data-guid');
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     $.ajax({
-        url: '/cfg/enablecommand',
-        type: 'POST',
+        url: "/cfg/enablecommand",
+        type: "POST",
         data: {
             Guid: g
         },
@@ -155,11 +155,11 @@ $('i[data-role="enable-command"]').click(function () {
 });
 
 $('i[data-role="play-command"]').click(function () {
-    var g = $(this).attr('data-guid');
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     $.ajax({
-        url: '/cfg/launchcommand',
-        type: 'POST',
+        url: "/cfg/launchcommand",
+        type: "POST",
         data: {
             Guid: g
         },
@@ -170,9 +170,9 @@ $('i[data-role="play-command"]').click(function () {
 });
 
 $('input[data-role="command-place"]').focusin(function () {
-    $('#Tip').show();
+    $("#Tip").show();
 });
 
 $('input[data-role="command-place"]').focusout(function () {
-    $('#Tip').hide();
+    $("#Tip").hide();
 });

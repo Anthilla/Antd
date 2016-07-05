@@ -91,15 +91,17 @@ namespace Antd.Scheduler {
             public void Execute(IJobExecutionContext context) {
                 var dataMap = context.JobDetail.JobDataMap;
                 var command = dataMap.GetString("data");
-                Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
-            }
-        }
-
-        public class Backup : IJob {
-            public void Execute(IJobExecutionContext context) {
-                var dataMap = context.JobDetail.JobDataMap;
-                var command = dataMap.GetString("data");
-                Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                if (command.StartsWith("*backup*")) {
+                    command = command.Split(new[] { "*backup*" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    if (!string.IsNullOrEmpty(command)) {
+                        var pool = dataMap.GetString("data");
+                        command = $"zfs snap -r {pool}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}";
+                        Terminal.Execute(command);
+                    }
+                }
+                else {
+                    Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                }
             }
         }
     }

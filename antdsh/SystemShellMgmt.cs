@@ -63,15 +63,15 @@ namespace antdsh {
         /// </summary>
         public static void DownloadNewFiles() {
             var firmwareTmp = $"{Parameter.AntdTmpDir}/firmare";
-            FileSystem.Download("/url/download/firmware", $"{firmwareTmp}");
+            new ApiConsumer().GetFile("/url/download/firmware", $"{firmwareTmp}");
             var initrdTmp = $"{Parameter.AntdTmpDir}/initrd";
-            FileSystem.Download("/url/download/initrd", $"{initrdTmp}");
+            new ApiConsumer().GetFile("/url/download/initrd", $"{initrdTmp}");
             var kernelTmp = $"{Parameter.AntdTmpDir}/kernel";
-            FileSystem.Download("/url/download/kernel", $"{kernelTmp}");
+            new ApiConsumer().GetFile("/url/download/kernel", $"{kernelTmp}");
             var modulesTmp = $"{Parameter.AntdTmpDir}/modules";
-            FileSystem.Download("/url/download/modules", $"{modulesTmp}");
+            new ApiConsumer().GetFile("/url/download/modules", $"{modulesTmp}");
             var systemTmp = $"{Parameter.AntdTmpDir}/system";
-            FileSystem.Download("/url/download/system", $"{systemTmp}");
+            new ApiConsumer().GetFile("/url/download/system", $"{systemTmp}");
 
             Terminal.Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");
             Terminal.Execute($"cp {initrdTmp} {Parameter.RepoKernel}");

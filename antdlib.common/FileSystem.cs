@@ -103,41 +103,6 @@ namespace antdlib.common {
             return !firstHash.Where((t, i) => t != secondHash[i]).Any();
         }
 
-        public static void Download(string url, string destination) {
-            try {
-                var nfile = destination;
-                if (File.Exists(destination)) {
-                    nfile = $"{destination}+";
-                }
-                using (var client = new WebClient()) {
-                    client.DownloadFile(url, nfile);
-                }
-                if (!File.Exists(nfile))
-                    return;
-                if (FilesAreEqual(new FileInfo(destination), new FileInfo(nfile)) == false) {
-                    File.Copy(nfile, destination, true);
-                }
-                File.Delete(nfile);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn($"unable to dowload from {url}: {ex.Message}");
-            }
-        }
-
-        public static void Download2(string url, string destination) {
-            try {
-                var myWebClient = new WebClient();
-                var nfile = destination;
-                if (File.Exists(destination)) {
-                    nfile = $"{destination}+";
-                }
-                myWebClient.DownloadFile(url, nfile);
-            }
-            catch (Exception ex) {
-                ConsoleLogger.Warn($"unable to dowload from {url}: {ex.Message}");
-            }
-        }
-
         public static bool IsNewerThan(string source, string destination) {
             var sourceInfo = new FileInfo(source);
             var destinationInfo = new FileInfo(destination);

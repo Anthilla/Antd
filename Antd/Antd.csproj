@@ -105,6 +105,10 @@
       <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleLogger.1.0.0\lib\net40\SimpleLogger.dll</HintPath>
       <Private>True</Private>
@@ -181,6 +185,8 @@
     <Compile Include="Scheduler\JobScheduler.cs" />
     <Compile Include="Ssh\SshConfig.cs" />
     <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Storage\Zfs.cs" />
+    <Compile Include="Storage\Zpool.cs" />
     <Compile Include="Svcs\Bind\BindConfig.cs" />
     <Compile Include="Svcs\Bind\BindStatement.cs" />
     <Compile Include="Svcs\Dhcp\DhcpConfig.cs" />
@@ -252,9 +258,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-proxy.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-rsync.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-samba.html">

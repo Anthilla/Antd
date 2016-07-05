@@ -184,16 +184,6 @@ namespace Antd {
             ConsoleLogger.Log("apps ready");
         }
 
-        public static void DownloadDefaultRepoFiles() {
-            if (!Parameter.IsUnix)
-                return;
-            var dir = $"{Parameter.RepoConfig}/database";
-            Directory.CreateDirectory(dir);
-            FileSystem.Download("http://www.internic.net/domain/named.root", $"{dir}/named.root");
-            FileSystem.Download("http://www.internic.net/domain/root.zone", $"{dir}/root.zone");
-            FileSystem.Download("http://standards-oui.ieee.org/oui.txt", $"{dir}/oui.txt");
-        }
-
         public static void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);

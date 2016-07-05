@@ -38,6 +38,7 @@ using antdlib.Info;
 using antdlib.Log;
 using antdlib.Status;
 using Antd.Database;
+using Antd.Storage;
 using Antd.Svcs.Dhcp;
 using Nancy;
 using Nancy.Security;
@@ -66,7 +67,6 @@ namespace Antd.Modules {
                     "Storage",
                     "VM",
                     "Mount",
-                    "Rsync",
                     "Users",
                     "Samba",
                 };
@@ -112,27 +112,10 @@ namespace Antd.Modules {
                 var scheduledJobs = new JobRepository().GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
 
-                viewModel.RsyncDirectories = new RsyncRepository().GetAll();
-                viewModel.RsyncOptions = new List<Tuple<string, string>> {
-                    new Tuple<string, string>("--checksum", "skip based on checksum"),
-                    new Tuple<string, string>("--archive", "archive mode"),
-                    new Tuple<string, string>("--recursive", "recurse into directories"),
-                    new Tuple<string, string>("--update", "skip files that are newer on the receiver"),
-                    new Tuple<string, string>("--links", "copy symlinks as symlinks"),
-                    new Tuple<string, string>("--copy-links", "transform symlink into referent file/dir"),
-                    new Tuple<string, string>("--copy-dirlinks", "transform symlink to dir into referent dir"),
-                    new Tuple<string, string>("--keep-dirlinks", "treat symlinked dir on receiver as dir"),
-                    new Tuple<string, string>("--hard-links", "preserve hard links"),
-                    new Tuple<string, string>("--hard-links", "preserve hard links"),
-                    new Tuple<string, string>("--hard-links", "preserve hard links"),
-                    new Tuple<string, string>("--perms", "preserve permissions"),
-                    new Tuple<string, string>("--executability", "preserve executability"),
-                    new Tuple<string, string>("--acls", "preserve ACLs"),
-                    new Tuple<string, string>("--xattrs", "preserve extended attributes"),
-                    new Tuple<string, string>("--owner", "preserve owner"),
-                    new Tuple<string, string>("--group", "preserve group"),
-                    new Tuple<string, string>("--times", "preserve modification times")
-                };
+                viewModel.Zpool = Terminal.Execute("zpool status");
+                viewModel.ZfsList = Zfs.List();
+                viewModel.ZfsSnap = Terminal.Execute("zfs list -t snap");
+
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
 
                 //todo check next parameters

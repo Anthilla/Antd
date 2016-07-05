@@ -27,17 +27,19 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
+using Antd.Scheduler;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class StorageModule : CoreModule {
 
-        private readonly RsyncRepository _rsyncRepositoryRepo = new RsyncRepository();
+        private readonly JobRepository _jobRepositoryRepo = new JobRepository();
 
         public StorageModule() {
             this.RequiresAuthentication();
@@ -52,28 +54,23 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/rsync/add"] = x => {
-                var source = (string)Request.Form.Source;
-                var destination = (string)Request.Form.Destination;
-                var options = (string)Request.Form.Options;
-                _rsyncRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Source", source },
-                    { "Destination", destination },
-                    { "Options", options }
-                });
+            Post["/zfs/snap"] = x => {
+                var pool = (string)Request.Form.Command;
+                var hourInterval = (string)Request.Form.Pool;
+                if (!string.IsNullOrEmpty(pool) && !string.IsNullOrEmpty(hourInterval)) {
+                    var alias = $"Scheduled snapshot for {pool} every {hourInterval} hours";
+                    var command = "*backup*" + pool;
+                    var cron = $"0 0 0/{hourInterval} * * ?";
+                    _jobRepositoryRepo.Create(new Dictionary<string, string> {
+                        { "Guid", Guid.NewGuid().ToString()},
+                        { "Alias",  alias },
+                        { "Data", "*backup*" + pool },
+                        { "IntervalSpan", hourInterval },
+                        { "CronExpression", cron }
+                    });
+                    JobScheduler.LaunchJob<JobScheduler.Command>((string)Guid.NewGuid().ToString(), alias, command, cron);
+                }
                 return Response.AsRedirect("/");
-            };
-
-            Post["/zfs/reload"] = x => {
-                //ZpoolManagement.UpdateInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/backup"] = x => {
-                var source = (string)Request.Form.Source;
-                var destination = (string)Request.Form.Destination;
-                Backup.LaunchBackupJob(source, destination);
-                return HttpStatusCode.OK;
             };
         }
     }

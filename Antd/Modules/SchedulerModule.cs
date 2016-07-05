@@ -29,7 +29,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Antd.Database;
 using Antd.Scheduler;
 using Nancy;
@@ -61,23 +60,6 @@ namespace Antd.Modules {
                     });
                     JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 }
-                return Response.AsRedirect("/");
-            };
-
-            Post["/scheduler/cron"] = x => {
-                var alias = (string)Request.Form.Alias;
-                var command = (string)Request.Form.Command;
-                var cron = (string)Request.Form.CronResult;
-                var guid = Guid.NewGuid().ToString();
-                _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Guid", guid },
-                    { "Alias", alias },
-                    { "Data", command },
-                    { "IntervalSpan", "1" },
-                    { "CronExpression", cron }
-                });
-                Thread.Sleep(20);
-                JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
                 return Response.AsRedirect("/");
             };
 

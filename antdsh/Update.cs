@@ -68,7 +68,7 @@ namespace antdsh {
                 "kpl-modules-prepare.service",
                 "kpl-restart-modules-load.service"
             };
-        private const string PublicRepositoryUrl = "http://srv.anthilla.com";
+        private static string _publicRepositoryUrl = "http://srv.anthilla.com";
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string TmpDirectory => $"{Parameter.RepoTemp}/update";
@@ -88,11 +88,22 @@ namespace antdsh {
         #endregion Parameters
 
         #region Public Medhod
+
+        public static void Check() {
+            var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
+            Console.WriteLine("");
+            foreach (var i in info) {
+                AntdshLogger.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
+            }
+            Console.WriteLine("");
+        }
+
         public static void LaunchUpdateFor(string context) {
+            _publicRepositoryUrl = GetRandomServer("http");
+            AntdshLogger.WriteLine($"repo = {_publicRepositoryUrl}");
             Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
-            //Terminal.Execute($"mkdir -p {TmpDirectory}");
             switch (context) {
-                case "list":
+                case "check":
                     var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
                     Console.WriteLine("");
                     foreach (var i in info) {
@@ -100,20 +111,26 @@ namespace antdsh {
                     }
                     Console.WriteLine("");
                     break;
+                case "all":
+                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
+                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
+                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
+                    break;
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    //UpdateUnits2(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    //UpdateUnits(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    //UpdateUnits2(UnitsAntdsh, UnitsTargetApp);
+                    //UpdateUnits(UnitsAntdsh, UnitsTargetApp);
                     break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     break;
                 case "kernel":
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    //UpdateUnits2(UnitsKernel, UnitsTargetKpl);
+                    //UpdateUnits(UnitsKernel, UnitsTargetKpl);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
@@ -163,7 +180,10 @@ namespace antdsh {
                     _updateCounter = 0;
                     return;
                 }
-                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
+                else {
+                    File.Delete($"{TmpDirectory}/{latestFileInfo.FileName}");
+                    AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
+                }
             }
         }
 
@@ -213,7 +233,7 @@ namespace antdsh {
             }
         }
 
-        private static void UpdateUnits2(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+        private static void UpdateUnits(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
@@ -262,7 +282,7 @@ namespace antdsh {
         }
 
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
-            FileSystem.Download2($"{PublicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
+            new ApiConsumer().GetFile($"{_publicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
             if (!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
                 return new List<FileInfoModel>();
             }
@@ -271,19 +291,18 @@ namespace antdsh {
             var files = new List<FileInfoModel>();
             foreach (var f in list) {
                 var fileInfo = f.Split(new[] { ' ' }, 4);
-                if (fileInfo.Length > 3) {
-                    var fi = new FileInfoModel {
-                        FileHash = fileInfo[0],
-                        FileContext = fileInfo[1],
-                        FileDate = fileInfo[2],
-                        FileName = fileInfo[3]
-                    };
-                    var date = GetVersionDateFromFile(fi.FileName);
-                    if (date != "00000000") {
-                        fi.FileDate = date;
-                    }
-                    files.Add(fi);
+                if (fileInfo.Length <= 3) continue;
+                var fi = new FileInfoModel {
+                    FileHash = fileInfo[0],
+                    FileContext = fileInfo[1],
+                    FileDate = fileInfo[2],
+                    FileName = fileInfo[3]
+                };
+                var date = GetVersionDateFromFile(fi.FileName);
+                if (date != "00000000") {
+                    fi.FileDate = date;
                 }
+                files.Add(fi);
             }
             return files;
         }
@@ -295,13 +314,13 @@ namespace antdsh {
         }
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
-            var latestFileDownloadUrl = $"{PublicRepositoryUrl}/{latestFileInfo.FileName}";
+            var latestFileDownloadUrl = $"{_publicRepositoryUrl}/{latestFileInfo.FileName}";
             AntdshLogger.WriteLine($"downloading file from {latestFileDownloadUrl}");
             var latestFile = $"{TmpDirectory}/{latestFileInfo.FileName}";
             if (File.Exists(latestFile)) {
                 File.Delete(latestFile);
             }
-            FileSystem.Download2(latestFileDownloadUrl, latestFile);
+            new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
             return latestFileInfo.FileHash == GetFileHash(latestFile);
         }
 
@@ -332,6 +351,22 @@ namespace antdsh {
             InstallDownloadedFile(latestFileTmpFilePath, newFileVersionPath, activePath);
             return true;
         }
+
+        private static IEnumerable<string> GetServerList(string filter = "") {
+            var text = new ApiConsumer().GetString("http://srv.anthilla.com/server.txt");
+            var list = text.SplitToList("\n");
+            if (!string.IsNullOrEmpty(filter)) {
+                list = list.Where(_ => _.StartsWith(filter)).ToList();
+            }
+            return list;
+        }
+
+        private static string GetRandomServer(string filter = "") {
+            var arr = GetServerList(filter).ToArray();
+            var rnd = new Random().Next(0, arr.Length);
+            return arr[rnd];
+        }
         #endregion
+
     }
 }

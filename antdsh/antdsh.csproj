@@ -60,6 +60,10 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -73,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AhtdshLogger.cs" />
+    <Compile Include="ApiConsumer.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Execute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
