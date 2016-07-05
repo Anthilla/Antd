@@ -164,7 +164,6 @@ namespace antdsh {
         }
 
         public static void Execute(string command) {
-            WriteLine($"Executing external command: {command}");
             WriteLine(Terminal.Execute(command));
         }
     }

@@ -125,6 +125,7 @@ namespace antdsh {
                     break;
             }
             Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            AntdshLogger.WriteLine("");
         }
         #endregion
 
@@ -221,6 +222,9 @@ namespace antdsh {
         }
 
         private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
+            AntdshLogger.WriteLine("");
+            AntdshLogger.WriteLine($"Updating units for {currentContext}");
+
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             var tmpMountDirectory = $"{TmpDirectory}/{currentContext}";
@@ -237,8 +241,10 @@ namespace antdsh {
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory);
             foreach (var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
+                AntdshLogger.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
             }
+            AntdshLogger.WriteLine($"{currentContext} units installation complete");
             Terminal.Execute($"umount {tmpMountDirectory}");
         }
 
