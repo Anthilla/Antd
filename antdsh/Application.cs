@@ -38,59 +38,62 @@ namespace antdsh {
         private static readonly IDictionary<string, string> CommandList = new Dictionary<string, string>();
 
         private static void Main(string[] args) {
+            Console.Title = "antdsh";
             Execute.RemounwRwOs();
             AntdshLogger.SetupFile();
-            while (true) {
-                Console.Title = "antdsh";
-                Directory.CreateDirectory(Parameter.AntdVersionsDir);
-                Directory.CreateDirectory(Parameter.AntdTmpDir);
-                if (args.Length == 0) {
-                    Console.Write($"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} > antdsh > ");
-                    _command = Console.ReadLine();
-                    if (_command != "") {
-                        AddCommand(_command);
-                    }
-                    if (_command != null)
-                        Command(_command.Trim());
-                    continue;
-                }
-                Command(args[0]);
-                Shell.Exit();
-                break;
+            Directory.CreateDirectory(Parameter.AntdVersionsDir);
+            Directory.CreateDirectory(Parameter.AntdTmpDir);
+
+            if (args.Length > 0) {
+                Command(args);
+                return;
+            }
+
+            KeepAlive();
+        }
+
+        private static void KeepAlive() {
+            while (_command != "quit" && _command != "exit" && _command != "close") {
+                Console.Write($"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} > antdsh > ");
+                _command = Console.ReadLine();
+                if (string.IsNullOrEmpty(_command)) continue;
+                AddCommand(_command);
+                Command(_command.Trim().SplitToList(" ").ToArray());
             }
         }
 
-        private static void Command(string command) {
-            if (command == "help") {
+        private static void Command(string[] command) {
+            if (command[0] == "help") {
                 Help();
             }
-            else if (command == "start") {
-                Shell.Start();
-            }
-            else if (command == "stop") {
-                Shell.Stop();
-            }
-            else if (command == "restart") {
-                Shell.Restart();
-            }
-            else if (command.StartsWith("update")) {
-                var context = command.Split(' ');
-                if (context.Length > 0) {
-                    Update.LaunchUpdateFor(context[1]);
+            else if (command[0] == "update") {
+                Console.WriteLine("");
+                Console.WriteLine(command.Length);
+                Console.WriteLine("");
+                if (command.Length > 1) {
+                    Update.LaunchUpdateFor(command[1]);
                 }
                 else {
                     Update.Check();
                 }
             }
-            else if (command == "history") {
+            else if (command[0] == "start") {
+                Start();
+            }
+            else if (command[0] == "stop") {
+                Stop();
+            }
+            else if (command[0] == "restart") {
+                Restart();
+            }
+            else if (command[0] == "history") {
                 PrintHistory();
             }
-            else if (command == "exit") {
-                Shell.Exit();
-            }
-            else if (command == "") { }
             else {
-                Shell.Execute(command);
+                var result = Terminal.Execute(string.Join(" ", command));
+                if (string.IsNullOrEmpty(result)) return;
+                Console.Write(result);
+                Console.WriteLine();
             }
         }
 
@@ -122,6 +125,130 @@ namespace antdsh {
             foreach (var cmd in CommandList) {
                 Console.WriteLine(cmd.Value);
             }
+        }
+
+        private static bool IsAntdRunning() => Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
+
+        private static void Start() {
+            if (IsAntdRunning()) return;
+            Console.WriteLine("Antd is not running, so we can start it.");
+            Console.WriteLine($"Looking for antds in {Parameter.AntdVersionsDir}");
+            var newestVersionFound = Execute.GetNewestVersion();
+            if (newestVersionFound.Key != null) {
+                Execute.LinkVersionToRunning(newestVersionFound.Key);
+                Console.WriteLine($"New antd '{newestVersionFound.Key}' linked to running version");
+                Console.WriteLine("Restarting services now...");
+                Execute.RestartSystemctlAntdServices();
+                if (IsAntdRunning()) {
+                    Console.WriteLine("Antd is running now!");
+                }
+                else {
+                    Console.WriteLine("Something went wrong starting antd... retrying starting it...");
+                    StartLoop(newestVersionFound.Key);
+                }
+            }
+            else {
+                Console.WriteLine(
+                    "There's no antd on this machine, you can try use update-url command to dowload the latest version...");
+            }
+        }
+
+        private static int _startCount;
+        private static void StartLoop(string versionToRun) {
+            while (true) {
+                _startCount++;
+                Console.WriteLine($"Retry #{_startCount}");
+                if (_startCount < 5) {
+                    Execute.LinkVersionToRunning(versionToRun);
+                    Console.WriteLine($"New antd '{versionToRun}' linked to running version");
+                    Console.WriteLine("Restarting services now...");
+                    Execute.RestartSystemctlAntdServices();
+                    if (IsAntdRunning()) {
+                        Console.WriteLine("Antd is running now!");
+                    }
+                    else {
+                        Console.WriteLine("Something went wrong starting antd... retrying starting it...");
+                        continue;
+                    }
+                }
+                else {
+                    Console.WriteLine("Error: too many retries...");
+                }
+                break;
+            }
+        }
+
+        private static void Stop() {
+            Console.WriteLine("Checking whether antd is running or not");
+            if (!IsAntdRunning()) return;
+            Console.WriteLine("Removing everything and stopping antd");
+            Execute.StopServices();
+            UmountAll();
+            if (IsAntdRunning() == false) {
+                Console.WriteLine("Antd has been stopped now!");
+            }
+            else {
+                Console.WriteLine("Something went wrong starting antd, antdsh is retrying");
+                StopLoop();
+            }
+        }
+
+        private static int _stopCount;
+        private static void StopLoop() {
+            while (true) {
+                _stopCount++;
+                Console.WriteLine($"Retry #{_stopCount}");
+                if (_stopCount < 5) {
+                    Console.WriteLine("Removing everything and stopping antd.");
+                    Execute.StopServices();
+                    UmountAll();
+                    if (IsAntdRunning() == false) {
+                        Console.WriteLine("Antd has been stopped now!");
+                    }
+                    else {
+                        Console.WriteLine("Something went wrong stopping antd... retrying stopping it...");
+                        continue;
+                    }
+                }
+                else {
+                    Console.WriteLine("Error: too many retries...");
+                }
+                break;
+            }
+        }
+
+        private static void Restart() {
+            Console.WriteLine("Checking whether antd is running or not...");
+            if (IsAntdRunning() == false) {
+                Console.WriteLine("Cannot restart antd because it isn't running! Try the 'start' command instead!");
+            }
+            else {
+                Stop();
+                Start();
+            }
+        }
+
+        private static void UmountAll() {
+            Console.WriteLine("Unmounting Antd");
+            while (true) {
+                var r = Terminal.Execute("cat /proc/mounts | grep /antd");
+                var f = Terminal.Execute("df | grep /cfg/antd");
+                if (r.Length <= 0 && f.Length <= 0)
+                    return;
+                Terminal.Execute($"umount {Parameter.AntdCfg}");
+                Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
+                Terminal.Execute("umount /framework/antd");
+            }
+        }
+
+        private static void IsRunning() {
+            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
+            Console.WriteLine(res.Length > 0 ? "Yes, is running." : "No.");
+        }
+
+        private static void CleanTmp() {
+            Console.WriteLine("Cleaning tmp.");
+            Execute.CleanTmp();
         }
     }
 }
