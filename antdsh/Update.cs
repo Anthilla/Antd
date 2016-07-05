@@ -53,21 +53,6 @@ namespace antdsh {
         private const string UpdateVerbForUnits = "update.units";
         private const string UnitsTargetApp = "/mnt/cdrom/Units/applicative.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
-        private static readonly string[] UnitsAntd = {
-                "app-antd-01-prepare.service",
-                "app-antd-02-mount.service",
-                "app-antd-03-launcher.service",
-            };
-        private static readonly string[] UnitsAntdsh = {
-                "app-antdsh-01-prepare.service",
-                "app-antdsh-02-mount.service"
-            };
-        private static readonly string[] UnitsKernel = {
-                "kpl-firmware-mount.service",
-                "kpl-modules-mount.",
-                "kpl-modules-prepare.service",
-                "kpl-restart-modules-load.service"
-            };
         private static string _publicRepositoryUrl = "http://srv.anthilla.com";
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
@@ -113,29 +98,33 @@ namespace antdsh {
                     break;
                 case "all":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
+                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
+                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
                     break;
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    //UpdateUnits(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    //UpdateUnits(UnitsAntdsh, UnitsTargetApp);
+                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
                     break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     break;
                 case "kernel":
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    //UpdateUnits(UnitsKernel, UnitsTargetKpl);
+                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
                     break;
             }
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
         #endregion
 
@@ -180,10 +169,8 @@ namespace antdsh {
                     _updateCounter = 0;
                     return;
                 }
-                else {
-                    File.Delete($"{TmpDirectory}/{latestFileInfo.FileName}");
-                    AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
-                }
+                File.Delete($"{TmpDirectory}/{latestFileInfo.FileName}");
+                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
             }
         }
 
@@ -233,45 +220,26 @@ namespace antdsh {
             }
         }
 
-        private static void UpdateUnits(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+        private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
-            _updateCounter++;
-            if (_updateCounter > 5) {
-                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
-                return;
-            }
-            var linkedFile = Terminal.Execute($"file {activeVersionPath}");
-            var currentVersionDate = GetVersionDateFromFile(linkedFile);
+            var tmpMountDirectory = $"{TmpDirectory}/{currentContext}";
+            Directory.CreateDirectory(tmpMountDirectory);
+            Terminal.Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
-            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
-            AntdshLogger.WriteLine($"found for: {currentContext}");
-            foreach (var cri in currentContextRepositoryInfo) {
-                AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
-            }
-            AntdshLogger.WriteLine("");
-            var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
-            if (latestFileInfo == null) {
-                AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
-                return;
-            }
-            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
-            if (!isUpdateNeeded) {
-                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
-                return;
-            }
-            AntdshLogger.WriteLine($"updating {currentContext}");
+            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
+            DownloadLatestFile(latestFileInfo);
+            if (latestFileInfo == null) return;
 
-            if (DownloadLatestFile(latestFileInfo)) {
-                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
-            }
             AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
-
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
-            InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
-            _updateCounter = 0;
+            Terminal.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
+            var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory);
+            foreach (var downloadedUnit in downloadedUnits) {
+                var fullPath = Path.GetFullPath(downloadedUnit);
+                File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
+            }
+            Terminal.Execute($"umount {tmpMountDirectory}");
         }
 
         private static string GetVersionDateFromFile(string path) {
