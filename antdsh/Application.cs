@@ -67,9 +67,6 @@ namespace antdsh {
                 Help();
             }
             else if (command[0] == "update") {
-                Console.WriteLine("");
-                Console.WriteLine(command.Length);
-                Console.WriteLine("");
                 if (command.Length > 1) {
                     Update.LaunchUpdateFor(command[1]);
                 }

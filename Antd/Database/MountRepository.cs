@@ -48,21 +48,42 @@ namespace Antd.Database {
             var objUpdate = new MountModel {
                 Id = id.ToGuid(),
                 DfpTimestamp = Timestamp.Now,
-                MountContext = (MountContext)Enum.Parse(typeof(MountContext), mountContext),
-                MountEntity = (MountEntity)Enum.Parse(typeof(MountEntity), mountEntity),
-                MountStatus = (MountStatus)Enum.Parse(typeof(MountStatus), mountStatus),
                 DirsPath = path.IsNullOrEmpty() ? null : Mounts.SetDirsPath(path),
                 Path = path.IsNullOrEmpty() ? null : path,
                 MountedPath = mountedPath.IsNullOrEmpty() ? null : mountedPath,
-                AssociatedUnits = units.SplitToList()
+                AssociatedUnits = units?.SplitToList()
             };
+
+            if (mountContext.IsNullOrEmpty()) {
+                objUpdate.MountContext = null; 
+            }
+            else {
+                objUpdate.MountContext = mountContext.ToEnum<MountContext>();
+            }
+
+            if (mountEntity.IsNullOrEmpty()) {
+                objUpdate.MountEntity = null;
+            }
+            else {
+                objUpdate.MountEntity = mountEntity.ToEnum<MountEntity>();
+            }
+
+            if (mountStatus.IsNullOrEmpty()) {
+                objUpdate.MountStatus = null;
+            }
+            else {
+                objUpdate.MountStatus = mountStatus.ToEnum<MountStatus>();
+            }
+
             objUpdate.HtmlStatusIcon = AssignHtmlStatusIcon(objUpdate.MountStatus);
             var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
             return result;
         }
 
-        private static string AssignHtmlStatusIcon(MountStatus status) {
+        private static string AssignHtmlStatusIcon(MountStatus? status) {
             switch (status) {
+                case null:
+                    return null;
                 case MountStatus.Mounted:
                     return "icon-record fg-green";
                 case MountStatus.Unmounted:
@@ -102,13 +123,24 @@ namespace Antd.Database {
             return result.FirstOrDefault();
         }
 
+
+        //var id = dict["Id"];
+        //var mountContext = dict["MountContext"];
+        //var mountEntity = dict["MountEntity"];
+        //var path = dict["Path"];
+        //var mountedPath = dict["MountedPath"];
+        //var mountStatus = dict["MountStatus"];
+        //var units = dict["Units"];
         public void SetAsMounted(string path, string mountedPath) {
             var m = GetByPath(path);
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
                 {"MountedPath", mountedPath},
-                {"MountStatus", MountStatus.Mounted.ToString()}
+                {"MountStatus", MountStatus.Mounted.ToString()},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -117,7 +149,11 @@ namespace Antd.Database {
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
-                {"MountStatus", MountStatus.Unmounted.ToString()}
+                {"MountStatus", MountStatus.Unmounted.ToString()},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -126,7 +162,11 @@ namespace Antd.Database {
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
-                {"MountStatus", MountStatus.MountedTmp.ToString()}
+                {"MountStatus", MountStatus.MountedTmp.ToString()},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -135,7 +175,11 @@ namespace Antd.Database {
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
-                {"MountStatus", MountStatus.MountedReadOnly.ToString()}
+                {"MountStatus", MountStatus.MountedReadOnly.ToString()},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -144,7 +188,11 @@ namespace Antd.Database {
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
-                {"MountStatus", MountStatus.DifferentMount.ToString()}
+                {"MountStatus", MountStatus.DifferentMount.ToString()},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -153,7 +201,11 @@ namespace Antd.Database {
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
                 {"Path", path},
-                {"MountStatus", MountStatus.Error.ToString()}
+                {"MountStatus", MountStatus.Error.ToString()},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
+                { "Units", null},
             });
         }
 
@@ -161,7 +213,12 @@ namespace Antd.Database {
             var m = GetByPath(path);
             Edit(new Dictionary<string, string> {
                 {"Id", m.Guid},
-                {"Units", units.JoinToString()}
+                {"Units", units.JoinToString()},
+                {"Path", null},
+                {"MountStatus", null},
+                { "MountedPath", null},
+                { "MountContext", null},
+                { "MountEntity", null},
             });
         }
     }

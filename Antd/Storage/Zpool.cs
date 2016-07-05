@@ -8,7 +8,16 @@ namespace Antd.Storage {
     public class Zpool {
         public class Model {
             public string Name { get; set; }
-            public string Stats { get; set; }
+            public string Size { get; set; }
+            public string Alloc { get; set; }
+            public string Free { get; set; }
+            public string Expandsz { get; set; }
+            public string Frag { get; set; }
+            public string Cap { get; set; }
+            public string Dedup { get; set; }
+            public string Health { get; set; }
+            public string Altroot { get; set; }
+            public string Status { get; set; }
         }
 
         public static List<Model> List() {
@@ -22,7 +31,16 @@ namespace Antd.Storage {
                 var cells = Regex.Split(line, @"\s+");
                 var model = new Model {
                     Name = cells[0],
-                    Stats = cells[1]
+                    Size = cells[1],
+                    Alloc = cells[2],
+                    Free = cells[3],
+                    Expandsz = cells[4],
+                    Frag = cells[5],
+                    Cap = cells[6],
+                    Dedup = cells[7],
+                    Health = cells[8],
+                    Altroot = cells[9],
+                    Status = Terminal.Execute($"zpool status {cells[0]}")
                 };
                 list.Add(model);
             }

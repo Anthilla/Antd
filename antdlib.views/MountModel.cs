@@ -5,6 +5,7 @@ using RaptorDB;
 
 namespace antdlib.views {
 
+    #region enums
     public enum MountStatus : byte {
         Mounted = 1,
         Unmounted = 2,
@@ -26,6 +27,7 @@ namespace antdlib.views {
         File = 2,
         Other = 99
     }
+    #endregion
 
     [Serializable]
     public class MountModel : EntityModel {
@@ -60,12 +62,12 @@ namespace antdlib.views {
         public string DirsPath { get; set; } = "";
         public string HtmlStatusIcon { get; set; } = "";
         public string MountedPath { get; set; } = "";
-        public MountStatus MountStatus { get; set; } = MountStatus.Unmounted;
-        public MountContext MountContext { get; set; } = MountContext.Core;
+        public MountStatus? MountStatus { get; set; } = null;
+        public MountContext? MountContext { get; set; } = null;
         public string Type { get; set; } = "";
         public string Options { get; set; } = "";
         public IEnumerable<string> AssociatedUnits { get; set; } = new HashSet<string>();
-        public MountEntity MountEntity { get; set; }
+        public MountEntity? MountEntity { get; set; } = null;
     }
 
     #region [    View    ]
@@ -78,16 +80,16 @@ namespace antdlib.views {
         public string Tags { get; set; }
         //---
         public string DfpTimestamp { get; set; }
-        public string Device { get; set; } 
+        public string Device { get; set; }
         public string Path { get; set; }
         public string DirsPath { get; set; }
         public string HtmlStatusIcon { get; set; }
-        public string MountedPath { get; set; } 
-        public string MountStatus { get; set; } 
-        public string MountContext { get; set; } 
-        public string Type { get; set; } 
+        public string MountedPath { get; set; }
+        public string MountStatus { get; set; }
+        public string MountContext { get; set; }
+        public string Type { get; set; }
         public string Options { get; set; }
-        public string AssociatedUnits { get; set; } 
+        public string AssociatedUnits { get; set; }
         public string MountEntity { get; set; }
     }
 
@@ -125,7 +127,7 @@ namespace antdlib.views {
                     doc.Type,
                     doc.Options,
                     doc.AssociatedUnits.JoinToString(),
-                    doc.MountEntity,
+                    doc.MountEntity.ToString()
                 };
                 api.Emit(docid, schemaMounts);
             };

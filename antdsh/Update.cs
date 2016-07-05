@@ -244,6 +244,7 @@ namespace antdsh {
                 AntdshLogger.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
             }
+            Terminal.Execute("systemctl daemon-reload");
             AntdshLogger.WriteLine($"{currentContext} units installation complete");
             Terminal.Execute($"umount {tmpMountDirectory}");
         }
