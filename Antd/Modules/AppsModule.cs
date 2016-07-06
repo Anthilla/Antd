@@ -107,7 +107,7 @@ namespace Antd.Modules {
             Post["/apps/Mount"] = x => {
                 var f = (string)Request.Form.Folder;
                 var m = (string)Request.Form.Mount;
-                Terminal.Execute("Mount " + f + " " + m);
+                new Terminal().Execute("Mount " + f + " " + m);
                 return Response.AsJson(AnthillaSp.Status.AnthillaServer());
             };
 

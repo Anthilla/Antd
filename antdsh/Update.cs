@@ -86,7 +86,7 @@ namespace antdsh {
         public static void LaunchUpdateFor(string context) {
             _publicRepositoryUrl = GetRandomServer("http");
             AntdshLogger.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            new Terminal().Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
             switch (context) {
                 case "check":
                     var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
@@ -124,7 +124,7 @@ namespace antdsh {
                     Console.WriteLine("Nothing to update...");
                     break;
             }
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            new Terminal().Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
             AntdshLogger.WriteLine("");
         }
         #endregion
@@ -140,7 +140,7 @@ namespace antdsh {
                 }
                 Directory.CreateDirectory(Parameter.RepoTemp);
                 Directory.CreateDirectory(TmpDirectory);
-                var linkedFile = Terminal.Execute($"file {activeVersionPath}");
+                var linkedFile = new Terminal().Execute($"file {activeVersionPath}");
                 var currentVersionDate = GetVersionDateFromFile(linkedFile);
                 var repositoryInfo = GetRepositoryInfo().ToList();
                 var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
@@ -229,7 +229,7 @@ namespace antdsh {
             Directory.CreateDirectory(TmpDirectory);
             var tmpMountDirectory = $"{TmpDirectory}/{currentContext}";
             Directory.CreateDirectory(tmpMountDirectory);
-            Terminal.Execute($"umount {tmpMountDirectory}");
+            new Terminal().Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
             DownloadLatestFile(latestFileInfo);
@@ -237,16 +237,16 @@ namespace antdsh {
 
             AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            Terminal.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
+            new Terminal().Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory);
             foreach (var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
                 AntdshLogger.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
             }
-            Terminal.Execute("systemctl daemon-reload");
+            new Terminal().Execute("systemctl daemon-reload");
             AntdshLogger.WriteLine($"{currentContext} units installation complete");
-            Terminal.Execute($"umount {tmpMountDirectory}");
+            new Terminal().Execute($"umount {tmpMountDirectory}");
         }
 
         private static string GetVersionDateFromFile(string path) {
@@ -261,7 +261,7 @@ namespace antdsh {
             if (!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
                 return new List<FileInfoModel>();
             }
-            var tmpRepoListText = Terminal.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
+            var tmpRepoListText = new Terminal().Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
             var list = tmpRepoListText.SplitToList(Environment.NewLine);
             var files = new List<FileInfoModel>();
             foreach (var f in list) {
@@ -308,9 +308,9 @@ namespace antdsh {
         private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
-            Terminal.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
-            Terminal.Execute($"chown root:wheel {newVersionPath}");
-            Terminal.Execute($"chmod 664 {newVersionPath}");
+            new Terminal().Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
+            new Terminal().Execute($"chown root:wheel {newVersionPath}");
+            new Terminal().Execute($"chmod 664 {newVersionPath}");
         }
 
         private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {

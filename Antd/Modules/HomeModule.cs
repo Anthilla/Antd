@@ -72,16 +72,16 @@ namespace Antd.Modules {
                 };
 
                 viewModel.Meminfo = Meminfo.GetMappedModel();
-                var os = Terminal.Execute("uname -a");
-                var aos = Terminal.Execute("cat /etc/aos-release");
+                var os = new Terminal().Execute("uname -a");
+                var aos = new Terminal().Execute("cat /etc/aos-release");
 
                 viewModel.VersionOS = os;
                 viewModel.VersionAOS = aos;
 
-                viewModel.ActiveKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.RecoveryKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.ActiveSystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.RecoverySystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.ActiveKernel = new Terminal().Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.RecoveryKernel = new Terminal().Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.ActiveSystem = new Terminal().Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                viewModel.RecoverySystem = new Terminal().Execute("ls -la /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 viewModel.Cpuinfo = Cpuinfo.Get();
                 viewModel.NetworkPhysicalIf = new NetworkInterfaceRepository().Physical();
                 viewModel.NetworkVirtualIf = new NetworkInterfaceRepository().Virtual();

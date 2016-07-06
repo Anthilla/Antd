@@ -63,7 +63,7 @@ namespace Antd.Database {
         public void SyncDirectories(string source) {
             var info = GetAll().FirstOrDefault(_ => _.Source == source);
             if (info != null) {
-                Terminal.Execute($"rsync {info.Options} {info.Source} {info.Destination}");
+                new Terminal().Execute($"rsync {info.Options} {info.Source} {info.Destination}");
             }
         }
     }

@@ -45,7 +45,7 @@
 //        private const string MainFile = "named.conf";
 
 //        public static void SetReady() {
-//            Terminal.Terminal.Execute($"cp {Dir} {MntDir}");
+//            Terminal.new Terminal().Execute($"cp {Dir} {MntDir}");
 //            FileSystem.CopyDirectory(Dir, MntDir);
 //            Mount.Dir(Dir);
 //        }
@@ -61,7 +61,7 @@
 //        /// todo cambiare comando
 //        /// </summary>
 //        public static void ReloadConfig() {
-//            Terminal.Terminal.Execute("");
+//            Terminal.new Terminal().Execute("");
 //        }
 
 //        public class MapRules {

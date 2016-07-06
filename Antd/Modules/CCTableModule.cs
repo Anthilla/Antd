@@ -98,7 +98,7 @@ namespace Antd.Modules {
             //    var resultString = (string)Request.Form.Result;
             //    ConsoleLogger.Log(commandString);
             //    if (commandString != "") {
-            //        var thisResult = resultString == "" ? Terminal.Execute(commandString) : resultString;
+            //        var thisResult = resultString == "" ? new Terminal().Execute(commandString) : resultString;
             //        CCTableRepository.CreateRowDataView(table, tableName, label, commandString, thisResult);
             //    }
             //    ConsoleLogger.Log(commandString);
@@ -153,20 +153,20 @@ namespace Antd.Modules {
 
             //    switch (commandType) {
             //        case "direct":
-            //            Terminal.Execute(row.CommandDirect);
+            //            new Terminal().Execute(row.CommandDirect);
             //            break;
             //        case "text":
-            //            Terminal.Execute(row.CommandSet.Replace("{Value}", newValue));
+            //            new Terminal().Execute(row.CommandSet.Replace("{Value}", newValue));
             //            break;
             //        case "bool":
             //            if (boolSelected == "true") {
-            //                Terminal.Execute(row.CommandTrue);
+            //                new Terminal().Execute(row.CommandTrue);
             //            }
             //            else if (boolSelected == "false") {
-            //                Terminal.Execute(row.CommandFalse);
+            //                new Terminal().Execute(row.CommandFalse);
             //            }
             //            else {
-            //                Terminal.Execute("echo COMMAND NOT FOUND");
+            //                new Terminal().Execute("echo COMMAND NOT FOUND");
             //            }
             //            break;
             //    }

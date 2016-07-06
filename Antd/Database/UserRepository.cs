@@ -126,7 +126,7 @@ namespace Antd.Database {
             if (!File.Exists(UserFile) || !File.Exists(UserPasswordFile)) {
                 return;
             }
-            var usersString = Terminal.Execute($"cat {UserFile}");
+            var usersString = new Terminal().Execute($"cat {UserFile}");
             var users = usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var user in users) {
                 Map(user);
@@ -138,7 +138,7 @@ namespace Antd.Database {
             if (userInfo.Length <= 8) {
                 return;
             }
-            var passwords = Terminal.Execute($"cat {UserPasswordFile}").SplitToList(Environment.NewLine);
+            var passwords = new Terminal().Execute($"cat {UserPasswordFile}").SplitToList(Environment.NewLine);
             Create(new Dictionary<string, string> {
                 { "FirstName", userInfo[0] },
                 { "LastName", userInfo[0] },
@@ -166,7 +166,7 @@ namespace Antd.Database {
 
         public class Shadow {
             public static void Create(string user) {
-                Terminal.Execute("useradd " + user);
+                new Terminal().Execute("useradd " + user);
             }
         }
     }

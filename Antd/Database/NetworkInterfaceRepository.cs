@@ -61,7 +61,7 @@ namespace Antd.Database {
                 return;
             var dirs = Directory.GetDirectories("/sys/class/net");
             var physical = from dir in dirs
-                           let f = Terminal.Execute($"file {dir}")
+                           let f = new Terminal().Execute($"file {dir}")
                            where !f.Contains("virtual") && !f.Contains("fake")
                            select Path.GetFileName(dir);
             foreach (var iface in physical) {
@@ -71,7 +71,7 @@ namespace Antd.Database {
                 });
             }
             var virtualIf = (from dir in dirs
-                             let f = Terminal.Execute($"file {dir}")
+                             let f = new Terminal().Execute($"file {dir}")
                              where f.Contains("virtual") || f.Contains("fake")
                              select Path.GetFileName(dir)).Where(_ => !_.Contains("bond"));
             foreach (var iface in virtualIf) {
@@ -81,7 +81,7 @@ namespace Antd.Database {
                 });
             }
             var bondIf = (from dir in dirs
-                          let f = Terminal.Execute($"file {dir}")
+                          let f = new Terminal().Execute($"file {dir}")
                           where f.Contains("virtual") || f.Contains("fake")
                           select Path.GetFileName(dir)).Where(_ => _.Contains("bond"));
             foreach (var iface in bondIf) {
@@ -90,7 +90,7 @@ namespace Antd.Database {
                     {"Type", NetworkInterfaceType.Bond.ToString()}
                 });
             }
-            var bridgeIf = Terminal.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
+            var bridgeIf = new Terminal().Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
             var brList = bridgeIf.Select(bbrr => bbrr.Replace("\t", " ").Replace("/t", " ").Replace("  ", " ").Split(' ')[0]).Select(brAttr => brAttr.Trim()).ToList();
             foreach (var iface in brList) {
                 Create(new Dictionary<string, string> {

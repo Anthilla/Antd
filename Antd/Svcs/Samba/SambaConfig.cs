@@ -58,7 +58,7 @@
 //                DeNSo.Session.New.Set(configModel);
 //                var model = DeNSo.Session.New.Get<SambaDomainConfig>(_ => _._Id == ServiceGuid).FirstOrDefault();
 //                if (model != null) {
-//                    Terminal.Terminal.Execute($"samba-tool domain provision --domain={model.Domain} --realm={model.Realm} --host-name={model.HostName} --host-ip={model.HostIp} --adminpass={model.AdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
+//                    Terminal.new Terminal().Execute($"samba-tool domain provision --domain={model.Domain} --realm={model.Realm} --host-name={model.HostName} --host-ip={model.HostIp} --adminpass={model.AdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
 //                }
 //            }
 //        }
@@ -70,7 +70,7 @@
 //        private const string AntdSambaFile = "antd.samba.conf";
 
 //        public static void SetReady() {
-//            Terminal.Terminal.Execute($"cp {Dir} {MntDir}");
+//            Terminal.new Terminal().Execute($"cp {Dir} {MntDir}");
 //            FileSystem.CopyDirectory(Dir, MntDir);
 //            Mount.Dir(Dir);
 //        }
@@ -80,7 +80,7 @@
 //        public static bool IsActive => CheckIsActive();
 
 //        public static void ReloadConfig() {
-//            Terminal.Terminal.Execute("smbcontrol all reload-config");
+//            Terminal.new Terminal().Execute("smbcontrol all reload-config");
 //        }
 
 //        private static List<string> GetServiceSimpleStructure() {

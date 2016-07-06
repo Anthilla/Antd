@@ -43,7 +43,7 @@ namespace Antd.Modules {
 
             Get["/terminal"] = x => View["page-terminal"];
 
-            Post["/terminal"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? Terminal.Execute((string)Request.Form.Command) : Terminal.Execute(Request.Form.Command, Request.Form.Directory)));
+            Post["/terminal"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? new Terminal().Execute((string)Request.Form.Command) : new Terminal().Execute(Request.Form.Command, Request.Form.Directory)));
 
             Post["/terminal/directory"] = x => {
                 string directory = Request.Form.Directory;
@@ -76,7 +76,7 @@ namespace Antd.Modules {
 
             Post["/terminal/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = Request.Form.Directory == "" ? Terminal.Execute((string[])cmds) : Terminal.Execute((string[])cmds, (string)Request.Form.Directory);
+                var result = Request.Form.Directory == "" ? new Terminal().Execute((string[])cmds) : new Terminal().Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
@@ -86,14 +86,14 @@ namespace Antd.Modules {
             //    foreach (var command in commandSplit) {
             //        _commandRepo.c(command);
             //    }
-            //    var result = Terminal.Execute(commandSplit);
+            //    var result = new Terminal().Execute(commandSplit);
             //    return Response.AsJson(result);
             //};
 
             //Post["/terminal/direct"] = x => {
             //    var inputCommand = (string)Request.Form.Command;
             //    var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
-            //    var result = Terminal.Execute(commandSplit);
+            //    var result = new Terminal().Execute(commandSplit);
             //    return Response.AsJson(result);
             //};
         }

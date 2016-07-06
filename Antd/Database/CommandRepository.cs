@@ -64,7 +64,7 @@ namespace Antd.Database {
                 return string.Empty;
             }
             var strings = command.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            return Terminal.Execute(strings);
+            return new Terminal().Execute(strings);
         }
 
         public string LaunchAndGetOutputUsingNewValue(string guid) {
@@ -73,7 +73,7 @@ namespace Antd.Database {
                 return string.Empty;
             }
             var strings = command.Layout.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            return Terminal.Execute(strings);
+            return new Terminal().Execute(strings);
         }
 
         public string LaunchAndGetOutputUsingNewValue(string guid, string value) {
@@ -85,7 +85,7 @@ namespace Antd.Database {
             var findReplace = "{" + guid + "}";
             var newCommand = layout.Replace(findReplace, value);
             var strings = newCommand.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            return Terminal.Execute(strings);
+            return new Terminal().Execute(strings);
         }
     }
 }

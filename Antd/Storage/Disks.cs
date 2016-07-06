@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
 using Newtonsoft.Json;
@@ -7,7 +6,7 @@ using Newtonsoft.Json;
 namespace Antd.Storage {
     public class Disks {
         public static List<Disk> List() {
-            var str = Terminal.Execute("lsblk -JO");
+            var str = new Terminal().Execute("lsblk -JO");
             var clean = str?.Replace("-", "_").Replace("maj:min", "maj_min");
             var ret = JsonConvert.DeserializeObject<Json.Lsblk>(clean);
             var result = ret.blockdevices.Select(_ => new Disk(_)).ToList();
@@ -75,8 +74,8 @@ namespace Antd.Storage {
             if (Partitions.Any()) {
                 HasPartition = true;
             }
-            Partprobe = Terminal.Execute($"partprobe -s /dev/{Name}");
-            var partitionTable = Terminal.Execute($"parted /dev/{Name} print 2> /dev/null | grep \"Partition Table:\"");
+            Partprobe = new Terminal().Execute($"partprobe -s /dev/{Name}");
+            var partitionTable = new Terminal().Execute($"parted /dev/{Name} print 2> /dev/null | grep \"Partition Table:\"");
             if (!string.IsNullOrEmpty(partitionTable)) {
                 PartitionTable = partitionTable.Replace("Partition Table:", "").Trim();
                 HasPartitionTable = partitionTable != "unknown";
@@ -130,10 +129,10 @@ namespace Antd.Storage {
         public string Vendor { get; set; }
         public List<Partition> Partitions { get; set; } = new List<Partition>();
 
-        public bool HasPartition { get; set; } = false;
+        public bool HasPartition { get; set; }
         public string Partprobe { get; set; } = "";
         public string PartitionTable { get; set; } = "";
-        public bool HasPartitionTable { get; set; } = false;
+        public bool HasPartitionTable { get; set; }
     }
 
     public class Partition {

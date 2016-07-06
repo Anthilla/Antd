@@ -23,8 +23,8 @@ namespace antdlib.common.Helpers {
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            var df = Terminal.Execute($"df | grep {directory}");
-            var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
+            var df = new Terminal().Execute($"df | grep {directory}");
+            var pm = new Terminal().Execute($"cat /proc/mounts | grep {directory}");
             return df.Length > 0 || pm.Length > 0;
         }
 
@@ -36,7 +36,7 @@ namespace antdlib.common.Helpers {
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount1Retry}");
-                Terminal.Execute($"umount {directory}");
+                new Terminal().Execute($"umount {directory}");
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
             }
@@ -47,8 +47,8 @@ namespace antdlib.common.Helpers {
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount2Retry}");
-                Terminal.Execute($"umount {source}");
-                Terminal.Execute($"umount {destination}");
+                new Terminal().Execute($"umount {source}");
+                new Terminal().Execute($"umount {destination}");
                 _umount2Retry = _umount2Retry + 1;
                 Umount(source, destination);
             }

@@ -36,33 +36,33 @@ using antdlib.common;
 namespace antdlib.Log {
     public class Journalctl {
         public static IEnumerable<string> GetAllLog() {
-            var result = Terminal.Execute("journalctl --no-pager --quiet");
+            var result = new Terminal().Execute("journalctl --no-pager --quiet");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static IEnumerable<string> GetAllLog(string filter) {
-            var result = Terminal.Execute($"journalctl --no-pager --quiet | grep {filter}");
+            var result = new Terminal().Execute($"journalctl --no-pager --quiet | grep {filter}");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static IEnumerable<string> GetAllLogSinceHour(string hours) {
             var cmd = $"journalctl --no-pager --quiet --since='{hours}h ago'";
-            var result = Terminal.Execute(cmd);
+            var result = new Terminal().Execute(cmd);
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static IEnumerable<string> GetAntdLog() {
-            var result = Terminal.Execute($"journalctl --no-pager --quiet -u {Parameter.UnitAntdLauncher}");
+            var result = new Terminal().Execute($"journalctl --no-pager --quiet -u {Parameter.UnitAntdLauncher}");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static IEnumerable<string> GetLogContexts() {
-            var result = Terminal.Execute("journalctl --quiet | awk '{print $5}'| awk -F '[' '{print $1}'| sort -u");
+            var result = new Terminal().Execute("journalctl --quiet | awk '{print $5}'| awk -F '[' '{print $1}'| sort -u");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Replace(":", ""));
         }
 
         public static IEnumerable<string> GetLogContextsSinceHour(string hours) {
-            var result = Terminal.Execute($"journalctl --quiet --since='{hours}h ago' | awk '{{print $5}}'| awk -F '[' '{{print $1}}'| sort -u");
+            var result = new Terminal().Execute($"journalctl --quiet --since='{hours}h ago' | awk '{{print $5}}'| awk -F '[' '{{print $1}}'| sort -u");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Replace(":", ""));
         }
 
@@ -82,12 +82,12 @@ namespace antdlib.Log {
                         $"|    Antd Report @ {DateTime.Now.ToString("yyyy-MM-dd")}    |",
                         "+================================+",
                         "",
-                        Terminal.Execute("uname -a"),
-                        $"uptime:           {Terminal.Execute("uptime | awk -F ',' '{print $1 $2}'").Trim()}",
-                        $"processes:        {Terminal.Execute("ps -aef | wc | awk -F ' ' '{ print $1 }'").Trim()}",
-                        $"users logged:     {Terminal.Execute("who | awk -F ' ' '{print $1}' |sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
-                        $"sessions open:    {Terminal.Execute("who | sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
-                        $"load:             {Terminal.Execute("uptime | awk -F ',' '{print $4 $5 $6}' | awk -F ':' '{print $2}'").Trim()}",
+                        new Terminal().Execute("uname -a"),
+                        $"uptime:           {new Terminal().Execute("uptime | awk -F ',' '{print $1 $2}'").Trim()}",
+                        $"processes:        {new Terminal().Execute("ps -aef | wc | awk -F ' ' '{ print $1 }'").Trim()}",
+                        $"users logged:     {new Terminal().Execute("who | awk -F ' ' '{print $1}' |sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
+                        $"sessions open:    {new Terminal().Execute("who | sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
+                        $"load:             {new Terminal().Execute("uptime | awk -F ',' '{print $4 $5 $6}' | awk -F ':' '{print $2}'").Trim()}",
                         ""
                     };
                     lines.AddRange(GetSecurityReport());
@@ -106,11 +106,11 @@ namespace antdlib.Log {
                     "+================================+",
                     "",
                 };
-                var sessionSummary = Terminal.Execute("aureport -au --summary");
+                var sessionSummary = new Terminal().Execute("aureport -au --summary");
                 var sessionSplitSummary = sessionSummary.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 lines.AddRange(from infoRow in sessionSplitSummary.Skip(5) where infoRow.Length > 0 select infoRow.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries) into infoArr select $"{infoArr[0]} authentication requests from user {infoArr[1]}");
                 lines.Add("");
-                var session = Terminal.Execute("aureport -au");
+                var session = new Terminal().Execute("aureport -au");
                 var sessionSplit = session.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Skip(5).ToList();
                 var ipList = new HashSet<string>();
                 foreach (var infoRow in sessionSplit.Where(_ => _.Length > 0)) {
@@ -132,7 +132,7 @@ namespace antdlib.Log {
             }
 
             public static string ReadReport(string reportFile) {
-                return !File.Exists(reportFile) ? "ERR" : Terminal.Execute($"cat {reportFile}");
+                return !File.Exists(reportFile) ? "ERR" : new Terminal().Execute($"cat {reportFile}");
             }
         }
     }

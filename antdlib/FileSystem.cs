@@ -83,7 +83,7 @@
 //                    Directory.CreateDirectory(dirPath.Replace(source, destination));
 //                }
 //                catch (Exception) {
-//                    Terminal.Execute($"mkdir -p {dirPath.Replace(source, destination)}");
+//                    new Terminal().Execute($"mkdir -p {dirPath.Replace(source, destination)}");
 //                }
 //            }
 //            foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
@@ -92,7 +92,7 @@
 //                    newPath.DosToUnix();
 //                }
 //                catch (Exception) {
-//                    Terminal.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
+//                    new Terminal().Execute($"cp {newPath} {newPath.Replace(source, destination)}");
 //                    newPath.DosToUnix();
 //                }
 //            }

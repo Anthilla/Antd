@@ -46,7 +46,7 @@ namespace Antd.Svcs.Dhcp {
         private const string MainFile = "dhcpd.conf";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {Dir} {MntDir}");
+            new Terminal().Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -58,7 +58,7 @@ namespace Antd.Svcs.Dhcp {
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Terminal.Execute("systemctl restart dhcpd4");
+            new Terminal().Execute("systemctl restart dhcpd4");
         }
 
         public class MapRules {

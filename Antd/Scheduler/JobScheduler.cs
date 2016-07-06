@@ -96,11 +96,11 @@ namespace Antd.Scheduler {
                     if (!string.IsNullOrEmpty(command)) {
                         var pool = dataMap.GetString("data");
                         command = $"zfs snap -r {pool}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}";
-                        Terminal.Execute(command);
+                        new Terminal().Execute(command);
                     }
                 }
                 else {
-                    Terminal.Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                    new Terminal().Execute(command.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
                 }
             }
         }

@@ -10,7 +10,7 @@ namespace antdlib {
     public static class Extensions {
         public static void DosToUnix(this string file, string otherFile = "") {
             var fileToConvert = otherFile.Length > 0 ? otherFile : file;
-            Terminal.Execute($"dos2unix {fileToConvert}");
+            new Terminal().Execute($"dos2unix {fileToConvert}");
         }
 
         public static string ReadAsString(this RequestStream requestStream) {
