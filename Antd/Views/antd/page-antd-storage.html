@@ -14,11 +14,11 @@
         <tbody>
             @Each.DisksList
             <tr data-role="show-details" data-guid="@Current.Guid">
-                <td>@Current.name</td>
-                <td>@Current.size </td>
-                <td>@Current.ro </td>
-                <td>@Current.type </td>
-                <td>@Current.mountpoint </td>
+                <td>@Current.Name</td>
+                <td>@Current.Size </td>
+                <td>@Current.Ro </td>
+                <td>@Current.Type </td>
+                <td>@Current.Mountpoint </td>
             </tr>
             @If.Haschildren
             @Partial['_partial_storage/part-disk-partition', Current];
