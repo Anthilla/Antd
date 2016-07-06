@@ -4,7 +4,7 @@
     <table class="table">
         <thead>
             <tr>
-                <td> Name </td>
+                <td colspan="2"> Name </td>
                 <td> Size </td>
                 <td> Readonly </td>
                 <td> Type </td>
@@ -14,15 +14,22 @@
         <tbody>
             @Each.DisksList
             <tr data-role="show-details" data-guid="@Current.Guid">
-                <td>@Current.name</td>
-                <td>@Current.size </td>
-                <td>@Current.ro </td>
-                <td>@Current.type </td>
-                <td>@Current.mountpoint </td>
+                <td colspan="2">@Current.Name</td>
+                <td>@Current.Size </td>
+                <td>@Current.Ro </td>
+                <td>@Current.Type </td>
+                <td>@Current.Mountpoint </td>
             </tr>
-            @If.Haschildren
-            @Partial['_partial_storage/part-disk-partition', Current];
-            @EndIf
+            @Partial['_partial_storage/part-disk-partition', Current.Partitions];
+            <tr data-row="@Current.Guid" style="display: none;">
+                <td colspan="10" style="padding-left: 50px; border-bottom: 5px solid #535353 !important;">
+                    <p>Manage Disk Partitions → @Current.Partprobe → @Current.PartitionTable</p>
+                    <br>
+                    @If.HasPartitionTable
+                    <p>@Current.PartitionTable</p>
+                    @EndIf
+                </td>
+            </tr>
             @EndEach
         </tbody>
     </table>
