@@ -29,15 +29,12 @@
 
 using System;
 using System.Collections.Generic;
-using antdlib.common;
 using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
 using Antd.Scheduler;
-using Antd.Storage;
 using Nancy;
 using Nancy.Security;
-using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class StorageModule : CoreModule {
@@ -60,11 +57,6 @@ namespace Antd.Modules {
             Get["/zfs/cron"] = x => {
                 var list = _jobRepositoryRepo.GetAll();
                 return Response.AsJson(list);
-            };
-
-            Get["/part"] = x => {
-                var o = Disks.List();
-                return Response.AsJson(o);
             };
 
             Post["/zfs/snap"] = x => {

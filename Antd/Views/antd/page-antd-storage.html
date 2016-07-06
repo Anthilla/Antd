@@ -1,5 +1,28 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend id="Storage">Storage</legend>
+    <legend>Disks</legend>
+    <table class="table">
+        <thead>
+            <tr>
+                <td> Name </td>
+                <td> Size </td>
+                <td> Readonly </td>
+                <td> Type </td>
+                <td> Mountpoint </td>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.DisksList
+            <tr data-role="show-details" data-guid="@Current.Guid">
+                <td>@Current.name</td>
+                <td>@Current.size </td>
+                <td>@Current.ro </td>
+                <td>@Current.type </td>
+                <td>@Current.mountpoint </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
     <legend>Zpool</legend>
     <table class="table">
         <thead>
