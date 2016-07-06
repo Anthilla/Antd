@@ -59,6 +59,8 @@ namespace Antd.Modules {
                         model.Message = "Your token is not valid!";
                         break;
                 }
+                var returnUrl = (string)Request.Query.returnUrl;
+                model.ReturnUrl = returnUrl;
                 model.Title = "Welcome to Anthilla";
                 model.Copyright = @"© 2013 - " + DateTime.Now.ToString("yyyy") + " Anthilla S.r.l.";
                 return View["login", model];
@@ -75,7 +77,8 @@ namespace Antd.Modules {
                 cookies.Clear();
                 cookies.Remove("antd-session");
                 var sessionCookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
-                return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100)).WithCookie(sessionCookie);
+                var returnUrl = (string)Request.Form.Return;
+                return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100), returnUrl).WithCookie(sessionCookie);
             };
 
             Get["/logout"] = x => {

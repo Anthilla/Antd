@@ -63,12 +63,7 @@ namespace Antd.Modules {
             };
 
             Get["/part"] = x => {
-                var j = Terminal.Execute("lsblk -JO");
-                Console.WriteLine(j);
-                var clean = j?.Replace("-", "_").Replace("maj:min", "maj_min");
-                Console.WriteLine(clean);
-                var o = JsonConvert.DeserializeObject<Lsblk>(clean);
-                Console.WriteLine(o.Blockdevices.Count);
+                var o = Disks.List();
                 return Response.AsJson(o);
             };
 

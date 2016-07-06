@@ -1,102 +1,118 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using antdlib.common;
+using Newtonsoft.Json;
 
 namespace Antd.Storage {
+    public class Disks {
+
+        public static Lsblk List() {
+            var str = Terminal.Execute("lsblk -JO");
+            var clean = str?.Replace("-", "_").Replace("maj:min", "maj_min");
+            var ret = JsonConvert.DeserializeObject<Lsblk>(clean);
+            return ret;
+        }
+
+    }
+
+    #region Models
     public class Partition {
-        public string Name { get; set; }
-        public string Kname { get; set; }
-        public string MajMin { get; set; }
-        public string Fstype { get; set; }
-        public string Mountpoint { get; set; }
-        public string Label { get; set; }
-        public string Uuid { get; set; }
-        public string Parttype { get; set; }
-        public string Partlabel { get; set; }
-        public string Partuuid { get; set; }
-        public object Partflags { get; set; }
-        public string Ra { get; set; }
-        public string Ro { get; set; }
-        public string Rm { get; set; }
-        public string Hotplug { get; set; }
-        public object Model { get; set; }
-        public object Serial { get; set; }
-        public string Size { get; set; }
-        public object State { get; set; }
-        public string Owner { get; set; }
-        public string Group { get; set; }
-        public string Mode { get; set; }
-        public string Alignment { get; set; }
-        public string MinIo { get; set; }
-        public string OptIo { get; set; }
-        public string PhySec { get; set; }
-        public string LogSec { get; set; }
-        public string Rota { get; set; }
-        public object Sched { get; set; }
-        public string RqSize { get; set; }
-        public string Type { get; set; }
-        public string DiscAln { get; set; }
-        public string DiscGran { get; set; }
-        public string DiscMax { get; set; }
-        public string DiscZero { get; set; }
-        public string Wsame { get; set; }
-        public object Wwn { get; set; }
-        public string Rand { get; set; }
-        public string Pkname { get; set; }
-        public object Hctl { get; set; }
-        public object Tran { get; set; }
-        public string Subsystems { get; set; }
-        public object Rev { get; set; }
-        public object Vendor { get; set; }
+        public string name { get; set; }
+        public string kname { get; set; }
+        public string maj_min { get; set; }
+        public string fstype { get; set; }
+        public string mountpoint { get; set; }
+        public string label { get; set; }
+        public string uuid { get; set; }
+        public string parttype { get; set; }
+        public string partlabel { get; set; }
+        public string partuuid { get; set; }
+        public object partflags { get; set; }
+        public string ra { get; set; }
+        public string ro { get; set; }
+        public string rm { get; set; }
+        public string hotplug { get; set; }
+        public object model { get; set; }
+        public object serial { get; set; }
+        public string size { get; set; }
+        public object state { get; set; }
+        public string owner { get; set; }
+        public string group { get; set; }
+        public string mode { get; set; }
+        public string alignment { get; set; }
+        public string min_io { get; set; }
+        public string opt_io { get; set; }
+        public string phy_sec { get; set; }
+        public string log_sec { get; set; }
+        public string rota { get; set; }
+        public object sched { get; set; }
+        public string rq_size { get; set; }
+        public string type { get; set; }
+        public string disc_aln { get; set; }
+        public string disc_gran { get; set; }
+        public string disc_max { get; set; }
+        public string disc_zero { get; set; }
+        public string wsame { get; set; }
+        public object wwn { get; set; }
+        public string rand { get; set; }
+        public string pkname { get; set; }
+        public object hctl { get; set; }
+        public object tran { get; set; }
+        public string subsystems { get; set; }
+        public object rev { get; set; }
+        public object vendor { get; set; }
     }
 
     public class Blockdevice {
-        public string Name { get; set; }
-        public string Kname { get; set; }
-        public string MajMin { get; set; }
-        public string Fstype { get; set; }
-        public string Mountpoint { get; set; }
-        public object Label { get; set; }
-        public object Uuid { get; set; }
-        public object Parttype { get; set; }
-        public object Partlabel { get; set; }
-        public object Partuuid { get; set; }
-        public object Partflags { get; set; }
-        public string Ra { get; set; }
-        public string Ro { get; set; }
-        public string Rm { get; set; }
-        public string Hotplug { get; set; }
-        public string Model { get; set; }
-        public string Serial { get; set; }
-        public string Size { get; set; }
-        public string State { get; set; }
-        public string Owner { get; set; }
-        public string Group { get; set; }
-        public string Mode { get; set; }
-        public string Alignment { get; set; }
-        public string MinIo { get; set; }
-        public string OptIo { get; set; }
-        public string PhySec { get; set; }
-        public string LogSec { get; set; }
-        public string Rota { get; set; }
-        public object Sched { get; set; }
-        public string RqSize { get; set; }
-        public string Type { get; set; }
-        public string DiscAln { get; set; }
-        public string DiscGran { get; set; }
-        public string DiscMax { get; set; }
-        public string DiscZero { get; set; }
-        public string Wsame { get; set; }
-        public object Wwn { get; set; }
-        public string Rand { get; set; }
-        public object Pkname { get; set; }
-        public string Hctl { get; set; }
-        public string Tran { get; set; }
-        public string Subsystems { get; set; }
-        public string Rev { get; set; }
-        public string Vendor { get; set; }
-        public List<Partition> Children { get; set; }
+        public string name { get; set; }
+        public string kname { get; set; }
+        public string maj_min { get; set; }
+        public string fstype { get; set; }
+        public string mountpoint { get; set; }
+        public object label { get; set; }
+        public object uuid { get; set; }
+        public object parttype { get; set; }
+        public object partlabel { get; set; }
+        public object partuuid { get; set; }
+        public object partflags { get; set; }
+        public string ra { get; set; }
+        public string ro { get; set; }
+        public string rm { get; set; }
+        public string hotplug { get; set; }
+        public string model { get; set; }
+        public string serial { get; set; }
+        public string size { get; set; }
+        public string state { get; set; }
+        public string owner { get; set; }
+        public string group { get; set; }
+        public string mode { get; set; }
+        public string alignment { get; set; }
+        public string min_io { get; set; }
+        public string opt_io { get; set; }
+        public string phy_sec { get; set; }
+        public string log_sec { get; set; }
+        public string rota { get; set; }
+        public object sched { get; set; }
+        public string rq_size { get; set; }
+        public string type { get; set; }
+        public string disc_aln { get; set; }
+        public string disc_gran { get; set; }
+        public string disc_max { get; set; }
+        public string disc_zero { get; set; }
+        public string wsame { get; set; }
+        public object wwn { get; set; }
+        public string rand { get; set; }
+        public object pkname { get; set; }
+        public string hctl { get; set; }
+        public string tran { get; set; }
+        public string subsystems { get; set; }
+        public string rev { get; set; }
+        public string vendor { get; set; }
+        public List<Partition> children { get; set; }
     }
 
     public class Lsblk {
-        public List<Blockdevice> Blockdevices { get; set; }
+        public List<Blockdevice> blockdevices { get; set; }
     }
+    #endregion
 }
