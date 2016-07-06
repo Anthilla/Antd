@@ -181,6 +181,7 @@
     <Compile Include="Scheduler\JobScheduler.cs" />
     <Compile Include="Ssh\SshConfig.cs" />
     <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Storage\Disks.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
     <Compile Include="Storage\Zpool.cs" />
