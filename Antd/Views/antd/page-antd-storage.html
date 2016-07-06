@@ -20,6 +20,9 @@
                 <td>@Current.type </td>
                 <td>@Current.mountpoint </td>
             </tr>
+            @If.Haschildren
+            @Partial['_partial_storage/part-disk-partition', Current];
+            @EndIf
             @EndEach
         </tbody>
     </table>
