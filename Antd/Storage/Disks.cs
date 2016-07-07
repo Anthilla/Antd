@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Antd.Storage {
     public class Disks {
         public static List<Disk> List() {
-            var str = new Terminal().Execute("lsblk -JO");
+            var str = Terminal.Execute("lsblk -JO");
             var clean = str?.Replace("-", "_").Replace("maj:min", "maj_min");
             var ret = JsonConvert.DeserializeObject<Json.Lsblk>(clean);
             var result = ret.blockdevices.Select(_ => new Disk(_)).ToList();
@@ -74,12 +74,7 @@ namespace Antd.Storage {
             if (Partitions.Any()) {
                 HasPartition = true;
             }
-            Partprobe = new Terminal().Execute($"partprobe -s /dev/{Name}");
-            var partitionTable = new Terminal().Execute($"parted /dev/{Name} print 2> /dev/null | grep \"Partition Table:\"");
-            if (!string.IsNullOrEmpty(partitionTable)) {
-                PartitionTable = partitionTable.Replace("Partition Table:", "").Trim();
-                HasPartitionTable = partitionTable != "unknown";
-            }
+            Partprobe = Terminal.Execute($"partprobe -s /dev/{Name}");
         }
 
         public string Guid { get; set; }

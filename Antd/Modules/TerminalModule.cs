@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using antdlib.common;
-using Antd.Database;
 using Nancy;
 using Nancy.Security;
 //-------------------------------------------------------------------------------------
@@ -36,14 +35,16 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class TerminalModule : CoreModule {
 
-        private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
-
         public TerminalModule() {
             this.RequiresAuthentication();
 
             Get["/terminal"] = x => View["page-terminal"];
 
-            Post["/terminal"] = x => Response.AsJson((string)(Request.Form.Directory == "" ? new Terminal().Execute((string)Request.Form.Command) : new Terminal().Execute(Request.Form.Command, Request.Form.Directory)));
+            Post["/terminal"] = x => {
+                string command = Request.Form.Command;
+                var result = Terminal.Execute(command);
+                return Response.AsText(result);
+            };
 
             Post["/terminal/directory"] = x => {
                 string directory = Request.Form.Directory;
@@ -76,7 +77,7 @@ namespace Antd.Modules {
 
             Post["/terminal/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = Request.Form.Directory == "" ? new Terminal().Execute((string[])cmds) : new Terminal().Execute((string[])cmds, (string)Request.Form.Directory);
+                var result = Request.Form.Directory == "" ? Terminal.Execute((string[])cmds) : Terminal.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 
@@ -86,14 +87,14 @@ namespace Antd.Modules {
             //    foreach (var command in commandSplit) {
             //        _commandRepo.c(command);
             //    }
-            //    var result = new Terminal().Execute(commandSplit);
+            //    var result = Terminal.Execute(commandSplit);
             //    return Response.AsJson(result);
             //};
 
             //Post["/terminal/direct"] = x => {
             //    var inputCommand = (string)Request.Form.Command;
             //    var commandSplit = inputCommand.Split(new[] { "$nl" }, StringSplitOptions.None).Select(cmd => ConfigManagement.SupposeCommandReplacement(cmd.Replace("$'", "\""))).ToList();
-            //    var result = new Terminal().Execute(commandSplit);
+            //    var result = Terminal.Execute(commandSplit);
             //    return Response.AsJson(result);
             //};
         }

@@ -29,7 +29,7 @@ namespace Antd.Storage {
         private static readonly JobRepository JobRepositoryRepo = new JobRepository();
 
         public static List<Model> List() {
-            var result = new Terminal().Execute("zpool list");
+            var result = Terminal.Execute("zpool list");
             var list = new List<Model>();
             if (string.IsNullOrEmpty(result)) {
                 return list;
@@ -49,7 +49,7 @@ namespace Antd.Storage {
                     Dedup = cells[7],
                     Health = cells[8],
                     Altroot = cells[9],
-                    Status = new Terminal().Execute($"zpool status {cells[0]}")
+                    Status = Terminal.Execute($"zpool status {cells[0]}")
                 };
 
                 var jobs = JobRepositoryRepo.GetAll().Where(_ => _.Alias == model.Name).ToList();

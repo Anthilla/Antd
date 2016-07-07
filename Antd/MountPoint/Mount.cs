@@ -65,7 +65,7 @@ namespace Antd.MountPoint {
         public static void OverlayDirectories() {
             foreach (var dir in DefaultOverlayDirectories) {
                 Dir(dir);
-                new Terminal().Execute($"rsync {Parameter.Overlay}/{dir} {dir}");
+                Terminal.Execute($"rsync {Parameter.Overlay}/{dir} {dir}");
             }
         }
 
@@ -91,8 +91,8 @@ namespace Antd.MountPoint {
                     var mntDir = Mounts.SetDirsPath(dir);
                     Directory.CreateDirectory(dir);
                     Directory.CreateDirectory(mntDir);
-                    ConsoleLogger.Log($"{mntDir} -> {dir}");
                     if (Mounts.IsAlreadyMounted(dir) == false) {
+                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                         SetBind(mntDir, dir);
                     }
                 }
@@ -112,13 +112,13 @@ namespace Antd.MountPoint {
                     continue;
                 var path = Path.GetDirectoryName(file);
                 var mntPath = Path.GetDirectoryName(mntFile);
-                new Terminal().Execute($"mkdir -p {path}");
-                new Terminal().Execute($"mkdir -p {mntPath}");
+                Terminal.Execute($"mkdir -p {path}");
+                Terminal.Execute($"mkdir -p {mntPath}");
                 if (!System.IO.File.Exists(file)) {
-                    new Terminal().Execute($"cp {mntFile} {file}");
+                    Terminal.Execute($"cp {mntFile} {file}");
                 }
-                ConsoleLogger.Log($"{mntFile} -> {file}");
                 if (Mounts.IsAlreadyMounted(file) == false) {
+                    ConsoleLogger.Log($"mount {mntFile} -> {file}");
                     SetBind(mntFile, file);
                 }
             }
@@ -130,7 +130,7 @@ namespace Antd.MountPoint {
             ConsoleLogger.Log("detected directories status checked");
 
             foreach (var srvc in from t in directoryMounts select t.AssociatedUnits into service where service.Any() from srvc in service select srvc) {
-                new Terminal().Execute($"systemctl restart {srvc}");
+                Terminal.Execute($"systemctl restart {srvc}");
             }
             ConsoleLogger.Log("services restarted");
         }
@@ -150,9 +150,9 @@ namespace Antd.MountPoint {
                 if (Directory.Exists(realPath))
                     continue;
                 try {
-                    new Terminal().Execute($"mkdir -p {t}");
-                    new Terminal().Execute($"mkdir -p {realPath}");
-                    new Terminal().Execute($"cp {t} {realPath}");
+                    Terminal.Execute($"mkdir -p {t}");
+                    Terminal.Execute($"mkdir -p {realPath}");
+                    Terminal.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -176,9 +176,9 @@ namespace Antd.MountPoint {
                 try {
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
-                    new Terminal().Execute($"mkdir -p {path}");
-                    new Terminal().Execute($"mkdir -p {mntPath}");
-                    new Terminal().Execute($"cp {t} {realPath}");
+                    Terminal.Execute($"mkdir -p {path}");
+                    Terminal.Execute($"mkdir -p {mntPath}");
+                    Terminal.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -259,7 +259,7 @@ namespace Antd.MountPoint {
         private static void SetBind(string source, string destination) {
             if (Mounts.IsAlreadyMounted(source, destination))
                 return;
-            new Terminal().Execute($"mount -o bind {source} {destination}");
+            Terminal.Execute($"mount -o bind {source} {destination}");
         }
     }
 }

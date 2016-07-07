@@ -140,7 +140,7 @@ namespace antdlib.Apps {
             }
 
             public static void CreateSquash() {
-                new Terminal().Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString("yyyyMMdd")}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
+                Terminal.Execute($"mksquashfs {AnthillaSpAppDir}/anthillasp {AnthillaSpAppDir}/DIR_framework_anthillasp-{DateTime.Now.ToString("yyyyMMdd")}.squashfs.xz -comp xz -Xbcj x86 -Xdict-size 75%");
             }
 
             public static void MountSquash(string version = null) {
@@ -150,7 +150,7 @@ namespace antdlib.Apps {
                 var file = version != null && enumerable.Any() ? $"DIR_framework_anthillasp-{version}.squashfs.xz" : Path.GetFileName(enumerable.OrderByDescending(f => f).LastOrDefault());
                 if (string.IsNullOrEmpty(file))
                     return;
-                new Terminal().Execute($"mount {AnthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
+                Terminal.Execute($"mount {AnthillaSpAppDir}/{file} {_anthillaSpFrameworkDir}");
             }
         }
 

@@ -104,7 +104,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIpv4(string address, string range, string interfaceName, string broadcast) {
@@ -116,7 +116,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string FlushConfigurationIpv4(string interfaceName = null) {
@@ -127,22 +127,22 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceAddr(string interfaceName) {
                 var cmd = $"ip addr show {interfaceName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceLink(string interfaceName) {
                 var cmd = $"ip link show {interfaceName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowInterfaceStats(string interfaceName) {
                 var cmd = $"ip -s link ls {interfaceName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddRouteIpv4(string gateway, string destination) {
@@ -154,7 +154,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteRouteIpv4(string gateway, string destination) {
@@ -166,7 +166,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddMultipathRoute(string net1, string net2) {
@@ -176,7 +176,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNat(string address, string viaAddress) {
@@ -186,12 +186,12 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowRoutes(string interfaceName = "") {
                 var cmd = $"ip route show {interfaceName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string EnableInterface(string interfaceName) {
@@ -201,7 +201,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DisableInterface(string interfaceName) {
@@ -211,7 +211,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddTunnelPointToPointIpv4(string interfaceName, string ttl, string foreignTunnel, string address) {
@@ -221,7 +221,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteTunnelPointToPointIpv4(string interfaceName) {
@@ -231,13 +231,13 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowTunnelsIpv4(string interfaceName) {
                 var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip tunnel show {i}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             #region IPV6 Related
@@ -248,7 +248,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteAddressIpv6(string address, string interfaceName) {
@@ -258,12 +258,12 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowRoutesIpv6(string interfaceName = "") {
                 var cmd = $"ip -6 route show {interfaceName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string FlushConfigurationIpv6() {
@@ -273,13 +273,13 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowNeighborsIpv6(string interfaceName = null) {
                 var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip -6 neigh show {i}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNeighborsIpv6(string address, string layerAddress, string interfaceName) {
@@ -289,7 +289,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteNeighborsIpv6(string address, string layerAddress, string interfaceName) {
@@ -299,7 +299,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddRouteIpv6Gateway(string address, string gateway = null) {
@@ -310,7 +310,7 @@ namespace Antd.Network {
                         { "Layout", "" },
                         { "Notes", "" }
                     });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route add {gateway} via {address}";
@@ -319,7 +319,7 @@ namespace Antd.Network {
                         { "Layout", "" },
                         { "Notes", "" }
                     });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
@@ -331,7 +331,7 @@ namespace Antd.Network {
                         { "Layout", "" },
                         { "Notes", "" }
                     });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route del {gateway} via {address}";
@@ -340,7 +340,7 @@ namespace Antd.Network {
                         { "Layout", "" },
                         { "Notes", "" }
                     });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
@@ -352,7 +352,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route add {gateway} dev {interfaceName}";
@@ -361,7 +361,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
@@ -373,7 +373,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
                 else {
                     var cmd = $"ip -6 route del {gateway} dev {interfaceName}";
@@ -382,14 +382,14 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                    return new Terminal().Execute(cmd);
+                    return Terminal.Execute(cmd);
                 }
             }
 
             public static string ShowTunnelsIpv6(string interfaceName) {
                 var i = interfaceName == null ? "" : $"dev {interfaceName}";
                 var cmd = $"ip -6 tunnel show {i}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
             #endregion
         }
@@ -404,7 +404,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteBridgeName(string bridgeName) {
@@ -414,7 +414,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string AddNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
@@ -424,7 +424,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DeleteNetworkInterfaceToBridge(string bridgeName, string interfaceName) {
@@ -434,7 +434,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string EnableStpOnBridge(string bridgeName) {
@@ -444,7 +444,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string DisableStpOnBridge(string bridgeName) {
@@ -454,17 +454,17 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowBridgeMacs(string bridgeName) {
                 var cmd = $"brctl showmacs {bridgeName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string ShowBridgeStp(string bridgeName) {
                 var cmd = $"brctl showstp {bridgeName}";
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string SetBridgePathCost(string bridgeName, string path, string cost) {
@@ -474,7 +474,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
 
             public static string SetBridgePortPriority(string bridgeName, string port, string priority) {
@@ -484,7 +484,7 @@ namespace Antd.Network {
                     { "Layout", "" },
                     { "Notes", "" }
                 });
-                return new Terminal().Execute(cmd);
+                return Terminal.Execute(cmd);
             }
         }
     }

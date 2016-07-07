@@ -44,7 +44,7 @@
 //        private static readonly string FilePath = $"{Parameter.AntdCfg}/websocketd";
 
 //        public static string GetFirstPort(long port = 31000) {
-//            var c = new Terminal().Execute($"netstat -anp | grep :{port}");
+//            var c = Terminal.Execute($"netstat -anp | grep :{port}");
 //            return c.Length > 0 ? GetFirstPort(port + 1) : (port > 49999 ? "30999" : port.ToString());
 //        }
 
@@ -67,7 +67,7 @@
 
 //        public static void SetCmd(string port, string command) {
 //            var cmd = $"{FilePath} --port={port} {command}";
-//            new Terminal().Execute(cmd);
+//            Terminal.Execute(cmd);
 //        }
 
 //        /// <summary></summary>

@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             @Each.DisksList
-            <tr data-role="show-details" data-guid="@Current.Guid">
+            <tr data-role="show-disk-details" data-guid="@Current.Guid" data-name="@Current.Name">
                 <td colspan="2">@Current.Name</td>
                 <td>@Current.Size </td>
                 <td>@Current.Ro </td>
@@ -23,11 +23,21 @@
             @Partial['_partial_storage/part-disk-partition', Current.Partitions];
             <tr data-row="@Current.Guid" style="display: none;">
                 <td colspan="10" style="padding-left: 50px; border-bottom: 5px solid #535353 !important;">
-                    <p>Manage Disk Partitions → @Current.Partprobe → @Current.PartitionTable</p>
+                    <p>Manage Disk Partitions</p>
                     <br>
-                    @If.HasPartitionTable
-                    <p>@Current.PartitionTable</p>
-                    @EndIf
+                    <p data-partitiontable="@Current.Guid"></p>
+                    <button data-role="CreatePartitionTable" data-name="@Current.Name" data-button="@Current.Guid" style="width: 250px;" class="bg-anthilla-green upcase">Create Partition Table</button>
+                    <p style="display: inline-block; margin: auto 15px;">of type</p>
+                    <select>
+                        <option disabled="disabled" selected="selected">Select a partition type</option>
+                        <option value="bsd">bsd</option>
+                        <option value="loop">loop</option>
+                        <option value="gpt">gpt</option>
+                        <option value="mac">mac</option>
+                        <option value="msdos">msdos</option>
+                        <option value="pc98">pc98</option>
+                        <option value="sun">sun</option>
+                    </select>
                 </td>
             </tr>
             @EndEach

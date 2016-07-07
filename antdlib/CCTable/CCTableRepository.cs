@@ -91,7 +91,7 @@ namespace antdlib.CCTable {
     //                if (a == null)
     //                    throw new ArgumentNullException(nameof(a));
     //                var c = a;
-    //                i.ValueResult = Terminal.new Terminal().Execute(f + " " + c);
+    //                i.ValueResult = Terminal.Terminal.Execute(f + " " + c);
     //            }
     //            return list;
     //        }
@@ -220,12 +220,12 @@ namespace antdlib.CCTable {
     //        }
 
     //        private static void SetConfFile(string source, string destination) {
-    //            Terminal.new Terminal().Execute($"cp {source} {destination}");
-    //            Terminal.new Terminal().Execute($"mount --bind {source} {destination}");
+    //            Terminal.Terminal.Execute($"cp {source} {destination}");
+    //            Terminal.Terminal.Execute($"mount --bind {source} {destination}");
     //        }
 
     //        private static void SetConfDirectory(string source, string destination) {
-    //            Terminal.new Terminal().Execute($"cp {source} {destination}");
+    //            Terminal.Terminal.Execute($"cp {source} {destination}");
     //            FileSystem.CopyDirectory(source, destination);
     //            MountPoint.Mount.Dir(source);
     //        }
@@ -274,7 +274,7 @@ namespace antdlib.CCTable {
     //            var row = DeNSo.Session.New.Get<CCTableRowModel>(c => c != null && c.Guid == guid).FirstOrDefault();
     //            if (row != null) {
     //                var command = row.InputCommand;
-    //                var result = Terminal.new Terminal().Execute(command);
+    //                var result = Terminal.Terminal.Execute(command);
     //                row.ValueResult = result;
     //                row.ValueResultArray = result.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
     //            }

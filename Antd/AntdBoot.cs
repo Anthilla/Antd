@@ -5,6 +5,7 @@ using antdlib;
 using antdlib.Apps;
 using antdlib.common;
 using antdlib.common.Helpers;
+using Antd.Configuration;
 using Antd.Database;
 using Antd.MountPoint;
 using Antd.Scheduler;
@@ -13,7 +14,14 @@ namespace Antd {
     public class AntdBoot {
 
         public static void CheckOsIsRw() {
-            new Terminal().Execute($"{Parameter.Aossvc} reporemountrw");
+            Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
+        }
+
+        public static void ConfigureMachine() {
+            //if (!Parameter.IsUnix)
+            //    return;
+            MachineConfiguration.Set();
+            ConsoleLogger.Log("machine configured");
         }
 
         public static void SetWorkingDirectories() {
@@ -46,19 +54,19 @@ namespace Antd {
         public static void ReloadSsh() {
             if (!Parameter.IsUnix)
                 return;
-            new Terminal().Execute("mkdir -p /root/.ssh");
+            Terminal.Execute("mkdir -p /root/.ssh");
             if (!File.Exists(Parameter.AuthKeys)) {
-                new Terminal().Execute($"touch {Parameter.AuthKeys}");
+                Terminal.Execute($"touch {Parameter.AuthKeys}");
             }
             const string dir = "/etc/ssh";
             var mntDir = Mounts.SetDirsPath(dir);
             if (!Directory.Exists(mntDir)) {
-                new Terminal().Execute($"cp -fR {dir} {mntDir}");
+                Terminal.Execute($"cp -fR {dir} {mntDir}");
             }
             Mounts.Umount(dir);
             Mount.Dir(dir);
-            new Terminal().Execute("ssh-keygen -A");
-            new Terminal().Execute("systemctl restart sshd.service");
+            Terminal.Execute("ssh-keygen -A");
+            Terminal.Execute("systemctl restart sshd.service");
             ConsoleLogger.Log("ssh config ready");
             //SshConfig.Keys.PropagateKeys(new[] { "" }, new[] { "" });
         }
@@ -81,26 +89,26 @@ namespace Antd {
             if (!Parameter.IsUnix)
                 return;
             if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                new Terminal().Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
+                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
-            var kernelRelease = new Terminal().Execute("uname -r").Trim();
-            var linkedRelease = new Terminal().Execute($"file {module}").Trim();
+            var kernelRelease = Terminal.Execute("uname -r").Trim();
+            var linkedRelease = Terminal.Execute($"file {module}").Trim();
             if (Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
                 ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
-                new Terminal().Execute($"mount {module} {moduleDir}");
+                Terminal.Execute($"mount {module} {moduleDir}");
             }
-            new Terminal().Execute("systemctl restart systemd-modules-load.service");
+            Terminal.Execute("systemctl restart systemd-modules-load.service");
             ConsoleLogger.Log("os mounts ready");
         }
 
-        public static void LaunchDefaultOsConfiguration() {
-            if (!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("default os configuration ready");
-        }
+        //public static void LaunchDefaultOsConfiguration() {
+        //    if (!Parameter.IsUnix)
+        //        return;
+        //    ConsoleLogger.Log("default os configuration ready");
+        //}
 
         public static void SetWebsocketd() {
             if (!Parameter.IsUnix)
@@ -109,7 +117,7 @@ namespace Antd {
             if (File.Exists(filePath))
                 return;
             File.Copy($"{Parameter.Resources}/websocketd", filePath);
-            new Terminal().Execute($"chmod 777 {filePath}");
+            Terminal.Execute($"chmod 777 {filePath}");
             ConsoleLogger.Log("websocketd ready");
         }
 
@@ -125,7 +133,7 @@ namespace Antd {
             if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            new Terminal().Execute("systemctl restart systemd-journald.service");
+            Terminal.Execute("systemctl restart systemd-journald.service");
             ConsoleLogger.Log("journald config ready");
         }
 
@@ -134,7 +142,7 @@ namespace Antd {
                 return;
             if (File.Exists("/etc/resolv.conf"))
                 return;
-            new Terminal().Execute("touch /etc/resolv.conf");
+            Terminal.Execute("touch /etc/resolv.conf");
             ConsoleLogger.Log("resolv ready");
         }
 
@@ -191,7 +199,7 @@ namespace Antd {
             if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            new Terminal().Execute("systemctl restart collectd.service");
+            Terminal.Execute("systemctl restart collectd.service");
         }
 
         public static void LoadWpaSupplicant() {
@@ -201,7 +209,7 @@ namespace Antd {
             if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            new Terminal().Execute("systemctl restart wpa_supplicant.service");
+            Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
         //public static void StartWebsocketServer() {

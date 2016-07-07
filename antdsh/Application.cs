@@ -87,7 +87,7 @@ namespace antdsh {
                 PrintHistory();
             }
             else {
-                var result = new Terminal().Execute(string.Join(" ", command));
+                var result = Terminal.Execute(string.Join(" ", command));
                 if (string.IsNullOrEmpty(result)) return;
                 Console.Write(result);
                 Console.WriteLine();
@@ -124,7 +124,7 @@ namespace antdsh {
             }
         }
 
-        private static bool IsAntdRunning() => new Terminal().Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
+        private static bool IsAntdRunning() => Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
 
         private static void Start() {
             if (IsAntdRunning()) return;
@@ -228,18 +228,18 @@ namespace antdsh {
         private static void UmountAll() {
             Console.WriteLine("Unmounting Antd");
             while (true) {
-                var r = new Terminal().Execute("cat /proc/mounts | grep /antd");
-                var f = new Terminal().Execute("df | grep /cfg/antd");
+                var r = Terminal.Execute("cat /proc/mounts | grep /antd");
+                var f = Terminal.Execute("df | grep /cfg/antd");
                 if (r.Length <= 0 && f.Length <= 0)
                     return;
-                new Terminal().Execute($"umount {Parameter.AntdCfg}");
-                new Terminal().Execute($"umount {Parameter.AntdCfgDatabase}");
-                new Terminal().Execute("umount /framework/antd");
+                Terminal.Execute($"umount {Parameter.AntdCfg}");
+                Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
+                Terminal.Execute("umount /framework/antd");
             }
         }
 
         private static void IsRunning() {
-            var res = new Terminal().Execute("ps -aef | grep Antd.exe | grep -v grep");
+            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
             Console.WriteLine(res.Length > 0 ? "Yes, is running." : "No.");
         }
 

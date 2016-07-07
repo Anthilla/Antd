@@ -41,9 +41,9 @@ namespace antdsh {
         /// </summary>
         public static bool ChechDiskSpace() {
             Console.WriteLine("Checking Disk Space");
-            var blkid = new Terminal().Execute("blkid | grep /dev/sda | grep BootExt");
+            var blkid = Terminal.Execute("blkid | grep /dev/sda | grep BootExt");
             var volume = blkid.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
-            var available = new Terminal().Execute($"df -k {volume} | sed -e 1d|head -3").
+            var available = Terminal.Execute($"df -k {volume} | sed -e 1d|head -3").
                 Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
             var availableInt = Convert.ToInt32(available);
             var msg = availableInt > 0 ? "There's enought disk space for the update" : "Not enough free disk space, try to remove something...";
@@ -73,23 +73,23 @@ namespace antdsh {
             var systemTmp = $"{Parameter.AntdTmpDir}/system";
             new ApiConsumer().GetFile("/url/download/system", $"{systemTmp}");
 
-            new Terminal().Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");
-            new Terminal().Execute($"cp {initrdTmp} {Parameter.RepoKernel}");
-            new Terminal().Execute($"cp {kernelTmp} {Parameter.RepoKernel}");
-            new Terminal().Execute($"cp {modulesTmp} {Parameter.RepoKernel}");
-            new Terminal().Execute($"cp {systemTmp} {Parameter.RepoSystem}");
+            Terminal.Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");
+            Terminal.Execute($"cp {initrdTmp} {Parameter.RepoKernel}");
+            Terminal.Execute($"cp {kernelTmp} {Parameter.RepoKernel}");
+            Terminal.Execute($"cp {modulesTmp} {Parameter.RepoKernel}");
+            Terminal.Execute($"cp {systemTmp} {Parameter.RepoSystem}");
 
-            new Terminal().Execute($"rm {Parameter.RepoKernel}/active-firmware");
-            new Terminal().Execute($"rm {Parameter.RepoKernel}/active-initrd");
-            new Terminal().Execute($"rm {Parameter.RepoKernel}/active-kernel");
-            new Terminal().Execute($"rm {Parameter.RepoKernel}/active-modules");
-            new Terminal().Execute($"rm {Parameter.RepoSystem}/active-system");
+            Terminal.Execute($"rm {Parameter.RepoKernel}/active-firmware");
+            Terminal.Execute($"rm {Parameter.RepoKernel}/active-initrd");
+            Terminal.Execute($"rm {Parameter.RepoKernel}/active-kernel");
+            Terminal.Execute($"rm {Parameter.RepoKernel}/active-modules");
+            Terminal.Execute($"rm {Parameter.RepoSystem}/active-system");
 
-            new Terminal().Execute($"ln -s {Parameter.RepoKernel}/firmware {Parameter.RepoKernel}/active-firmware");
-            new Terminal().Execute($"ln -s {Parameter.RepoKernel}/initrd {Parameter.RepoKernel}/active-initrd");
-            new Terminal().Execute($"ln -s {Parameter.RepoKernel}/kernel {Parameter.RepoKernel}/active-kernel");
-            new Terminal().Execute($"ln -s {Parameter.RepoKernel}/modules {Parameter.RepoKernel}/active-modules");
-            new Terminal().Execute($"ln -s {Parameter.RepoSystem}/system {Parameter.RepoSystem}/active-system");
+            Terminal.Execute($"ln -s {Parameter.RepoKernel}/firmware {Parameter.RepoKernel}/active-firmware");
+            Terminal.Execute($"ln -s {Parameter.RepoKernel}/initrd {Parameter.RepoKernel}/active-initrd");
+            Terminal.Execute($"ln -s {Parameter.RepoKernel}/kernel {Parameter.RepoKernel}/active-kernel");
+            Terminal.Execute($"ln -s {Parameter.RepoKernel}/modules {Parameter.RepoKernel}/active-modules");
+            Terminal.Execute($"ln -s {Parameter.RepoSystem}/system {Parameter.RepoSystem}/active-system");
 
             Execute.CleanTmp();
         }
@@ -99,7 +99,7 @@ namespace antdsh {
         /// </summary>
         public static void CopyGrub() {
             Console.WriteLine("Copying grub.conf file");
-            new Terminal().Execute($"cp /mnt/cdrom/grub/grub.cfg /mnt/cdrom/DIRS/DIR_cfg_antd_config/grub{DateTime.Now.ToString("yyyyMMdd")}.conf");
+            Terminal.Execute($"cp /mnt/cdrom/grub/grub.cfg /mnt/cdrom/DIRS/DIR_cfg_antd_config/grub{DateTime.Now.ToString("yyyyMMdd")}.conf");
         }
 
         /// <summary>
@@ -107,14 +107,14 @@ namespace antdsh {
         /// </summary>
         public static void Reboot() {
             Console.WriteLine("Rebooting system right now!");
-            new Terminal().Execute("reboot");
+            Terminal.Execute("reboot");
         }
 
         /// <summary>
         /// 07 - il sistema è stato aggiornato (forse) e riavviato con i nuovi file: controlla lo status
         /// </summary>
         public static void VerifyUpdate() {
-            var versionInfo = new Terminal().Execute("uname -a").Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[2];
+            var versionInfo = Terminal.Execute("uname -a").Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[2];
             Console.WriteLine($"This aos version is: {versionInfo}");
         }
 
@@ -125,7 +125,7 @@ namespace antdsh {
             Console.WriteLine("Setting system units");
 
             Console.WriteLine("Reload daemon now...");
-            new Terminal().Execute("systemctl daemon-reload");
+            Terminal.Execute("systemctl daemon-reload");
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace antdsh {
                     continue;
                 var newPath = path.Replace("_", "/");
                 Console.WriteLine($"{t} mounted on {newPath}");
-                new Terminal().Execute($"mount --bind {t} {newPath}");
+                Terminal.Execute($"mount --bind {t} {newPath}");
             }
 
             var files = Directory.EnumerateFiles(Parameter.RepoDirs).Where(f => !f.Contains(".ori"));
@@ -151,7 +151,7 @@ namespace antdsh {
                     continue;
                 var newPath = path.Replace("_", "/");
                 Console.WriteLine($"{t} mounted on {newPath}");
-                new Terminal().Execute($"mount --bind {t} {newPath}");
+                Terminal.Execute($"mount --bind {t} {newPath}");
             }
         }
     }

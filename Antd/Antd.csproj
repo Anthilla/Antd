@@ -125,6 +125,8 @@
     <Compile Include="AntdBoot.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="Configuration\ConfigurationFlow.cs" />
+    <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\NetworkInterfaceRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
@@ -150,7 +152,7 @@
     <Compile Include="Modules\CCTableModule.cs" />
     <Compile Include="Modules\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
-    <Compile Include="Modules\ConfigModule.cs" />
+    <Compile Include="Modules\CfgModule.cs" />
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
@@ -277,6 +279,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-ca.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-cfg-old.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-cfg.html">

@@ -49,7 +49,7 @@ namespace Antd.Ssh {
         private const string MainFile = "sshd_config";
 
         public static void SetReady() {
-            new Terminal().Execute($"cp {Dir} {MntDir}");
+            Terminal.Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -61,7 +61,7 @@ namespace Antd.Ssh {
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            new Terminal().Execute("systemctl restart sshd");
+            Terminal.Execute("systemctl restart sshd");
         }
 
         public class MapRules {
@@ -220,13 +220,13 @@ namespace Antd.Ssh {
         public class Keys {
             public static void SendKey(string host, string keyName, string user = "") {
                 var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
-                new Terminal().Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
+                Terminal.Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
             }
 
             private static string GenerateForUser(string userName) {
                 var privateKeyPath = $"/home/{userName}/.ssh/{userName}-key";
                 var publicKeyPath = $"/home/{userName}/.ssh/{userName}-key.pub";
-                new Terminal().Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
+                Terminal.Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
                 return publicKeyPath;
             }
 
@@ -234,7 +234,7 @@ namespace Antd.Ssh {
                 var userPubKeyPath = GenerateForUser(user);
                 var keyContent = File.ReadAllText(userPubKeyPath).Replace(Environment.NewLine, " ");
                 //todo comando per aggiungere la chiave al file di là
-                new Terminal().Execute($"scp {keyContent} {remoteMachine}/{Parameter.AuthKeys}");
+                Terminal.Execute($"scp {keyContent} {remoteMachine}/{Parameter.AuthKeys}");
             }
 
             public static void PropagateKeys(IEnumerable<string> users, IEnumerable<string> remoteMachines) {

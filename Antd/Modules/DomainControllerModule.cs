@@ -55,8 +55,8 @@ namespace Antd.Modules {
             Post["/dc/setup"] = x => {
                 foreach (var dir in _directories) {
                     var mntDir = Mounts.GetDirsPath(dir);
-                    new Terminal().Execute($"mkdir -p {mntDir}");
-                    new Terminal().Execute($"cp /mnt/livecd{dir} {mntDir}");
+                    Terminal.Execute($"mkdir -p {mntDir}");
+                    Terminal.Execute($"cp /mnt/livecd{dir} {mntDir}");
                     Mount.Dir(dir);
                 }
 
@@ -72,23 +72,23 @@ namespace Antd.Modules {
                     return Response.AsText("error: a value is missing. go back.");
                 }
 
-                new Terminal().Execute($"samba-tool domain provision --option=\"interfaces = lo br0\" --option=\"bind interfaces only = yes\" --use-rfc2307 --domain={domainName} --realm={domainRealmname} --host-name={domainHostname} --host-ip={domainHostip} --adminpass={domainAdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
+                Terminal.Execute($"samba-tool domain provision --option=\"interfaces = lo br0\" --option=\"bind interfaces only = yes\" --use-rfc2307 --domain={domainName} --realm={domainRealmname} --host-name={domainHostname} --host-ip={domainHostip} --adminpass={domainAdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
                 ConsoleLogger.Log($"domain {domainName} created");
 
                 if (!Mounts.IsAlreadyMounted("/etc/hosts")) {
                     Mount.File("/etc/hosts");
                 }
-                new Terminal().Execute("echo 127.0.0.1 localhost.localdomain localhost > /etc/hosts");
-                new Terminal().Execute($"echo {domainHostip} {domainHostname}.{domainRealmname} {domainHostname} >> /etc/hosts");
+                Terminal.Execute("echo 127.0.0.1 localhost.localdomain localhost > /etc/hosts");
+                Terminal.Execute($"echo {domainHostip} {domainHostname}.{domainRealmname} {domainHostname} >> /etc/hosts");
 
                 if (!Mounts.IsAlreadyMounted("/etc/resolv.conf")) {
                     Mount.File("/etc/resolv.conf");
                 }
-                new Terminal().Execute(!File.Exists("/etc/resolv.conf")
+                Terminal.Execute(!File.Exists("/etc/resolv.conf")
                     ? $"echo nameserver {domainHostip} > /etc/resolv.conf"
                     : $"echo nameserver {domainHostip} >> /etc/resolv.conf");
-                new Terminal().Execute($"echo search {domainRealmname} >> /etc/resolv.conf");
-                new Terminal().Execute($"echo domain {domainRealmname} >> /etc/resolv.conf");
+                Terminal.Execute($"echo search {domainRealmname} >> /etc/resolv.conf");
+                Terminal.Execute($"echo domain {domainRealmname} >> /etc/resolv.conf");
 
                 const string sambaRealConf = "/etc/samba/smb.conf";
                 var sambaConf = $"{Parameter.Resources}/smb.conf.template";
@@ -107,9 +107,9 @@ namespace Antd.Modules {
                 }
                 File.WriteAllText(sambaRealConf, sambaCnfText);
 
-                new Terminal().Execute("systemctl restart samba");
+                Terminal.Execute("systemctl restart samba");
 
-                new Terminal().Execute("mkdir -p /var/lib/samba/private");
+                Terminal.Execute("mkdir -p /var/lib/samba/private");
                 var krbConf = $"{Parameter.Resources}/krb5.conf.template";
                 const string realmAlt = "$realmalt$";
                 var krbCnfText = File.ReadAllText(krbConf)
@@ -140,7 +140,7 @@ namespace Antd.Modules {
                     return Response.AsText("error: a value is missing. go back.");
                 }
 
-                new Terminal().Execute($"samba-tool user create {username} --password={userPassword} --username={username} --mail-address={username}@{domainName} --given-name={username}");
+                Terminal.Execute($"samba-tool user create {username} --password={userPassword} --username={username} --mail-address={username}@{domainName} --given-name={username}");
                 return Response.AsRedirect("/");
             };
 

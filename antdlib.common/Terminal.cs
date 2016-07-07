@@ -33,7 +33,7 @@ using System.Diagnostics;
 
 namespace antdlib.common {
     public class Terminal {
-        public string Execute(string command, string dir = "") {
+        public static string Execute(string command, string dir = "") {
             var output = string.Empty;
             var error = string.Empty;
             if (!Parameter.IsUnix)
@@ -68,7 +68,7 @@ namespace antdlib.common {
             }
         }
 
-        public string Execute(IEnumerable<string> commands, string dir = "") {
+        public static string Execute(IEnumerable<string> commands, string dir = "") {
             var genericOutput = string.Empty;
             if (!Parameter.IsUnix)
                 return genericOutput;

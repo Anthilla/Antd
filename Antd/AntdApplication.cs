@@ -96,6 +96,7 @@ namespace Antd {
             Database.RegisterView(new UserClaimView());
             Database.RegisterView(new UserView());
 
+            AntdBoot.ConfigureMachine();
             AntdBoot.CheckCertificate();
             AntdBoot.ReloadUsers();
             AntdBoot.ReloadSsh();
@@ -103,12 +104,11 @@ namespace Antd {
             //AntdBoot.SetSystemdJournald();
             AntdBoot.SetMounts();
             AntdBoot.SetOsMount();
-            AntdBoot.LaunchDefaultOsConfiguration();
             //AntdBoot.SetWebsocketd();
             AntdBoot.CheckResolv();
             AntdBoot.SetFirewall();
             AntdBoot.ImportSystemInformation();
-            AntdBoot.StartScheduler(false);
+            AntdBoot.StartScheduler(true);
             AntdBoot.StartDirectoryWatcher();
             AntdBoot.LaunchApps();
             //AntdBoot.StartWebsocketServer();

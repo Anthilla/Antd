@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using antdlib.common;
 using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
@@ -83,6 +84,20 @@ namespace Antd.Modules {
                 var id = (string)Request.Form.Guid;
                 var r = _jobRepositoryRepo.Delete(id);
                 return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+            };
+
+            Post["/parted/print"] = x => {
+                var disk = (string)Request.Form.Disk;
+                var result = Terminal.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
+                return Response.AsText(result.Replace("Partition Table: ", ""));
+            };
+
+            Post["/parted/mklabel"] = x => {
+                var disk = (string)Request.Form.Disk;
+                var type = (string)Request.Form.Type;
+                var yn = (string)Request.Form.Confirm;
+                var result = Terminal.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
+                return Response.AsText(result);
             };
         }
     }

@@ -91,7 +91,7 @@ namespace Antd.Users {
         }
 
         public static void CreateGroup(string group) {
-            new Terminal().Execute($"groupadd {group}");
+            Terminal.Execute($"groupadd {group}");
         }
     }
 }

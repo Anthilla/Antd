@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using Antd.Database;
 using Antd.Helpers;
@@ -35,13 +36,22 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ConfigModule : CoreModule {
+    public class CfgModule : CoreModule {
 
         private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
         private readonly CommandValuesRepository _commandValuesRepositoryRepo = new CommandValuesRepository();
 
-        public ConfigModule() {
+        public CfgModule() {
             this.RequiresAuthentication();
+
+            Get["/cfg"] = x => {
+                dynamic vmod = new ExpandoObject();
+                var values = _commandRepositoryRepo.GetAll().ToList();
+                vmod.ValueBundle = values;
+                vmod.EnabledCommandBundle = values.Where(_ => _.IsEnabled == true);
+                vmod.DisabledCommandBundle = values.Where(_ => _.IsEnabled == false);
+                return View["antd/page-cfg", vmod];
+            };
 
             Post["/cfg/addvalue"] = x => {
                 var name = (string)Request.Form.Name;
