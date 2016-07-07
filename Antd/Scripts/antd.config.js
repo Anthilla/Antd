@@ -87,20 +87,37 @@ $('i[data-role="show-command"]').mouseup(function () {
     container.find('[data-role="command-exd"]').hide();
 });
 
-
 $("#sortable").sortable({
+    //sort: function () {
+    //    RefreshCommandIndexes();
+    //    ReindexCheck();
+    //},
     stop: function () {
         RefreshCommandIndexes();
-    }
+        ReindexCheck();
+    },
 }).disableSelection();
 
 $(document).on("click", "body", function () {
     RefreshCommandIndexes();
+    ReindexCheck();
 });
 
 $(document).ready(function () {
     $("#valueBundleTag").hide();
 });
+
+function ReindexCheck() {
+    $('[data-role="control"]').each(function (index) {
+        var i = index;
+        $(this).find('[data-role="DisplayIndex"]').val(i);
+        $(this).find("input").each(function () {
+            var name = $(this).attr("data-name");
+            var nn = name + "_" + i;
+            $(this).attr("name", nn);
+        });
+    });
+}
 
 function RefreshCommandIndexes() {
     $("input[name=Index]").each(function (index) {

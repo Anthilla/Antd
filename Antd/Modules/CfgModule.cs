@@ -30,9 +30,11 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Antd.Configuration;
 using Antd.Database;
 using Antd.Helpers;
 using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -46,12 +48,39 @@ namespace Antd.Modules {
 
             Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
-                var values = _commandRepositoryRepo.GetAll().ToList();
-                vmod.ValueBundle = values;
-                vmod.EnabledCommandBundle = values.Where(_ => _.IsEnabled == true);
-                vmod.DisabledCommandBundle = values.Where(_ => _.IsEnabled == false);
+                vmod.HasConfiguration = true;
+                vmod.Controls = MachineConfiguration.Get();
+                if (MachineConfiguration.Get().Count < 1) {
+                    vmod.HasConfiguration = false;
+                }
                 return View["antd/page-cfg", vmod];
             };
+
+            Post["/cfg/export"] = x => {
+                var control = this.Bind<List<Control>>();
+                var checkedControl= new List<Control>();
+                foreach (var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
+                    var s = new Control {
+                        Index = cr.Index,
+                        FirstCommand = cr.FirstCommand,
+                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "": cr.ControlCommand,
+                        Check = string.IsNullOrEmpty(cr.Check) ? "": cr.Check,
+                    };
+
+                    checkedControl.Add(s);
+                }
+                MachineConfiguration.Export(checkedControl);
+                return Response.AsRedirect("/cfg");
+            };
+
+            //Get["/cfg"] = x => {
+            //    dynamic vmod = new ExpandoObject();
+            //    var values = _commandRepositoryRepo.GetAll().ToList();
+            //    vmod.ValueBundle = values;
+            //    vmod.EnabledCommandBundle = values.Where(_ => _.IsEnabled == true);
+            //    vmod.DisabledCommandBundle = values.Where(_ => _.IsEnabled == false);
+            //    return View["antd/page-cfg", vmod];
+            //};
 
             Post["/cfg/addvalue"] = x => {
                 var name = (string)Request.Form.Name;
@@ -126,11 +155,6 @@ namespace Antd.Modules {
                 var data = _commandRepositoryRepo.GetAll().Select(_ => _.Layout);
                 var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
                 return Response.AsJson(map);
-            };
-
-            Post["/cfg/export"] = x => {
-                //todo ConfigManagement.Export.ExportConfigurationToFile();
-                return HttpStatusCode.OK;
             };
         }
     }

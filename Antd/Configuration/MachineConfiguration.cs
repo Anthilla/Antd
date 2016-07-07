@@ -78,5 +78,31 @@ namespace Antd.Configuration {
             }
             _counter = 0;
         }
+
+        public static List<Control> Get() {
+            Directory.CreateDirectory(Parameter.RepoConfig);
+            if (!File.Exists(FilePath)) {
+                return new List<Control>();
+            }
+            var text = File.ReadAllText(FilePath);
+            var flow = JsonConvert.DeserializeObject<ConfigurationFlow>(text);
+            var controls = flow?.Controls?.OrderBy(_ => _.Index).ToList();
+            return controls;
+        }
+
+        public static void Export(List<Control> controls) {
+            Directory.CreateDirectory(Parameter.RepoConfig);
+            if (File.Exists(FilePath)) {
+                File.Delete(FilePath);
+            }
+            var flow = new ConfigurationFlow {
+                Name = "setup.conf",
+                Path = FilePath,
+                Controls = controls
+            };
+            if (!File.Exists(FilePath)) {
+                File.WriteAllText(FilePath, JsonConvert.SerializeObject(flow, Formatting.Indented));
+            }
+        }
     }
 }

@@ -43,10 +43,6 @@
         </div>
         <div class="element-divider"></div>
 
-        <a data-role="export-conf" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" style="cursor:pointer; padding-top: 11px;">
-            Export Configuration
-        </a>
-
         <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
             <i class="icon-arrow-up"></i>
         </a>
@@ -55,122 +51,62 @@
 @EndSection
 
 @Section['MainContent']
-<div id="ValueBundlesContainer" style="float: left;">
-    <form action="/cfg/addvalue" enctype="multipart/form-data" id="ValueBundleDashboard" method="POST">
-        <div style="display: inline-block; float: left; margin-right: 9px; height: 35px;" class="bg-anthilla-gray selectizecontainer">
-            <input id="valueBundleTag" name="Tag" type="text" class="bg-anthilla-gray" style="width: 258px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
-        </div>
-        <input name="Key" type="hidden" value="">
-        <input placeholder="Value" name="Value" type="text" class="bg-anthilla-gray" style="width: 258px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
-        <input type="submit" class="bg-anthilla-green" style="width: 90px; padding: 10px; margin-bottom: 5px; display: inline; color: #3A3A3A !important;" autocomplete="off" value="ADD">
-    </form>
-    <table class="table">
-        <tbody>
-            <tr style="border-bottom: 2px solid #A7BD39;">
-                <td style="width: 40%;">Tag(Context)</td>
-                <td>Value</td>
-                <td style="width: 100px;">ValueID(Index)</td>
-                <td style="width: 100px;"></td>
-            </tr>
-            @Each.ValueBundle
-            <tr>
-                <td>@Current.Tag</td>
-                <td>@Current.Value</td>
-                <td>@Current.Key</td>
-                <td>
-                    @If.Current.IsDefault
-                    <i class="icon-remove fg-orange" data-key="@Current.Key" data-role="delete-Value" data-tag="@Current.Tag" data-Value="@Current.Value"></i>
-                    @EndIf
-                </td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
-</div>
-<div id="CommandBundleContainer" style="float: right;">
-    <form id="ValueBundleDashboard" action="/cfg/addcommand" method="POST" enctype="multipart/form-data">
-        <input data-role="command-place" name="Command" placeholder="Type your command here..." type="text" class="bg-anthilla-gray" style="width: 700px; padding: 10px; margin-bottom: 5px; display: inline;" autocomplete="off">
-        <input type="submit" class="bg-anthilla-green" style="width: 94px; padding: 10px; margin-bottom: 5px; display: inline; color: #3A3A3A !important;" autocomplete="off" value="ADD">
-    </form>
-    <ul id="ResultsContainer" class="fg-white bg-anthilla-gray border-anthilla-gray" style="display: none; list-style: none; padding: 5px; margin-left: 0; margin-top: -23px; width: 700px; min-height: 37px;"></ul>
-    <p id="Tip" style="padding-left: 10px; display: none;">Tip: write [tag:index]</p>
-    <div style="width: 800px; min-height: 250px; padding-right: 10px;" class="bg-anthilla-gray fg-white border-2-anthilla-gray-m" id="MegaContainer">
-        <form id="CommandBundleDashboard2" action="/cfg/reindex" method="POST" enctype="multipart/form-data">
-            <ul id="sortable" style="list-style: none;" class="fg-white">
-                <li class="border-2-anthilla-gray bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
-                    <i data-role="show-all-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i class="icon-warning fg-orange blinking" data-role="missing-Value-notif" style="display: none; float: right; margin-right: 10px;"></i>
-                </li>
-                @Each.EnabledCommandBundle
-                <li class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: 45px; margin-bottom: 3px;">
-                    <input name="Guid" type="hidden" value="@Current.Guid" />
-                    <input name="Index" type="hidden" value="@i" />
-                    <p data-role="command-saved" style="float: left;">
-                        @Current.Command
-                    </p>
-                    <p data-role="command-exd" style="display: none; float: left">
-                        @Current.CommandWithValues
-                    </p>
-
-                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-                    <i data-role="disable-command" data-guid="@Current.Guid" class="icon-checkmark fg-lightBlue" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                </li>
-                @EndEach
-                @Each.DisabledCommandBundle
-                <li class="border-2-anthilla-gray-m bg-anthilla-gray" style="padding: 10px; height: 45px; opacity: 0.5; margin-bottom: 3px;">
-                    <input name="Guid" type="hidden" value="@Current.Guid" />
-                    <input name="Index" type="hidden" value="@i" />
-                    <p data-role="command-saved" style="float: left;">
-                        @Current.Command
-                    </p>
-                    <p data-role="command-exd" style="display: none; float: left">
-                        @Current.CommandWithValues
-                    </p>
-                    <i data-role="remove-command" data-guid="@Current.Guid" class="icon-remove fg-orange" style="cursor: pointer; float: right;"></i>
-                    <i data-role="enable-command" data-guid="@Current.Guid" class="icon-blocked fg-lightRed" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i data-role="play-command" data-guid="@Current.Guid" class="icon-lpay fg-indigo" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                    <i data-role="show-command" class="icon-eye fg-white" style="cursor: pointer; float: right; margin-right: 10px;"></i>
-                </li>
-                @EndEach
-            </ul>
-            <input type="submit" class="bg-anthilla-green" value="Save configuration order" style="width: 90%; margin-left: 40px; color:#3A3A3A !important;" />
-        </form>
-    </div>
-</div>@EndSection
+<form action="/cfg/export" method="POST" enctype="multipart/form-data">
+    <input type="button" data-role="AddLine" class="bg-anthilla-green upcase" value="Add line" style="width: 90%; margin-left: 40px; color: #3A3A3A !important;" />
+    <ul id="sortable" style="list-style: none;" class="fg-white">
+        @Each.Controls
+        <li data-role="control" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: auto; margin-bottom: 5px;">
+            <input data-role="DisplayIndex" type="text" data-name="Index" value="@Current.Index" name="Index_@Current.Index" style="border-width: 0 !important; width: 20px;" readonly="readonly">
+            <input name="FirstCommand_@Current.Index" data-name="FirstCommand" type="text" value="@Current.FirstCommand" style="width: 90%; padding: 3px;" />
+            <input data-role="Remove" type="button" value="X" class="" style="width: 15px; color: orange !important;">
+            <br />
+            <input name="ControlCommand_@Current.Index" data-name="ControlCommand" type="text" value="@Current.ControlCommand" style="width: 90%; margin-left: 24px; padding: 3px;" />
+            <br />
+            <input name="Check_@Current.Index" type="text" data-name="Check" value="@Current.Check" style="width: 90%; margin-left: 24px; padding: 3px;" />
+        </li>
+        @EndEach
+    </ul>
+    <input type="button" data-role="AddLine" class="bg-anthilla-green upcase" value="Add line" style="width: 90%; margin-left: 40px; color: #3A3A3A !important;" />
+    <br />
+    <input type="submit" class="bg-anthilla-green upcase" value="Export" style="width: 90%; margin-left: 40px; color: #3A3A3A !important;" />
+</form>
+@EndSection
 
 @Section['Scripts']
 <script src="/Scripts/antd.config.js" type="text/javascript"></script>
 <script type="text/javascript">
-    $('a[data-role="export-conf"]').click(function () {
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/cfg/export',
-            type: 'POST',
-            success: function () {
-                location.reload(true);
-            }
-        });
+    $('[data-role="AddLine"]').click(function () {
+        var cont = $("#sortable");
+        var line =
+'<li data-role="control" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: auto; margin-bottom: 5px;">' +
+'<input data-role="DisplayIndex" type="text" value="" name="Index_@Current.Index" data-name="Index" style="border-width: 0 !important; width: 20px;" readonly="readonly"> ' +
+'<input name="FirstCommand" data-name="FirstCommand" type="text" value="" style="width: 90%; padding: 3px;"/><br />' +
+'<input data-role="Remove" type="button" value="X" class="" style="width: 15px; color: orange !important;">' +
+'<input name="ControlCommand" data-name="ControlCommand" type="text" value="" style="width: 90%; margin-left: 24px; padding: 3px;"/><br />' +
+'<input name="Check" type="text" data-name="Check" value="" style="width: 90%; margin-left: 24px; padding: 3px;"/>' +
+'</li>';
+        cont.append(line);
+        SelectInput();
+        RemoveLine();
     });
 
-    $('i[data-role="delete-Value"]').click(function () {
-        var t = $(this).attr('data-tag');
-        var k = $(this).attr('data-key');
-        var v = $(this).attr('data-Value');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/cfg/delValue',
-            type: 'POST',
-            data: {
-                Tag: t,
-                Key: k,
-                Value: v
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
+    $(document).ready(function () {
+        SelectInput();
+        RemoveLine();
     });
+
+    function SelectInput() {
+        $('input[type="text"]').click(function () {
+            $(this).focus();
+            $(this).select();
+        });
+    }
+
+    function RemoveLine() {
+        $('[data-role="Remove"]').click(function () {
+            $(this).parents('li').remove();
+            ReindexCheck();
+        });
+    }
 </script>
 @EndSection
