@@ -100,6 +100,7 @@ namespace Antd {
             Database.RegisterView(new UserView());
             Database.RegisterView(new MacAddressView());
 
+            Boot.ImportCommands();
             Boot.ConfigureMachine();
             Boot.CheckCertificate();
             Boot.ReloadUsers();

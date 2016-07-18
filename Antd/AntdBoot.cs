@@ -17,6 +17,13 @@ namespace Antd {
             Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
         }
 
+        public void ImportCommands() {
+            Directory.CreateDirectory(Parameter.AntdCfgCommands);
+            new CommandRepository().Import();
+            new CommandValuesRepository().Import();
+            ConsoleLogger.Log("commands imported");
+        }
+
         public void ConfigureMachine() {
             MachineConfiguration.Set();
             ConsoleLogger.Log("machine configured");

@@ -27,9 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
+using antdlib.common;
 using Antd.Database;
 using Nancy;
 using Nancy.Security;
@@ -58,10 +61,10 @@ namespace Antd.Modules {
             };
 
             Post["/cmd/commands"] = x => {
-                string alias = Request.Form.Alias;
+                string alias = Request.Form.Name;
                 string command = Request.Form.Command;
                 _commandRepo.Create(new Dictionary<string, string> {
-                    {"Alias", alias},
+                    {"Name", alias},
                     {"Command", command},
                 });
                 return HttpStatusCode.OK;
@@ -69,11 +72,11 @@ namespace Antd.Modules {
 
             Put["/cmd/commands"] = x => {
                 string id = Request.Form.Id;
-                string alias = Request.Form.Alias;
+                string alias = Request.Form.Name;
                 string command = Request.Form.Command;
                 _commandRepo.Edit(new Dictionary<string, string> {
                     {"Id", id},
-                    {"Alias", alias},
+                    {"Name", alias},
                     {"Command", command},
                 });
                 return HttpStatusCode.OK;
@@ -136,17 +139,26 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(result);
             };
 
-            //Post["/command/mgmt/"] = x => {
-            //    string command = Request.Form.Command;
-            //    string layout = Request.Form.CommandLayout;
-            //    string notes = Request.Form.Notes;
-            //    _commandRepositoryRepo.Create(new Dictionary<string, string> {
-            //        { "Command", command },
-            //        { "Layout", layout },
-            //        { "Notes", notes }
-            //    });
-            //    return Response.AsRedirect("/");
-            //};
+            Post["/cmd/export"] = x => {
+                Directory.CreateDirectory(Parameter.AntdCfgCommands);
+                var result = _commandRepo.GetAll().ToDictionary(_ => _.Name, _ => _.Command).OrderBy(_ => _.Key);
+                var json = JsonConvert.SerializeObject(result, Formatting.Indented);
+                var path = $"{Parameter.AntdCfgCommands}/commands.json";
+                if (File.Exists(path)) {
+                    File.Delete(path);
+                }
+                File.WriteAllText(path, json);
+
+                var result2 = _commandValuesRepo.GetAll().ToDictionary(_ => _.Name, _ => _.Value ?? "").OrderBy(_ => _.Key);
+                var json2 = JsonConvert.SerializeObject(result2, Formatting.Indented);
+                var path2 = $"{Parameter.AntdCfgCommands}/values.json";
+                if (File.Exists(path2)) {
+                    File.Delete(path2);
+                }
+                File.WriteAllText(path2, json2);
+
+                return Response.AsRedirect("/cmd");
+            };
 
             //Post["/command/mgmt/launch/{guid}"] = x => {
             //    string guid = x.guid;

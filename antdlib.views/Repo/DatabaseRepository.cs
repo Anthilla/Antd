@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
@@ -8,7 +9,13 @@ namespace antdlib.views.Repo {
 
         public static IEnumerable<T> Query<T>(RaptorDB.RaptorDB rdb, string viewName) {
             var result = rdb.Query(viewName);
-            var list = result.Rows.Select(_ => (T)_);
+            var list = result.Rows.Select(_ => (T)_).ToList();
+            //if (typeof (T) == typeof (CommandSchema)) {
+            //    list.AddRange((IEnumerable<T>)Default.Commands.All());
+            //}
+            //if (typeof(T) == typeof(CommandValuesSchema)) {
+            //    list.AddRange((IEnumerable<T>)Default.CommandValues.All());
+            //}
             return list;
         }
 

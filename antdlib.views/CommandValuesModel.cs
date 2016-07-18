@@ -18,12 +18,12 @@ namespace antdlib.views {
             Id = System.Guid.Parse(sourceModel.Id);
             Guid = sourceModel.Guid;
             Name = sourceModel.Name;
-            //Index = sourceModel.Index;
             Value = sourceModel.Value;
+            //Index = sourceModel.Index;
         }
         public string Name { get; set; }
-        //public string Index { get; set; }
         public string Value { get; set; }
+        //public string Index { get; set; }
     }
 
     #region [    View    ]
@@ -36,8 +36,8 @@ namespace antdlib.views {
         public string Tags { get; set; }
         //---
         public string Name { get; set; }
-        //public string Index { get; set; }
         public string Value { get; set; }
+        //public string Index { get; set; }
     }
 
     [RegisterView]

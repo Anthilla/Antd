@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
@@ -48,26 +49,28 @@ namespace Antd.Configuration {
 
         private static int _counter;
         private static void Launch(Control control) {
+            var firstCommand = control.FirstCommand.SplitToList(Environment.NewLine);
+            var controlCommand = control.ControlCommand.SplitToList(Environment.NewLine);
             if (_counter > 5) {
                 ConsoleLogger.Log($"{control.FirstCommand} - failed, too many retry...");
                 _counter = 0;
                 return;
             }
             if (string.IsNullOrEmpty(control.ControlCommand)) {
-                Terminal.Execute(control.FirstCommand);
+                Terminal.Execute(firstCommand);
                 ConsoleLogger.Log($"{control.FirstCommand} - applied!");
                 _counter = 0;
                 return;
             }
-            var controlResult = Terminal.Execute(control.ControlCommand);
+            var controlResult = Terminal.Execute(controlCommand);
             var firstCheck = controlResult.Contains(control.Check);
             if (firstCheck) {
                 ConsoleLogger.Log($"{control.FirstCommand} - applied!");
                 _counter = 0;
                 return;
             }
-            Terminal.Execute(control.FirstCommand);
-            controlResult = Terminal.Execute(control.ControlCommand);
+            Terminal.Execute(firstCommand);
+            controlResult = Terminal.Execute(controlCommand);
             var secondCheck = controlResult.Contains(control.Check);
             if (secondCheck) {
                 ConsoleLogger.Log($"{control.FirstCommand} - applied!");

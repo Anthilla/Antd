@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Default\Commands.cs" />
+    <Compile Include="Default\CommandValues.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetworkInterfaceModel.cs" />
     <Compile Include="MacAddressModel.cs" />
@@ -79,9 +81,7 @@
       <Name>antdlib.common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Default\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

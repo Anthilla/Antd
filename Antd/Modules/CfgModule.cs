@@ -146,10 +146,10 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            Get["/cfg/getenabled"] = x => {
-                var data = _commandRepositoryRepo.GetAll().Where(_ => _.IsEnabled == true);
-                return Response.AsJson(data);
-            };
+            //Get["/cfg/getenabled"] = x => {
+            //    var data = _commandRepositoryRepo.GetAll().Where(_ => _.IsEnabled == true);
+            //    return Response.AsJson(data);
+            //};
 
             //Get["/cfg/layouts"] = x => {
             //    var data = _commandRepositoryRepo.GetAll().Select(_ => _.Layout);

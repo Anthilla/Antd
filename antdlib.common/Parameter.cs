@@ -55,12 +55,10 @@ namespace antdlib.common {
 
         public static string AntdCfg => $"{RootCfg}/antd";
         public static string AntdCfgDatabase => $"{AntdCfg}/database";
-        public static string AntdCfgDatabaseName => "antd-database";
-        public static string AntdCfgDatabaseNamePath => $"{AntdCfgDatabase}/{AntdCfgDatabaseName}";
-        public static string AntdCfgDatabaseJournalPath => $"{AntdCfgDatabaseNamePath}/denso.jnl";
         public static string AntdCfgNetworkd => $"{AntdCfg}/networkd";
         public static string AntdCfgKeys => $"{AntdCfg}/keys";
         public static string AntdCfgReport => $"{AntdCfg}/report";
+        public static string AntdCfgCommands => $"{AntdCfg}/commands";
 
         public static string Repo => "/mnt/cdrom";
         public static string RepoApps => $"{Repo}/Apps";

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.views;
 using antdlib.views.Repo;
+using Newtonsoft.Json;
 
 namespace Antd.Database {
     public class CommandValuesRepository {
@@ -22,6 +24,26 @@ namespace Antd.Database {
         public CommandValuesSchema GetByName(string name) {
             var result = DatabaseRepository.Query<CommandValuesSchema>(AntdApplication.Database, ViewName, schema => schema.Name == name);
             return result.FirstOrDefault();
+        }
+
+        public void Import() {
+            Directory.CreateDirectory(Parameter.AntdCfgCommands);
+            var path = $"{Parameter.AntdCfgCommands}/values.json";
+            if (!File.Exists(path)) {
+                return;
+            }
+            var text = File.ReadAllText(path);
+            if (string.IsNullOrEmpty(text)) {
+                return;
+            }
+            var objs = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
+            foreach (var o in objs) {
+                var obj = new CommandValuesModel {
+                    Name = o.Key,
+                    Value = o.Value,
+                };
+                DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            }
         }
 
         public bool Create(IDictionary<string, string> dict) {
