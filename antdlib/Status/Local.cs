@@ -57,8 +57,8 @@ namespace antdlib.Status {
                 ConsoleLogger.Warn(linkInfoData);
                 var linkInfos = linkInfoData.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var sc = new SystemComponentModel() {
-                    active = linkInfos[0].Replace(":", "").Trim(),
-                    link = linkInfos[1].Replace("symbolic link to", "").Trim()
+                    Active = linkInfos[0].Replace(":", "").Trim(),
+                    Recovery = linkInfos[1].Replace("symbolic link to", "").Trim()
                 };
                 list.Add(sc);
             }

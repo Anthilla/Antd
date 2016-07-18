@@ -49,7 +49,7 @@ namespace antdsh {
                 var psResult = Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep");
                 if (psResult.Length <= 0)
                     return;
-                var split = psResult.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+                var split = psResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length <= 0)
                     return;
                 var pid = split[1];
@@ -152,13 +152,14 @@ namespace antdsh {
 
         public static void UmountTmpRam() {
             while (true) {
-                var r = Terminal.Execute($"cat /proc/mounts | grep {Parameter.AntdTmpDir}");
-                if (r.Length > 0 && !r.StartsWith("----")) {
+                var procMounts = File.ReadAllLines("/proc/mounts");
+                if (procMounts.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----"))) {
                     Terminal.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
                     UmountTmpRam();
                 }
-                var f = Terminal.Execute($"df | grep {Parameter.AntdTmpDir}");
-                if (f.Length <= 0 || f.StartsWith("----"))
+
+                var f = File.ReadAllLines("/proc/mounts");
+                if (f.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----")))
                     return;
                 Terminal.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
             }

@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             @Each.DisksList
-            <tr data-role="show-disk-details" data-guid="@Current.Guid" data-name="@Current.Name">
+            <tr data-role="show-disk-details-@Current.Ro" data-guid="@Current.Guid" data-name="@Current.Name">
                 <td colspan="2">@Current.Name</td>
                 <td>@Current.Size </td>
                 <td>@Current.Ro </td>

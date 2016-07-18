@@ -7,18 +7,18 @@
 
 @Each.VolumesInfo
 <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white nif-header" data-disk-name="@Current.Name">
-            <i class="icon-cone on-left"></i>  @Current.Name
-            @if (antdlib.Install.InstallCheck.IsDiskEligibleForOs(blk.Name) && Model.IsOsRemovable) {
-                @ShowInstallButton(blk.Name)
-            }
-        </div>
-        <div class="panel-content nif-content" style="display: none;" data-disk-content="@Current.Name">
-            @If.Current.Size
-            <canvas class="disk-size-chart" width="200" height="200" data-size="@Current.Size"></canvas>
-            @EndIf
-            <hr class="bg-anthilla-gray" />
-            <ul>
+    <div class="panel-header bg-anthilla-gray fg-white nif-header" data-disk-name="@Current.Name">
+        <i class="icon-cone on-left"></i>  @Current.Name
+        @if (antdlib.Install.InstallCheck.IsDiskEligibleForOs(blk.Name) && Model.IsOsRemovable) {
+        @ShowInstallButton(blk.Name)
+        }
+    </div>
+    <div class="panel-content nif-content" style="display: none;" data-disk-content="@Current.Name">
+        @If.Current.Size
+        <canvas class="disk-size-chart" width="200" height="200" data-size="@Current.Size"></canvas>
+        @EndIf
+        <hr class="bg-anthilla-gray" />
+        <ul>
             <!--
             @if (blk.Label != "" || blk.Label == null) {
             <li><label>Label</label>
@@ -40,15 +40,15 @@
                 <p>@Current.DiskType</p></li>}
             -->
 
-            </ul>
-        </div>
+        </ul>
     </div>
+</div>
 @EndEach
 
 @helper ShowInstallButton(string diskName) {
-    <input id="SelectThisDiskWhereIstallAOS"
-           data-disk-name="@diskName" type="button" value="Install AOS here!"
-           class="bg-anthilla-green" style="padding: 4px 10px; float: left; margin-right: 10px;" />
+<input id="SelectThisDiskWhereIstallAOS"
+       data-disk-name="@diskName" type="button" value="Install AOS here!"
+       class="bg-anthilla-green" style="padding: 4px 10px; float: left; margin-right: 10px;" />
 }
 
 <script type="text/javascript">

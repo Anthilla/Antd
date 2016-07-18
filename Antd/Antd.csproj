@@ -129,6 +129,7 @@
     <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\NetworkInterfaceRepository.cs" />
+    <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
     <Compile Include="Database\JobRepository.cs" />
     <Compile Include="Database\FirewallListRepository.cs" />
@@ -139,10 +140,13 @@
     <Compile Include="Database\UserClaimRepository.cs" />
     <Compile Include="Database\UserRepository.cs" />
     <Compile Include="DirectoryWatcher.cs" />
+    <Compile Include="Firewall\FirewallLists.cs" />
+    <Compile Include="Firewall\NFTables.cs" />
     <Compile Include="Helpers\CertificateAssignmentType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
+    <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
@@ -206,6 +210,9 @@
     <Content Include="Content\Style\jquery-cron.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\antd.cmd.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-2.2.0.intellisense.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -227,10 +234,7 @@
     <Content Include="Views\antd\page-antd-cron.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-antd-config.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-dhcp.html">
+    <Content Include="Views\antd\page-antd-host.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-dns-client.html">
@@ -279,6 +283,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-ca.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-cmd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-cfg-old.html">

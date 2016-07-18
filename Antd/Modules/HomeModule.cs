@@ -27,17 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib;
 using antdlib.common;
 using antdlib.Certificate;
-using antdlib.Info;
 using antdlib.Log;
-using antdlib.Status;
 using Antd.Database;
+using Antd.Info;
 using Antd.Storage;
 using Antd.Svcs.Dhcp;
 using Nancy;
@@ -54,7 +52,7 @@ namespace Antd.Modules {
 
                 viewModel.AntdContext = new[] {
                     "Info",
-                    "Config",
+                    "Host",
                     "Network",
                     "DnsClient",
                     "Firewall",
@@ -69,18 +67,16 @@ namespace Antd.Modules {
                     "Samba",
                 };
 
-                viewModel.Meminfo = Meminfo.GetMappedModel();
                 var os = Terminal.Execute("uname -a");
-                var aos = Terminal.Execute("cat /etc/aos-release");
-
                 viewModel.VersionOS = os;
-                viewModel.VersionAOS = aos;
 
-                viewModel.ActiveKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.RecoveryKernel = Terminal.Execute("ls -la /mnt/cdrom/Kernel | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.ActiveSystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep active | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.RecoverySystem = Terminal.Execute("ls -la /mnt/cdrom/System | grep recovery | awk '{print $9 \" : \" $11;}'").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                viewModel.Cpuinfo = Cpuinfo.Get();
+                var machineInfo = new MachineInfo();
+                viewModel.Meminfo = machineInfo.GetMeminfo();
+                viewModel.Cpuinfo = machineInfo.GetCpuinfo();
+                viewModel.LosetupInfo = machineInfo.GetLosetup();
+                viewModel.AosInfo = machineInfo.GetAosrelease();
+                viewModel.SystemComponents = machineInfo.GetSystemComponentModels();
+
                 viewModel.NetworkPhysicalIf = new NetworkInterfaceRepository().Physical();
                 viewModel.NetworkVirtualIf = new NetworkInterfaceRepository().Virtual();
                 viewModel.NetworkBondIf = new NetworkInterfaceRepository().Bond();
@@ -104,6 +100,8 @@ namespace Antd.Modules {
                 //    viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
                 //    viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
                 //}
+
+                viewModel.MacAddressList = new MacAddressRepository().GetAll();
 
                 viewModel.Mounts = new MountRepository().GetAll();
 

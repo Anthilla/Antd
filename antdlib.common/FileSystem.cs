@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------------
+﻿////-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -34,7 +34,7 @@ using System.Security.Cryptography;
 
 namespace antdlib.common {
 
-    public static class FileSystem {
+    public class FileSystem {
 
         /// <summary>
         /// If file exists return content else return empty string

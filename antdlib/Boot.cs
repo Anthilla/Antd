@@ -27,6 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
 
@@ -38,13 +40,14 @@ namespace antdlib {
             var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
             var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
             ConsoleLogger.Log($"global repository -> checking");
-            var mountResult = Terminal.Execute($"cat /proc/mounts | grep '{bootExtDevice} /mnt/cdrom '");
-            if (mountResult.Length > 0) {
-                if (mountResult.Contains("ro") && !mountResult.Contains("rw")) {
+            var procMounts = File.ReadAllLines("/proc/mounts");
+            var line = procMounts.FirstOrDefault(_ => _.Contains($"'{bootExtDevice} /mnt/cdrom '"));
+            if (!string.IsNullOrEmpty(line)) {
+                if (line.Contains("ro") && !line.Contains("rw")) {
                     ConsoleLogger.Log($"is RO -> remounting");
                     Terminal.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
-                else if (mountResult.Contains("rw") && !mountResult.Contains("ro")) {
+                else if (line.Contains("rw") && !line.Contains("ro")) {
                     ConsoleLogger.Log($"is RW -> ok!");
                 }
             }

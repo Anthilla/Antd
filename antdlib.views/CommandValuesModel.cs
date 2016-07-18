@@ -18,13 +18,12 @@ namespace antdlib.views {
             Id = System.Guid.Parse(sourceModel.Id);
             Guid = sourceModel.Guid;
             Name = sourceModel.Name;
-            Index = sourceModel.Index;
+            //Index = sourceModel.Index;
             Value = sourceModel.Value;
         }
         public string Name { get; set; }
-        public string Index { get; set; }
+        //public string Index { get; set; }
         public string Value { get; set; }
-        public string RegexTag => $"[{Name}:{Index}]";
     }
 
     #region [    View    ]
@@ -37,9 +36,8 @@ namespace antdlib.views {
         public string Tags { get; set; }
         //---
         public string Name { get; set; }
-        public string Index { get; set; }
+        //public string Index { get; set; }
         public string Value { get; set; }
-        public string RegexTag { get; set; }
     }
 
     [RegisterView]
@@ -66,9 +64,8 @@ namespace antdlib.views {
                     doc.EntityCode,
                     doc.Tags.JoinToString(),
                     doc.Name,
-                    doc.Index,
-                    doc.Value,
-                    $"[{doc.Name}:{doc.Index}]"
+                    //doc.Index,
+                    doc.Value
             };
                 api.Emit(docid, schemaCommandValuess);
             };

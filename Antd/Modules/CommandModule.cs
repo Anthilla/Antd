@@ -29,61 +29,149 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using Antd.Database;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
     public class CommandModule : CoreModule {
 
-        private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
+        private readonly CommandRepository _commandRepo = new CommandRepository();
+        private readonly CommandValuesRepository _commandValuesRepo = new CommandValuesRepository();
 
         public CommandModule() {
             this.RequiresAuthentication();
 
-            Get["/command/mgmt"] = x => {
+            Get["/cmd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.list = _commandRepositoryRepo.GetAll();
-                return View["page-command-mgmt", vmod];
+                vmod.Command = _commandRepo.GetAll();
+                vmod.Value = _commandValuesRepo.GetAll();
+                return View["antd/page-cmd", vmod];
             };
 
-            Post["/command/mgmt/"] = x => {
+            Get["/cmd/commands"] = x => {
+                var result = _commandRepo.GetAll();
+                return JsonConvert.SerializeObject(result);
+            };
+
+            Post["/cmd/commands"] = x => {
+                string alias = Request.Form.Alias;
                 string command = Request.Form.Command;
-                string layout = Request.Form.CommandLayout;
-                string notes = Request.Form.Notes;
-                _commandRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Command", command },
-                    { "Layout", layout },
-                    { "Notes", notes }
+                _commandRepo.Create(new Dictionary<string, string> {
+                    {"Alias", alias},
+                    {"Command", command},
                 });
-                return Response.AsRedirect("/");
-            };
-
-            Post["/command/mgmt/launch/{guid}"] = x => {
-                string guid = x.guid;
-                var result = _commandRepositoryRepo.Launch(guid);
-                return Response.AsJson(result);
-            };
-
-            Post["/command/mgmt/delete/{guid}"] = x => {
-                string guid = x.guid;
-                _commandRepositoryRepo.Delete(guid);
                 return HttpStatusCode.OK;
             };
 
-            Get["/command/mgmt/ex/{inputid}"] = x => {
-                string inputid = x.inputid;
-                var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid);
-                return Response.AsJson(r);
+            Put["/cmd/commands"] = x => {
+                string id = Request.Form.Id;
+                string alias = Request.Form.Alias;
+                string command = Request.Form.Command;
+                _commandRepo.Edit(new Dictionary<string, string> {
+                    {"Id", id},
+                    {"Alias", alias},
+                    {"Command", command},
+                });
+                return HttpStatusCode.OK;
             };
 
-            Get["/command/mgmt/ex/{inputid}/{Value}"] = x => {
-                string inputid = x.inputid;
-                string value = x.value;
-                var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid, value);
-                return Response.AsJson(r);
+            Delete["/cmd/commands"] = x => {
+                string id = Request.Form.Id;
+                _commandRepo.Delete(id);
+                return HttpStatusCode.OK;
             };
+
+            Get["/ex/command/{alias}"] = x => {
+                string alias = x.alias;
+                var result = _commandRepo.Launch(alias);
+                return JsonConvert.SerializeObject(result);
+            };
+
+            Get["/cmd/values"] = x => {
+                var result = _commandValuesRepo.GetAll();
+                return JsonConvert.SerializeObject(result.Select(_ => new KeyValuePair<string, string>(_.Name, _.Value)));
+            };
+
+            Post["/cmd/values"] = x => {
+                string name = Request.Form.Name;
+                if (!name.StartsWith("$")) {
+                    name = "$" + name;
+                }
+                string value = Request.Form.Value;
+                _commandValuesRepo.Create(new Dictionary<string, string> {
+                    {"Name", name},
+                    {"Value", value},
+                });
+                return HttpStatusCode.OK;
+            };
+
+            Put["/cmd/values"] = x => {
+                string id = Request.Form.Id;
+                string name = Request.Form.Name;
+                if (!name.StartsWith("$")) {
+                    name = "$" + name;
+                }
+                string value = Request.Form.Value;
+                _commandValuesRepo.Edit(new Dictionary<string, string> {
+                    {"Id", id},
+                    {"Name", name},
+                    {"Value", value},
+                });
+                return HttpStatusCode.OK;
+            };
+
+            Delete["/cmd/values"] = x => {
+                string id = Request.Form.Id;
+                _commandValuesRepo.Delete(id);
+                return HttpStatusCode.OK;
+            };
+
+            Get["/cmd/values/{name}"] = x => {
+                string name = x.name;
+                var result = _commandValuesRepo.GetByName(name);
+                return JsonConvert.SerializeObject(result);
+            };
+
+            //Post["/command/mgmt/"] = x => {
+            //    string command = Request.Form.Command;
+            //    string layout = Request.Form.CommandLayout;
+            //    string notes = Request.Form.Notes;
+            //    _commandRepositoryRepo.Create(new Dictionary<string, string> {
+            //        { "Command", command },
+            //        { "Layout", layout },
+            //        { "Notes", notes }
+            //    });
+            //    return Response.AsRedirect("/");
+            //};
+
+            //Post["/command/mgmt/launch/{guid}"] = x => {
+            //    string guid = x.guid;
+            //    var result = _commandRepositoryRepo.Launch(guid);
+            //    return Response.AsJson(result);
+            //};
+
+            //Post["/command/mgmt/delete/{guid}"] = x => {
+            //    string guid = x.guid;
+            //    _commandRepositoryRepo.Delete(guid);
+            //    return HttpStatusCode.OK;
+            //};
+
+            //Get["/command/mgmt/ex/{inputid}"] = x => {
+            //    string inputid = x.inputid;
+            //    var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid);
+            //    return Response.AsJson(r);
+            //};
+
+            //Get["/command/mgmt/ex/{inputid}/{Value}"] = x => {
+            //    string inputid = x.inputid;
+            //    string value = x.value;
+            //    var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid, value);
+            //    return Response.AsJson(r);
+            //};
         }
     }
 }

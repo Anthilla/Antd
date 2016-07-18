@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using antdlib.common;
 
 namespace antdsh {
@@ -228,13 +229,14 @@ namespace antdsh {
         private static void UmountAll() {
             Console.WriteLine("Unmounting Antd");
             while (true) {
-                var r = Terminal.Execute("cat /proc/mounts | grep /antd");
-                var f = Terminal.Execute("df | grep /cfg/antd");
-                if (r.Length <= 0 && f.Length <= 0)
-                    return;
-                Terminal.Execute($"umount {Parameter.AntdCfg}");
-                Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
-                Terminal.Execute("umount /framework/antd");
+                if (File.Exists("/proc/mounts")) {
+                    var procMounts = File.ReadAllLines("/proc/mounts");
+                    if (procMounts.Any(_ => _.Contains("/antd")))
+                        return;
+                    Terminal.Execute($"umount {Parameter.AntdCfg}");
+                    Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
+                    Terminal.Execute("umount /framework/antd");
+                }
             }
         }
 

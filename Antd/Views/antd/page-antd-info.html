@@ -6,7 +6,28 @@
     <table class="table">
         <tbody>
             <tr>
-                <td><label>Linux Version</label></td>
+                <td colspan="2">
+                    <label>AnthillaOS Release</label>
+                </td>
+            </tr>
+            @Each.AosInfo
+            <tr>
+                <td>
+                    <label>@Current.Key</label>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>
+                    <label>Linux Version</label>
+                </td>
                 <td>@Model.VersionOS</td>
             </tr>
         </tbody>
@@ -15,51 +36,36 @@
     <table class="table" style="width: 49% !important; display: inline-block !important; float: left; margin-right: 26px;">
         <tbody>
             <tr>
-                <td colspan="2"><label>Memory</label></td>
+                <td colspan="2">
+                    <label>Memory</label>
+                </td>
             </tr>
+            @Each.Meminfo
             <tr>
-                <td><label>MemTotal</label></td>
-                <td>@Model.Meminfo.MemTotal</td>
+                <td>
+                    <label>@Current.Key</label>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
             </tr>
-            <tr>
-                <td><label>MemFree</label></td>
-                <td>@Model.Meminfo.MemFree</td>
-            </tr>
-            <tr>
-                <td><label>MemAvailable</label></td>
-                <td>@Model.Meminfo.MemAvailable</td>
-            </tr>
-            <tr>
-                <td><label>Buffers</label></td>
-                <td>@Model.Meminfo.Buffers</td>
-            </tr>
-            <tr>
-                <td><label>Cached</label></td>
-                <td>@Model.Meminfo.Cached</td>
-            </tr>
-            <tr>
-                <td><label>SwapCached</label></td>
-                <td>@Model.Meminfo.SwapCached</td>
-            </tr>
-            <tr>
-                <td><label>SwapTotal</label></td>
-                <td>@Model.Meminfo.SwapTotal</td>
-            </tr>
-            <tr>
-                <td><label>SwapFree</label></td>
-                <td>@Model.Meminfo.SwapFree</td>
-            </tr>
+            @EndEach
         </tbody>
     </table>
     <table class="table" style="width: 49% !important; display: inline-block !important;">
         <tbody>
             <tr>
-                <td><label>CPU</label></td>
+                <td colspan="2">
+                    <label>CPU</label>
+                </td>
             </tr>
             @Each.Cpuinfo
             <tr>
                 <td>
-                    <p>@Current</p>
+                    <label>@Current.Key</label>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
                 </td>
             </tr>
             @EndEach
@@ -69,46 +75,106 @@
     <table class="table">
         <tbody>
             <tr>
-                <td><label>AnthillaOS Version</label></td>
-                <td>@Model.VersionAOS</td>
+                <td colspan="8">
+                    <label>Losetup</label>
+                </td>
             </tr>
             <tr>
-                <td colspan="2"><label>AnthillaOS - Active Kernel</label></td>
+                <th>
+                    <p>Name</p>
+                </th>
+                <th>
+                    <p>Sizelimit</p>
+                </th>
+                <th>
+                    <p>Offset</p>
+                </th>
+                <th>
+                    <p>Autoclear</p>
+                </th>
+                <th>
+                    <p>Readonly</p>
+                </th>
+                <th>
+                    <p>Backfile</p>
+                </th>
+                <th>
+                    <p>Dio</p>
+                </th>
+                <th>
+                    <p>Hash</p>
+                </th>
             </tr>
-            @Each.ActiveKernel
+            @Each.LosetupInfo
             <tr>
-                <td colspan="2">
-                    <p>@Current</p>
+                <td>
+                    <p>@Current.Name</p>
+                </td>
+                <td>
+                    <p>@Current.Sizelimit</p>
+                </td>
+                <td>
+                    <p>@Current.Offset</p>
+                </td>
+                <td>
+                    <p>@Current.Autoclear</p>
+                </td>
+                <td>
+                    <p>@Current.Readonly</p>
+                </td>
+                <td>
+                    <p>@Current.Backfile</p>
+                </td>
+                <td>
+                    <p>@Current.Dio</p>
+                </td>
+                <td>
+                    <p>@Current.Hash</p>
                 </td>
             </tr>
             @EndEach
-            <tr>
-                <td colspan="2"><label>AnthillaOS - Active System</label></td>
-            </tr>
-            @Each.ActiveSystem
-            <tr>
-                <td colspan="2">
-                    <p>@Current</p>
+        </tbody>
+    </table>
+    <table class="table">
+        <tbody>
+            <tr colspan="5">
+                <td>
+                    <label>SystemComponents</label>
                 </td>
             </tr>
-            @EndEach
             <tr>
-                <td colspan="2"><label>AnthillaOS - Recovery Kernel</label></td>
+                <th>
+                    <p>Alias</p>
+                </th>
+                <th>
+                    <p>Active</p>
+                </th>
+                <th>
+                    <p>Recovery</p>
+                </th>
+                <th>
+                    <p>Running</p>
+                </th>
+                <th>
+                    <p>Newest</p>
+                </th>
             </tr>
-            @Each.RecoveryKernel
+            @Each.SystemComponents
             <tr>
-                <td colspan="2">
-                    <p>@Current</p>
+                <td>
+                    <p>@Current.Alias</p>
                 </td>
-            </tr>
-            @EndEach
-            <tr>
-                <td colspan="2"><label>AnthillaOS - Recovery System</label></td>
-            </tr>
-            @Each.RecoverySystem
-            <tr>
-                <td colspan="2">
-                    <p>@Current</p>
+                <td>
+                    <p>@Current.Active</p>
+                </td>
+                <td>
+                    <p>@Current.Recovery</p>
+                </td>
+                <td>
+                    <p>@Current.Running</p>
+                </td>
+                <td>
+                    <p>@Current.Newest</p>
                 </td>
             </tr>
             @EndEach

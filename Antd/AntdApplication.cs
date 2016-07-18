@@ -43,8 +43,9 @@ namespace Antd {
         public static RaptorDB.RaptorDB Database;
 
         private static void Main() {
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Console.Title = "antd";
             if (Parameter.IsUnix == false) {
                 Directory.CreateDirectory("/cfg/antd");
@@ -75,10 +76,12 @@ namespace Antd {
             }
         }
 
+        private static readonly AntdBoot Boot = new AntdBoot();
+
         private static void Configuration() {
-            AntdBoot.CheckOsIsRw();
-            AntdBoot.SetWorkingDirectories();
-            AntdBoot.SetCoreParameters();
+            Boot.CheckOsIsRw();
+            Boot.SetWorkingDirectories();
+            Boot.SetCoreParameters();
 
             var path = ApplicationSetting.DatabasePath();
             Database = RaptorDB.RaptorDB.Open(path);
@@ -95,24 +98,25 @@ namespace Antd {
             Database.RegisterView(new RsyncView());
             Database.RegisterView(new UserClaimView());
             Database.RegisterView(new UserView());
+            Database.RegisterView(new MacAddressView());
 
-            AntdBoot.ConfigureMachine();
-            AntdBoot.CheckCertificate();
-            AntdBoot.ReloadUsers();
-            AntdBoot.ReloadSsh();
-            //AntdBoot.SetOverlayDirectories();
-            //AntdBoot.SetSystemdJournald();
-            AntdBoot.SetMounts();
-            AntdBoot.SetOsMount();
-            //AntdBoot.SetWebsocketd();
-            AntdBoot.CheckResolv();
-            AntdBoot.SetFirewall();
-            AntdBoot.ImportSystemInformation();
-            AntdBoot.StartScheduler(true);
-            AntdBoot.StartDirectoryWatcher();
-            AntdBoot.LaunchApps();
-            //AntdBoot.StartWebsocketServer();
-            //AntdBoot.DownloadDefaultRepoFiles();
+            Boot.ConfigureMachine();
+            Boot.CheckCertificate();
+            Boot.ReloadUsers();
+            Boot.ReloadSsh();
+            //boot.SetOverlayDirectories();
+            //boot.SetSystemdJournald();
+            Boot.SetMounts();
+            Boot.SetOsMount();
+            //boot.SetWebsocketd();
+            Boot.CheckResolv();
+            Boot.SetFirewall();
+            Boot.ImportSystemInformation();
+            Boot.StartScheduler(true);
+            Boot.StartDirectoryWatcher();
+            Boot.LaunchApps();
+            //boot.StartWebsocketServer();
+            //boot.DownloadDefaultRepoFiles();
         }
     }
 

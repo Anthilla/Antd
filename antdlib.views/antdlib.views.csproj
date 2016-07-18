@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="MountModel.cs" />
     <Compile Include="NetworkInterfaceModel.cs" />
+    <Compile Include="MacAddressModel.cs" />
     <Compile Include="RsyncModel.cs" />
     <Compile Include="JobModel.cs" />
     <Compile Include="LogModel.cs" />
@@ -77,6 +78,9 @@
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Default\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,15 +17,13 @@ namespace antdlib.views {
         public CommandModel(CommandSchema sourceModel) {
             Id = System.Guid.Parse(sourceModel.Id);
             Guid = sourceModel.Guid;
+            Alias = sourceModel.Alias;
             Command = sourceModel.Command;
-            Layout = sourceModel.Layout;
-            Notes = sourceModel.Notes;
             LaunchAtBoot = sourceModel.LaunchAtBoot;
             IsEnabled = sourceModel.IsEnabled;
         }
+        public string Alias { get; set; }
         public string Command { get; set; }
-        public string Layout { get; set; }
-        public string Notes { get; set; }
         public bool? LaunchAtBoot { get; set; } = false;
         public bool? IsEnabled { get; set; } = true;
     }
@@ -39,9 +37,8 @@ namespace antdlib.views {
         public string EntityCode { get; set; }
         public string Tags { get; set; }
         //---
+        public string Alias { get; set; }
         public string Command { get; set; }
-        public string Layout { get; set; }
-        public string Notes { get; set; }
         public bool? LaunchAtBoot { get; set; }
         public bool? IsEnabled { get; set; }
     }
@@ -69,9 +66,8 @@ namespace antdlib.views {
                     doc.Timestamp,
                     doc.EntityCode,
                     doc.Tags.JoinToString(),
+                    doc.Alias,
                     doc.Command,
-                    doc.Layout,
-                    doc.Notes,
                     doc.LaunchAtBoot,
                     doc.IsEnabled,
                 };

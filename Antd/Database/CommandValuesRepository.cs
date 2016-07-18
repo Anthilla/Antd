@@ -19,13 +19,16 @@ namespace Antd.Database {
             return result.FirstOrDefault();
         }
 
+        public CommandValuesSchema GetByName(string name) {
+            var result = DatabaseRepository.Query<CommandValuesSchema>(AntdApplication.Database, ViewName, schema => schema.Name == name);
+            return result.FirstOrDefault();
+        }
+
         public bool Create(IDictionary<string, string> dict) {
             var name = dict["Name"];
-            var index = dict["Index"];
             var value = dict["Value"];
             var obj = new CommandValuesModel {
                 Name = name,
-                Index = index,
                 Value = value
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
@@ -35,12 +38,10 @@ namespace Antd.Database {
         public bool Edit(IDictionary<string, string> dict) {
             var id = dict["Id"];
             var name = dict["Name"];
-            var index = dict["Index"];
             var value = dict["Value"];
             var objUpdate = new CommandValuesModel {
                 Id = id.ToGuid(),
                 Name = name.IsNullOrEmpty() ? null : name,
-                Index = index.IsNullOrEmpty() ? null : index,
                 Value = value.IsNullOrEmpty() ? null : value
             };
             var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);

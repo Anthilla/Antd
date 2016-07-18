@@ -13,30 +13,28 @@ using Antd.Scheduler;
 namespace Antd {
     public class AntdBoot {
 
-        public static void CheckOsIsRw() {
+        public void CheckOsIsRw() {
             Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
         }
 
-        public static void ConfigureMachine() {
-            //if (!Parameter.IsUnix)
-            //    return;
+        public void ConfigureMachine() {
             MachineConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }
 
-        public static void SetWorkingDirectories() {
+        public void SetWorkingDirectories() {
             if (!Parameter.IsUnix)
                 return;
             Mount.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
         }
 
-        public static void SetCoreParameters() {
+        public void SetCoreParameters() {
             ApplicationSetting.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
         }
 
-        public static void CheckCertificate() {
+        public void CheckCertificate() {
             var certificate = ApplicationSetting.CertificatePath();
             if (!File.Exists(certificate)) {
                 File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
@@ -44,14 +42,14 @@ namespace Antd {
             ConsoleLogger.Log("certificates ready");
         }
 
-        public static void ReloadUsers() {
+        public void ReloadUsers() {
             if (!Parameter.IsUnix)
                 return;
             //SystemUser.Config.ResetPasswordForUserStoredInDb();
             ConsoleLogger.Log("users config ready");
         }
 
-        public static void ReloadSsh() {
+        public void ReloadSsh() {
             if (!Parameter.IsUnix)
                 return;
             Terminal.Execute("mkdir -p /root/.ssh");
@@ -71,21 +69,21 @@ namespace Antd {
             //SshConfig.Keys.PropagateKeys(new[] { "" }, new[] { "" });
         }
 
-        public static void SetOverlayDirectories() {
+        public void SetOverlayDirectories() {
             if (!Parameter.IsUnix)
                 return;
             Mount.OverlayDirectories();
             ConsoleLogger.Log("overlay ready");
         }
 
-        public static void SetMounts() {
+        public void SetMounts() {
             if (!Parameter.IsUnix)
                 return;
             Mount.AllDirectories();
             ConsoleLogger.Log("mounts ready");
         }
 
-        public static void SetOsMount() {
+        public void SetOsMount() {
             if (!Parameter.IsUnix)
                 return;
             if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
@@ -104,13 +102,13 @@ namespace Antd {
             ConsoleLogger.Log("os mounts ready");
         }
 
-        //public static void LaunchDefaultOsConfiguration() {
+        //public  void LaunchDefaultOsConfiguration() {
         //    if (!Parameter.IsUnix)
         //        return;
         //    ConsoleLogger.Log("default os configuration ready");
         //}
 
-        public static void SetWebsocketd() {
+        public void SetWebsocketd() {
             if (!Parameter.IsUnix)
                 return;
             var filePath = $"{Parameter.AntdCfg}/websocketd";
@@ -121,7 +119,7 @@ namespace Antd {
             ConsoleLogger.Log("websocketd ready");
         }
 
-        public static void SetSystemdJournald() {
+        public void SetSystemdJournald() {
             if (!Parameter.IsUnix)
                 return;
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
@@ -137,7 +135,7 @@ namespace Antd {
             ConsoleLogger.Log("journald config ready");
         }
 
-        public static void CheckResolv() {
+        public void CheckResolv() {
             if (!Parameter.IsUnix)
                 return;
             if (File.Exists("/etc/resolv.conf"))
@@ -146,13 +144,13 @@ namespace Antd {
             ConsoleLogger.Log("resolv ready");
         }
 
-        public static void SetFirewall() {
+        public void SetFirewall() {
             if (!Parameter.IsUnix)
                 return;
             ConsoleLogger.Log("firewall ready");
         }
 
-        public static void ImportSystemInformation() {
+        public void ImportSystemInformation() {
             if (!Parameter.IsUnix)
                 return;
             if (!new NetworkInterfaceRepository().GetAll().Any()) {
@@ -161,17 +159,17 @@ namespace Antd {
             ConsoleLogger.Log("network interfaces imported");
         }
 
-        public static void StartScheduler(bool loadFromDatabase) {
+        public void StartScheduler(bool loadFromDatabase) {
             JobScheduler.Start(loadFromDatabase);
             ConsoleLogger.Log("scheduler ready");
         }
 
-        public static void StartDirectoryWatcher() {
+        public void StartDirectoryWatcher() {
             new DirectoryWatcher().StartWatching();
             ConsoleLogger.Log("directory watcher ready");
         }
 
-        public static void LaunchApps() {
+        public void LaunchApps() {
             if (!Parameter.IsUnix)
                 return;
             var apps = Management.DetectApps();
@@ -192,7 +190,7 @@ namespace Antd {
             ConsoleLogger.Log("apps ready");
         }
 
-        public static void LoadCollectd() {
+        public void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
@@ -202,7 +200,7 @@ namespace Antd {
             Terminal.Execute("systemctl restart collectd.service");
         }
 
-        public static void LoadWpaSupplicant() {
+        public void LoadWpaSupplicant() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
@@ -212,7 +210,7 @@ namespace Antd {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        //public static void StartWebsocketServer() {
+        //public  void StartWebsocketServer() {
         //    var port = PortManagement.GetFirstAvailable(1234);
         //    ApplicationSetting.SetWebsocketPort(port.ToString());
         //    WebSocket.Start(Convert.ToInt32(ApplicationSetting.WebsocketPort()));

@@ -70,8 +70,9 @@ namespace Antd.MountPoint {
         }
 
         public static void AllDirectories() {
-            if (!MountRepository.GetAll().Any()) {
-                foreach (var path in DefaultWorkingDirectories) {
+            var all = MountRepository.GetAll().ToList();
+            if (!all.Any()) {
+                foreach (var path in DefaultWorkingDirectories.Where(path => MountRepository.GetByPath(path) == null)) {
                     MountRepository.Create(new Dictionary<string, string> {
                         {"Path", path},
                         {"MountContext", MountContext.Core.ToString()},
@@ -81,20 +82,20 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("stored mount info checked");
 
+            RemoveDuplicates();
             CheckCurrentStatus();
             ConsoleLogger.Log("current mount status checked");
 
-            var directoryMounts = MountRepository.GetAll().Where(m => m.MountEntity == MountEntity.Directory.ToString()).ToArray();
+            var directoryMounts = all.Where(m => m.MountEntity == MountEntity.Directory.ToString()).ToArray();
             foreach (var t in directoryMounts) {
                 try {
                     var dir = t.Path.Replace("\\", "");
                     var mntDir = Mounts.SetDirsPath(dir);
                     Directory.CreateDirectory(dir);
                     Directory.CreateDirectory(mntDir);
-                    if (Mounts.IsAlreadyMounted(dir) == false) {
-                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
-                        SetBind(mntDir, dir);
-                    }
+                    if (Mounts.IsAlreadyMounted(dir)) continue;
+                    ConsoleLogger.Log($"mount {mntDir} -> {dir}");
+                    SetBind(mntDir, dir);
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -102,7 +103,7 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("directories mounted");
 
-            var fileMounts = MountRepository.GetAll().Where(m => m.MountEntity == MountEntity.File.ToString()).ToArray();
+            var fileMounts = all.Where(m => m.MountEntity == MountEntity.File.ToString()).ToArray();
             foreach (var t in fileMounts) {
                 var file = t.Path.Replace("\\", "");
                 var mntFile = Mounts.SetFilesPath(file);
@@ -117,10 +118,9 @@ namespace Antd.MountPoint {
                 if (!System.IO.File.Exists(file)) {
                     Terminal.Execute($"cp {mntFile} {file}");
                 }
-                if (Mounts.IsAlreadyMounted(file) == false) {
-                    ConsoleLogger.Log($"mount {mntFile} -> {file}");
-                    SetBind(mntFile, file);
-                }
+                if (Mounts.IsAlreadyMounted(file)) continue;
+                ConsoleLogger.Log($"mount {mntFile} -> {file}");
+                SetBind(mntFile, file);
             }
             ConsoleLogger.Log("files mounted");
 
@@ -133,6 +133,19 @@ namespace Antd.MountPoint {
                 Terminal.Execute($"systemctl restart {srvc}");
             }
             ConsoleLogger.Log("services restarted");
+        }
+
+        private static void RemoveDuplicates() {
+            var all = MountRepository.GetAll().ToList();
+            var sorted = all.GroupBy(a => a.Path);
+            foreach (var group in sorted) {
+                if (group.Count() > 1) {
+                    var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
+                    foreach (var g in old) {
+                        MountRepository.Delete(g.Id);
+                    }
+                }
+            }
         }
 
         public static void CheckCurrentStatus() {

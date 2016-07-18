@@ -55,11 +55,10 @@
 
 @Section['MainContent']
 @Partial['antd/page-antd-info'];
-@Partial['antd/page-antd-config'];
+@Partial['antd/page-antd-host'];
 @Partial['antd/page-antd-network'];
 @Partial['antd/page-antd-dns-client'];
 @Partial['antd/page-antd-firewall'];
-@Partial['antd/page-antd-dhcp'];
 @Partial['antd/page-antd-dns-server'];
 @Partial['antd/page-antd-proxy'];
 @Partial['antd/page-antd-acl'];
@@ -1079,7 +1078,7 @@
         });
     });
 
-    $('[data-role="show-disk-details"]').click(function () {
+    $('[data-role="show-disk-details-0"]').click(function () {
         var g = $(this).attr('data-guid');
         $('[data-row="' + g + '"]').toggle();
         var d = $(this).attr('data-name');

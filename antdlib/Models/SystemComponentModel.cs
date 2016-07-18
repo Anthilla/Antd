@@ -29,8 +29,10 @@
 
 namespace antdlib.Models {
     public class SystemComponentModel {
-        public string active { get; set; }
-
-        public string link { get; set; }
+        public string Alias { get; set; }
+        public string Active { get; set; }
+        public string Recovery { get; set; }
+        public string Running { get; set; }
+        public string Newest { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace antdlib.common.Helpers {
     public class Mounts {
@@ -23,9 +25,8 @@ namespace antdlib.common.Helpers {
         }
 
         public static bool IsAlreadyMounted(string directory) {
-            var df = Terminal.Execute($"df | grep {directory}");
-            var pm = Terminal.Execute($"cat /proc/mounts | grep {directory}");
-            return df.Length > 0 || pm.Length > 0;
+            var procMounts = File.ReadAllLines("/proc/mounts");
+            return procMounts.Any(_ => _.Contains(directory));
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {

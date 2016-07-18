@@ -172,7 +172,7 @@ namespace Antd.Ssh {
 
             public static void DumpGlobalConfig() {
                 var parameters = MapFile.Get().Data.ToArray();
-                var filesToClean = parameters.Select(p => p.FilePath).ToDynamicHashSet();
+                var filesToClean = parameters.Select(p => p.FilePath).ToHashSet();
                 foreach (var file in filesToClean) {
                     CleanFile(file);
                 }

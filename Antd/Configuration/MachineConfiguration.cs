@@ -48,7 +48,6 @@ namespace Antd.Configuration {
 
         private static int _counter;
         private static void Launch(Control control) {
-            _counter = _counter + 1;
             if (_counter > 5) {
                 ConsoleLogger.Log($"{control.FirstCommand} - failed, too many retry...");
                 _counter = 0;
@@ -57,26 +56,27 @@ namespace Antd.Configuration {
             if (string.IsNullOrEmpty(control.ControlCommand)) {
                 Terminal.Execute(control.FirstCommand);
                 ConsoleLogger.Log($"{control.FirstCommand} - applied!");
+                _counter = 0;
                 return;
             }
             var controlResult = Terminal.Execute(control.ControlCommand);
             var firstCheck = controlResult.Contains(control.Check);
             if (firstCheck) {
                 ConsoleLogger.Log($"{control.FirstCommand} - applied!");
+                _counter = 0;
+                return;
             }
-            else {
-                Terminal.Execute(control.FirstCommand);
-                controlResult = Terminal.Execute(control.ControlCommand);
-                var secondCheck = controlResult.Contains(control.Check);
-                if (secondCheck) {
-                    ConsoleLogger.Log($"{control.FirstCommand} - applied!");
-                }
-                else {
-                    ConsoleLogger.Log($"{control.FirstCommand} - failed, retry");
-                    Launch(control);
-                }
+            Terminal.Execute(control.FirstCommand);
+            controlResult = Terminal.Execute(control.ControlCommand);
+            var secondCheck = controlResult.Contains(control.Check);
+            if (secondCheck) {
+                ConsoleLogger.Log($"{control.FirstCommand} - applied!");
+                _counter = 0;
+                return;
             }
-            _counter = 0;
+            ConsoleLogger.Log($"{control.FirstCommand} - failed, retry");
+            _counter = _counter + 1;
+            Launch(control);
         }
 
         public static List<Control> Get() {

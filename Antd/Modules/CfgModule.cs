@@ -151,11 +151,11 @@ namespace Antd.Modules {
                 return Response.AsJson(data);
             };
 
-            Get["/cfg/layouts"] = x => {
-                var data = _commandRepositoryRepo.GetAll().Select(_ => _.Layout);
-                var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
-                return Response.AsJson(map);
-            };
+            //Get["/cfg/layouts"] = x => {
+            //    var data = _commandRepositoryRepo.GetAll().Select(_ => _.Layout);
+            //    var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
+            //    return Response.AsJson(map);
+            //};
         }
     }
 }

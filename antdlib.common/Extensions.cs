@@ -215,16 +215,8 @@ namespace antdlib.common {
             return memReplace;
         }
 
-        public static HashSet<dynamic> ToDynamicHashSet(this IEnumerable<dynamic> input) {
-            var list = new HashSet<dynamic>();
-            foreach (var i in input) {
-                list.Add(i);
-            }
-            return list;
-        }
-
-        public static HashSet<string> ToStringHashSet(this IEnumerable<string> input) {
-            var list = new HashSet<string>();
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> input) {
+            var list = new HashSet<T>();
             foreach (var i in input) {
                 list.Add(i);
             }
