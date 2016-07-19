@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using antdlib.common;
 using Antd.Database;
 using Nancy;
@@ -170,6 +171,29 @@ namespace Antd.Modules {
                 File.WriteAllText(path2, json2);
 
                 return Response.AsRedirect("/cmd");
+            };
+
+            Post["/cmd/launch"] = x => {
+                string name = Request.Form.Command;
+                string strValues = Request.Form.Matches;
+                var cmd = _commandRepo.GetByName(name);
+                if (cmd == null) {
+                    return string.Empty;
+                }
+                var command = cmd.Command;
+                var matches = Regex.Matches(command, "\\$[a-zA-Z0-9_]+");
+                var kvp = strValues.SplitToList(";");
+                var values = kvp.Select(kv => kv.SplitToList(":").ToArray()).ToDictionary(s => s.First(), s => s.Last());
+                foreach (var match in matches) {
+                    var val = values.FirstOrDefault(_ => _.Key == match.ToString());
+                    if (string.IsNullOrEmpty(val.Value)) {
+                        continue;
+                    }
+                    command = command.Replace(match.ToString(), val.Value);
+                }
+                Console.WriteLine($"Ill execute: {command}");
+                var result = Terminal.Execute(command);
+                return Response.AsJson(result);
             };
 
             //Post["/command/mgmt/launch/{guid}"] = x => {

@@ -54,6 +54,24 @@
 @EndSection
 
 @Section['MainContent']
+<legend>Test Command</legend>
+<table class="table">
+    <tbody>
+        <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+            <td style="width: 44%;">
+                <input type="text" data="$var1" placeholder="$var1" />
+            </td>
+            <td style="width: 44%;">
+                <input type="text" data="$var2" placeholder="$var2" />
+            </td>
+            <td>
+                <input type="button" data-role="TestCommand" data-name="echo" data-par="$var1,$var2" value="Test" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 <legend>Create Command</legend>
 <table class="table">
     <thead>
@@ -162,6 +180,34 @@
 @Section['Scripts']
 <script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
 <script type="text/javascript">
+
+    $('[data-role="TestCommand"]').click(function () {
+        var command = $(this).attr('data-name');
+        var values = "";
+        var par = $(this).attr('data-par');
+        var res = par.split(",");
+        $.each(res, function (i, v) {
+            var app = v + ":";
+            var val = $('[data="' + v + '"]').val();
+            app += val;
+            app += ";";
+            if (val.length > 1) {
+                values += app;
+            }
+        });
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/cmd/launch",
+            type: "POST",
+            data: {
+                Command: command,
+                Matches: values
+            },
+            success: function (data) {
+                alert(data);
+            }
+        });
+    });
 
     $('#ExportCommandsAndValues').click(function () {
         jQuery.support.cors = true;
