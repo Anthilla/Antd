@@ -13,6 +13,32 @@ namespace Antd.Configuration {
         public static void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if (!File.Exists(FilePath)) {
+                var backupConfigFile = $"{Parameter.RepoConfig}/network/000network.cfg";
+                if (File.Exists(backupConfigFile)) {
+                    var lines = File.ReadAllLines(backupConfigFile).ToArray();
+                    var importControls = new List<Control>();
+
+                    for (var i = 0; i < lines.Length; i++) {
+                        Terminal.Execute(lines[i]);
+                        importControls.Add(new Control {
+                            Index = i,
+                            FirstCommand = lines[i],
+                            ControlCommand = "",
+                            Check = ""
+                        });
+                    }
+                    ConsoleLogger.Log("setup configuration file does not exist");
+                    var importFlow = new ConfigurationFlow {
+                        Name = "setup.conf",
+                        Path = $"{Parameter.RepoConfig}/setup.conf",
+                        Controls = importControls
+                    };
+                    if (!File.Exists(importFlow.Path)) {
+                        File.WriteAllText(importFlow.Path, JsonConvert.SerializeObject(importFlow, Formatting.Indented));
+                        ConsoleLogger.Log("a setup configuration file template has been created");
+                    }
+                    return;
+                }
                 ConsoleLogger.Log("setup configuration file does not exist");
                 var tempFlow = new ConfigurationFlow {
                     Name = ".setup.conf",

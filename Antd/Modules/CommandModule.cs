@@ -65,7 +65,7 @@ namespace Antd.Modules {
                 string command = Request.Form.Command;
                 _commandRepo.Create(new Dictionary<string, string> {
                     {"Name", alias},
-                    {"Command", command},
+                    {"Command", command.Replace("\n", Environment.NewLine)},
                 });
                 return HttpStatusCode.OK;
             };
@@ -77,7 +77,7 @@ namespace Antd.Modules {
                 _commandRepo.Edit(new Dictionary<string, string> {
                     {"Id", id},
                     {"Name", alias},
-                    {"Command", command},
+                    {"Command", command.Replace("\n", Environment.NewLine)},
                 });
                 return HttpStatusCode.OK;
             };
@@ -141,16 +141,28 @@ namespace Antd.Modules {
 
             Post["/cmd/export"] = x => {
                 Directory.CreateDirectory(Parameter.AntdCfgCommands);
-                var result = _commandRepo.GetAll().ToDictionary(_ => _.Name, _ => _.Command).OrderBy(_ => _.Key);
-                var json = JsonConvert.SerializeObject(result, Formatting.Indented);
+                var result = _commandRepo.GetAll();
+                var commandDict = new Dictionary<string, IEnumerable<string>>();
+                foreach (var r in result) {
+                    if (!commandDict.ContainsKey(r.Name)) {
+                        commandDict.Add(r.Name, r.Command.SplitToList(Environment.NewLine));
+                    }
+                }
+                var json = JsonConvert.SerializeObject(commandDict, Formatting.Indented);
                 var path = $"{Parameter.AntdCfgCommands}/commands.json";
                 if (File.Exists(path)) {
                     File.Delete(path);
                 }
                 File.WriteAllText(path, json);
 
-                var result2 = _commandValuesRepo.GetAll().ToDictionary(_ => _.Name, _ => _.Value ?? "").OrderBy(_ => _.Key);
-                var json2 = JsonConvert.SerializeObject(result2, Formatting.Indented);
+                var result2 = _commandValuesRepo.GetAll();
+                var valueDict = new Dictionary<string, string>();
+                foreach (var r in result2) {
+                    if (!valueDict.ContainsKey(r.Name)) {
+                        valueDict.Add(r.Name, r.Value);
+                    }
+                }
+                var json2 = JsonConvert.SerializeObject(valueDict, Formatting.Indented);
                 var path2 = $"{Parameter.AntdCfgCommands}/values.json";
                 if (File.Exists(path2)) {
                     File.Delete(path2);

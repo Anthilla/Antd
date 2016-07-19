@@ -99,8 +99,10 @@ namespace antdsh {
                 case "all":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+                    RestartAntd();
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
                     UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+                    RestartAntdsh();
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
                     UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
@@ -108,10 +110,12 @@ namespace antdsh {
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+                    RestartAntd();
                     break;
                 case "antdsh":
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
                     UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+                    RestartAntdsh();
                     break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
@@ -238,7 +242,7 @@ namespace antdsh {
             AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
             Terminal.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
-            var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory);
+            var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
             foreach (var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
                 AntdshLogger.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
@@ -310,7 +314,7 @@ namespace antdsh {
             File.Delete(activeVersionPath);
             Terminal.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
             Terminal.Execute($"chown root:wheel {newVersionPath}");
-            Terminal.Execute($"chmod 664 {newVersionPath}");
+            Terminal.Execute($"chmod 775 {newVersionPath}");
         }
 
         private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
@@ -337,11 +341,25 @@ namespace antdsh {
         }
 
         private static string GetRandomServer(string filter = "") {
+            return _publicRepositoryUrl;
             var arr = GetServerList(filter).ToArray();
             var rnd = new Random().Next(0, arr.Length);
             return arr[rnd];
         }
         #endregion
 
+        private static void RestartAntd() {
+            Terminal.Execute("systemctl daemon-reload");
+            Terminal.Execute("systemctl stop app-antd-03-launcher.service");
+            Terminal.Execute("systemctl stop framework-antd.mount");
+            Terminal.Execute("systemctl restart app-antd-02-mount.service");
+            Terminal.Execute("systemctl restart app-antd-03-launcher.service");
+        }
+
+        private static void RestartAntdsh() {
+            Terminal.Execute("systemctl daemon-reload");
+            Terminal.Execute("systemctl stop framework-antdsh.mount");
+            Terminal.Execute("systemctl restart app-antdsh-02-mount.service");
+        }
     }
 }

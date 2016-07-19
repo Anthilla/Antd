@@ -44,13 +44,13 @@ namespace Antd {
 
         private static void Main() {
             ConsoleLogger.Log("starting antd");
+            Directory.CreateDirectory("/cfg/antd");
+            Directory.CreateDirectory("/cfg/antd/database");
+            Directory.CreateDirectory("/mnt/cdrom/DIRS");
             var startTime = DateTime.Now;
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Console.Title = "antd";
             if (Parameter.IsUnix == false) {
-                Directory.CreateDirectory("/cfg/antd");
-                Directory.CreateDirectory("/cfg/antd/database");
-                Directory.CreateDirectory("/mnt/cdrom/DIRS");
                 ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
             }
 

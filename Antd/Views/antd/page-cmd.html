@@ -70,13 +70,13 @@
     </thead>
     <tbody id="CommandTable">
         <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-            <td>
+            <td style="width: 35%;">
                 <input type="text" data-role="Name" />
             </td>
             <td>
-                <textarea type="text" data-role="Command" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
+                <textarea type="text" data-role="Command" class="bg-anthilla-gray fg-white border-anthilla-green" style="min-width: 90%; max-width: 90%;"></textarea>
             </td>
-            <td>
+            <td style="width: 10%;">
                 <input type="button" data-role="CreateCommand" value="Add" />
             </td>
         </tr>
@@ -86,7 +86,7 @@
                 <input type="text" data="checkForChange" data-role="Name" data-value="@Current.Name" value="@Current.Name" />
             </td>
             <td>
-                <textarea type="text" data="checkForChange" data-role="Command" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;" data-value="@Current.Command">@Current.Command</textarea>
+                <textarea type="text" data="checkForChange" data-role="Command" class="bg-anthilla-gray fg-white border-anthilla-green" style="min-width: 90%; max-width: 90%;" data-value="@Current.Command">@Current.Command</textarea>
             </td>
             <td>
                 <input type="button" data-role="DeleteCommand" data-id="@Current.Id" value="X" />
@@ -111,10 +111,9 @@
             <td colspan="3">
                 <p>rules:</p>
                 <br />
-                <ol>
-                    <li>Name must start with '$'</li>
-                    <li>You can use only letters and numbers</li>
-                    <li>The only special character allowed is '_'</li>
+                <ol class="fg-white">
+                    <li>Names must start with '$'</li>
+                    <li>Names must contain only letters and numbers, the only special character allowed is '_'</li>
                 </ol>
             </td>
         </tr>

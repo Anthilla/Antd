@@ -36,13 +36,21 @@ namespace Antd.Database {
             if (string.IsNullOrEmpty(text)) {
                 return;
             }
-            var objs = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
-            foreach (var o in objs) {
-                var obj = new CommandValuesModel {
-                    Name = o.Key,
-                    Value = o.Value,
-                };
-                DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            try {
+                var objs = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
+                foreach (var o in objs) {
+                    var t = GetByName(o.Key);
+                    if (t == null) {
+                        var obj = new CommandValuesModel {
+                            Name = o.Key,
+                            Value = o.Value,
+                        };
+                        DatabaseRepository.Save(AntdApplication.Database, obj, true);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                ConsoleLogger.Warn(ex);
             }
         }
 

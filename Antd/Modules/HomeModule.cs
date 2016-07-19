@@ -34,6 +34,7 @@ using antdlib;
 using antdlib.common;
 using antdlib.Certificate;
 using antdlib.Log;
+using antdlib.views;
 using Antd.Database;
 using Antd.Info;
 using Antd.Storage;
@@ -77,10 +78,12 @@ namespace Antd.Modules {
                 viewModel.AosInfo = machineInfo.GetAosrelease();
                 viewModel.SystemComponents = machineInfo.GetSystemComponentModels();
 
-                viewModel.NetworkPhysicalIf = new NetworkInterfaceRepository().Physical();
-                viewModel.NetworkVirtualIf = new NetworkInterfaceRepository().Virtual();
-                viewModel.NetworkBondIf = new NetworkInterfaceRepository().Bond();
-                viewModel.NetworkBridgeIf = new NetworkInterfaceRepository().Bridge();
+                var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
+                viewModel.NetworkPhysicalIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkVirtualIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkBondIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkBridgeIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
+
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
                 viewModel.DhcpdStatus = DhcpConfig.IsActive;
                 //var dhcpdModel = DhcpConfig.MapFile.Get();

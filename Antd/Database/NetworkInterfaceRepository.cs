@@ -51,7 +51,7 @@ namespace Antd.Database {
 
         private void FlushDb() {
             foreach (var obj in GetAll()) {
-                Delete(obj.Guid);
+                Delete(obj.Id);
             }
         }
 
@@ -98,26 +98,6 @@ namespace Antd.Database {
                     {"Type", NetworkInterfaceType.Bridge.ToString()}
                 });
             }
-        }
-
-        public IEnumerable<NetworkInterfaceSchema> Physical() {
-            var result = GetAll().Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name).ToList();
-            return result;
-        }
-
-        public IEnumerable<NetworkInterfaceSchema> Virtual() {
-            var result = GetAll().Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name).ToList();
-            return result;
-        }
-
-        public IEnumerable<NetworkInterfaceSchema> Bond() {
-            var result = GetAll().Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name).ToList();
-            return result;
-        }
-
-        public IEnumerable<NetworkInterfaceSchema> Bridge() {
-            var result = GetAll().Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name).ToList();
-            return result;
         }
     }
 }
