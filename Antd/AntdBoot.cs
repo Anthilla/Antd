@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,8 +9,8 @@ using antdlib.common.Helpers;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.MountPoint;
-using Antd.Scheduler;
 using Antd.Storage;
+using Antd.SystemdTimer;
 
 namespace Antd {
     public class AntdBoot {
@@ -169,9 +168,20 @@ namespace Antd {
             ConsoleLogger.Log("network interfaces imported");
         }
 
-        public void StartScheduler(bool loadFromDatabase) {
-            JobScheduler.Start(loadFromDatabase);
+        public void StartScheduler() {
+            Timers.Setup();
+            Timers.Import();
+            Timers.Export();
+            StartZpoolSnapshot();
+            Timers.StartAll();
             ConsoleLogger.Log("scheduler ready");
+        }
+
+        private static void StartZpoolSnapshot() {
+            var pools = Zpool.List();
+            foreach (var zp in pools) {
+                Timers.Create(zp.Name.ToLower() + "snap", "", $"zfs snap -r {zp.Name}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}");
+            }
         }
 
         public void StartDirectoryWatcher() {
@@ -220,30 +230,6 @@ namespace Antd {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        private readonly JobRepository _jobRepositoryRepo = new JobRepository();
-
-        public void StartZpoolSnapshot() {
-            var pools = Zpool.List();
-            foreach (var zp in pools) {
-                var pool = zp.Name;
-                const string hourInterval = "1";
-                if (string.IsNullOrEmpty(pool)) continue;
-                var alias = $"Scheduled snapshot for {pool} every {hourInterval} hours";
-                var command = "*backup*" + pool;
-                var cron = $"0 0 0/{hourInterval} * * ?";
-                var tryget = _jobRepositoryRepo.GetByName(pool);
-                if (tryget == null) {
-                    _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                        { "Guid", Guid.NewGuid().ToString()},
-                        { "Alias",  pool },
-                        { "Data", "*backup*" + pool },
-                        { "IntervalSpan", hourInterval },
-                        { "CronExpression", cron }
-                    });
-                    JobScheduler.LaunchJob<JobScheduler.Command>(Guid.NewGuid().ToString(), alias, command, cron);
-                }
-            }
-        }
 
         //public  void StartWebsocketServer() {
         //    var port = PortManagement.GetFirstAvailable(1234);

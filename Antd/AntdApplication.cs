@@ -90,7 +90,7 @@ namespace Antd {
             Database.RegisterView(new CommandValuesView());
             Database.RegisterView(new CustomTableView());
             Database.RegisterView(new FirewallListView());
-            Database.RegisterView(new JobView());
+            Database.RegisterView(new TimerView());
             Database.RegisterView(new LogView());
             Database.RegisterView(new MountView());
             Database.RegisterView(new NetworkInterfaceView());
@@ -113,10 +113,9 @@ namespace Antd {
             Boot.CheckResolv();
             Boot.SetFirewall();
             Boot.ImportSystemInformation();
-            Boot.StartScheduler(true);
+            Boot.StartScheduler();
             Boot.StartDirectoryWatcher();
             Boot.LaunchApps();
-            Boot.StartZpoolSnapshot();
             //boot.StartWebsocketServer();
             //boot.DownloadDefaultRepoFiles();
         }

@@ -56,7 +56,6 @@
     <Compile Include="NetworkInterfaceModel.cs" />
     <Compile Include="MacAddressModel.cs" />
     <Compile Include="RsyncModel.cs" />
-    <Compile Include="JobModel.cs" />
     <Compile Include="LogModel.cs" />
     <Compile Include="FirewallListModel.cs" />
     <Compile Include="CommandValuesModel.cs" />

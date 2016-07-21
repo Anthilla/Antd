@@ -26,7 +26,7 @@ namespace Antd.Storage {
             public string Snapshot { get; set; } = "";
         }
 
-        private static readonly JobRepository JobRepositoryRepo = new JobRepository();
+        private static readonly TimerRepository TimerRepository = new TimerRepository();
 
         public static List<Model> List() {
             var result = Terminal.Execute("zpool list");
@@ -52,12 +52,12 @@ namespace Antd.Storage {
                     Status = Terminal.Execute($"zpool status {cells[0]}")
                 };
 
-                var jobs = JobRepositoryRepo.GetAll().Where(_ => _.Alias == model.Name).ToList();
+                var jobs = TimerRepository.GetAll().Where(_ => _.Alias == model.Name).ToList();
                 if (jobs.Any()) {
                     var j = jobs.FirstOrDefault();
                     if (j != null) {
                         model.HasSnapshot = true;
-                        model.Snapshot = j.CronExpression.SplitAndGetTextBetween('/', " *").First();
+                        model.Snapshot = j.Time;
                         model.SnapshotGuid = j.Id;
                     }
                 }

@@ -31,13 +31,7 @@ namespace Antd.SystemdTimer {
         }
 
         public static void StartAll() {
-            if (IsTargetActive()) {
-                Terminal.Execute("systemctl restart tt.target");
-            }
-            else {
-                Setup();
-                Terminal.Execute("systemctl restart tt.target");
-            }
+            Terminal.Execute("systemctl restart tt.target");
         }
 
         #region TT Target
@@ -234,6 +228,14 @@ namespace Antd.SystemdTimer {
             foreach (var tt in all) {
                 Create(tt.Alias, tt.Time, tt.Command);
             }
+        }
+
+        public static void Enable(string ttName) {
+            Terminal.Execute($"systemctl restart {ttName}.target");
+        }
+
+        public static void Disable(string ttName) {
+            Terminal.Execute($"systemctl stop {ttName}.target");
         }
     }
 }

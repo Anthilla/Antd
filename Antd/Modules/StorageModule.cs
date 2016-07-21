@@ -28,19 +28,18 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using antdlib.common;
 using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
-using Antd.Scheduler;
+using Antd.SystemdTimer;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class StorageModule : CoreModule {
 
-        private readonly JobRepository _jobRepositoryRepo = new JobRepository();
+        private readonly TimerRepository _timerRepository = new TimerRepository();
 
         public StorageModule() {
             this.RequiresAuthentication();
@@ -56,7 +55,7 @@ namespace Antd.Modules {
             };
 
             Get["/zfs/cron"] = x => {
-                var list = _jobRepositoryRepo.GetAll();
+                var list = _timerRepository.GetAll();
                 return Response.AsJson(list);
             };
 
@@ -66,24 +65,17 @@ namespace Antd.Modules {
                 if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(hourInterval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                var alias = $"Scheduled snapshot for {pool} every {hourInterval} hours";
-                var command = "*backup*" + pool;
                 var cron = $"0 0 0/{hourInterval} * * ?";
-                _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Guid", Guid.NewGuid().ToString()},
-                    { "Alias",  pool },
-                    { "Data", "*backup*" + pool },
-                    { "IntervalSpan", hourInterval },
-                    { "CronExpression", cron }
-                });
-                JobScheduler.LaunchJob<JobScheduler.Command>(Guid.NewGuid().ToString(), alias, command, cron);
+                Timers.Create(pool.ToLower() + "snap", cron, $"zfs snap -r {pool}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}");
                 return HttpStatusCode.OK;
             };
 
             Post["/zfs/snap/disable"] = x => {
-                var id = (string)Request.Form.Guid;
-                var r = _jobRepositoryRepo.Delete(id);
-                return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+                string guid = Request.Form.Guid;
+                var tt = _timerRepository.GetByGuid(guid);
+                if (tt == null) return HttpStatusCode.InternalServerError;
+                Timers.Disable(tt.Alias);
+                return HttpStatusCode.OK;
             };
 
             Post["/parted/print"] = x => {

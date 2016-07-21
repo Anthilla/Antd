@@ -108,7 +108,7 @@ namespace Antd.Modules {
 
                 viewModel.Mounts = new MountRepository().GetAll();
 
-                var scheduledJobs = new JobRepository().GetAll();
+                var scheduledJobs = new TimerRepository().GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
 
                 viewModel.DisksList = Disks.List();

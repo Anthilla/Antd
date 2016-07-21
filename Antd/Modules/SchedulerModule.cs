@@ -27,17 +27,16 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using Antd.Database;
-using Antd.Scheduler;
+using Antd.SystemdTimer;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class SchedulerModule : CoreModule {
 
-        private readonly JobRepository _jobRepositoryRepo = new JobRepository();
+        private readonly TimerRepository _timerRepository = new TimerRepository();
 
         public SchedulerModule() {
             this.RequiresAuthentication();
@@ -46,51 +45,38 @@ namespace Antd.Modules {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
                 var cron = (string)Request.Form.CronExValue;
-                var guid = Guid.NewGuid().ToString();
                 if (!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(cron)) {
-                    if (string.IsNullOrEmpty(alias.Trim() + command.Trim())) {
-                        alias = guid;
-                    }
-                    _jobRepositoryRepo.Create(new Dictionary<string, string> {
-                        { "Guid", guid },
-                        { "Alias", alias },
-                        { "Data", command },
-                        { "IntervalSpan", cron },
-                        { "CronExpression", cron }
-                    });
-                    JobScheduler.LaunchJob<JobScheduler.Command>(guid, alias, command, cron);
+                    Timers.Create(alias, cron, command);
                 }
                 return Response.AsRedirect("/");
             };
 
             Post["/scheduler/enable"] = x => {
                 string guid = Request.Form.Guid;
-                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
-                    { "Id", guid },
-                    { "IsEnabled", "true" }
-                });
+                var tt = _timerRepository.GetByGuid(guid);
+                if (tt == null) return HttpStatusCode.InternalServerError;
+                Timers.Enable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 
             Post["/scheduler/disable"] = x => {
                 string guid = Request.Form.Guid;
-                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
-                    { "Id", guid },
-                    { "IsEnabled", "false" }
-                });
+                var tt = _timerRepository.GetByGuid(guid);
+                if (tt == null) return HttpStatusCode.InternalServerError;
+                Timers.Disable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 
             Post["/scheduler/delete"] = x => {
                 string guid = Request.Form.Guid;
-                _jobRepositoryRepo.Delete(guid);
+                _timerRepository.Delete(guid);
                 return HttpStatusCode.OK;
             };
 
             Post["/scheduler/edit"] = x => {
                 var id = (string)Request.Form.Guid;
                 var command = (string)Request.Form.Command;
-                _jobRepositoryRepo.Edit(new Dictionary<string, string> {
+                _timerRepository.Edit(new Dictionary<string, string> {
                     { "Id", id },
                     { "Data", command }
                 });
