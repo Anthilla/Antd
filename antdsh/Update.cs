@@ -140,6 +140,7 @@ namespace antdsh {
                 _updateCounter++;
                 if (_updateCounter > 5) {
                     AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                    _updateCounter = 0;
                     return;
                 }
                 Directory.CreateDirectory(Parameter.RepoTemp);
@@ -156,11 +157,13 @@ namespace antdsh {
                 var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
                 if (latestFileInfo == null) {
                     AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
+                    _updateCounter = 0;
                     return;
                 }
                 var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
                 if (!isUpdateNeeded) {
                     AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                    _updateCounter = 0;
                     return;
                 }
                 AntdshLogger.WriteLine($"updating {currentContext}");
@@ -186,6 +189,8 @@ namespace antdsh {
             _updateCounter++;
             if (_updateCounter > 5) {
                 AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                _updateCounter = 0;
+                _updateRetry = false;
                 return;
             }
             var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
@@ -195,34 +200,43 @@ namespace antdsh {
             var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
             if (!isUpdateNeeded) {
                 AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                _updateCounter = 0;
+                _updateRetry = false;
                 return;
             }
             AntdshLogger.WriteLine($"updating {currentContext}");
 
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
             if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
-                UpdateContext(currentContext, activeVersionPath, contextDestinationDirectory);
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+            _updateRetry = false;
+            _updateCounter = 0;
         }
 
         private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
@@ -300,6 +314,8 @@ namespace antdsh {
                 File.Delete(latestFile);
             }
             new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
+            AntdshLogger.WriteLine($"repository file hash: {latestFileInfo.FileHash}");
+            AntdshLogger.WriteLine($"downloaded file hash: {GetFileHash(latestFile)}");
             return latestFileInfo.FileHash == GetFileHash(latestFile);
         }
 
@@ -319,7 +335,8 @@ namespace antdsh {
 
         private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
-            if (DownloadLatestFile(latestFileInfo)) {
+            var isDownloadValid = DownloadLatestFile(latestFileInfo);
+            if (isDownloadValid == false) {
                 AntdshLogger.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
                 _updateRetry = true;
                 return false;

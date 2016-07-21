@@ -116,6 +116,7 @@ namespace Antd {
             Boot.StartScheduler(true);
             Boot.StartDirectoryWatcher();
             Boot.LaunchApps();
+            Boot.StartZpoolSnapshot();
             //boot.StartWebsocketServer();
             //boot.DownloadDefaultRepoFiles();
         }

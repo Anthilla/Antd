@@ -19,6 +19,11 @@ namespace Antd.Database {
             return result.FirstOrDefault();
         }
 
+        public JobSchema GetByName(string name) {
+            var result = DatabaseRepository.Query<JobSchema>(AntdApplication.Database, ViewName, schema => schema.Alias == name);
+            return result.FirstOrDefault();
+        }
+
         public bool Create(IDictionary<string, string> dict) {
             var guid = dict["Guid"];
             var alias = dict["Alias"];

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Default\Commands.cs" />
     <Compile Include="Default\CommandValues.cs" />
+    <Compile Include="TimerModel.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetworkInterfaceModel.cs" />
     <Compile Include="MacAddressModel.cs" />

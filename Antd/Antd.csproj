@@ -127,6 +127,7 @@
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\MachineConfiguration.cs" />
+    <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\NetworkInterfaceRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Svcs\Dhcp\DhcpStatement.cs" />
     <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
     <Compile Include="Svcs\Samba\SambaConfig.cs" />
+    <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
