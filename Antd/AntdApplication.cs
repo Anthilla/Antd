@@ -42,12 +42,14 @@ namespace Antd {
     internal static class AntdApplication {
         public static RaptorDB.RaptorDB Database;
 
+        private static DateTime _startTime;
+
         private static void Main() {
             ConsoleLogger.Log("starting antd");
+            _startTime = DateTime.Now;
             Directory.CreateDirectory("/cfg/antd");
             Directory.CreateDirectory("/cfg/antd/database");
             Directory.CreateDirectory("/mnt/cdrom/DIRS");
-            var startTime = DateTime.Now;
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             Console.Title = "antd";
             if (Parameter.IsUnix == false) {
@@ -58,10 +60,9 @@ namespace Antd {
 
             var port = Convert.ToInt32(ApplicationSetting.HttpPort());
             using (var host = WebApp.Start<Startup>($"http://+:{port}/")) {
-                ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log($"http port: {port}");
                 ConsoleLogger.Log("antd is running");
-                ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+                ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
                 KeepAlive();
                 ConsoleLogger.Log("antd is closing");
                 host.Dispose();
@@ -99,6 +100,7 @@ namespace Antd {
             Database.RegisterView(new UserClaimView());
             Database.RegisterView(new UserView());
             Database.RegisterView(new MacAddressView());
+            ConsoleLogger.Log("database ready");
 
             Boot.ImportCommands();
             Boot.ConfigureMachine();

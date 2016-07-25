@@ -40,7 +40,7 @@ namespace antdlib.common {
         public static IEnumerable<string> GetAll() {
             var logs = File.ReadAllLines("/cfg/antd/antd.log");
             return logs;
-        } 
+        }
 
         public static void Log(dynamic message, string source = "") {
             var src = source.Length > 0 ? $" src={source}" : "";
@@ -50,30 +50,21 @@ namespace antdlib.common {
         }
 
         public static void Warn(dynamic message, string source = "") {
-            var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
             var src = source.Length > 0 ? $" src={source}" : "";
             var logEntry = $"app=antd lvl=1 msg={message}{src}";
             Console.WriteLine(logEntry);
-            Console.ForegroundColor = currentColor;
             //Write(logEntry);
         }
 
         public static void Error(dynamic message, string source = "") {
-            var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkRed;
             var src = source.Length > 0 ? $" src={source}" : "";
             var logEntry = $"app=antd lvl=2 msg={message}{src}";
             Console.WriteLine(logEntry);
-            Console.ForegroundColor = currentColor;
             //Write(logEntry);
         }
 
         public static void Point(dynamic message) {
-            var currentFg = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"→→ {message}");
-            Console.ForegroundColor = currentFg;
         }
 
         //private static void Write(string message) {

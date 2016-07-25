@@ -34,10 +34,7 @@ using System.Diagnostics;
 namespace antdlib.common {
     public class Terminal {
         public static string Execute(string command, string dir = "") {
-            var output = string.Empty;
             var error = string.Empty;
-            if (!Parameter.IsUnix)
-                return output;
             var process = new Process {
                 StartInfo = {
                     FileName = "bash",
@@ -52,6 +49,7 @@ namespace antdlib.common {
             }
             try {
                 process.Start();
+                string output;
                 using (var streamReader = process.StandardOutput) {
                     output = streamReader.ReadToEnd();
                 }
@@ -59,6 +57,7 @@ namespace antdlib.common {
                     error = streamReader.ReadToEnd();
                 }
                 process.WaitForExit();
+                process.Close();
                 return output;
             }
             catch (Exception ex) {
@@ -70,8 +69,6 @@ namespace antdlib.common {
 
         public static string Execute(IEnumerable<string> commands, string dir = "") {
             var genericOutput = string.Empty;
-            if (!Parameter.IsUnix)
-                return genericOutput;
             foreach (var command in commands) {
                 var process = new Process {
                     StartInfo = {
@@ -95,10 +92,12 @@ namespace antdlib.common {
                         genericOutput += streamReader.ReadToEnd();
                     }
                     process.WaitForExit();
+                    process.Close();
                 }
                 catch (Exception ex) {
                     genericOutput += ex.Message;
                     ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
+                    process.Close();
                 }
             }
             return genericOutput;
