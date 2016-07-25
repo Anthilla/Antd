@@ -10,6 +10,12 @@ using Newtonsoft.Json;
 
 namespace Antd.Database {
     public class CommandRepository {
+
+        public class RootObject {
+            public string Key { get; set; }
+            public List<string> Value { get; set; }
+        }
+
         private const string ViewName = "Command";
 
         public IEnumerable<CommandSchema> GetAll() {
@@ -38,15 +44,23 @@ namespace Antd.Database {
                 return;
             }
             try {
-                var objs = JsonConvert.DeserializeObject<Dictionary<string, IEnumerable<string>>>(text);
-                foreach (var o in objs) {
-                    var t = GetByName(o.Key);
-                    if (t == null) {
-                        var obj = new CommandModel {
-                            Name = o.Key,
-                            Command = o.Value.JoinToString(Environment.NewLine)
-                        };
-                        DatabaseRepository.Save(AntdApplication.Database, obj, true);
+                var objs = JsonConvert.DeserializeObject<List<RootObject>>(text);
+                var now = GetByName("_version");
+                long tsNow = 0;
+                if (now != null) {
+                    tsNow = Convert.ToInt64(now.Command);
+                }
+                if (objs.Any(_=>_.Key == "_version")) {
+                    var version = objs.FirstOrDefault(_ => _.Key == "_version")?.Value.JoinToString();
+                    if (Convert.ToInt64(version) > tsNow) {
+                        DeleteAll();
+                        foreach (var o in objs) {
+                            var obj = new CommandModel {
+                                Name = o.Key,
+                                Command = o.Value.JoinToString(Environment.NewLine)
+                            };
+                            DatabaseRepository.Save(AntdApplication.Database, obj, true);
+                        }
                     }
                 }
             }
@@ -82,6 +96,13 @@ namespace Antd.Database {
         public bool Delete(string guid) {
             var result = DatabaseRepository.Delete<CommandModel>(AntdApplication.Database, Guid.Parse(guid));
             return result;
+        }
+
+        public void DeleteAll() {
+            var all = GetAll();
+            foreach (var el in all) {
+                Delete(el.Id);
+            }
         }
 
         private readonly CommandValuesRepository _commandValuesRepository = new CommandValuesRepository();

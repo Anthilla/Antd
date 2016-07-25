@@ -51,8 +51,8 @@ namespace Antd.Modules {
 
             Get["/cmd"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Command = _commandRepo.GetAll();
-                vmod.Value = _commandValuesRepo.GetAll();
+                vmod.Command = _commandRepo.GetAll().OrderBy(_ => _.Name);
+                vmod.Value = _commandValuesRepo.GetAll().OrderBy(_ => _.Name);
                 return View["antd/page-cmd", vmod];
             };
 
@@ -143,13 +143,13 @@ namespace Antd.Modules {
             Post["/cmd/export"] = x => {
                 Directory.CreateDirectory(Parameter.AntdCfgCommands);
                 var result = _commandRepo.GetAll();
-                var commandDict = new Dictionary<string, IEnumerable<string>>();
+                var commandDict = new Dictionary<string, IEnumerable<string>> { { "_version", new List<string> { Timestamp.Now } } };
                 foreach (var r in result) {
                     if (!commandDict.ContainsKey(r.Name)) {
                         commandDict.Add(r.Name, r.Command.SplitToList(Environment.NewLine));
                     }
                 }
-                var json = JsonConvert.SerializeObject(commandDict, Formatting.Indented);
+                var json = JsonConvert.SerializeObject(commandDict.OrderBy(_ => _.Key), Formatting.Indented);
                 var path = $"{Parameter.AntdCfgCommands}/commands.json";
                 if (File.Exists(path)) {
                     File.Delete(path);
@@ -157,13 +157,13 @@ namespace Antd.Modules {
                 File.WriteAllText(path, json);
 
                 var result2 = _commandValuesRepo.GetAll();
-                var valueDict = new Dictionary<string, string>();
+                var valueDict = new Dictionary<string, string> { { "_version", Timestamp.Now } };
                 foreach (var r in result2) {
                     if (!valueDict.ContainsKey(r.Name)) {
                         valueDict.Add(r.Name, r.Value);
                     }
                 }
-                var json2 = JsonConvert.SerializeObject(valueDict, Formatting.Indented);
+                var json2 = JsonConvert.SerializeObject(valueDict.OrderBy(_ => _.Key), Formatting.Indented);
                 var path2 = $"{Parameter.AntdCfgCommands}/values.json";
                 if (File.Exists(path2)) {
                     File.Delete(path2);
@@ -195,31 +195,6 @@ namespace Antd.Modules {
                 var result = Terminal.Execute(command);
                 return Response.AsJson(result);
             };
-
-            //Post["/command/mgmt/launch/{guid}"] = x => {
-            //    string guid = x.guid;
-            //    var result = _commandRepositoryRepo.Launch(guid);
-            //    return Response.AsJson(result);
-            //};
-
-            //Post["/command/mgmt/delete/{guid}"] = x => {
-            //    string guid = x.guid;
-            //    _commandRepositoryRepo.Delete(guid);
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Get["/command/mgmt/ex/{inputid}"] = x => {
-            //    string inputid = x.inputid;
-            //    var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid);
-            //    return Response.AsJson(r);
-            //};
-
-            //Get["/command/mgmt/ex/{inputid}/{Value}"] = x => {
-            //    string inputid = x.inputid;
-            //    string value = x.value;
-            //    var r = _commandRepositoryRepo.LaunchAndGetOutputUsingNewValue(inputid, value);
-            //    return Response.AsJson(r);
-            //};
         }
     }
 }

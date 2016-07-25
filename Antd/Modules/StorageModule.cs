@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using antdlib.common;
 using antdlib.Install;
 using antdlib.Storage;
@@ -65,8 +64,9 @@ namespace Antd.Modules {
                 if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(hourInterval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                var cron = $"0 0 0/{hourInterval} * * ?";
-                Timers.Create(pool.ToLower() + "snap", cron, $"zfs snap -r {pool}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}");
+                //var cron = $"0 0 0/{hourInterval} * * ?";
+                var cron = hourInterval;
+                Timers.Create(pool.ToLower() + "snap", cron, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
                 return HttpStatusCode.OK;
             };
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
 using Antd.Database;
+using Antd.SystemdTimer;
 
 namespace Antd.Storage {
     public class Zpool {
@@ -56,7 +57,7 @@ namespace Antd.Storage {
                 if (jobs.Any()) {
                     var j = jobs.FirstOrDefault();
                     if (j != null) {
-                        model.HasSnapshot = true;
+                        model.HasSnapshot = Timers.IsActive(model.Name);
                         model.Snapshot = j.Time;
                         model.SnapshotGuid = j.Id;
                     }

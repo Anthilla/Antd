@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading;
 using antdlib;
@@ -169,6 +168,8 @@ namespace Antd {
         }
 
         public void StartScheduler() {
+            if (!Parameter.IsUnix)
+                return;
             Timers.Setup();
             Timers.Import();
             Timers.Export();
@@ -180,7 +181,7 @@ namespace Antd {
         private static void StartZpoolSnapshot() {
             var pools = Zpool.List();
             foreach (var zp in pools) {
-                Timers.Create(zp.Name.ToLower() + "snap", "", $"zfs snap -r {zp.Name}@{DateTime.Now.ToString("yyyyMMdd-HHmmss")}");
+                Timers.Create(zp.Name.ToLower() + "snap", "1", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
             }
         }
 

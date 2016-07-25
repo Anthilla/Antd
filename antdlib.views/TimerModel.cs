@@ -21,11 +21,13 @@ namespace antdlib.views {
             Time = sourceModel.Time;
             Command = sourceModel.Command;
             TimerStatus = sourceModel.TimerStatus;
+            IsEnabled = sourceModel.IsEnabled;
         }
         public string Alias { get; set; }
         public string Time { get; set; }
         public string Command { get; set; }
         public string TimerStatus { get; set; }
+        public bool IsEnabled { get; set; }
     }
 
     #region [    View    ]
@@ -41,6 +43,7 @@ namespace antdlib.views {
         public string Time { get; set; }
         public string Command { get; set; }
         public string TimerStatus { get; set; }
+        public bool IsEnabled { get; set; }
     }
 
     [RegisterView]
@@ -69,7 +72,8 @@ namespace antdlib.views {
                     doc.Alias,
                     doc.Time,
                     doc.Command,
-                    doc.TimerStatus
+                    doc.TimerStatus,
+                    doc.IsEnabled
                 };
                 api.Emit(docid, schemaTimers);
             };

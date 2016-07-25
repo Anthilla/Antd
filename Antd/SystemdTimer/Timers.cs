@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.views;
 using Antd.Database;
 
 namespace Antd.SystemdTimer {
@@ -36,7 +37,7 @@ namespace Antd.SystemdTimer {
 
         #region TT Target
         private static bool IsTargetActive() {
-            var result = Terminal.Execute("");
+            var result = Terminal.Execute("systemctl is-active tt.target");
             return result.Trim() == "active";
         }
 
@@ -110,8 +111,11 @@ namespace Antd.SystemdTimer {
         }
         #endregion TT Target
 
-        public static List<Model> GetAll() {
-            var list = new List<Model>();
+        public static IEnumerable<TimerSchema> GetAll() {
+            var list = TimerRepository.GetAll().ToList();
+            foreach (var el in list) {
+                el.IsEnabled = IsActive(el.Alias);
+            }
             return list;
         }
 
@@ -128,7 +132,7 @@ namespace Antd.SystemdTimer {
                 $"Description={name} Timer",
                 "",
                 "[Timer]",
-                $"OnCalendar = {time}",
+                $"OnCalendar={time}",
                 "",
                 "[Install]",
                 "WantedBy=applicative.target",
@@ -146,7 +150,8 @@ namespace Antd.SystemdTimer {
                 "",
                 "[Service]",
                 "Type=oneshot",
-                $"ExecStart = {command}",
+                "ExecStartPre=/bin/bash -c \"/usr/bin/systemctl set-environment TTDATE=$(/bin/date +'%%Y%%m%%d-%%H%%M%%S')\"",
+                $"ExecStart={command}",
                 "",
                 "[Install]",
                 "WantedBy=applicative.target",
@@ -195,6 +200,7 @@ namespace Antd.SystemdTimer {
                     var coreName = name.Replace(".target", "");
                     var tryget = TimerRepository.GetByName(coreName);
                     var time = "";
+                    if (!File.Exists(file)) continue;
                     var lines = File.ReadAllLines(file);
                     var t = lines.FirstOrDefault(_ => _.Contains("OnCalendar"));
                     if (t != null) {
@@ -204,7 +210,8 @@ namespace Antd.SystemdTimer {
                     var command = "";
                     var eqPath = files.FirstOrDefault(_ => _.Contains(coreName) && _.EndsWith(".service"));
                     if (eqPath != null) {
-                        var clines = File.ReadAllLines(Path.GetFileName(eqPath));
+                        if (!File.Exists(eqPath)) continue;
+                        var clines = File.ReadAllLines(eqPath);
                         var c = clines.FirstOrDefault(_ => _.Contains("ExecStart"));
                         if (c != null) {
                             command = c.SplitToList("=").Last();
@@ -236,6 +243,11 @@ namespace Antd.SystemdTimer {
 
         public static void Disable(string ttName) {
             Terminal.Execute($"systemctl stop {ttName}.target");
+        }
+
+        public static bool IsActive(string ttName) {
+            var result = Terminal.Execute($"systemctl is-active {ttName}.target");
+            return result.Trim() == "active";
         }
     }
 }

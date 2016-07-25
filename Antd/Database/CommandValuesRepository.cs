@@ -9,6 +9,12 @@ using Newtonsoft.Json;
 
 namespace Antd.Database {
     public class CommandValuesRepository {
+
+        public class RootObject {
+            public string Key { get; set; }
+            public string Value { get; set; }
+        }
+
         private const string ViewName = "CommandValues";
 
         public IEnumerable<CommandValuesSchema> GetAll() {
@@ -37,15 +43,23 @@ namespace Antd.Database {
                 return;
             }
             try {
-                var objs = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
-                foreach (var o in objs) {
-                    var t = GetByName(o.Key);
-                    if (t == null) {
-                        var obj = new CommandValuesModel {
-                            Name = o.Key,
-                            Value = o.Value,
-                        };
-                        DatabaseRepository.Save(AntdApplication.Database, obj, true);
+                var objs = JsonConvert.DeserializeObject<List<RootObject>>(text);
+                var now = GetByName("_version");
+                long tsNow = 0;
+                if (now != null) {
+                    tsNow = Convert.ToInt64(now.Value);
+                }
+                if (objs.Any(_ => _.Key == "_version")) {
+                    var version = objs.FirstOrDefault(_ => _.Key == "_version")?.Value;
+                    if (Convert.ToInt64(version) > tsNow) {
+                        DeleteAll();
+                        foreach (var o in objs) {
+                            var obj = new CommandValuesModel {
+                                Name = o.Key,
+                                Value = o.Value
+                            };
+                            DatabaseRepository.Save(AntdApplication.Database, obj, true);
+                        }
                     }
                 }
             }
@@ -81,6 +95,13 @@ namespace Antd.Database {
         public bool Delete(string guid) {
             var result = DatabaseRepository.Delete<CommandValuesModel>(AntdApplication.Database, Guid.Parse(guid));
             return result;
+        }
+
+        public void DeleteAll() {
+            var all = GetAll();
+            foreach (var el in all) {
+                Delete(el.Id);
+            }
         }
     }
 }

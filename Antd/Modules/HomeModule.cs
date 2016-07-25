@@ -39,6 +39,7 @@ using Antd.Database;
 using Antd.Info;
 using Antd.Storage;
 using Antd.Svcs.Dhcp;
+using Antd.SystemdTimer;
 using Nancy;
 using Nancy.Security;
 
@@ -108,7 +109,7 @@ namespace Antd.Modules {
 
                 viewModel.Mounts = new MountRepository().GetAll();
 
-                var scheduledJobs = new TimerRepository().GetAll();
+                var scheduledJobs = Timers.GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
 
                 viewModel.DisksList = Disks.List();
