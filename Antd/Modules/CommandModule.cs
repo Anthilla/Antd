@@ -191,7 +191,6 @@ namespace Antd.Modules {
                     }
                     command = command.Replace(match.ToString(), val.Value);
                 }
-                Console.WriteLine($"Ill execute: {command}");
                 var result = Terminal.Execute(command);
                 return Response.AsJson(result);
             };
