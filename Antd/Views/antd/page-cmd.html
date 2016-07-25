@@ -57,15 +57,30 @@
 <legend>Test Command</legend>
 <table class="table">
     <tbody>
-        <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+        <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
             <td style="width: 44%;">
-                <input type="text" data="$var1" placeholder="$var1" />
-            </td>
-            <td style="width: 44%;">
-                <input type="text" data="$var2" placeholder="$var2" />
+                <input type="text" data="$var1" placeholder="$var1" style="width: 90%;" />
+                <br />
+                <input type="text" data="$var2" placeholder="$var2" style="width: 90%;" />
             </td>
             <td>
-                <input type="button" data-role="TestCommand" data-name="echo" data-par="$var1,$var2" value="Test" />
+                <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Launch" />
+            </td>
+            <td style="width: 44%;">
+                <textarea data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
+            </td>
+        </tr>
+        <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+            <td style="width: 44%;">
+                <input type="text" data="$var1" placeholder="$var1" style="width: 90%;" />
+                <br />
+                <input type="hidden" data="$var2" value="StaticValue" placeholder="$var2" style="width: 90%;" />
+            </td>
+            <td>
+                <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Update" />
+            </td>
+            <td style="width: 44%;">
+                <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
             </td>
         </tr>
     </tbody>
@@ -181,14 +196,27 @@
 <script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
 <script type="text/javascript">
 
-    $('[data-role="TestCommand"]').click(function () {
-        var command = $(this).attr('data-name');
+    $(document).ready(function () {
+        $('[data="CmdGet"]').each(function () {
+            var container = $(this).parents('[data-role="CmdContainer"]');
+            LaunchCommand(container);
+        });
+    });
+
+    $('[data-role="CmdLaunch"]').click(function () {
+        var container = $(this).parents('[data-role="CmdContainer"]');
+        LaunchCommand(container);
+    });
+
+    function LaunchCommand(container) {
+        var button = container.find('[data-role="CmdLaunch"]');
+        var command = button.attr('data-name');
         var values = "";
-        var par = $(this).attr('data-par');
+        var par = button.attr('data-par');
         var res = par.split(",");
         $.each(res, function (i, v) {
             var app = v + ":";
-            var val = $('[data="' + v + '"]').val();
+            var val = container.find('[data="' + v + '"]').val();
             app += val;
             app += ";";
             if (val.length > 1) {
@@ -204,10 +232,10 @@
                 Matches: values
             },
             success: function (data) {
-                alert(data);
+                container.find('[data-role="CmdResult"]').val(data);
             }
         });
-    });
+    }
 
     $('#ExportCommandsAndValues').click(function () {
         jQuery.support.cors = true;
