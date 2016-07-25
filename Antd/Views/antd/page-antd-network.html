@@ -4,40 +4,33 @@
         <i id="ReloadNetworkInterfacesInformation" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
     </legend>
     <legend>Physical Interfaces</legend>
-
     @Each.NetworkPhysicalIf
-    <div data-role="panel border-2-anthilla-gray" class="panel">
+    <div data-role="panel" class="panel border-2-anthilla-gray">
         <div class="panel-header bg-anthilla-gray fg-white" style="margin-bottom: 5px;">
             @Current.Name
         </div>
         <div class="panel-content">
-            @Current.Name
             <table class="table">
                 <tbody>
                     <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                        <td style="width: 44%;">
-                            <input type="text" data="$var1" placeholder="$var1" style="width: 90%;" />
-                            <br />
-                            <input type="text" data="$var2" placeholder="$var2" style="width: 90%;" />
-                        </td>
                         <td>
-                            <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Launch" />
-                        </td>
-                        <td style="width: 44%;">
-                            <textarea data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-link" data-par="$net_if" value="Update" />
                         </td>
                     </tr>
                     <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                        <td style="width: 44%;">
-                            <input type="text" data="$var1" placeholder="$var1" style="width: 90%;" />
-                            <br />
-                            <input type="hidden" data="$var2" value="StaticValue" placeholder="$var2" style="width: 90%;" />
-                        </td>
                         <td>
-                            <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Update" />
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-addr" data-par="$net_if" value="Update" />
                         </td>
-                        <td style="width: 44%;">
-                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-stats" data-par="$net_if" value="Update" />
                         </td>
                     </tr>
                 </tbody>
@@ -46,104 +39,132 @@
     </div>
     @EndEach
     <br />
-    <table class="table">
-        <thead id="VirtualInterfacesHeader">
-            <tr>
-                <td colspan="4">
-                    <label>Virtual Interfaces</label>
-                </td>
-            </tr>
-        </thead>
-        @Each.NetworkVirtualIf
-        <tbody class="nif-header nif-content virtualInterfacesBody" data-nif-name="@Current.Name" style="display: none;">
-            <tr>
-                <td colspan="4">
-                    <label class="nif-header" data-nif-name="@Current.Name">@Current.Name</label>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 200px;"></td>
-                <td colspan="3">
-                    <textarea data-role="show-general-function" data-command="ip link show @Current.Name" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                    <textarea data-role="show-general-function" data-command="ip addr show @Current.Name | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                    <textarea data-role="show-general-function" data-command="ip -s link ls @Current.Name | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 85px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                </td>
-            </tr>
-            <!--@Partial['_partial_network/part-network-post', Current.PostCommands];-->
-            <!--@Partial['_partial_network/part-network-get', Current.GetCommands];-->
-        </tbody>
-        @EndEach
-    </table>
-    <table class="table">
-        <thead id="BondInterfacesHeader">
-            <tr>
-                <td colspan="4">
-                    <label>Bond Interfaces</label>
-                </td>
-            </tr>
-        </thead>
-        @Each.NetworkBondIf
-        <tbody class="nif-header nif-content bondInterfacesBody" data-nif-name="@Current.Name" style="display: none;">
-            <tr>
-                <td colspan="4">
-                    <label class="nif-header" data-nif-name="@Current.Name">@Current.Name</label>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 200px;"></td>
-                <td colspan="3">
-                    <textarea data-role="show-general-function" data-command="ip link show @Current.Name" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                    <textarea data-role="show-general-function" data-command="ip addr show @Current.Name | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 50px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                    <textarea data-role="show-general-function" data-command="ip -s link ls @Current.Name | tail -n+3" style="min-width: 100%; max-width: 100%; width: 100%; height: 85px; background-color: #464646; border: 0;" class="fg-white" readonly="readonly"></textarea>
-                </td>
-            </tr>
-            <!--@Partial['_partial_network/part-network-post', Current.PostCommands];-->
-            <!--@Partial['_partial_network/part-network-get', Current.GetCommands];-->
-        </tbody>
-        @EndEach
-    </table>
-    <table class="table">
-        <thead>
-            <tr>
-                <td colspan="4">
-                    <label>Bridge Interfaces</label>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="width: 350px;">
-                    <label>Add Bridge</label>
-                </td>
-                <td>
-                    <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
-                    <input data-role="submit-general-function" data-command="brctl addbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 350px;">
-                    <label>Delete Bridge</label>
-                </td>
-                <td>
-                    <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
-                    <input data-role="submit-general-function" data-command="brctl delbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
-                </td>
-            </tr>
-        </tbody>
-        @Each.NetworkBridgeIf
-        <tbody class="nif-header nif-content" data-nif-name="@Current.Name">
-            <tr>
-                <td style="width: 200px;">
-                    <label>@Current.Name</label>
-                </td>
-                <td>
-                    <!--@Partial['_partial_network/part-network-post', Current.BridgePostCommands];-->
-                    <!--@Partial['_partial_network/part-network-get', Current.BridgeGetCommands];-->
-                </td>
-            </tr>
-        </tbody>
-        @EndEach
-    </table>
+    <legend>Virtual Interfaces</legend>
+    @Each.NetworkVirtualIf
+    <div data-role="panel" class="panel border-2-anthilla-gray">
+        <div class="panel-header bg-anthilla-gray fg-white" style="margin-bottom: 5px;">
+            @Current.Name
+        </div>
+        <div class="panel-content">
+            <table class="table">
+                <tbody>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-link" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-addr" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-stats" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @EndEach
+    <br />
+    <legend>Bond Interfaces</legend>
+    @Each.NetworkBondIf
+    <div data-role="panel" class="panel border-2-anthilla-gray">
+        <div class="panel-header bg-anthilla-gray fg-white" style="margin-bottom: 5px;">
+            @Current.Name
+        </div>
+        <div class="panel-content">
+            <table class="table">
+                <tbody>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-link" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-addr" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-stats" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @EndEach
+    <br />
+    <legend>Bridge Interfaces</legend>
+    <!--<tr>
+        <td style="width: 350px;">
+            <label>Add Bridge</label>
+        </td>
+        <td>
+            <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;"/>
+            <input data-role="submit-general-function" data-command="brctl addbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;"/>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 350px;">
+            <label>Delete Bridge</label>
+        </td>
+        <td>
+            <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
+            <input data-role="submit-general-function" data-command="brctl delbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
+        </td>
+    </tr>-->
+    @Each.NetworkBridgeIf
+    <div data-role="panel" class="panel border-2-anthilla-gray">
+        <div class="panel-header bg-anthilla-gray fg-white" style="margin-bottom: 5px;">
+            @Current.Name
+        </div>
+        <div class="panel-content">
+            <table class="table">
+                <tbody>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-link" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-addr" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ipv4-show-interface-stats" data-par="$net_if" value="Update" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @EndEach
+    <br />
 
-    <legend id="Dhcp">Dhcp</legend>
+    <!--<legend id="Dhcp">Dhcp</legend>-->
 </div>
