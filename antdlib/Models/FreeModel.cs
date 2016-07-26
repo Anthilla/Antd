@@ -27,25 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Antd.Ssh;
-using Nancy;
-
-namespace Antd.Modules {
-    public class TestModule : CoreModule {
-        public TestModule() {
-
-            Get["Test page", "/test"] = x => Response.AsText("Hello World!");
-
-            Get["/test/page"] = x => View["page-test"];
-
-            Get["/test/page2"] = x => View["page-test-2"];
-
-            Get["/test/vnc"] = x => View["page-vnc"];
-
-            Get["/test/ssh"] = x => {
-                Test.Start("aos003", "root", "root");
-                return View["page-test"];
-            };
-        }
+namespace antdlib.Models {
+    public class FreeModel {
+        public string Name { get; set; }
+        public string Total { get; set; }
+        public string Used { get; set; }
+        public string Free { get; set; }
+        public string Shared { get; set; }
+        public string BuffCache { get; set; }
+        public string Available { get; set; }
     }
 }

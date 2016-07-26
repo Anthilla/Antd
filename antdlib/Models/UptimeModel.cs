@@ -29,13 +29,8 @@
 
 namespace antdlib.Models {
     public class UptimeModel {
-
-        public string uptime { get; set; }
-
-        public string users { get; set; }
-
-        public string loadAverage { get; set; }
-
-        public string[] loadAverageValues { get; set; }
+        public string Uptime { get; set; }
+        public string Users { get; set; }
+        public string LoadAverage { get; set; }
     }
 }

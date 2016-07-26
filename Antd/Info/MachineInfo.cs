@@ -44,34 +44,45 @@ namespace Antd.Info {
             }
         }
 
-        private readonly MapToModel _mapper = new MapToModel();
+        private static readonly MapToModel Mapper = new MapToModel();
 
-        public IEnumerable<CpuinfoModel> GetCpuinfo() {
-            var result = _mapper.FromFile<CpuinfoModel>("/proc/cpuinfo", ":");
+        public static IEnumerable<CpuinfoModel> GetCpuinfo() {
+            var result = Mapper.FromFile<CpuinfoModel>("/proc/cpuinfo", ":");
             return result;
         }
 
-        public IEnumerable<MeminfoModel> GetMeminfo() {
-            var result = _mapper.FromFile<MeminfoModel>("/proc/meminfo", ":");
+        public static IEnumerable<MeminfoModel> GetMeminfo() {
+            var result = Mapper.FromFile<MeminfoModel>("/proc/meminfo", ":");
             return result;
         }
 
-        public IEnumerable<AosReleaseModel> GetAosrelease() {
-            var result = _mapper.FromFile<AosReleaseModel>("/etc/aos-release", ":");
+        public static IEnumerable<AosReleaseModel> GetAosrelease() {
+            var result = Mapper.FromFile<AosReleaseModel>("/etc/aos-release", ":");
             return result;
         }
 
-        public IEnumerable<LosetupModel> GetLosetup() {
-            var result = _mapper.FromCommand<LosetupModel>("losetup --list -n").ToList();
-            foreach (var res in result) {
-                if (File.Exists(res.Backfile)) {
-                    res.Hash = GetFileHash(res.Backfile);
-                }
-            }
+        public static IEnumerable<LosetupModel> GetLosetup() {
+            var result = Mapper.FromCommand<LosetupModel>("losetup --list -n").ToList();
             return result;
         }
 
-        public IEnumerable<SystemComponentModel> GetSystemComponentModels() {
+        public static UptimeModel GetUptime() {
+            var result = Terminal.Execute("uptime");
+            var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);
+            var model = new UptimeModel {
+                Uptime = values[0],
+                Users = values[1],
+                LoadAverage = values[2]
+            };
+            return model;
+        }
+
+        public static IEnumerable<FreeModel> GetFree() {
+            var result = Mapper.FromCommand<FreeModel>("free -lth").ToList().Skip(1);
+            return result;
+        }
+
+        public static IEnumerable<SystemComponentModel> GetSystemComponentModels() {
             var repoSystem = Parameter.RepoSystem;
             var actives = Directory.EnumerateFileSystemEntries(repoSystem).Where(_ => _.Contains("active-")).ToList();
             var repoKernel = Parameter.RepoKernel;

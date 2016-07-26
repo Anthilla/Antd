@@ -21,7 +21,7 @@ function LaunchCommand(container) {
         var val = container.find('[data="' + v + '"]').val();
         app += val;
         app += ";";
-        if (val.length > 1) {
+        if (val != null && val.length > 1) {
             values += app;
         }
     });
@@ -38,3 +38,23 @@ function LaunchCommand(container) {
         }
     });
 }
+
+$(document).ready(function () {
+    $('[data-role="ContextSelection"]').each(function () {
+        $(this).windowed({
+            change: function (event, selected) {
+                selected = $(selected);
+                var val = selected.val();
+                var container = selected.parents('table.context');
+                container.find('[data-select]').hide();
+                container.find('[data-select="' + val + '"]').show();
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('textarea').each(function () {
+        this.style.height = (this.scrollHeight + 10) + 'px';
+    });
+});

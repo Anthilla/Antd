@@ -14,6 +14,7 @@ namespace Antd.Database {
         public class RootObject {
             public string Key { get; set; }
             public List<string> Value { get; set; }
+            public string Description { get; set; }
         }
 
         private const string ViewName = "Command";
@@ -45,22 +46,16 @@ namespace Antd.Database {
             }
             try {
                 var objs = JsonConvert.DeserializeObject<List<RootObject>>(text);
-                var now = GetByName("_version");
-                long tsNow = 0;
-                if (now != null) {
-                    tsNow = Convert.ToInt64(now.Command);
-                }
-                if (objs.Any(_=>_.Key == "_version")) {
-                    var version = objs.FirstOrDefault(_ => _.Key == "_version")?.Value.JoinToString();
-                    if (Convert.ToInt64(version) > tsNow) {
-                        DeleteAll();
-                        foreach (var o in objs) {
-                            var obj = new CommandModel {
-                                Name = o.Key,
-                                Command = o.Value.JoinToString(Environment.NewLine)
-                            };
-                            DatabaseRepository.Save(AntdApplication.Database, obj, true);
-                        }
+                DeleteAll();
+                foreach (var o in objs) {
+                    var t = GetByName(o.Key);
+                    if (t == null && !o.Key.StartsWith("_")) {
+                        var obj = new CommandModel {
+                            Name = o.Key,
+                            Command = o.Value.JoinToString(Environment.NewLine),
+                            Description = o.Description
+                        };
+                        DatabaseRepository.Save(AntdApplication.Database, obj, true);
                     }
                 }
             }
@@ -72,9 +67,11 @@ namespace Antd.Database {
         public bool Create(IDictionary<string, string> dict) {
             var alias = dict["Name"];
             var command = dict["Command"];
+            var description = dict["Description"];
             var obj = new CommandModel {
                 Name = alias,
                 Command = command,
+                Description = description,
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
             return result;
@@ -84,10 +81,12 @@ namespace Antd.Database {
             var id = dict["Id"];
             var alias = dict["Name"];
             var command = dict["Command"];
+            var description = dict["Description"];
             var objUpdate = new CommandModel {
                 Id = id.ToGuid(),
                 Name = alias.IsNullOrEmpty() ? null : alias,
                 Command = command.IsNullOrEmpty() ? null : command,
+                Description = description.IsNullOrEmpty() ? null : description,
             };
             var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
             return result;

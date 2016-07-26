@@ -27,55 +27,33 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.Models;
-using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
+using Antd.Info;
+using Antd.SystemdTimer;
+using Nancy.Security;
 
-namespace antdlib.Status {
+namespace Antd.Modules {
+    public class PartialHomeModule : CoreModule {
 
-    public class Uptime {
+        public PartialHomeModule() {
+            this.RequiresAuthentication();
 
-        private static string GetUptime() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
-            return MapUptimeJson(output).uptime;
-        }
+            Get["/part/info/losetup"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.LosetupInfo = MachineInfo.GetLosetup();
+                Console.WriteLine("page - LosetupInfo loaded");
+                return View["_partial/part-info-losetup", viewModel];
+            };
 
-        public static string UpTime => GetUptime();
-
-        private static string GetLoadAverage() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
-            return MapUptimeJson(output).loadAverage;
-        }
-
-        public static string LoadAverage => GetLoadAverage();
-
-        private static string[] GetLoadAverageValues() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("uptime").ConvertCommandToModel().output);
-            return MapUptimeJson(output).loadAverageValues;
-        }
-
-        public static string[] LoadAverageValues => GetLoadAverageValues();
-
-        private static UptimeModel MapUptimeJson(string inUptimeJson) {
-            var uptimeJson = Regex.Replace(inUptimeJson, "\"", "").Replace("\\n", "\n");
-            var uptimeJsonRow = uptimeJson.Split(new[] { "  " }, StringSplitOptions.None).ToArray();
-            var model = new UptimeModel();
-            if (uptimeJsonRow.Length == 3) {
-                model.uptime = uptimeJsonRow[0];
-                model.users = uptimeJsonRow[1];
-                model.loadAverage = uptimeJsonRow[2];
-                var values = uptimeJsonRow[2].Split(new[] { ", " }, StringSplitOptions.None).ToArray();
-                model.loadAverageValues = values;
-            }
-            else {
-                model.uptime = uptimeJson;
-                model.users = uptimeJson;
-                model.loadAverage = uptimeJson;
-            }
-            return model;
+            Get["/part/scheduler"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                var scheduledJobs = Timers.GetAll();
+                viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
+                Console.WriteLine("page - Cron loaded");
+                return View["_partial/part-scheduler", viewModel];
+            };
         }
     }
 }

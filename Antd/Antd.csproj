@@ -138,6 +138,7 @@
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
+    <Compile Include="Modules\PartialHomeModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />
@@ -375,6 +376,9 @@
     <Content Include="Views\page-terminal.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\page-test-2.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\page-test.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -483,7 +487,13 @@
     <Content Include="Views\_cctable-table-settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\_partial\part-scheduler.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\_partial\part-mount-units.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-info-losetup.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-users.html">

@@ -29,16 +29,20 @@
     //     20141110
     //------------------------------------------------------------------------------------->
 @Section['MainContent']
-<div class="grid">
-    <div class="row">
-        <div class="span12">
-            <div data-role="command-set" data-command="echo"></div>
-        </div>
-    </div>
-</div>
+<div id="Container"></div>
 @EndSection
 
 @Section['Scripts']
 <script type="text/javascript">
+    $(document).ready(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/test/page2',
+            type: 'GET',
+            success: function (data) {
+                $("#Container").html(data);
+            }
+        });
+    });
 </script>
 @EndSection

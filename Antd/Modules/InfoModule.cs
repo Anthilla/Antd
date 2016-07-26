@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib.common;
-using antdlib.Status;
 using Nancy;
 using Nancy.Security;
 
@@ -36,10 +35,6 @@ namespace Antd.Modules {
     public class InfoModule : CoreModule {
         public InfoModule() {
             this.RequiresAuthentication();
-
-            Get["/info/loadaverage"] = x => Response.AsJson(Uptime.LoadAverage);
-
-            Get["/info/disk"] = x => Response.AsJson(Uptime.LoadAverage);
 
             Post["/info/killproc"] = x => {
                 Terminal.Execute("kill " + (string)Request.Form.data);

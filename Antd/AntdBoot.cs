@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Threading;
 using antdlib;
 using antdlib.Apps;
 using antdlib.common;
@@ -194,19 +193,12 @@ namespace Antd {
             if (!Parameter.IsUnix)
                 return;
             var apps = Management.DetectApps();
-            if (apps.Length > 0) {
-                foreach (
-                    var dir in
-                        from app in apps
-                        select Management.GetWantedDirectories(app)
-                        into dirs
-                        where dirs.Length > 0
-                        from dir in dirs
-                        select dir) {
+            foreach (var app in apps) {
+                var dirs = Management.GetWantedDirectories(app);
+                foreach (var dir in dirs) {
                     Mount.Dir(dir);
                 }
             }
-            Thread.Sleep(10);
             AnthillaSp.SetApp();
             ConsoleLogger.Log("apps ready");
         }

@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -71,22 +72,35 @@ namespace Antd.Modules {
 
                 var os = Terminal.Execute("uname -a");
                 viewModel.VersionOS = os;
+                Console.WriteLine("page - VersionOS loaded");
 
-                var machineInfo = new MachineInfo();
-                viewModel.Meminfo = machineInfo.GetMeminfo();
-                viewModel.Cpuinfo = machineInfo.GetCpuinfo();
-                viewModel.LosetupInfo = machineInfo.GetLosetup();
-                viewModel.AosInfo = machineInfo.GetAosrelease();
-                viewModel.SystemComponents = machineInfo.GetSystemComponentModels();
+                viewModel.Meminfo = MachineInfo.GetMeminfo();
+                Console.WriteLine("page - Meminfo loaded");
+                viewModel.Cpuinfo = MachineInfo.GetCpuinfo();
+                Console.WriteLine("page - Cpuinfo loaded");
+                viewModel.AosInfo = MachineInfo.GetAosrelease();
+                Console.WriteLine("page - AosInfo loaded");
+                viewModel.SystemComponents = MachineInfo.GetSystemComponentModels();
+                Console.WriteLine("page - SystemComponents loaded");
+                viewModel.Uptime = MachineInfo.GetUptime();
+                Console.WriteLine("page - Uptime loaded");
+                viewModel.Free = MachineInfo.GetFree();
+                Console.WriteLine("page - Free loaded");
+
+                var timezones = Terminal.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
+                viewModel.Timezones = timezones;
 
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
                 viewModel.NetworkPhysicalIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
                 viewModel.NetworkVirtualIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name);
                 viewModel.NetworkBondIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
                 viewModel.NetworkBridgeIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
+                Console.WriteLine("page - NetworkInterfaces loaded");
 
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
+                Console.WriteLine("page - FirewallCommands loaded");
                 viewModel.DhcpdStatus = DhcpConfig.IsActive;
+                Console.WriteLine("page - DhcpdStatus loaded");
                 //var dhcpdModel = DhcpConfig.MapFile.Get();
                 //if (dhcpdModel != null) {
                 //    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
@@ -106,22 +120,27 @@ namespace Antd.Modules {
                 //}
 
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
+                Console.WriteLine("page - MacAddressList loaded");
 
                 viewModel.Mounts = new MountRepository().GetAll();
+                Console.WriteLine("page - Mounts loaded");
 
-                var scheduledJobs = Timers.GetAll();
-                viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
+                //var scheduledJobs = Timers.GetAll();
+                //viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
+                //Console.WriteLine("page - Cron loaded");
 
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
                 viewModel.ZfsSnap = ZfsSnap.List();
+                Console.WriteLine("page - Storage loaded");
 
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
+                Console.WriteLine("page - vm loaded");
 
-                //todo check next parameters
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
+                Console.WriteLine("page - ssh loaded");
 
                 return View["antd/page-antd", viewModel];
             };

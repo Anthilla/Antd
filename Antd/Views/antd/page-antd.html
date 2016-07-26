@@ -62,7 +62,8 @@
 @Partial['antd/page-antd-dns-server'];
 @Partial['antd/page-antd-proxy'];
 @Partial['antd/page-antd-acl'];
-@Partial['antd/page-antd-cron', Model];
+<!--@Partial['antd/page-antd-cron'];-->
+<div data-render="part-scheduler"></div>
 @Partial['antd/page-antd-storage'];
 @Partial['antd/page-antd-vm'];
 @Partial['antd/page-antd-mount'];
@@ -71,6 +72,30 @@
 @EndSection
 
 @Section['Scripts']
+<script data-context="pageload" type="text/javascript">
+    $(document).ready(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/part/info/losetup',
+            type: 'GET',
+            success: function (data) {
+                $('[data-render="part-info-losetup"]').html(data);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/part/scheduler',
+            type: 'GET',
+            success: function (data) {
+                $('[data-render="part-scheduler"]').html(data);
+            }
+        });
+    });
+
+</script>
 <script data-context="cron" type="text/javascript">
     $(document).ready(function () {
         $('#CronSelector').cron({

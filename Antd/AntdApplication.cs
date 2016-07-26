@@ -30,12 +30,13 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading;
 using antdlib;
 using antdlib.common;
 using antdlib.views;
-using Owin;
 using Microsoft.Owin.Hosting;
 using Nancy;
+using Owin;
 using RaptorDB;
 
 namespace Antd {
@@ -60,14 +61,30 @@ namespace Antd {
 
             var port = Convert.ToInt32(ApplicationSetting.HttpPort());
             using (var host = WebApp.Start<Startup>($"http://+:{port}/")) {
+                ConsoleLogger.Log("loading service");
                 ConsoleLogger.Log($"http port: {port}");
                 ConsoleLogger.Log("antd is running");
                 ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
+                Thread.CurrentThread.Name = "AntdMainThread";
                 KeepAlive();
                 ConsoleLogger.Log("antd is closing");
                 host.Dispose();
                 Database.Shutdown();
             }
+
+            //var port = ApplicationSetting.HttpPort();
+            //var uri = $"http://localhost:{port}/";
+            //var host = new NancyHost(new Uri(uri));
+            //host.Start();
+            //StaticConfiguration.DisableErrorTraces = false;
+            //ConsoleLogger.Log($"http port: {port}");
+            //ConsoleLogger.Log("antd is running");
+            //ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
+
+            //KeepAlive();
+            //ConsoleLogger.Log("antd is closing");
+            //host.Stop();
+            //Database.Shutdown();
         }
 
         private static void KeepAlive() {

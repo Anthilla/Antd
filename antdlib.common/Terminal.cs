@@ -37,7 +37,7 @@ namespace antdlib.common {
             var error = string.Empty;
             var process = new Process {
                 StartInfo = {
-                    FileName = "bash",
+                    FileName = "/bin/bash",
                     Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

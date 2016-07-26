@@ -42,42 +42,8 @@ namespace antdlib.Apps {
         private static string _anthillaSpFrameworkDir = "/framework/anthillasp";
 
         public static void SetApp() {
-            //CreateUnits();
-            //Thread.Sleep(20);
-            //SetDirectories();
-            //Thread.Sleep(20);
             Start();
         }
-
-        //public static void CreateUnits() {
-        //    if (Units.CheckFiles() == false) {
-        //        Units.SetAnthillaSp();
-        //        Units.MountFramework();
-        //        Units.LaunchAnthillaSp();
-        //        Units.LaunchAnthillaServer();
-        //    }
-        //    Systemctl.DaemonReload();
-        //}
-
-        //private static void SetDirectories() {
-        //    var app = Management.DetectApps().FirstOrDefault(a => a.Name == "anthillasp");
-        //    if (app == null) {
-        //        ConsoleLogger.Log("no appinfo detected");
-        //    }
-        //    else {
-        //        var dirs = Management.GetWantedDirectories(app);
-        //        if (dirs.Length <= 0) {
-        //            ConsoleLogger.Log("no app directory found");
-        //        }
-        //        else {
-        //            foreach (var dir in dirs) {
-        //                Directory.CreateDirectory(dir.Trim());
-        //                Directory.CreateDirectory(Mount.SetDirsPath(dir.Trim()));
-        //                Mount.Dir(dir.Trim());
-        //            }
-        //        }
-        //    }
-        //}
 
         public static void Start() {
             if (!Systemctl.Status("app-anthillasp-01-prepare.service").output.Contains("Active: active (running)")) {

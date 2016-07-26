@@ -123,14 +123,6 @@ namespace Antd.Database {
             return result.FirstOrDefault();
         }
 
-
-        //var id = dict["Id"];
-        //var mountContext = dict["MountContext"];
-        //var mountEntity = dict["MountEntity"];
-        //var path = dict["Path"];
-        //var mountedPath = dict["MountedPath"];
-        //var mountStatus = dict["MountStatus"];
-        //var units = dict["Units"];
         public void SetAsMounted(string path, string mountedPath) {
             var m = GetByPath(path);
             Edit(new Dictionary<string, string> {

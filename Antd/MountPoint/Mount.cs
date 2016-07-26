@@ -91,11 +91,12 @@ namespace Antd.MountPoint {
                 try {
                     var dir = t.Path.Replace("\\", "");
                     var mntDir = Mounts.SetDirsPath(dir);
-                    Directory.CreateDirectory(dir);
-                    Directory.CreateDirectory(mntDir);
-                    if (Mounts.IsAlreadyMounted(dir)) continue;
-                    ConsoleLogger.Log($"mount {mntDir} -> {dir}");
-                    SetBind(mntDir, dir);
+                    if (Mounts.IsAlreadyMounted(dir) == false) {
+                        Directory.CreateDirectory(dir);
+                        Directory.CreateDirectory(mntDir);
+                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
+                        SetBind(mntDir, dir);
+                    }
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -107,20 +108,19 @@ namespace Antd.MountPoint {
             foreach (var t in fileMounts) {
                 var file = t.Path.Replace("\\", "");
                 var mntFile = Mounts.SetFilesPath(file);
-                if (mntFile == null)
-                    throw new ArgumentNullException(nameof(mntFile));
-                if (!System.IO.File.Exists(mntFile))
-                    continue;
-                var path = Path.GetDirectoryName(file);
-                var mntPath = Path.GetDirectoryName(mntFile);
-                Terminal.Execute($"mkdir -p {path}");
-                Terminal.Execute($"mkdir -p {mntPath}");
-                if (!System.IO.File.Exists(file)) {
-                    Terminal.Execute($"cp {mntFile} {file}");
+                if (System.IO.File.Exists(mntFile)) {
+                    var path = Path.GetDirectoryName(file);
+                    var mntPath = Path.GetDirectoryName(mntFile);
+                    if (Mounts.IsAlreadyMounted(file) == false) {
+                        Terminal.Execute($"mkdir -p {path}");
+                        Terminal.Execute($"mkdir -p {mntPath}");
+                        if (!System.IO.File.Exists(file)) {
+                            Terminal.Execute($"cp {mntFile} {file}");
+                        }
+                        ConsoleLogger.Log($"mount {mntFile} -> {file}");
+                        SetBind(mntFile, file);
+                    }
                 }
-                if (Mounts.IsAlreadyMounted(file)) continue;
-                ConsoleLogger.Log($"mount {mntFile} -> {file}");
-                SetBind(mntFile, file);
             }
             ConsoleLogger.Log("files mounted");
 
@@ -160,8 +160,6 @@ namespace Antd.MountPoint {
                         {"MountEntity", MountEntity.Directory.ToString()}
                     });
                 }
-                if (Directory.Exists(realPath))
-                    continue;
                 try {
                     Terminal.Execute($"mkdir -p {t}");
                     Terminal.Execute($"mkdir -p {realPath}");
@@ -184,8 +182,6 @@ namespace Antd.MountPoint {
                         {"MountEntity", MountEntity.File.ToString()}
                     });
                 }
-                if (System.IO.File.Exists(realPath))
-                    continue;
                 try {
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');

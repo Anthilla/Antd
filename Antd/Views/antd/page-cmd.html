@@ -45,6 +45,9 @@
         <a id="ExportCommandsAndValues" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
             Export
         </a>
+        <a id="ImportCommandsAndValues" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
+            Import
+        </a>
 
         <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
             <i class="icon-arrow-up"></i>
@@ -67,7 +70,7 @@
                 <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Launch" />
             </td>
             <td style="width: 44%;">
-                <textarea data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%;"></textarea>
+                <textarea data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
             </td>
         </tr>
         <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
@@ -80,7 +83,7 @@
                 <input type="button" data-role="CmdLaunch" data-name="echo" data-par="$var1,$var2" value="Update" />
             </td>
             <td style="width: 44%;">
-                <textarea data="CmdGet" data-role="CmdResult" class="bg-anthilla-gray fg-white border-anthilla-green" style="max-width: 90%; min-width: 90%; height: auto;"></textarea>
+                <textarea data="CmdGet" data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
             </td>
         </tr>
     </tbody>
@@ -91,8 +94,16 @@
 <table class="table">
     <thead>
         <tr>
+            <!--<td colspan="3">
+                <p style="display: inline-block; margin-right: 15px;">Search:</p>
+                <input data-role="SearchCommand" type="text"/>
+            </td>-->
             <td colspan="3">
                 <p>rules:</p>
+                <br />
+                <ol class="fg-white">
+                    <li>Commands, at the moment, CANNOT contain '"'</li>
+                </ol>
             </td>
         </tr>
         <tr>
@@ -195,10 +206,34 @@
 @Section['Scripts']
 <script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
 <script type="text/javascript">
+    $('[data-role="SearchCommand"]').keyup(function () {
+        var q = $(this).val();
+        $("#CommandTable").find('tr').each(function () {
+            var row = $(this);
+            row.show();
+            var i1 = $('[data-role="Name"]').val();
+            var i2 = $('[data-role="Command"]').val();
+            if (i1.toLowerCase().indexOf(q) < 0 || i2.toLowerCase().indexOf(q)) {
+                row.hide();
+            }
+        });
+    });
+
     $('#ExportCommandsAndValues').click(function () {
         jQuery.support.cors = true;
         $.ajax({
             url: "/cmd/export",
+            type: "POST",
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ImportCommandsAndValues').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: "/cmd/import",
             type: "POST",
             success: function () {
                 location.reload(true);

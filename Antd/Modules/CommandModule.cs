@@ -143,10 +143,22 @@ namespace Antd.Modules {
             Post["/cmd/export"] = x => {
                 Directory.CreateDirectory(Parameter.AntdCfgCommands);
                 var result = _commandRepo.GetAll();
-                var commandDict = new Dictionary<string, IEnumerable<string>> { { "_version", new List<string> { Timestamp.Now } } };
+                var commandDict = new HashSet<CommandRepository.RootObject> {
+                    new CommandRepository.RootObject {
+                        Key = "_version",
+                        Value = new List<string> { Timestamp.Now },
+                        Description = "Current command version"
+                    }
+                };
                 foreach (var r in result) {
-                    if (!commandDict.ContainsKey(r.Name)) {
-                        commandDict.Add(r.Name, r.Command.SplitToList(Environment.NewLine));
+                    if (!commandDict.Any(_ => _.Key == r.Name)) {
+                        commandDict.Add(
+                            new CommandRepository.RootObject {
+                                Key = r.Name,
+                                Value = r.Command.SplitToList(Environment.NewLine),
+                                Description = ""
+                            }
+                        );
                     }
                 }
                 var json = JsonConvert.SerializeObject(commandDict.OrderBy(_ => _.Key), Formatting.Indented);
@@ -170,7 +182,14 @@ namespace Antd.Modules {
                 }
                 File.WriteAllText(path2, json2);
 
-                return Response.AsRedirect("/cmd");
+                return HttpStatusCode.OK;
+            };
+
+            Post["/cmd/import"] = x => {
+                Directory.CreateDirectory(Parameter.AntdCfgCommands);
+                new CommandRepository().Import();
+                new CommandValuesRepository().Import();
+                return HttpStatusCode.OK;
             };
 
             Post["/cmd/launch"] = x => {

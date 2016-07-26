@@ -111,6 +111,7 @@
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
     <Compile Include="Log\Journalctl.cs" />
+    <Compile Include="Models\FreeModel.cs" />
     <Compile Include="Models\LosetupModel.cs" />
     <Compile Include="Models\SystemComponentModel.cs" />
     <Compile Include="Models\CommandModel.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="Status\Local.cs" />
     <Compile Include="Status\Networkd.cs" />
     <Compile Include="Status\Sysctl.cs" />
-    <Compile Include="Status\Uptime.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Systemd\Units.cs" />

@@ -33,7 +33,7 @@ using System.IO;
 
 namespace antdlib.common {
     public class MapToModel {
-        public IEnumerable<T> FromFile<T>(string filePath, string separator = " ", StringSplitOptions option = StringSplitOptions.None) where T : new() {
+        public IEnumerable<T> FromFile<T>(string filePath, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
             if (!File.Exists(filePath)) {
                 return new List<T>();
             }
@@ -58,13 +58,13 @@ namespace antdlib.common {
             return objects;
         }
 
-        public IEnumerable<T> FromCommand<T>(string command, string separator = " ", StringSplitOptions option = StringSplitOptions.None) where T : new() {
+        public IEnumerable<T> FromCommand<T>(string command, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
             var commandResult = Terminal.Execute(command);
             if (commandResult.Length < 1) {
                 return new List<T>();
             }
             var objects = new List<T>();
-            var lines = commandResult.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var lines = commandResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines) {
                 var arr = line.Split(new[] { separator }, option);
                 var obj = new T();
@@ -84,12 +84,12 @@ namespace antdlib.common {
             return objects;
         }
 
-        public IEnumerable<T> FromText<T>(string text, string separator = " ", StringSplitOptions option = StringSplitOptions.None) where T : new() {
+        public IEnumerable<T> FromText<T>(string text, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
             if (text.Length < 1) {
                 return new List<T>();
             }
             var objects = new List<T>();
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in lines) {
                 var arr = line.Split(new[] { separator }, option);
                 var obj = new T();

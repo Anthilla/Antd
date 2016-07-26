@@ -19,9 +19,11 @@ namespace antdlib.views {
             Guid = sourceModel.Guid;
             Name = sourceModel.Name;
             Command = sourceModel.Command;
+            Description = sourceModel.Description;
         }
         public string Name { get; set; }
         public string Command { get; set; }
+        public string Description { get; set; }
     }
 
     #region [    View    ]
@@ -35,6 +37,7 @@ namespace antdlib.views {
         //---
         public string Name { get; set; }
         public string Command { get; set; }
+        public string Description { get; set; }
     }
 
     [RegisterView]
@@ -46,7 +49,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 1;
+            Version = 2;
             Schema = typeof(CommandSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -62,6 +65,7 @@ namespace antdlib.views {
                     doc.Tags.JoinToString(),
                     doc.Name,
                     doc.Command,
+                    doc.Description,
                 };
                 api.Emit(docid, schemaCommands);
             };
