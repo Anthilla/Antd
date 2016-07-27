@@ -63,24 +63,20 @@ namespace Antd {
             if (!File.Exists(Parameter.AuthKeys)) {
                 Terminal.Execute($"touch {Parameter.AuthKeys}");
             }
-            const string dir = "/etc/ssh";
-            var mntDir = Mounts.SetDirsPath(dir);
+            var mntDir = Mounts.SetDirsPath(Parameter.EtcSsh);
             if (!Directory.Exists(mntDir)) {
-                Terminal.Execute($"cp -fR {dir} {mntDir}");
+                Terminal.Execute($"cp -fR {Parameter.EtcSsh} {mntDir}");
             }
-            Mounts.Umount(dir);
-            Mount.Dir(dir);
-            Terminal.Execute("ssh-keygen -A");
-            Terminal.Execute("systemctl restart sshd.service");
-            ConsoleLogger.Log("ssh config ready");
-            //SshConfig.Keys.PropagateKeys(new[] { "" }, new[] { "" });
+            if (Mounts.IsAlreadyMounted(Parameter.EtcSsh)) {
+                Terminal.Execute("ssh-keygen -A");
+                Terminal.Execute("systemctl restart sshd.service");
+                ConsoleLogger.Log("ssh config ready");
+            }
         }
 
-        public void SetOverlayDirectories() {
-            if (!Parameter.IsUnix)
-                return;
-            Mount.OverlayDirectories();
-            ConsoleLogger.Log("overlay ready");
+        public void StartOverlayWatcher() {
+            new OverlayWatcher().StartWatching();
+            ConsoleLogger.Log("overlay watcher ready");
         }
 
         public void SetMounts() {
@@ -142,14 +138,14 @@ namespace Antd {
             ConsoleLogger.Log("journald config ready");
         }
 
-        public void CheckResolv() {
-            if (!Parameter.IsUnix)
-                return;
-            if (File.Exists("/etc/resolv.conf"))
-                return;
-            Terminal.Execute("touch /etc/resolv.conf");
-            ConsoleLogger.Log("resolv ready");
-        }
+        //public void CheckResolv() {
+        //    if (!Parameter.IsUnix)
+        //        return;
+        //    if (File.Exists("/etc/resolv.conf"))
+        //        return;
+        //    Terminal.Execute("touch /etc/resolv.conf");
+        //    ConsoleLogger.Log("resolv ready");
+        //}
 
         public void SetFirewall() {
             if (!Parameter.IsUnix)
@@ -222,7 +218,6 @@ namespace Antd {
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
-
 
         //public  void StartWebsocketServer() {
         //    var port = PortManagement.GetFirstAvailable(1234);

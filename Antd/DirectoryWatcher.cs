@@ -33,7 +33,6 @@ using antdlib.common;
 using Antd.Database;
 
 namespace Antd {
-
     public class DirectoryWatcher {
         public void StartWatching() {
             try {

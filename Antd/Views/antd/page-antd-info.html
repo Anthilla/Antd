@@ -129,7 +129,32 @@
                 </table>
             </div>
             <div id="_Uptime_" class="frame" style="display: none;">
-                <h1>@Model.Uptime</h1>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Uptime</label>
+                            </td>
+                            <td>
+                                <label>Users</label>
+                            </td>
+                            <td>
+                                <label>LoadAverage</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>@Model.Uptime.Uptime</p>
+                            </td>
+                            <td>
+                                <p>@Model.Uptime.Users</p>
+                            </td>
+                            <td>
+                                <p>@Model.Uptime.LoadAverage</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

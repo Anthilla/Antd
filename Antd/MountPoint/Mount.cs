@@ -40,32 +40,17 @@ namespace Antd.MountPoint {
 
         private static readonly Database.MountRepository MountRepository = new Database.MountRepository();
 
-        private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg };
+        private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
         public static void WorkingDirectories() {
             foreach (var dir in DefaultWorkingDirectories) {
                 var mntDir = Mounts.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
-                if (Mounts.IsAlreadyMounted(dir))
-                    continue;
-                ConsoleLogger.Log($"mounting {mntDir}");
-                SetBind(mntDir, dir);
-            }
-        }
-
-        private static readonly string[] DefaultOverlayDirectories = {
-            "/usr/share/.mono",
-            "/var/lib/samba",
-            "/var/log/journal",
-            "/var/log/nginx",
-            "/var/www/ca",
-        };
-
-        public static void OverlayDirectories() {
-            foreach (var dir in DefaultOverlayDirectories) {
-                Dir(dir);
-                Terminal.Execute($"rsync {Parameter.Overlay}/{dir} {dir}");
+                if (Mounts.IsAlreadyMounted(dir) == false) {
+                    ConsoleLogger.Log($"mount {mntDir} -> {dir}");
+                    SetBind(mntDir, dir);
+                }
             }
         }
 
@@ -207,25 +192,31 @@ namespace Antd.MountPoint {
         }
 
         public static void Dir(string directory) {
-            MountRepository.Create(new Dictionary<string, string> {
+            var tryget = MountRepository.GetByPath(directory);
+            if (tryget == null) {
+                MountRepository.Create(new Dictionary<string, string> {
                         {"Path", directory},
                         {"MountContext", MountContext.External.ToString()},
                         {"MountEntity", MountEntity.Directory.ToString()}
                     });
-            var mntDir = Mounts.SetDirsPath(directory);
-            Directory.CreateDirectory(directory);
-            Directory.CreateDirectory(mntDir);
-            SetBind(mntDir, directory);
+                var mntDir = Mounts.SetDirsPath(directory);
+                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(mntDir);
+                SetBind(mntDir, directory);
+            }
         }
 
         public static void File(string file) {
-            MountRepository.Create(new Dictionary<string, string> {
+            var tryget = MountRepository.GetByPath(file);
+            if (tryget == null) {
+                MountRepository.Create(new Dictionary<string, string> {
                         {"Path", file},
                         {"MountContext", MountContext.External.ToString()},
                         {"MountEntity", MountEntity.File.ToString()}
                     });
-            var mntFile = Mounts.SetFilesPath(file);
-            SetBind(mntFile, file);
+                var mntFile = Mounts.SetFilesPath(file);
+                SetBind(mntFile, file);
+            }
         }
 
         private static void CheckMount(string directory) {

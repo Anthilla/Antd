@@ -27,33 +27,51 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using antdlib.common;
 
-namespace antdlib.Overlayfs {
-
-    public class Overlayfs {
-
-        public static void Set(string lower, string upper, string work, string merged) {
-            if (!Directory.Exists(lower)) {
-                ConsoleLogger.Warn("Overlayfs -> the 'lower' dir does not exist: {0}", lower);
+namespace Antd {
+    public class OverlayWatcher {
+        public void StartWatching() {
+            try {
+                var path = Parameter.Overlay;
+                var watcher = new FileSystemWatcher(path) {
+                    NotifyFilter =
+                        NotifyFilters.LastAccess |
+                        NotifyFilters.LastWrite |
+                        NotifyFilters.FileName |
+                        NotifyFilters.DirectoryName,
+                    IncludeSubdirectories = true,
+                };
+                watcher.Changed += OnChanged;
+                watcher.Created += OnChanged;
+                watcher.Deleted += OnChanged;
+                watcher.Renamed += OnRenamed;
+                watcher.EnableRaisingEvents = true;
             }
-            else if (!Directory.Exists(upper)) {
-                ConsoleLogger.Warn("Overlayfs -> the 'upper' dir does not exist: {0}", upper);
-            }
-            else if (!Directory.Exists(work)) {
-                ConsoleLogger.Warn("Overlayfs -> the 'work' dir does not exist: {0}", work);
-            }
-            else if (!Directory.Exists(merged)) {
-                ConsoleLogger.Warn("Overlayfs -> the 'merged' dir does not exist: {0}", merged);
-            }
-            else {
-                ConsoleLogger.Log("Overlayfs -> Mount");
+            catch (Exception ex) {
+                ConsoleLogger.Log(ex.Message);
             }
         }
 
-        //public static void Set(string lowerdir, string upperdir, string workdir) {
-        //    Job.Schedule("Mount", "-t overlay overlay -o lowerdir=" + lowerdir + ",upperdir=" + upperdir + @",\workdir=" + workdir + " /merged");
-        //}
+        public static HashSet<string> ChangedDirectories { get; private set; } = new HashSet<string>();
+
+        private static void OnChanged(object source, FileSystemEventArgs e) {
+            //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
+            var directory = Path.GetDirectoryName(e.FullPath);
+            if (!ChangedDirectories.Contains(directory)) {
+                ChangedDirectories.Add(directory);
+            }
+        }
+
+        private static void OnRenamed(object source, RenamedEventArgs e) {
+            //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
+            var directory = Path.GetDirectoryName(e.FullPath);
+            if (!ChangedDirectories.Contains(directory)) {
+                ChangedDirectories.Add(directory);
+            }
+        }
     }
 }

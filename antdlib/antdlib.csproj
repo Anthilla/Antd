@@ -128,7 +128,6 @@
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
-    <Compile Include="Overlayfs\Overlayfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\RSA.cs" />
     <Compile Include="Security\RSACore.cs" />

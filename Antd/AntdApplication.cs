@@ -30,12 +30,11 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Threading;
 using antdlib;
 using antdlib.common;
 using antdlib.views;
-using Microsoft.Owin.Hosting;
 using Nancy;
+using Nancy.Hosting.Self;
 using Owin;
 using RaptorDB;
 
@@ -47,44 +46,33 @@ namespace Antd {
 
         private static void Main() {
             ConsoleLogger.Log("starting antd");
+
+            new OverlayWatcher().StartWatching();
+
             _startTime = DateTime.Now;
-            Directory.CreateDirectory("/cfg/antd");
-            Directory.CreateDirectory("/cfg/antd/database");
-            Directory.CreateDirectory("/mnt/cdrom/DIRS");
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
             Console.Title = "antd";
             if (Parameter.IsUnix == false) {
+                Directory.CreateDirectory("/cfg/antd");
+                Directory.CreateDirectory("/cfg/antd/database");
+                Directory.CreateDirectory("/mnt/cdrom/DIRS");
                 ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
             }
 
             Configuration();
 
-            var port = Convert.ToInt32(ApplicationSetting.HttpPort());
-            using (var host = WebApp.Start<Startup>($"http://+:{port}/")) {
-                ConsoleLogger.Log("loading service");
-                ConsoleLogger.Log($"http port: {port}");
-                ConsoleLogger.Log("antd is running");
-                ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
-                Thread.CurrentThread.Name = "AntdMainThread";
-                KeepAlive();
-                ConsoleLogger.Log("antd is closing");
-                host.Dispose();
-                Database.Shutdown();
-            }
-
-            //var port = ApplicationSetting.HttpPort();
-            //var uri = $"http://localhost:{port}/";
-            //var host = new NancyHost(new Uri(uri));
-            //host.Start();
-            //StaticConfiguration.DisableErrorTraces = false;
-            //ConsoleLogger.Log($"http port: {port}");
-            //ConsoleLogger.Log("antd is running");
-            //ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
-
-            //KeepAlive();
-            //ConsoleLogger.Log("antd is closing");
-            //host.Stop();
-            //Database.Shutdown();
+            var port = ApplicationSetting.HttpPort();
+            var uri = $"http://localhost:{port}/";
+            var host = new NancyHost(new Uri(uri));
+            host.Start();
+            StaticConfiguration.DisableErrorTraces = false;
+            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log("antd is running");
+            ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
+            KeepAlive();
+            ConsoleLogger.Log("antd is closing");
+            host.Stop();
+            Database.Shutdown();
         }
 
         private static void KeepAlive() {
@@ -119,24 +107,17 @@ namespace Antd {
             Database.RegisterView(new MacAddressView());
             ConsoleLogger.Log("database ready");
 
-            Boot.ImportCommands();
-            Boot.ConfigureMachine();
-            Boot.CheckCertificate();
-            Boot.ReloadUsers();
-            Boot.ReloadSsh();
-            //boot.SetOverlayDirectories();
-            //boot.SetSystemdJournald();
             Boot.SetMounts();
             Boot.SetOsMount();
-            //boot.SetWebsocketd();
-            Boot.CheckResolv();
-            Boot.SetFirewall();
-            Boot.ImportSystemInformation();
+            Boot.ImportCommands();
+            Boot.ConfigureMachine();
+            Boot.ReloadUsers();
+            Boot.ReloadSsh();
             Boot.StartScheduler();
             Boot.StartDirectoryWatcher();
+            Boot.ImportSystemInformation();
+            Boot.CheckCertificate();
             Boot.LaunchApps();
-            //boot.StartWebsocketServer();
-            //boot.DownloadDefaultRepoFiles();
         }
     }
 

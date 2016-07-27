@@ -173,6 +173,7 @@
     <Compile Include="Network\NetworkConfig.cs" />
     <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\PortManagement.cs" />
+    <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Ssh\SshConfig.cs" />
     <Compile Include="Ssh\Test.cs" />
     <Compile Include="Storage\Disks.cs" />
@@ -328,25 +329,25 @@
     <Content Include="Views\hypervisor\_page-hypervisor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-cpuinfo.html">
+    <Content Include="Views\__old\page-info-cpuinfo.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-dmidecode.html">
+    <Content Include="Views\__old\page-info-dmidecode.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-ifconfig.html">
+    <Content Include="Views\__old\page-info-ifconfig.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-meminfo.html">
+    <Content Include="Views\__old\page-info-meminfo.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-procs.html">
+    <Content Include="Views\__old\page-info-procs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\page-info-version.html">
+    <Content Include="Views\__old\page-info-version.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\info\_page-info.html">
+    <Content Include="Views\__old\_page-info.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\layout.html">
@@ -361,16 +362,7 @@
     <Content Include="Views\login.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\page-dir.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-empty-partial.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\page-redirect.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-scheduler.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-terminal.html">
@@ -439,16 +431,16 @@
     <Content Include="Views\services\_page-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\storage\page-storage-disks.html">
+    <Content Include="Views\__old\page-storage-disks.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\storage\page-storage-iscsi.html">
+    <Content Include="Views\__old\page-storage-iscsi.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\storage\page-storage-mounts.html">
+    <Content Include="Views\__old\page-storage-mounts.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\storage\_page-storage.html">
+    <Content Include="Views\__old\_page-storage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\system\page-system-authentication.html">
@@ -469,22 +461,22 @@
     <Content Include="Views\antd\page-vnc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-dashboard.html">
+    <Content Include="Views\__old\_cctable-dashboard.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-main.html">
+    <Content Include="Views\__old\_cctable-main.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-table-conf.html">
+    <Content Include="Views\__old\_cctable-table-conf.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-table-dataview.html">
+    <Content Include="Views\__old\_cctable-table-dataview.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-table-new.html">
+    <Content Include="Views\__old\_cctable-table-new.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_cctable-table-settings.html">
+    <Content Include="Views\__old\_cctable-table-settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-scheduler.html">

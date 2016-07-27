@@ -159,12 +159,15 @@ namespace Antd.SystemdTimer {
             };
             File.WriteAllLines(serviceFile, serviceText);
 
-            TimerRepository.Create(new Dictionary<string, string> {
-                { "Guid", Guid.NewGuid().ToString() },
-                { "Alias", name },
-                { "Time", time },
-                { "Command", command}
-            });
+            var tryget = TimerRepository.GetByName(name);
+            if (tryget == null) {
+                TimerRepository.Create(new Dictionary<string, string> {
+                    {"Guid", Guid.NewGuid().ToString()},
+                    {"Alias", name},
+                    {"Time", time},
+                    {"Command", command}
+                });
+            }
 
             Terminal.Execute($"chown root:wheel {timerFile}");
             Terminal.Execute($"chown root:wheel {serviceFile}");
@@ -220,10 +223,10 @@ namespace Antd.SystemdTimer {
 
                     if (tryget == null) {
                         TimerRepository.Create(new Dictionary<string, string> {
-                            { "Guid", Guid.NewGuid().ToString() },
-                            { "Alias", coreName },
-                            { "Time", time },
-                            { "Command", command}
+                            {"Guid", Guid.NewGuid().ToString()},
+                            {"Alias", coreName},
+                            {"Time", time},
+                            {"Command", command}
                         });
                     }
                 }

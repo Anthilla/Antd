@@ -116,5 +116,8 @@ namespace antdlib.common {
         public static string UnitAntdPrepare => "app-antd-01-prepare.service";
         public static string UnitAntdMount => "app-antd-02-mount.service";
         public static string UnitAntdLauncher => "app-antd-03-launcher.service";
+
+        public static string EtcSsh => "/etc/ssh";
+
     }
 }
