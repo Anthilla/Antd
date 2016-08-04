@@ -27,30 +27,19 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Dynamic;
-using System.Linq;
-using Antd.Info;
-using Antd.SystemdTimer;
+using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class PartialHomeModule : CoreModule {
+    public class OverlayModule : CoreModule {
 
-        public PartialHomeModule() {
+        public OverlayModule() {
             this.RequiresAuthentication();
 
-            Get["/part/info/losetup"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                viewModel.LosetupInfo = MachineInfo.GetLosetup();
-                return View["_partial/part-info-losetup", viewModel];
-            };
-
-            Get["/part/scheduler"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                var scheduledJobs = Timers.GetAll();
-                viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
-                return View["_partial/part-scheduler", viewModel];
+            Post["/overlay/directory"] = x => {
+                string dir = Request.Form.Directory;
+                OverlayWatcher.SetOverlayDirectory(dir);
+                return HttpStatusCode.OK;
             };
         }
     }

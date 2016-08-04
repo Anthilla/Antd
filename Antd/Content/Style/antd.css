@@ -1335,3 +1335,7 @@ input:disabled,
 @keyframes blinker {  
   50% { opacity: 0.0; }
 }
+
+.float-right {
+  float: right !important;
+}

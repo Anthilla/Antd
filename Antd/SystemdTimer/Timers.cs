@@ -132,7 +132,7 @@ namespace Antd.SystemdTimer {
                 $"Description={name} Timer",
                 "",
                 "[Timer]",
-                $"OnCalendar={time}",
+                $"OnCalendar={time}h",
                 "",
                 "[Install]",
                 "WantedBy=applicative.target",

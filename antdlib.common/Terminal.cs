@@ -34,35 +34,30 @@ using System.Diagnostics;
 namespace antdlib.common {
     public class Terminal {
         public static string Execute(string command, string dir = "") {
-            //var error = string.Empty;
-            var process = new Process {
-                StartInfo = {
+            try {
+                var proc = new ProcessStartInfo {
                     FileName = "/bin/bash",
                     Arguments = $"-c \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false
+                };
+                if (!string.IsNullOrEmpty(dir)) {
+                    proc.WorkingDirectory = dir;
                 }
-            };
-            if (!string.IsNullOrEmpty(dir)) {
-                process.StartInfo.WorkingDirectory = dir;
-            }
-            try {
-                process.Start();
-                string output;
-                using (var streamReader = process.StandardOutput) {
-                    output = streamReader.ReadToEnd();
+                using (var p = new Process()) {
+                    p.StartInfo = proc;
+                    p.Start();
+                    string output;
+                    using (var streamReader = p.StandardOutput) {
+                        output = streamReader.ReadToEnd();
+                    }
+                    p.WaitForExit(1000 * 30);
+                    return output;
                 }
-                //using (var streamReader = process.StandardError) {
-                //    error += streamReader.ReadToEnd();
-                //}
-                process.WaitForExit();
-                process.Close();
-                return output;
             }
             catch (Exception ex) {
                 ConsoleLogger.Error($"Failed to execute '{command}': {ex.Message}");
-                process.Close();
                 return string.Empty;
             }
         }
@@ -88,10 +83,7 @@ namespace antdlib.common {
                     using (var streamReader = process.StandardOutput) {
                         genericOutput += streamReader.ReadToEnd();
                     }
-                    //using (var streamReader = process.StandardError) {
-                    //    genericOutput += streamReader.ReadToEnd();
-                    //}
-                    process.WaitForExit();
+                    process.WaitForExit(1000 * 30);
                     process.Close();
                 }
                 catch (Exception ex) {

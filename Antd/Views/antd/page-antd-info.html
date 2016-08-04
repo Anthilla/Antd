@@ -20,15 +20,58 @@
                 </td>
             </tr>
             @EndEach
-        </tbody>
-    </table>
-    <table class="table">
-        <tbody>
             <tr>
                 <td>
                     <label>Linux Version</label>
                 </td>
-                <td>@Model.VersionOS</td>
+                <td>
+                    <p>@Model.VersionOS</p>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Gentoo release</label></td>
+                <td data-role="CmdContainer" colspan="2">
+                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-gentoorel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-gentoorel" data-par="" value="Update" class="float-right" />
+                </td>
+            </tr>
+            <tr>
+                <td> <label>lsb release</label></td>
+                <td data-role="CmdContainer" colspan="2">
+                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-lsbrel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-lsbrel" data-par="" value="Update" class="float-right" />
+                </td>
+            </tr>
+            <tr>
+                <td> <label>os release</label></td>
+                <td data-role="CmdContainer" colspan="2">
+                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-osrel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-osrel" data-par="" value="Update" class="float-right" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Uptime</label>
+                </td>
+                <td>
+                    <p>@Model.Uptime.Uptime</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Users</label>
+                </td>
+                <td>
+                    <p>@Model.Uptime.Users</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>LoadAverage</label>
+                </td>
+                <td>
+                    <p>@Model.Uptime.LoadAverage</p>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -38,7 +81,8 @@
             <li class="active"><a href="#_Memory_1">Memory</a></li>
             <li><a href="#_CPU_">CPU</a></li>
             <li><a href="#_Free_">Free</a></li>
-            <li><a href="#_Uptime_">Uptime</a></li>
+            <li><a href="#_Losetup_">Losetup</a></li>
+            <li><a href="#_SysComp_">System Components</a></li>
         </ul>
 
         <div class="frames">
@@ -128,81 +172,51 @@
                     </tbody>
                 </table>
             </div>
-            <div id="_Uptime_" class="frame" style="display: none;">
+            <div id="_Losetup_" class="frame" style="display: none;">
+                <div data-render="part-info-losetup"></div>
+            </div>
+            <div id="_SysComp_" class="frame" style="display: none;">
                 <table class="table">
                     <tbody>
                         <tr>
-                            <td>
-                                <label>Uptime</label>
-                            </td>
-                            <td>
-                                <label>Users</label>
-                            </td>
-                            <td>
-                                <label>LoadAverage</label>
-                            </td>
+                            <th>
+                                <p>Alias</p>
+                            </th>
+                            <th>
+                                <p>Active</p>
+                            </th>
+                            <th>
+                                <p>Recovery</p>
+                            </th>
+                            <th>
+                                <p>Running</p>
+                            </th>
+                            <th>
+                                <p>Newest</p>
+                            </th>
                         </tr>
+                        @Each.SystemComponents
                         <tr>
                             <td>
-                                <p>@Model.Uptime.Uptime</p>
+                                <p>@Current.Alias</p>
                             </td>
                             <td>
-                                <p>@Model.Uptime.Users</p>
+                                <p>@Current.Active</p>
                             </td>
                             <td>
-                                <p>@Model.Uptime.LoadAverage</p>
+                                <p>@Current.Recovery</p>
+                            </td>
+                            <td>
+                                <p>@Current.Running</p>
+                            </td>
+                            <td>
+                                <p>@Current.Newest</p>
                             </td>
                         </tr>
+                        @EndEach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <br />
-    <div data-render="part-info-losetup"></div>
-    <table class="table">
-        <tbody>
-            <tr colspan="5">
-                <td>
-                    <label>SystemComponents</label>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <p>Alias</p>
-                </th>
-                <th>
-                    <p>Active</p>
-                </th>
-                <th>
-                    <p>Recovery</p>
-                </th>
-                <th>
-                    <p>Running</p>
-                </th>
-                <th>
-                    <p>Newest</p>
-                </th>
-            </tr>
-            @Each.SystemComponents
-            <tr>
-                <td>
-                    <p>@Current.Alias</p>
-                </td>
-                <td>
-                    <p>@Current.Active</p>
-                </td>
-                <td>
-                    <p>@Current.Recovery</p>
-                </td>
-                <td>
-                    <p>@Current.Running</p>
-                </td>
-                <td>
-                    <p>@Current.Newest</p>
-                </td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
 </div>

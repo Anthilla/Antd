@@ -1,0 +1,20 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Overlay">Overlay Management</legend>
+    <table class="table">
+        <tbody>
+            @Each.Overlay
+            <tr>
+                <td>
+                    @Current.Key
+                </td>
+                <td>
+                    @Current.Value
+                </td>
+                <td style="width: 300px;">
+                    <input data-role="SetOverlayDirectory" data-dir="@Current.Key" type="button" class="bg-anthilla-green" value="Set Directory" />
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

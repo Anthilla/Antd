@@ -44,9 +44,9 @@ namespace Antd.Modules {
             Post["/cron"] = x => {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
-                var cron = (string)Request.Form.CronExValue;
-                if (!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(cron)) {
-                    Timers.Create(alias, cron, command);
+                var hi = (string)Request.Form.Interval;
+                if (!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(hi)) {
+                    Timers.Create(alias, hi, command);
                 }
                 return Response.AsRedirect("/");
             };

@@ -30,7 +30,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using antdlib.common;
+using antdlib.common.Helpers;
+using Antd.MountPoint;
 
 namespace Antd {
     public class OverlayWatcher {
@@ -56,22 +59,39 @@ namespace Antd {
             }
         }
 
-        public static HashSet<string> ChangedDirectories { get; private set; } = new HashSet<string>();
+        public static IDictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();
 
         private static void OnChanged(object source, FileSystemEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.Contains(directory)) {
-                ChangedDirectories.Add(directory);
+            if (!ChangedDirectories.ContainsKey(directory)) {
+                var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
+                ChangedDirectories.Add(directory, du);
             }
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.Contains(directory)) {
-                ChangedDirectories.Add(directory);
+            if (!ChangedDirectories.ContainsKey(directory)) {
+                var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
+                ChangedDirectories.Add(directory, du);
             }
+        }
+
+        public static void SetOverlayDirectory(string overlayPath) {
+            //check overlayPath con du -ms
+            var overlayDir = Parameter.Overlay;
+            var path = overlayPath.Replace(Parameter.Overlay, "");
+            //creo cartella in mntDIRS
+            var dirsPath = Mounts.SetDirsPath(path);
+            Terminal.Execute($"mkdir -p {dirsPath}");
+            //copio rsync overlayPath in mntDIRS
+            Terminal.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/");
+            //cancello/pulisco dir equivalente
+            Terminal.Execute($"rm -fR {path}");
+            //monto mntDIRS - dir
+            Mount.Dir(path);
         }
     }
 }

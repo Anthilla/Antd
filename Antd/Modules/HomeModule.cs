@@ -40,7 +40,6 @@ using Antd.Database;
 using Antd.Info;
 using Antd.Storage;
 using Antd.Svcs.Dhcp;
-using Antd.SystemdTimer;
 using Nancy;
 using Nancy.Security;
 
@@ -56,14 +55,16 @@ namespace Antd.Modules {
                 viewModel.AntdContext = new[] {
                     "Info",
                     "Host",
-                    "Network",
-                    "DnsClient",
+                    "Time",
+                    "NS",
+                    "Net",
                     "Firewall",
                     "DnsServer",
                     "Proxy",
                     "Acl",
                     "Cron",
                     "Storage",
+                    "Overlay",
                     "VM",
                     "Mount",
                     "Users",
@@ -72,35 +73,34 @@ namespace Antd.Modules {
 
                 var os = Terminal.Execute("uname -a");
                 viewModel.VersionOS = os;
-                Console.WriteLine("page - VersionOS loaded");
 
                 viewModel.Meminfo = MachineInfo.GetMeminfo();
-                Console.WriteLine("page - Meminfo loaded");
                 viewModel.Cpuinfo = MachineInfo.GetCpuinfo();
-                Console.WriteLine("page - Cpuinfo loaded");
                 viewModel.AosInfo = MachineInfo.GetAosrelease();
-                Console.WriteLine("page - AosInfo loaded");
                 viewModel.SystemComponents = MachineInfo.GetSystemComponentModels();
-                Console.WriteLine("page - SystemComponents loaded");
                 viewModel.Uptime = MachineInfo.GetUptime();
-                Console.WriteLine("page - Uptime loaded");
                 viewModel.Free = MachineInfo.GetFree();
-                Console.WriteLine("page - Free loaded");
 
                 var timezones = Terminal.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
                 viewModel.Timezones = timezones;
 
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
-                viewModel.NetworkPhysicalIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkVirtualIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkBondIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkBridgeIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
-                Console.WriteLine("page - NetworkInterfaces loaded");
+                var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkPhysicalIf = phyIf;
+                var brgIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkBridgeIf = brgIf;
+                var bndIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
+                viewModel.NetworkBondIf = bndIf;
+                var vrtIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name).ToList();
+                foreach (var v in vrtIf) {
+                    if (phyIf.Contains(v) || brgIf.Contains(v) || bndIf.Contains(v)) {
+                        vrtIf.Remove(v);
+                    }
+                }
+                viewModel.NetworkVirtualIf = vrtIf;
 
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
-                Console.WriteLine("page - FirewallCommands loaded");
                 viewModel.DhcpdStatus = DhcpConfig.IsActive;
-                Console.WriteLine("page - DhcpdStatus loaded");
                 //var dhcpdModel = DhcpConfig.MapFile.Get();
                 //if (dhcpdModel != null) {
                 //    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
@@ -120,27 +120,20 @@ namespace Antd.Modules {
                 //}
 
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
-                Console.WriteLine("page - MacAddressList loaded");
 
                 viewModel.Mounts = new MountRepository().GetAll();
-                Console.WriteLine("page - Mounts loaded");
-
-                //var scheduledJobs = Timers.GetAll();
-                //viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
-                //Console.WriteLine("page - Cron loaded");
 
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
                 viewModel.ZfsSnap = ZfsSnap.List();
-                Console.WriteLine("page - Storage loaded");
+
+                viewModel.Overlay = OverlayWatcher.ChangedDirectories;
 
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
-                Console.WriteLine("page - vm loaded");
 
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
-                Console.WriteLine("page - ssh loaded");
 
                 return View["antd/page-antd", viewModel];
             };
@@ -187,7 +180,12 @@ namespace Antd.Modules {
                 return View["antd/page-vnc", vmod];
             };
 
-            Post["/network/import/if"] = x => {
+            Get["/network/list/if"] = x => {
+                var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
+                return Response.AsJson(networkInterfaces);
+            };
+
+            Post["/network/import"] = x => {
                 new NetworkInterfaceRepository().Import();
                 return HttpStatusCode.OK;
             };

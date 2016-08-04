@@ -1,5 +1,5 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Network">
+    <legend id="Net">
         Network
         <i id="ReloadNetworkInterfacesInformation" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
     </legend>
@@ -8,15 +8,19 @@
     <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white">
             @Current.Name
+            <p data-role="CmdContainer" style="display: inline-block; margin-left: 20px;">
+                <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-updown" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+            </p>
         </div>
         <div class="panel-content" style="display: none;">
             <table class="table">
                 <tbody>
                     <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                         <td>
-                            <textarea data="CmdGet" data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
-                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" />
+                            <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-if-stats" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" class="float-right" />
                         </td>
                     </tr>
                 </tbody>
@@ -25,7 +29,7 @@
             <div data-role="tab-control" class="tab-control">
                 <ul class="tabs">
                     <li class="active"><a href="#_IF_@Current.Name">Interface Configuration</a></li>
-                    <li><a href="#_IPV4_@Current.Name">IPV6 Configuration</a></li>
+                    <li><a href="#_IPV4_@Current.Name">IPV4 Configuration</a></li>
                     <li><a href="#_IPV6_@Current.Name">IPV6 Configuration</a></li>
                 </ul>
 
@@ -33,39 +37,39 @@
                     <div id="_IF_@Current.Name" class="frame" style="display: block;">
                         <table class="table" style="table-layout: fixed;">
                             <tbody>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface" />
                                     </td>
                                     <td></td>
                                     <td> Enable of Disable @Current.Name interface</td>
                                 </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Apply" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" class="float-right" />
                                     </td>
-                                    <td></td>
-                                    <td> Remove the current configuration from @Current.Name</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" />
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-macaddress" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-macaddress" data-par="$net_if" value="Update" class="float-right" />
                                     </td>
-                                    <td></td>
                                     <td> Edit @Current.Name MAC Address</td>
                                 </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$mtu" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$mtu" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" class="float-right" />
                                     </td>
-                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-mtu" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-mtu" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
                                     <td> Edit @Current.Name MTU</td>
                                 </tr>
                             </tbody>
@@ -78,165 +82,75 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
                                         <p>IPV4 - Static - Add Address</p>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Add static ip address to @Current.Name with ipv4 protocol</td>
-                                </tr>
-                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <p>Dhclient4 - Set Interface</p>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="dhclient4" data-par="$net_if" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Add dynamic ip address to @Current.Name with ipv4 protocol</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="_IPV6_@Current.Name" class="frame" style="display: block;">
-                        <table class="table context" style="table-layout: fixed;">
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">
-                                        <select data-role="ContextSelection">
-                                            <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <p>IPV6 - Static - Add Address</p>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip6-add-addr" data-par="$address,$range,$net_if" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Add static ip address to @Current.Name with ipv6 protocol</td>
-                                </tr>
-                                <tr data-role="CmdContainer" data-select="1" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <p>Dhclient4 - Set Interface</p>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="dhclient6" data-par="$net_if" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Add dynamic ip address to @Current.Name with ipv6 protocol</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @EndEach
-    <br />
-    <legend>Virtual Interfaces</legend>
-    @Each.NetworkVirtualIf
-    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white">
-            @Current.Name
-        </div>
-        <div class="panel-content" style="display: none;">
-            <table class="table">
-                <tbody>
-                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                        <td>
-                            <textarea data="CmdGet" data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
-                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <hr class="bg-anthilla-gray" style="height: 2px;" />
-            <div data-role="tab-control" class="tab-control">
-                <ul class="tabs">
-                    <li class="active"><a href="#_IF_@Current.Name">Interface Configuration</a></li>
-                    <li><a href="#_IPV4_@Current.Name">IPV6 Configuration</a></li>
-                    <li><a href="#_IPV6_@Current.Name">IPV6 Configuration</a></li>
-                </ul>
+                                        <input type="text" data="$address" style="width: 60%;" />
 
-                <div class="frames">
-                    <div id="_IF_@Current.Name" class="frame" style="display: block;">
-                        <table class="table" style="table-layout: fixed;">
-                            <tbody>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface" />
-                                    </td>
-                                    <td></td>
-                                    <td> Enable of Disable @Current.Name interface</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Remove the current configuration from @Current.Name</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Edit @Current.Name MAC Address</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$mtu" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Edit @Current.Name MTU</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="_IPV4_@Current.Name" class="frame" style="display: block;">
-                        <table class="table context" style="table-layout: fixed;">
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">
-                                        <select data-role="ContextSelection">
-                                            <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                        <select data="$range" style="width: 30%; height: 25px;" class="border-anthilla-green">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16" selected="selected">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                            <option value="32">32</option>
                                         </select>
-                                    </td>
-                                </tr>
-                                <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
                                     </td>
-                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-addr" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-addr" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
                                     <td> Add static ip address to @Current.Name with ipv4 protocol</td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient4" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
@@ -252,23 +166,35 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip6-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV6 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="text" data="$range" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip6-add-addr" data-par="$address,$range,$net_if" value="Apply" />
                                     </td>
                                     <td></td>
                                     <td> Add static ip address to @Current.Name with ipv6 protocol</td>
                                 </tr>
-                                <tr data-role="CmdContainer" data-select="1" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient6" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
@@ -282,21 +208,37 @@
         </div>
     </div>
     @EndEach
+
     <br />
     <legend>Bond Interfaces</legend>
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td><label>Create a new bond</label></td>
+                <td data-role="CmdContainer">
+                    <input type="text" data="$bond" style="width: 60%;" />
+                    <input type="button" data-role="CmdLaunch" data-name="bond-set" data-par="$bond" value="Create" class="float-right" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
     @Each.NetworkBondIf
     <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white">
             @Current.Name
+            <p data-role="CmdContainer" style="display: inline-block; margin-left: 20px;">
+                <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-updown" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+            </p>
         </div>
         <div class="panel-content" style="display: none;">
             <table class="table">
                 <tbody>
                     <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                         <td>
-                            <textarea data="CmdGet" data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
-                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" />
+                            <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-if-stats" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" class="float-right" />
                         </td>
                     </tr>
                 </tbody>
@@ -305,7 +247,8 @@
             <div data-role="tab-control" class="tab-control">
                 <ul class="tabs">
                     <li class="active"><a href="#_IF_@Current.Name">Interface Configuration</a></li>
-                    <li><a href="#_IPV4_@Current.Name">IPV6 Configuration</a></li>
+                    <li><a href="#_Bon_@Current.Name">Bond Configuration</a></li>
+                    <li><a href="#_IPV4_@Current.Name">IPV4 Configuration</a></li>
                     <li><a href="#_IPV6_@Current.Name">IPV6 Configuration</a></li>
                 </ul>
 
@@ -313,40 +256,64 @@
                     <div id="_IF_@Current.Name" class="frame" style="display: block;">
                         <table class="table" style="table-layout: fixed;">
                             <tbody>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface" />
-                                    </td>
+                            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <td data-role="CmdContainer">
+                                    <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;"/>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface"/>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface"/>
+                                </td>
+                                <td></td>
+                                <td> Enable of Disable @Current.Name interface</td>
+                            </tr>
+                            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <td data-role="CmdContainer">
+                                    <input type="text" data="$address" style="width: 60%;"/>
+                                    <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;"/>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" class="float-right"/>
+                                </td>
+                                <td data-role="CmdContainer">
+                                    <input type="hidden" data="$net_if" value="@Current.Name"/>
+                                    <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-macaddress" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-macaddress" data-par="$net_if" value="Update" class="float-right"/>
+                                </td>
+                                <td> Edit @Current.Name MAC Address</td>
+                            </tr>
+                            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <td data-role="CmdContainer">
+                                    <input type="text" data="$mtu" style="width: 60%;"/>
+                                    <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;"/>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" class="float-right"/>
+                                </td>
+                                <td data-role="CmdContainer">
+                                    <input type="hidden" data="$net_if" value="@Current.Name"/>
+                                    <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-mtu" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                    <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-mtu" data-par="$net_if" value="Update" class="float-right"/>
+                                </td>
+                                <td> Edit @Current.Name MTU</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="_Bon_@Current.Name" class="frame" style="display: block;">
+                        <table class="table" style="table-layout: fixed;">
+                            <tbody>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td></td>
-                                    <td> Enable of Disable @Current.Name interface</td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bond" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="brctl-show-brif" data-par="$bond" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="brctl-show-brif" data-par="$bond" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Get network interfaces assigned to @Current.Name</td>
                                 </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Apply" />
-                                    </td>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td></td>
-                                    <td> Remove the current configuration from @Current.Name</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" />
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bond" value="@Current.Name" />
+                                        <input type="text" data="$net_if" data-role="show-net-if" />
+                                        <input type="button" data-role="CmdLaunch" data-name="bond-add-if" data-par="$bond,$net_if" value="Update" class="float-right" />
                                     </td>
-                                    <td></td>
-                                    <td> Edit @Current.Name MAC Address</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$mtu" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" />
-                                    </td>
-                                    <td></td>
-                                    <td> Edit @Current.Name MTU</td>
+                                    <td> Add interface to @Current.Name</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -358,23 +325,75 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Flush" />
                                     </td>
                                     <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV4 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+
+                                        <select data="$range" style="width: 30%; height: 25px;" class="border-anthilla-green">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16" selected="selected">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                            <option value="32">32</option>
+                                        </select>
+
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-addr" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-addr" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
                                     <td> Add static ip address to @Current.Name with ipv4 protocol</td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient4" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
@@ -390,23 +409,35 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip6-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV6 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="text" data="$range" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip6-add-addr" data-par="$address,$range,$net_if" value="Apply" />
                                     </td>
                                     <td></td>
                                     <td> Add static ip address to @Current.Name with ipv6 protocol</td>
                                 </tr>
-                                <tr data-role="CmdContainer" data-select="1" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient6" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
@@ -422,37 +453,34 @@
     @EndEach
     <br />
     <legend>Bridge Interfaces</legend>
-    <!--<tr>
-      <td style="width: 350px;">
-        <label>Add Bridge</label>
-      </td>
-      <td>
-        <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;"/>
-        <input data-role="submit-general-function" data-command="brctl addbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;"/>
-      </td>
-    </tr>
-    <tr>
-      <td style="width: 350px;">
-        <label>Delete Bridge</label>
-      </td>
-      <td>
-        <input data-role="input-general-function" type="text" style="width: 60%; height: 25px;" />
-        <input data-role="submit-general-function" data-command="brctl delbr [tag:x]" type="button" value="Apply" class="bg-anthilla-green" style="width: 40% !important; color: #464646; float: right;" />
-      </td>
-    </tr>-->
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td><label>Create a new bridge</label></td>
+                <td data-role="CmdContainer">
+                    <input type="text" data="$bridge" style="width: 60%;" />
+                    <input type="button" data-role="CmdLaunch" data-name="brctl-add" data-par="$bridge" value="Create" class="float-right" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
     @Each.NetworkBridgeIf
     <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white">
             @Current.Name
+            <p data-role="CmdContainer" style="display: inline-block; margin-left: 20px;">
+                <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-updown" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+            </p>
         </div>
         <div class="panel-content" style="display: none;">
             <table class="table">
                 <tbody>
                     <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                         <td>
-                            <textarea data="CmdGet" data-role="CmdResult" class="bg-transparent fg-white border-anthilla-green" style="border-width: 0; max-width: 90%; min-width: 90%; height: auto;" readonly="readonly"></textarea>
-                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" />
+                            <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-if-stats" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" class="float-right" />
                         </td>
                     </tr>
                 </tbody>
@@ -461,7 +489,8 @@
             <div data-role="tab-control" class="tab-control">
                 <ul class="tabs">
                     <li class="active"><a href="#_IF_@Current.Name">Interface Configuration</a></li>
-                    <li><a href="#_IPV4_@Current.Name">IPV6 Configuration</a></li>
+                    <li><a href="#_BR_@Current.Name">Bridge Configuration</a></li>
+                    <li><a href="#_IPV4_@Current.Name">IPV4 Configuration</a></li>
                     <li><a href="#_IPV6_@Current.Name">IPV6 Configuration</a></li>
                 </ul>
 
@@ -469,40 +498,84 @@
                     <div id="_IF_@Current.Name" class="frame" style="display: block;">
                         <table class="table" style="table-layout: fixed;">
                             <tbody>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface" />
                                     </td>
                                     <td></td>
                                     <td> Enable of Disable @Current.Name interface</td>
                                 </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Apply" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" class="float-right" />
                                     </td>
-                                    <td></td>
-                                    <td> Remove the current configuration from @Current.Name</td>
-                                </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" />
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-macaddress" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-macaddress" data-par="$net_if" value="Update" class="float-right" />
                                     </td>
-                                    <td></td>
                                     <td> Edit @Current.Name MAC Address</td>
                                 </tr>
-                                <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                                    <td>
-                                        <input type="text" data="$mtu" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" />
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$mtu" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" class="float-right" />
                                     </td>
-                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-mtu" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-mtu" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
                                     <td> Edit @Current.Name MTU</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="_BR_@Current.Name" class="frame" style="display: block;">
+                        <table class="table" style="table-layout: fixed;">
+                            <tbody>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bridge" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="brctl-show-brif" data-par="$bridge" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="brctl-show-brif" data-par="$bridge" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Get network interfaces assigned to @Current.Name</td>
+                                </tr>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bridge" value="@Current.Name" />
+                                        <input type="text" data="$net_if" data-role="show-net-if" />
+                                        <input type="button" data-role="CmdLaunch" data-name="brctl-add-if" data-par="$bridge,$net_if" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Add interface to @Current.Name</td>
+                                </tr>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td></td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bridge" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="brctl-show-brid" data-par="$bridge" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="brctl-show-brid" data-par="$bridge" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Get @Current.Name id</td>
+                                </tr>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td>
+                                        <label>stp enabled</label>
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$bridge" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="brctl-show-brstpstatus" data-par="$bridge" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="brctl-show-brstpstatus" data-par="$bridge" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Get @Current.Name id</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -514,23 +587,75 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
-                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Flush" />
                                     </td>
                                     <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV4 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+
+                                        <select data="$range" style="width: 30%; height: 25px;" class="border-anthilla-green">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16" selected="selected">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                            <option value="32">32</option>
+                                        </select>
+
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-addr" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-addr" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
                                     <td> Add static ip address to @Current.Name with ipv4 protocol</td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient4" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
@@ -546,23 +671,244 @@
                                     <td colspan="3">
                                         <select data-role="ContextSelection">
                                             <option value="0" selected="selected">ipv4</option>
-                                            <option value="1">ipv6</option>
+                                            <option value="1">dhcp</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="text" data="$address" style="width: 90%;" />
-                                        <input type="text" data="$range" style="width: 90%;" />
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip6-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV6 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="text" data="$range" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="ip6-add-addr" data-par="$address,$range,$net_if" value="Apply" />
                                     </td>
                                     <td></td>
                                     <td> Add static ip address to @Current.Name with ipv6 protocol</td>
                                 </tr>
-                                <tr data-role="CmdContainer" data-select="1" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                                     <td>
-                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 90%;" />
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="dhclient6" data-par="$net_if" value="Apply" />
+                                    </td>
+                                    <td></td>
+                                    <td> Add dynamic ip address to @Current.Name with ipv6 protocol</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @EndEach
+    <br />
+    <legend>
+        Virtual Interfaces
+        <i id="ShowNetworkVirtualIf" class="icon-eye fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
+    @Each.NetworkVirtualIf
+    <div data-role="panel" data-show="NetworkVirtualIf" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px; display: none;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            @Current.Name
+            <p data-role="CmdContainer" style="display: inline-block; margin-left: 20px;">
+                <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-updown" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+            </p>
+        </div>
+        <div class="panel-content" style="display: none;">
+            <table class="table">
+                <tbody>
+                    <tr data-role="CmdContainer" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                        <td>
+                            <span data="CmdGet" data-role="CmdResult" data-name="ip4-show-if-stats" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                            <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                            <input type="button" data-role="CmdLaunch" data-name="ip4-show-if-stats" data-par="$net_if" value="Update" class="float-right" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" style="height: 2px;" />
+            <div data-role="tab-control" class="tab-control">
+                <ul class="tabs">
+                    <li class="active"><a href="#_IF_@Current.Name">Interface Configuration</a></li>
+                    <li><a href="#_IPV4_@Current.Name">IPV4 Configuration</a></li>
+                    <li><a href="#_IPV6_@Current.Name">IPV6 Configuration</a></li>
+                </ul>
+
+                <div class="frames">
+                    <div id="_IF_@Current.Name" class="frame" style="display: block;">
+                        <table class="table" style="table-layout: fixed;">
+                            <tbody>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-enable-if" data-par="$net_if" value="Enable Interface" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-disable-if" data-par="$net_if" value="Disable Interface" />
+                                    </td>
+                                    <td></td>
+                                    <td> Enable of Disable @Current.Name interface</td>
+                                </tr>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-macaddress" data-par="$net_if,$address" value="Apply" class="float-right" />
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-macaddress" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-macaddress" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Edit @Current.Name MAC Address</td>
+                                </tr>
+                                <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <input type="text" data="$mtu" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-set-mtu" data-par="$net_if,$mtu" value="Apply" class="float-right" />
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-mtu" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-mtu" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Edit @Current.Name MTU</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="_IPV4_@Current.Name" class="frame" style="display: block;">
+                        <table class="table context" style="table-layout: fixed;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <select data-role="ContextSelection">
+                                            <option value="0" selected="selected">ipv4</option>
+                                            <option value="1">dhcp</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td>
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV4 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+
+                                        <select data="$range" style="width: 30%; height: 25px;" class="border-anthilla-green">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16" selected="selected">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                            <option value="32">32</option>
+                                        </select>
+
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                    </td>
+                                    <td data-role="CmdContainer">
+                                        <input type="hidden" data="$net_if" value="@Current.Name" />
+                                        <span data="CmdGet" data-role="CmdResult" data-name="ip4-get-if-addr" data-par="$net_if" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                                        <input type="button" data-role="CmdLaunch" data-name="ip4-get-if-addr" data-par="$net_if" value="Update" class="float-right" />
+                                    </td>
+                                    <td> Add static ip address to @Current.Name with ipv4 protocol</td>
+                                </tr>
+                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td>
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="dhclient4" data-par="$net_if" value="Apply" />
+                                    </td>
+                                    <td></td>
+                                    <td> Add dynamic ip address to @Current.Name with ipv4 protocol</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="_IPV6_@Current.Name" class="frame" style="display: block;">
+                        <table class="table context" style="table-layout: fixed;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <select data-role="ContextSelection">
+                                            <option value="0" selected="selected">ipv4</option>
+                                            <option value="1">dhcp</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td>
+                                        Flush the current configuration from @Current.Name
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="checkbox" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip6-flush-configuration" data-par="$net_if" value="Flush" />
+                                    </td>
+                                    <td></td>
+                                    <td> Flush the current configuration from @Current.Name</td>
+                                </tr>
+                                <tr data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td data-role="CmdContainer">
+                                        <p>IPV6 - Static - Add Address</p>
+                                        <input type="text" data="$address" style="width: 60%;" />
+                                        <input type="text" data="$range" style="width: 60%;" />
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
+                                        <input type="button" data-role="CmdLaunch" data-name="ip6-add-addr" data-par="$address,$range,$net_if" value="Apply" />
+                                    </td>
+                                    <td></td>
+                                    <td> Add static ip address to @Current.Name with ipv6 protocol</td>
+                                </tr>
+                                <tr data-role="CmdContainer" data-select="1" style="display: none; border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                                    <td>
+                                        <p>Dhclient4 - Set Interface</p>
+                                        <input type="hidden" data="$net_if" value="@Current.Name" style="width: 60%;" />
                                         <input type="button" data-role="CmdLaunch" data-name="dhclient6" data-par="$net_if" value="Apply" />
                                     </td>
                                     <td></td>
