@@ -60,13 +60,11 @@ namespace Antd.Modules {
 
             Post["/zfs/snap"] = x => {
                 var pool = (string)Request.Form.Pool;
-                var hourInterval = (string)Request.Form.Interval;
-                if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(hourInterval)) {
+                var interval = (string)Request.Form.Interval;
+                if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                //var cron = $"0 0 0/{hourInterval} * * ?";
-                var cron = hourInterval;
-                Timers.Create(pool.ToLower() + "snap", cron, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
+                Timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
                 return HttpStatusCode.OK;
             };
 

@@ -176,7 +176,7 @@ namespace Antd {
         private static void StartZpoolSnapshot() {
             var pools = Zpool.List();
             foreach (var zp in pools) {
-                Timers.Create(zp.Name.ToLower() + "snap", "1", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
+                Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
             }
         }
 

@@ -123,7 +123,7 @@ namespace Antd.SystemdTimer {
         private static readonly TimerRepository TimerRepository = new TimerRepository();
 
         public static void Create(string name, string time, string command) {
-            var timerFile = $"{TargetDirectory}/{name}.target";
+            var timerFile = $"{TargetDirectory}/{name}.timer";
             if (File.Exists(timerFile)) {
                 File.Delete(timerFile);
             }
@@ -132,10 +132,11 @@ namespace Antd.SystemdTimer {
                 $"Description={name} Timer",
                 "",
                 "[Timer]",
-                $"OnCalendar={time}h",
+                $"OnCalendar={time}",
+                "Persistent=true",
                 "",
                 "[Install]",
-                "WantedBy=applicative.target",
+                "WantedBy=tt.target",
                 ""
             };
             File.WriteAllLines(timerFile, timerText);
@@ -154,7 +155,7 @@ namespace Antd.SystemdTimer {
                 $"ExecStart={command}",
                 "",
                 "[Install]",
-                "WantedBy=applicative.target",
+                "WantedBy=tt.target",
                 ""
             };
             File.WriteAllLines(serviceFile, serviceText);
@@ -200,7 +201,7 @@ namespace Antd.SystemdTimer {
             foreach (var file in files.Where(_ => _.EndsWith(".target"))) {
                 var name = Path.GetFileName(file);
                 if (name != null) {
-                    var coreName = name.Replace(".target", "");
+                    var coreName = name.Replace(".timer", "");
                     var tryget = TimerRepository.GetByName(coreName);
                     var time = "";
                     if (!File.Exists(file)) continue;

@@ -68,9 +68,11 @@ function LoadNetworkIf() {
     if ($('[data-role="show-net-if"]').length > 0) {
         $('[data-role="show-net-if"]').each(function () {
             var init = InitNetworkIf($(this));
-            init.load(function (callback) {
-                Callback(callback, this.settings.remoteUrl);
-            });
+            if (init != undefined) {
+                init.load(function (callback) {
+                    Callback(callback, this.settings.remoteUrl);
+                });
+            }
             $(this).hide();
         });
     }

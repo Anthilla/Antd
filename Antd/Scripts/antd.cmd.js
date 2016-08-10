@@ -81,3 +81,13 @@ $(document).ready(function () {
         this.style.height = (this.scrollHeight + 10) + 'px';
     });
 });
+
+
+data = "ReplaceNewLine"
+
+$(document).ready(function () {
+    $('[data="ReplaceNewLine"]').each(function () {
+        var txt = $(this).text();
+        $(this).html(txt.replace(/\n/g, "<br/>"));
+    });
+});

@@ -99,13 +99,13 @@ namespace antdsh {
                 case "all":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
                     UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
-                    RestartAntd();
                     UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
                     UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
-                    RestartAntdsh();
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
                     UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+                    RestartAntd();
+                    RestartAntdsh();
                     break;
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
@@ -375,8 +375,9 @@ namespace antdsh {
 
         private static void RestartAntdsh() {
             Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl stop framework-antdsh.mount");
-            Terminal.Execute("systemctl restart app-antdsh-02-mount.service");
+            Terminal.Execute("systemd-run --on-active=4 /usr/bin/systemctl stop framework-antdsh.mount");
+            Terminal.Execute("systemd-run --on-active=5 /usr/bin/systemctl restart app-antdsh-02-mount.service");
+            Environment.Exit(1);
         }
     }
 }

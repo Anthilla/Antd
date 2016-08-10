@@ -24,6 +24,22 @@
         </div>
         <div class="row" style="padding-bottom: 20px;">
             <div class="span3">
+                <label>Interval</label>
+            </div>
+            <div class="span8">
+                <select name="Interval" data-guid="@Current.Guid" data-role="select-hour" style="width: 90%;">
+                    <option value="*-*-* *:0/10:00" selected>10 minutes</option>
+                    <option value="*-*-* *:0/30:00">30 minutes</option>
+                    <option value="hourly">1 hour</option>
+                    <option value="*-*-* 0/4:00:00">4 hours</option>
+                    <option value="*-*-* 0/12:00:00">12 hours</option>
+                    <option value="daily">24 hours</option>
+                    <option value="*-*-* *:0/1:00">1 minute</option>
+                </select>
+            </div>
+        </div>
+        <!--<div class="row" style="padding-bottom: 20px;">
+            <div class="span3">
                 <label>Cron Ex</label>
             </div>
             <div class="span8">
@@ -33,7 +49,7 @@
                     <input type="text" name="CronExValue" id="CronExValue" value="* * * * * ? *" readonly="readonly" />
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="row">
             <div class="span3">
             </div>
@@ -55,7 +71,6 @@
                     <br />
                     <button style="width: 90%;" class="bg-anthilla-green upcase" data-role="EditCronJob" data-guid="@Current.Id">Save</button>
                 </td>
-                <td>@Current.CronExpression</td>
                 <td>
                     <a data-role="LaunchCronJob" data-guid="@Current.Id" href="#" class="button bg-green" style="width: 90%; color: #3a3a3a !important;">Launch Now</a>
                     <a data-role="DeleteCronJob" data-guid="@Current.Id" href="#" class="button bg-violet" style="width: 90%; color: #3a3a3a !important;">Delete</a>
@@ -80,102 +95,3 @@
         </tbody>
     </table>
 </div>
-<script data-context="cron" type="text/javascript">
-    $(document).ready(function () {
-        $('#CronSelector').cron({
-            onChange: function () {
-                $('#CronExValue').val($(this).cron("value"));
-            },
-            customValues: {
-                "2 Hours": "0 0 0/2 * * ?",
-                "5 Minutes": "0 0/5 * * * ?",
-                "10 Seconds": "0/10 * * * * ?"
-            }
-        });
-    });
-
-    $('#ShowCronInfo').click(function () {
-        $('#CronDashboard').show();
-    });
-
-    $('#HideCronInfo').click(function () {
-        $('#CronDashboard').hide();
-    });
-
-    $('[data-role="EditCronJob"]').click(function () {
-        var guid = $(this).attr('data-guid');
-        var command = $(this).parents('td').find('textarea').val();
-        jQuery.support.cors = true;
-        $.ajax({
-            url: "/scheduler/edit",
-            type: "POST",
-            data: {
-                Guid: guid,
-                Command: command
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="DeleteCronJob"]').click(function () {
-        var guid = $(this).attr('data-guid');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: "/scheduler/delete",
-            type: "POST",
-            data: {
-                Guid: guid
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="DisableCronJob"]').click(function () {
-        var guid = $(this).attr('data-guid');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: "/scheduler/disable",
-            type: "POST",
-            data: {
-                Guid: guid
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="EnableCronJob"]').click(function () {
-        var guid = $(this).attr('data-guid');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: "/scheduler/enable",
-            type: "POST",
-            data: {
-                Guid: guid
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="LaunchCronJob"]').click(function () {
-        var guid = $(this).attr('data-guid');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: "/scheduler/launch",
-            type: "POST",
-            data: {
-                Guid: guid
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-</script>
