@@ -96,6 +96,8 @@ namespace antdlib.common {
 
         public static string AuthKeys => "/root/.ssh/authorized_keys";
 
+        public static string Home => "/home";
+
         public static string ExeAntd => "Antd.exe";
         public static string ExeAntdsh => "antdsh.exe";
 

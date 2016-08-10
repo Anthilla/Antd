@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Antd.Ssh;
 using Nancy;
 
 namespace Antd.Modules {
@@ -41,11 +40,6 @@ namespace Antd.Modules {
             Get["/test/page2"] = x => View["page-test-2"];
 
             Get["/test/vnc"] = x => View["page-vnc"];
-
-            Get["/test/ssh"] = x => {
-                Test.Start("aos003", "root", "root");
-                return View["page-test"];
-            };
         }
     }
 }

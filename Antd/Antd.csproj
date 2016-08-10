@@ -174,7 +174,7 @@
     <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
-    <Compile Include="Ssh\SshConfig.cs" />
+    <Compile Include="Ssh.cs" />
     <Compile Include="Ssh\Test.cs" />
     <Compile Include="Storage\Disks.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
@@ -219,6 +219,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery-cron.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-ssh-authkey.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-ssh.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-scheduler.html">

@@ -68,6 +68,7 @@
 @Partial['antd/page-antd-vm'];
 @Partial['antd/page-antd-mount'];
 @Partial['antd/page-antd-users'];
+<div data-render="part-ssh"></div>
 @Partial['antd/page-antd-samba'];
 @EndSection
 
@@ -91,6 +92,17 @@
             type: 'GET',
             success: function(data) {
                 $('[data-render="part-scheduler"]').html(data);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/part/ssh',
+            type: 'GET',
+            success: function (data) {
+                $('[data-render="partpart-ssh"]').html(data);
             }
         });
     });

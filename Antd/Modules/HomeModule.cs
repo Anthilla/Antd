@@ -68,7 +68,8 @@ namespace Antd.Modules {
                     "VM",
                     "Mount",
                     "Users",
-                    "Samba",
+                    "Ssh",
+                    "Samba"
                 };
 
                 var os = Terminal.Execute("uname -a");

@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Dynamic;
 using System.Linq;
 using Antd.Info;
@@ -51,6 +50,13 @@ namespace Antd.Modules {
                 var scheduledJobs = Timers.GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
                 return View["_partial/part-scheduler", viewModel];
+            };
+
+            Get["/part/ssh"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                var authorizedKeys = Ssh.GetAuthorizedKeys();
+                viewModel.Keys = authorizedKeys;
+                return View["_partial/part-ssh", viewModel];
             };
         }
     }
