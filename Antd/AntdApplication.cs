@@ -106,6 +106,7 @@ namespace Antd {
             Database.RegisterView(new MacAddressView());
 
             Database.RegisterView(new SambaConfigView());
+            Database.RegisterView(new DhcpConfigView());
 
             ConsoleLogger.Log("database ready");
 

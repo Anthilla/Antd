@@ -6,7 +6,7 @@ using antdlib.views;
 using antdlib.views.Repo;
 
 namespace Antd.Database {
-    public class SambaConfigRepository {
+    public class BindConfigRepository {
 
         public class RootObject {
             public string Key { get; set; }
@@ -14,21 +14,21 @@ namespace Antd.Database {
             public string Description { get; set; }
         }
 
-        private const string ViewName = "SambaConfig";
+        private const string ViewName = "BindConfig";
 
-        public IEnumerable<SambaConfigSchema> GetAll() {
-            var result = DatabaseRepository.Query<SambaConfigSchema>(AntdApplication.Database, ViewName);
+        public IEnumerable<BindConfigSchema> GetAll() {
+            var result = DatabaseRepository.Query<BindConfigSchema>(AntdApplication.Database, ViewName);
             return result;
         }
 
-        public SambaConfigSchema GetByGuid(string guid) {
-            var result = DatabaseRepository.Query<SambaConfigSchema>(AntdApplication.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
+        public BindConfigSchema GetByGuid(string guid) {
+            var result = DatabaseRepository.Query<BindConfigSchema>(AntdApplication.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
             return result.FirstOrDefault();
         }
 
         public bool Create(IDictionary<string, string> dict) {
             var config = dict["Config"];
-            var obj = new SambaConfigModel {
+            var obj = new BindConfigModel {
                 Config = config
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
@@ -38,7 +38,7 @@ namespace Antd.Database {
         public bool Edit(IDictionary<string, string> dict) {
             var id = dict["Id"];
             var config = dict["Config"];
-            var objUpdate = new SambaConfigModel {
+            var objUpdate = new BindConfigModel {
                 Id = id.ToGuid(),
                 Config = config.IsNullOrEmpty() ? null : config
             };
@@ -47,7 +47,7 @@ namespace Antd.Database {
         }
 
         public bool Delete(string guid) {
-            var result = DatabaseRepository.Delete<SambaConfigModel>(AntdApplication.Database, Guid.Parse(guid));
+            var result = DatabaseRepository.Delete<BindConfigModel>(AntdApplication.Database, Guid.Parse(guid));
             return result;
         }
 
@@ -60,7 +60,7 @@ namespace Antd.Database {
 
         public bool Dump(string id, string config) {
             Delete(id);
-            var obj = new SambaConfigModel {
+            var obj = new BindConfigModel {
                 Id = Guid.Parse(id),
                 Guid = id,
                 Config = config

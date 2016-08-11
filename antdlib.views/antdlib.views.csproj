@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindConfigModel.cs" />
+    <Compile Include="DhcpConfigModel.cs" />
     <Compile Include="SambaConfigModel.cs" />
     <Compile Include="SshKeyModel.cs" />
     <Compile Include="Default\Commands.cs" />

@@ -129,9 +129,6 @@ namespace antdlib.Svcs.Samba {
         }
 
         public class SambaModel {
-            public string Id { get; set; }
-            public string Guid { get; set; }
-            public string Timestamp { get; set; }
             public List<LineModel> Data { get; set; } = new List<LineModel>();
             public List<ShareModel> Share { get; set; } = new List<ShareModel>();
         }
@@ -211,9 +208,6 @@ namespace antdlib.Svcs.Samba {
                     }
                 }
                 var samba = new SambaModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
                 };
@@ -246,9 +240,6 @@ namespace antdlib.Svcs.Samba {
                 var shares = MapFile.Get().Share;
                 var data = newParameters.Select(ConvertData).ToList();
                 var samba = new SambaModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
                 };
@@ -288,9 +279,6 @@ namespace antdlib.Svcs.Samba {
                 };
                 shares.Add(newShare);
                 var samba = new SambaModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
                 };
@@ -326,9 +314,6 @@ namespace antdlib.Svcs.Samba {
                 var data = MapFile.Get().Data;
                 data.Add(line);
                 var samba = new SambaModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
                 };
@@ -398,9 +383,6 @@ namespace antdlib.Svcs.Samba {
                 var data = MapFile.Get().Data;
                 shares.Add(sh);
                 var samba = new SambaModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     Share = shares,
                     Data = data
                 };

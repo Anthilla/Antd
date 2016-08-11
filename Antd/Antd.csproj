@@ -87,6 +87,8 @@
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\MachineConfiguration.cs" />
+    <Compile Include="Database\BindConfigRepository.cs" />
+    <Compile Include="Database\DhcpConfigRepository.cs" />
     <Compile Include="Database\SambaConfigRepository.cs" />
     <Compile Include="Database\SshKeyRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />

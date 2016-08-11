@@ -26,20 +26,19 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
-
-using System;
+using antdlib.ViewBinds;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib;
 using antdlib.common;
 using antdlib.common.Helpers;
-using antdlib.ViewBinds;
 using Antd.Database;
 using Antd.MountPoint;
+using Newtonsoft.Json;
 
-namespace Antd.Svcs.Dhcp {
+namespace antdlib.Svcs.Dhcp {
     public class DhcpConfig {
+
         private const string ServiceGuid = "470782AC-4EB4-4964-8B55-F900DABAB59B";
         private const string Dir = "/etc/dhcp";
         private static readonly string MntDir = Mounts.SetDirsPath(Dir);
@@ -52,13 +51,13 @@ namespace Antd.Svcs.Dhcp {
         }
 
         private static bool CheckIsActive() {
-            return new MountRepository().GetByPath(Dir) != null;
+            var mount = new MountRepository().GetByPath(Dir);
+            return mount != null;
         }
 
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Terminal.Execute("systemctl restart dhcpd4");
         }
 
         public class MapRules {
@@ -99,6 +98,8 @@ namespace Antd.Svcs.Dhcp {
             }
         }
 
+        private static readonly DhcpConfigRepository Repository = new DhcpConfigRepository();
+
         public class LineModel {
             public string FilePath { get; set; }
             public string Key { get; set; }
@@ -115,9 +116,6 @@ namespace Antd.Svcs.Dhcp {
         }
 
         public class DhcpModel {
-            public string Id { get; set; }
-            public string Guid { get; set; }
-            public string Timestamp { get; set; }
             public List<LineModel> DhcpGlobal { get; set; } = new List<LineModel>();
             public List<LineModel> DhcpInclude { get; set; } = new List<LineModel>();
             public List<OptionModel> DhcpKey { get; set; } = new List<OptionModel>();
@@ -136,6 +134,7 @@ namespace Antd.Svcs.Dhcp {
         }
 
         public class MapFile {
+
             public static void Render() {
                 var path = $"{MntDir}/{MainFile}";
                 var input = File.ReadAllText(path);
@@ -155,9 +154,6 @@ namespace Antd.Svcs.Dhcp {
                 var @class = DhcpStatement.AssignClass(input).ToList();
                 var subclass = DhcpStatement.AssignSubclass(input).ToList();
                 var dhcp = new DhcpModel {
-                    Id = ServiceGuid,
-                    Guid = ServiceGuid,
-                    Timestamp = Timestamp.Now,
                     DhcpGlobal = global,
                     DhcpInclude = include,
                     DhcpKey = key,
@@ -174,13 +170,16 @@ namespace Antd.Svcs.Dhcp {
                     DhcpClass = @class,
                     DhcpSubclass = subclass
                 };
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static DhcpModel Get() {
-                throw new NotImplementedException();
-                //var dhcp = DeNSo.Session.New.Get<DhcpModel>(s => s.Guid == ServiceGuid).FirstOrDefault();
-                //return dhcp;
+                var dhcpCgf = Repository.GetByGuid(ServiceGuid);
+                if (string.IsNullOrEmpty(dhcpCgf.Config)) {
+                    return null;
+                }
+                var dhcp = JsonConvert.DeserializeObject<DhcpModel>(dhcpCgf.Config);
+                return dhcp;
             }
 
             public static void AddGlobal(string key, string value) {
@@ -192,9 +191,8 @@ namespace Antd.Svcs.Dhcp {
                     BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpGlobal.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddPrefix6(string key, string value) {
@@ -206,9 +204,8 @@ namespace Antd.Svcs.Dhcp {
                     BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpPrefix6.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddRange6(string key, string value) {
@@ -220,9 +217,8 @@ namespace Antd.Svcs.Dhcp {
                     BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpRange6.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddRange(string key, string value) {
@@ -234,89 +230,78 @@ namespace Antd.Svcs.Dhcp {
                     BooleanVerbs = Helper.ServiceData.SupposeBooleanVerbs(value)
                 };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpRange.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddKey(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpKey.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddSubnet(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpSubnet.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddClass(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpClass.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddHost(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpHost.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddSubclass(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpSubclass.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddSubnet6(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpSubnet6.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddFailover(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpFailover.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddLogging(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpLogging.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddGroup(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpGroup.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void AddSharedNetwork(string name) {
                 var ob = new OptionModel { Name = name };
                 var dhcp = Get();
-                dhcp.Timestamp = Timestamp.Now;
                 dhcp.DhcpSharedNetwork.Add(ob);
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
         }
 
@@ -336,7 +321,6 @@ namespace Antd.Svcs.Dhcp {
 
             public static void SaveConfigFor(string section, List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
-                dhcp.Timestamp = Timestamp.Now;
                 var data = (from parameter in newParameters where parameter.DataKey.Length > 0 select ConvertData(parameter)).ToList();
                 var options = new List<OptionModel>();
                 var option = new OptionModel {
@@ -354,41 +338,35 @@ namespace Antd.Svcs.Dhcp {
                 else if (section == "logging") { dhcp.DhcpLogging = options; }
                 else if (section == "group") { dhcp.DhcpGroup = options; }
                 else if (section == "shared-network") { dhcp.DhcpSharedNetwork = options; }
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void SaveGlobal(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
-                dhcp.Timestamp = Timestamp.Now;
-                var data = (from parameter in newParameters
-                            where parameter.DataKey.Length > 0
-                            select ConvertData(parameter)).ToList();
+                var data = (from parameter in newParameters where parameter.DataKey.Length > 0 select ConvertData(parameter)).ToList();
                 dhcp.DhcpGlobal = data;
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void SavePrefix6(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
-                dhcp.Timestamp = Timestamp.Now;
                 var data = (from parameter in newParameters where parameter.DataKey.Length > 0 select ConvertData(parameter)).ToList();
                 dhcp.DhcpPrefix6 = data;
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void SaveRange6(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
-                dhcp.Timestamp = Timestamp.Now;
                 var data = (from parameter in newParameters where parameter.DataKey.Length > 0 select ConvertData(parameter)).ToList();
                 dhcp.DhcpRange6 = data;
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void SaveRange(List<ServiceDhcp> newParameters) {
                 var dhcp = MapFile.Get();
-                dhcp.Timestamp = Timestamp.Now;
                 var data = (from parameter in newParameters where parameter.DataKey.Length > 0 select ConvertData(parameter)).ToList();
                 dhcp.DhcpRange = data;
-                throw new NotImplementedException();
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(dhcp));
             }
 
             public static void DumpGlobalConfig() {
@@ -452,7 +430,7 @@ namespace Antd.Svcs.Dhcp {
                 File.AppendAllLines(filePath, linesToAppend);
             }
 
-            private static void WriteMutipleSection(string section, string name, string filePath, IEnumerable<LineModel> lines) {
+            private static void WriteMutipleSection(string section, string name, string filePath, List<LineModel> lines) {
                 var linesToAppend = new List<string>();
                 var nametowrite = section == "zone" ? $" \"{name}\" " : $" {name} ";
                 linesToAppend.Add($"{section}{nametowrite}{{");

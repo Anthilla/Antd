@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Dynamic;
 using System.Linq;
 using antdlib.common;
@@ -35,7 +34,6 @@ using Antd.Database;
 using Antd.Info;
 using Antd.SystemdTimer;
 using Nancy.Security;
-using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
