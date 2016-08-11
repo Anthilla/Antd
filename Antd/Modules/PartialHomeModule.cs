@@ -27,14 +27,20 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Dynamic;
 using System.Linq;
+using antdlib.common;
+using Antd.Database;
 using Antd.Info;
 using Antd.SystemdTimer;
 using Nancy.Security;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
+
+        private readonly SshKeyRepository _sshKeyRepository = new SshKeyRepository();
 
         public PartialHomeModule() {
             this.RequiresAuthentication();
@@ -42,6 +48,7 @@ namespace Antd.Modules {
             Get["/part/info/losetup"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.LosetupInfo = MachineInfo.GetLosetup();
+                ConsoleLogger.Log("Home loading > losetup");
                 return View["_partial/part-info-losetup", viewModel];
             };
 
@@ -49,13 +56,15 @@ namespace Antd.Modules {
                 dynamic viewModel = new ExpandoObject();
                 var scheduledJobs = Timers.GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
+                ConsoleLogger.Log("Home loading > scheduler");
                 return View["_partial/part-scheduler", viewModel];
             };
 
             Get["/part/ssh"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var authorizedKeys = Ssh.GetAuthorizedKeys();
+                var authorizedKeys = _sshKeyRepository.GetAll();
                 viewModel.Keys = authorizedKeys;
+                ConsoleLogger.Log("Home loading > ssh");
                 return View["_partial/part-ssh", viewModel];
             };
         }

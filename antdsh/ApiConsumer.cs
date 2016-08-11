@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Extensions;
 
 namespace antdsh {
     public class ApiConsumer {
@@ -136,12 +135,21 @@ namespace antdsh {
 
         public FileInfo GetFile(string uri, string destination) {
             try {
-                var client = new RestClient(uri);
-                var request = new RestRequest("/", Method.GET);
-                request.AddHeader(InstanceHeader, _instance);
-                client.DownloadData(request).SaveAs(destination);
-                var finfo = new FileInfo(destination);
-                return finfo;
+                //var client = new RestClient(uri);
+                //var request = new RestRequest("/", Method.GET);
+                //request.AddHeader(InstanceHeader, _instance);
+                //client.DownloadData(request).SaveAs(destination);
+                //var finfo = new FileInfo(destination);
+                //return finfo;
+                using (var writer = File.OpenWrite(destination)) {
+                    var client = new RestClient(uri);
+                    var request = new RestRequest("/", Method.GET) {
+                        ResponseWriter = responseStream => responseStream.CopyTo(writer)
+                    };
+                    client.DownloadData(request);
+                    var finfo = new FileInfo(destination);
+                    return finfo;
+                }
             }
             #region Exception
             catch (Exception ex) {

@@ -84,6 +84,7 @@ namespace Antd.Modules {
 
                 var timezones = Terminal.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
                 viewModel.Timezones = timezones;
+                ConsoleLogger.Log("Home loading > host info");
 
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
                 var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
@@ -99,6 +100,7 @@ namespace Antd.Modules {
                     }
                 }
                 viewModel.NetworkVirtualIf = vrtIf;
+                ConsoleLogger.Log("Home loading > network");
 
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
                 viewModel.DhcpdStatus = DhcpConfig.IsActive;
@@ -121,13 +123,16 @@ namespace Antd.Modules {
                 //}
 
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
+                ConsoleLogger.Log("Home loading > firewall");
 
                 viewModel.Mounts = new MountRepository().GetAll();
+                ConsoleLogger.Log("Home loading > mounts");
 
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
                 viewModel.ZfsSnap = ZfsSnap.List();
+                ConsoleLogger.Log("Home loading > storage");
 
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
 
@@ -135,6 +140,7 @@ namespace Antd.Modules {
 
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
+                ConsoleLogger.Log("Home loading > misc");
 
                 return View["antd/page-antd", viewModel];
             };
@@ -188,6 +194,13 @@ namespace Antd.Modules {
 
             Post["/network/import"] = x => {
                 new NetworkInterfaceRepository().Import();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/ssh/savekey"] = x => {
+                string user = Request.Form.User;
+                string[] values = Request.Form.Values;
+                Ssh.SaveKey(user, values);
                 return HttpStatusCode.OK;
             };
         }

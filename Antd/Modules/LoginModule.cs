@@ -69,6 +69,7 @@ namespace Antd.Modules {
             Post["/login"] = x => {
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
+                ConsoleLogger.Log($"login attempt from {username}");
                 var validationGuid = UserDatabase.ValidateUser(username, password);
                 if (validationGuid == null) {
                     return Context.GetRedirect("/login/fail");
@@ -78,6 +79,7 @@ namespace Antd.Modules {
                 cookies.Remove("antd-session");
                 var sessionCookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString());
                 var returnUrl = (string)Request.Form.Return;
+                ConsoleLogger.Log($"{username} logged in successfully");
                 return this.LoginAndRedirect(validationGuid.ToGuid(), DateTime.Now.AddHours(100), returnUrl).WithCookie(sessionCookie);
             };
 

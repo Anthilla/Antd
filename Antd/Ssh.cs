@@ -31,57 +31,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Schema;
-using antdlib;
 using antdlib.common;
-using antdlib.common.Helpers;
-using antdlib.ViewBinds;
-using Antd.Database;
-using Antd.MountPoint;
-using Nancy.Responses;
 
 namespace Antd {
     public class Ssh {
 
-        private static IEnumerable<string> GetUsers() {
-            var u = Directory.EnumerateDirectories(Parameter.Home);
-            return u.Select(Path.GetDirectoryName);
-        }
-
-        public static IEnumerable<AuthorizedKeys> GetAuthorizedKeys() {
-            var ak = new List<AuthorizedKeys>();
-            foreach (var u in GetUsers()) {
-                var auk = $"{Parameter.Home}/{u}/.ssh/authorized_keys";
-                if (File.Exists(auk)) {
-                    var a = new AuthorizedKeys {
-                        User = u
-                    };
-                    var klist = new List<SshKey>();
-                    foreach (var line in File.ReadAllLines(auk)) {
-                        var split = line.Split(' ');
-                        var k = new SshKey {
-                            Type = split[0],
-                            Value = split[1],
-                            PublicUser = split[2]
-                        };
-                        klist.Add(k);
-                    }
-                    a.KeyList = klist;
-                    ak.Add(a);
-                }
+        public static void SaveKey(string user, IEnumerable<string> values) {
+            var authKeyFile = $"/home/{user}/.ssh/authorized_keys";
+            if (!File.Exists(authKeyFile)) {
+                return;
             }
-            return ak;
-        }
-
-        public class AuthorizedKeys {
-            public string User { get; set; }
-            public IEnumerable<SshKey> KeyList { get; set; } = new List<SshKey>();
-        }
-
-        public class SshKey {
-            public string Type { get; set; }
-            public string Value { get; set; }
-            public string PublicUser { get; set; }
+            File.WriteAllLines(authKeyFile, values);
         }
 
         public class Keys {

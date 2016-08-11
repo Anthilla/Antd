@@ -56,9 +56,14 @@ namespace Antd {
             ConsoleLogger.Log("users config ready");
         }
 
-        public void ReloadSsh() {
+        public void Ssh() {
             if (!Parameter.IsUnix)
                 return;
+            new SshKeyRepository().Import();
+            ConsoleLogger.Log("ssh keys imported");
+
+
+
             Terminal.Execute("mkdir -p /root/.ssh");
             if (!File.Exists(Parameter.AuthKeys)) {
                 Terminal.Execute($"touch {Parameter.AuthKeys}");

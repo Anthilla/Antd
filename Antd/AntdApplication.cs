@@ -35,7 +35,6 @@ using antdlib.common;
 using antdlib.views;
 using Nancy;
 using Nancy.Hosting.Self;
-using Owin;
 using RaptorDB;
 
 namespace Antd {
@@ -104,6 +103,7 @@ namespace Antd {
             Database.RegisterView(new RsyncView());
             Database.RegisterView(new UserClaimView());
             Database.RegisterView(new UserView());
+            Database.RegisterView(new SshKeyView());
             Database.RegisterView(new MacAddressView());
             ConsoleLogger.Log("database ready");
 
@@ -112,23 +112,12 @@ namespace Antd {
             Boot.ImportCommands();
             Boot.ConfigureMachine();
             Boot.ReloadUsers();
-            Boot.ReloadSsh();
+            Boot.Ssh();
             Boot.StartScheduler();
             Boot.StartDirectoryWatcher();
             Boot.ImportSystemInformation();
             Boot.CheckCertificate();
             Boot.LaunchApps();
-        }
-    }
-
-    internal class Startup {
-        public void Configuration(IAppBuilder app) {
-            object httpListener;
-            if (app.Properties.TryGetValue(typeof(HttpListener).FullName, out httpListener) && httpListener is HttpListener) {
-                ((HttpListener)httpListener).IgnoreWriteExceptions = true;
-            }
-            StaticConfiguration.DisableErrorTraces = false;
-            app.UseNancy();
         }
     }
 }

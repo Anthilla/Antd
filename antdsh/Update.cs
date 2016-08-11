@@ -53,7 +53,7 @@ namespace antdsh {
         private const string UpdateVerbForUnits = "update.units";
         private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
-        private static string _publicRepositoryUrl = "http://srv.anthilla.com";
+        private static string _publicRepositoryUrl = "http://srv.anthilla.com/";
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string TmpDirectory => $"{Parameter.RepoTemp}/update";

@@ -3,13 +3,16 @@
         Ssh
     </legend>
     @Each.Keys
-    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+    <p>@Current.PublicUser</p>
+    <p>@Current.Value</p>
+    <hr />
+    <!--<div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white">
             Authorized Keys for @Current.User
         </div>
         <div class="panel-content" style="display: none;">
-            @Partial['_partial/part-ssh-authkey', Current.KeyList];
+            <p>@Current.Value</p>
         </div>
-    </div>
+    </div>-->
     @EndEach
 </div>
