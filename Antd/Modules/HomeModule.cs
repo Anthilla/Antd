@@ -137,11 +137,8 @@ namespace Antd.Modules {
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                 ConsoleLogger.Log("Home load done > overlay");
 
-                viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
-
-                viewModel.SSHPort = "22";
-                viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
-                ConsoleLogger.Log("Home load done > misc");
+                //viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
+                //ConsoleLogger.Log("Home load done > misc");
 
                 return View["antd/page-antd", viewModel];
             };

@@ -110,12 +110,6 @@ namespace Antd {
             ConsoleLogger.Log("os mounts ready");
         }
 
-        //public  void LaunchDefaultOsConfiguration() {
-        //    if (!Parameter.IsUnix)
-        //        return;
-        //    ConsoleLogger.Log("default os configuration ready");
-        //}
-
         public void SetWebsocketd() {
             if (!Parameter.IsUnix)
                 return;
@@ -142,15 +136,6 @@ namespace Antd {
             Terminal.Execute("systemctl restart systemd-journald.service");
             ConsoleLogger.Log("journald config ready");
         }
-
-        //public void CheckResolv() {
-        //    if (!Parameter.IsUnix)
-        //        return;
-        //    if (File.Exists("/etc/resolv.conf"))
-        //        return;
-        //    Terminal.Execute("touch /etc/resolv.conf");
-        //    ConsoleLogger.Log("resolv ready");
-        //}
 
         public void SetFirewall() {
             if (!Parameter.IsUnix)

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SambaConfigModel.cs" />
     <Compile Include="SshKeyModel.cs" />
     <Compile Include="Default\Commands.cs" />
     <Compile Include="Default\CommandValues.cs" />

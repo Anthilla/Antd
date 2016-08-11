@@ -104,6 +104,9 @@ namespace Antd {
             Database.RegisterView(new UserView());
             Database.RegisterView(new SshKeyView());
             Database.RegisterView(new MacAddressView());
+
+            Database.RegisterView(new SambaConfigView());
+
             ConsoleLogger.Log("database ready");
 
             Boot.SetMounts();
