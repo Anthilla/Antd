@@ -84,14 +84,12 @@ namespace Antd.Configuration {
             }
             if (string.IsNullOrEmpty(control.ControlCommand)) {
                 Terminal.Execute(firstCommand);
-                ConsoleLogger.Log($"{control.FirstCommand} - applied!");
                 _counter = 0;
                 return;
             }
             var controlResult = Terminal.Execute(controlCommand);
             var firstCheck = controlResult.Contains(control.Check);
             if (firstCheck) {
-                ConsoleLogger.Log($"{control.FirstCommand} - applied!");
                 _counter = 0;
                 return;
             }
@@ -99,7 +97,6 @@ namespace Antd.Configuration {
             controlResult = Terminal.Execute(controlCommand);
             var secondCheck = controlResult.Contains(control.Check);
             if (secondCheck) {
-                ConsoleLogger.Log($"{control.FirstCommand} - applied!");
                 _counter = 0;
                 return;
             }

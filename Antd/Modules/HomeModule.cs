@@ -84,7 +84,7 @@ namespace Antd.Modules {
 
                 var timezones = Terminal.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
                 viewModel.Timezones = timezones;
-                ConsoleLogger.Log("Home loading > host info");
+                ConsoleLogger.Log("Home load done > host info");
 
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
                 var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
@@ -100,7 +100,7 @@ namespace Antd.Modules {
                     }
                 }
                 viewModel.NetworkVirtualIf = vrtIf;
-                ConsoleLogger.Log("Home loading > network");
+                ConsoleLogger.Log("Home load done > network");
 
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
                 viewModel.DhcpdStatus = DhcpConfig.IsActive;
@@ -123,24 +123,25 @@ namespace Antd.Modules {
                 //}
 
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
-                ConsoleLogger.Log("Home loading > firewall");
+                ConsoleLogger.Log("Home load done > firewall");
 
                 viewModel.Mounts = new MountRepository().GetAll();
-                ConsoleLogger.Log("Home loading > mounts");
+                ConsoleLogger.Log("Home load done > mounts");
 
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
                 viewModel.ZfsSnap = ZfsSnap.List();
-                ConsoleLogger.Log("Home loading > storage");
+                ConsoleLogger.Log("Home load done > storage");
 
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
+                ConsoleLogger.Log("Home load done > overlay");
 
                 viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
 
                 viewModel.SSHPort = "22";
                 viewModel.AuthStatus = ApplicationSetting.TwoFactorAuth();
-                ConsoleLogger.Log("Home loading > misc");
+                ConsoleLogger.Log("Home load done > misc");
 
                 return View["antd/page-antd", viewModel];
             };
