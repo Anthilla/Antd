@@ -33,7 +33,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class NetworkInterfaceSchema : RDBSchema {
+    public class NetworkInterfaceSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -54,7 +54,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 1;
+            Version = 5;
             Schema = typeof(NetworkInterfaceSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -63,6 +63,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<NetworkInterfaceModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaNetworkInterfaces = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

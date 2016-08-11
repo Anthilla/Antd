@@ -6,21 +6,15 @@ using antdlib.common;
 namespace antdlib.views.Repo {
     public class DatabaseRepository {
 
-        public static IEnumerable<T> Query<T>(RaptorDB.RaptorDB rdb, string viewName) {
+        public static IEnumerable<T> Query<T>(RaptorDB.RaptorDB rdb, string viewName) where T : EntitySchema, new() {
             var result = rdb.Query(viewName);
-            var list = result.Rows.Select(_ => (T)_).ToList();
-            //if (typeof (T) == typeof (CommandSchema)) {
-            //    list.AddRange((IEnumerable<T>)Default.Commands.All());
-            //}
-            //if (typeof(T) == typeof(CommandValuesSchema)) {
-            //    list.AddRange((IEnumerable<T>)Default.CommandValues.All());
-            //}
+            var list = result.Rows.Select(_ => (T)_).Where(_ => _.Status != EntityStatus.Delete.ToString()).ToList();
             return list;
         }
 
-        public static IEnumerable<T> Query<T>(RaptorDB.RaptorDB rdb, string viewName, Func<T, bool> predicate) {
+        public static IEnumerable<T> Query<T>(RaptorDB.RaptorDB rdb, string viewName, Func<T, bool> predicate) where T : EntitySchema, new() {
             var result = rdb.Query(viewName);
-            var list = result.Rows.Select(_ => (T)_);
+            var list = result.Rows.Select(_ => (T)_).Where(_ => _.Status != EntityStatus.Delete.ToString());
             return list.Where(predicate);
         }
 

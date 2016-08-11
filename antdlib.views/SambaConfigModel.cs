@@ -23,7 +23,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class SambaConfigSchema : RDBSchema {
+    public class SambaConfigSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -52,6 +52,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<SambaConfigModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaSambaConfigs = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

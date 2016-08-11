@@ -31,7 +31,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class MacAddressSchema : RDBSchema {
+    public class MacAddressSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -55,7 +55,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 1;
+            Version = 5;
             Schema = typeof(MacAddressSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -64,6 +64,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<MacAddressModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaMacAddresss = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

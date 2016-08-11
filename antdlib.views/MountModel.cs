@@ -62,16 +62,16 @@ namespace antdlib.views {
         public string DirsPath { get; set; } = "";
         public string HtmlStatusIcon { get; set; } = "";
         public string MountedPath { get; set; } = "";
-        public MountStatus? MountStatus { get; set; } = null;
-        public MountContext? MountContext { get; set; } = null;
+        public MountStatus? MountStatus { get; set; }
+        public MountContext? MountContext { get; set; }
         public string Type { get; set; } = "";
         public string Options { get; set; } = "";
         public IEnumerable<string> AssociatedUnits { get; set; } = new HashSet<string>();
-        public MountEntity? MountEntity { get; set; } = null;
+        public MountEntity? MountEntity { get; set; }
     }
 
     #region [    View    ]
-    public class MountSchema : RDBSchema {
+    public class MountSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -102,7 +102,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 1;
+            Version = 5;
             Schema = typeof(MountSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -111,6 +111,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<MountModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaMounts = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

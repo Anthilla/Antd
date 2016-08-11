@@ -29,7 +29,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class SshKeySchema : RDBSchema {
+    public class SshKeySchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -61,6 +61,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<SshKeyModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaSshKeys = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

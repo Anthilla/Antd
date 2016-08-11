@@ -25,7 +25,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class ObjectSchema : RDBSchema {
+    public class ObjectSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -46,7 +46,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 1;
+            Version = 5;
             Schema = typeof(ObjectSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -55,6 +55,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<ObjectModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaObjects = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

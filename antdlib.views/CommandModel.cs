@@ -27,7 +27,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class CommandSchema : RDBSchema {
+    public class CommandSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -58,6 +58,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<CommandModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaCommands = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

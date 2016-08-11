@@ -47,10 +47,9 @@ namespace Antd.MountPoint {
                 var mntDir = Mounts.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
-                if (Mounts.IsAlreadyMounted(dir) == false) {
-                    ConsoleLogger.Log($"mount {mntDir} -> {dir}");
-                    SetBind(mntDir, dir);
-                }
+                if (Mounts.IsAlreadyMounted(dir)) continue;
+                ConsoleLogger.Log($"mount {mntDir} -> {dir}");
+                SetBind(mntDir, dir);
             }
         }
 

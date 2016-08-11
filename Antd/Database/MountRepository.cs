@@ -55,7 +55,7 @@ namespace Antd.Database {
             };
 
             if (mountContext.IsNullOrEmpty()) {
-                objUpdate.MountContext = null; 
+                objUpdate.MountContext = null;
             }
             else {
                 objUpdate.MountContext = mountContext.ToEnum<MountContext>();
@@ -106,6 +106,13 @@ namespace Antd.Database {
         public bool Delete(string guid) {
             var result = DatabaseRepository.Delete<MountModel>(AntdApplication.Database, Guid.Parse(guid));
             return result;
+        }
+
+        public void DeleteAll() {
+            var all = GetAll();
+            foreach (var el in all) {
+                Delete(el.Id);
+            }
         }
 
         public IEnumerable<MountSchema> GetByUnit(string unit) {

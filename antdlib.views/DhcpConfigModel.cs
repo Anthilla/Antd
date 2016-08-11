@@ -23,7 +23,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class DhcpConfigSchema : RDBSchema {
+    public class DhcpConfigSchema : EntitySchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -52,6 +52,7 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<DhcpConfigModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaDhcpConfigs = {
+                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,
