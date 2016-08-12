@@ -83,11 +83,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntdBoot.cs" />
+    <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\MachineConfiguration.cs" />
+    <Compile Include="Configuration\SetupConfiguration.cs" />
     <Compile Include="Database\BindConfigRepository.cs" />
+    <Compile Include="Database\BootOsParametersLoadRepository.cs" />
+    <Compile Include="Database\BootServiceLoadRepository.cs" />
+    <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\DhcpConfigRepository.cs" />
     <Compile Include="Database\SambaConfigRepository.cs" />
     <Compile Include="Database\SshKeyRepository.cs" />
@@ -250,9 +255,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-cmd.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-cfg-old.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-cfg.html">

@@ -31,25 +31,21 @@ using System;
 using System.IO;
 using antdlib;
 using antdlib.common;
-using antdlib.views;
 using Nancy;
 using Nancy.Hosting.Self;
-using RaptorDB;
 
 namespace Antd {
     internal static class AntdApplication {
         public static RaptorDB.RaptorDB Database;
 
-        private static DateTime _startTime;
+        private static readonly AntdBoot Boot = new AntdBoot();
 
         private static void Main() {
             ConsoleLogger.Log("starting antd");
+            var startTime = DateTime.Now;
+            Boot.RemoveLimits();
+            Boot.StartOverlayWatcher();
 
-            new OverlayWatcher().StartWatching();
-
-            _startTime = DateTime.Now;
-
-            Console.Title = "antd";
             if (Parameter.IsUnix == false) {
                 Directory.CreateDirectory("/cfg/antd");
                 Directory.CreateDirectory("/cfg/antd/database");
@@ -57,58 +53,37 @@ namespace Antd {
                 ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
             }
 
-            Configuration();
-
-            var port = ApplicationSetting.HttpPort();
-            var uri = $"http://localhost:{port}/";
-            var host = new NancyHost(new Uri(uri));
-            host.Start();
-            StaticConfiguration.DisableErrorTraces = false;
-            ConsoleLogger.Log($"http port: {port}");
-            ConsoleLogger.Log("antd is running");
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - _startTime}");
-            KeepAlive();
-            ConsoleLogger.Log("antd is closing");
-            host.Stop();
-            Database.Shutdown();
-        }
-
-        private static void KeepAlive() {
-            var r = Console.ReadLine();
-            while (r != "quit") {
-                r = Console.ReadLine();
-            }
-        }
-
-        private static readonly AntdBoot Boot = new AntdBoot();
-
-        private static void Configuration() {
             Boot.CheckOsIsRw();
             Boot.SetWorkingDirectories();
             Boot.SetCoreParameters();
 
-            var path = ApplicationSetting.DatabasePath();
-            Database = RaptorDB.RaptorDB.Open(path);
-            Global.RequirePrimaryView = false;
-            Database.RegisterView(new CommandView());
-            Database.RegisterView(new CommandValuesView());
-            Database.RegisterView(new CustomTableView());
-            Database.RegisterView(new FirewallListView());
-            Database.RegisterView(new TimerView());
-            Database.RegisterView(new LogView());
-            Database.RegisterView(new MountView());
-            Database.RegisterView(new NetworkInterfaceView());
-            Database.RegisterView(new ObjectView());
-            Database.RegisterView(new RsyncView());
-            Database.RegisterView(new UserClaimView());
-            Database.RegisterView(new UserView());
-            Database.RegisterView(new SshKeyView());
-            Database.RegisterView(new MacAddressView());
-            Database.RegisterView(new SambaConfigView());
-            Database.RegisterView(new DhcpConfigView());
-            Database.RegisterView(new BindConfigView());
-            ConsoleLogger.Log("database ready");
+            //var path = ApplicationSetting.DatabasePath();
+            //Database = RaptorDB.RaptorDB.Open(path);
+            //Global.RequirePrimaryView = false;
+            //Database.RegisterView(new BootModuleLoadView());
+            //Database.RegisterView(new BootServiceLoadView());
+            //Database.RegisterView(new BootOsParametersLoadView());
+            //Database.RegisterView(new CommandView());
+            //Database.RegisterView(new CommandValuesView());
+            //Database.RegisterView(new CustomTableView());
+            //Database.RegisterView(new FirewallListView());
+            //Database.RegisterView(new TimerView());
+            //Database.RegisterView(new LogView());
+            //Database.RegisterView(new MountView());
+            //Database.RegisterView(new NetworkInterfaceView());
+            //Database.RegisterView(new ObjectView());
+            //Database.RegisterView(new RsyncView());
+            //Database.RegisterView(new UserClaimView());
+            //Database.RegisterView(new UserView());
+            //Database.RegisterView(new SshKeyView());
+            //Database.RegisterView(new MacAddressView());
+            //Database.RegisterView(new SambaConfigView());
+            //Database.RegisterView(new DhcpConfigView());
+            //Database.RegisterView(new BindConfigView());
+            //ConsoleLogger.Log("database ready");
+            Database = Boot.StartDatabase();
 
+            Boot.PrepareConfiguration();
             Boot.SetOsMount();
             Boot.SetOsParametersLocal();
             Boot.LoadModules();
@@ -125,6 +100,26 @@ namespace Antd {
             Boot.StartDirectoryWatcher();
             Boot.CheckCertificate();
             Boot.LaunchApps();
+
+            var port = ApplicationSetting.HttpPort();
+            var uri = $"http://localhost:{port}/";
+            var host = new NancyHost(new Uri(uri));
+            host.Start();
+            StaticConfiguration.DisableErrorTraces = false;
+            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log("antd is running");
+            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+            KeepAlive();
+            ConsoleLogger.Log("antd is closing");
+            host.Stop();
+            Database.Shutdown();
+        }
+
+        private static void KeepAlive() {
+            var r = Console.ReadLine();
+            while (r != "quit") {
+                r = Console.ReadLine();
+            }
         }
     }
 }

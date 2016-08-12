@@ -73,6 +73,15 @@ namespace antdlib.common {
             return source ?? Guid.Empty;
         }
 
+        public static string ToJson<T>(this T obj) {
+            if (obj == null) return string.Empty;
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        public static T ToObject<T>(this string json) {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
         public static string GetFirstString(this string str) {
             var arr = str.Split(' ');
             return arr.Length > 0 ? arr[0] : string.Empty;

@@ -49,8 +49,8 @@ namespace Antd.Modules {
             Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.HasConfiguration = true;
-                vmod.Controls = MachineConfiguration.Get();
-                if (MachineConfiguration.Get().Count < 1) {
+                vmod.Controls = SetupConfiguration.Get();
+                if (SetupConfiguration.Get().Count < 1) {
                     vmod.HasConfiguration = false;
                 }
                 return View["antd/page-cfg", vmod];
@@ -69,7 +69,7 @@ namespace Antd.Modules {
 
                     checkedControl.Add(s);
                 }
-                MachineConfiguration.Export(checkedControl);
+                SetupConfiguration.Export(checkedControl);
                 return Response.AsRedirect("/cfg");
             };
 

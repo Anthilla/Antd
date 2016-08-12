@@ -1,32 +1,39 @@
-﻿using System.IO;
+﻿using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using antdlib;
 using antdlib.Apps;
 using antdlib.common;
 using antdlib.common.Helpers;
+using antdlib.Systemd;
+using antdlib.views;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.MountPoint;
 using Antd.Storage;
 using Antd.SystemdTimer;
+using RaptorDB;
 
 namespace Antd {
     public class AntdBoot {
 
+        public void RemoveLimits() {
+            const int openFileLimit = 1024000;
+            var checkLimit = Terminal.Execute("ulimit -a | grep 'open files' | awk '{print $4}'");
+            if (checkLimit != openFileLimit.ToString()) {
+                Terminal.Execute("ulimit -Hn 1024000");
+                Terminal.Execute("ulimit -Sn 1024000");
+                ConsoleLogger.Log("removed open files limit");
+            }
+        }
+
+        public void StartOverlayWatcher() {
+            new OverlayWatcher().StartWatching();
+            ConsoleLogger.Log("overlay watcher ready");
+        }
+
         public void CheckOsIsRw() {
             Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
-        }
-
-        public void ImportCommands() {
-            Directory.CreateDirectory(Parameter.AntdCfgCommands);
-            new CommandRepository().Import();
-            new CommandValuesRepository().Import();
-            ConsoleLogger.Log("commands imported");
-        }
-
-        public void CommandExecuteLocal() {
-            MachineConfiguration.Set();
-            ConsoleLogger.Log("machine configured");
         }
 
         public void SetWorkingDirectories() {
@@ -41,12 +48,96 @@ namespace Antd {
             ConsoleLogger.Log("antd core parameters ready");
         }
 
-        public void CheckCertificate() {
-            var certificate = ApplicationSetting.CertificatePath();
-            if (!File.Exists(certificate)) {
-                File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
+        public RaptorDB.RaptorDB StartDatabase() {
+            var path = ApplicationSetting.DatabasePath();
+            var database = RaptorDB.RaptorDB.Open(path);
+            Global.RequirePrimaryView = false;
+            database.RegisterView(new BootModuleLoadView());
+            database.RegisterView(new BootServiceLoadView());
+            database.RegisterView(new BootOsParametersLoadView());
+            database.RegisterView(new CommandView());
+            database.RegisterView(new CommandValuesView());
+            database.RegisterView(new CustomTableView());
+            database.RegisterView(new FirewallListView());
+            database.RegisterView(new TimerView());
+            database.RegisterView(new LogView());
+            database.RegisterView(new MountView());
+            database.RegisterView(new NetworkInterfaceView());
+            database.RegisterView(new ObjectView());
+            database.RegisterView(new RsyncView());
+            database.RegisterView(new UserClaimView());
+            database.RegisterView(new UserView());
+            database.RegisterView(new SshKeyView());
+            database.RegisterView(new MacAddressView());
+            database.RegisterView(new SambaConfigView());
+            database.RegisterView(new DhcpConfigView());
+            database.RegisterView(new BindConfigView());
+            ConsoleLogger.Log("database ready");
+            return database;
+        }
+
+        public void PrepareConfiguration() {
+            MachineConfiguration.Set();
+            ConsoleLogger.Log("configuration prepared");
+        }
+
+        public void SetOsMount() {
+            if (!Parameter.IsUnix)
+                return;
+            if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
             }
-            ConsoleLogger.Log("certificates ready");
+            const string module = "/mnt/cdrom/Kernel/active-modules";
+            var kernelRelease = Terminal.Execute("uname -r").Trim();
+            var linkedRelease = Terminal.Execute($"file {module}").Trim();
+            if (Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+                var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                ConsoleLogger.Log($"creating {moduleDir} to mount OS-modules");
+                Directory.CreateDirectory(moduleDir);
+                Terminal.Execute($"mount {module} {moduleDir}");
+            }
+            Terminal.Execute("systemctl restart systemd-modules-load.service");
+            ConsoleLogger.Log("os mounts ready");
+        }
+
+        public void SetOsParametersLocal() {
+            if (!Parameter.IsUnix)
+                return;
+            var kvps = new BootOsParametersLoadRepository().Retrieve();
+            if (kvps != null) {
+                foreach (var kvp in kvps) {
+                    var file = kvp.Key;
+                    var value = kvp.Value;
+                    File.WriteAllText(file, value);
+                }
+            }
+            ConsoleLogger.Log("os local parameters ready");
+        }
+
+        public void LoadModules() {
+            if (!Parameter.IsUnix)
+                return;
+            var modules = new BootModuleLoadRepository().Retrieve();
+            if (modules != null) {
+                foreach (var module in modules) {
+                    Terminal.Execute($"modprobe {module}");
+                }
+            }
+            ConsoleLogger.Log("modules ready");
+        }
+
+        public void SetMounts() {
+            if (!Parameter.IsUnix)
+                return;
+            Mount.AllDirectories();
+            ConsoleLogger.Log("mounts ready");
+        }
+
+        public void ImportCommands() {
+            Directory.CreateDirectory(Parameter.AntdCfgCommands);
+            new CommandRepository().Import();
+            new CommandValuesRepository().Import();
+            ConsoleLogger.Log("commands imported");
         }
 
         public void ReloadUsers() {
@@ -54,6 +145,20 @@ namespace Antd {
                 return;
             //SystemUser.Config.ResetPasswordForUserStoredInDb();
             ConsoleLogger.Log("users config ready");
+        }
+
+        public void CommandExecuteLocal() {
+            SetupConfiguration.Set();
+            ConsoleLogger.Log("machine configured");
+        }
+
+        public void ImportNetworkConfiguration() {
+            if (!Parameter.IsUnix)
+                return;
+            if (!new NetworkInterfaceRepository().GetAll().Any()) {
+                new NetworkInterfaceRepository().Import();
+            }
+            ConsoleLogger.Log("network interfaces imported");
         }
 
         public void Ssh() {
@@ -77,37 +182,77 @@ namespace Antd {
             }
         }
 
-        public void StartOverlayWatcher() {
-            new OverlayWatcher().StartWatching();
-            ConsoleLogger.Log("overlay watcher ready");
-        }
-
-        public void SetMounts() {
+        public void CommandExecuteNetwork() {
             if (!Parameter.IsUnix)
                 return;
-            Mount.AllDirectories();
-            ConsoleLogger.Log("mounts ready");
+            ConsoleLogger.Log("network configuration ready");
         }
 
-        public void SetOsMount() {
+        //todo
+        public void SetOsParametersNetwork() {
             if (!Parameter.IsUnix)
                 return;
-            if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Terminal.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
-            }
-            const string module = "/mnt/cdrom/Kernel/active-modules";
-            var kernelRelease = Terminal.Execute("uname -r").Trim();
-            var linkedRelease = Terminal.Execute($"file {module}").Trim();
-            if (Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
-                var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                ConsoleLogger.Log($"Creating {moduleDir} to mount OS-modules");
-                Directory.CreateDirectory(moduleDir);
-                Terminal.Execute($"mount {module} {moduleDir}");
-            }
-            Terminal.Execute("systemctl restart systemd-modules-load.service");
-            ConsoleLogger.Log("os mounts ready");
+            ConsoleLogger.Log("os parameters ready");
         }
 
+        public void LoadServices() {
+            if (!Parameter.IsUnix)
+                return;
+            var services = new BootServiceLoadRepository().Retrieve();
+            if (services != null) {
+                foreach (var service in services) {
+                    if (Systemctl.IsActive(service) == false) {
+                        Systemctl.Restart(service);
+                    }
+                }
+            }
+            ConsoleLogger.Log("services ready");
+        }
+
+        public void StartScheduler() {
+            if (!Parameter.IsUnix)
+                return;
+            Timers.Setup();
+            Timers.Import();
+            Timers.Export();
+
+            var pools = Zpool.List();
+            foreach (var zp in pools) {
+                Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
+            }
+
+            Timers.StartAll();
+            ConsoleLogger.Log("scheduler ready");
+        }
+
+        public void StartDirectoryWatcher() {
+            new DirectoryWatcher().StartWatching();
+            ConsoleLogger.Log("directory watcher ready");
+        }
+
+        public void CheckCertificate() {
+            var certificate = ApplicationSetting.CertificatePath();
+            if (!File.Exists(certificate)) {
+                File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
+            }
+            ConsoleLogger.Log("certificates ready");
+        }
+
+        public void LaunchApps() {
+            if (!Parameter.IsUnix)
+                return;
+            var apps = Management.DetectApps();
+            foreach (var app in apps) {
+                var dirs = Management.GetWantedDirectories(app);
+                foreach (var dir in dirs) {
+                    Mount.Dir(dir);
+                }
+            }
+            AnthillaSp.SetApp();
+            ConsoleLogger.Log("apps ready");
+        }
+
+        #region Unused Configuration
         public void SetWebsocketd() {
             if (!Parameter.IsUnix)
                 return;
@@ -141,52 +286,6 @@ namespace Antd {
             ConsoleLogger.Log("firewall ready");
         }
 
-        public void ImportNetworkConfiguration() {
-            if (!Parameter.IsUnix)
-                return;
-            if (!new NetworkInterfaceRepository().GetAll().Any()) {
-                new NetworkInterfaceRepository().Import();
-            }
-            ConsoleLogger.Log("network interfaces imported");
-        }
-
-        public void StartScheduler() {
-            if (!Parameter.IsUnix)
-                return;
-            Timers.Setup();
-            Timers.Import();
-            Timers.Export();
-            StartZpoolSnapshot();
-            Timers.StartAll();
-            ConsoleLogger.Log("scheduler ready");
-        }
-
-        private static void StartZpoolSnapshot() {
-            var pools = Zpool.List();
-            foreach (var zp in pools) {
-                Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
-            }
-        }
-
-        public void StartDirectoryWatcher() {
-            new DirectoryWatcher().StartWatching();
-            ConsoleLogger.Log("directory watcher ready");
-        }
-
-        public void LaunchApps() {
-            if (!Parameter.IsUnix)
-                return;
-            var apps = Management.DetectApps();
-            foreach (var app in apps) {
-                var dirs = Management.GetWantedDirectories(app);
-                foreach (var dir in dirs) {
-                    Mount.Dir(dir);
-                }
-            }
-            AnthillaSp.SetApp();
-            ConsoleLogger.Log("apps ready");
-        }
-
         public void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
@@ -206,37 +305,6 @@ namespace Antd {
             }
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
-
-        //todo
-        public void LoadModules() {
-            if (!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("modules ready");
-        }
-
-        //todo
-        public void LoadServices() {
-            if (!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("services ready");
-        }
-
-        //todo
-        public void CommandExecuteNetwork() {
-            //MachineConfiguration.Set();
-            //ConsoleLogger.Log("machine configured");
-        }
-
-        //todo
-        public void SetOsParametersLocal() {
-            //MachineConfiguration.Set();
-            //ConsoleLogger.Log("machine configured");
-        }
-
-        //todo
-        public void SetOsParametersNetwork() {
-            //MachineConfiguration.Set();
-            //ConsoleLogger.Log("machine configured");
-        }
+        #endregion
     }
 }

@@ -50,6 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindConfigModel.cs" />
+    <Compile Include="BootOsParametersLoadModel.cs" />
+    <Compile Include="BootServiceLoadModel.cs" />
+    <Compile Include="BootModuleLoadModel.cs" />
     <Compile Include="DhcpConfigModel.cs" />
     <Compile Include="SambaConfigModel.cs" />
     <Compile Include="SshKeyModel.cs" />
