@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Dynamic;
+using antdlib.common;
 using antdlib.Log;
 using Nancy;
 using Nancy.Security;
@@ -37,6 +38,19 @@ namespace Antd.Modules {
     public class LogModule : CoreModule {
         public LogModule() {
             this.RequiresAuthentication();
+
+            Get["/log"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.AntdContext = new[] {
+                    "AntdLog",
+                    "SystemLog",
+                    "LogReport",
+                };
+
+                viewModel.Logs = ConsoleLogger.GetAll();
+                viewModel.LogReports = Journalctl.Report.Get();
+                return View["antd/page-log", viewModel];
+            };
 
             Get["/log/journalctl/all"] = x => Response.AsJson(Journalctl.GetAllLog());
 

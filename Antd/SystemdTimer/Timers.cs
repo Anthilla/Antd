@@ -111,6 +111,19 @@ namespace Antd.SystemdTimer {
         }
         #endregion TT Target
 
+        public static void CleanUp() {
+            var all = TimerRepository.GetAll().ToList();
+            var sorted = all.GroupBy(a => a.Alias);
+            foreach (var group in sorted) {
+                if (group.Count() > 1) {
+                    var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
+                    foreach (var g in old) {
+                        TimerRepository.Delete(g.Id);
+                    }
+                }
+            }
+        }
+
         public static IEnumerable<TimerSchema> GetAll() {
             var list = TimerRepository.GetAll().ToList();
             foreach (var el in list) {

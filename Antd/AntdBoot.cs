@@ -17,13 +17,13 @@ namespace Antd {
     public class AntdBoot {
 
         public void RemoveLimits() {
-            const int openFileLimit = 1024000;
-            var checkLimit = Terminal.Execute("ulimit -a | grep 'open files' | awk '{print $4}'");
-            if (checkLimit != openFileLimit.ToString()) {
+            //const int openFileLimit = 1024000;
+            //var checkLimit = Terminal.Execute("ulimit -a | grep 'open files' | awk '{print $4}'");
+            //if (checkLimit != openFileLimit.ToString()) {
                 Terminal.Execute("ulimit -Hn 1024000");
                 Terminal.Execute("ulimit -Sn 1024000");
                 ConsoleLogger.Log("removed open files limit");
-            }
+            //}
         }
 
         public void StartOverlayWatcher() {
@@ -213,6 +213,7 @@ namespace Antd {
         public void StartScheduler() {
             if (!Parameter.IsUnix)
                 return;
+            Timers.CleanUp();
             Timers.Setup();
             Timers.Import();
             Timers.Export();

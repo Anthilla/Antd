@@ -41,6 +41,7 @@ namespace Antd {
         private static readonly AntdBoot Boot = new AntdBoot();
 
         private static void Main() {
+            ConsoleLogger.Log("");
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
             Boot.RemoveLimits();

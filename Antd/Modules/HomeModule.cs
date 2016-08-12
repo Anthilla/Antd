@@ -143,19 +143,6 @@ namespace Antd.Modules {
                 return View["antd/page-antd", viewModel];
             };
 
-            Get["/log"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                viewModel.AntdContext = new[] {
-                    "AntdLog",
-                    "SystemLog",
-                    "LogReport",
-                };
-
-                viewModel.Logs = ConsoleLogger.GetAll();
-                viewModel.LogReports = Journalctl.Report.Get();
-                return View["antd/page-log", viewModel];
-            };
-
             Get["/ca"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.AntdContext = new[] {

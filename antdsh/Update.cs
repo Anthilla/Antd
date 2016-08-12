@@ -88,6 +88,22 @@ namespace antdsh {
             AntdshLogger.WriteLine($"repo = {_publicRepositoryUrl}");
             Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
             switch (context) {
+                case "help":
+                    Console.WriteLine("update usage:");
+                    Console.WriteLine("    update [options] [verb]");
+                    Console.WriteLine("");
+                    Console.WriteLine("update options:");
+                    Console.WriteLine("    -f      force the update");
+                    Console.WriteLine("");
+                    Console.WriteLine("update verbs:");
+                    Console.WriteLine("    check");
+                    Console.WriteLine("    all");
+                    Console.WriteLine("    antd");
+                    Console.WriteLine("    antdsh");
+                    Console.WriteLine("    system");
+                    Console.WriteLine("    kernel");
+                    Console.WriteLine("");
+                    break;
                 case "check":
                     var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
                     Console.WriteLine("");
@@ -107,8 +123,24 @@ namespace antdsh {
                     RestartAntd();
                     RestartAntdsh();
                     break;
+                case "-f all":
+                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, true);
+                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, true);
+                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, true);
+                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, true);
+                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+                    RestartAntd();
+                    RestartAntdsh();
+                    break;
                 case "antd":
                     UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
+                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+                    RestartAntd();
+                    break;
+                case "-f antd":
+                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, true);
                     UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
                     RestartAntd();
                     break;
@@ -117,11 +149,23 @@ namespace antdsh {
                     UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
                     RestartAntdsh();
                     break;
+                case "-f antdsh":
+                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, true);
+                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+                    RestartAntdsh();
+                    break;
                 case "system":
                     UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
                     break;
+                case "-f system":
+                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, true);
+                    break;
                 case "kernel":
                     UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
+                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+                    break;
+                case "-f kernel":
+                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, true);
                     UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
                     break;
                 default:
@@ -135,7 +179,7 @@ namespace antdsh {
 
         #region Private Methods
         private static int _updateCounter;
-        private static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+        private static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             while (true) {
                 _updateCounter++;
                 if (_updateCounter > 5) {
@@ -160,16 +204,29 @@ namespace antdsh {
                     _updateCounter = 0;
                     return;
                 }
-                var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
-                if (!isUpdateNeeded) {
-                    AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
-                    _updateCounter = 0;
-                    return;
+                if (force == false) {
+                    var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
+                    if (!isUpdateNeeded) {
+                        AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                        _updateCounter = 0;
+                        return;
+                    }
                 }
                 AntdshLogger.WriteLine($"updating {currentContext}");
 
-                var isDownloadValid = DownloadLatestFile(latestFileInfo);
-                if (isDownloadValid) {
+                if (force == false) {
+                    var isDownloadValid = DownloadLatestFile(latestFileInfo);
+                    if (isDownloadValid) {
+                        AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+                        var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
+                        var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
+                        InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
+                        _updateCounter = 0;
+                        return;
+                    }
+                }
+                else {
+                    DownloadLatestFile(latestFileInfo);
                     AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
                     var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
                     var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
@@ -183,7 +240,7 @@ namespace antdsh {
         }
 
         private static bool _updateRetry;
-        private static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory) {
+        private static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
@@ -198,43 +255,74 @@ namespace antdsh {
             var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
             var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
             var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
-            if (!isUpdateNeeded) {
-                AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
-                _updateCounter = 0;
-                _updateRetry = false;
-                return;
+            if (force == false) {
+                if (!isUpdateNeeded) {
+                    AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                    _updateCounter = 0;
+                    _updateRetry = false;
+                    return;
+                }
             }
             AntdshLogger.WriteLine($"updating {currentContext}");
 
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
+
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
+
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
+
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
+
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
-            if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
+
+            if (force) {
+                UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
+            }
+            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
+
             _updateRetry = false;
             _updateCounter = 0;
         }
@@ -375,8 +463,8 @@ namespace antdsh {
 
         private static void RestartAntdsh() {
             Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemd-run --on-active=4 /usr/bin/systemctl stop framework-antdsh.mount");
-            Terminal.Execute("systemd-run --on-active=5 /usr/bin/systemctl restart app-antdsh-02-mount.service");
+            Terminal.Execute("systemd-run --on-active=5 /usr/bin/systemctl stop framework-antdsh.mount");
+            Terminal.Execute("systemd-run --on-active=10 /usr/bin/systemctl restart app-antdsh-02-mount.service");
             Environment.Exit(1);
         }
     }

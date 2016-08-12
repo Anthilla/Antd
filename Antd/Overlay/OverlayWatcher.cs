@@ -59,6 +59,19 @@ namespace Antd {
             }
         }
 
+        //public static void CleanUp() {
+        //    var all = TimerRepository.GetAll().ToList();
+        //    var sorted = all.GroupBy(a => a.Alias);
+        //    foreach (var group in sorted) {
+        //        if (group.Count() > 1) {
+        //            var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
+        //            foreach (var g in old) {
+        //                TimerRepository.Delete(g.Id);
+        //            }
+        //        }
+        //    }
+        //}
+
         public static IDictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();
 
         private static void OnChanged(object source, FileSystemEventArgs e) {

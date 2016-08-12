@@ -59,7 +59,7 @@ namespace antdsh {
                 _command = Console.ReadLine();
                 if (string.IsNullOrEmpty(_command)) continue;
                 AddCommand(_command);
-                Command(_command.Trim().SplitToList(" ").ToArray());
+                Command(_command.Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries));
             }
         }
 
