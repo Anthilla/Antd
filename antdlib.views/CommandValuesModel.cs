@@ -27,7 +27,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class CommandValuesSchema : EntitySchema {
+    public class CommandValuesSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -49,7 +49,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 5;
+            Version = 8;
             Schema = typeof(CommandValuesSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -58,7 +58,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<CommandValuesModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaCommandValuess = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

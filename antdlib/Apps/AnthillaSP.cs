@@ -46,19 +46,19 @@ namespace antdlib.Apps {
         }
 
         public static void Start() {
-            if (!Systemctl.Status("app-anthillasp-01-prepare.service").output.Contains("Active: active (running)")) {
+            if (!Systemctl.Status("app-anthillasp-01-prepare.service").Contains("Active: active (running)")) {
                 Systemctl.Start("app-anthillasp-01-prepare.service");
             }
 
-            if (!Systemctl.Status("app-anthillasp-02-mount.service").output.Contains("Active: active (running)")) {
+            if (!Systemctl.Status("app-anthillasp-02-mount.service").Contains("Active: active (running)")) {
                 Systemctl.Start("app-anthillasp-02-mount.service");
             }
 
-            if (!Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active (running)")) {
+            if (!Systemctl.Status("app-anthillasp-03-srv-launcher.service").Contains("Active: active (running)")) {
                 Systemctl.Start("app-anthillasp-03-srv-launcher.service");
             }
 
-            if (!Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active (running)")) {
+            if (!Systemctl.Status("app-anthillasp-04-wui-launcher.service").Contains("Active: active (running)")) {
                 Systemctl.Start("app-anthillasp-04-wui-launcher.service");
             }
         }
@@ -81,19 +81,19 @@ namespace antdlib.Apps {
 
         public class Status {
             public static string AnthillaSp() {
-                return Systemctl.Status("app-anthillasp-04-wui-launcher.service").output;
+                return Systemctl.Status("app-anthillasp-04-wui-launcher.service");
             }
 
             public static string AnthillaServer() {
-                return Systemctl.Status("app-anthillasp-03-srv-launcher.service").output;
+                return Systemctl.Status("app-anthillasp-03-srv-launcher.service");
             }
 
             public static bool IsActiveAnthillaSp() {
-                return Systemctl.Status("app-anthillasp-04-wui-launcher.service").output.Contains("Active: active");
+                return Systemctl.Status("app-anthillasp-04-wui-launcher.service").Contains("Active: active");
             }
 
             public static bool IsActiveAnthillaServer() {
-                return Systemctl.Status("app-anthillasp-03-srv-launcher.service").output.Contains("Active: active");
+                return Systemctl.Status("app-anthillasp-03-srv-launcher.service").Contains("Active: active");
             }
         }
 

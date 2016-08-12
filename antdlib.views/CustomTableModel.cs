@@ -60,7 +60,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class CustomTableSchema : EntitySchema {
+    public class CustomTableSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -83,7 +83,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 5;
+            Version = 8;
             Schema = typeof(CustomTableSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -92,7 +92,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<CustomTableModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaCustomTables = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Alias,

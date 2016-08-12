@@ -104,8 +104,13 @@ namespace Antd.Database {
         }
 
         public bool Delete(string guid) {
-            var result = DatabaseRepository.Delete<MountModel>(AntdApplication.Database, Guid.Parse(guid));
-            return result;
+            try {
+                var result = DatabaseRepository.Delete<MountModel>(AntdApplication.Database, Guid.Parse(guid));
+                return result;
+            }
+            catch (Exception) {
+                return false;
+            }
         }
 
         public void DeleteAll() {

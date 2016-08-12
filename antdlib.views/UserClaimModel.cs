@@ -84,7 +84,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class UserClaimSchema : EntitySchema {
+    public class UserClaimSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -109,7 +109,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 5;
+            Version = 8;
             Schema = typeof(UserClaimSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -118,7 +118,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<UserClaimModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaObjects = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

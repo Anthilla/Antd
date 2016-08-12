@@ -23,7 +23,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class BindConfigSchema : EntitySchema {
+    public class BindConfigSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -43,7 +43,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 2;
+            Version = 8;
             Schema = typeof(BindConfigSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -52,7 +52,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<BindConfigModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaBindConfigs = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

@@ -29,7 +29,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class SshKeySchema : EntitySchema {
+    public class SshKeySchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -52,7 +52,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 2;
+            Version = 8;
             Schema = typeof(SshKeySchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -61,7 +61,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<SshKeyModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaSshKeys = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

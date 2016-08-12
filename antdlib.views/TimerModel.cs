@@ -31,7 +31,7 @@ namespace antdlib.views {
     }
 
     #region [    View    ]
-    public class TimerSchema : EntitySchema {
+    public class TimerSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -55,7 +55,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 5;
+            Version = 8;
             Schema = typeof(TimerSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -64,7 +64,6 @@ namespace antdlib.views {
                 var decryptedDoc = Encryption.DbDecrypt<TimerModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
                 object[] schemaTimers = {
-                    doc.Status.ToString(),
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,

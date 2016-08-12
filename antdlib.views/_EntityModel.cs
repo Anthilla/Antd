@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RaptorDB;
 
 namespace antdlib.views {
     [Serializable]
@@ -29,9 +28,5 @@ namespace antdlib.views {
         public bool IsEncrypted { get; set; }
         public byte[] Dump { get; set; }
         public IEnumerable<string> Tags { get; set; } = new List<string>();
-    }
-
-    public class EntitySchema : RDBSchema {
-        public string Status { get; set; }
     }
 }

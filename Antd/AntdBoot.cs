@@ -24,7 +24,7 @@ namespace Antd {
             ConsoleLogger.Log("commands imported");
         }
 
-        public void ConfigureMachine() {
+        public void CommandExecuteLocal() {
             MachineConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }
@@ -61,8 +61,6 @@ namespace Antd {
                 return;
             new SshKeyRepository().Import();
             ConsoleLogger.Log("ssh keys imported");
-
-
 
             Terminal.Execute("mkdir -p /root/.ssh");
             if (!File.Exists(Parameter.AuthKeys)) {
@@ -143,7 +141,7 @@ namespace Antd {
             ConsoleLogger.Log("firewall ready");
         }
 
-        public void ImportSystemInformation() {
+        public void ImportNetworkConfiguration() {
             if (!Parameter.IsUnix)
                 return;
             if (!new NetworkInterfaceRepository().GetAll().Any()) {
@@ -209,10 +207,36 @@ namespace Antd {
             Terminal.Execute("systemctl restart wpa_supplicant.service");
         }
 
-        //public  void StartWebsocketServer() {
-        //    var port = PortManagement.GetFirstAvailable(1234);
-        //    ApplicationSetting.SetWebsocketPort(port.ToString());
-        //    WebSocket.Start(Convert.ToInt32(ApplicationSetting.WebsocketPort()));
-        //}
+        //todo
+        public void LoadModules() {
+            if (!Parameter.IsUnix)
+                return;
+            ConsoleLogger.Log("modules ready");
+        }
+
+        //todo
+        public void LoadServices() {
+            if (!Parameter.IsUnix)
+                return;
+            ConsoleLogger.Log("services ready");
+        }
+
+        //todo
+        public void CommandExecuteNetwork() {
+            //MachineConfiguration.Set();
+            //ConsoleLogger.Log("machine configured");
+        }
+
+        //todo
+        public void SetOsParametersLocal() {
+            //MachineConfiguration.Set();
+            //ConsoleLogger.Log("machine configured");
+        }
+
+        //todo
+        public void SetOsParametersNetwork() {
+            //MachineConfiguration.Set();
+            //ConsoleLogger.Log("machine configured");
+        }
     }
 }

@@ -150,6 +150,7 @@
     <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
+    <Compile Include="Rmmod.cs" />
     <Compile Include="Ssh.cs" />
     <Compile Include="Ssh\Test.cs" />
     <Compile Include="Storage\Disks.cs" />

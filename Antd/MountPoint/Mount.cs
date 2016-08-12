@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
+using antdlib.Systemd;
 using antdlib.views;
 
 namespace Antd.MountPoint {
@@ -54,7 +55,10 @@ namespace Antd.MountPoint {
         }
 
         public static void AllDirectories() {
+            MountRepository.DeleteAll();
+
             var all = MountRepository.GetAll().ToList();
+
             if (!all.Any()) {
                 foreach (var path in DefaultWorkingDirectories.Where(path => MountRepository.GetByPath(path) == null)) {
                     MountRepository.Create(new Dictionary<string, string> {
@@ -66,9 +70,11 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("stored mount info checked");
 
-            RemoveDuplicates();
             CheckCurrentStatus();
+            RemoveDuplicates();
             ConsoleLogger.Log("current mount status checked");
+
+            all = MountRepository.GetAll().ToList();
 
             var directoryMounts = all.Where(m => m.MountEntity == MountEntity.Directory.ToString()).ToArray();
             foreach (var t in directoryMounts) {
@@ -80,6 +86,13 @@ namespace Antd.MountPoint {
                         Directory.CreateDirectory(mntDir);
                         ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                         SetBind(mntDir, dir);
+
+                        var associatedUnits = t.AssociatedUnits.SplitToList();
+                        foreach (var unit in associatedUnits) {
+                            if (Systemctl.IsActive(unit) == false) {
+                                Systemctl.Restart(unit);
+                            }
+                        }
                     }
                 }
                 catch (Exception ex) {
@@ -103,6 +116,13 @@ namespace Antd.MountPoint {
                         }
                         ConsoleLogger.Log($"mount {mntFile} -> {file}");
                         SetBind(mntFile, file);
+
+                        var associatedUnits = t.AssociatedUnits.SplitToList();
+                        foreach (var unit in associatedUnits) {
+                            if (Systemctl.IsActive(unit) == false) {
+                                Systemctl.Restart(unit);
+                            }
+                        }
                     }
                 }
             }
@@ -113,10 +133,6 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("detected directories status checked");
 
-            foreach (var srvc in from t in directoryMounts select t.AssociatedUnits into service where service.Any() from srvc in service select srvc) {
-                Terminal.Execute($"systemctl restart {srvc}");
-            }
-            ConsoleLogger.Log("services restarted");
         }
 
         private static void RemoveDuplicates() {

@@ -84,7 +84,7 @@ namespace antdlib.Status {
 
         private static string StatusNetworkdDir() {
             var r = Systemctl.Status("systemd-networkd");
-            return r.output;
+            return r;
         }
 
         private static void CreateUnit(string filename, string matchName, string matchHost, string matchVirtualization,

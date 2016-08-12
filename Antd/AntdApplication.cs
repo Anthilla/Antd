@@ -104,21 +104,25 @@ namespace Antd {
             Database.RegisterView(new UserView());
             Database.RegisterView(new SshKeyView());
             Database.RegisterView(new MacAddressView());
-
             Database.RegisterView(new SambaConfigView());
             Database.RegisterView(new DhcpConfigView());
-
+            Database.RegisterView(new BindConfigView());
             ConsoleLogger.Log("database ready");
 
-            Boot.SetMounts();
             Boot.SetOsMount();
+            Boot.SetOsParametersLocal();
+            Boot.LoadModules();
+            Boot.SetMounts();
             Boot.ImportCommands();
-            Boot.ConfigureMachine();
             Boot.ReloadUsers();
+            Boot.CommandExecuteLocal();
+            Boot.ImportNetworkConfiguration();
             Boot.Ssh();
+            Boot.CommandExecuteNetwork();
+            Boot.SetOsParametersNetwork();
+            Boot.LoadServices();
             Boot.StartScheduler();
             Boot.StartDirectoryWatcher();
-            Boot.ImportSystemInformation();
             Boot.CheckCertificate();
             Boot.LaunchApps();
         }

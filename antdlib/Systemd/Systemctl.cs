@@ -28,46 +28,45 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib.common;
-using antdlib.Models;
 
 namespace antdlib.Systemd {
 
     public class Systemctl {
 
-        public static CommandModel DaemonReload() {
-            return Terminal.Execute("systemctl daemon-reload").ConvertCommandToModel();
+        public static void DaemonReload() {
+            Terminal.Execute("systemctl daemon-reload");
         }
 
-        public static CommandModel Start(string unit) {
-            return Terminal.Execute("systemctl start " + unit).ConvertCommandToModel();
+        public static void Start(string unit) {
+            Terminal.Execute("systemctl start " + unit);
         }
 
-        public static CommandModel Stop(string unit) {
-            return Terminal.Execute("systemctl stop " + unit).ConvertCommandToModel();
+        public static void Stop(string unit) {
+            Terminal.Execute("systemctl stop " + unit);
         }
 
-        public static CommandModel Restart(string unit) {
-            return Terminal.Execute("systemctl restart " + unit).ConvertCommandToModel();
+        public static void Restart(string unit) {
+            Terminal.Execute("systemctl restart " + unit);
         }
 
-        public static CommandModel Reload(string unit) {
-            return Terminal.Execute("systemctl reload " + unit).ConvertCommandToModel();
+        public static void Reload(string unit) {
+            Terminal.Execute("systemctl reload " + unit);
         }
 
-        public static CommandModel Status(string unit) {
-            return Terminal.Execute("systemctl status " + unit).ConvertCommandToModel();
+        public static string Status(string unit) {
+            return Terminal.Execute("systemctl status " + unit);
         }
 
-        public static CommandModel IsEnabled(string unit) {
-            return Terminal.Execute("systemctl is-enabled " + unit).ConvertCommandToModel();
+        public static bool IsActive(string unit) {
+            var r = Terminal.Execute("systemctl is-active " + unit);
+            return r != "inactive";
         }
 
-        public static CommandModel Enable(string unit) {
-            return Terminal.Execute("systemctl enable " + unit).ConvertCommandToModel();
+        public static void Enable(string unit) {
+            Terminal.Execute("systemctl enable " + unit);
         }
 
-        public static CommandModel Disable(string unit) {
-            return Terminal.Execute("systemctl disable " + unit).ConvertCommandToModel();
+        public static void Disable(string unit) {
         }
     }
 }
