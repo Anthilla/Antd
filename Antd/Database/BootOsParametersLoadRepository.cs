@@ -61,7 +61,10 @@ namespace Antd.Database {
         }
 
         public bool Dump(Dictionary<string, string> values) {
-            Delete(ViewGuid);
+            var tryGet = GetByGuid(ViewGuid);
+            if (tryGet != null) {
+                Delete(ViewGuid);
+            }
             var obj = new BootOsParametersLoadModel {
                 Id = Guid.Parse(ViewGuid),
                 Guid = ViewGuid,

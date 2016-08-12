@@ -1,5 +1,4 @@
-﻿using System.Data.SqlTypes;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using antdlib;
 using antdlib.Apps;
@@ -148,6 +147,8 @@ namespace Antd {
         }
 
         public void CommandExecuteLocal() {
+            if (!Parameter.IsUnix)
+                return;
             SetupConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }

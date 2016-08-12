@@ -61,7 +61,10 @@ namespace Antd.Database {
         }
 
         public bool Dump(IEnumerable<string> mods) {
-            Delete(ViewGuid);
+            var tryGet = GetByGuid(ViewGuid);
+            if (tryGet != null) {
+                Delete(ViewGuid);
+            }
             var obj = new BootModuleLoadModel {
                 Id = Guid.Parse(ViewGuid),
                 Guid = ViewGuid,

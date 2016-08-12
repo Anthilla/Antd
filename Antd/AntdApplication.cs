@@ -56,33 +56,7 @@ namespace Antd {
             Boot.CheckOsIsRw();
             Boot.SetWorkingDirectories();
             Boot.SetCoreParameters();
-
-            //var path = ApplicationSetting.DatabasePath();
-            //Database = RaptorDB.RaptorDB.Open(path);
-            //Global.RequirePrimaryView = false;
-            //Database.RegisterView(new BootModuleLoadView());
-            //Database.RegisterView(new BootServiceLoadView());
-            //Database.RegisterView(new BootOsParametersLoadView());
-            //Database.RegisterView(new CommandView());
-            //Database.RegisterView(new CommandValuesView());
-            //Database.RegisterView(new CustomTableView());
-            //Database.RegisterView(new FirewallListView());
-            //Database.RegisterView(new TimerView());
-            //Database.RegisterView(new LogView());
-            //Database.RegisterView(new MountView());
-            //Database.RegisterView(new NetworkInterfaceView());
-            //Database.RegisterView(new ObjectView());
-            //Database.RegisterView(new RsyncView());
-            //Database.RegisterView(new UserClaimView());
-            //Database.RegisterView(new UserView());
-            //Database.RegisterView(new SshKeyView());
-            //Database.RegisterView(new MacAddressView());
-            //Database.RegisterView(new SambaConfigView());
-            //Database.RegisterView(new DhcpConfigView());
-            //Database.RegisterView(new BindConfigView());
-            //ConsoleLogger.Log("database ready");
             Database = Boot.StartDatabase();
-
             Boot.PrepareConfiguration();
             Boot.SetOsMount();
             Boot.SetOsParametersLocal();
@@ -105,6 +79,7 @@ namespace Antd {
             var uri = $"http://localhost:{port}/";
             var host = new NancyHost(new Uri(uri));
             host.Start();
+            ConsoleLogger.Log("host ready");
             StaticConfiguration.DisableErrorTraces = false;
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("antd is running");

@@ -27,9 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using antdlib.common;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Helpers;
@@ -43,6 +45,10 @@ namespace Antd.Modules {
         private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
         private readonly CommandValuesRepository _commandValuesRepositoryRepo = new CommandValuesRepository();
 
+        private readonly BootModuleLoadRepository _bootModuleLoadRepo = new BootModuleLoadRepository();
+        private readonly BootServiceLoadRepository _bootServiceLoadRepo = new BootServiceLoadRepository();
+        private readonly BootOsParametersLoadRepository _bootOsParametersLoadRepo = new BootOsParametersLoadRepository();
+
         public CfgModule() {
             this.RequiresAuthentication();
 
@@ -53,18 +59,27 @@ namespace Antd.Modules {
                 if (SetupConfiguration.Get().Count < 1) {
                     vmod.HasConfiguration = false;
                 }
+
+                var modules = _bootModuleLoadRepo.Retrieve();
+                vmod.Modules = modules == null ? "" : string.Join("\r\n", modules);
+                var services = _bootModuleLoadRepo.Retrieve();
+                vmod.Services = services == null ? "" : string.Join("\r\n", services);
+                var ospar = _bootOsParametersLoadRepo.Retrieve();
+                var osparList = ospar?.Select(_ => $"{_.Key} {_.Value}").ToList();
+                vmod.OsParam = osparList == null ? "" : string.Join("\r\n", osparList);
+
                 return View["antd/page-cfg", vmod];
             };
 
             Post["/cfg/export"] = x => {
                 var control = this.Bind<List<Control>>();
-                var checkedControl= new List<Control>();
+                var checkedControl = new List<Control>();
                 foreach (var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
                     var s = new Control {
                         Index = cr.Index,
                         FirstCommand = cr.FirstCommand,
-                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "": cr.ControlCommand,
-                        Check = string.IsNullOrEmpty(cr.Check) ? "": cr.Check,
+                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "" : cr.ControlCommand,
+                        Check = string.IsNullOrEmpty(cr.Check) ? "" : cr.Check,
                     };
 
                     checkedControl.Add(s);
@@ -72,15 +87,6 @@ namespace Antd.Modules {
                 SetupConfiguration.Export(checkedControl);
                 return Response.AsRedirect("/cfg");
             };
-
-            //Get["/cfg"] = x => {
-            //    dynamic vmod = new ExpandoObject();
-            //    var values = _commandRepositoryRepo.GetAll().ToList();
-            //    vmod.ValueBundle = values;
-            //    vmod.EnabledCommandBundle = values.Where(_ => _.IsEnabled == true);
-            //    vmod.DisabledCommandBundle = values.Where(_ => _.IsEnabled == false);
-            //    return View["antd/page-cfg", vmod];
-            //};
 
             Post["/cfg/addvalue"] = x => {
                 var name = (string)Request.Form.Name;
@@ -146,16 +152,31 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            //Get["/cfg/getenabled"] = x => {
-            //    var data = _commandRepositoryRepo.GetAll().Where(_ => _.IsEnabled == true);
-            //    return Response.AsJson(data);
-            //};
+            Post["/cfg/modules"] = x => {
+                var modulesText = (string)Request.Form.Config;
+                var modules = modulesText.SplitToList(Environment.NewLine);
+                _bootModuleLoadRepo.Dump(modules);
+                return Response.AsRedirect("/cfg");
+            };
 
-            //Get["/cfg/layouts"] = x => {
-            //    var data = _commandRepositoryRepo.GetAll().Select(_ => _.Layout);
-            //    var map = SelectizerMapModel.MapRawCommandBundleLayout(data);
-            //    return Response.AsJson(map);
-            //};
+            Post["/cfg/services"] = x => {
+                var servicesText = (string)Request.Form.Config;
+                var services = servicesText.SplitToList(Environment.NewLine);
+                _bootServiceLoadRepo.Dump(services);
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/cfg/osparam"] = x => {
+                var osparamText = (string)Request.Form.Config;
+                var services = osparamText.SplitToList(Environment.NewLine);
+                var dict = new Dictionary<string, string>();
+                foreach (var serv in services) {
+                    var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
+                    dict.Add(kvp[0], kvp[1]);
+                }
+                _bootOsParametersLoadRepo.Dump(dict);
+                return Response.AsRedirect("/cfg");
+            };
         }
     }
 }
