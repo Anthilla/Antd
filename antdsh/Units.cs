@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using antdlib.common;
 
 namespace antdsh {
@@ -32,6 +28,8 @@ namespace antdsh {
             if (!File.Exists(Antdsh03MountServicePath)) {
                 CreateMountServiceFile();
             }
+            Terminal.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");
+            Terminal.Execute($"chmod -R 664 {Parameter.TimerUnits}/");
             Terminal.Execute("systemctl daemon-reload");
         }
 
@@ -61,11 +59,11 @@ namespace antdsh {
                 "Description=ExtUnit, Application: TT Antdsh 01 remount timer",
                 "",
                 "[Timer]",
-                "OnActiveSec =10s",
-                "Persistent =false",
+                "OnActiveSec=10s",
+                "Persistent=false",
                 "",
                 "[Install]",
-                "WantedBy =tt.target"
+                "WantedBy=tt.target"
             };
             File.WriteAllLines(Antdsh01RemountTimerPath, lines);
         }

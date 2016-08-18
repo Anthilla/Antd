@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
 using antdlib;
-using antdlib.Apps;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.Systemd;
 using antdlib.views;
+using Antd.Apps;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.MountPoint;
@@ -17,13 +17,11 @@ namespace Antd {
     public class AntdBoot {
 
         public void RemoveLimits() {
-            //const int openFileLimit = 1024000;
-            //var checkLimit = Terminal.Execute("ulimit -a | grep 'open files' | awk '{print $4}'");
-            //if (checkLimit != openFileLimit.ToString()) {
-                Terminal.Execute("ulimit -Hn 1024000");
-                Terminal.Execute("ulimit -Sn 1024000");
-                ConsoleLogger.Log("removed open files limit");
-            //}
+            if (!Parameter.IsUnix)
+                return;
+            Terminal.Execute("ulimit -Hn 1024000");
+            Terminal.Execute("ulimit -Sn 1024000");
+            ConsoleLogger.Log("removed open files limit");
         }
 
         public void StartOverlayWatcher() {
@@ -51,6 +49,7 @@ namespace Antd {
             var path = ApplicationSetting.DatabasePath();
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
+            database.RegisterView(new ApplicationView());
             database.RegisterView(new BootModuleLoadView());
             database.RegisterView(new BootServiceLoadView());
             database.RegisterView(new BootOsParametersLoadView());
@@ -240,19 +239,19 @@ namespace Antd {
             ConsoleLogger.Log("certificates ready");
         }
 
-        public void LaunchApps() {
-            if (!Parameter.IsUnix)
-                return;
-            var apps = Management.DetectApps();
-            foreach (var app in apps) {
-                var dirs = Management.GetWantedDirectories(app);
-                foreach (var dir in dirs) {
-                    Mount.Dir(dir);
-                }
-            }
-            AnthillaSp.SetApp();
-            ConsoleLogger.Log("apps ready");
-        }
+        //public void LaunchApps() {
+        //    if (!Parameter.IsUnix)
+        //        return;
+        //    var apps = AppsManagement.Detect();
+        //    foreach (var app in apps) {
+        //        var dirs = AppsManagement.GetWantedDirectories(app);
+        //        foreach (var dir in dirs) {
+        //            Mount.Dir(dir);
+        //        }
+        //    }
+        //    AnthillaSp.SetApp();
+        //    ConsoleLogger.Log("apps ready");
+        //}
 
         #region Unused Configuration
         public void SetWebsocketd() {

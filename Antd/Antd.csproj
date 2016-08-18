@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntdBoot.cs" />
+    <Compile Include="Apps\AppsManagement.cs" />
+    <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Database\BootOsParametersLoadRepository.cs" />
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
+    <Compile Include="Database\ApplicationRepository.cs" />
     <Compile Include="Database\DhcpConfigRepository.cs" />
     <Compile Include="Database\SambaConfigRepository.cs" />
     <Compile Include="Database\SshKeyRepository.cs" />
@@ -191,6 +194,12 @@
     <Content Include="Scripts\jquery-2.2.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\page-apps.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-apps-info.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\_partial\part-ssh-authkey.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -273,12 +282,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\apps\page-apps-anthillasp.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\apps\page-apps-list.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\apps\_page-apps.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\cctable\_page-cctable.html">

@@ -27,9 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
-using antdlib.Apps;
-using antdlib.common;
+using Antd.Apps;
 using Nancy;
 using Nancy.Security;
 
@@ -40,80 +38,13 @@ namespace Antd.Modules {
         public AppsModule() {
             this.RequiresAuthentication();
 
-            Get["/apps"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.AppList = Management.DetectApps();
-                vmod.AppExists = AnthillaSp.Setting.CheckSquash();
-                vmod.AnthillaSpIsActive = AnthillaSp.Status.IsActiveAnthillaSp();
-                vmod.AnthillaSpStatus = AnthillaSp.Status.AnthillaSp();
-                vmod.AnthillaServerIsActive = AnthillaSp.Status.IsActiveAnthillaServer();
-                vmod.AnthillaServerStatus = AnthillaSp.Status.AnthillaServer();
-                vmod.Message = "";
-                return View["_page-apps", vmod];
-            };
-
-            //Get["/apps/set/anthillasp"] = x => {
-            //    if (AnthillaSp.Units.CheckFiles() == false) {
-            //        AnthillaSp.CreateUnits();
-            //    }
-            //    AnthillaSp.Start();
-            //    return HttpStatusCode.OK;
-            //};
-
-            Get["/apps/apply/anthillasp"] = x => {
-                AnthillaSp.Start();
-                return HttpStatusCode.OK;
-            };
-
-            Get["/apps/Launch"] = x => {
-                ConsoleLogger.Log(">> App >> AnthillaSP");
-                ConsoleLogger.Log(">> Check squashfs");
-                if (AnthillaSp.Setting.CheckSquash() == false) {
-                    ConsoleLogger.Warn(">> Squashfs does not exist!");
-                    return Response.AsJson(false);
+            Post["/apps/setup"] = x => {
+                string app = Request.Form.AppName;
+                if (string.IsNullOrEmpty(app)) {
+                    return HttpStatusCode.InternalServerError;
                 }
-                ConsoleLogger.Log(">> Mount squashfs in /framework/anthillasp");
-                AnthillaSp.Setting.MountSquash();
-                ConsoleLogger.Log(">> Create AnthillaSP units in /mnt/cdrom/Overlay/anthillasp/");
-                //AnthillaSp.CreateUnits();
-                AnthillaSp.Start();
+                AppsManagement.Setup(app);
                 return HttpStatusCode.OK;
-            };
-
-            Post["/apps/start/sp"] = x => {
-                AnthillaSp.StartSp();
-                return Response.AsJson("sp process started");
-            };
-
-            Post["/apps/start/server"] = x => {
-                AnthillaSp.StartServer();
-                return Response.AsJson("server process started");
-            };
-
-            Post["/apps/stop/sp"] = x => {
-                AnthillaSp.StopSp();
-                return Response.AsJson("sp process stopped");
-            };
-
-            Post["/apps/stop/server"] = x => {
-                AnthillaSp.StopServer();
-                return Response.AsJson("server process stopped");
-            };
-
-            Get["/apps/status/sp"] = x => Response.AsJson(AnthillaSp.Status.AnthillaSp());
-
-            Get["/apps/status/server"] = x => Response.AsJson(AnthillaSp.Status.AnthillaServer());
-
-            Post["/apps/Mount"] = x => {
-                var f = (string)Request.Form.Folder;
-                var m = (string)Request.Form.Mount;
-                Terminal.Execute("Mount " + f + " " + m);
-                return Response.AsJson(AnthillaSp.Status.AnthillaServer());
-            };
-
-            Post["/apps/set/anthillasp"] = x => {
-                AnthillaSp.SetApp();
-                return Response.AsJson("/set/anthillasp");
             };
         }
     }

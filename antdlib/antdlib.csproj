@@ -82,8 +82,6 @@
   <ItemGroup>
     <Compile Include="Acl\AclManagement.cs" />
     <Compile Include="ApiConsumer.cs" />
-    <Compile Include="Apps\AnthillaSP.cs" />
-    <Compile Include="Apps\Manage.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Helper.cs" />

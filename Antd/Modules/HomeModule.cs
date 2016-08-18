@@ -34,9 +34,9 @@ using System.Linq;
 using antdlib;
 using antdlib.common;
 using antdlib.Certificate;
-using antdlib.Log;
 using antdlib.Svcs.Dhcp;
 using antdlib.views;
+using Antd.Apps;
 using Antd.Database;
 using Antd.Info;
 using Antd.Storage;
@@ -143,10 +143,21 @@ namespace Antd.Modules {
                 return View["antd/page-antd", viewModel];
             };
 
+            Get["/apps"] = x => {
+                dynamic vmod = new ExpandoObject();
+                vmod.AppList = AppsManagement.Detect();
+                //vmod.AppExists = AnthillaSp.Setting.CheckSquash();
+                //vmod.AnthillaSpIsActive = AnthillaSp.Status.IsActiveAnthillaSp();
+                //vmod.AnthillaSpStatus = AnthillaSp.Status.AnthillaSp();
+                //vmod.AnthillaServerIsActive = AnthillaSp.Status.IsActiveAnthillaServer();
+                //vmod.AnthillaServerStatus = AnthillaSp.Status.AnthillaServer();
+                return View["antd/page-apps", vmod];
+            };
+
             Get["/ca"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.AntdContext = new[] {
-                    "Manage",
+                    "Manage"
                 };
 
                 viewModel.SslStatus = "Enabled";

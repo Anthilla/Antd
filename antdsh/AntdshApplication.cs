@@ -90,6 +90,7 @@ namespace antdsh {
         }
 
         private static void UpdateFunc(string[] args) {
+            Units.CreateRemountUnits();
             if (args.Length < 1) {
                 WriteHelp("update usage", "update [options] [verb]");
                 Console.WriteLine("");
