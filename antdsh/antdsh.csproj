@@ -51,6 +51,9 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>antdsh.AntdshApplication</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -76,10 +79,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AhtdshLogger.cs" />
     <Compile Include="ApiConsumer.cs" />
-    <Compile Include="Application.cs" />
     <Compile Include="Execute.cs" />
+    <Compile Include="AntdshApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemShellMgmt.cs" />
     <Compile Include="Update.cs" />

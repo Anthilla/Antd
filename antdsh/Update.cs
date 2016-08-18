@@ -75,115 +75,87 @@ namespace antdsh {
         #region Public Medhod
 
         public static void Check() {
+            _publicRepositoryUrl = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
             var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
             Console.WriteLine("");
             foreach (var i in info) {
-                AntdshLogger.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
+                Console.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
             }
             Console.WriteLine("");
         }
 
-        public static void LaunchUpdateFor(string context) {
+        public static void All(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
-            AntdshLogger.WriteLine($"repo = {_publicRepositoryUrl}");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
-            switch (context) {
-                case "help":
-                    Console.WriteLine("update usage:");
-                    Console.WriteLine("    update [options] [verb]");
-                    Console.WriteLine("");
-                    Console.WriteLine("update options:");
-                    Console.WriteLine("    -f      force the update");
-                    Console.WriteLine("");
-                    Console.WriteLine("update verbs:");
-                    Console.WriteLine("    check");
-                    Console.WriteLine("    all");
-                    Console.WriteLine("    antd");
-                    Console.WriteLine("    antdsh");
-                    Console.WriteLine("    system");
-                    Console.WriteLine("    kernel");
-                    Console.WriteLine("");
-                    break;
-                case "check":
-                    var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
-                    Console.WriteLine("");
-                    foreach (var i in info) {
-                        AntdshLogger.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
-                    }
-                    Console.WriteLine("");
-                    break;
-                case "all":
-                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
-                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
-                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
-                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
-                    RestartAntd();
-                    RestartAntdsh();
-                    break;
-                case "-f all":
-                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, true);
-                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
-                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, true);
-                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
-                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, true);
-                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, true);
-                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
-                    RestartAntd();
-                    RestartAntdsh();
-                    break;
-                case "antd":
-                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory);
-                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
-                    RestartAntd();
-                    break;
-                case "-f antd":
-                    UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, true);
-                    UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
-                    RestartAntd();
-                    break;
-                case "antdsh":
-                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory);
-                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
-                    RestartAntdsh();
-                    break;
-                case "-f antdsh":
-                    UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, true);
-                    UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
-                    RestartAntdsh();
-                    break;
-                case "system":
-                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory);
-                    break;
-                case "-f system":
-                    UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, true);
-                    break;
-                case "kernel":
-                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory);
-                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
-                    break;
-                case "-f kernel":
-                    UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, true);
-                    UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
-                    break;
-                default:
-                    Console.WriteLine("Nothing to update...");
-                    break;
-            }
+
+            UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
+            UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+            UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
+            UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+            UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
+            UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
+            UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+            RestartAntd();
+            RestartAntdsh();
+
             Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
-            AntdshLogger.WriteLine("");
+        }
+
+        public static void Antd(bool forced) {
+            _publicRepositoryUrl = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
+            UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+            RestartAntd();
+
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+        }
+
+        public static void Antdsh(bool forced) {
+            _publicRepositoryUrl = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
+            UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+            RestartAntdsh();
+
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+        }
+
+        public static void System(bool forced) {
+            _publicRepositoryUrl = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
+
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+        }
+
+        public static void Kernel(bool forced) {
+            _publicRepositoryUrl = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
+            UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+
+            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
         #endregion
 
         #region Private Methods
         private static int _updateCounter;
-        private static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+        public static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             while (true) {
                 _updateCounter++;
                 if (_updateCounter > 5) {
-                    AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                    Console.WriteLine($"{currentContext} update failed, too many retries");
                     _updateCounter = 0;
                     return;
                 }
@@ -193,31 +165,31 @@ namespace antdsh {
                 var currentVersionDate = GetVersionDateFromFile(linkedFile);
                 var repositoryInfo = GetRepositoryInfo().ToList();
                 var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
-                AntdshLogger.WriteLine($"found for: {currentContext}");
+                Console.WriteLine($"found for: {currentContext}");
                 foreach (var cri in currentContextRepositoryInfo) {
-                    AntdshLogger.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
+                    Console.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
                 }
-                AntdshLogger.WriteLine("");
+                Console.WriteLine("");
                 var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
                 if (latestFileInfo == null) {
-                    AntdshLogger.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
+                    Console.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
                     _updateCounter = 0;
                     return;
                 }
                 if (force == false) {
                     var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
                     if (!isUpdateNeeded) {
-                        AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                        Console.WriteLine($"current version of {currentContext} is already up to date.");
                         _updateCounter = 0;
                         return;
                     }
                 }
-                AntdshLogger.WriteLine($"updating {currentContext}");
+                Console.WriteLine($"updating {currentContext}");
 
                 if (force == false) {
                     var isDownloadValid = DownloadLatestFile(latestFileInfo);
                     if (isDownloadValid) {
-                        AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+                        Console.WriteLine($"{latestFileInfo.FileName} download complete");
                         var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
                         var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
                         InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
@@ -227,7 +199,7 @@ namespace antdsh {
                 }
                 else {
                     DownloadLatestFile(latestFileInfo);
-                    AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+                    Console.WriteLine($"{latestFileInfo.FileName} download complete");
                     var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
                     var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
                     InstallDownloadedFile(latestTmpFilePath, newVersionPath, activeVersionPath);
@@ -235,17 +207,17 @@ namespace antdsh {
                     return;
                 }
                 File.Delete($"{TmpDirectory}/{latestFileInfo.FileName}");
-                AntdshLogger.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
+                Console.WriteLine($"{latestFileInfo.FileName}: downloaded file is not valid");
             }
         }
 
         private static bool _updateRetry;
-        private static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+        public static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
             if (_updateCounter > 5) {
-                AntdshLogger.WriteLine($"{currentContext} update failed, too many retries");
+                Console.WriteLine($"{currentContext} update failed, too many retries");
                 _updateCounter = 0;
                 _updateRetry = false;
                 return;
@@ -257,13 +229,13 @@ namespace antdsh {
             var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
             if (force == false) {
                 if (!isUpdateNeeded) {
-                    AntdshLogger.WriteLine($"current version of {currentContext} is already up to date.");
+                    Console.WriteLine($"current version of {currentContext} is already up to date.");
                     _updateCounter = 0;
                     _updateRetry = false;
                     return;
                 }
             }
-            AntdshLogger.WriteLine($"updating {currentContext}");
+            Console.WriteLine($"updating {currentContext}");
 
             if (force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
@@ -327,9 +299,9 @@ namespace antdsh {
             _updateCounter = 0;
         }
 
-        private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
-            AntdshLogger.WriteLine("");
-            AntdshLogger.WriteLine($"Updating units for {currentContext}");
+        public static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
+            Console.WriteLine("");
+            Console.WriteLine($"Updating units for {currentContext}");
 
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
@@ -338,20 +310,20 @@ namespace antdsh {
             Terminal.Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
-            DownloadLatestFile(latestFileInfo);
             if (latestFileInfo == null) return;
+            DownloadLatestFile(latestFileInfo);
 
-            AntdshLogger.WriteLine($"{latestFileInfo.FileName} download complete");
+            Console.WriteLine($"{latestFileInfo.FileName} download complete");
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
             Terminal.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
             foreach (var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
-                AntdshLogger.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
+                Console.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
             }
             Terminal.Execute("systemctl daemon-reload");
-            AntdshLogger.WriteLine($"{currentContext} units installation complete");
+            Console.WriteLine($"{currentContext} units installation complete");
             Terminal.Execute($"umount {tmpMountDirectory}");
         }
 
@@ -396,14 +368,14 @@ namespace antdsh {
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
             var latestFileDownloadUrl = $"{_publicRepositoryUrl}/{latestFileInfo.FileName}";
-            AntdshLogger.WriteLine($"downloading file from {latestFileDownloadUrl}");
+            Console.WriteLine($"downloading file from {latestFileDownloadUrl}");
             var latestFile = $"{TmpDirectory}/{latestFileInfo.FileName}";
             if (File.Exists(latestFile)) {
                 File.Delete(latestFile);
             }
             new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
-            AntdshLogger.WriteLine($"repository file hash: {latestFileInfo.FileHash}");
-            AntdshLogger.WriteLine($"downloaded file hash: {GetFileHash(latestFile)}");
+            Console.WriteLine($"repository file hash: {latestFileInfo.FileHash}");
+            Console.WriteLine($"downloaded file hash: {GetFileHash(latestFile)}");
             return latestFileInfo.FileHash == GetFileHash(latestFile);
         }
 
@@ -425,11 +397,11 @@ namespace antdsh {
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
             var isDownloadValid = DownloadLatestFile(latestFileInfo);
             if (isDownloadValid == false) {
-                AntdshLogger.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
+                Console.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
                 _updateRetry = true;
                 return false;
             }
-            AntdshLogger.WriteLine($"{latestFileInfo?.FileName} download complete");
+            Console.WriteLine($"{latestFileInfo?.FileName} download complete");
             var latestFileTmpFilePath = $"{TmpDirectory}/{latestFileInfo?.FileName}";
             var newFileVersionPath = $"{contextDestinationDirectory}/{latestFileInfo?.FileName}";
             InstallDownloadedFile(latestFileTmpFilePath, newFileVersionPath, activePath);
@@ -463,6 +435,7 @@ namespace antdsh {
 
         private static void RestartAntdsh() {
             Terminal.Execute("systemctl daemon-reload");
+            Terminal.Execute("systemd-run --on-active=5 /bin/umount /framework/antdsh");
             Terminal.Execute("systemd-run --on-active=5 /usr/bin/systemctl stop framework-antdsh.mount");
             Terminal.Execute("systemd-run --on-active=10 /usr/bin/systemctl restart app-antdsh-02-mount.service");
             Environment.Exit(1);
