@@ -434,11 +434,9 @@ namespace antdsh {
         }
 
         private static void RestartAntdsh() {
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemd-run --on-active=5 /bin/umount /framework/antdsh");
-            Terminal.Execute("systemd-run --on-active=5 /usr/bin/systemctl stop framework-antdsh.mount");
-            Terminal.Execute("systemd-run --on-active=10 /usr/bin/systemctl restart app-antdsh-02-mount.service");
-            Environment.Exit(1);
+            Units.CreateRemountUnits();
+            Terminal.Execute("systemctl restart tt-antdsh-01-remount.timer");
+            Environment.Exit(0);
         }
     }
 }

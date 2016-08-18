@@ -84,6 +84,7 @@
     <Compile Include="AntdshApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemShellMgmt.cs" />
+    <Compile Include="Units.cs" />
     <Compile Include="Update.cs" />
   </ItemGroup>
   <ItemGroup>
