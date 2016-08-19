@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.Systemd;
 using Antd.Apps;
 using Nancy;
 using Nancy.Security;
@@ -44,6 +45,30 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
                 AppsManagement.Setup(app);
+                return HttpStatusCode.OK;
+            };
+
+            Get["/apps/status/{unit}"] = x => {
+                var unitName = (string)x.unit;
+                var status = Systemctl.Status(unitName);
+                return Response.AsJson(status);
+            };
+
+            Get["/apps/active/{unit}"] = x => {
+                var unitName = (string)x.unit;
+                var status = Systemctl.IsActive(unitName);
+                return Response.AsJson(status == true ? "active" : "inactive");
+            };
+
+            Post["/apps/restart"] = x => {
+                string unitName = Request.Form.Name;
+                Systemctl.Restart(unitName);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/apps/stop"] = x => {
+                string unitName = Request.Form.Name;
+                Systemctl.Stop(unitName);
                 return HttpStatusCode.OK;
             };
         }

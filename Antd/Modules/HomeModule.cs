@@ -46,6 +46,8 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class HomeModule : CoreModule {
 
+        private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
+
         public HomeModule() {
             this.RequiresAuthentication();
 
@@ -145,7 +147,8 @@ namespace Antd.Modules {
 
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.AppList = AppsManagement.Detect();
+                vmod.Detected = AppsManagement.Detect();
+                vmod.AppList = ApplicationRepository.GetAll().Select(_=> new ApplicationModel(_));
                 //vmod.AppExists = AnthillaSp.Setting.CheckSquash();
                 //vmod.AnthillaSpIsActive = AnthillaSp.Status.IsActiveAnthillaSp();
                 //vmod.AnthillaSpStatus = AnthillaSp.Status.AnthillaSp();

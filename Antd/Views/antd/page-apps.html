@@ -55,19 +55,33 @@
 
 @Section['MainContent']
 <div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="List">Detected Apps</legend>
+    <legend id="DetectedApps">Detected Apps</legend>
+    @Each.Detected
+    <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@Current.Name">
+            <i class="icon-eye on-left"></i>  @Current.Name
+        </div>
+        <div class="panel-content nif-content" style="display: none;" data-app-content="@Current.Name">
+            <input type="button" class="bg-anthilla-blu" style="width: 100%;" value="Install @Current.Name" data-role="ApplicationSetup" data-app-name="@Current.Name" />
+            <br />
+            <br />
+            <table class="table" style="table-layout: fixed;">
+                <tbody>
+                    @Partial['_partial/part-apps-info', @Current.Values];
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @EndEach
+
+    <legend id="InstalledApps">Installed Apps</legend>
     @Each.AppList
     <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@Current.Name">
             <i class="icon-eye on-left"></i>  @Current.Name
         </div>
         <div class="panel-content nif-content" style="display: none;" data-app-content="@Current.Name">
-            <input type="button" class="bg-anthilla-blu" style="width: 100%;" value="Setup" data-role="ApplicationSetup" data-app-name="@Current.Name" />
-            <table class="table" style="table-layout: fixed;">
-                <tbody>
-                    @Partial['antd/page-antd-proxy', @Current.Values];
-                </tbody>
-            </table>
+            @Partial['_partial/part-apps-unitinfo', @Current.UnitLauncher];
         </div>
     </div>
     @EndEach
@@ -91,5 +105,72 @@
         });
     });
 
+    $('[data-role="ApplicationRestart"]').click(function () {
+        var app = $(this).attr('data-app-name');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/apps/restart',
+            type: 'POST',
+            data: {
+                Name: app
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('[data-role="ApplicationStop"]').click(function () {
+        var app = $(this).attr('data-app-name');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/apps/stop',
+            type: 'POST',
+            data: {
+                Name: app
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-role="ApplicationStatus"]').each(function () {
+            var container = $(this);
+            var app = container.attr('data-app-name');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/apps/status/' + app,
+                type: 'GET',
+                success: function (data) {
+                    container.text(data);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-role="ApplicationActivity"]').each(function () {
+            var container = $(this);
+            var app = container.attr('data-app-name');
+            jQuery.support.cors = true;
+            $.ajax({
+                url: '/apps/active/' + app,
+                type: 'GET',
+                success: function (data) {
+                    if (data === "active") {
+                        container.html('<i class="icon-checkmark fg-anthilla-green"></i>');
+                        return;
+                    }
+                    if (data === "inactive") {
+                        container.html('<i class="icon-cancel-2 fg-red"></i>');
+                        return;
+                    }
+                    container.text(data);
+                }
+            });
+        });
+    });
 </script>
 @EndSection

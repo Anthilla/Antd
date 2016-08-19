@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using antdlib.common;
 using antdlib.views;
 using antdlib.views.Repo;
-using Newtonsoft.Json;
 
 namespace Antd.Database {
     public class ApplicationRepository {
@@ -35,13 +32,21 @@ namespace Antd.Database {
         }
 
         public bool Create(IDictionary<string, string> dict) {
-            var alias = dict["Name"];
-            var command = dict["Application"];
-            var description = dict["Description"];
+            var name = dict["Name"];
+            var repositoryName = dict["RepositoryName"];
+            var exes = dict["Exes"];
+            var workingDirectories = dict["WorkingDirectories"];
+            var unitPrepare = dict["UnitPrepare"];
+            var unitMount = dict["UnitMount"];
+            var unitLauncher = dict["UnitLauncher"];
             var obj = new ApplicationModel {
-                Name = alias,
-                Application = command,
-                Description = description,
+                Name = name,
+                RepositoryName = repositoryName,
+                Exes = exes.SplitToList(),
+                WorkingDirectories = workingDirectories.SplitToList(),
+                UnitPrepare = unitPrepare,
+                UnitMount = unitMount,
+                UnitLauncher = unitLauncher.SplitToList()
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
             return result;
@@ -49,14 +54,22 @@ namespace Antd.Database {
 
         public bool Edit(IDictionary<string, string> dict) {
             var id = dict["Id"];
-            var alias = dict["Name"];
-            var command = dict["Application"];
-            var description = dict["Description"];
+            var name = dict["Name"];
+            var repositoryName = dict["RepositoryName"];
+            var exes = dict["Exes"];
+            var workingDirectories = dict["WorkingDirectories"];
+            var unitPrepare = dict["UnitPrepare"];
+            var unitMount = dict["UnitMount"];
+            var unitLauncher = dict["UnitLauncher"];
             var objUpdate = new ApplicationModel {
                 Id = id.ToGuid(),
-                Name = alias.IsNullOrEmpty() ? null : alias,
-                Application = command.IsNullOrEmpty() ? null : command,
-                Description = description.IsNullOrEmpty() ? null : description,
+                Name = name,
+                RepositoryName = repositoryName,
+                Exes = exes.SplitToList(),
+                WorkingDirectories = workingDirectories.SplitToList(),
+                UnitPrepare = unitPrepare,
+                UnitMount = unitMount,
+                UnitLauncher = unitLauncher.SplitToList()
             };
             var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
             return result;

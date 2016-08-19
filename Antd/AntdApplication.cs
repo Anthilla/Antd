@@ -74,6 +74,7 @@ namespace Antd {
             Boot.StartScheduler();
             Boot.StartDirectoryWatcher();
             Boot.CheckCertificate();
+            Boot.LaunchApps();
 
             var port = ApplicationSetting.HttpPort();
             var uri = $"http://localhost:{port}/";

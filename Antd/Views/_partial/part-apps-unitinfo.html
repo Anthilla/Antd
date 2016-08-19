@@ -1,0 +1,19 @@
+﻿@Each.Model
+<div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
+    <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@Current">
+        <p data-role="ApplicationActivity" data-app-name="@Current" style="display: inline-block; margin-right: 10px;"></p>
+        @Current
+    </div>
+    <div class="panel-content nif-content" style="display: none;" data-app-content="@Current">
+        <input type="button" class="bg-anthilla-blu" style="width: 100%;" value="Restart" data-role="ApplicationRestart" data-app-name="@Current" />
+        <br />
+        <input type="button" class="bg-anthilla-orange" style="width: 100%;" value="Stop" data-role="ApplicationStop" data-app-name="@Current" />
+        <br />
+        <br />
+        <br />
+        <textarea data-role="ApplicationStatus" data-app-name="@Current" style="min-width: 90%; max-width: 90%; min-height: 250px;" class="fg-white bg-anthilla-gray-m border-anthilla-gray-m"></textarea>
+        <button data-role="ApplicationReloadStatus" data-app-name="@Current" class="bg-anthilla-gray"><i class="icon-cycle fg-anthilla-green"></i></button>
+    </div>
+</div>
+<br />
+@EndEach

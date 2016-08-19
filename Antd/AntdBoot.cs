@@ -5,7 +5,6 @@ using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.Systemd;
 using antdlib.views;
-using Antd.Apps;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.MountPoint;
@@ -239,19 +238,22 @@ namespace Antd {
             ConsoleLogger.Log("certificates ready");
         }
 
-        //public void LaunchApps() {
-        //    if (!Parameter.IsUnix)
-        //        return;
-        //    var apps = AppsManagement.Detect();
-        //    foreach (var app in apps) {
-        //        var dirs = AppsManagement.GetWantedDirectories(app);
-        //        foreach (var dir in dirs) {
-        //            Mount.Dir(dir);
-        //        }
-        //    }
-        //    AnthillaSp.SetApp();
-        //    ConsoleLogger.Log("apps ready");
-        //}
+        private readonly ApplicationRepository _applicationRepository = new ApplicationRepository();
+
+        public void LaunchApps() {
+            if (!Parameter.IsUnix)
+                return;
+            var apps = _applicationRepository.GetAll().Select(_ => new ApplicationModel(_)).ToList();
+            foreach (var app in apps) {
+                var units = app.UnitLauncher;
+                foreach (var unit in units) {
+                    if (Systemctl.IsActive(unit) == false) {
+                        Systemctl.Restart(unit);
+                    }
+                }
+            }
+            ConsoleLogger.Log("apps ready");
+        }
 
         #region Unused Configuration
         public void SetWebsocketd() {

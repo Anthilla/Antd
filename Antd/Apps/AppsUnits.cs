@@ -5,15 +5,16 @@ using antdlib.Systemd;
 
 namespace Antd.Apps {
     public class AppsUnits {
-        public static void CreatePrepareUnit(string name, string frameworkDir) {
-            var fileName = $"{Parameter.AppsUnits}/app-{name}-01-prepare.service";
+        public static string CreatePrepareUnit(string name, string frameworkDir) {
+            var unitName = $"app-{name.ToLower()}-01-prepare.service".Replace(" ", "");
+            var fileName = $"{Parameter.AppsUnits}/{unitName}";
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
             }
             var lines = new List<string> {
                 "[Unit]",
                 "Description=External Volume Unit, Application: {name} Prepare Service",
-                $"Before=app-{name}-02-mount.service",
+                $"Before=app-{name.ToLower()}-02-mount.service".Replace(" ", ""),
                 "",
                 "[Service]",
                 $"ExecStart=/bin/mkdir -p {frameworkDir}",
@@ -25,10 +26,12 @@ namespace Antd.Apps {
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
+            return unitName;
         }
 
-        public static void CreateMountUnit(string name, string sourcePath, string frameworkDir) {
-            var fileName = $"{Parameter.AppsUnits}/app-{name}-02-mount.service";
+        public static string CreateMountUnit(string name, string sourcePath, string frameworkDir) {
+            var unitName = $"app-{name.ToLower()}-02-mount.service".Replace(" ", "");
+            var fileName = $"{Parameter.AppsUnits}/{unitName}";
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
             }
@@ -46,29 +49,33 @@ namespace Antd.Apps {
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
+            return unitName;
         }
 
-        public static void CreateLauncherUnit(string name, string exeName, string exePath) {
-            var fileName = $"{Parameter.AppsUnits}/app-{name}-{exeName.Replace(".exe", "")}-launcher.service";
+        public static string CreateLauncherUnit(string name, string exeName, string exePath) {
+            var unitName = $"app-{name.ToLower()}-{exeName.ToLower().Replace(".exe", "")}-launcher.service";
+            var fileName = $"{Parameter.AppsUnits}/{unitName}";
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
             }
             var lines = new List<string> {
                 "[Unit]",
                 $"Description=External Volume Unit, Application: {exeName} Launcher Service",
-                $"After=app-{name}-02-mount.service",
+                $"After=app-{name.ToLower()}-02-mount.service".Replace(" ", ""),
                 "",
                 "[Service]",
                 $"ExecStart=/usr/bin/mono {exePath}",
-                "Restart=on-failed",
-                "SuccessExitStatus=0",
+                "Restart=on-failure",
                 "RemainAfterExit=no",
+                "TasksMax=infinity",
+                "LimitNOFILE=1024000",
                 "",
                 "[Install]",
                 "WantedBy=applicative.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
+            return unitName;
         }
     }
 }
