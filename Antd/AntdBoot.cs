@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using antdlib;
 using antdlib.common;
@@ -18,8 +19,7 @@ namespace Antd {
         public void RemoveLimits() {
             if (!Parameter.IsUnix)
                 return;
-            Terminal.Execute("ulimit -Hn 1024000");
-            Terminal.Execute("ulimit -Sn 1024000");
+            Terminal.Execute("ulimit -n 1024000");
             ConsoleLogger.Log("removed open files limit");
         }
 

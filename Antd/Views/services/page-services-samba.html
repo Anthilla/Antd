@@ -1,0 +1,147 @@
+﻿<legend id="Samba">
+    Samba
+
+    @If.SambaIsActive
+    <i id="ShowSambaStructure" class="icon-list fg-white" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+    <i id="RefreshSamba" class="icon-redo fg-anthilla-blu" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+    <i id="ReloadSamba" class="icon-cycle fg-lightGreen" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+    @EndIf
+
+    @IfNot.SambaIsActive
+    <i id="ActivateSamba" class="icon-upload fg-anthilla-orange" style="float: right; cursor: pointer;"></i>
+    @EndIf
+</legend>
+@If.SambaIsActive
+<div data-role="tab-control" class="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#samba_global">Global</a></li>
+        <li><a href="#samba_share">Share</a></li>
+    </ul>
+
+    <div class="frames">
+        <div id="samba_global" class="frame" style="display: block;">
+
+            <div id="SambaConfigPanel" style="width: 100%; height: auto; padding: 20px; margin-bottom: 15px;" class="border-2-anthilla-gray">
+                <input type="button" onclick="$('#SambaForm').submit()" class="bg-mauve" value="Update Global Configuration" style="display: inline-block;">
+                <input type="button" class="bg-mauve" value="Add New Parameter to Global Configuration" id="AddNewParameterSamba" style="display: inline-block;">
+                <input type="text" placeholder="Search" style="position: relative; margin-bottom: 15px; height: 30px; width: 300px; padding-left: 5px; display: inline; float: right;" data-table="SambaSearch" class="search-field" autocomplete="off">
+            </div>
+
+            <div id="NewParameterSambaDashboard" style="display: none; width: 100%; height: auto; padding: 20px; margin-bottom: 15px;" class="border-2-anthilla-gray">
+                <form action="/services/samba/addparam" method="POST" enctype="multipart/form-data" class="grid">
+                    <div class="row">
+                        <div class="span4">
+                            <label>Parameter Key</label>
+                        </div>
+                        <div class="span6">
+                            <input name="NewParameterKey" type="text" style="width: 90%;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <label>Parameter Value</label>
+                        </div>
+                        <div class="span6">
+                            <input name="NewParameterValue" type="text" style="width: 90%;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                        </div>
+                        <div class="span6">
+                            <input value="Add Parameter" type="submit" style="width: 90%;" class="bg-anthilla-geen" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <form action="/services/update/samba" id="SambaForm" method="POST" enctype="multipart/form-data">
+                <table class="table" data-search="SambaSearch">
+                    <thead id="SambaStructure" style="display: none;">
+                        <tr>
+                            <td colspan="3">
+                                <ul class="fg-white" style="list-style: none;">
+                                    <li><label>Service Structure</label></li>
+                                    @Each.SambaStructure
+                                    <li>
+                                        <p>@Current</p>
+                                    </li>
+                                    @EndEach
+                                </ul>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.SambaData
+                        @Partial['_partial/part-srvc-samba-data', @Current];
+                        @EndEach
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div id="samba_share" class="frame" style="display: none;">
+
+            <div id="SambaShareConfigPanel" style="width: 100%; height: auto; padding: 20px; margin-bottom: 15px;" class="border-2-anthilla-gray">
+                <input type="button" class="bg-mauve" value="Add New Share" id="AddNewShare" style="display: inline-block;">
+            </div>
+
+            <div id="NewSambaShare" style="display: none; width: 100%; height: auto; padding: 20px; margin-bottom: 15px;" class="border-2-anthilla-gray">
+                <form action="/services/samba/addshare" method="POST" enctype="multipart/form-data" class="grid">
+                    <div class="row">
+                        <div class="span4">
+                            <label>Share Name</label>
+                        </div>
+                        <div class="span6">
+                            <input name="NewShareName" type="text" style="width: 90%;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <label>Share Directory</label>
+                        </div>
+                        <div class="span6">
+                            <input name="NewShareDirectory" type="text" style="width: 90%;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <label></label>
+                        </div>
+                        <div class="span6">
+                            <input value="Add Share" type="submit" style="width: 90%;" class="bg-anthilla-geen" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            @Each.SambaData
+            <form action="/services/update/sambashares" data-share-form="ShareForm" data-share-name="@Current.Name" method="POST" enctype="multipart/form-data">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="border-bottom: 4px solid #3A3A3A;">
+                                <input name="ShareName" type="text" value="@Current.Name" style="padding: 5px; width: 50%;" />
+                                <input name="ShareQueryName" type="hidden" value="@Current.Name" />
+                                <input name="ShareFile" type="hidden" value="@Current.FilePath" />
+                                <input type="submit" value="Update @Current.Name" class="bg-indigo" style="float: right;" />
+                            </td>
+                        </tr>
+                        @Partial['_partial/part-srvc-samba-data', @Current.Data];
+                        <tr data-share="@Current.Name" data-object="share-parameter">
+                            <td class="bg-anthilla-gray-m" style="border-width: 0; border-right: 4px solid #3A3A3A;"></td>
+                            <td style="width: 33%; border-bottom: 4px solid #3A3A3A;">
+                                <input name="DataKey" type="text" style="width: 90%;" />
+                                <input name="DataFilePath" type="hidden" value="@Current.FilePath" />
+                            </td>
+                            <td style="border-bottom: 4px solid #3A3A3A;">
+                                <input name="DataValue" type="text" value="" style="width: 90%;" />
+                                <i class="icon-plus fg-anthilla-green" style="float: right; margin-top: 5px; margin-right: 10px;"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            @EndEach
+        </div>
+    </div>
+</div>
+@EndIf

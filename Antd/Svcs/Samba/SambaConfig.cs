@@ -26,18 +26,20 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
-using antdlib.ViewBinds;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib;
 using antdlib.common;
 using antdlib.common.Helpers;
+using antdlib.ViewBinds;
 using Antd.Database;
 using Antd.MountPoint;
 using Newtonsoft.Json;
 
-namespace antdlib.Svcs.Samba {
+namespace Antd.Svcs.Samba {
     public class SambaConfig {
 
         //public class SmartcardConfig {
@@ -102,7 +104,7 @@ namespace antdlib.Svcs.Samba {
 
         public static List<string> SimpleStructure => GetServiceSimpleStructure();
 
-        private static SambaConfigRepository _repository = new SambaConfigRepository();
+        private static readonly SambaConfigRepository Repository = new SambaConfigRepository();
 
         public class MapRules {
             public static char CharComment => ';';
@@ -211,11 +213,11 @@ namespace antdlib.Svcs.Samba {
                     Share = shares,
                     Data = data
                 };
-                _repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
             }
 
             public static SambaModel Get() {
-                var smbcfg = _repository.GetByGuid(ServiceGuid);
+                var smbcfg = Repository.GetByGuid(ServiceGuid);
                 if (string.IsNullOrEmpty(smbcfg.Config)) return null;
                 var smbmodel = JsonConvert.DeserializeObject<SambaModel>(smbcfg.Config);
                 return smbmodel;
@@ -243,7 +245,7 @@ namespace antdlib.Svcs.Samba {
                     Share = shares,
                     Data = data
                 };
-                _repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
             }
 
             public static void DumpGlobalConfig() {
@@ -282,7 +284,7 @@ namespace antdlib.Svcs.Samba {
                     Share = shares,
                     Data = data
                 };
-                _repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
             }
 
             public static void DumpShare(string shareName) {
@@ -317,7 +319,7 @@ namespace antdlib.Svcs.Samba {
                     Share = shares,
                     Data = data
                 };
-                _repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
             }
 
             private static void SetCustomFile() {
@@ -386,7 +388,7 @@ namespace antdlib.Svcs.Samba {
                     Share = shares,
                     Data = data
                 };
-                _repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
+                Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(samba));
             }
 
             private static void SetShareFile(string shareName) {

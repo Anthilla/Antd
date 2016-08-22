@@ -1,0 +1,12 @@
+﻿@Each.Model
+<tr data-file="@filePath" data-object="samba-parameter">
+    <td style="width: 33%;">
+        @Current.Key
+        <input name="DataKey" type="hidden" value="@Current.Key" />
+        <input name="DataFilePath" type="hidden" value="@Current.FilePath" />
+    </td>
+    <td>
+        <input name="DataValue" type="text" value="@Current.Value" style="width: 90%;" />
+    </td>
+</tr>
+@EndEach

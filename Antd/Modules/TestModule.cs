@@ -27,7 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Runtime.ConstrainedExecution;
 using Nancy;
+using Vsync;
 
 namespace Antd.Modules {
     public class TestModule : CoreModule {

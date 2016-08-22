@@ -176,6 +176,7 @@
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserModel.cs" />
+    <Compile Include="vsync\Vsync.cs" />
     <Content Include="Content\Style\img\disk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -195,6 +196,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-apps.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\services\page-services-bind.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\services\_page-services.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-srvc-bind-data.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-srvc-samba-data.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-apps-unitinfo.html">
@@ -338,55 +351,55 @@
     <Content Include="Views\page-units.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-bind.html">
+    <Content Include="Views\_old\services\page-services-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-glusterfs.html">
+    <Content Include="Views\_old\services\page-services-glusterfs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-libvirt.html">
+    <Content Include="Views\_old\services\page-services-libvirt.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-lxc.html">
+    <Content Include="Views\_old\services\page-services-lxc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-nfs.html">
+    <Content Include="Views\_old\services\page-services-nfs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-nftable.html">
+    <Content Include="Views\_old\services\page-services-nftable.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-nginx.html">
+    <Content Include="Views\_old\services\page-services-nginx.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-ntpd.html">
+    <Content Include="Views\_old\services\page-services-ntpd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-qemu.html">
+    <Content Include="Views\_old\services\page-services-qemu.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-squid.html">
+    <Content Include="Views\_old\services\page-services-squid.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-ssh.html">
+    <Content Include="Views\_old\services\page-services-ssh.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-syslogng.html">
+    <Content Include="Views\_old\services\page-services-syslogng.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-systemd-hostnamectl.html">
+    <Content Include="Views\_old\services\page-services-systemd-hostnamectl.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-systemd-journald.html">
+    <Content Include="Views\_old\services\page-services-systemd-journald.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-systemd-networkd.html">
+    <Content Include="Views\_old\services\page-services-systemd-networkd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-zfs.html">
+    <Content Include="Views\_old\services\page-services-zfs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\_page-services.html">
+    <Content Include="Views\_old\services\_page-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\system\page-system-authentication.html">
@@ -779,6 +792,8 @@
     <None Include="Svcs\Samba\json-schema1.json" />
     <None Include="Svcs\Samba\samba.command.list" />
     <None Include="Svcs\Samba\samba.json" />
+    <Content Include="Views\services\page-services-dhcp.html" />
+    <Content Include="Views\services\page-services-samba.html" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\antd.websocket.js">
