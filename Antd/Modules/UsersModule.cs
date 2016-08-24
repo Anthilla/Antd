@@ -51,9 +51,10 @@ namespace Antd.Modules {
                 var password = (string)Request.Form.Password;
                 var tryGet = _userRepositoryRepo.GetByAlias(user);
                 if (tryGet != null) {
-                    SystemUser.ResetPassword(user, password);
+                    var hp = Terminal.Execute($"mkpasswd -m sha-512 '{password}'");
+                    SystemUser.SetPassword(user, hp);
                     _userRepositoryRepo.Delete(tryGet.Id);
-                    _userRepositoryRepo.FastCreate(user, password);
+                    _userRepositoryRepo.FastCreate(user, hp);
                 }
                 return HttpStatusCode.OK;
             };

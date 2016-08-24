@@ -21,9 +21,12 @@ namespace Antd {
         public void RemoveLimits() {
             if (!Parameter.IsUnix)
                 return;
-            var limitsFile = "/etc/security/limits.conf";
+            const string limitsFile = "/etc/security/limits.conf";
             if (File.Exists(limitsFile)) {
-                File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
+                var t = File.ReadAllText(limitsFile);
+                if (!t.Contains("root - nofile 1024000")) {
+                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
+                }
             }
 
             Terminal.Execute("ulimit -n 1024000");
@@ -148,14 +151,16 @@ namespace Antd {
         public void ReloadUsers() {
             if (!Parameter.IsUnix)
                 return;
-            var sysUser = _userRepository.Import().ToList();
+            var sysUser = _userRepository.Import();
+            Console.WriteLine("");
             foreach (var user in _userRepository.GetAll()) {
-                if (!sysUser.Contains(user.Alias)) {
+                Console.WriteLine($"{user.Alias} - {user.Password}");
+                if (!sysUser.ContainsKey(user.Alias)) {
                     SystemUser.Create(user.Alias);
                     ConsoleLogger.Log($"system-user {user.Alias} created");
                 }
                 if (!string.IsNullOrEmpty(user.Password)) {
-                    SystemUser.ResetPassword(user.Alias, user.Password);
+                    SystemUser.SetPassword(user.Alias, user.Password);
                 }
             }
             ConsoleLogger.Log("users config ready");

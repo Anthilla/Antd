@@ -8,9 +8,15 @@ namespace Antd.Users {
             Terminal.Execute($"useradd {user}");
         }
 
-        public static void ResetPassword(string user, string password) {
-            var hp = Terminal.Execute($"mkpasswd -m sha-512 {password}");
-            Terminal.Execute($"usermod -p '{hp.Trim()}' {user}");
+        public static void SetPassword(string user, string password) {
+            if (string.IsNullOrEmpty(user)) {
+                return;
+            }
+            if (string.IsNullOrEmpty(password)) {
+                return;
+            }
+            Console.WriteLine($"usermod -p {password} {user}");
+            Console.WriteLine(Terminal.Execute($"usermod -p '{password}' {user}"));
         }
     }
 }

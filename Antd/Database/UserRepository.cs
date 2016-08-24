@@ -127,39 +127,37 @@ namespace Antd.Database {
         private const string EtcPasswd = "/etc/passwd";
         private const string EtcShadow = "/etc/shadow";
 
-        public IEnumerable<string> Import() {
-            if (!File.Exists(EtcShadow) || !File.Exists(EtcPasswd)) {
-                return new List<string>();
-            }
+        public Dictionary<string, string> Import() {
             var users = File.ReadAllLines(EtcPasswd);
             var passwords = File.ReadAllLines(EtcShadow);
-            var sysUsers = new List<string>();
+            var sysUsers = new Dictionary<string, string>();
             foreach (var user in users) {
                 var u = Map(user, passwords);
-                sysUsers.Add(u.Split(':')[0]);
+                sysUsers.Add(u.Key, u.Value);
             }
             return sysUsers;
         }
 
-        private string Map(string userLine, IEnumerable<string> passwords) {
+        private KeyValuePair<string, string> Map(string userLine, IEnumerable<string> passwords) {
             var userInfo = userLine.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
             if (userInfo.Length <= 2) {
-                return "";
+                return new KeyValuePair<string, string>("", "");
             }
             var tryGet = GetByAlias(userInfo[0]);
             if (tryGet != null) {
-                return userInfo[0];
+                return new KeyValuePair<string, string>(tryGet.Alias, tryGet.Password);
             }
             var user = userInfo[0];
-            var passwordLine = passwords.FirstOrDefault(_ => _.StartsWith(user));
+            var passwordLine = passwords.FirstOrDefault(_ => _.Contains(user));
             var passwordInfo = passwordLine?.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
             var password = string.IsNullOrEmpty(passwordInfo?[1]) ? "" : passwordInfo[1];
             FastCreate(user, password);
             ConsoleLogger.Log($"imported {userInfo[0]} into Database");
-            return user;
+            return new KeyValuePair<string, string>(user, password);
         }
 
         public bool FastCreate(string alias, string password) {
+            Console.WriteLine($"Create: {alias} {password}");
             var obj = new UserModel {
                 Guid = Guid.NewGuid().ToString(),
                 Alias = alias,
