@@ -69,8 +69,21 @@ namespace Antd.Modules {
 
                 vmod.DhcpIsActive = DhcpConfig.IsActive;
                 var dhcpMapFile = DhcpConfig.MapFile.Get();
-                //vmod.DhcpData = dhcpMapFile.Data;
-                //vmod.DhcpShareData = dhcpMapFile.Share;
+                vmod.DhcpGlobal = dhcpMapFile.DhcpGlobal;
+                vmod.DhcpInclude = dhcpMapFile.DhcpInclude;
+                vmod.DhcpKey = dhcpMapFile.DhcpKey;
+                vmod.DhcpSubnet = dhcpMapFile.DhcpSubnet;
+                vmod.DhcpHost = dhcpMapFile.DhcpHost;
+                vmod.DhcpPrefix6 = dhcpMapFile.DhcpPrefix6;
+                vmod.DhcpRange6 = dhcpMapFile.DhcpRange6;
+                vmod.DhcpRange = dhcpMapFile.DhcpRange;
+                vmod.DhcpSubnet6 = dhcpMapFile.DhcpSubnet6;
+                vmod.DhcpFailover = dhcpMapFile.DhcpFailover;
+                vmod.DhcpLogging = dhcpMapFile.DhcpLogging;
+                vmod.DhcpSharedNetwork = dhcpMapFile.DhcpSharedNetwork;
+                vmod.DhcpGroup = dhcpMapFile.DhcpGroup;
+                vmod.DhcpClass = dhcpMapFile.DhcpClass;
+                vmod.DhcpSubclass = dhcpMapFile.DhcpSubclass;
 
                 vmod.CurrentContext = Request.Path;
                 return View["_page-services", vmod];

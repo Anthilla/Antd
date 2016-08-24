@@ -161,6 +161,7 @@
     <Compile Include="Rmmod.cs" />
     <Compile Include="Ssh.cs" />
     <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
     <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="SystemdTimer\Timers.cs" />
+    <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
@@ -202,6 +204,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\services\_page-services.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_partial\part-srvc-dhcp-data.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-srvc-bind-data.html">

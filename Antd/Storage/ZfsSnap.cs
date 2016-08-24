@@ -14,6 +14,10 @@ namespace Antd.Storage {
             public string Refer { get; set; }
             public string Mountpoint { get; set; }
             public bool IsEmpty { get; set; }
+
+            public int Index { get; set; }
+            public DateTime Created { get; set; }
+            public long Dimension { get; set; }
         }
 
         public static List<Model> List() {

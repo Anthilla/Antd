@@ -11,6 +11,7 @@ using Antd.Database;
 using Antd.MountPoint;
 using Antd.Storage;
 using Antd.SystemdTimer;
+using Antd.Timer;
 using RaptorDB;
 
 namespace Antd {
@@ -19,6 +20,11 @@ namespace Antd {
         public void RemoveLimits() {
             if (!Parameter.IsUnix)
                 return;
+            var limitsFile = "/etc/security/limits.conf";
+            if (File.Exists(limitsFile)) {
+                File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
+            }
+
             Terminal.Execute("ulimit -n 1024000");
             ConsoleLogger.Log("removed open files limit");
         }
@@ -236,6 +242,13 @@ namespace Antd {
                 File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
             }
             ConsoleLogger.Log("certificates ready");
+        }
+
+        public void LaunchInternalTimers() {
+            if (!Parameter.IsUnix)
+                return;
+            SnapshotCleanup.Start(new TimeSpan(2, 00, 00));
+            ConsoleLogger.Log("internal timers ready");
         }
 
         private readonly ApplicationRepository _applicationRepository = new ApplicationRepository();
