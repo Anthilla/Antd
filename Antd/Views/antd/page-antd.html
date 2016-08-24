@@ -74,23 +74,23 @@
 
 @Section['Scripts']
 <script data-context="pageload" type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         jQuery.support.cors = true;
         $.ajax({
             url: '/part/info/losetup',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 $('[data-render="part-info-losetup"]').html(data);
             }
         });
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         jQuery.support.cors = true;
         $.ajax({
             url: '/part/scheduler',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 $('[data-render="part-scheduler"]').html(data);
             }
         });
@@ -709,39 +709,23 @@
         });
     });
 
-    $('i[data-role="remove-claim"]').click(function () {
-        var userGuid = $(this).attr('data-user-guid');
-        var claimGuid = $(this).attr('data-claim-guid');
+    $('[data-role="UpdateUserPassword"]').click(function () {
+        var user = $(this).attr('data-user');
+        var container = $(this).parents('[data-role="UpdatePasswordPanel"]');
+        var pass = container.find('[data-role="Password01"]').val();
         jQuery.support.cors = true;
         $.ajax({
-            url: '/users/identity/delclaim',
+            url: '/users/change/password',
             type: 'POST',
             data: {
-                Userguid: userGuid,
-                Guid: claimGuid
+                User: user,
+                Password: pass
             },
             success: function () {
                 location.reload(true);
             }
         });
     });
-
-    $('li[data-role="user"]').click(function () {
-        var userGuid = $(this).attr('data-user-guid');
-        $('li[data-user-guid="' + userGuid + '"]').not('li[data-role="user"]').toggle();
-    });
-
-    $('#UserClaimTypeSelection').find('input[type="radio"]').click(function () {
-        var vncSelector = $('#UserClaimTypeSelection').find('input[value="vnc"]');
-        var kInput = $('#UserClaimKey');
-        if (vncSelector.is(':checked')) {
-            kInput.attr('placeholder', 'Remote Machine Name');
-        }
-        else {
-            kInput.attr('placeholder', 'Key');
-        }
-    });
-
 </script>
 <script data-context="services" type="text/javascript">
     $('.search-field').keyup(function () {

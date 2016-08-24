@@ -12,6 +12,7 @@ using Antd.MountPoint;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
+using Antd.Users;
 using RaptorDB;
 
 namespace Antd {
@@ -143,10 +144,20 @@ namespace Antd {
             ConsoleLogger.Log("commands imported");
         }
 
+        private readonly UserRepository _userRepository = new UserRepository();
         public void ReloadUsers() {
             if (!Parameter.IsUnix)
                 return;
-            //SystemUser.Config.ResetPasswordForUserStoredInDb();
+            var sysUser = _userRepository.Import().ToList();
+            foreach (var user in _userRepository.GetAll()) {
+                if (!sysUser.Contains(user.Alias)) {
+                    SystemUser.Create(user.Alias);
+                    ConsoleLogger.Log($"system-user {user.Alias} created");
+                }
+                if (!string.IsNullOrEmpty(user.Password)) {
+                    SystemUser.ResetPassword(user.Alias, user.Password);
+                }
+            }
             ConsoleLogger.Log("users config ready");
         }
 

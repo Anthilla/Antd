@@ -37,6 +37,11 @@ namespace Antd.Database {
             return result.FirstOrDefault();
         }
 
+        public UserSchema GetByAlias(string alias) {
+            var result = DatabaseRepository.Query<UserSchema>(AntdApplication.Database, ViewName, schema => schema.Alias == alias);
+            return result.FirstOrDefault();
+        }
+
         public bool Create(IDictionary<string, string> dict) {
             var guid = dict["Guid"];
             var firstName = dict["FirstName"];
@@ -119,50 +124,61 @@ namespace Antd.Database {
             return result;
         }
 
-        private const string UserFile = "/etc/shadow";
-        private const string UserPasswordFile = "/etc/passwd";
+        private const string EtcPasswd = "/etc/passwd";
+        private const string EtcShadow = "/etc/shadow";
 
-        public void Import() {
-            if (!File.Exists(UserFile) || !File.Exists(UserPasswordFile)) {
-                return;
+        public IEnumerable<string> Import() {
+            if (!File.Exists(EtcShadow) || !File.Exists(EtcPasswd)) {
+                return new List<string>();
             }
-            var usersString = Terminal.Execute($"cat {UserFile}");
-            var users = usersString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var users = File.ReadAllLines(EtcPasswd);
+            var passwords = File.ReadAllLines(EtcShadow);
+            var sysUsers = new List<string>();
             foreach (var user in users) {
-                Map(user);
+                var u = Map(user, passwords);
+                sysUsers.Add(u.Split(':')[0]);
             }
+            return sysUsers;
         }
 
-        private void Map(string userString) {
-            var userInfo = userString.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
-            if (userInfo.Length <= 8) {
-                return;
+        private string Map(string userLine, IEnumerable<string> passwords) {
+            var userInfo = userLine.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
+            if (userInfo.Length <= 2) {
+                return "";
             }
-            var passwords = Terminal.Execute($"cat {UserPasswordFile}").SplitToList(Environment.NewLine);
-            Create(new Dictionary<string, string> {
-                { "FirstName", userInfo[0] },
-                { "LastName", userInfo[0] },
-                { "Password", $"{userInfo[1]}${passwords.FirstOrDefault(_=>_.Contains(userInfo[0]))}"},
-                { "Role", "system-user" },
-                { "Email", "" },
-                { "CompanyGuid", "" },
-                { "Projects", "" },
-                { "Usergroups", "" },
-                { "Resources", "" },
-                { "Users", "" },
-                { "Tags", "" }
-            });
+            var tryGet = GetByAlias(userInfo[0]);
+            if (tryGet != null) {
+                return userInfo[0];
+            }
+            var user = userInfo[0];
+            var passwordLine = passwords.FirstOrDefault(_ => _.StartsWith(user));
+            var passwordInfo = passwordLine?.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
+            var password = string.IsNullOrEmpty(passwordInfo?[1]) ? "" : passwordInfo[1];
+            FastCreate(user, password);
+            ConsoleLogger.Log($"imported {userInfo[0]} into Database");
+            return user;
         }
 
-        private static string[] MapPassword(string passwdString) {
-            var passwdInfo = passwdString.Split(new[] { "$" }, StringSplitOptions.None).ToArray();
-            //var passwd = new SystemUserPassword {
-            //    Type = passwdInfo[0],
-            //    Salt = passwdInfo[1],
-            //    Result = passwdInfo[2]
-            //};
-            return passwdInfo;
+        public bool FastCreate(string alias, string password) {
+            var obj = new UserModel {
+                Guid = Guid.NewGuid().ToString(),
+                Alias = alias,
+                Password = password,
+                Role = "system-user"
+            };
+            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            return result;
         }
+
+        //private static string[] MapPassword(string passwdString) {
+        //    var passwdInfo = passwdString.Split(new[] { "$" }, StringSplitOptions.None).ToArray();
+        //    //var passwd = new SystemUserPassword {
+        //    //    Type = passwdInfo[0],
+        //    //    Salt = passwdInfo[1],
+        //    //    Result = passwdInfo[2]
+        //    //};
+        //    return passwdInfo;
+        //}
 
         public class Shadow {
             public static void Create(string user) {

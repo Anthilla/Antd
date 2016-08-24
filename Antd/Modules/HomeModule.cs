@@ -34,7 +34,6 @@ using System.Linq;
 using antdlib;
 using antdlib.common;
 using antdlib.Certificate;
-using antdlib.Svcs.Dhcp;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
@@ -47,6 +46,7 @@ namespace Antd.Modules {
     public class HomeModule : CoreModule {
 
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
+        private static readonly UserRepository UserRepository = new UserRepository();
 
         public HomeModule() {
             this.RequiresAuthentication();
@@ -103,44 +103,21 @@ namespace Antd.Modules {
                 }
                 viewModel.NetworkVirtualIf = vrtIf;
                 ConsoleLogger.Log("Home load done > network");
-
                 viewModel.FirewallCommands = new FirewallListRepository().GetAll();
-                viewModel.DhcpdStatus = DhcpConfig.IsActive;
-                //var dhcpdModel = DhcpConfig.MapFile.Get();
-                //if (dhcpdModel != null) {
-                //    viewModel.DhcpdGetGlobal = dhcpdModel.DhcpGlobal;
-                //    viewModel.DhcpdGetPrefix6 = dhcpdModel.DhcpPrefix6;
-                //    viewModel.DhcpdGetRange = dhcpdModel.DhcpRange;
-                //    viewModel.DhcpdGetRange6 = dhcpdModel.DhcpRange6;
-                //    viewModel.DhcpdGetKeys = dhcpdModel.DhcpKey;
-                //    viewModel.DhcpdGetSubnet = dhcpdModel.DhcpSubnet;
-                //    viewModel.DhcpdGetSubnet6 = dhcpdModel.DhcpSubnet6;
-                //    viewModel.DhcpdGetHost = dhcpdModel.DhcpHost;
-                //    viewModel.DhcpdGetFailover = dhcpdModel.DhcpFailover;
-                //    viewModel.DhcpdGetSharedNetwork = dhcpdModel.DhcpSharedNetwork;
-                //    viewModel.DhcpdGetGroup = dhcpdModel.DhcpGroup;
-                //    viewModel.DhcpdGetClass = dhcpdModel.DhcpClass;
-                //    viewModel.DhcpdGetSubclass = dhcpdModel.DhcpSubclass;
-                //    viewModel.DhcpdGetLogging = dhcpdModel.DhcpLogging;
-                //}
-
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
                 ConsoleLogger.Log("Home load done > firewall");
-
                 viewModel.Mounts = new MountRepository().GetAll();
                 ConsoleLogger.Log("Home load done > mounts");
-
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = Zpool.List();
                 viewModel.ZfsList = Zfs.List();
                 viewModel.ZfsSnap = ZfsSnap.List();
                 ConsoleLogger.Log("Home load done > storage");
-
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                 ConsoleLogger.Log("Home load done > overlay");
 
-                //viewModel.VMList = antdlib.Virsh.Virsh.GetVmList();
-                //ConsoleLogger.Log("Home load done > misc");
+                viewModel.Users = UserRepository.GetAll().OrderBy(_ => _.Alias);
+                ConsoleLogger.Log("Home load done > users");
 
                 return View["antd/page-antd", viewModel];
             };
@@ -148,12 +125,7 @@ namespace Antd.Modules {
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Detected = AppsManagement.Detect();
-                vmod.AppList = ApplicationRepository.GetAll().Select(_=> new ApplicationModel(_));
-                //vmod.AppExists = AnthillaSp.Setting.CheckSquash();
-                //vmod.AnthillaSpIsActive = AnthillaSp.Status.IsActiveAnthillaSp();
-                //vmod.AnthillaSpStatus = AnthillaSp.Status.AnthillaSp();
-                //vmod.AnthillaServerIsActive = AnthillaSp.Status.IsActiveAnthillaServer();
-                //vmod.AnthillaServerStatus = AnthillaSp.Status.AnthillaServer();
+                vmod.AppList = ApplicationRepository.GetAll().Select(_ => new ApplicationModel(_));
                 return View["antd/page-apps", vmod];
             };
 

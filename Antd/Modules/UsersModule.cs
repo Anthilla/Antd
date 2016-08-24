@@ -46,6 +46,18 @@ namespace Antd.Modules {
         public UsersModule() {
             this.RequiresAuthentication();
 
+            Post["/users/change/password"] = x => {
+                var user = (string)Request.Form.User;
+                var password = (string)Request.Form.Password;
+                var tryGet = _userRepositoryRepo.GetByAlias(user);
+                if (tryGet != null) {
+                    SystemUser.ResetPassword(user, password);
+                    _userRepositoryRepo.Delete(tryGet.Id);
+                    _userRepositoryRepo.FastCreate(user, password);
+                }
+                return HttpStatusCode.OK;
+            };
+
             Get["/users/json"] = x => Response.AsJson(SelectizerMapModel.MapRawUserEntity(_userRepositoryRepo.GetAll()));
 
             Post["/users/refresh/users"] = x => {
@@ -67,13 +79,6 @@ namespace Antd.Modules {
             Post["/users/create/group"] = x => {
                 string name = Request.Form.Name;
                 SystemGroup.CreateGroup(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/users/sysmap/create"] = x => {
-                string user = Request.Form.UserAlias;
-                string pwd = Request.Form.UserPassword;
-                SystemUser.Map.MapUser(user, pwd);
                 return Response.AsRedirect("/");
             };
 
