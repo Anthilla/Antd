@@ -15,8 +15,7 @@ namespace Antd.Users {
             if (string.IsNullOrEmpty(password)) {
                 return;
             }
-            Console.WriteLine($"usermod -p {password} {user}");
-            Console.WriteLine(Terminal.Execute($"usermod -p '{password}' {user}"));
+            Terminal.Execute($"usermod -p '{password}' {user}");
         }
     }
 }

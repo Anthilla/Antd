@@ -152,9 +152,7 @@ namespace Antd {
             if (!Parameter.IsUnix)
                 return;
             var sysUser = _userRepository.Import();
-            Console.WriteLine("");
             foreach (var user in _userRepository.GetAll()) {
-                Console.WriteLine($"{user.Alias} - {user.Password}");
                 if (!sysUser.ContainsKey(user.Alias)) {
                     SystemUser.Create(user.Alias);
                     ConsoleLogger.Log($"system-user {user.Alias} created");

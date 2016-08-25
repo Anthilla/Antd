@@ -157,7 +157,6 @@ namespace Antd.Database {
         }
 
         public bool FastCreate(string alias, string password) {
-            Console.WriteLine($"Create: {alias} {password}");
             var obj = new UserModel {
                 Guid = Guid.NewGuid().ToString(),
                 Alias = alias,

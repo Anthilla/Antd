@@ -1019,7 +1019,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Gluster\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
