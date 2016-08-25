@@ -114,6 +114,8 @@
     <Compile Include="DirectoryWatcher.cs" />
     <Compile Include="Firewall\FirewallLists.cs" />
     <Compile Include="Firewall\NFTables.cs" />
+    <Compile Include="Gluster\GlusterSetup.cs" />
+    <Compile Include="Gluster\GlusterConfiguration.cs" />
     <Compile Include="Helpers\CertificateAssignmentType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
@@ -1019,9 +1021,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gluster\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>

@@ -8,6 +8,7 @@ using antdlib.Systemd;
 using antdlib.views;
 using Antd.Configuration;
 using Antd.Database;
+using Antd.Gluster;
 using Antd.MountPoint;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -243,6 +244,14 @@ namespace Antd {
 
             Timers.StartAll();
             ConsoleLogger.Log("scheduler ready");
+        }
+
+        public void InitGlusterfs() {
+            if (!Parameter.IsUnix)
+                return;
+            GlusterConfiguration.Start();
+
+            ConsoleLogger.Log("glusterfs ready");
         }
 
         public void StartDirectoryWatcher() {
