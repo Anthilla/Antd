@@ -1,5 +1,4 @@
-﻿using System;
-using antdlib.common;
+﻿using antdlib.common;
 
 namespace Antd.Users {
     public class SystemUser {

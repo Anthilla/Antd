@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.common.Helpers;
 using Antd.Configuration;
 using Newtonsoft.Json;
 
@@ -50,12 +51,14 @@ namespace Antd.Gluster {
             var config = JsonConvert.DeserializeObject<GlusterSetup>(text);
 
             foreach (var node in config.Nodes) {
+                Console.WriteLine($"glusterfs: setup {node} node");
                 Console.WriteLine(Terminal.Execute($"gluster peer probe {node}"));
             }
 
             var numberOfNodes = config.Nodes.Count.ToString();
 
             foreach (var volume in config.Volumes) {
+                Console.WriteLine($"glusterfs: setup {volume.Name} volume");
                 var volumePath = $"{volume.Brick}{volume.Name}";
                 Directory.CreateDirectory(volumePath);
 
@@ -80,20 +83,18 @@ namespace Antd.Gluster {
 
         public static void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
             var volString = string.Join(" ", volumesList);
-            // srv01:/Data/Storage02/Brick01/gv01 srv02:/Data/Storage02/Brick01/gv01 force
-            Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString}");
-            Terminal.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString}");
+            Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
+            Terminal.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
         }
 
         public static void VolumeStart(string volumeName) {
-            Console.WriteLine($"gluster volume start {volumeName}");
             Terminal.Execute($"gluster volume start {volumeName}");
         }
 
         public static void VolumeMount(string node, string volumeName, string mountPoint) {
-            //check isalreadymount
-            Console.WriteLine($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
-            Terminal.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
+            if (Mounts.IsAlreadyMounted(mountPoint) == false) {
+                Terminal.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
+            }
         }
 
         public static List<Control> Get() {
