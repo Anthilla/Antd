@@ -66,12 +66,12 @@ namespace Antd.Modules {
                     "Acl",
                     "Cron",
                     "Storage",
+                    "Gluster",
                     "Overlay",
                     "VM",
                     "Mount",
                     "Users",
-                    "Ssh",
-                    "Samba"
+                    "Ssh"
                 };
 
                 var os = Terminal.Execute("uname -a");

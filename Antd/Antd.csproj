@@ -85,6 +85,7 @@
     <Compile Include="AntdBoot.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
+    <Compile Include="Avahi\AvahiServiceXml.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
@@ -136,7 +137,6 @@
     <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
-    <Compile Include="Modules\InfoModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\LogModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
@@ -197,6 +197,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery-2.2.0.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-gluster.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-apps.html">

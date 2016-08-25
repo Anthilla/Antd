@@ -29,7 +29,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.ServiceModel.Syndication;
+using Nancy;
 
 namespace Antd.Modules {
 
@@ -48,6 +51,17 @@ namespace Antd.Modules {
                     DateTime.Now);
                 feed.Items = new List<SyndicationItem> { item1 };
                 return new RssResponse(feed);
+            };
+
+            Get["/hello"] = x => {
+                var interNetwork = new List<string>();
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList) {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork) {
+                        interNetwork.Add(ip.ToString());
+                    }
+                }
+                return Response.AsJson(interNetwork);
             };
         }
     }

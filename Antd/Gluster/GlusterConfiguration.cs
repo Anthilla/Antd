@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
-using antdlib.Systemd;
 using Antd.Configuration;
 using Newtonsoft.Json;
 
@@ -38,16 +37,63 @@ namespace Antd.Gluster {
                     File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
                     ConsoleLogger.Log("a gluster configuration file template has been created");
                 }
-                return;
             }
-            //var text = File.ReadAllText(FilePath);
-            //var flow = JsonConvert.DeserializeObject<GlusterSetup>(text);
         }
 
         public static void Start() {
-            if (Systemctl.IsActive(ServiceName) == false) {
-                Systemctl.Start(ServiceName);
+            Console.WriteLine($"systemctl start {ServiceName}");
+            Terminal.Execute($"systemctl start {ServiceName}");
+        }
+
+        public static void Launch() {
+            var text = File.ReadAllText(FilePath);
+            var config = JsonConvert.DeserializeObject<GlusterSetup>(text);
+
+            foreach (var node in config.Nodes) {
+                Console.WriteLine(Terminal.Execute($"gluster peer probe {node}"));
             }
+
+            var numberOfNodes = config.Nodes.Count.ToString();
+
+            foreach (var volume in config.Volumes) {
+                var volumePath = $"{volume.Brick}{volume.Name}";
+                Directory.CreateDirectory(volumePath);
+
+                //Terminal.Execute($"setfattr -x trusted.gfid {volumePath}");
+                //Terminal.Execute($"setfattr -x trusted.glusterfs.volume-id {volumePath}");
+                //Terminal.Execute($"rm -fR {volumePath}/.glusterfs");
+
+                var volumesList = new List<string>();
+                foreach (var node in config.Nodes) {
+                    volumesList.Add($"{node}:{volumePath}");
+                }
+
+                VolumeCreate(volume.Name, numberOfNodes, volumesList.ToArray());
+                VolumeStart(volume.Name);
+
+                Directory.CreateDirectory(volume.MountPoint);
+                foreach (var node in config.Nodes) {
+                    VolumeMount(node, volume.Name, volume.MountPoint);
+                }
+            }
+        }
+
+        public static void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
+            var volString = string.Join(" ", volumesList);
+            // srv01:/Data/Storage02/Brick01/gv01 srv02:/Data/Storage02/Brick01/gv01 force
+            Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString}");
+            Terminal.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString}");
+        }
+
+        public static void VolumeStart(string volumeName) {
+            Console.WriteLine($"gluster volume start {volumeName}");
+            Terminal.Execute($"gluster volume start {volumeName}");
+        }
+
+        public static void VolumeMount(string node, string volumeName, string mountPoint) {
+            //check isalreadymount
+            Console.WriteLine($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
+            Terminal.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
         }
 
         public static List<Control> Get() {

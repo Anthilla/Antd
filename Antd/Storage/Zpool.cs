@@ -67,5 +67,15 @@ namespace Antd.Storage {
             }
             return list;
         }
+
+        public static IEnumerable<string> ImportList() {
+            var text = Terminal.Execute("zpool import | grep 'pool:' | awk {'print $2'}");
+            var importPools = text.Split(new [] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+            return importPools;
+        } 
+
+        public static void Import(string poolName) {
+            Terminal.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}");
+        }
     }
 }

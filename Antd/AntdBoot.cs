@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib;
@@ -229,6 +230,21 @@ namespace Antd {
             ConsoleLogger.Log("services ready");
         }
 
+        public void ImportPools() {
+            if (!Parameter.IsUnix)
+                return;
+            var pools = Zpool.ImportList().ToList();
+            foreach (var pool in pools) {
+                if (!string.IsNullOrEmpty(pool)) {
+                    ConsoleLogger.Log($"pool {pool} imported");
+                    Zpool.Import(pool);
+                }
+            }
+            if (pools.Count > 0) {
+                ConsoleLogger.Log("pools imported");
+            }
+        }
+
         public void StartScheduler() {
             if (!Parameter.IsUnix)
                 return;
@@ -239,6 +255,7 @@ namespace Antd {
 
             var pools = Zpool.List();
             foreach (var zp in pools) {
+
                 Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
             }
 
@@ -250,7 +267,8 @@ namespace Antd {
             if (!Parameter.IsUnix)
                 return;
             GlusterConfiguration.Start();
-
+            GlusterConfiguration.Set();
+            GlusterConfiguration.Launch();
             ConsoleLogger.Log("glusterfs ready");
         }
 
