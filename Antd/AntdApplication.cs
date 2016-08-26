@@ -71,11 +71,11 @@ namespace Antd {
             Boot.CommandExecuteNetwork();
             Boot.SetOsParametersNetwork();
             Boot.LoadServices();
+            Boot.InitAvahi();
             Boot.ImportPools();
             Boot.StartScheduler();
             Boot.InitGlusterfs();
             Boot.StartDirectoryWatcher();
-            Boot.CheckCertificate();
             Boot.LaunchInternalTimers();
             Boot.LaunchApps();
 

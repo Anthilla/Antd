@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.Systemd;
 using antdlib.views;
+using Antd.Avahi;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Gluster;
@@ -230,6 +232,26 @@ namespace Antd {
             ConsoleLogger.Log("services ready");
         }
 
+        public void InitAvahi() {
+            if (!Parameter.IsUnix)
+                return;
+            var hostname = Terminal.Execute("hostname");
+            if (!string.IsNullOrEmpty(hostname)) {
+                const string avahiServicePath = "/etc/avahi/services/antd.service";
+                var avahi = new Servicegroup {
+                    Name = new Name { Replacewildcards = "yes", Text = hostname },
+                    Service = new Service { Type = "_http._tcp", Port = ApplicationSetting.HttpPort() }
+                };
+                if (File.Exists(avahiServicePath)) {
+                    File.Delete(avahiServicePath);
+                }
+                var xs = new XmlSerializer(typeof(Servicegroup));
+                var tw = new StreamWriter(avahiServicePath);
+                xs.Serialize(tw, avahi);
+                ConsoleLogger.Log("avahi ready");
+            }
+        }
+
         public void ImportPools() {
             if (!Parameter.IsUnix)
                 return;
@@ -275,14 +297,6 @@ namespace Antd {
         public void StartDirectoryWatcher() {
             new DirectoryWatcher().StartWatching();
             ConsoleLogger.Log("directory watcher ready");
-        }
-
-        public void CheckCertificate() {
-            var certificate = ApplicationSetting.CertificatePath();
-            if (!File.Exists(certificate)) {
-                File.Copy($"{Parameter.Resources}/certificate.pfx", certificate, true);
-            }
-            ConsoleLogger.Log("certificates ready");
         }
 
         public void LaunchInternalTimers() {

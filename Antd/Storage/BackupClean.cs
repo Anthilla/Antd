@@ -72,7 +72,12 @@ namespace Antd.Storage {
         }
 
         public bool DestroySnapshot(string snapshotName) {
-            Terminal.Execute($"zfs destroy {snapshotName}");
+            if (snapshotName.Contains("@")) {
+                Terminal.Execute($"zfs destroy {snapshotName}");
+            }
+            else {
+                Terminal.Execute($"zfs destroy @{snapshotName}");
+            }
             return true;
         }
 
