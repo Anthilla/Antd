@@ -9,16 +9,22 @@
         <div class="panel-header bg-anthilla-gray fg-white">
             @Current.Type @Current.Name
         </div>
-        <div class="panel-content" style="display: none;">
-            <table class="table">
+        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="@Current.Type" data-nft-name="@Current.Name">
+            <label>Table sets</label>
+            <table class="table" data-nft="Sets">
                 <tbody>
                     @Partial['_partial/part-nft-sets', @Current.Sets];
                 </tbody>
             </table>
-            <hr class="bg-anthilla-gray"/>
-            @Partial['_partial/part-nft-chains', @Current];
-            <hr class="bg-anthilla-gray"/>
-            <input type="button" style="width: 100%;" value="Save Nft Configuration" data-role="SaveNftConfiguration"/>
+            <hr class="bg-anthilla-gray" />
+            <label>Table chains</label>
+            <table class="table" data-nft="Chains">
+                <tbody>
+                    @Partial['_partial/part-nft-chains', @Current.Chains];
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" style="width: 100%;" value="Save Nft Configuration" data-role="SaveNftConfiguration" class="bg-yellow bg-active-orange" />
         </div>
     </div>
     @EndEach

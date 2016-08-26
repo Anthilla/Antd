@@ -492,6 +492,68 @@
     });
 </script>
 <script data-context="firewall" type="text/javascript">
+
+    $('[data-role="SaveNftConfiguration"]').click(function () {
+        var tables = [];
+        $('[data-nft="Table"]').each(function () {
+            var self = $(this);
+            var tableType = self.attr('data-nft-type');
+            var tableName = self.attr('data-nft-name');
+
+            var tableSets = [];
+            self.find('[data-nft="Set"]').each(function () {
+                var selfSet = $(this);
+                var setName = selfSet.attr('data-nft-name');
+                var elements = self.find('[data-nft="SetElements"]').text();
+                var set = {
+                    Name: setName,
+                    Elements: elements
+                };
+                tableSets.push(set);
+            });
+
+            var tableChains = [];
+            self.find('[data-nft="Set"]').each(function () {
+                var selfChain = $(this);
+                var chainName = selfChain.attr('data-nft-name');
+                var rules = self.find('[data-nft="ChainRules"]').text();
+                var chain = {
+                    Name: chainName,
+                    RulesString: rules,
+                    Rules: null
+                };
+                tableChains.push(chain);
+            });
+
+            var table = {
+                Type: tableType,
+                Name: tableName,
+                Sets: tableSets,
+                Chains: tableChains
+            };
+            tables.push(table);
+        });
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/nft/save',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Data: JSON.stringify(tables)
+            },
+            success: function () {
+                location.reload(true);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $('.autoheight').each(function () {
+            var sh = $(this).scrollHeight;
+            $(this).height = sh + "px";
+        });
+    });
+
     $('input[data-role="enable-mac-address"]').click(function () {
         var guid = $(this).attr('data-object-guid');
         jQuery.support.cors = true;
@@ -670,19 +732,19 @@
     });
 </script>
 <script data-context="Mount" type="text/javascript">
-    $('i.show-units-mgmt').click(function() {
+    $('i.show-units-mgmt').click(function () {
         var g = $(this).attr('data-guid');
         $('tr.Mount-units[data-guid="' + g + '"]').toggle();
     });
 
-    $('input[data-role="show-dashboard"]').click(function() {
+    $('input[data-role="show-dashboard"]').click(function () {
         var g = $(this).attr('data-guid');
         $('#AntdMountdDashboard').toggle();
         $('#AntdMountdDashboard').find('input[name="Guid"]').val(g);
         $('#AntdMountdDashboard').find('input[name="Mount"]').val($(this).attr('data-mntpth'));
     });
 
-    $('i[data-role="remove-this-unit"]').click(function() {
+    $('i[data-role="remove-this-unit"]').click(function () {
         var g = $(this).attr('data-guid');
         var u = $(this).attr('data-unit');
         jQuery.support.cors = true;
@@ -693,7 +755,7 @@
                 Guid: g,
                 Unit: u
             },
-            success: function() {
+            success: function () {
                 location.reload(true);
             }
         });

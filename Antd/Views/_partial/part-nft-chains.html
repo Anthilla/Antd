@@ -1,10 +1,10 @@
 ﻿@Each.Model
-<tr>
-    <td>
+<tr data-nft="Chain" data-nft-name="@Current.Name">
+    <td style="width: 28%;">
         <p>@Current.Name</p>
     </td>
     <td>
-        <textarea class="fg-white bg-anthilla-gray border-anthilla-green" style="width: 90%;">@Current.RulesString</textarea>
+        <textarea data-nft="ChainRules" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 20px;">@Current.RulesString</textarea>
     </td>
 </tr>
 @EndEach

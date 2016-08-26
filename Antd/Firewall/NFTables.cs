@@ -77,7 +77,35 @@ namespace Antd.Firewall {
         }
 
         public static void Export(IEnumerable<NftModel.Table> tables) {
+            if (File.Exists(FilePath)) {
+                File.Delete(FilePath);
+            }
+            var lines = new List<string>();
+            lines.Add("flush ruleset;");
+            lines.Add("flush ruleset;");
+            lines.Add("flush ruleset;");
+            lines.Add("flush ruleset;");
+            lines.Add("flush ruleset;");
+            foreach (var table in tables) {
+                lines.Add($"table {table.Type} {table.Name} {{");
+                foreach (var set in table.Sets) {
+                    lines.Add($"    set {set.Name} {{");
+                    lines.Add($"        type {set.Type}");
+                    lines.Add($"        elements = {{ {set.Elements}}}");
+                    lines.Add("    }");
+                }
+                foreach (var chain in table.Chains) {
+                    lines.Add($"    chain {chain.Name} {{");
+                    foreach (var rule in chain.Rules) {
+                        lines.Add($"        {rule}");
+                    }
+                    lines.Add("    }");
 
+                }
+                lines.Add("}");
+            }
+            File.WriteAllLines(FilePath, lines);
+            ReloadConfiguration();
         }
 
         public static IEnumerable<NftModel.Table> Tables() {
@@ -105,9 +133,9 @@ namespace Antd.Firewall {
         public static List<NftModel.Set> Sets(string tableType, string tableName) {
             var list = new List<NftModel.Set>();
             var result = Terminal.Execute($"nft list table {tableType} {tableName}");
-            var matches = new Regex("set [\\w\\s]* {", RegexOptions.Multiline).Matches(result);
+            var matches = new Regex("set [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
             foreach (var match in matches) {
-                var arr = match.ToString().Replace(new[] { "set", "{", "}" }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
+                var arr = match.ToString().Replace(new[] { " {", "}", "set " }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var setName = arr[0];
                 var setResult = Terminal.Execute($"nft list set {tableType} {tableName} {setName}");
                 var lines = setResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -118,7 +146,7 @@ namespace Antd.Firewall {
                 var set = new NftModel.Set {
                     Name = setName,
                     Type = type,
-                    Elements = elements
+                    Elements = elements.Trim()
                 };
                 list.Add(set);
             }
@@ -128,7 +156,7 @@ namespace Antd.Firewall {
         public static List<NftModel.Chain> Chains(string tableType, string tableName) {
             var list = new List<NftModel.Chain>();
             var result = Terminal.Execute($"nft list table {tableType} {tableName}");
-            var matches = new Regex("chain [\\w\\s]* {", RegexOptions.Multiline).Matches(result);
+            var matches = new Regex("chain [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
             foreach (var match in matches) {
                 var arr = match.ToString().Replace(new[] { "chain", "{", "}" }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var chainName = arr[0];
