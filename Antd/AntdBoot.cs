@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -11,6 +10,7 @@ using antdlib.views;
 using Antd.Avahi;
 using Antd.Configuration;
 using Antd.Database;
+using Antd.Firewall;
 using Antd.Gluster;
 using Antd.MountPoint;
 using Antd.Storage;
@@ -83,6 +83,7 @@ namespace Antd {
             database.RegisterView(new SambaConfigView());
             database.RegisterView(new DhcpConfigView());
             database.RegisterView(new BindConfigView());
+            database.RegisterView(new NftView());
             ConsoleLogger.Log("database ready");
             return database;
         }
@@ -218,6 +219,17 @@ namespace Antd {
             ConsoleLogger.Log("os parameters ready");
         }
 
+        public void SetFirewall() {
+            if (!Parameter.IsUnix)
+                return;
+            NfTables.Setup();
+            NfTables.ReloadConfiguration();
+            NfTables.Import();
+            NfTables.Export();
+            NfTables.ReloadConfiguration();
+            ConsoleLogger.Log("firewall ready");
+        }
+
         public void LoadServices() {
             if (!Parameter.IsUnix)
                 return;
@@ -349,12 +361,6 @@ namespace Antd {
             }
             Terminal.Execute("systemctl restart systemd-journald.service");
             ConsoleLogger.Log("journald config ready");
-        }
-
-        public void SetFirewall() {
-            if (!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("firewall ready");
         }
 
         public void LoadCollectd() {

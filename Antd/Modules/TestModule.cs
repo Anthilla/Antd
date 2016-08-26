@@ -28,12 +28,23 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
+using antdlib.common;
+using Antd.Firewall;
+using fastJSON;
 using Nancy;
+using Newtonsoft.Json;
 using Vsync;
 
 namespace Antd.Modules {
     public class TestModule : CoreModule {
+
+        public class TestClass {
+            public string Text { get; set; }
+        }
+
         public TestModule() {
 
             Get["Test page", "/test"] = x => Response.AsText("Hello World!");
@@ -43,6 +54,12 @@ namespace Antd.Modules {
             Get["/test/page2"] = x => View["page-test-2"];
 
             Get["/test/vnc"] = x => View["page-vnc"];
+
+            Get["/test/nft"] = x => {
+                var t = NfTables.Tables();
+                return JsonConvert.SerializeObject(t, Formatting.Indented);
+            };
+
         }
     }
 }

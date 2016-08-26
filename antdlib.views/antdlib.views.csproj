@@ -54,6 +54,7 @@
     <Compile Include="ApplicationModel.cs" />
     <Compile Include="BootServiceLoadModel.cs" />
     <Compile Include="BootModuleLoadModel.cs" />
+    <Compile Include="NftModel.cs" />
     <Compile Include="GlusterModel.cs" />
     <Compile Include="DhcpConfigModel.cs" />
     <Compile Include="SambaConfigModel.cs" />

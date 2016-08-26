@@ -37,6 +37,7 @@ using antdlib.Certificate;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
+using Antd.Firewall;
 using Antd.Info;
 using Antd.Storage;
 using Nancy;
@@ -103,7 +104,7 @@ namespace Antd.Modules {
                 }
                 viewModel.NetworkVirtualIf = vrtIf;
                 ConsoleLogger.Log("Home load done > network");
-                viewModel.FirewallCommands = new FirewallListRepository().GetAll();
+                viewModel.NftTables = NfTables.Tables();
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
                 ConsoleLogger.Log("Home load done > firewall");
                 viewModel.Mounts = new MountRepository().GetAll();

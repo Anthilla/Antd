@@ -129,10 +129,6 @@ namespace antdlib.common {
             return char.ToUpper(str[0]) + str.Substring(1);
         }
 
-        public static string RemoveWhiteSpace(this string str) {
-            return str.Replace(" ", "");
-        }
-
         public static string AsJson(this object str) {
             return JsonConvert.SerializeObject(str);
         }
@@ -246,6 +242,20 @@ namespace antdlib.common {
             var coreVector = new byte[16];
             Array.Copy(Encryption.Hash(guid.ToString()), 0, coreVector, 0, coreVector.Length);
             return coreVector;
+        }
+
+        public static string RemoveWhiteSpace(this string input) {
+            return new string(input.ToCharArray()
+                .Where(c => !char.IsWhiteSpace(c))
+                .ToArray());
+        }
+
+        public static string Replace(this string input, string[] values, string rep) {
+            var i = input;
+            foreach (var val in values) {
+                i = i.Replace(val, rep);
+            }
+            return i;
         }
     }
 }
