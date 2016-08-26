@@ -679,12 +679,16 @@
     <Content Include="novnc\images\tab.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\.gluster.conf" />
+    <None Include="Resources\.machine.conf" />
+    <None Include="Resources\.setup.conf" />
     <None Include="Resources\dhcpd.leases">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\FILE_etc_collectd.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\FILE_etc_nftables.conf" />
     <None Include="Resources\FILE_etc_systemd_journald.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -695,9 +699,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\krb5.conf.template">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\antd.firewall.template.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Resources\nginx.conf.template">
