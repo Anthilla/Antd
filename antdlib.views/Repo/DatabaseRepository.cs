@@ -64,5 +64,20 @@ namespace antdlib.views.Repo {
             var newSave = Save(rdb, newModel, useEncryption);
             return oldSave && newSave;
         }
+
+        public static bool SetFastObject(RaptorDB.RaptorDB rdb, string key, object obj) {
+            var kv = rdb.GetKVHF();
+            return kv.SetObjectHF(key, obj);
+        }
+
+        public static object GetFastObject(RaptorDB.RaptorDB rdb, string key) {
+            var kv = rdb.GetKVHF();
+            return kv.GetObjectHF(key);
+        }
+
+        public static T GetFastObject<T>(RaptorDB.RaptorDB rdb, string key) {
+            var kv = rdb.GetKVHF();
+            return (T)kv.GetObjectHF(key);
+        }
     }
 }

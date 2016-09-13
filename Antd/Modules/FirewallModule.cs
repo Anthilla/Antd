@@ -27,9 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Antd.Database;
 using Antd.Firewall;
 using Nancy;
@@ -78,8 +76,8 @@ namespace Antd.Modules {
             Post["/nft/save"] = x => {
                 var data = (string)Request.Form.Data;
                 var tab = JsonConvert.DeserializeObject<IEnumerable<NftModel.Table>>(data);
-                Console.WriteLine(tab.Count());
-                //NfTables.Export(tab);
+                //Console.WriteLine(JsonConvert.SerializeObject(tab, Formatting.Indented));
+                NfTables.Export(tab);
                 return HttpStatusCode.OK;
             };
         }

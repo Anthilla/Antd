@@ -62,6 +62,11 @@ namespace Antd {
             var path = ApplicationSetting.DatabasePath();
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
+            Global.BackupCronSchedule = null;
+            Global.EnableWebStudio = true;
+            Global.WebStudioPort = 9999;
+            Global.LocalOnlyWebStudio = false;
+            Global.FlushStorageFileImmediately = true;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new BootModuleLoadView());
             database.RegisterView(new BootServiceLoadView());
