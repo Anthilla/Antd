@@ -58,11 +58,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="RaptorDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.5\lib\net40\RaptorDB.dll</HintPath>
+      <HintPath>..\packages\RaptorDB_doc.3.3.13\lib\net40\RaptorDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RaptorDB.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.5\lib\net40\RaptorDB.Common.dll</HintPath>
+      <HintPath>..\packages\RaptorDB_doc.3.3.13\lib\net40\RaptorDB.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -97,6 +97,7 @@
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
+    <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\DhcpConfigRepository.cs" />
     <Compile Include="Database\SambaConfigRepository.cs" />

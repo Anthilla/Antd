@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using antdlib.common;
 
 namespace antdlib.views.Repo {
@@ -65,9 +66,9 @@ namespace antdlib.views.Repo {
             return oldSave && newSave;
         }
 
-        public static bool SetFastObject(RaptorDB.RaptorDB rdb, string key, object obj) {
+        public static IEnumerable<string> GetFastObjectKeys(RaptorDB.RaptorDB rdb) {
             var kv = rdb.GetKVHF();
-            return kv.SetObjectHF(key, obj);
+            return kv.GetKeysHF();
         }
 
         public static object GetFastObject(RaptorDB.RaptorDB rdb, string key) {
@@ -78,6 +79,16 @@ namespace antdlib.views.Repo {
         public static T GetFastObject<T>(RaptorDB.RaptorDB rdb, string key) {
             var kv = rdb.GetKVHF();
             return (T)kv.GetObjectHF(key);
+        }
+
+        public static bool SetFastObject(RaptorDB.RaptorDB rdb, string key, object obj) {
+            var kv = rdb.GetKVHF();
+            return kv.SetObjectHF(key, obj);
+        }
+
+        public static bool DeleteFastObject(RaptorDB.RaptorDB rdb, string key) {
+            var kv = rdb.GetKVHF();
+            return kv.DeleteKeyHF(key);
         }
     }
 }
