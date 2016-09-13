@@ -250,6 +250,15 @@ namespace antdlib.common {
                 .ToArray());
         }
 
+        public static string RemoveWhiteSpaceFromStart(this string input) {
+            var s = input;
+            if (char.IsWhiteSpace(s[0])) {
+                s = string.Join("", s.ToCharArray().Skip(1));
+                RemoveWhiteSpaceFromStart(s);
+            }
+            return s;
+        }
+
         public static string Replace(this string input, string[] values, string rep) {
             var i = input;
             foreach (var val in values) {

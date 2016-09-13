@@ -43,6 +43,15 @@ namespace Antd.MountPoint {
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
+        //"mount -o remount,nodev,nosuid,mode=1777 /dev/shm"
+        //"mount -o mode=1770,gid=78 -t hugetlbfs hugetlbfs /hugepages"
+        //"mount -o default -t ocfs2_dlmfs dlm /sys/kernel/dlm"
+        private static readonly Dictionary<string, string> DefaultWorkingDirectoriesWithOptions = new Dictionary<string, string> {
+            {"/dev/shm", "-o remount,nodev,nosuid,mode=1777"},
+            {"/hugepages", "-o mode=1770,gid=78 -t hugetlbfs hugetlbfs"},
+            {"/sys/kernel/dlm", "-o default -t ocfs2_dlmfs dlm"}
+        };
+
         public static void WorkingDirectories() {
             foreach (var dir in DefaultWorkingDirectories) {
                 var mntDir = Mounts.SetDirsPath(dir);
@@ -51,6 +60,11 @@ namespace Antd.MountPoint {
                 if (Mounts.IsAlreadyMounted(dir)) continue;
                 ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                 SetBind(mntDir, dir);
+            }
+            foreach (var kvp in DefaultWorkingDirectoriesWithOptions) {
+                if (Mounts.IsAlreadyMounted(kvp.Key) == false) {
+                    Terminal.Execute($"mount {kvp.Value} {kvp.Key}");
+                }
             }
         }
 

@@ -146,7 +146,7 @@ namespace Antd.Firewall {
                 var set = new NftModel.Set {
                     Name = setName,
                     Type = type,
-                    Elements = elements.Trim()
+                    Elements = elements?.Trim().RemoveWhiteSpaceFromStart()
                 };
                 list.Add(set);
             }
@@ -162,7 +162,7 @@ namespace Antd.Firewall {
                 var chainName = arr[0];
                 var chainResult = Terminal.Execute($"nft list chain {tableType} {tableName} {chainName}");
                 var lines = chainResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(2).ToList();
-                var rules = lines.Take(lines.Count - 2).ToList();
+                var rules = lines.Take(lines.Count - 2).Select(_ => _.RemoveWhiteSpaceFromStart()).ToList();
                 var chain = new NftModel.Chain {
                     Name = chainName,
                     Rules = rules,

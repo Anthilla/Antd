@@ -31,20 +31,20 @@ namespace Antd.Database {
             return result;
         }
 
-        public bool Edit(IDictionary<string, string> dict) {
-            var id = dict["Id"];
-            var alias = dict["Name"];
-            var command = dict["FastObject"];
-            var description = dict["Description"];
-            var objUpdate = new FastObjectModel {
-                Id = id.ToGuid(),
-                Name = alias.IsNullOrEmpty() ? null : alias,
-                FastObject = command.IsNullOrEmpty() ? null : command,
-                Description = description.IsNullOrEmpty() ? null : description,
-            };
-            var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
-            return result;
-        }
+        //public bool Edit(IDictionary<string, string> dict) {
+        //    var id = dict["Id"];
+        //    var alias = dict["Name"];
+        //    var command = dict["FastObject"];
+        //    var description = dict["Description"];
+        //    var objUpdate = new FastObjectModel {
+        //        Id = id.ToGuid(),
+        //        Name = alias.IsNullOrEmpty() ? null : alias,
+        //        FastObject = command.IsNullOrEmpty() ? null : command,
+        //        Description = description.IsNullOrEmpty() ? null : description,
+        //    };
+        //    var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
+        //    return result;
+        //}
 
         public bool Delete(string key) {
             var result = DatabaseRepository.DeleteFastObject(AntdApplication.Database, key);
