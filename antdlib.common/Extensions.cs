@@ -259,6 +259,14 @@ namespace antdlib.common {
             return s;
         }
 
+        public static string RemoveDoubleSpace(this string input) {
+            var line = input.Replace("\t", " ");
+            while (line.IndexOf("  ", StringComparison.InvariantCulture) > 0) {
+                line = line.Replace("  ", " ");
+            }
+            return line;
+        }
+
         public static string Replace(this string input, string[] values, string rep) {
             var i = input;
             foreach (var val in values) {

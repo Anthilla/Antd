@@ -549,8 +549,14 @@
 
     $(document).ready(function () {
         $('.autoheight').each(function () {
-            var sh = $(this).scrollHeight;
-            $(this).height = sh + "px";
+            this.style.height = "1px";
+
+            var text = $(this).val();
+            var lines = text.split(/\r|\r\n|\n/);
+            var count = lines.length;
+            console.log(count);
+
+            this.style.height = (count * 20) + "px";
         });
     });
 
