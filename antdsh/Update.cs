@@ -434,6 +434,7 @@ namespace antdsh {
         }
 
         private static void RestartAntdsh() {
+            Target.Setup();
             Units.CreateRemountUnits();
             Terminal.Execute("systemctl restart tt-antdsh-01-remount.timer");
             Environment.Exit(0);
