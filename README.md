@@ -14,7 +14,7 @@ Antd is:
 - self hosted, no external webserver is needed
 - IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB
 
-Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, and dbus.
+Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, integration with systemd become deeper and deeper.
 
 ### Project Goals
 - Complete administration capabilities
@@ -59,6 +59,9 @@ On <b>Linux</b> for Development
 2. open from an IDE
 
 The Antd API uses JSON over HTTP.
+
+<b>Binaries</b>: Refer to AnthillaOS for Binary version.
+
 
 How to Contribute
 -----------------
@@ -126,6 +129,4 @@ Specific components of Antd use code derivative from software distributed under 
 > ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 > (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 > SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->
->
 >
