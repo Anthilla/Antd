@@ -77,7 +77,7 @@ namespace Antd {
         private static void OnChanged(object source, FileSystemEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.ContainsKey(directory)) {
+            if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -86,7 +86,7 @@ namespace Antd {
         private static void OnRenamed(object source, RenamedEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.ContainsKey(directory)) {
+            if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }

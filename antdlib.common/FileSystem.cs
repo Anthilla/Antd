@@ -96,6 +96,12 @@ namespace antdlib.common {
             }
         }
 
+        public static string GetFileHash(string filePath) {
+            using (var fileStreamToRead = File.OpenRead(filePath)) {
+                return BitConverter.ToString(new SHA1Managed().ComputeHash(fileStreamToRead)).Replace("-", string.Empty);
+            }
+        }
+
         public static bool FilesAreEqual(FileInfo first, FileInfo second) {
             var firstHash = MD5.Create().ComputeHash(first.OpenRead());
             var secondHash = MD5.Create().ComputeHash(second.OpenRead());

@@ -1,0 +1,26 @@
+[
+  {
+    "Key": "$date_server",
+    "Value": ""
+  },
+  {
+    "Key": "$host_chassis",
+    "Value": ""
+  },
+  {
+    "Key": "$host_deployment",
+    "Value": ""
+  },
+  {
+    "Key": "$host_location",
+    "Value": ""
+  },
+  {
+    "Key": "$host_name",
+    "Value": ""
+  },
+  {
+    "Key": "_version",
+    "Value": "20160809151656205"
+  }
+]

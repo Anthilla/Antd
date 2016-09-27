@@ -7,6 +7,7 @@ using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.Systemd;
 using antdlib.views;
+using Antd.Apps;
 using Antd.Avahi;
 using Antd.Configuration;
 using Antd.Database;
@@ -125,7 +126,9 @@ namespace Antd {
                 foreach (var kvp in kvps) {
                     var file = kvp.Key;
                     var value = kvp.Value;
-                    File.WriteAllText(file, value);
+                    if (!string.IsNullOrEmpty(file) && !string.IsNullOrEmpty(value)) {
+                        File.WriteAllText(file, value);
+                    }
                 }
             }
             ConsoleLogger.Log("os local parameters ready");
@@ -165,7 +168,6 @@ namespace Antd {
             foreach (var user in _userRepository.GetAll()) {
                 if (!sysUser.ContainsKey(user.Alias)) {
                     SystemUser.Create(user.Alias);
-                    ConsoleLogger.Log($"system-user {user.Alias} created");
                 }
                 if (!string.IsNullOrEmpty(user.Password)) {
                     SystemUser.SetPassword(user.Alias, user.Password);
@@ -328,6 +330,7 @@ namespace Antd {
         public void LaunchApps() {
             if (!Parameter.IsUnix)
                 return;
+            AppTarget.Setup();
             var apps = _applicationRepository.GetAll().Select(_ => new ApplicationModel(_)).ToList();
             foreach (var app in apps) {
                 var units = app.UnitLauncher;
@@ -337,6 +340,7 @@ namespace Antd {
                     }
                 }
             }
+            //AppTarget.StartAll();
             ConsoleLogger.Log("apps ready");
         }
 

@@ -171,8 +171,13 @@ namespace Antd.Modules {
                 var services = osparamText.SplitToList(Environment.NewLine);
                 var dict = new Dictionary<string, string>();
                 foreach (var serv in services) {
-                    var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
-                    dict.Add(kvp[0], kvp[1]);
+                    try {
+                        var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
+                        dict.Add(kvp[0], kvp[1]);
+                    }
+                    catch (Exception) {
+                        continue;
+                    }
                 }
                 _bootOsParametersLoadRepo.Dump(dict);
                 return Response.AsRedirect("/cfg");

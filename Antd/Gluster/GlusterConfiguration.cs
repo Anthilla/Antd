@@ -11,7 +11,7 @@ namespace Antd.Gluster {
     public class GlusterConfiguration {
 
         private static readonly string FilePath = $"{Parameter.RepoConfig}/gluster.conf";
-        private static readonly string ServiceName = "glusterd.service";
+        private const string ServiceName = "glusterd.service";
 
         public static void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
@@ -47,6 +47,9 @@ namespace Antd.Gluster {
         }
 
         public static void Launch() {
+            if (!File.Exists(FilePath)) {
+                return;
+            }
             var text = File.ReadAllText(FilePath);
             var config = JsonConvert.DeserializeObject<GlusterSetup>(text);
 

@@ -11,6 +11,10 @@ namespace Antd.Apps {
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
             }
+            var oldUnitName= $"{Parameter.ApplicativeUnits}/{unitName}";
+            if (File.Exists(oldUnitName)) {
+                File.Delete(oldUnitName);
+            }
             var lines = new List<string> {
                 "[Unit]",
                 "Description=External Volume Unit, Application: {name} Prepare Service",
@@ -22,7 +26,7 @@ namespace Antd.Apps {
                 "RemainAfterExit=yes",
                 "",
                 "[Install]",
-                "WantedBy=applicative.target"
+                "WantedBy=app.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
@@ -35,6 +39,10 @@ namespace Antd.Apps {
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
             }
+            var oldUnitName = $"{Parameter.ApplicativeUnits}/{unitName}";
+            if (File.Exists(oldUnitName)) {
+                File.Delete(oldUnitName);
+            }
             var lines = new List<string> {
                 "[Unit]",
                 $"Description=External Volume Unit, Application: {frameworkDir} Mount",
@@ -45,7 +53,7 @@ namespace Antd.Apps {
                 "RemainAfterExit=yes",
                 "",
                 "[Install]",
-                "WantedBy=applicative.target"
+                "WantedBy=app.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
@@ -57,6 +65,10 @@ namespace Antd.Apps {
             var fileName = $"{Parameter.AppsUnits}/{unitName}";
             if (File.Exists(fileName)) {
                 File.Delete(fileName);
+            }
+            var oldUnitName = $"{Parameter.ApplicativeUnits}/{unitName}";
+            if (File.Exists(oldUnitName)) {
+                File.Delete(oldUnitName);
             }
             var lines = new List<string> {
                 "[Unit]",
@@ -71,7 +83,7 @@ namespace Antd.Apps {
                 "LimitNOFILE=1024000",
                 "",
                 "[Install]",
-                "WantedBy=applicative.target"
+                "WantedBy=app.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();

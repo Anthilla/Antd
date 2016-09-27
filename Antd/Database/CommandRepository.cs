@@ -37,8 +37,19 @@ namespace Antd.Database {
         public void Import() {
             Directory.CreateDirectory(Parameter.AntdCfgCommands);
             var path = $"{Parameter.AntdCfgCommands}/commands.json";
+            var resourceFile = $"{Parameter.RootFrameworkAntdResources}/commands.json";
             if (!File.Exists(path)) {
-                return;
+                if (!File.Exists(resourceFile)) {
+                    return;
+                }
+                File.Copy(resourceFile, path, true);
+            }
+            else {
+                var existingFileHash = FileSystem.GetFileHash(path);
+                var storedFileHash = FileSystem.GetFileHash(resourceFile);
+                if (existingFileHash != storedFileHash) {
+                    File.Copy(resourceFile, path, true);
+                }
             }
             var text = File.ReadAllText(path);
             if (string.IsNullOrEmpty(text)) {

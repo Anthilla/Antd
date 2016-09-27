@@ -48,6 +48,7 @@ namespace antdlib.common {
         public static string RootData => "/Data";
         public static string RootFramework => "/framework";
         public static string RootFrameworkAntd => $"{RootFramework}/antd";
+        public static string RootFrameworkAntdResources => $"{RootFrameworkAntd}/Resources";
         public static string RootFrameworkAntdsh => $"{RootFramework}/antdsh";
         public static string RootSystem => "/System";
         public static string RootPorts => "/ports";
@@ -80,7 +81,8 @@ namespace antdlib.common {
         public static string Overlay => "/mnt/overlay";
 
         public static string Livecd => "/mnt/livecd";
-        public static string AppsUnits => $"{RepoUnits}/applicative.target.wants";
+        public static string AppsUnits => $"{RepoUnits}/app.target.wants";
+        public static string ApplicativeUnits => $"{RepoUnits}/applicative.target.wants";
         public static string WebsocketUnits => $"{RepoUnits}/websocket.target.wants";
         public static string KernelUnits => $"{RepoUnits}/kernelpkgload.target.wants";
         public static string TimerUnits => $"{RepoUnits}/tt.target.wants";

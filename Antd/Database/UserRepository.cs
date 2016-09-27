@@ -133,7 +133,9 @@ namespace Antd.Database {
             var sysUsers = new Dictionary<string, string>();
             foreach (var user in users) {
                 var u = Map(user, passwords);
-                sysUsers.Add(u.Key, u.Value);
+                if (u.Key != null && u.Value != null) {
+                    sysUsers.Add(u.Key, u.Value);
+                }
             }
             return sysUsers;
         }
@@ -148,9 +150,15 @@ namespace Antd.Database {
                 return new KeyValuePair<string, string>(tryGet.Alias, tryGet.Password);
             }
             var user = userInfo[0];
+            if (user.ToLower().Contains("root")) {
+                return new KeyValuePair<string, string>(null, null);
+            }
             var passwordLine = passwords.FirstOrDefault(_ => _.Contains(user));
             var passwordInfo = passwordLine?.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
             var password = string.IsNullOrEmpty(passwordInfo?[1]) ? "" : passwordInfo[1];
+            if (string.IsNullOrEmpty(password.Trim().RemoveWhiteSpace())) {
+                return new KeyValuePair<string, string>(null, null);
+            }
             FastCreate(user, password);
             ConsoleLogger.Log($"imported {userInfo[0]} into Database");
             return new KeyValuePair<string, string>(user, password);
