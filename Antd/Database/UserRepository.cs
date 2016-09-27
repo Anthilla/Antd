@@ -124,16 +124,25 @@ namespace Antd.Database {
             return result;
         }
 
+        public void DeleteAll() {
+            foreach (var u in GetAll()) {
+                Delete(u.Guid);
+            }
+        }
+
         private const string EtcPasswd = "/etc/passwd";
         private const string EtcShadow = "/etc/shadow";
 
         public Dictionary<string, string> Import() {
+            DeleteAll();
             var users = File.ReadAllLines(EtcPasswd);
             var passwords = File.ReadAllLines(EtcShadow);
             var sysUsers = new Dictionary<string, string>();
             foreach (var user in users) {
                 var u = Map(user, passwords);
-                if (u.Key != null && u.Value != null) {
+                if (u.Key == null)
+                    continue;
+                if (u.Value != null) {
                     sysUsers.Add(u.Key, u.Value);
                 }
             }

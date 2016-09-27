@@ -63,7 +63,7 @@
 @Partial['antd/page-antd-proxy'];
 @Partial['antd/page-antd-acl'];
 <div data-render="part-scheduler"></div>
-@Partial['antd/page-antd-storage'];
+<div data-render="part-storage"></div>
 @Partial['antd/page-antd-gluster'];
 @Partial['antd/page-antd-overlay'];
 @Partial['antd/page-antd-vm'];
@@ -74,6 +74,17 @@
 
 @Section['Scripts']
 <script data-context="pageload" type="text/javascript">
+    $(document).ready(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/part/storage',
+            type: 'GET',
+            success: function (data) {
+                $('[data-render="part-storage"]').html(data);
+            }
+        });
+    });
+
     $(document).ready(function () {
         jQuery.support.cors = true;
         $.ajax({

@@ -109,11 +109,11 @@ namespace Antd.Modules {
                 ConsoleLogger.Log("Home load done > firewall");
                 viewModel.Mounts = new MountRepository().GetAll();
                 ConsoleLogger.Log("Home load done > mounts");
-                viewModel.DisksList = Disks.List();
-                viewModel.ZpoolList = Zpool.List();
-                viewModel.ZfsList = Zfs.List();
-                viewModel.ZfsSnap = ZfsSnap.List();
-                ConsoleLogger.Log("Home load done > storage");
+                //viewModel.DisksList = Disks.List();
+                //viewModel.ZpoolList = Zpool.List();
+                //viewModel.ZfsList = Zfs.List();
+                //viewModel.ZfsSnap = ZfsSnap.List();
+                //ConsoleLogger.Log("Home load done > storage");
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                 ConsoleLogger.Log("Home load done > overlay");
 

@@ -32,6 +32,7 @@ using System.Linq;
 using antdlib.common;
 using Antd.Database;
 using Antd.Info;
+using Antd.Storage;
 using Antd.SystemdTimer;
 using Nancy.Security;
 
@@ -64,6 +65,16 @@ namespace Antd.Modules {
                 viewModel.Keys = authorizedKeys;
                 ConsoleLogger.Log("Home loading > ssh");
                 return View["_partial/part-ssh", viewModel];
+            };
+
+            Get["/part/storage"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.DisksList = Disks.List();
+                viewModel.ZpoolList = Zpool.List();
+                viewModel.ZfsList = Zfs.List();
+                viewModel.ZfsSnap = ZfsSnap.List();
+                ConsoleLogger.Log("Home load done > storage");
+                return View["_partial/part-antd-storage", viewModel];
             };
         }
     }

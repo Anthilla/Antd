@@ -307,9 +307,11 @@ namespace Antd {
         public void InitGlusterfs() {
             if (!Parameter.IsUnix)
                 return;
-            GlusterConfiguration.Start();
             GlusterConfiguration.Set();
-            GlusterConfiguration.Launch();
+            if (GlusterConfiguration.IsConfigured) {
+                GlusterConfiguration.Start();
+                GlusterConfiguration.Launch();
+            }
             ConsoleLogger.Log("glusterfs ready");
         }
 

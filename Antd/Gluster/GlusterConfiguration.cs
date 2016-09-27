@@ -41,6 +41,8 @@ namespace Antd.Gluster {
             }
         }
 
+        public static bool IsConfigured => File.Exists(FilePath);
+
         public static void Start() {
             Console.WriteLine($"systemctl start {ServiceName}");
             Terminal.Execute($"systemctl start {ServiceName}");
