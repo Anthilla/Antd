@@ -13,37 +13,43 @@ namespace Antd.Storage {
         public class Model {
             public int Index { get; set; }
             public string Name { get; set; }
+            public string PoolName { get; set; }
             public DateTime Created { get; set; }
             public long Dimension { get; set; }
-        }
-
-        public BackupClean() {
-            RemovableSnapshots = GetRemovableSnapshots();
         }
 
         /// <summary>
         /// Lista effettiva degli snapshot da rimuovere
         /// Viene generata partendo dalla lista completa degli snapshot dopo essere stata filtrata secondo le Regole definite sotto
         /// </summary>
-        public HashSet<string> RemovableSnapshots { get; private set; }
-
-        public HashSet<string> GetRemovableSnapshots() {
+        public HashSet<string> GetRemovableSnapshots(IEnumerable<string> t = null) {
             var snapshots = new List<Model>();
             var text = Terminal.Execute("zfs list -t snap -o name,used -p");
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1);
+            var lines = t ?? text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1);
             foreach (var line in lines) {
                 var snap = new Model();
                 var attr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                snap.Name = attr[0];
-                snap.Dimension = Convert.ToInt64(attr[1]);
-                snap.Created = GetSnapshotDate(snap.Name);
-                snapshots.Add(snap);
+                try {
+                    snap.Name = attr[0];
+                    snap.PoolName = attr[0].Split('@').FirstOrDefault();
+                    snap.Dimension = Convert.ToInt64(attr[1]);
+                    snap.Created = GetSnapshotDate(snap.Name);
+                    snapshots.Add(snap);
+                }
+                catch (Exception ex) {
+                    Console.WriteLine(ex);
+                }
             }
-            snapshots = Rule00(snapshots);
-            snapshots = Rule01(snapshots.ToArray());
-            snapshots = Rule02(snapshots);
-            snapshots = Rule03(snapshots);
-            return snapshots.Select(_ => _.Name).ToHashSet();
+
+            var list = new HashSet<string>();
+            var snapshotGroups = snapshots.GroupBy(_ => _.PoolName);
+            foreach (var snpgrp in snapshotGroups) {
+                var filter = Filter(snpgrp);
+                foreach (var snp in filter) {
+                    list.Add(snp.Name);
+                }
+            }
+            return list;
         }
 
         /// <summary>
@@ -56,9 +62,9 @@ namespace Antd.Storage {
         /// Questa azione viene scatenata una volta al giorno
         /// Questa azione schedula / gestisce le cancellazioni in maniera controllata
         /// </summary>
-        public void Launch() {
+        public void Launch(IEnumerable<string> t = null) {
             var dtn = DateTime.Now;
-            var removableSnapshots = GetRemovableSnapshots().ToList();
+            var removableSnapshots = GetRemovableSnapshots(t).ToList();
             //divido in liste più piccole e più facili da gestire
             var chunks = ChunkList(removableSnapshots, 25);
             foreach (var chunk in chunks) {
@@ -111,16 +117,13 @@ namespace Antd.Storage {
 
         private static List<List<T>> ChunkList<T>(List<T> elements, int chunkSize = 30) {
             var list = new List<List<T>>();
-
-            for (int i = 0; i < elements.Count; i += chunkSize) {
+            for (var i = 0; i < elements.Count; i += chunkSize) {
                 list.Add(elements.GetRange(i, Math.Min(chunkSize, elements.Count - i)));
             }
-
             return list;
         }
 
-
-
+        #region Consts
         //Giorno
         private const int Range00 = 1;
         //Settinama
@@ -128,9 +131,18 @@ namespace Antd.Storage {
         //Mese
         private const int Range02 = Range01 * 4;
         //Anno
-        private static readonly int Range03 = Range02 * 12;
+        private const int Range03 = Range02 * 12;
         //Dimensioni
         private const int RangeDim = 0;
+        #endregion
+
+        private static IEnumerable<Model> Filter(IEnumerable<Model> list) {
+            var rule00List = Rule00(list);
+            var rule01List = Rule01(rule00List.ToArray());
+            var rule02List = Rule02(rule01List);
+            var rule03List = Rule03(rule02List);
+            return rule03List;
+        }
 
         /// <summary>
         /// Regola: per la giornata corrente e per quella di ieri non faccio niente
@@ -138,7 +150,7 @@ namespace Antd.Storage {
         /// Ottendo quindi la lista degli snapshot rimanenti
         /// </summary>
         /// <param name="snapshots"></param>
-        public List<Model> Rule00(List<Model> snapshots) {
+        private static List<Model> Rule00(IEnumerable<Model> snapshots) {
             var range = DateTime.Now.AddDays(-Range00);
             return snapshots.Where(_ => _.Created < range).ToList();
         }
@@ -153,15 +165,25 @@ namespace Antd.Storage {
         /// </summary>
         /// <param name="snapshots"></param>
         /// <returns></returns>
-        public List<Model> Rule01(Model[] snapshots) {
+        private static List<Model> Rule01(Model[] snapshots) {
             //per trovare precedente e successivo creo una lista degli indici degli snapshot
+            //questi oggetti saranno quelli da TENERE
             var indexes = new HashSet<int>();
-            foreach (var snapshot in snapshots.Where(snapshot => snapshot.Dimension > RangeDim)) {
+            var snpList = snapshots.Where(snapshot => snapshot.Dimension > RangeDim);
+            foreach (var snapshot in snpList) {
                 indexes.Add(snapshot.Index);
-                indexes.Add(snapshot.Index - 1);
-                indexes.Add(snapshot.Index + 1);
+                var prevIndex = snapshot.Index - 1;
+                if (prevIndex > 0) {
+                    indexes.Add(prevIndex);
+                }
+                var nextIndex = snapshot.Index + 1;
+                if (nextIndex < snapshots.Length) {
+                    indexes.Add(nextIndex);
+                }
             }
-            return indexes.Select(i => snapshots[i]).ToList();
+            var result = snapshots.Where(_ => !indexes.Contains(_.Index)).ToList();
+            //var result = indexes.Select(i => snapshots[i]).ToList();
+            return result;
         }
 
         /// <summary>
@@ -172,7 +194,7 @@ namespace Antd.Storage {
         /// </summary>
         /// <param name="snapshots"></param>
         /// <returns></returns>
-        public List<Model> Rule02(List<Model> snapshots) {
+        private static List<Model> Rule02(List<Model> snapshots) {
             var minRange = DateTime.Now.AddDays(-Range02);
             var maxRange = DateTime.Now.AddDays(-Range03);
             var olderSnapshots = snapshots.Where(_ => _.Created > maxRange).OrderBy(_ => _.Name).ToList();
@@ -185,7 +207,8 @@ namespace Antd.Storage {
                 olderSnapshots.Add(keepThis);
             }
 
-            return olderSnapshots;
+            var result = olderSnapshots.Where(_ => _ != null).ToList();
+            return result;
         }
 
         /// <summary>
@@ -193,10 +216,10 @@ namespace Antd.Storage {
         /// </summary>
         /// <param name="snapshots"></param>
         /// <returns></returns>
-        public List<Model> Rule03(List<Model> snapshots) {
+        private static List<Model> Rule03(List<Model> snapshots) {
             var range = DateTime.Now.AddDays(-Range03);
-            var olderSnapshots = snapshots.Where(_ => _.Created < range).OrderBy(_ => _.Name).ToList();
-            var monthsOfPastYear = PartitionList(olderSnapshots, 4);
+            var olderSnapshots = snapshots.Where(_ => _ != null && _.Created < range).ToList();
+            var monthsOfPastYear = PartitionList(olderSnapshots.OrderBy(_ => _.Name).ToList(), 4);
             var keepThese = new List<Model>();
 
             foreach (var elementsOfMonth in monthsOfPastYear) {

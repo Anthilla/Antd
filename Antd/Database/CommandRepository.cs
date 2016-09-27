@@ -37,7 +37,7 @@ namespace Antd.Database {
         public void Import() {
             Directory.CreateDirectory(Parameter.AntdCfgCommands);
             var path = $"{Parameter.AntdCfgCommands}/commands.json";
-            var resourceFile = $"{Parameter.RootFrameworkAntdResources}/commands.json";
+            var resourceFile = $"Resources/commands.json";
             if (!File.Exists(path)) {
                 if (!File.Exists(resourceFile)) {
                     return;

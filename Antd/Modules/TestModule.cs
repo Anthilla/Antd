@@ -33,6 +33,7 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using antdlib.common;
 using Antd.Firewall;
+using Antd.Storage;
 using fastJSON;
 using Nancy;
 using Newtonsoft.Json;
@@ -58,6 +59,12 @@ namespace Antd.Modules {
             Get["/test/nft"] = x => {
                 var t = NfTables.Tables();
                 return JsonConvert.SerializeObject(t, Formatting.Indented);
+            };
+
+            Get["/test/zfs"] = x => {
+                var t = File.ReadAllText(@"D:\zfs.txt").Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                new BackupClean().Launch(t);
+                return HttpStatusCode.ImATeapot;
             };
 
         }
