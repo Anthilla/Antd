@@ -210,7 +210,7 @@ namespace Antd.Modules {
                     }
                     command = command.Replace(match.ToString(), val.Value);
                 }
-                var result = Terminal.Execute(command);
+                var result = Bash.Execute(command);
                 return Response.AsJson(result);
             };
         }

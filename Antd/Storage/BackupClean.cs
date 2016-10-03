@@ -24,7 +24,7 @@ namespace Antd.Storage {
         /// </summary>
         public HashSet<string> GetRemovableSnapshots(IEnumerable<string> t = null) {
             var snapshots = new List<Model>();
-            var text = Terminal.Execute("zfs list -t snap -o name,used -p");
+            var text = Bash.Execute("zfs list -t snap -o name,used -p");
             var lines = t ?? text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1);
             foreach (var line in lines) {
                 var snap = new Model();
@@ -79,10 +79,10 @@ namespace Antd.Storage {
 
         public bool DestroySnapshot(string snapshotName) {
             if (snapshotName.Contains("@")) {
-                Terminal.Execute($"zfs destroy {snapshotName}");
+                Bash.Execute($"zfs destroy {snapshotName}");
             }
             else {
-                Terminal.Execute($"zfs destroy @{snapshotName}");
+                Bash.Execute($"zfs destroy @{snapshotName}");
             }
             return true;
         }

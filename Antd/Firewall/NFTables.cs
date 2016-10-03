@@ -50,7 +50,7 @@ namespace Antd.Firewall {
             if (File.Exists(FilePath)) {
                 return false;
             }
-            var result = Terminal.Execute($"nft -f {FilePath}");
+            var result = Bash.Execute($"nft -f {FilePath}");
             return string.IsNullOrEmpty(result.RemoveWhiteSpace());
         }
 
@@ -111,7 +111,7 @@ namespace Antd.Firewall {
         public static IEnumerable<NftModel.Table> Tables() {
             var list = new List<NftModel.Table>();
             if (File.Exists(FilePath)) {
-                var result = Terminal.Execute("nft list tables").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                var result = Bash.Execute("nft list tables").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var match in result) {
                     var arr = match.Replace("table", "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                     var tableType = arr[0];
@@ -132,12 +132,12 @@ namespace Antd.Firewall {
 
         public static List<NftModel.Set> Sets(string tableType, string tableName) {
             var list = new List<NftModel.Set>();
-            var result = Terminal.Execute($"nft list table {tableType} {tableName}");
+            var result = Bash.Execute($"nft list table {tableType} {tableName}");
             var matches = new Regex("set [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
             foreach (var match in matches) {
                 var arr = match.ToString().Replace(new[] { " {", "}", "set " }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var setName = arr[0];
-                var setResult = Terminal.Execute($"nft list set {tableType} {tableName} {setName}");
+                var setResult = Bash.Execute($"nft list set {tableType} {tableName} {setName}");
                 var lines = setResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 var typeLine = lines.FirstOrDefault(_ => _.Contains("type "));
                 var type = typeLine?.Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries).Last();
@@ -155,12 +155,12 @@ namespace Antd.Firewall {
 
         public static List<NftModel.Chain> Chains(string tableType, string tableName) {
             var list = new List<NftModel.Chain>();
-            var result = Terminal.Execute($"nft list table {tableType} {tableName}");
+            var result = Bash.Execute($"nft list table {tableType} {tableName}");
             var matches = new Regex("chain [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
             foreach (var match in matches) {
                 var arr = match.ToString().Replace(new[] { "chain", "{", "}" }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var chainName = arr[0];
-                var chainResult = Terminal.Execute($"nft list chain {tableType} {tableName} {chainName}");
+                var chainResult = Bash.Execute($"nft list chain {tableType} {tableName} {chainName}");
                 var lines = chainResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(2).ToList();
                 var rules = lines.Take(lines.Count - 2).Select(_ => _.RemoveWhiteSpaceFromStart().Replace("\t", "").RemoveDoubleSpace()).ToList();
                 var chain = new NftModel.Chain {

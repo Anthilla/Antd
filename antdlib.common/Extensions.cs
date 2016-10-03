@@ -38,7 +38,7 @@ namespace antdlib.common {
     public static class Extensions {
         public static void DosToUnix(this string file, string otherFile = "") {
             var fileToConvert = otherFile.Length > 0 ? otherFile : file;
-            Terminal.Execute($"dos2unix {fileToConvert}");
+            Bash.Execute($"dos2unix {fileToConvert}");
         }
 
         public static bool? ToBoolean(this string str) {

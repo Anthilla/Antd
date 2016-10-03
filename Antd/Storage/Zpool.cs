@@ -30,7 +30,7 @@ namespace Antd.Storage {
         private static readonly TimerRepository TimerRepository = new TimerRepository();
 
         public static List<Model> List() {
-            var result = Terminal.Execute("zpool list");
+            var result = Bash.Execute("zpool list");
             var list = new List<Model>();
             if (string.IsNullOrEmpty(result)) {
                 return list;
@@ -50,7 +50,7 @@ namespace Antd.Storage {
                     Dedup = cells[7],
                     Health = cells[8],
                     Altroot = cells[9],
-                    Status = Terminal.Execute($"zpool status {cells[0]}")
+                    Status = Bash.Execute($"zpool status {cells[0]}")
                 };
 
                 var jobs = TimerRepository.GetAll().Where(_ => _.Alias == model.Name).ToList();
@@ -69,13 +69,13 @@ namespace Antd.Storage {
         }
 
         public static IEnumerable<string> ImportList() {
-            var text = Terminal.Execute("zpool import | grep 'pool:' | awk {'print $2'}");
+            var text = Bash.Execute("zpool import | grep 'pool:' | awk {'print $2'}");
             var importPools = text.Split(new [] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
             return importPools;
         } 
 
         public static void Import(string poolName) {
-            Terminal.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}");
+            Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}");
         }
     }
 }

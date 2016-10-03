@@ -27,17 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using antdlib.common;
 using Antd.Firewall;
 using Antd.Storage;
-using fastJSON;
 using Nancy;
 using Newtonsoft.Json;
-using Vsync;
 
 namespace Antd.Modules {
     public class TestModule : CoreModule {
@@ -61,12 +54,10 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(t, Formatting.Indented);
             };
 
-            Get["/test/zfs"] = x => {
-                var t = File.ReadAllText(@"D:\zfs.txt").Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                new BackupClean().Launch(t);
+            Get["/test/clearnsnapshots"] = x => {
+                new BackupClean().Launch();
                 return HttpStatusCode.ImATeapot;
             };
-
         }
     }
 }

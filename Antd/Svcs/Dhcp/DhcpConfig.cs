@@ -45,7 +45,7 @@ namespace antdlib.Svcs.Dhcp {
         private const string MainFile = "dhcpd.conf";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {Dir} {MntDir}");
+            Bash.Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }

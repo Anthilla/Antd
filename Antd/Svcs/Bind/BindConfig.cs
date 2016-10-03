@@ -44,7 +44,7 @@ namespace antdlib.Svcs.Bind {
         private const string MainFile = "named.conf";
 
         public static void SetReady() {
-            Terminal.Execute($"cp {Dir} {MntDir}");
+            Bash.Execute($"cp {Dir} {MntDir}");
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }

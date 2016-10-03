@@ -19,25 +19,25 @@ namespace Antd.SystemdTimer {
 
         public static void Setup() {
             if (IsTargetActive()) return;
-            Terminal.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
-            Terminal.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
+            Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
+            Bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
-            Terminal.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl start tt.service");
-            Terminal.Execute("systemctl start tt.target");
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl start tt.service");
+            Bash.Execute("systemctl start tt.target");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void StartAll() {
-            Terminal.Execute("systemctl restart tt.target");
+            Bash.Execute("systemctl restart tt.target");
         }
 
         #region TT Target
         private static bool IsTargetActive() {
-            var result = Terminal.Execute("systemctl is-active tt.target");
+            var result = Bash.Execute("systemctl is-active tt.target");
             return result.Trim() == "active";
         }
 
@@ -183,19 +183,19 @@ namespace Antd.SystemdTimer {
                 });
             }
 
-            Terminal.Execute($"chown root:wheel {timerFile}");
-            Terminal.Execute($"chown root:wheel {serviceFile}");
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute($"chown root:wheel {timerFile}");
+            Bash.Execute($"chown root:wheel {serviceFile}");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void Remove(string name) {
-            Terminal.Execute($"systemctl stop {name}.target");
+            Bash.Execute($"systemctl stop {name}.target");
             var timerFile = $"{TargetDirectory}/{name}.target";
             if (File.Exists(timerFile)) {
                 File.Delete(timerFile);
             }
 
-            Terminal.Execute($"systemctl stop {name}.service");
+            Bash.Execute($"systemctl stop {name}.service");
             var serviceFile = $"{TargetDirectory}/{name}.service";
             if (File.Exists(serviceFile)) {
                 File.Delete(serviceFile);
@@ -206,7 +206,7 @@ namespace Antd.SystemdTimer {
                 TimerRepository.Delete(tryget.Id);
             }
 
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void Import() {
@@ -255,15 +255,15 @@ namespace Antd.SystemdTimer {
         }
 
         public static void Enable(string ttName) {
-            Terminal.Execute($"systemctl restart {ttName}.target");
+            Bash.Execute($"systemctl restart {ttName}.target");
         }
 
         public static void Disable(string ttName) {
-            Terminal.Execute($"systemctl stop {ttName}.target");
+            Bash.Execute($"systemctl stop {ttName}.target");
         }
 
         public static bool IsActive(string ttName) {
-            var result = Terminal.Execute($"systemctl is-active {ttName}.target");
+            var result = Bash.Execute($"systemctl is-active {ttName}.target");
             return result.Trim() == "active";
         }
     }

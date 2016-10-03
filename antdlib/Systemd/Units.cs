@@ -39,7 +39,7 @@ namespace antdlib.Systemd {
     public class Units {
 
         private static List<UnitModel> GetAllUnits() {
-            var command = Terminal.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
+            var command = Bash.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
             if (output == null)
                 return null;

@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace antdlib.common {
-    public class Terminal {
+    public class Bash {
         public static string Execute(string command, string dir = "") {
             try {
                 var proc = new ProcessStartInfo {

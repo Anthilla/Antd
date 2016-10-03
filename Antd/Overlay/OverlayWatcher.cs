@@ -78,7 +78,7 @@ namespace Antd {
             //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
             var directory = Path.GetDirectoryName(e.FullPath);
             if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
-                var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
+                var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
         }
@@ -87,7 +87,7 @@ namespace Antd {
             //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
             var directory = Path.GetDirectoryName(e.FullPath);
             if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
-                var du = Terminal.Execute($"du -msh {directory}/").SplitToList().First();
+                var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
         }
@@ -98,11 +98,11 @@ namespace Antd {
             var path = overlayPath.Replace(Parameter.Overlay, "");
             //creo cartella in mntDIRS
             var dirsPath = Mounts.SetDirsPath(path);
-            Terminal.Execute($"mkdir -p {dirsPath}");
+            Bash.Execute($"mkdir -p {dirsPath}");
             //copio rsync overlayPath in mntDIRS
-            Terminal.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/");
+            Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/");
             //cancello/pulisco dir equivalente
-            Terminal.Execute($"rm -fR {path}");
+            Bash.Execute($"rm -fR {path}");
             //monto mntDIRS - dir
             Mount.Dir(path);
         }

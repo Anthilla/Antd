@@ -78,7 +78,7 @@ namespace Antd.Modules {
 
             Post["/parted/print"] = x => {
                 var disk = (string)Request.Form.Disk;
-                var result = Terminal.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
+                var result = Bash.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 
@@ -86,7 +86,7 @@ namespace Antd.Modules {
                 var disk = (string)Request.Form.Disk;
                 var type = (string)Request.Form.Type;
                 var yn = (string)Request.Form.Confirm;
-                var result = Terminal.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
+                var result = Bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
                 return Response.AsText(result);
             };
         }

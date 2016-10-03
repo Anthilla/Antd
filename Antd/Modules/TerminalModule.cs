@@ -42,7 +42,7 @@ namespace Antd.Modules {
 
             Post["/terminal"] = x => {
                 string command = Request.Form.Command;
-                var result = Terminal.Execute(command);
+                var result = Bash.Execute(command);
                 return Response.AsText(result);
             };
 
@@ -77,7 +77,7 @@ namespace Antd.Modules {
 
             Post["/terminal/api"] = x => {
                 var cmds = Request.Form.Command.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var result = Request.Form.Directory == "" ? Terminal.Execute((string[])cmds) : Terminal.Execute((string[])cmds, (string)Request.Form.Directory);
+                var result = Request.Form.Directory == "" ? Bash.Execute((string[])cmds) : Bash.Execute((string[])cmds, (string)Request.Form.Directory);
                 return Response.AsJson(result);
             };
 

@@ -77,28 +77,28 @@ namespace antdlib.Storage {
 
         public class Get {
             public static string[] ById() {
-                return Terminal.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Bash.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Bash.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartLabel() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Bash.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByPartUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Bash.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
             public static string[] ByUuid() {
-                return Terminal.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                return Bash.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
         }
 
         public static void PopulateBlocks() {
-            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = Bash.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block {
@@ -144,7 +144,7 @@ namespace antdlib.Storage {
 
         public static List<string> BlockList() {
             var blocks = new List<string>();
-            var rows = Terminal.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = Bash.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             blocks.AddRange(rows);
             return blocks;
         }
@@ -158,7 +158,7 @@ namespace antdlib.Storage {
         }
 
         private static IEnumerable<Block> Lsblk() {
-            var rows = Terminal.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = Bash.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             return rows.Select(row => row.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToArray()).Select(cells => new Block {
                 Name = cells[0], Maj = cells[1], Min = cells[1], Rm = cells[2], Size = cells[3], Ro = cells[4], DiskType = cells[5], MountPoint = cells.Length > 6 ? cells[6] : ""
             }).ToList();
@@ -166,7 +166,7 @@ namespace antdlib.Storage {
 
         private static IEnumerable<Block> Blkid() {
             var list = new List<Block>();
-            var rows = Terminal.Execute("blkid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            var rows = Bash.Execute("blkid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach (var row in rows) {
                 var cells = row.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block {

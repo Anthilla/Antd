@@ -57,7 +57,7 @@
     <Compile Include="MapToModel.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Terminal.cs" />
+    <Compile Include="Bash.cs" />
     <Compile Include="Timestamp.cs" />
   </ItemGroup>
   <ItemGroup>

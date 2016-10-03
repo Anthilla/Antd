@@ -39,7 +39,6 @@ using Antd.Apps;
 using Antd.Database;
 using Antd.Firewall;
 using Antd.Info;
-using Antd.Storage;
 using Nancy;
 using Nancy.Security;
 
@@ -75,7 +74,7 @@ namespace Antd.Modules {
                     "Ssh"
                 };
 
-                var os = Terminal.Execute("uname -a");
+                var os = Bash.Execute("uname -a");
                 viewModel.VersionOS = os;
 
                 viewModel.Meminfo = MachineInfo.GetMeminfo();
@@ -85,7 +84,7 @@ namespace Antd.Modules {
                 viewModel.Uptime = MachineInfo.GetUptime();
                 viewModel.Free = MachineInfo.GetFree();
 
-                var timezones = Terminal.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
+                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
                 viewModel.Timezones = timezones;
                 ConsoleLogger.Log("Home load done > host info");
 

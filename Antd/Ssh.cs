@@ -47,13 +47,13 @@ namespace Antd {
         public class Keys {
             public static void SendKey(string host, string keyName, string user = "") {
                 var at = (user.Length > 0 ? user + "@" : "") + $"{host}";
-                Terminal.Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
+                Bash.Execute($"scp {keyName} {at} /root/.ssh/authorized_keys");
             }
 
             private static string GenerateForUser(string userName) {
                 var privateKeyPath = $"/home/{userName}/.ssh/{userName}-key";
                 var publicKeyPath = $"/home/{userName}/.ssh/{userName}-key.pub";
-                Terminal.Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
+                Bash.Execute($"sudo -H -u {userName} bash -c 'echo y\n | ssh-keygen -b 2048 -t rsa -f {privateKeyPath} -q -N \"\"'");
                 return publicKeyPath;
             }
 
@@ -61,7 +61,7 @@ namespace Antd {
                 var userPubKeyPath = GenerateForUser(user);
                 var keyContent = File.ReadAllText(userPubKeyPath).Replace(Environment.NewLine, " ");
                 //todo comando per aggiungere la chiave al file di là
-                Terminal.Execute($"scp {keyContent} {remoteMachine}/{Parameter.AuthKeys}");
+                Bash.Execute($"scp {keyContent} {remoteMachine}/{Parameter.AuthKeys}");
             }
 
             public static void PropagateKeys(IEnumerable<string> users, IEnumerable<string> remoteMachines) {

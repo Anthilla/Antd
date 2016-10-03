@@ -28,9 +28,9 @@ namespace antdsh {
             if (!File.Exists(Antdsh03MountServicePath)) {
                 CreateMountServiceFile();
             }
-            Terminal.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");
-            Terminal.Execute($"chmod -R 664 {Parameter.TimerUnits}/");
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");
+            Bash.Execute($"chmod -R 664 {Parameter.TimerUnits}/");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         private static void CreateRemountServiceFile() {

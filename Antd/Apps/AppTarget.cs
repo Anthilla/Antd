@@ -6,25 +6,25 @@ namespace Antd.Apps {
     public class AppTarget {
         public static void Setup() {
             if (IsTargetActive()) return;
-            Terminal.Execute("mkdir -p /etc/systemd/system/app.target.wants");
-            Terminal.Execute("mkdir -p /mnt/cdrom/Units/app.target.wants");
+            Bash.Execute("mkdir -p /etc/systemd/system/app.target.wants");
+            Bash.Execute("mkdir -p /mnt/cdrom/Units/app.target.wants");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
-            Terminal.Execute("ln -s ../../../../usr/lib64/systemd/system/app.service app.service", "/etc/systemd/system/multi-user.target.wants");
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl start app.service");
-            Terminal.Execute("systemctl start app.target");
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/app.service app.service", "/etc/systemd/system/multi-user.target.wants");
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl start app.service");
+            Bash.Execute("systemctl start app.target");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void StartAll() {
-            Terminal.Execute("systemctl restart app.target");
+            Bash.Execute("systemctl restart app.target");
         }
 
         #region TT Target
         private static bool IsTargetActive() {
-            var result = Terminal.Execute("systemctl is-active app.target");
+            var result = Bash.Execute("systemctl is-active app.target");
             return result.Trim() == "active";
         }
 

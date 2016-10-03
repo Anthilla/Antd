@@ -59,7 +59,7 @@ namespace antdlib.common {
         }
 
         public IEnumerable<T> FromCommand<T>(string command, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
-            var commandResult = Terminal.Execute(command);
+            var commandResult = Bash.Execute(command);
             if (commandResult.Length < 1) {
                 return new List<T>();
             }

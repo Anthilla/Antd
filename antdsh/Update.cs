@@ -88,7 +88,7 @@ namespace antdsh {
         public static void All(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
             UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
@@ -100,52 +100,52 @@ namespace antdsh {
             RestartAntd();
             RestartAntdsh();
 
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
         public static void Antd(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
             UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
             RestartAntd();
 
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
         public static void Antdsh(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
             UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
             RestartAntdsh();
 
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
         public static void System(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
 
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
         public static void Kernel(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
             UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
 
-            Terminal.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
         #endregion
 
@@ -161,7 +161,7 @@ namespace antdsh {
                 }
                 Directory.CreateDirectory(Parameter.RepoTemp);
                 Directory.CreateDirectory(TmpDirectory);
-                var linkedFile = Terminal.Execute($"file {activeVersionPath}");
+                var linkedFile = Bash.Execute($"file {activeVersionPath}");
                 var currentVersionDate = GetVersionDateFromFile(linkedFile);
                 var repositoryInfo = GetRepositoryInfo().ToList();
                 var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
@@ -307,7 +307,7 @@ namespace antdsh {
             Directory.CreateDirectory(TmpDirectory);
             var tmpMountDirectory = $"{TmpDirectory}/{currentContext}";
             Directory.CreateDirectory(tmpMountDirectory);
-            Terminal.Execute($"umount {tmpMountDirectory}");
+            Bash.Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
             if (latestFileInfo == null) return;
@@ -315,16 +315,16 @@ namespace antdsh {
 
             Console.WriteLine($"{latestFileInfo.FileName} download complete");
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            Terminal.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
+            Bash.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
             foreach (var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
                 Console.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
             }
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl daemon-reload");
             Console.WriteLine($"{currentContext} units installation complete");
-            Terminal.Execute($"umount {tmpMountDirectory}");
+            Bash.Execute($"umount {tmpMountDirectory}");
         }
 
         private static string GetVersionDateFromFile(string path) {
@@ -339,7 +339,7 @@ namespace antdsh {
             if (!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
                 return new List<FileInfoModel>();
             }
-            var tmpRepoListText = Terminal.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
+            var tmpRepoListText = Bash.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
             var list = tmpRepoListText.SplitToList(Environment.NewLine);
             var files = new List<FileInfoModel>();
             foreach (var f in list) {
@@ -388,9 +388,9 @@ namespace antdsh {
         private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
-            Terminal.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
-            Terminal.Execute($"chown root:wheel {newVersionPath}");
-            Terminal.Execute($"chmod 775 {newVersionPath}");
+            Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
+            Bash.Execute($"chown root:wheel {newVersionPath}");
+            Bash.Execute($"chmod 775 {newVersionPath}");
         }
 
         private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
@@ -426,17 +426,17 @@ namespace antdsh {
         #endregion
 
         private static void RestartAntd() {
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl stop app-antd-03-launcher.service");
-            Terminal.Execute("systemctl stop framework-antd.mount");
-            Terminal.Execute("systemctl restart app-antd-02-mount.service");
-            Terminal.Execute("systemctl restart app-antd-03-launcher.service");
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl stop app-antd-03-launcher.service");
+            Bash.Execute("systemctl stop framework-antd.mount");
+            Bash.Execute("systemctl restart app-antd-02-mount.service");
+            Bash.Execute("systemctl restart app-antd-03-launcher.service");
         }
 
         private static void RestartAntdsh() {
             Target.Setup();
             Units.CreateRemountUnits();
-            Terminal.Execute("systemctl restart tt-antdsh-01-remount.timer");
+            Bash.Execute("systemctl restart tt-antdsh-01-remount.timer");
             Environment.Exit(0);
         }
     }

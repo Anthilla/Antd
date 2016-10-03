@@ -70,12 +70,12 @@ namespace antdlib.Acl {
         }
 
         public static void GetAcl(string path) {
-            Terminal.Execute($"getfacl {path}");
+            Bash.Execute($"getfacl {path}");
         }
 
         public static void SetUserAcl(string path, string perms, string user = "") {
             try {
-                var r = Terminal.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}");
+                var r = Bash.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}");
                 if (r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
@@ -87,7 +87,7 @@ namespace antdlib.Acl {
 
         public static void SetGroupAcl(string path, string perms, string group = "") {
             try {
-                var r = Terminal.Execute($"setfacl -R -m \"g:{group}:{perms}\" {path}");
+                var r = Bash.Execute($"setfacl -R -m \"g:{group}:{perms}\" {path}");
                 if (r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
@@ -99,7 +99,7 @@ namespace antdlib.Acl {
 
         public static void RemoveUserAcl(string path, string user = "") {
             try {
-                var r = Terminal.Execute($"setfacl -R -x \"u:{user}\" {path}");
+                var r = Bash.Execute($"setfacl -R -x \"u:{user}\" {path}");
                 if (r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
@@ -111,7 +111,7 @@ namespace antdlib.Acl {
 
         public static void RemoveGroupAcl(string path, string group = "") {
             try {
-                var r = Terminal.Execute($"setfacl -R -x \"g:{group}\" {path}");
+                var r = Bash.Execute($"setfacl -R -x \"g:{group}\" {path}");
                 if (r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
@@ -123,7 +123,7 @@ namespace antdlib.Acl {
 
         public static void SetOwner(string path, string userOwner, string groupOwner) {
             try {
-                var r = Terminal.Execute($"chown {userOwner}:{groupOwner} -R {path}");
+                var r = Bash.Execute($"chown {userOwner}:{groupOwner} -R {path}");
                 if (r.Trim().Length > 0) {
                     throw new Exception(r);
                 }

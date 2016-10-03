@@ -4,7 +4,7 @@ namespace Antd.Users {
     public class SystemUser {
 
         public static void Create(string user) {
-            Terminal.Execute($"useradd {user}");
+            Bash.Execute($"useradd {user}");
         }
 
         public static void SetPassword(string user, string password) {
@@ -14,7 +14,7 @@ namespace Antd.Users {
             if (string.IsNullOrEmpty(password)) {
                 return;
             }
-            Terminal.Execute($"usermod -p '{password}' {user}");
+            Bash.Execute($"usermod -p '{password}' {user}");
         }
     }
 }

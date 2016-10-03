@@ -40,20 +40,20 @@ namespace antdsh {
     public class Execute {
 
         public static void RemounwRwOs() {
-            Terminal.Execute($"{Parameter.Aossvc} reporemountrw");
+            Bash.Execute($"{Parameter.Aossvc} reporemountrw");
         }
 
         private static int _retryCountTryStopProcess;
         private static void TryStopProcess(string query) {
             while (true) {
-                var psResult = Terminal.Execute($"ps -aef|grep '{query}'|grep -v grep");
+                var psResult = Bash.Execute($"ps -aef|grep '{query}'|grep -v grep");
                 if (psResult.Length <= 0)
                     return;
                 var split = psResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length <= 0)
                     return;
                 var pid = split[1];
-                Terminal.Execute($"kill -9 {pid.Trim()}");
+                Bash.Execute($"kill -9 {pid.Trim()}");
                 _retryCountTryStopProcess = _retryCountTryStopProcess + 1;
                 Thread.Sleep(500);
             }
@@ -65,7 +65,7 @@ namespace antdsh {
         }
 
         public static void CheckRunningExists() {
-            var running = Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
+            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
             if (running.Contains(Parameter.AntdRunning))
                 return;
             Console.WriteLine("There's no running version of antd.");
@@ -100,22 +100,22 @@ namespace antdsh {
 
         public static void LinkVersionToRunning(string fileToLink) {
             Console.WriteLine("Linking {0} to {1}", fileToLink, RunningPath);
-            Terminal.Execute("ln -s " + fileToLink + " " + RunningPath);
+            Bash.Execute("ln -s " + fileToLink + " " + RunningPath);
         }
 
         public static void RemoveLink() {
             var running = Parameter.AntdVersionsDir + "/" + Parameter.AntdRunning;
             Console.WriteLine("Removing running {0}", running);
-            Terminal.Execute("rm " + running);
+            Bash.Execute("rm " + running);
         }
 
         public static string GetRunningVersion() {
-            var running = Terminal.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
+            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
             if (!running.Contains(Parameter.AntdRunning)) {
                 Console.WriteLine("There's no running version of antd.");
                 return null;
             }
-            var version = Terminal.Execute("file " + RunningPath).Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
+            var version = Bash.Execute("file " + RunningPath).Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last();
             Console.WriteLine("Running version detected: {0}", version);
             return version;
         }
@@ -138,7 +138,7 @@ namespace antdsh {
         public static string RunningPath => Path.Combine(Parameter.AntdVersionsDir, Parameter.AntdRunning);
 
         public static void ExtractZip(string file) {
-            Terminal.Execute("7z x " + file);
+            Bash.Execute("7z x " + file);
         }
 
         public static void ExtractZipTmp(string file) {
@@ -147,30 +147,30 @@ namespace antdsh {
 
         public static void MountTmpRam() {
             Directory.CreateDirectory(Parameter.AntdTmpDir);
-            Terminal.Execute($"mount -t tmpfs tmpfs {Parameter.AntdTmpDir}");
+            Bash.Execute($"mount -t tmpfs tmpfs {Parameter.AntdTmpDir}");
         }
 
         public static void UmountTmpRam() {
             while (true) {
                 var procMounts = File.ReadAllLines("/proc/mounts");
                 if (procMounts.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----"))) {
-                    Terminal.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
+                    Bash.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
                     UmountTmpRam();
                 }
 
                 var f = File.ReadAllLines("/proc/mounts");
                 if (f.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----")))
                     return;
-                Terminal.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
+                Bash.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
             }
         }
 
         public static void CopyToTmp(string file) {
-            Terminal.Execute("cp " + file + " " + Parameter.AntdTmpDir);
+            Bash.Execute("cp " + file + " " + Parameter.AntdTmpDir);
         }
 
         public static void MoveToTmp(string file) {
-            Terminal.Execute("mv " + file + " " + Parameter.AntdTmpDir);
+            Bash.Execute("mv " + file + " " + Parameter.AntdTmpDir);
         }
 
         public static void RemoveTmpZips() {
@@ -182,7 +182,7 @@ namespace antdsh {
         }
 
         public static void RemoveTmpAll() {
-            Terminal.Execute($"rm -fR {Parameter.AntdTmpDir}");
+            Bash.Execute($"rm -fR {Parameter.AntdTmpDir}");
         }
 
         public static void CreateSquash(string squashName) {
@@ -192,7 +192,7 @@ namespace antdsh {
                 return;
             }
             Console.WriteLine($"squashfs creation of: {squashName}");
-            Terminal.Execute("mksquashfs " + src + " " + squashName + " -comp xz -Xbcj x86 -Xdict-size 75%");
+            Bash.Execute("mksquashfs " + src + " " + squashName + " -comp xz -Xbcj x86 -Xdict-size 75%");
         }
 
         public static void CleanTmp() {
@@ -250,14 +250,14 @@ namespace antdsh {
             Console.WriteLine("Download file from: {0}", url);
             var to = Parameter.AntdTmpDir + "/" + Parameter.DownloadName;
             Console.WriteLine("Download file to: {0}", to);
-            Terminal.Execute("wget " + url + " -o " + to);
+            Bash.Execute("wget " + url + " -o " + to);
             Console.WriteLine("Download complete");
         }
 
         public static void DownloadFromUrl(string url, string destination) {
             Console.WriteLine("Download file from: {0}", url);
             Console.WriteLine("Download file to: {0}", destination);
-            Terminal.Execute("wget " + url + " -O " + destination);
+            Bash.Execute("wget " + url + " -O " + destination);
             Console.WriteLine("Download complete!");
         }
 
@@ -301,17 +301,17 @@ namespace antdsh {
         }
 
         public static void RestartSystemctlAntdServices() {
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl restart app-antd-01-prepare");
-            Terminal.Execute("systemctl restart app-antd-02-mount");
-            Terminal.Execute("systemctl restart app-antd-03-launcher");
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl restart app-antd-01-prepare");
+            Bash.Execute("systemctl restart app-antd-02-mount");
+            Bash.Execute("systemctl restart app-antd-03-launcher");
         }
 
         public static void Umount(string dir) {
             while (true) {
                 if (Mounts.IsAlreadyMounted(dir) != true)
                     return;
-                Terminal.Execute($"umount {dir}");
+                Bash.Execute($"umount {dir}");
             }
         }
     }

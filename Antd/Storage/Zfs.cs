@@ -21,7 +21,7 @@ namespace Antd.Storage {
         }
 
         public static List<Model> List() {
-            var result = Terminal.Execute("zfs list");
+            var result = Bash.Execute("zfs list");
             var list = new List<Model>();
             if (string.IsNullOrEmpty(result)) {
                 return list;

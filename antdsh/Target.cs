@@ -9,25 +9,25 @@ namespace antdsh {
 
         public static void Setup() {
             if (IsTargetActive()) return;
-            Terminal.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
-            Terminal.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
+            Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
+            Bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
-            Terminal.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
-            Terminal.Execute("systemctl daemon-reload");
-            Terminal.Execute("systemctl start tt.service");
-            Terminal.Execute("systemctl start tt.target");
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl start tt.service");
+            Bash.Execute("systemctl start tt.target");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void StartAll() {
-            Terminal.Execute("systemctl restart tt.target");
+            Bash.Execute("systemctl restart tt.target");
         }
 
         #region TT Target
         private static bool IsTargetActive() {
-            var result = Terminal.Execute("systemctl is-active tt.target");
+            var result = Bash.Execute("systemctl is-active tt.target");
             return result.Trim() == "active";
         }
 

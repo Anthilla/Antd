@@ -126,7 +126,7 @@ namespace Antd.Database {
 
         public void DeleteAll() {
             foreach (var u in GetAll()) {
-                Delete(u.Guid);
+                Delete(u.Id);
             }
         }
 
@@ -168,6 +168,9 @@ namespace Antd.Database {
             if (string.IsNullOrEmpty(password.Trim().RemoveWhiteSpace())) {
                 return new KeyValuePair<string, string>(null, null);
             }
+            if (password == "!" || password.Length < 2 || password == "x" || password == "*") {
+                return new KeyValuePair<string, string>(null, null);
+            }
             FastCreate(user, password);
             ConsoleLogger.Log($"imported {userInfo[0]} into Database");
             return new KeyValuePair<string, string>(user, password);
@@ -196,7 +199,7 @@ namespace Antd.Database {
 
         public class Shadow {
             public static void Create(string user) {
-                Terminal.Execute("useradd " + user);
+                Bash.Execute("useradd " + user);
             }
         }
     }

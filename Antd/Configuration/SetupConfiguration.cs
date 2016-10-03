@@ -19,7 +19,7 @@ namespace Antd.Configuration {
                     var importControls = new List<Control>();
 
                     for (var i = 0; i < lines.Length; i++) {
-                        Terminal.Execute(lines[i]);
+                        Bash.Execute(lines[i]);
                         importControls.Add(new Control {
                             Index = i,
                             FirstCommand = lines[i],
@@ -83,18 +83,18 @@ namespace Antd.Configuration {
                 return;
             }
             if (string.IsNullOrEmpty(control.ControlCommand)) {
-                Terminal.Execute(firstCommand);
+                Bash.Execute(firstCommand);
                 _counter = 0;
                 return;
             }
-            var controlResult = Terminal.Execute(controlCommand);
+            var controlResult = Bash.Execute(controlCommand);
             var firstCheck = controlResult.Contains(control.Check);
             if (firstCheck) {
                 _counter = 0;
                 return;
             }
-            Terminal.Execute(firstCommand);
-            controlResult = Terminal.Execute(controlCommand);
+            Bash.Execute(firstCommand);
+            controlResult = Bash.Execute(controlCommand);
             var secondCheck = controlResult.Contains(control.Check);
             if (secondCheck) {
                 _counter = 0;

@@ -55,7 +55,7 @@ namespace Antd.Network {
             var niFlist = new List<string>();
             const int m = 15;
             for (var i = 0; i < m; i++) {
-                var r = Terminal.Execute($"ip link set eth{i} up");
+                var r = Bash.Execute($"ip link set eth{i} up");
                 if (r.Length > 0) {
                     break;
                 }
@@ -66,7 +66,7 @@ namespace Antd.Network {
 
         private static List<string> DetectActiveNetworkInterfaces() {
             var niFlist = DetectAllNetworkInterfaces();
-            return (from nif in niFlist let r = Terminal.Execute($"cat /sys/class/net/{nif}/carrier") where r == "1" select nif).ToList();
+            return (from nif in niFlist let r = Bash.Execute($"cat /sys/class/net/{nif}/carrier") where r == "1" select nif).ToList();
         }
 
         private static bool IsIpAvailable(string input) {
@@ -117,10 +117,10 @@ namespace Antd.Network {
                 var ip = PickIp();
                 ConsoleLogger.Log($"_> Assigning {ip} to {selectedNif}");
                 var cmd1 = $"ip addr add {ip} dev {selectedNif}";
-                Terminal.Execute(cmd1);
+                Bash.Execute(cmd1);
                 Commands.Add(cmd1);
                 var cmd2 = $"ip route add default via {ip}";
-                Terminal.Execute(cmd2);
+                Bash.Execute(cmd2);
                 Commands.Add(cmd2);
                 ShowNetworkInfo(selectedNif, ip);
             }
@@ -135,7 +135,7 @@ namespace Antd.Network {
             var bluetoothConnectionName = $"{nif}_S{ip.Replace("/", "-")}";
             ConsoleLogger.Log("Showing network configuration with a bluetooth connection ;)");
             ConsoleLogger.Log("bt >> set up all wireless connections");
-            Terminal.Execute("rfkill unblock all");
+            Bash.Execute("rfkill unblock all");
             var btDirs = Directory.EnumerateDirectories("/var/lib/bluetooth").ToArray();
             if (btDirs.Length > 0) {
                 ConsoleLogger.Log("bt >> create bt configuration file");
@@ -154,10 +154,10 @@ namespace Antd.Network {
                     FileSystem.WriteFile(replace, string.Join(n, fileLines));
                 }
                 ConsoleLogger.Log("bt >> restart bluetooth service");
-                Terminal.Execute("systemctl restart bluetooth");
+                Bash.Execute("systemctl restart bluetooth");
                 ConsoleLogger.Log("bt >> activate bluetooth connection");
                 var btCombo = $"power on{n}discoverable on{n}agent on{n}quit{n}";
-                Terminal.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
+                Bash.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
                 ConsoleLogger.Log("bt >> done!");
             }
             else {

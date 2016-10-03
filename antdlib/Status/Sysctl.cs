@@ -41,7 +41,7 @@ namespace antdlib.Status {
     public class Sysctl {
 
         private static List<SysctlModel> GetAllSysctls() {
-            var output = JsonConvert.SerializeObject(Terminal.Execute("sysctl --all").ConvertCommandToModel().output);
+            var output = JsonConvert.SerializeObject(Bash.Execute("sysctl --all").ConvertCommandToModel().output);
             return MapSysctlJson(output);
         }
 
@@ -81,7 +81,7 @@ namespace antdlib.Status {
         public static string Config(string param, string value) {
             WriteConfig();
             LoadConfig();
-            return JsonConvert.SerializeObject(Terminal.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel().output);
+            return JsonConvert.SerializeObject(Bash.Execute("sysctl -w " + param + "=\"" + value + "\"").ConvertCommandToModel().output);
         }
 
         public static void WriteConfig() {
@@ -101,7 +101,7 @@ namespace antdlib.Status {
         }
 
         public static void LoadConfig() {
-            Terminal.Execute("sysctl -p " + Path.Combine(Parameter.AntdCfg, "antd.sysctl.conf"));
+            Bash.Execute("sysctl -p " + Path.Combine(Parameter.AntdCfg, "antd.sysctl.conf"));
         }
     }
 }

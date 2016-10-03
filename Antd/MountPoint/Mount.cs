@@ -63,7 +63,7 @@ namespace Antd.MountPoint {
             }
             foreach (var kvp in DefaultWorkingDirectoriesWithOptions) {
                 if (Mounts.IsAlreadyMounted(kvp.Key) == false) {
-                    Terminal.Execute($"mount {kvp.Value} {kvp.Key}");
+                    Bash.Execute($"mount {kvp.Value} {kvp.Key}");
                 }
             }
         }
@@ -123,10 +123,10 @@ namespace Antd.MountPoint {
                     var path = Path.GetDirectoryName(file);
                     var mntPath = Path.GetDirectoryName(mntFile);
                     if (Mounts.IsAlreadyMounted(file) == false) {
-                        Terminal.Execute($"mkdir -p {path}");
-                        Terminal.Execute($"mkdir -p {mntPath}");
+                        Bash.Execute($"mkdir -p {path}");
+                        Bash.Execute($"mkdir -p {mntPath}");
                         if (!System.IO.File.Exists(file)) {
-                            Terminal.Execute($"cp {mntFile} {file}");
+                            Bash.Execute($"cp {mntFile} {file}");
                         }
                         ConsoleLogger.Log($"mount {mntFile} -> {file}");
                         SetBind(mntFile, file);
@@ -175,9 +175,9 @@ namespace Antd.MountPoint {
                     });
                 }
                 try {
-                    Terminal.Execute($"mkdir -p {t}");
-                    Terminal.Execute($"mkdir -p {realPath}");
-                    Terminal.Execute($"cp {t} {realPath}");
+                    Bash.Execute($"mkdir -p {t}");
+                    Bash.Execute($"mkdir -p {realPath}");
+                    Bash.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -199,9 +199,9 @@ namespace Antd.MountPoint {
                 try {
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
-                    Terminal.Execute($"mkdir -p {path}");
-                    Terminal.Execute($"mkdir -p {mntPath}");
-                    Terminal.Execute($"cp {t} {realPath}");
+                    Bash.Execute($"mkdir -p {path}");
+                    Bash.Execute($"mkdir -p {mntPath}");
+                    Bash.Execute($"cp {t} {realPath}");
                 }
                 catch (Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
@@ -288,7 +288,7 @@ namespace Antd.MountPoint {
         private static void SetBind(string source, string destination) {
             if (Mounts.IsAlreadyMounted(source, destination))
                 return;
-            Terminal.Execute($"mount -o bind {source} {destination}");
+            Bash.Execute($"mount -o bind {source} {destination}");
         }
     }
 }

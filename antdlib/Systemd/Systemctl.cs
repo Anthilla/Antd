@@ -34,36 +34,36 @@ namespace antdlib.Systemd {
     public class Systemctl {
 
         public static void DaemonReload() {
-            Terminal.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl daemon-reload");
         }
 
         public static void Start(string unit) {
-            Terminal.Execute("systemctl start " + unit);
+            Bash.Execute("systemctl start " + unit);
         }
 
         public static void Stop(string unit) {
-            Terminal.Execute("systemctl stop " + unit);
+            Bash.Execute("systemctl stop " + unit);
         }
 
         public static void Restart(string unit) {
-            Terminal.Execute("systemctl restart " + unit);
+            Bash.Execute("systemctl restart " + unit);
         }
 
         public static void Reload(string unit) {
-            Terminal.Execute("systemctl reload " + unit);
+            Bash.Execute("systemctl reload " + unit);
         }
 
         public static string Status(string unit) {
-            return Terminal.Execute("systemctl status " + unit);
+            return Bash.Execute("systemctl status " + unit);
         }
 
         public static bool IsActive(string unit) {
-            var r = Terminal.Execute("systemctl is-active " + unit);
+            var r = Bash.Execute("systemctl is-active " + unit);
             return r != "inactive";
         }
 
         public static void Enable(string unit) {
-            Terminal.Execute("systemctl enable " + unit);
+            Bash.Execute("systemctl enable " + unit);
         }
 
         public static void Disable(string unit) {

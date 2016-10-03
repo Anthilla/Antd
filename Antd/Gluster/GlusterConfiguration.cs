@@ -45,7 +45,7 @@ namespace Antd.Gluster {
 
         public static void Start() {
             Console.WriteLine($"systemctl start {ServiceName}");
-            Terminal.Execute($"systemctl start {ServiceName}");
+            Bash.Execute($"systemctl start {ServiceName}");
         }
 
         public static void Launch() {
@@ -57,7 +57,7 @@ namespace Antd.Gluster {
 
             foreach (var node in config.Nodes) {
                 Console.WriteLine($"glusterfs: setup {node} node");
-                Console.WriteLine(Terminal.Execute($"gluster peer probe {node}"));
+                Console.WriteLine(Bash.Execute($"gluster peer probe {node}"));
             }
 
             var numberOfNodes = config.Nodes.Count.ToString();
@@ -89,16 +89,16 @@ namespace Antd.Gluster {
         public static void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
             var volString = string.Join(" ", volumesList);
             Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
-            Terminal.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
+            Bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
         }
 
         public static void VolumeStart(string volumeName) {
-            Terminal.Execute($"gluster volume start {volumeName}");
+            Bash.Execute($"gluster volume start {volumeName}");
         }
 
         public static void VolumeMount(string node, string volumeName, string mountPoint) {
             if (Mounts.IsAlreadyMounted(mountPoint) == false) {
-                Terminal.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
+                Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
             }
         }
 

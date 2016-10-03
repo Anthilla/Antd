@@ -157,7 +157,7 @@ namespace antdsh {
             }
         }
 
-        private static bool IsAntdRunning() => Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
+        private static bool IsAntdRunning() => Bash.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
 
         private static int _startCount;
         private static void StartFunc(string[] args) {
@@ -218,18 +218,18 @@ namespace antdsh {
                     var procMounts = File.ReadAllLines("/proc/mounts");
                     if (procMounts.Any(_ => _.Contains("/antd")))
                         return;
-                    Terminal.Execute($"umount {Parameter.AntdCfg}");
-                    Terminal.Execute($"umount {Parameter.AntdCfgDatabase}");
-                    Terminal.Execute("umount /framework/antd");
+                    Bash.Execute($"umount {Parameter.AntdCfg}");
+                    Bash.Execute($"umount {Parameter.AntdCfgDatabase}");
+                    Bash.Execute("umount /framework/antd");
                 }
             }
         }
 
         private static void StatusFunc(string[] args) {
-            var res = Terminal.Execute("ps -aef | grep Antd.exe | grep -v grep");
+            var res = Bash.Execute("ps -aef | grep Antd.exe | grep -v grep");
             Console.WriteLine(res.Length > 0 ? "Antd is running." : "Antd is NOT running");
             Console.WriteLine("");
-            Console.WriteLine(Terminal.Execute("systemctl status "));
+            Console.WriteLine(Bash.Execute("systemctl status "));
 
         }
 

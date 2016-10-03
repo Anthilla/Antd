@@ -67,7 +67,7 @@ namespace Antd.Info {
         }
 
         public static UptimeModel GetUptime() {
-            var result = Terminal.Execute("uptime");
+            var result = Bash.Execute("uptime");
             var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);
             var model = new UptimeModel {
                 Uptime = values[0],
@@ -93,8 +93,8 @@ namespace Antd.Info {
             foreach (var file in actives) {
                 var alias = file.SplitToList("-").Last();
                 var dir = file.SplitToList("active-").Last();
-                var active = Terminal.Execute($"file {file}").SplitToList("symbolic link to ").Last();
-                var recovery = Terminal.Execute($"file {file.Replace("active", "recovery")}").SplitToList(":").Last();
+                var active = Bash.Execute($"file {file}").SplitToList("symbolic link to ").Last();
+                var recovery = Bash.Execute($"file {file.Replace("active", "recovery")}").SplitToList(":").Last();
                 var hash = File.Exists(dir + "/" + active) ? GetFileHash(dir + "/" + active) : "";
                 var running = losetup.Any(_ => _.Hash == hash && _.Backfile == dir + "/" + active) ? "1" : "0";
                 var comp = new SystemComponentModel {

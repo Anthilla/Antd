@@ -35,7 +35,7 @@ using antdlib.common;
 namespace antdlib {
     public class RepositoryCheck {
         public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bootExtData = Terminal.Execute("blkid | grep BootExt");
+            var bootExtData = Bash.Execute("blkid | grep BootExt");
             if (bootExtData.Length <= 0) return;
             var bootExtDevice = new Regex(".*:").Matches(bootExtData)[0].Value.Replace(":", "").Trim();
             var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(bootExtData)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
@@ -45,7 +45,7 @@ namespace antdlib {
             if (!string.IsNullOrEmpty(line)) {
                 if (line.Contains("ro") && !line.Contains("rw")) {
                     ConsoleLogger.Log($"is RO -> remounting");
-                    Terminal.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
+                    Bash.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom");
                 }
                 else if (line.Contains("rw") && !line.Contains("ro")) {
                     ConsoleLogger.Log($"is RW -> ok!");
