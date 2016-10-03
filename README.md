@@ -1,13 +1,6 @@
 Antd
 ====
 
-[![Join the chat at https://gitter.im/Anthilla/Antd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Anthilla/Antd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-<a href="https://scan.coverity.com/projects/antd">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/6211/badge.svg"/>
-</a>
-
 About
 -----
  
@@ -19,8 +12,9 @@ Antd is:
 - implemented as web service with REST API service and rendered web interface
 - released under the BSD 3 license
 - self hosted, no external webserver is needed
+- IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB
 
-Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, and dbus.
+Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, integration with systemd become deeper and deeper.
 
 ### Project Goals
 - Complete administration capabilities
@@ -43,36 +37,31 @@ Antd is a single daemon to maintain the entire Linux/Unix appliance system (proc
 
 ### Dependencies:
 - [C5](https://github.com/sestoft/C5/)
-- [DensoDb](https://github.com/ppossanzini/DensoDB) v3
+- [RaptorDB](https://raptordb.codeplex.com/)
 - [jQuery](https://github.com/jquery/jquery)
 - [Owin](https://github.com/owin/owin)
 - [Nancy](https://github.com/NancyFx/Nancy)
 - [Newtonsoft Json](https://github.com/JamesNK/Newtonsoft.Json)
 - [Metro UI](https://github.com/olton/Metro-UI-CSS) 
 
-Getting Started
+Getting Started (Development)
 ---------------
 
-<b>Windows</b>
+On <b>Windows</b>, for Development
 
 1. Download the source files from GitHub, or use `git clone https://github.com/Anthilla/Antd.git`
 
 2. Import nuget packages necessary to build with "Restore nuget packages" available both in Mono Develop + nuget and Visual Studio.
-3. Run it!
- 
-<b>Gentoo Linux</b>
 
-1. Add the dotnet repository (`layman -a dotnet`)
-2. `emerge antd`
-3. Run it! (`antd` or `sudo antd` for root permissions)
+On <b>Linux</b> for Development 
 
-<b>Other Linux</b>
+1. Install mono (4.x or higher)
+2. open from an IDE
 
-1. Install mono (3.2.1 or higher)
-2. Build it with xbuild or from an IDE
-3. Run it!
- 
 The Antd API uses JSON over HTTP.
+
+<b>Binaries</b>: Refer to AnthillaOS for Binary version.
+
 
 How to Contribute
 -----------------
@@ -140,6 +129,4 @@ Specific components of Antd use code derivative from software distributed under 
 > ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 > (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 > SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->
->
 >
