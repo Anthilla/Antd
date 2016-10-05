@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindConfigModel.cs" />
+    <Compile Include="AuthorizedKeysModel.cs" />
     <Compile Include="BootOsParametersLoadModel.cs" />
     <Compile Include="ApplicationModel.cs" />
     <Compile Include="BootServiceLoadModel.cs" />
@@ -58,7 +59,6 @@
     <Compile Include="GlusterModel.cs" />
     <Compile Include="DhcpConfigModel.cs" />
     <Compile Include="SambaConfigModel.cs" />
-    <Compile Include="SshKeyModel.cs" />
     <Compile Include="Default\Commands.cs" />
     <Compile Include="Default\CommandValues.cs" />
     <Compile Include="TimerModel.cs" />

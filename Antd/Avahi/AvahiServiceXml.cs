@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace Antd.Avahi {
     [XmlRoot(ElementName = "name")]
@@ -23,5 +24,22 @@ namespace Antd.Avahi {
         public Name Name { get; set; }
         [XmlElement(ElementName = "service")]
         public Service Service { get; set; }
+    }
+
+    public class AvahiCustomXml {
+        public static IEnumerable<string> Generate(string port) {
+            return new List<string> {
+                "<?xml version=\"1.0\" standalone='no'?>" ,
+                "<!DOCTYPE service-group SYSTEM \"avahi-service.dtd\"> " ,
+                "<service-group> " ,
+                "<name replace-wildcards=\"yes\">antd on %h</name> " ,
+                "<service> " ,
+                "<type>_http._tcp</type> " ,
+                $"<port>{port}</port> " ,
+                "<txt-record>antd_service</txt-record> " ,
+                "</service> " ,
+                "</service-group >"
+            };
+        }
     }
 }

@@ -97,6 +97,9 @@ namespace antdlib.common {
         }
 
         public static string GetFileHash(string filePath) {
+            if (!File.Exists(filePath)) {
+                return string.Empty;
+            }
             using (var fileStreamToRead = File.OpenRead(filePath)) {
                 return BitConverter.ToString(new SHA1Managed().ComputeHash(fileStreamToRead)).Replace("-", string.Empty);
             }

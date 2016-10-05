@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ANTD - Authorized Keys </title>
+    <script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <br />
+    <form action="/page/ak" method="POST" enctype="multipart/form-data" style="width: 90%; border: 1px solid black; padding: 10px 30px; margin: auto;">
+        <label>Remote User</label>
+        <br />
+        <input name="RemoteUser" type="text" style="width: 90%;">
+        <br />
+        <br />
+        <label>User</label>
+        <br />
+        <input name="User" type="text" style="width: 90%;">
+        <br />
+        <br />
+        <label>Key</label>
+        <br />
+        <textarea name="Key" style="min-width: 90%; max-width: 90%;"></textarea>
+        <br />
+        <br />
+        <input type="submit" value="Submit" style="width: 200px;" />
+    </form>
+    <table style="width: 90%; border: 1px solid black; padding: 10px 30px; margin: auto; margin-top: -1px !important;">
+        <thead>
+            <tr>
+                <th style="width: 22%; border: 1px solid black;">
+                    Remote User
+                </th>
+                <th style="width: 25px;"> > </th>
+                <th style="width: 22%; border: 1px solid black;">Local User</th>
+                <th style="border: 1px solid black;">Key Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.Keys
+            <tr>
+                <td>@Current.RemoteUser</td>
+                <th> > </th>
+                <td>@Current.User</td>
+                <td>@Current.KeyValue</td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</body>
+</html>

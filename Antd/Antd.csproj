@@ -86,6 +86,7 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Avahi\AvahiBrowse.cs" />
     <Compile Include="Avahi\AvahiServiceXml.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />
     <Compile Include="Database\BindConfigRepository.cs" />
+    <Compile Include="Database\AuthorizedKeysRepository.cs" />
     <Compile Include="Database\BootOsParametersLoadRepository.cs" />
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
@@ -102,7 +104,6 @@
     <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\DhcpConfigRepository.cs" />
     <Compile Include="Database\SambaConfigRepository.cs" />
-    <Compile Include="Database\SshKeyRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\NetworkInterfaceRepository.cs" />
@@ -126,7 +127,9 @@
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
     <Compile Include="Info\MachineInfo.cs" />
+    <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
+    <Compile Include="Modules\DiscoveryModule.cs" />
     <Compile Include="Modules\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\OverlayModule.cs" />
@@ -210,6 +213,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-apps.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\page-ak.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\services\page-services-bind.html">

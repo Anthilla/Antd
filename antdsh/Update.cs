@@ -91,12 +91,12 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
-            UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntd.");
             UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
-            UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
             UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
             UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
-            UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
             RestartAntd();
             RestartAntdsh();
 
@@ -109,7 +109,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
-            UpdateUnits("antd", UnitsTargetApp, "AppAntd.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntd.");
             RestartAntd();
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -121,7 +121,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
-            UpdateUnits("antdsh", UnitsTargetApp, "AppAntdsh.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
             RestartAntdsh();
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -143,7 +143,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
-            UpdateUnits("kernel", UnitsTargetKpl, "kpl.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }

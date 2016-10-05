@@ -4,8 +4,8 @@ using RaptorDB;
 
 namespace antdlib.views {
     [Serializable]
-    public class SshKeyModel : EntityModel {
-        public SshKeyModel() {
+    public class AuthorizedKeysModel : EntityModel {
+        public AuthorizedKeysModel() {
             Id = System.Guid.NewGuid();
             Guid = System.Guid.NewGuid().ToString();
             Key = System.Guid.NewGuid();
@@ -14,22 +14,19 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
-        public SshKeyModel(SshKeySchema sourceModel) {
+        public AuthorizedKeysModel(AuthorizedKeysSchema sourceModel) {
             Id = System.Guid.Parse(sourceModel.Id);
             Guid = sourceModel.Guid;
             User = sourceModel.User;
-            PublicUser = sourceModel.PublicUser;
-            Type = sourceModel.Type;
-            Value = sourceModel.Value;
+            KeyValue = sourceModel.KeyValue;
         }
+        public string RemoteUser { get; set; }
         public string User { get; set; }
-        public string PublicUser { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public string KeyValue { get; set; }
     }
 
     #region [    View    ]
-    public class SshKeySchema : RDBSchema {
+    public class AuthorizedKeysSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -37,41 +34,39 @@ namespace antdlib.views {
         public string EntityCode { get; set; }
         public string Tags { get; set; }
         //---
+        public string RemoteUser { get; set; }
         public string User { get; set; }
-        public string PublicUser { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public string KeyValue { get; set; }
     }
 
     [RegisterView]
-    public class SshKeyView : View<SshKeyModel> {
-        public SshKeyView() {
-            Name = "SshKey";
-            Description = "Primary view for SshKeyModel";
+    public class AuthorizedKeysView : View<AuthorizedKeysModel> {
+        public AuthorizedKeysView() {
+            Name = "AuthorizedKeys";
+            Description = "Primary view for AuthorizedKeysModel";
             isPrimaryList = true;
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 8;
-            Schema = typeof(SshKeySchema);
+            Version = 2;
+            Schema = typeof(AuthorizedKeysSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
                 var k = doc.Key.ToKey();
                 var v = doc.Vector.ToVector();
-                var decryptedDoc = Encryption.DbDecrypt<SshKeyModel>(doc.Dump, k, v);
+                var decryptedDoc = Encryption.DbDecrypt<AuthorizedKeysModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
-                object[] schemaSshKeys = {
+                object[] schemaAuthorizedKeyss = {
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,
                     doc.EntityCode,
                     doc.Tags.JoinToString(),
+                    doc.RemoteUser,
                     doc.User,
-                    doc.PublicUser,
-                    doc.Type,
-                    doc.Value
+                    doc.KeyValue
                 };
-                api.Emit(docid, schemaSshKeys);
+                api.Emit(docid, schemaAuthorizedKeyss);
             };
         }
     }

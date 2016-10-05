@@ -69,7 +69,7 @@ namespace Antd.Apps {
                 var name = appInfo.Values.FirstOrDefault(_ => _.Key == "name").Value;
                 var repoPath = appInfo.Repository;
                 var timestamp = DateTime.Now.ToString("yyyyMMdd");
-                var squashName = $"DIR_framework_{name.ToLower().Replace("/", "-")}-{timestamp}.squashfs.xz";
+                var squashName = $"DIR_framework_{name.ToLower().Replace("/", "-")}-aosApps-{timestamp}-std-x86_64.squashfs.xz";
                 ConsoleLogger.Log($"name => {name}");
                 ConsoleLogger.Log($"repoPath => {repoPath}");
                 ConsoleLogger.Log($"timestamp => {timestamp}");

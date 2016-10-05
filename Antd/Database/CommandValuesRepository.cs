@@ -45,7 +45,7 @@ namespace Antd.Database {
             else {
                 var existingFileHash = FileSystem.GetFileHash(path);
                 var storedFileHash = FileSystem.GetFileHash(resourceFile);
-                if (existingFileHash != storedFileHash) {
+                if (File.Exists(resourceFile) && existingFileHash != storedFileHash) {
                     File.Copy(resourceFile, path, true);
                 }
             }

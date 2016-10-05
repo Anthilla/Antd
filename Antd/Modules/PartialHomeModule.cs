@@ -39,8 +39,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
 
-        private readonly SshKeyRepository _sshKeyRepository = new SshKeyRepository();
-
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
@@ -61,8 +59,8 @@ namespace Antd.Modules {
 
             Get["/part/ssh"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var authorizedKeys = _sshKeyRepository.GetAll();
-                viewModel.Keys = authorizedKeys;
+                //var authorizedKeys = _sshKeyRepository.GetAll();
+                viewModel.Keys = null;
                 ConsoleLogger.Log("Home loading > ssh");
                 return View["_partial/part-ssh", viewModel];
             };

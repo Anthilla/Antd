@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -69,6 +70,7 @@ namespace Antd {
             Global.LocalOnlyWebStudio = false;
             Global.FlushStorageFileImmediately = true;
             database.RegisterView(new ApplicationView());
+            database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new BootModuleLoadView());
             database.RegisterView(new BootServiceLoadView());
             database.RegisterView(new BootOsParametersLoadView());
@@ -84,7 +86,6 @@ namespace Antd {
             database.RegisterView(new RsyncView());
             database.RegisterView(new UserClaimView());
             database.RegisterView(new UserView());
-            database.RegisterView(new SshKeyView());
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SambaConfigView());
             database.RegisterView(new DhcpConfigView());
@@ -193,23 +194,21 @@ namespace Antd {
         }
 
         public void Ssh() {
-            if (!Parameter.IsUnix)
+            if (!Parameter.IsUnix) {
                 return;
-            new SshKeyRepository().Import();
-            ConsoleLogger.Log("ssh keys imported");
-
-            Bash.Execute("mkdir -p /root/.ssh");
-            if (!File.Exists(Parameter.AuthKeys)) {
-                Bash.Execute($"touch {Parameter.AuthKeys}");
             }
-            var mntDir = Mounts.SetDirsPath(Parameter.EtcSsh);
-            if (!Directory.Exists(mntDir)) {
-                Bash.Execute($"cp -fR {Parameter.EtcSsh} {mntDir}");
-            }
-            if (Mounts.IsAlreadyMounted(Parameter.EtcSsh)) {
-                Bash.Execute("ssh-keygen -A");
-                Bash.Execute("systemctl restart sshd.service");
-                ConsoleLogger.Log("ssh config ready");
+            var storedKeyRepo = new AuthorizedKeysRepository();
+            var storedKeys = storedKeyRepo.GetAll();
+            foreach (var storedKey in storedKeys) {
+                var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
+                var authorizedKeysPath = $"{home}/authorized_keys";
+                if (!File.Exists(authorizedKeysPath)) {
+                    File.Create(authorizedKeysPath);
+                }
+                var line = $"{storedKey.KeyValue} {storedKey.RemoteUser}";
+                File.AppendAllLines(authorizedKeysPath, new List<string> { line });
+                Bash.Execute($"chmod 600 {authorizedKeysPath}");
+                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
         }
 
@@ -257,16 +256,19 @@ namespace Antd {
             var hostname = Bash.Execute("hostname");
             if (!string.IsNullOrEmpty(hostname)) {
                 const string avahiServicePath = "/etc/avahi/services/antd.service";
-                var avahi = new Servicegroup {
-                    Name = new Name { Replacewildcards = "yes", Text = hostname },
-                    Service = new Service { Type = "_http._tcp", Port = ApplicationSetting.HttpPort() }
-                };
+                var xml = AvahiCustomXml.Generate(ApplicationSetting.HttpPort());
                 if (File.Exists(avahiServicePath)) {
                     File.Delete(avahiServicePath);
                 }
-                var xs = new XmlSerializer(typeof(Servicegroup));
-                var tw = new StreamWriter(avahiServicePath);
-                xs.Serialize(tw, avahi);
+                File.WriteAllLines(avahiServicePath, xml);
+                Bash.Execute("chmod 755 /etc/avahi/services");
+                Bash.Execute($"chmod 644 {avahiServicePath}");
+                if (Systemctl.IsActive("avahi-daemon.service") == false) {
+                    Systemctl.Restart("avahi-daemon.service");
+                }
+                if (Systemctl.IsActive("avahi-daemon.socket") == false) {
+                    Systemctl.Restart("avahi-daemon.socket");
+                }
                 ConsoleLogger.Log("avahi ready");
             }
         }
