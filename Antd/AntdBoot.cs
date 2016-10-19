@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Helpers;
@@ -88,6 +87,7 @@ namespace Antd {
             database.RegisterView(new UserView());
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SambaConfigView());
+            database.RegisterView(new SyslogView());
             database.RegisterView(new DhcpConfigView());
             database.RegisterView(new BindConfigView());
             database.RegisterView(new NftView());
@@ -253,24 +253,17 @@ namespace Antd {
         public void InitAvahi() {
             if (!Parameter.IsUnix)
                 return;
-            var hostname = Bash.Execute("hostname");
-            if (!string.IsNullOrEmpty(hostname)) {
-                const string avahiServicePath = "/etc/avahi/services/antd.service";
-                var xml = AvahiCustomXml.Generate(ApplicationSetting.HttpPort());
-                if (File.Exists(avahiServicePath)) {
-                    File.Delete(avahiServicePath);
-                }
-                File.WriteAllLines(avahiServicePath, xml);
-                Bash.Execute("chmod 755 /etc/avahi/services");
-                Bash.Execute($"chmod 644 {avahiServicePath}");
-                if (Systemctl.IsActive("avahi-daemon.service") == false) {
-                    Systemctl.Restart("avahi-daemon.service");
-                }
-                if (Systemctl.IsActive("avahi-daemon.socket") == false) {
-                    Systemctl.Restart("avahi-daemon.socket");
-                }
-                ConsoleLogger.Log("avahi ready");
+            const string avahiServicePath = "/etc/avahi/services/antd.service";
+            var xml = AvahiCustomXml.Generate(ApplicationSetting.HttpPort());
+            if (File.Exists(avahiServicePath)) {
+                File.Delete(avahiServicePath);
             }
+            File.WriteAllLines(avahiServicePath, xml);
+            Bash.Execute("chmod 755 /etc/avahi/services");
+            Bash.Execute($"chmod 644 {avahiServicePath}");
+            Systemctl.Restart("avahi-daemon.service");
+            Systemctl.Restart("avahi-daemon.socket");
+            ConsoleLogger.Log("avahi ready");
         }
 
         public void ImportPools() {

@@ -94,12 +94,14 @@
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />
+    <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\BindConfigRepository.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
     <Compile Include="Database\BootOsParametersLoadRepository.cs" />
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
+    <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\DhcpConfigRepository.cs" />
@@ -168,8 +170,7 @@
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Rmmod.cs" />
-    <Compile Include="Ssh.cs" />
-    <Compile Include="Ssh\Test.cs" />
+    <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
@@ -627,6 +628,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\values.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\.syslog-ng.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Svcs\Samba\json-schema1.json" />

@@ -51,6 +51,12 @@ namespace Antd.Modules {
         public HomeModule() {
             this.RequiresAuthentication();
 
+            After += ctx => {
+                if (ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                }
+            };
+
             Get["/"] = x => {
                 dynamic viewModel = new ExpandoObject();
 
@@ -60,13 +66,12 @@ namespace Antd.Modules {
                     "Time",
                     "NS",
                     "Net",
-                    "Firewall",
-                    "DnsServer",
+                    "FW",
                     "Proxy",
                     "Acl",
                     "Cron",
                     "Storage",
-                    "Gluster",
+                    "Sync",
                     "Overlay",
                     "VM",
                     "Mount",
@@ -165,13 +170,6 @@ namespace Antd.Modules {
 
             Post["/network/import"] = x => {
                 new NetworkInterfaceRepository().Import();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/ssh/savekey"] = x => {
-                string user = Request.Form.User;
-                string[] values = Request.Form.Values;
-                Ssh.SaveKey(user, values);
                 return HttpStatusCode.OK;
             };
         }

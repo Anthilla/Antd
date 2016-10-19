@@ -28,12 +28,16 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using antdlib;
+using antdlib.common;
 using Antd.Avahi;
 using Nancy;
+using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {
     public class DiscoveryModule : CoreModule {
@@ -53,10 +57,65 @@ namespace Antd.Modules {
             };
 
             Get["/disc/lookaround"] = x => {
+                ConsoleLogger.Log("hs > 1139");
                 var ava = new AvahiBrowse();
                 ava.DiscoverService("antd");
                 var a = ava.Locals;
                 return Response.AsJson(a);
+            };
+
+            Get["/disc/handshake"] = x => {
+                ConsoleLogger.Log("hs > 1139");
+                const string pathToPrivateKey = "/root/.ssh/antd-root-key";
+                const string pathToPublicKey = "/root/.ssh/antd-root-key.pub";
+                if (!File.Exists(pathToPublicKey)) {
+                    ConsoleLogger.Log("hs > create keys");
+                    var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                    ConsoleLogger.Log(k);
+                }
+                var ava = new AvahiBrowse();
+                ava.DiscoverService("antd");
+                var hosts = ava.Locals;
+
+                var key = "";
+
+                try {
+                    key = Bash.Execute($"cat {pathToPublicKey}");
+                    ConsoleLogger.Log($"hs > {key}");
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Log($"hs exc1 > {ex}");
+                    return HttpStatusCode.ImATeapot;
+                }
+
+                try {
+                    var key2 = File.ReadAllText(pathToPublicKey);
+                    ConsoleLogger.Log($"hs > {key2}");
+                }
+                catch (Exception ex) {
+                    ConsoleLogger.Log($"hs exc2 > {ex}");
+                    return HttpStatusCode.ImATeapot;
+                }
+                //var key = Bash.Execute($"cat {pathToPublicKey}");
+                //ConsoleLogger.Log($"hs > {key}");
+
+                //var key2 = File.ReadAllText(pathToPublicKey);
+                //ConsoleLogger.Log($"hs > {key2}");
+
+                if (string.IsNullOrEmpty(key)) {
+                    ConsoleLogger.Log("hs > no key to share");
+                    return HttpStatusCode.ImATeapot;
+                }
+
+                foreach (var host in hosts) {
+                    ConsoleLogger.Log($"hs > send request to http://{host}/ak/handshake");
+                    var dict = new Dictionary<string, string> {
+                            {"ApplePie", key}
+                        };
+                    var r = new ApiConsumer().Post($"http://{host}/ak/handshake", dict);
+                    ConsoleLogger.Log($"hs > request result {r}");
+                }
+                return HttpStatusCode.OK;
             };
         }
     }

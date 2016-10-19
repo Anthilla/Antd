@@ -79,6 +79,41 @@ namespace Antd.Modules {
                 return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
             };
 
+            #region for remote handshaking with avahi discovery
+            Post["/ak/handshake"] = x => {
+                ConsoleLogger.Log("hs > request");
+                string apple = Request.Form.ApplePie;
+                if (string.IsNullOrEmpty(apple)) {
+                    ConsoleLogger.Log("hs > no key");
+                    return HttpStatusCode.InternalServerError;
+                }
+
+                var info = apple.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if (info.Length < 2) {
+                    ConsoleLogger.Log("hs > no info");
+                    return HttpStatusCode.InternalServerError;
+                }
+
+                var key = info[0];
+                var remoteUser = info[1];
+                const string user = "root";
+                var r = _authorizedKeysRepository.Create2(remoteUser, user, key);
+                ConsoleLogger.Log("hs > keys registered");
+
+                const string authorizedKeysPath = "/root/.ssh/authorized_keys";
+                if (!File.Exists(authorizedKeysPath)) {
+                    File.Create(authorizedKeysPath);
+                }
+                var line = $"{key} {remoteUser}";
+                File.AppendAllLines(authorizedKeysPath, new List<string> { line });
+                Bash.Execute($"chmod 600 {authorizedKeysPath}");
+                Bash.Execute($"chown {user}:{user} {authorizedKeysPath}");
+                ConsoleLogger.Log("hs > keys inserted");
+
+                return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+            };
+            #endregion for remote handshaking with avahi discovery
+
             Get["/ak/introduce"] = x => {
                 var remoteHost = Request.Query.Host;
                 var remoteUser = $"{Environment.UserName}@{Environment.MachineName}";
