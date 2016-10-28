@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using antdlib.common;
+using antdlib.Systemd;
 using antdlib.views;
 using Antd.Database;
 
@@ -8,16 +9,19 @@ namespace Antd.Configuration {
     public class SyslogConfiguration {
 
         private const string ConfigurationPath = "/etc/syslog-ng/syslog-ng.conf";
+        private const string ServiceName = "syslog-ng.service";
         private static readonly SyslogRepository SyslogRepository = new SyslogRepository();
 
-        public static void Set() {
+        public static bool Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             var config = SyslogRepository.Get();
             if (config == null) {
-                return;
+                return false;
             }
             var model = new SyslogModel(config);
             WriteFile(model);
+            RestartService();
+            return true;
         }
 
         private static void WriteFile(SyslogModel model) {
@@ -100,6 +104,13 @@ namespace Antd.Configuration {
             headLines.AddRange(logLines);
 
             File.WriteAllLines(ConfigurationPath, headLines);
+        }
+
+        public static void RestartService() {
+            if (Systemctl.IsEnabled(ServiceName) == false) {
+                Systemctl.Enable(ServiceName);
+            }
+            Systemctl.Restart(ServiceName);
         }
     }
 }

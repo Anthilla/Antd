@@ -29,52 +29,43 @@
 //------------------------------------------------------------------------------------->
 @Section['PageBar']
 <style type="text/css">
-    #Config-TB {
-        border-bottom: 10px solid #A7BD39;
-        height: 80px !important;
-    }
+	#Config-TB {
+		border-bottom: 10px solid #A7BD39;
+		height: 80px !important;
+	}
 
-    div.row {
-        margin-top: 20px !important;
-    }
+	div.row {
+		margin-top: 20px !important;
+	}
 </style>
-<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
-    <nav class="navigation-bar-content">
-        @Each.AntdContext
-        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
-            @Current
-        </a>
-        @EndEach
-
-        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px; cursor: pointer;">
-            <i class="icon-arrow-up"></i>
-        </a>
-    </nav>
-</nav>
 @EndSection
 
 @Section['MainContent']
-@Partial['antd/page-antd-info'];
-@Partial['antd/page-antd-host'];
-@Partial['antd/page-antd-dns-client'];
-@Partial['antd/page-antd-dns-server'];
-@Partial['antd/page-antd-network'];
-@Partial['antd/page-antd-firewall'];
-@Partial['antd/page-antd-dns-server'];
-@Partial['antd/page-antd-proxy'];
-@Partial['antd/page-antd-acl'];
-<div data-render="part-scheduler"></div>
-<div data-render="part-storage"></div>
-@Partial['antd/page-antd-gluster'];
-@Partial['antd/page-antd-overlay'];
-@Partial['antd/page-antd-vm'];
-@Partial['antd/page-antd-mount'];
-@Partial['antd/page-antd-users'];
-<div data-render="part-ssh"></div>
-<div data-render="part-update"></div>
+<nav class="vertical-menu">
+    <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
+        @Each.AntdContext
+		<li><a href="#" data-role="load-page" data-page="@Current" class="fg-hover-white upcase">@Current</a></li>
+        @EndEach
+    </ul>
+</nav>
+<div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">
+</div>
 @EndSection
 
 @Section['Scripts']
+<script data-context="new-pageload" type="text/javascript">
+    $('[data-role="load-page"]').click(function () {
+        var page = $(this).attr('data-page');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/part/load/' + page,
+            type: 'GET',
+            success: function (data) {
+                $('[data-role="page-container"]').html(data);
+            }
+        });
+    });
+</script>
 <script type="text/javascript">
     $('[data-role="ToggleNextRow"]').click(function () {
         var id = $(this).attr('data-id');

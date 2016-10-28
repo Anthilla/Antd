@@ -9,12 +9,12 @@ namespace Antd.Gluster {
         /// Lista dei server/nodi
         /// es: srv01, srv02, srv03...
         /// </summary>
-        public List<string> Nodes { get; set; } 
+        public List<string> Nodes { get; set; }
 
         /// <summary>
         /// Lista delle informazioni dei volumi da avviare/configurare sulla macchina
         /// </summary>
-        public List<GfsVolume>  Volumes { get; set; }
+        public List<GfsVolume> Volumes { get; set; }
     }
 
     public class GfsVolume {

@@ -100,7 +100,6 @@
     <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Install\InstallCheck.cs" />
     <Compile Include="Install\InstallOperativeSystem.cs" />
-    <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Models\FreeModel.cs" />
     <Compile Include="Models\LosetupModel.cs" />
     <Compile Include="Models\SystemComponentModel.cs" />

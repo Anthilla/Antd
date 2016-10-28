@@ -41,6 +41,11 @@ namespace antdlib.common {
             Bash.Execute($"dos2unix {fileToConvert}");
         }
 
+        public static bool ToNnBoolean(this string str) {
+            if (string.IsNullOrEmpty(str)) return false;
+            return Convert.ToBoolean(str.ToLower());
+        }
+
         public static bool? ToBoolean(this string str) {
             if (string.IsNullOrEmpty(str)) return null;
             return Convert.ToBoolean(str.ToLower());

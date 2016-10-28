@@ -49,12 +49,19 @@ namespace Antd {
         protected override void ConfigureConventions(NancyConventions conv) {
             base.ConfigureConventions(conv);
             conv.StaticContentsConventions.Clear();
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Content", @"/Content/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Scripts", @"/Scripts/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("novnc", @"/novnc/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Fonts", @"/Fonts/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo", @"/Resources/", TimeSpan.FromDays(365)));
-            conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo/ssh", @"/Resources/ssh/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Content", @"/Content/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Scripts", @"/Scripts/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("novnc", @"/novnc/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("Fonts", @"/Fonts/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo", @"/Resources/", TimeSpan.FromDays(365)));
+            //conv.StaticContentsConventions.Add(RequestHandling.AddDirectoryWithExpiresHeader("repo/ssh", @"/Resources/ssh/", TimeSpan.FromDays(365)));
+
+            conv.StaticContentsConventions.AddDirectory("Content", @"/Content/");
+            conv.StaticContentsConventions.AddDirectory("Scripts", @"/Scripts/");
+            conv.StaticContentsConventions.AddDirectory("novnc", @"/novnc/");
+            conv.StaticContentsConventions.AddDirectory("Fonts", @"/Fonts/");
+            conv.StaticContentsConventions.AddDirectory("repo", @"/Resources/");
+            conv.StaticContentsConventions.AddDirectory("repo/ssh", @"/Resources/ssh/");
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines) {

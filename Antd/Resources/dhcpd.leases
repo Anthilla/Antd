@@ -1,224 +1,1560 @@
 # The format of this file is documented in the dhcpd.leases(5) manual page.
-# This lease file was written by isc-dhcp-4.3.2 Gentoo-r0
+# This lease file was written by isc-dhcp-4.3.4 Gentoo-r0
 
-lease 10.99.3.101 {
-  starts 2 2015/08/11 04:23:51;
-  ends 2 2015/08/11 05:08:50;
-  tstp 2 2015/08/11 05:08:50;
-  cltt 2 2015/08/11 04:23:51;
+# authoring-byte-order entry is generated, DO NOT DELETE
+authoring-byte-order little-endian;
+
+lease 10.11.33.40 {
+  starts 2 2016/10/18 08:28:39;
+  ends 2 2016/10/18 10:28:39;
+  tstp 2 2016/10/18 10:28:39;
+  cltt 2 2016/10/18 08:28:39;
   binding state free;
-  hardware ethernet 52:54:00:58:bd:5d;
-  uid "\377\036r0)\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+  hardware ethernet 80:2a:a8:90:15:f4;
+  uid "\001\200*\250\220\025\364";
+  set vendor-class-identifier = "ubnt";
 }
-lease 10.99.3.102 {
-  starts 2 2015/08/11 04:23:53;
-  ends 2 2015/08/11 05:08:51;
-  tstp 2 2015/08/11 05:08:51;
-  cltt 2 2015/08/11 04:23:53;
+lease 10.11.33.13 {
+  starts 5 2016/10/21 09:50:18;
+  ends 5 2016/10/21 11:50:18;
+  cltt 5 2016/10/21 09:50:18;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:19:33;
+  uid "\001\200*\250\220\0313";
+  set ddns-rev-name = "13.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31c3053371b8996a13c3f5d3ba66644c28";
+  set ddns-fwd-name = "NwZ2F1H3p35.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F1H3p35";
+}
+lease 10.11.33.39 {
+  starts 5 2016/10/21 09:50:18;
+  ends 5 2016/10/21 11:50:18;
+  cltt 5 2016/10/21 09:50:18;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:84;
+  uid "\001\200*\250\220\027\204";
+  set vendor-class-identifier = "ubnt";
+}
+lease 10.11.33.26 {
+  starts 5 2016/10/21 09:56:53;
+  ends 5 2016/10/21 11:56:53;
+  cltt 5 2016/10/21 09:56:53;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:54;
+  uid "\001\200*\250\220\027T";
+  set ddns-rev-name = "26.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31d7cc039d1137fa801fec72fd67d2203a";
+  set ddns-fwd-name = "NwZ1F3H2p13.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F3H2p13";
+}
+lease 10.11.33.32 {
+  starts 5 2016/10/21 09:57:15;
+  ends 5 2016/10/21 11:57:15;
+  cltt 5 2016/10/21 09:57:15;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:9e;
+  uid "\001\200*\250\220\026\236";
+  set ddns-rev-name = "32.33.11.10.in-addr.arpa.";
+  set ddns-txt = "314164af9482855b31e75c5e2159619362";
+  set ddns-fwd-name = "NwZ2F0H0p24.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F0H0p24";
+}
+lease 10.11.33.38 {
+  starts 5 2016/10/21 09:57:50;
+  ends 5 2016/10/21 11:57:50;
+  cltt 5 2016/10/21 09:57:50;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:20;
+  uid "\001\200*\250\220\027 ";
+  set ddns-rev-name = "38.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31148a374ebbb78ba73fe7a8b2fbd69b47";
+  set ddns-fwd-name = "NwZ0F1H4pXXTec.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H4pXXTec";
+}
+lease 10.11.33.33 {
+  starts 5 2016/10/21 10:07:28;
+  ends 5 2016/10/21 12:07:28;
+  cltt 5 2016/10/21 10:07:28;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:b9;
+  uid "\001\200*\250\220\026\271";
+  set ddns-rev-name = "33.33.11.10.in-addr.arpa.";
+  set ddns-txt = "311150723d3f42373539ead2d15e517089";
+  set ddns-fwd-name = "NwZ2F3H1p26.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F3H1p26";
+}
+lease 10.11.33.21 {
+  starts 5 2016/10/21 10:13:41;
+  ends 5 2016/10/21 12:13:41;
+  cltt 5 2016/10/21 10:13:41;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:2b;
+  uid "\001\200*\250\220\026+";
+  set ddns-rev-name = "21.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31687cd8e39ce210fde0b54956fb39fee7";
+  set ddns-fwd-name = "NwZ0F0H4p45Atrio.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F0H4p45Atrio";
+}
+lease 10.11.33.16 {
+  starts 5 2016/10/21 10:13:42;
+  ends 5 2016/10/21 12:13:42;
+  cltt 5 2016/10/21 10:13:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:8d;
+  uid "\001\200*\250\220\027\215";
+  set ddns-rev-name = "16.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31494d55202ffc1f35341e89757ffe4855";
+  set ddns-fwd-name = "NwZ2F2H2p31.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H2p31";
+}
+lease 10.11.33.17 {
+  starts 5 2016/10/21 10:13:42;
+  ends 5 2016/10/21 12:13:42;
+  cltt 5 2016/10/21 10:13:42;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:5f;
+  uid "\001\200*\250\220\026_";
+  set ddns-rev-name = "17.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31eb25bcd8ba41bd9c47812bc1db5531ae";
+  set ddns-fwd-name = "NwZ2F2H1p30.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H1p30";
+}
+lease 10.11.33.14 {
+  starts 5 2016/10/21 10:13:44;
+  ends 5 2016/10/21 12:13:44;
+  cltt 5 2016/10/21 10:13:44;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:5e;
+  uid "\001\200*\250\220\026^";
+  set ddns-rev-name = "14.33.11.10.in-addr.arpa.";
+  set ddns-txt = "313c44713eb677ea1d7853e88a50b27c02";
+  set ddns-fwd-name = "NwZ2F2H3p32.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H3p32";
+}
+lease 10.11.33.25 {
+  starts 5 2016/10/21 10:31:28;
+  ends 5 2016/10/21 12:31:28;
+  cltt 5 2016/10/21 10:31:28;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:3e;
+  uid "\001\200*\250\220\027>";
+  set ddns-rev-name = "25.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31d7e26064a6ac1b6221c9fca40d4e2303";
+  set ddns-fwd-name = "NwZ1F3H1p12.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F3H1p12";
+}
+lease 10.11.33.36 {
+  starts 5 2016/10/21 10:32:20;
+  ends 5 2016/10/21 12:32:20;
+  cltt 5 2016/10/21 10:32:20;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:1a:a6;
+  uid "\001\200*\250\220\032\246";
+  set ddns-rev-name = "36.33.11.10.in-addr.arpa.";
+  set ddns-txt = "312adbebab849519a6ad33222505650d6d";
+  set ddns-fwd-name = "NwZ2F0H2p38.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F0H2p38";
+}
+lease 10.11.33.27 {
+  starts 5 2016/10/21 10:42:52;
+  ends 5 2016/10/21 12:42:52;
+  cltt 5 2016/10/21 10:42:52;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:19:15;
+  uid "\001\200*\250\220\031\025";
+  set ddns-rev-name = "27.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31fea698beaf2b2fccce5b510368219165";
+  set ddns-fwd-name = "NwZ1F2H2p16.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F2H2p16";
+}
+lease 10.11.33.34 {
+  starts 5 2016/10/21 10:43:19;
+  ends 5 2016/10/21 12:43:19;
+  cltt 5 2016/10/21 10:43:19;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:c7;
+  uid "\001\200*\250\220\026\307";
+  set ddns-rev-name = "34.33.11.10.in-addr.arpa.";
+  set ddns-txt = "3161533dfbc3de3b83a55d24a6b07ff69a";
+  set ddns-fwd-name = "NwZxxFxpx5.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZxxFxpx5";
+}
+lease 10.11.33.29 {
+  starts 5 2016/10/21 10:46:34;
+  ends 5 2016/10/21 12:46:34;
+  cltt 5 2016/10/21 10:46:34;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:ab;
+  uid "\001\200*\250\220\026\253";
+  set ddns-rev-name = "29.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31639e68168963adbbac228ffbbef05fdd";
+  set ddns-fwd-name = "NwZ1F1H2p17.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F1H2p17";
+}
+lease 10.11.33.20 {
+  starts 5 2016/10/21 10:46:37;
+  ends 5 2016/10/21 12:46:37;
+  cltt 5 2016/10/21 10:46:37;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:90;
+  uid "\001\200*\250\220\027\220";
+  set ddns-rev-name = "20.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31597c41300e2a79cf3d6778b282bfa9d2";
+  set ddns-fwd-name = "NwZ0F1H4pTec.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H4pTec";
+}
+lease 10.11.33.12 {
+  starts 5 2016/10/21 10:47:32;
+  ends 5 2016/10/21 12:47:32;
+  cltt 5 2016/10/21 10:47:32;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:39;
+  uid "\001\200*\250\220\0279";
+  set ddns-rev-name = "12.33.11.10.in-addr.arpa.";
+  set ddns-txt = "3107de65f79b399eb3e6bf57dbdfa636e2";
+  set ddns-fwd-name = "NwZ0F1H3p27Caf.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H3p27Caf";
+}
+lease 10.11.33.30 {
+  starts 5 2016/10/21 10:54:00;
+  ends 5 2016/10/21 12:54:00;
+  cltt 5 2016/10/21 10:54:00;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:b3;
+  uid "\001\200*\250\220\027\263";
+  set ddns-rev-name = "30.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31746f84ac6bacf21ed9fc47fbdcd29e95";
+  set ddns-fwd-name = "NwZ2F3H3p28.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F3H3p28";
+}
+lease 10.11.33.35 {
+  starts 5 2016/10/21 10:56:05;
+  ends 5 2016/10/21 12:56:05;
+  cltt 5 2016/10/21 10:56:05;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:fd;
+  uid "\001\200*\250\220\026\375";
+  set ddns-rev-name = "35.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31033f03f75b01ac9dfc04c626602132a0";
+  set ddns-fwd-name = "NwZ0F0H4p50Damb.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F0H4p50Damb";
+}
+lease 10.11.33.23 {
+  starts 5 2016/10/21 10:59:50;
+  ends 5 2016/10/21 12:59:50;
+  cltt 5 2016/10/21 10:59:50;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:b2;
+  uid "\001\200*\250\220\027\262";
+  set ddns-rev-name = "23.33.11.10.in-addr.arpa.";
+  set ddns-txt = "3171e48a46deafad0a8814ade4aad461d4";
+  set ddns-fwd-name = "NwZ1F0H2p21.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F0H2p21";
+}
+lease 10.11.33.15 {
+  starts 5 2016/10/21 11:11:28;
+  ends 5 2016/10/21 13:11:28;
+  cltt 5 2016/10/21 11:11:28;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:29;
+  uid "\001\200*\250\220\026)";
+  set ddns-rev-name = "15.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31ff90d4f012211eda8d9ab39638a7439d";
+  set ddns-fwd-name = "NwZ2F1H2p34.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F1H2p34";
+}
+lease 10.11.33.31 {
+  starts 5 2016/10/21 11:12:36;
+  ends 5 2016/10/21 13:12:36;
+  cltt 5 2016/10/21 11:12:36;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:11;
+  uid "\001\200*\250\220\026\021";
+  set ddns-rev-name = "31.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31c448266b30988286c9f6af3f54b1b3c2";
+  set ddns-fwd-name = "NwZ2F3H2p27.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F3H2p27";
+}
+lease 10.11.33.37 {
+  starts 5 2016/10/21 11:12:54;
+  ends 5 2016/10/21 13:12:54;
+  cltt 5 2016/10/21 11:12:54;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:c0;
+  uid "\001\200*\250\220\027\300";
+  set vendor-class-identifier = "ubnt";
+}
+lease 10.11.33.11 {
+  starts 5 2016/10/21 11:12:57;
+  ends 5 2016/10/21 13:12:57;
+  cltt 5 2016/10/21 11:12:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:60;
+  uid "\001\200*\250\220\026`";
+  set ddns-rev-name = "11.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31546ad6789286faccfcb2b152e23a62d7";
+  set ddns-fwd-name = "NwZ0F1H1p26App.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H1p26App";
+}
+lease 10.11.33.28 {
+  starts 5 2016/10/21 11:13:48;
+  ends 5 2016/10/21 13:13:48;
+  cltt 5 2016/10/21 11:13:48;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:d6;
+  uid "\001\200*\250\220\026\326";
+  set ddns-rev-name = "28.33.11.10.in-addr.arpa.";
+  set ddns-txt = "3112a4b70e36359baa611fcf5657e405ed";
+  set ddns-fwd-name = "NwZ1F0H1p20.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F0H1p20";
+}
+lease 10.11.33.19 {
+  starts 5 2016/10/21 11:14:38;
+  ends 5 2016/10/21 13:14:38;
+  cltt 5 2016/10/21 11:14:38;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:89;
+  uid "\001\200*\250\220\027\211";
+  set ddns-rev-name = "19.33.11.10.in-addr.arpa.";
+  set ddns-txt = "3100105d6165ce5ee82aebb44bf16682a9";
+  set ddns-fwd-name = "NwZ2F0H1p37.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F0H1p37";
+}
+lease 10.11.33.10 {
+  starts 5 2016/10/21 11:17:32;
+  ends 5 2016/10/21 13:17:32;
+  cltt 5 2016/10/21 11:17:32;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:e0;
+  uid "\001\200*\250\220\026\340";
+  set ddns-rev-name = "10.33.11.10.in-addr.arpa.";
+  set ddns-txt = "310a53da47733bc2aa93578d5e6788e3d8";
+  set ddns-fwd-name = "NwZ0F1H2p25Tim.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H2p25Tim";
+}
+lease 10.11.33.22 {
+  starts 5 2016/10/21 11:26:06;
+  ends 5 2016/10/21 13:26:06;
+  cltt 5 2016/10/21 11:26:06;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:32;
+  uid "\001\200*\250\220\0272";
+  set ddns-rev-name = "22.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31946ee83c1edb9a534381da83c7ab50fd";
+  set ddns-fwd-name = "NwZ1F1H1p18.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F1H1p18";
+}
+lease 10.11.33.24 {
+  starts 5 2016/10/21 11:28:30;
+  ends 5 2016/10/21 13:28:30;
+  cltt 5 2016/10/21 11:28:30;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:d5;
+  uid "\001\200*\250\220\026\325";
+  set ddns-rev-name = "24.33.11.10.in-addr.arpa.";
+  set ddns-txt = "319f0e98813ac4f961281674f5ddf52c39";
+  set ddns-fwd-name = "NwZ1F2H1p15.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F2H1p15";
+}
+lease 10.11.33.18 {
+  starts 5 2016/10/21 11:34:22;
+  ends 5 2016/10/21 13:34:22;
+  cltt 5 2016/10/21 11:34:22;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:b7;
+  uid "\001\200*\250\220\026\267";
+  set ddns-rev-name = "18.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31d356a5ccf990e49259187b7024a99f9a";
+  set ddns-fwd-name = "NwZ0F1H4p24Bib.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H4p24Bib";
+}
+lease 10.11.3.132 {
+  starts 1 2016/10/03 14:01:50;
+  ends 1 2016/10/03 16:01:50;
+  tstp 1 2016/10/03 16:01:50;
+  cltt 1 2016/10/03 14:01:50;
   binding state free;
-  hardware ethernet 52:54:00:76:bd:1a;
-  uid "\377bl\250t\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+  hardware ethernet c4:54:44:d2:86:92;
+  uid "\001\304TD\322\206\222";
+  set vendor-class-identifier = "MSFT 5.0";
 }
-lease 10.99.3.103 {
-  starts 2 2015/08/11 04:24:17;
-  ends 2 2015/08/11 05:09:16;
-  tstp 2 2015/08/11 05:09:16;
-  cltt 2 2015/08/11 04:24:17;
+lease 10.11.3.121 {
+  starts 4 2016/10/06 12:33:47;
+  ends 4 2016/10/06 14:33:47;
+  tstp 4 2016/10/06 14:33:47;
+  cltt 4 2016/10/06 12:33:47;
   binding state free;
-  hardware ethernet ce:36:bc:0f:56:45;
-  uid "\377\245X|F\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+  hardware ethernet 08:00:27:3f:3c:8a;
+  uid "\001\010\000'?<\212";
+  set vendor-class-identifier = "MSFT 5.0";
 }
-lease 10.99.3.100 {
-  starts 2 2015/08/11 05:08:39;
-  ends 2 2015/08/11 17:08:39;
-  tstp 2 2015/08/11 17:08:39;
-  cltt 2 2015/08/11 05:08:39;
+lease 10.11.3.115 {
+  starts 5 2016/10/07 06:07:22;
+  ends 5 2016/10/07 08:07:22;
+  tstp 5 2016/10/07 08:07:22;
+  cltt 5 2016/10/07 06:07:22;
   binding state free;
-  hardware ethernet 52:54:00:02:de:a6;
+  hardware ethernet 08:00:27:56:6e:35;
+  uid "\001\010\000'Vn5";
+  set vendor-class-identifier = "MSFT 5.0";
 }
-lease 10.99.3.104 {
-  starts 2 2015/08/11 05:10:26;
-  ends 2 2015/08/11 17:10:26;
-  tstp 2 2015/08/11 17:10:26;
-  cltt 2 2015/08/11 05:10:26;
+lease 10.11.3.143 {
+  starts 5 2016/10/07 15:05:43;
+  ends 5 2016/10/07 15:07:43;
+  cltt 5 2016/10/07 15:05:43;
   binding state free;
-  hardware ethernet 52:54:00:91:eb:93;
+  hardware ethernet e1:6c:d6:ae:52:90;
+  uid "\001\341l\326\256R\220";
 }
-lease 10.99.3.111 {
-  starts 4 2015/08/27 18:28:17;
-  ends 5 2015/08/28 06:28:17;
-  tstp 5 2015/08/28 06:28:17;
-  cltt 4 2015/08/27 18:28:17;
+lease 10.11.3.137 {
+  starts 5 2016/10/07 15:05:44;
+  ends 5 2016/10/07 15:07:44;
+  cltt 5 2016/10/07 15:05:44;
   binding state free;
-  hardware ethernet 24:db:ed:65:48:ae;
-  uid "\001$\333\355eH\256";
-  set vendor-class-identifier = "dhcpcd-5.2.10";
+  hardware ethernet e9:eb:b3:a6:db:3c;
+  uid "\001\351\353\263\246\333<";
 }
-lease 10.99.3.110 {
-  starts 3 2015/09/02 08:01:32;
-  ends 3 2015/09/02 20:01:32;
-  cltt 3 2015/09/02 08:01:32;
+lease 10.11.3.138 {
+  starts 5 2016/10/07 14:26:53;
+  ends 5 2016/10/07 16:26:53;
+  tstp 5 2016/10/07 16:26:53;
+  cltt 5 2016/10/07 14:52:27;
+  binding state free;
+  hardware ethernet 52:54:00:a7:e6:f1;
+  uid "\377\353\250l\253\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.11.3.148 {
+  starts 5 2016/10/07 14:39:33;
+  ends 5 2016/10/07 16:39:33;
+  tstp 5 2016/10/07 16:39:33;
+  cltt 5 2016/10/07 14:46:06;
+  binding state free;
+  hardware ethernet 08:00:27:04:9b:00;
+  uid "\377\323\010\0248\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.11.3.149 {
+  starts 5 2016/10/07 14:42:02;
+  ends 5 2016/10/07 16:42:02;
+  tstp 5 2016/10/07 16:42:02;
+  cltt 5 2016/10/07 14:48:29;
+  binding state free;
+  hardware ethernet 08:00:27:04:9b:00;
+}
+lease 10.11.3.109 {
+  starts 5 2016/10/07 14:46:18;
+  ends 5 2016/10/07 16:46:18;
+  tstp 5 2016/10/07 16:46:18;
+  cltt 5 2016/10/07 14:46:18;
+  binding state free;
+  hardware ethernet 52:54:00:a7:e6:f1;
+  uid "\377\265^g\377\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+}
+lease 10.11.3.142 {
+  starts 5 2016/10/07 15:14:33;
+  ends 5 2016/10/07 17:14:33;
+  tstp 5 2016/10/07 17:14:33;
+  cltt 5 2016/10/07 15:14:33;
+  binding state free;
+  hardware ethernet 52:54:00:f2:3e:4d;
+  uid "\001RT\000\362>M";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.139 {
+  starts 3 2016/10/12 15:24:34;
+  ends 3 2016/10/12 17:24:34;
+  tstp 3 2016/10/12 17:24:34;
+  cltt 3 2016/10/12 15:24:34;
+  binding state free;
+  hardware ethernet 2c:56:dc:b1:0d:32;
+  uid "\001,V\334\261\0152";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.146 {
+  starts 5 2016/10/14 13:43:49;
+  ends 5 2016/10/14 15:43:49;
+  tstp 5 2016/10/14 15:43:49;
+  cltt 5 2016/10/14 13:43:49;
+  binding state free;
+  hardware ethernet 68:f7:28:eb:02:b3;
+  uid "\001h\367(\353\002\263";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.131 {
+  starts 5 2016/10/14 14:36:13;
+  ends 5 2016/10/14 16:36:13;
+  tstp 5 2016/10/14 16:36:13;
+  cltt 5 2016/10/14 14:36:13;
+  binding state free;
+  hardware ethernet 70:62:b8:96:89:03;
+  uid "\001pb\270\226\211\003";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.136 {
+  starts 1 2016/10/17 14:43:20;
+  ends 1 2016/10/17 14:45:09;
+  tstp 1 2016/10/17 14:45:09;
+  cltt 1 2016/10/17 14:43:20;
+  binding state free;
+  hardware ethernet 60:a4:4c:d9:50:d9;
+  uid "\001`\244L\331P\331";
+}
+lease 10.11.3.150 {
+  starts 2 2016/10/18 09:52:57;
+  ends 2 2016/10/18 11:52:57;
+  tstp 2 2016/10/18 11:52:57;
+  cltt 2 2016/10/18 09:52:57;
+  binding state free;
+  hardware ethernet 80:19:34:14:6b:26;
+  uid "\001\200\0314\024k&";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.129 {
+  starts 4 2016/10/20 21:53:57;
+  ends 4 2016/10/20 23:53:57;
+  tstp 4 2016/10/20 23:53:57;
+  cltt 4 2016/10/20 21:53:57;
+  binding state free;
+  hardware ethernet 6c:f0:49:5f:02:10;
+  uid "\001l\360I_\002\020";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.127 {
+  starts 5 2016/10/21 09:18:02;
+  ends 5 2016/10/21 11:18:02;
+  tstp 5 2016/10/21 11:18:02;
+  cltt 5 2016/10/21 09:18:02;
+  binding state free;
+  hardware ethernet 34:e6:ad:f8:82:bb;
+  uid "\0014\346\255\370\202\273";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.135 {
+  starts 5 2016/10/21 09:18:10;
+  ends 5 2016/10/21 11:18:10;
+  tstp 5 2016/10/21 11:18:10;
+  cltt 5 2016/10/21 09:18:10;
+  binding state free;
+  hardware ethernet 10:78:d2:93:84:0a;
+  uid "\001\020x\322\223\204\012";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.145 {
+  starts 5 2016/10/21 10:02:50;
+  ends 5 2016/10/21 12:02:50;
+  cltt 5 2016/10/21 10:11:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet bc:44:34:f0:74:2b;
+  uid "\001\274D4\360t+";
+  set ddns-rev-name = "145.3.11.10.in-addr.arpa.";
+  set ddns-txt = "3124e5afa3593873572a19a0d782c60680";
+  set ddns-fwd-name = "android-a2d442e7643888f3.fondazionescola.local";
+  set vendor-class-identifier = "android-dhcp-6.0";
+}
+lease 10.11.3.134 {
+  starts 5 2016/10/21 10:22:18;
+  ends 5 2016/10/21 12:22:18;
+  cltt 5 2016/10/21 10:50:23;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d4:3d:7e:d3:fa:f2;
+  uid "\001\324=~\323\372\362";
+  set ddns-client-fqdn = "CFHMAGAZ01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "134.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.126 {
+  starts 5 2016/10/21 10:43:18;
+  ends 5 2016/10/21 12:43:18;
+  cltt 5 2016/10/21 10:43:18;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:3f:d5:f5:08:95;
+  uid "\001\300?\325\365\010\225";
+  set ddns-client-fqdn = "CFVSAMBU01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "126.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSAMBU01";
+}
+lease 10.11.3.122 {
+  starts 5 2016/10/21 10:45:03;
+  ends 5 2016/10/21 12:45:03;
+  cltt 5 2016/10/21 10:45:03;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 90:1b:0e:06:56:51;
+  uid "\001\220\033\016\006VQ";
+  set ddns-client-fqdn = "CFVAMM03.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "122.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVAMM03";
+}
+lease 10.11.3.128 {
+  starts 5 2016/10/21 10:46:08;
+  ends 5 2016/10/21 12:46:08;
+  cltt 5 2016/10/21 10:46:08;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:44:a3:23;
+  uid "\377\234\342\361\323\000\002\000\000\253\021\"\376\303\013U\020\216Z";
+  set ddns-rev-name = "128.3.11.10.in-addr.arpa.";
+  set ddns-txt = "3168279fdf1308cab274b5ce8bedbdd700";
+  set ddns-fwd-name = "appliance.fondazionescola.local";
+  client-hostname "appliance";
+}
+lease 10.11.3.141 {
+  starts 5 2016/10/21 10:46:57;
+  ends 5 2016/10/21 12:46:57;
+  cltt 5 2016/10/21 10:46:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 10:2f:6b:c8:a8:70;
+  uid "\001\020/k\310\250p";
+  set ddns-rev-name = "141.3.11.10.in-addr.arpa.";
+  set ddns-txt = "312b7792edb5e4850d0da9e643b95226d5";
+  set ddns-fwd-name = "WindowsPhone.fondazionescola.local";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "WindowsPhone";
+}
+lease 10.11.3.144 {
+  starts 5 2016/10/21 10:47:37;
+  ends 5 2016/10/21 12:47:37;
+  cltt 5 2016/10/21 10:47:41;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 30:10:b3:9c:d9:81;
+  uid "\0010\020\263\234\331\201";
+  set ddns-rev-name = "144.3.11.10.in-addr.arpa.";
+  set ddns-txt = "3108920f788ef590f2de509c3748a6fc66";
+  set ddns-fwd-name = "AnthBook001.fondazionescola.local";
+  set vendor-class-identifier = "MSFT 5.0";
+}
+lease 10.11.3.140 {
+  starts 5 2016/10/21 10:47:49;
+  ends 5 2016/10/21 12:47:49;
+  cltt 5 2016/10/21 10:47:49;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 6c:71:d9:50:ae:49;
-  uid "\377\331P\256I\000\001\000\001\033z\341\316lq\331P\256I";
-  set vendor-class-identifier = "dhcpcd-6.9.1:Linux-4.1.0-sabayon:x86_64:GenuineIntel";
-  client-hostname "DeborahNotebook";
+  uid "\001lq\331P\256I";
+  set ddns-rev-name = "140.3.11.10.in-addr.arpa.";
+  set ddns-txt = "317ee8bc9c1dc7ae60717fe67086c95d40";
+  set ddns-fwd-name = "NBDEBBY.fondazionescola.local";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "NBDEBBY";
 }
-lease 10.99.3.108 {
-  starts 3 2015/09/02 11:16:55;
-  ends 3 2015/09/02 23:16:55;
-  cltt 3 2015/09/02 11:16:55;
+lease 10.11.3.100 {
+  starts 5 2016/10/21 10:49:07;
+  ends 5 2016/10/21 12:49:07;
+  cltt 5 2016/10/21 10:49:07;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:3f:d5:b7:da:5c;
+  uid "\001\300?\325\267\332\\";
+  set ddns-client-fqdn = "CFHSCDI.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "100.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSCDI";
+}
+lease 10.11.3.108 {
+  starts 5 2016/10/21 10:49:22;
+  ends 5 2016/10/21 12:49:22;
+  cltt 5 2016/10/21 10:49:22;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:32:3e:f6;
+  uid "\001\320'\2102>\366";
+  set ddns-client-fqdn = "CFHUT01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "108.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHUT01";
+}
+lease 10.11.3.117 {
+  starts 5 2016/10/21 10:50:25;
+  ends 5 2016/10/21 12:50:25;
+  cltt 5 2016/10/21 10:50:25;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 00:19:99:66:4a:17;
+  uid "\001\000\031\231fJ\027";
+  set ddns-client-fqdn = "CFHSAN02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "117.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSAN02";
+}
+lease 10.11.3.130 {
+  starts 5 2016/10/21 10:55:17;
+  ends 5 2016/10/21 12:55:17;
+  cltt 5 2016/10/21 10:55:17;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet b8:ae:ed:b8:62:a1;
+  uid "\001\270\256\355\270b\241";
+  set ddns-client-fqdn = "CFHAMM04.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "130.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHAMM04";
+}
+lease 10.11.3.110 {
+  starts 5 2016/10/21 11:00:03;
+  ends 5 2016/10/21 13:00:03;
+  cltt 5 2016/10/21 11:00:03;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:56:53:0b;
+  uid "\001\320'\210VS\013";
+  set ddns-client-fqdn = "CFVSDIR01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "110.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSDIR01";
+}
+lease 10.11.3.114 {
+  starts 5 2016/10/21 11:01:15;
+  ends 5 2016/10/21 13:01:15;
+  cltt 5 2016/10/21 11:01:15;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fd:ad;
+  uid "\001\320'\210\026\375\255";
+  set ddns-client-fqdn = "CFVECON02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "114.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVECON02";
+}
+lease 10.11.3.101 {
+  starts 5 2016/10/21 11:03:16;
+  ends 5 2016/10/21 13:03:16;
+  cltt 5 2016/10/21 11:03:16;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fe:66;
+  uid "\001\320'\210\026\376f";
+  set vendor-class-identifier = "MSFT 5.0";
+  set ddns-rev-name = "101.3.11.10.in-addr.arpa.";
+  set ddns-client-fqdn = "cfhsbc3.FONDAZIONESCOLA.local";
+  client-hostname "cfhsbc3";
+}
+lease 10.11.3.102 {
+  starts 5 2016/10/21 11:03:53;
+  ends 5 2016/10/21 13:03:53;
+  cltt 5 2016/10/21 11:03:53;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fd:d8;
+  uid "\001\320'\210\026\375\330";
+  set ddns-client-fqdn = "cfhsa01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "102.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsa01";
+}
+lease 10.11.3.118 {
+  starts 5 2016/10/21 11:05:09;
+  ends 5 2016/10/21 13:05:09;
+  cltt 5 2016/10/21 11:05:09;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d4:3d:7e:d3:fb:3b;
+  uid "\001\324=~\323\373;";
+  set ddns-client-fqdn = "CFVAMM02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "118.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVAMM02";
+}
+lease 10.11.3.111 {
+  starts 5 2016/10/21 11:05:23;
+  ends 5 2016/10/21 13:05:23;
+  cltt 5 2016/10/21 11:05:23;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c8:9c:dc:ec:64:81;
+  uid "\001\310\234\334\354d\201";
+  set ddns-client-fqdn = "CFHSEGDIR01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "111.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSEGDIR01";
+}
+lease 10.11.3.147 {
+  starts 5 2016/10/21 11:07:09;
+  ends 5 2016/10/21 13:07:09;
+  cltt 5 2016/10/21 11:07:09;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:19:34:12:26:13;
+  uid "\001\200\0314\022&\023";
+  set ddns-client-fqdn = "CFVSCOORDL01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "147.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSCOORDL01";
+}
+lease 10.11.3.119 {
+  starts 5 2016/10/21 11:12:14;
+  ends 5 2016/10/21 13:12:14;
+  cltt 5 2016/10/21 11:12:14;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 00:19:99:91:29:fa;
+  uid "\001\000\031\231\221)\372";
+  set ddns-client-fqdn = "CFHSAN01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "119.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSAN01";
+}
+lease 10.11.3.106 {
+  starts 5 2016/10/21 11:15:53;
+  ends 5 2016/10/21 13:15:53;
+  cltt 5 2016/10/21 11:15:53;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:1b:7f:af;
+  uid "\001\320'\210\033\177\257";
+  set vendor-class-identifier = "MSFT 5.0";
+  set ddns-rev-name = "106.3.11.10.in-addr.arpa.";
+  set ddns-client-fqdn = "cfhsbc2.FONDAZIONESCOLA.local";
+  client-hostname "cfhsbc2";
+}
+lease 10.11.3.103 {
+  starts 5 2016/10/21 11:16:08;
+  ends 5 2016/10/21 13:16:08;
+  cltt 5 2016/10/21 11:16:08;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fe:6d;
+  uid "\001\320'\210\026\376m";
+  set ddns-client-fqdn = "cfhsa23.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "103.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsa23";
+}
+lease 10.11.3.104 {
+  starts 5 2016/10/21 11:16:47;
+  ends 5 2016/10/21 13:16:47;
+  cltt 5 2016/10/21 11:16:47;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 90:1b:0e:05:30:da;
+  uid "\001\220\033\016\0050\332";
+  set ddns-client-fqdn = "cfhsna.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "104.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsna";
+}
+lease 10.11.3.125 {
+  starts 5 2016/10/21 11:17:38;
+  ends 5 2016/10/21 13:17:38;
+  cltt 5 2016/10/21 11:17:38;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet f4:6d:04:14:a5:2c;
+  uid "\001\364m\004\024\245,";
+  set ddns-rev-name = "125.3.11.10.in-addr.arpa.";
+  set ddns-txt = "31ec7f3c9e9a6c805824200059ec60b1cb";
+  set ddns-fwd-name = "besana.fondazionescola.local";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "besana";
+}
+lease 10.11.3.133 {
+  starts 5 2016/10/21 11:18:11;
+  ends 5 2016/10/21 13:18:11;
+  cltt 5 2016/10/21 11:18:11;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c4:54:44:d2:86:b8;
+  uid "\001\304TD\322\206\270";
+  set ddns-client-fqdn = "CFVSINFDIRL02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "133.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSINFDIRL02";
+}
+lease 10.11.3.120 {
+  starts 5 2016/10/21 11:23:41;
+  ends 5 2016/10/21 13:23:41;
+  cltt 5 2016/10/21 11:23:41;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet b8:ae:ed:2a:90:0a;
+  uid "\001\270\256\355*\220\012";
+  set ddns-client-fqdn = "CFHECON01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "120.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHECON01";
+}
+lease 10.11.3.123 {
+  starts 5 2016/10/21 11:27:30;
+  ends 5 2016/10/21 13:27:30;
+  cltt 5 2016/10/21 11:27:30;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:44:a3:23;
+}
+lease 10.11.3.113 {
+  starts 5 2016/10/21 11:31:57;
+  ends 5 2016/10/21 13:31:57;
+  cltt 5 2016/10/21 11:31:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 90:fb:a6:49:c7:d7;
+  uid "\001\220\373\246I\307\327";
+  set ddns-client-fqdn = "CFVSFIS01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "113.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSFIS01";
+}
+lease 10.11.3.134 {
+  starts 5 2016/10/21 11:36:19;
+  ends 5 2016/10/21 13:36:19;
+  cltt 5 2016/10/21 11:36:19;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d4:3d:7e:d3:fa:f2;
+  uid "\001\324=~\323\372\362";
+  set ddns-client-fqdn = "CFHMAGAZ01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "134.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHMAGAZ01";
+}
+lease 10.11.3.126 {
+  starts 5 2016/10/21 11:43:18;
+  ends 5 2016/10/21 13:43:18;
+  cltt 5 2016/10/21 11:43:18;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c0:3f:d5:f5:08:95;
+  uid "\001\300?\325\365\010\225";
+  set ddns-client-fqdn = "CFVSAMBU01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "126.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSAMBU01";
+}
+lease 10.11.3.122 {
+  starts 5 2016/10/21 11:45:02;
+  ends 5 2016/10/21 13:45:02;
+  cltt 5 2016/10/21 11:45:02;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 90:1b:0e:06:56:51;
+  uid "\001\220\033\016\006VQ";
+  set ddns-client-fqdn = "CFVAMM03.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "122.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVAMM03";
+}
+lease 10.11.33.39 {
+  starts 5 2016/10/21 11:46:34;
+  ends 5 2016/10/21 13:46:34;
+  cltt 5 2016/10/21 11:46:34;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:84;
+  uid "\001\200*\250\220\027\204";
+  set vendor-class-identifier = "ubnt";
+}
+lease 10.11.33.13 {
+  starts 5 2016/10/21 11:46:34;
+  ends 5 2016/10/21 13:46:34;
+  cltt 5 2016/10/21 11:46:34;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:19:33;
+  uid "\001\200*\250\220\0313";
+  set ddns-rev-name = "13.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31c3053371b8996a13c3f5d3ba66644c28";
+  set ddns-fwd-name = "NwZ2F1H3p35.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F1H3p35";
+}
+lease 10.11.3.141 {
+  starts 5 2016/10/21 11:47:03;
+  ends 5 2016/10/21 13:47:03;
+  cltt 5 2016/10/21 11:47:03;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 10:2f:6b:c8:a8:70;
   uid "\001\020/k\310\250p";
+  set ddns-rev-name = "141.3.11.10.in-addr.arpa.";
+  set ddns-txt = "312b7792edb5e4850d0da9e643b95226d5";
+  set ddns-fwd-name = "WindowsPhone.fondazionescola.local";
   set vendor-class-identifier = "MSFT 5.0";
-  client-hostname "Windows-Phone";
+  client-hostname "WindowsPhone";
 }
-lease 10.99.3.109 {
-  starts 3 2015/09/02 11:19:01;
-  ends 3 2015/09/02 23:19:01;
-  cltt 3 2015/09/02 11:19:01;
+lease 10.11.3.144 {
+  starts 5 2016/10/21 11:47:46;
+  ends 5 2016/10/21 13:47:46;
+  cltt 5 2016/10/21 11:47:46;
   binding state active;
   next binding state free;
   rewind binding state free;
   hardware ethernet 30:10:b3:9c:d9:81;
   uid "\0010\020\263\234\331\201";
+  set ddns-rev-name = "144.3.11.10.in-addr.arpa.";
+  set ddns-txt = "3108920f788ef590f2de509c3748a6fc66";
+  set ddns-fwd-name = "AnthBook001.fondazionescola.local";
   set vendor-class-identifier = "MSFT 5.0";
   client-hostname "AnthBook001";
 }
-lease 10.99.3.107 {
-  starts 3 2015/09/02 12:46:03;
-  ends 4 2015/09/03 00:46:03;
-  cltt 3 2015/09/02 12:46:03;
+lease 10.11.3.140 {
+  starts 5 2016/10/21 11:47:54;
+  ends 5 2016/10/21 13:47:54;
+  cltt 5 2016/10/21 11:47:54;
   binding state active;
   next binding state free;
   rewind binding state free;
-  hardware ethernet 24:7f:3c:a1:9d:af;
-  set vendor-class-identifier = "dhcpcd-5.5.6";
-  client-hostname "android-eb225a5724e255cc";
-}
-lease 10.99.3.105 {
-  starts 3 2015/09/02 14:37:19;
-  ends 4 2015/09/03 02:37:19;
-  cltt 3 2015/09/02 14:37:19;
-  binding state active;
-  next binding state free;
-  rewind binding state free;
-  hardware ethernet c0:cb:38:82:87:af;
-  uid "\001\300\3138\202\207\257";
-  client-hostname "STAMPANTE";
-}
-lease 10.99.3.106 {
-  starts 3 2015/09/02 14:42:43;
-  ends 4 2015/09/03 02:42:43;
-  cltt 3 2015/09/02 14:42:43;
-  binding state active;
-  next binding state free;
-  rewind binding state free;
-  hardware ethernet 54:e4:bd:6b:0f:5c;
-  uid "\001T\344\275k\017\\";
+  hardware ethernet 6c:71:d9:50:ae:49;
+  uid "\001lq\331P\256I";
+  set ddns-rev-name = "140.3.11.10.in-addr.arpa.";
+  set ddns-txt = "317ee8bc9c1dc7ae60717fe67086c95d40";
+  set ddns-fwd-name = "NBDEBBY.fondazionescola.local";
   set vendor-class-identifier = "MSFT 5.0";
-  client-hostname "Oplite";
+  client-hostname "NBDEBBY";
 }
-lease 10.1.3.101 {
-  starts 2 2015/08/11 11:09:16;
-  ends 2 2015/08/11 23:09:16;
-  tstp 2 2015/08/11 23:09:16;
-  cltt 2 2015/08/11 11:09:16;
-  binding state free;
-  hardware ethernet ce:36:bc:0f:56:45;
-  uid "\377\245X|F\000\002\000\000\253\021\"\376\303\013U\020\216Z";
-}
-lease 10.1.3.104 {
-  starts 2 2015/08/11 15:21:00;
-  ends 3 2015/08/12 03:21:00;
-  tstp 3 2015/08/12 03:21:00;
-  cltt 2 2015/08/11 15:21:00;
-  binding state free;
-  hardware ethernet ce:36:bc:0f:56:45;
-}
-lease 10.1.3.105 {
-  starts 1 2015/08/17 11:16:01;
-  ends 1 2015/08/17 23:16:01;
-  tstp 1 2015/08/17 23:16:01;
-  cltt 1 2015/08/17 11:16:01;
-  binding state free;
-  hardware ethernet 08:d8:33:19:5c:bf;
-  uid "\001\010\3303\031\\\277";
-  set vendor-class-identifier = "MSFT 5.0";
-}
-lease 10.1.3.100 {
-  starts 1 2015/08/24 12:16:48;
-  ends 1 2015/08/24 21:22:52;
-  tstp 1 2015/08/24 21:22:52;
-  cltt 1 2015/08/24 12:16:48;
-  binding state free;
-  hardware ethernet 54:e4:bd:6b:0f:5c;
-  uid "\001T\344\275k\017\\";
-}
-lease 10.1.3.103 {
-  starts 1 2015/08/24 10:17:39;
-  ends 1 2015/08/24 22:17:39;
-  tstp 1 2015/08/24 22:17:39;
-  cltt 1 2015/08/24 10:17:39;
-  binding state free;
-  hardware ethernet 30:10:b3:9c:d9:81;
-  uid "\0010\020\263\234\331\201";
-  set vendor-class-identifier = "MSFT 5.0";
-}
-lease 10.1.3.106 {
-  starts 1 2015/08/24 10:53:11;
-  ends 1 2015/08/24 22:53:11;
-  tstp 1 2015/08/24 22:53:11;
-  cltt 1 2015/08/24 10:53:11;
-  binding state free;
-  hardware ethernet 24:7f:3c:a1:9d:af;
-  set vendor-class-identifier = "dhcpcd-5.5.6";
-}
-lease 10.1.3.102 {
-  starts 1 2015/08/24 14:29:55;
-  ends 2 2015/08/25 02:29:55;
-  tstp 2 2015/08/25 02:29:55;
-  cltt 1 2015/08/24 14:29:55;
-  binding state free;
-  hardware ethernet 10:2f:6b:c8:a8:70;
-  uid "\001\020/k\310\250p";
-  set vendor-class-identifier = "MSFT 5.0";
-}
-lease 10.99.3.107 {
-  starts 3 2015/09/02 14:49:51;
-  ends 4 2015/09/03 02:49:51;
-  cltt 3 2015/09/02 14:49:51;
+lease 10.11.3.100 {
+  starts 5 2016/10/21 11:49:07;
+  ends 5 2016/10/21 13:49:07;
+  cltt 5 2016/10/21 11:49:07;
   binding state active;
   next binding state free;
   rewind binding state free;
-  hardware ethernet 24:7f:3c:a1:9d:af;
-  set vendor-class-identifier = "dhcpcd-5.5.6";
-  client-hostname "android-eb225a5724e255cc";
+  hardware ethernet c0:3f:d5:b7:da:5c;
+  uid "\001\300?\325\267\332\\";
+  set ddns-client-fqdn = "CFHSCDI.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "100.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSCDI";
 }
-lease 10.99.3.105 {
-  starts 3 2015/09/02 14:57:39;
-  ends 4 2015/09/03 02:57:39;
-  cltt 3 2015/09/02 14:57:39;
+lease 10.11.3.108 {
+  starts 5 2016/10/21 11:49:26;
+  ends 5 2016/10/21 13:49:26;
+  cltt 5 2016/10/21 11:49:26;
   binding state active;
   next binding state free;
   rewind binding state free;
-  hardware ethernet c0:cb:38:82:87:af;
-  uid "\001\300\3138\202\207\257";
-  client-hostname "STAMPANTE";
+  hardware ethernet d0:27:88:32:3e:f6;
+  uid "\001\320'\2102>\366";
+  set ddns-client-fqdn = "CFHUT01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "108.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHUT01";
 }
-lease 10.99.3.105 {
-  starts 3 2015/09/02 15:12:00;
-  ends 4 2015/09/03 03:12:00;
-  cltt 3 2015/09/02 15:12:00;
+lease 10.11.33.38 {
+  starts 5 2016/10/21 11:50:21;
+  ends 5 2016/10/21 13:50:21;
+  cltt 5 2016/10/21 11:50:21;
   binding state active;
   next binding state free;
   rewind binding state free;
-  hardware ethernet c0:cb:38:82:87:af;
-  uid "\001\300\3138\202\207\257";
-  client-hostname "STAMPANTE";
+  hardware ethernet 80:2a:a8:90:17:20;
+  uid "\001\200*\250\220\027 ";
+  set ddns-rev-name = "38.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31148a374ebbb78ba73fe7a8b2fbd69b47";
+  set ddns-fwd-name = "NwZ0F1H4pXXTec.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F1H4pXXTec";
+}
+lease 10.11.3.117 {
+  starts 5 2016/10/21 11:50:26;
+  ends 5 2016/10/21 13:50:26;
+  cltt 5 2016/10/21 11:50:26;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 00:19:99:66:4a:17;
+  uid "\001\000\031\231fJ\027";
+  set ddns-client-fqdn = "CFHSAN02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "117.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSAN02";
+}
+lease 10.11.33.26 {
+  starts 5 2016/10/21 11:53:09;
+  ends 5 2016/10/21 13:53:09;
+  cltt 5 2016/10/21 11:53:09;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:54;
+  uid "\001\200*\250\220\027T";
+  set ddns-rev-name = "26.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31d7cc039d1137fa801fec72fd67d2203a";
+  set ddns-fwd-name = "NwZ1F3H2p13.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F3H2p13";
+}
+lease 10.11.33.32 {
+  starts 5 2016/10/21 11:53:31;
+  ends 5 2016/10/21 13:53:31;
+  cltt 5 2016/10/21 11:53:31;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:9e;
+  uid "\001\200*\250\220\026\236";
+  set ddns-rev-name = "32.33.11.10.in-addr.arpa.";
+  set ddns-txt = "314164af9482855b31e75c5e2159619362";
+  set ddns-fwd-name = "NwZ2F0H0p24.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F0H0p24";
+}
+lease 10.11.3.130 {
+  starts 5 2016/10/21 11:55:17;
+  ends 5 2016/10/21 13:55:17;
+  cltt 5 2016/10/21 11:55:17;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet b8:ae:ed:b8:62:a1;
+  uid "\001\270\256\355\270b\241";
+  set ddns-client-fqdn = "CFHAMM04.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "130.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHAMM04";
+}
+lease 10.11.3.123 {
+  starts 5 2016/10/21 11:58:28;
+  ends 5 2016/10/21 13:58:28;
+  cltt 5 2016/10/21 11:58:28;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 08:00:27:44:a3:23;
+}
+lease 10.11.3.129 {
+  starts 5 2016/10/21 11:59:55;
+  ends 5 2016/10/21 13:59:55;
+  cltt 5 2016/10/21 11:59:55;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 6c:f0:49:5f:02:10;
+  uid "\001l\360I_\002\020";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSB1";
+}
+lease 10.11.3.129 {
+  starts 5 2016/10/21 11:59:55;
+  ends 5 2016/10/21 13:59:55;
+  cltt 5 2016/10/21 11:59:55;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 6c:f0:49:5f:02:10;
+  uid "\001l\360I_\002\020";
+  set ddns-client-fqdn = "CFHSB1.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "129.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSB1";
+}
+lease 10.11.33.33 {
+  starts 5 2016/10/21 11:59:57;
+  ends 5 2016/10/21 13:59:57;
+  cltt 5 2016/10/21 11:59:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:b9;
+  uid "\001\200*\250\220\026\271";
+  set ddns-rev-name = "33.33.11.10.in-addr.arpa.";
+  set ddns-txt = "311150723d3f42373539ead2d15e517089";
+  set ddns-fwd-name = "NwZ2F3H1p26.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F3H1p26";
+}
+lease 10.11.3.110 {
+  starts 5 2016/10/21 12:00:03;
+  ends 5 2016/10/21 14:00:03;
+  cltt 5 2016/10/21 12:00:03;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:56:53:0b;
+  uid "\001\320'\210VS\013";
+  set ddns-client-fqdn = "CFVSDIR01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "110.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSDIR01";
+}
+lease 10.11.3.145 {
+  starts 5 2016/10/21 10:02:50;
+  ends 5 2016/10/21 12:02:50;
+  tstp 5 2016/10/21 12:02:50;
+  cltt 5 2016/10/21 10:11:57;
+  binding state free;
+  hardware ethernet bc:44:34:f0:74:2b;
+  uid "\001\274D4\360t+";
+  set ddns-rev-name = "145.3.11.10.in-addr.arpa.";
+  set ddns-txt = "3124e5afa3593873572a19a0d782c60680";
+  set ddns-fwd-name = "android-a2d442e7643888f3.fondazionescola.local";
+  set vendor-class-identifier = "android-dhcp-6.0";
+}
+lease 10.11.3.145 {
+  starts 5 2016/10/21 10:02:50;
+  ends 5 2016/10/21 12:02:50;
+  tstp 5 2016/10/21 12:02:50;
+  cltt 5 2016/10/21 10:11:57;
+  binding state free;
+  hardware ethernet bc:44:34:f0:74:2b;
+  uid "\001\274D4\360t+";
+  set ddns-rev-name = "145.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "android-dhcp-6.0";
+}
+lease 10.11.3.145 {
+  starts 5 2016/10/21 10:02:50;
+  ends 5 2016/10/21 12:02:50;
+  tstp 5 2016/10/21 12:02:50;
+  cltt 5 2016/10/21 10:11:57;
+  binding state free;
+  hardware ethernet bc:44:34:f0:74:2b;
+  uid "\001\274D4\360t+";
+  set vendor-class-identifier = "android-dhcp-6.0";
+}
+lease 10.11.3.101 {
+  starts 5 2016/10/21 12:03:16;
+  ends 5 2016/10/21 14:03:16;
+  cltt 5 2016/10/21 12:03:16;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fe:66;
+  uid "\001\320'\210\026\376f";
+  set vendor-class-identifier = "MSFT 5.0";
+  set ddns-rev-name = "101.3.11.10.in-addr.arpa.";
+  set ddns-client-fqdn = "cfhsbc3.FONDAZIONESCOLA.local";
+  client-hostname "cfhsbc3";
+}
+lease 10.11.3.102 {
+  starts 5 2016/10/21 12:03:53;
+  ends 5 2016/10/21 14:03:53;
+  cltt 5 2016/10/21 12:03:53;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fd:d8;
+  uid "\001\320'\210\026\375\330";
+  set ddns-client-fqdn = "cfhsa01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "102.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsa01";
+}
+lease 10.11.33.21 {
+  starts 5 2016/10/21 12:06:11;
+  ends 5 2016/10/21 14:06:11;
+  cltt 5 2016/10/21 12:06:11;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:2b;
+  uid "\001\200*\250\220\026+";
+  set ddns-rev-name = "21.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31687cd8e39ce210fde0b54956fb39fee7";
+  set ddns-fwd-name = "NwZ0F0H4p45Atrio.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ0F0H4p45Atrio";
+}
+lease 10.11.3.147 {
+  starts 5 2016/10/21 12:07:09;
+  ends 5 2016/10/21 14:07:09;
+  cltt 5 2016/10/21 12:07:09;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:19:34:12:26:13;
+  uid "\001\200\0314\022&\023";
+  set ddns-client-fqdn = "CFVSCOORDL01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "147.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSCOORDL01";
+}
+lease 10.11.33.16 {
+  starts 5 2016/10/21 12:09:57;
+  ends 5 2016/10/21 14:09:57;
+  cltt 5 2016/10/21 12:09:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:8d;
+  uid "\001\200*\250\220\027\215";
+  set ddns-rev-name = "16.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31494d55202ffc1f35341e89757ffe4855";
+  set ddns-fwd-name = "NwZ2F2H2p31.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H2p31";
+}
+lease 10.11.33.17 {
+  starts 5 2016/10/21 12:09:57;
+  ends 5 2016/10/21 14:09:57;
+  cltt 5 2016/10/21 12:09:57;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:5f;
+  uid "\001\200*\250\220\026_";
+  set ddns-rev-name = "17.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31eb25bcd8ba41bd9c47812bc1db5531ae";
+  set ddns-fwd-name = "NwZ2F2H1p30.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H1p30";
+}
+lease 10.11.33.14 {
+  starts 5 2016/10/21 12:09:59;
+  ends 5 2016/10/21 14:09:59;
+  cltt 5 2016/10/21 12:09:59;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:16:5e;
+  uid "\001\200*\250\220\026^";
+  set ddns-rev-name = "14.33.11.10.in-addr.arpa.";
+  set ddns-txt = "313c44713eb677ea1d7853e88a50b27c02";
+  set ddns-fwd-name = "NwZ2F2H3p32.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F2H3p32";
+}
+lease 10.11.3.119 {
+  starts 5 2016/10/21 12:12:14;
+  ends 5 2016/10/21 14:12:14;
+  cltt 5 2016/10/21 12:12:14;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 00:19:99:91:29:fa;
+  uid "\001\000\031\231\221)\372";
+  set ddns-client-fqdn = "CFHSAN01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "119.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHSAN01";
+}
+lease 10.11.3.106 {
+  starts 5 2016/10/21 12:15:54;
+  ends 5 2016/10/21 14:15:54;
+  cltt 5 2016/10/21 12:15:54;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:1b:7f:af;
+  uid "\001\320'\210\033\177\257";
+  set vendor-class-identifier = "MSFT 5.0";
+  set ddns-rev-name = "106.3.11.10.in-addr.arpa.";
+  set ddns-client-fqdn = "cfhsbc2.FONDAZIONESCOLA.local";
+  client-hostname "cfhsbc2";
+}
+lease 10.11.3.103 {
+  starts 5 2016/10/21 12:16:08;
+  ends 5 2016/10/21 14:16:08;
+  cltt 5 2016/10/21 12:16:08;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet d0:27:88:16:fe:6d;
+  uid "\001\320'\210\026\376m";
+  set ddns-client-fqdn = "cfhsa23.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "103.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsa23";
+}
+lease 10.11.3.104 {
+  starts 5 2016/10/21 12:16:47;
+  ends 5 2016/10/21 14:16:47;
+  cltt 5 2016/10/21 12:16:47;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 90:1b:0e:05:30:da;
+  uid "\001\220\033\016\0050\332";
+  set ddns-client-fqdn = "cfhsna.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "104.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "cfhsna";
+}
+lease 10.11.3.125 {
+  starts 5 2016/10/21 12:17:38;
+  ends 5 2016/10/21 14:17:38;
+  cltt 5 2016/10/21 12:17:38;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet f4:6d:04:14:a5:2c;
+  uid "\001\364m\004\024\245,";
+  set ddns-rev-name = "125.3.11.10.in-addr.arpa.";
+  set ddns-txt = "31ec7f3c9e9a6c805824200059ec60b1cb";
+  set ddns-fwd-name = "besana.fondazionescola.local";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "besana";
+}
+lease 10.11.3.133 {
+  starts 5 2016/10/21 12:18:11;
+  ends 5 2016/10/21 14:18:11;
+  cltt 5 2016/10/21 12:18:11;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet c4:54:44:d2:86:b8;
+  uid "\001\304TD\322\206\270";
+  set ddns-client-fqdn = "CFVSINFDIRL02.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "133.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFVSINFDIRL02";
+}
+lease 10.11.3.120 {
+  starts 5 2016/10/21 12:23:41;
+  ends 5 2016/10/21 14:23:41;
+  cltt 5 2016/10/21 12:23:41;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet b8:ae:ed:2a:90:0a;
+  uid "\001\270\256\355*\220\012";
+  set ddns-client-fqdn = "CFHECON01.FONDAZIONESCOLA.local";
+  set ddns-rev-name = "120.3.11.10.in-addr.arpa.";
+  set vendor-class-identifier = "MSFT 5.0";
+  client-hostname "CFHECON01";
+}
+lease 10.11.33.36 {
+  starts 5 2016/10/21 12:24:50;
+  ends 5 2016/10/21 14:24:50;
+  cltt 5 2016/10/21 12:24:50;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:1a:a6;
+  uid "\001\200*\250\220\032\246";
+  set ddns-rev-name = "36.33.11.10.in-addr.arpa.";
+  set ddns-txt = "312adbebab849519a6ad33222505650d6d";
+  set ddns-fwd-name = "NwZ2F0H2p38.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ2F0H2p38";
+}
+lease 10.11.33.25 {
+  starts 5 2016/10/21 12:27:43;
+  ends 5 2016/10/21 14:27:43;
+  cltt 5 2016/10/21 12:27:43;
+  binding state active;
+  next binding state free;
+  rewind binding state free;
+  hardware ethernet 80:2a:a8:90:17:3e;
+  uid "\001\200*\250\220\027>";
+  set ddns-rev-name = "25.33.11.10.in-addr.arpa.";
+  set ddns-txt = "31d7e26064a6ac1b6221c9fca40d4e2303";
+  set ddns-fwd-name = "NwZ1F3H1p12.fondazionescola.local";
+  set vendor-class-identifier = "ubnt";
+  client-hostname "NwZ1F3H1p12";
 }

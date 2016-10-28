@@ -2,7 +2,7 @@
   {
     "Key": "_version",
     "Value": [
-      "20160809151656198"
+      "20161020141638805"
     ],
     "Description": "Current command version"
   },
@@ -81,28 +81,28 @@
   {
     "Key": "brctl-show-br",
     "Value": [
-      "brctl show $bridge | grep -ho '$bridge.*'"
+      "brctl show $bridge | grep -ho '$bridge.*"
     ],
     "Description": ""
   },
   {
     "Key": "brctl-show-brid",
     "Value": [
-      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $2}'"
+      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "brctl-show-brif",
     "Value": [
-      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $4}'"
+      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $4}"
     ],
     "Description": ""
   },
   {
     "Key": "brctl-show-brstpstatus",
     "Value": [
-      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $3}'"
+      "brctl show $bridge | grep -ho '$bridge.*' | awk '{print $3}"
     ],
     "Description": ""
   },
@@ -137,42 +137,42 @@
   {
     "Key": "cat-etc-gentoorel",
     "Value": [
-      "cat /etc/gentoo-release | grep -v '^#' | grep -v '^$'"
+      "cat /etc/gentoo-release | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
   {
     "Key": "cat-etc-hostname",
     "Value": [
-      "cat /etc/hostname | grep -v '^#' | grep -v '^$'"
+      "cat /etc/hostname | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
   {
     "Key": "cat-etc-hosts",
     "Value": [
-      "cat /etc/hosts | grep -v '^#' | grep -v '^$'"
+      "cat /etc/hosts | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
   {
     "Key": "cat-etc-lsbrel",
     "Value": [
-      "cat /etc/lsb-release | grep -v '^#' | grep -v '^$'"
+      "cat /etc/lsb-release | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
   {
     "Key": "cat-etc-osrel",
     "Value": [
-      "cat /etc/os-release | grep -v '^#' | grep -v '^$'"
+      "cat /etc/os-release | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
   {
     "Key": "cat-etc-resolv",
     "Value": [
-      "cat /etc/resolv.conf | grep -v '^#' | grep -v '^$'"
+      "cat /etc/resolv.conf | grep -v '^#' | grep -v '^$"
     ],
     "Description": ""
   },
@@ -216,77 +216,77 @@
   {
     "Key": "hostnamectl-get-arch",
     "Value": [
-      "hostnamectl | grep -ho 'Architecture: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Architecture: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-bootid",
     "Value": [
-      "hostnamectl | grep -ho 'Boot ID: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Boot ID: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-chassis",
     "Value": [
-      "hostnamectl | grep -ho 'Chassis: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Chassis: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-deployment",
     "Value": [
-      "hostnamectl | grep -ho 'Deployment: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Deployment: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-hostname",
     "Value": [
-      "hostnamectl | grep -ho 'Static hostname: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Static hostname: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-iconname",
     "Value": [
-      "hostnamectl | grep -ho 'Icon name: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Icon name: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-kernel",
     "Value": [
-      "hostnamectl | grep -ho 'Kernel: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Kernel: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-location",
     "Value": [
-      "hostnamectl | grep -ho 'Location: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Location: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-machineid",
     "Value": [
-      "hostnamectl | grep -ho 'Machine ID: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Machine ID: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-os",
     "Value": [
-      "hostnamectl | grep -ho 'Operating System: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Operating System: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "hostnamectl-get-virtualization",
     "Value": [
-      "hostnamectl | grep -ho 'Virtualization: .*' | awk -F: '{print $2}'"
+      "hostnamectl | grep -ho 'Virtualization: .*' | awk -F: '{print $2}"
     ],
     "Description": ""
   },
@@ -384,14 +384,14 @@
   {
     "Key": "ip4-get-if-addr",
     "Value": [
-      "ip addr show $net_if | grep -ho 'inet .*' | awk '{print $2}'"
+      "ip addr show $net_if | grep -ho 'inet .*' | awk '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "ip4-get-if-brd",
     "Value": [
-      "ip addr show $net_if | grep -ho 'inet .*' | awk '{print $4}'"
+      "ip addr show $net_if | grep -ho 'inet .*' | awk '{print $4}"
     ],
     "Description": ""
   },
@@ -477,7 +477,7 @@
   {
     "Key": "ip4-show-updown",
     "Value": [
-      "ip link show $net_if | grep -ho ' UP \\| DOWN '| grep -v '^$'"
+      "ip link show $net_if | grep -ho ' UP \\| DOWN '| grep -v '^$"
     ],
     "Description": ""
   },
@@ -594,6 +594,20 @@
     "Description": ""
   },
   {
+    "Key": "mono-antdsh-update",
+    "Value": [
+      "mono /framework/antdsh/antdsh.exe update $context"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "mono-antdsh-update-check",
+    "Value": [
+      "mono /framework/antdsh/antdsh.exe update check"
+    ],
+    "Description": ""
+  },
+  {
     "Key": "rsync",
     "Value": [
       "rsync -aHA $source/ $destination/"
@@ -705,49 +719,119 @@
   {
     "Key": "timedatectl-get-localtime",
     "Value": [
-      "timedatectl | grep -ho 'Local time: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'Local time: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-nettimeon",
     "Value": [
-      "timedatectl | grep -ho 'Network time on: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'Network time on: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-ntpsync",
     "Value": [
-      "timedatectl | grep -ho 'NTP synchronized: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'NTP synchronized: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-rtcintz",
     "Value": [
-      "timedatectl | grep -ho 'RTC in local TZ: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'RTC in local TZ: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-rtctime",
     "Value": [
-      "timedatectl | grep -ho 'RTC time: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'RTC time: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-timezone",
     "Value": [
-      "timedatectl | grep -ho 'Time zone: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'Time zone: .*'| awk -F: '{print $2}"
     ],
     "Description": ""
   },
   {
     "Key": "timedatectl-get-univtime",
     "Value": [
-      "timedatectl | grep -ho 'Universal time: .*'| awk -F: '{print $2}'"
+      "timedatectl | grep -ho 'Universal time: .*'| awk -F: '{print $2}"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-destroy",
+    "Value": [
+      "virsh destroy $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-reboot",
+    "Value": [
+      "virsh reboot $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-reset",
+    "Value": [
+      "virsh reset $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-restore",
+    "Value": [
+      "virsh restore $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-resume",
+    "Value": [
+      "virsh resume $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-shutdown",
+    "Value": [
+      "virsh shutdown $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-start",
+    "Value": [
+      "virsh start $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-suspend",
+    "Value": [
+      "virsh suspend $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-dompmsuspend",
+    "Value": [
+      "virsh dompmsuspend $domain"
+    ],
+    "Description": ""
+  },
+  {
+    "Key": "virsh-dompmwakeup",
+    "Value": [
+      "virsh dompmwakeup $domain"
     ],
     "Description": ""
   },
@@ -758,7 +842,7 @@
     ],
     "Description": ""
   },
-   {
+  {
     "Key": "zpool-create",
     "Value": [
       "zpool create -f -o altroot=$pool_altroot -o ashift=12 -O casesensitivity=insensitive -O normalization=formD $pool_name $pool_type $disk_byid"

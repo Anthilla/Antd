@@ -71,6 +71,7 @@ namespace Antd {
             Boot.CommandExecuteNetwork();
             Boot.SetOsParametersNetwork();
             Boot.LoadServices();
+            Boot.SetSyslogNg();
             Boot.InitAvahi();
             Boot.ImportPools();
             Boot.StartScheduler();

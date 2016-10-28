@@ -23,12 +23,14 @@ namespace antdlib.views {
             PortNet2 = sourceModel.PortNet2;
             PortNet3 = sourceModel.PortNet3;
             Services = sourceModel.Services.ToObject<Dictionary<string, string>>();
+            IsEnabled = sourceModel.IsEnabled.ToNnBoolean();
         }
         public string RootPath { get; set; }
         public string PortNet1 { get; set; }
         public string PortNet2 { get; set; }
         public string PortNet3 { get; set; }
         public Dictionary<string, string> Services { get; set; } = new Dictionary<string, string>();
+        public bool IsEnabled { get; set; } = true;
     }
 
     #region [    View    ]
@@ -45,6 +47,7 @@ namespace antdlib.views {
         public string PortNet2 { get; set; }
         public string PortNet3 { get; set; }
         public string Services { get; set; }
+        public string IsEnabled { get; set; }
     }
 
     [RegisterView]
@@ -74,7 +77,8 @@ namespace antdlib.views {
                     doc.PortNet1,
                     doc.PortNet2,
                     doc.PortNet3,
-                    doc.Services.ToJson()
+                    doc.Services.ToJson(),
+                    doc.IsEnabled.ToString()
                 };
                 api.Emit(docid, schemaSyslogs);
             };

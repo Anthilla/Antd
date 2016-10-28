@@ -35,7 +35,7 @@ using antdlib.common;
 namespace antdlib.Virsh {
     public class Virsh {
 
-        public class VM {
+        public class VirtualMachineInfo {
             public string Id { get; set; }
             public string Domain { get; set; }
             public string State { get; set; }
@@ -43,8 +43,8 @@ namespace antdlib.Virsh {
             public string VncPort { get; set; }
         }
 
-        public static IEnumerable<VM> GetVmList() {
-            var vms = new List<VM>();
+        public static IEnumerable<VirtualMachineInfo> GetVmList() {
+            var vms = new List<VirtualMachineInfo>();
             var res = Bash.Execute("virsh list --all | sed '1,2d'");
             if (res.Length < 1) {
                 return vms;
@@ -52,7 +52,7 @@ namespace antdlib.Virsh {
             var virshVms = res.Split(new[] { Environment.NewLine }, 3, StringSplitOptions.RemoveEmptyEntries);
             foreach (var i in virshVms) {
                 var info = i.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                var vm = new VM {
+                var vm = new VirtualMachineInfo {
                     Id = info[0],
                     Domain = info[1],
                     State = info[2],

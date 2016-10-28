@@ -1,0 +1,42 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Avahi">
+        Service Discovery
+    </legend>
+    <table class="table" style="table-layout: fixed;">
+        <thead>
+            <tr><td colspan="3"><label>Antd Services - Discovered in local network</label></td></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label>
+                        IP
+                    </label>
+                </td>
+                <td>
+                    <label>
+                        Port
+                    </label>
+                </td>
+                <td></td>
+            </tr>
+            @Each.AntdAvahiServices
+            <tr>
+                <td>
+                    <p>
+                        @Current.Key
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        @Current.Value
+                    </p>
+                </td>
+                <td>
+                    <a href="http://@Current.Key:@Current.Value/" target="_blank" class="button bg-anthilla-blu" style="width: 90%; height: 28px;">Open</a>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

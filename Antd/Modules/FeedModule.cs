@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel.Syndication;
-using antdlib;
 using Nancy;
 
 namespace Antd.Modules {

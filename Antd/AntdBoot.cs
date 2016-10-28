@@ -89,6 +89,11 @@ namespace Antd {
             database.RegisterView(new SambaConfigView());
             database.RegisterView(new SyslogView());
             database.RegisterView(new DhcpConfigView());
+            database.RegisterView(new DhcpServerOptionsView());
+            database.RegisterView(new DhcpServerClassView());
+            database.RegisterView(new DhcpServerSubnetView());
+            database.RegisterView(new DhcpServerPoolView());
+            database.RegisterView(new DhcpServerReservationView());
             database.RegisterView(new BindConfigView());
             database.RegisterView(new NftView());
             ConsoleLogger.Log("database ready");
@@ -248,6 +253,15 @@ namespace Antd {
                 }
             }
             ConsoleLogger.Log("services ready");
+        }
+
+        public void SetSyslogNg() {
+            if (!Parameter.IsUnix)
+                return;
+            var s = SyslogConfiguration.Set();
+            if (s) {
+                ConsoleLogger.Log("syslog ready");
+            }
         }
 
         public void InitAvahi() {

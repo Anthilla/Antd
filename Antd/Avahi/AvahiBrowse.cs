@@ -6,7 +6,7 @@ using antdlib.common;
 
 namespace Antd.Avahi {
     public class AvahiBrowse {
-        public List<string> Locals { get; private set; } = new List<string>();
+        public List<string> Locals { get; } = new List<string>();
 
         public void DiscoverService(string serviceName) {
             var result = Bash.Execute("avahi-browse -d local _http._tcp --resolve -tp");

@@ -30,9 +30,12 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading;
+using antdlib.common;
 using antdlib.Svcs.Bind;
-using antdlib.Svcs.Dhcp;
+using antdlib.views;
 using antdlib.ViewBinds;
+using Antd.Database;
+using Antd.DhcpServer;
 using Antd.Svcs.Samba;
 using Nancy;
 using Nancy.ModelBinding;
@@ -40,6 +43,13 @@ using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServicesModule : CoreModule {
+
+        private static readonly DhcpServerOptionsRepository DhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+        private static readonly DhcpServerSubnetRepository DhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+        private static readonly DhcpServerClassRepository DhcpServerClassRepository = new DhcpServerClassRepository();
+        private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
+        private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
+
         public ServicesModule() {
             this.RequiresAuthentication();
 
@@ -67,27 +77,155 @@ namespace Antd.Modules {
                 vmod.BindServer = bindMapFile.BindServer;
                 vmod.BindView = bindMapFile.BindView;
 
-                vmod.DhcpIsActive = DhcpConfig.IsActive;
-                var dhcpMapFile = DhcpConfig.MapFile.Get();
-                vmod.DhcpGlobal = dhcpMapFile.DhcpGlobal;
-                vmod.DhcpInclude = dhcpMapFile.DhcpInclude;
-                vmod.DhcpKey = dhcpMapFile.DhcpKey;
-                vmod.DhcpSubnet = dhcpMapFile.DhcpSubnet;
-                vmod.DhcpHost = dhcpMapFile.DhcpHost;
-                vmod.DhcpPrefix6 = dhcpMapFile.DhcpPrefix6;
-                vmod.DhcpRange6 = dhcpMapFile.DhcpRange6;
-                vmod.DhcpRange = dhcpMapFile.DhcpRange;
-                vmod.DhcpSubnet6 = dhcpMapFile.DhcpSubnet6;
-                vmod.DhcpFailover = dhcpMapFile.DhcpFailover;
-                vmod.DhcpLogging = dhcpMapFile.DhcpLogging;
-                vmod.DhcpSharedNetwork = dhcpMapFile.DhcpSharedNetwork;
-                vmod.DhcpGroup = dhcpMapFile.DhcpGroup;
-                vmod.DhcpClass = dhcpMapFile.DhcpClass;
-                vmod.DhcpSubclass = dhcpMapFile.DhcpSubclass;
+                var dhcpdIsActive = DhcpServerOptionsRepository.Get() != null && DhcpServerSubnetRepository.Get() != null;
+                vmod.DhcpdIsActive = dhcpdIsActive;
+                vmod.DhcpdOptions = DhcpServerOptionsRepository.Get();
+                vmod.DhcpdSubnet = DhcpServerSubnetRepository.Get();
+                vmod.DhcpdClass = DhcpServerClassRepository.GetAll();
+                vmod.DhcpdPools = DhcpServerPoolRepository.GetAll();
+                vmod.DhcpdReservation = DhcpServerReservationRepository.GetAll();
 
                 vmod.CurrentContext = Request.Path;
                 return View["_page-services", vmod];
             };
+
+            #region [    DHCPD    ]
+            Post["/services/dhcpd/enable"] = x => {
+                DhcpdConfiguration.Enable();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/disable"] = x => {
+                DhcpdConfiguration.Disable();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/set"] = x => {
+                DhcpdConfiguration.Set();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/restart"] = x => {
+                DhcpdConfiguration.Enable();
+                DhcpdConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/stop"] = x => {
+                DhcpdConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/options"] = x => {
+                string allow = Request.Form.Allow;
+                string updateStaticLeases = Request.Form.UpdateStaticLeases;
+                string updateConflictDetection = Request.Form.UpdateConflictDetection;
+                string useHostDeclNames = Request.Form.UseHostDeclNames;
+                string doForwardUpdates = Request.Form.DoForwardUpdates;
+                string doReverseUpdates = Request.Form.DoReverseUpdates;
+                string logFacility = Request.Form.LogFacility;
+                string option = Request.Form.Option;
+                string zoneName = Request.Form.ZoneName;
+                string zonePrimaryAddress = Request.Form.ZonePrimaryAddress;
+                string ddnsUpdateStyle = Request.Form.DdnsUpdateStyle;
+                string ddnsUpdates = Request.Form.DdnsUpdates;
+                string ddnsDomainName = Request.Form.DdnsDomainName;
+                string ddnsRevDomainName = Request.Form.DdnsRevDomainName;
+                string defaultLeaseTime = Request.Form.DefaultLeaseTime;
+                string maxLeaseTime = Request.Form.MaxLeaseTime;
+                string keyName = Request.Form.KeyName;
+                string keySecret = Request.Form.KeySecret;
+                var model = new DhcpServerOptionsModel {
+                    Allow = allow.SplitToList(),
+                    UpdateStaticLeases = updateStaticLeases,
+                    UpdateConflictDetection = updateConflictDetection,
+                    UseHostDeclNames = useHostDeclNames,
+                    DoForwardUpdates = doForwardUpdates,
+                    DoReverseUpdates = doReverseUpdates,
+                    LogFacility = logFacility,
+                    Option = option.SplitToList(),
+                    ZoneName = zoneName,
+                    ZonePrimaryAddress = zonePrimaryAddress,
+                    DdnsUpdateStyle = ddnsUpdateStyle,
+                    DdnsUpdates = ddnsUpdates,
+                    DdnsDomainName = ddnsDomainName,
+                    DdnsRevDomainName = ddnsRevDomainName,
+                    DefaultLeaseTime = defaultLeaseTime,
+                    MaxLeaseTime = maxLeaseTime,
+                    KeyName = keyName,
+                    KeySecret = keySecret
+                };
+                DhcpServerOptionsRepository.Set(model);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/services/dhcpd/subnet"] = x => {
+                string ipFamily = Request.Form.IpFamily;
+                string ipMask = Request.Form.IpMask;
+                string optionRouters = Request.Form.OptionRouters;
+                string ntpServers = Request.Form.NtpServers;
+                string timeServers = Request.Form.DoForTimeServerswardUpdates;
+                string domainNameServers = Request.Form.DomainNameServers;
+                string broadcastAddress = Request.Form.BroadcastAddress;
+                string subnetMask = Request.Form.SubnetMask;
+                string zoneName = Request.Form.ZoneName;
+                string zonePrimaryAddress = Request.Form.ZonePrimaryAddress;
+                var model = new DhcpServerSubnetModel {
+                    IpFamily = ipFamily,
+                    IpMask = ipMask,
+                    OptionRouters = optionRouters,
+                    NtpServers = ntpServers,
+                    TimeServers = timeServers,
+                    DomainNameServers = domainNameServers,
+                    BroadcastAddress = broadcastAddress,
+                    SubnetMask = subnetMask,
+                    ZoneName = zoneName,
+                    ZonePrimaryAddress = zonePrimaryAddress,
+                };
+                DhcpServerSubnetRepository.Set(model);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/services/dhcpd/class/add"] = x => {
+                string name = Request.Form.Name;
+                string macVendor = Request.Form.MacVendor;
+                DhcpServerClassRepository.Create(name, macVendor);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/services/dhcpd/class/del"] = x => {
+                string id = Request.Form.Guid;
+                DhcpServerClassRepository.Delete(id);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/pool/add"] = x => {
+                string option = Request.Form.Option;
+                DhcpServerPoolRepository.Create(option.SplitToList());
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/services/dhcpd/pool/del"] = x => {
+                string id = Request.Form.Guid;
+                DhcpServerPoolRepository.Delete(id);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/reservation/add"] = x => {
+                string hostName = Request.Form.HostName;
+                string macAddress = Request.Form.MacAddress;
+                string ipAddress = Request.Form.IpAddress;
+                DhcpServerReservationRepository.Create(hostName, macAddress, ipAddress);
+                return Response.AsRedirect("/services");
+            };
+
+            Post["/services/dhcpd/reservation/del"] = x => {
+                string id = Request.Form.Guid;
+                DhcpServerReservationRepository.Delete(id);
+                return HttpStatusCode.OK;
+            };
+
+            #endregion [    DHCPD    ]
 
             #region SAMBA
             Post["/services/activate/samba"] = x => {
@@ -225,142 +363,6 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
             #endregion BIND
-
-            #region DHCP
-            Post["/services/activate/dhcp"] = x => {
-                DhcpConfig.SetReady();
-                DhcpConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/refresh/dhcp"] = x => {
-                DhcpConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/reloadconfig/dhcp"] = x => {
-                DhcpConfig.ReloadConfig();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/update/dhcp/{section}"] = x => {
-                var parameters = this.Bind<List<ServiceDhcp>>();
-                var section = (string)x.section;
-                if (section == "global") {
-                    DhcpConfig.WriteFile.SaveGlobal(parameters);
-                }
-                if (section == "prefix6") {
-                    DhcpConfig.WriteFile.SavePrefix6(parameters);
-                }
-                if (section == "range6") {
-                    DhcpConfig.WriteFile.SaveRange6(parameters);
-                }
-                if (section == "range") {
-                    DhcpConfig.WriteFile.SaveRange(parameters);
-                }
-                else {
-                    DhcpConfig.WriteFile.SaveConfigFor(section, parameters);
-                }
-                Thread.Sleep(1000);
-                DhcpConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addglobal"] = x => {
-                string k = Request.Form.NewKey;
-                string v = Request.Form.NewValue;
-                DhcpConfig.MapFile.AddGlobal(k, v);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addrange"] = x => {
-                string k = Request.Form.NewKey;
-                string v = Request.Form.NewValue;
-                DhcpConfig.MapFile.AddGlobal(k, v);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addprefix6"] = x => {
-                string k = Request.Form.NewKey;
-                string v = Request.Form.NewValue;
-                DhcpConfig.MapFile.AddPrefix6(k, v);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addrange6"] = x => {
-                string k = Request.Form.NewKey;
-                string v = Request.Form.NewValue;
-                DhcpConfig.MapFile.AddRange6(k, v);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addrange"] = x => {
-                string k = Request.Form.NewKey;
-                string v = Request.Form.NewValue;
-                DhcpConfig.MapFile.AddRange(k, v);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addkey"] = x => {
-                string name = Request.Form.NewKeyName;
-                DhcpConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addsubnet"] = x => {
-                string name = Request.Form.NewSubnet6Name;
-                DhcpConfig.MapFile.AddSubnet6(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addsubnet"] = x => {
-                string name = Request.Form.NewSubnetName;
-                DhcpConfig.MapFile.AddSubnet(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addhost"] = x => {
-                string name = Request.Form.NewHostName;
-                DhcpConfig.MapFile.AddHost(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addclass"] = x => {
-                string name = Request.Form.NewClassName;
-                DhcpConfig.MapFile.AddClass(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addsubclass"] = x => {
-                string name = Request.Form.NewSubclassName;
-                DhcpConfig.MapFile.AddSubclass(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addfailover"] = x => {
-                string name = Request.Form.NewFailoverName;
-                DhcpConfig.MapFile.AddFailover(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addlogging"] = x => {
-                string name = Request.Form.NewLoggingName;
-                DhcpConfig.MapFile.AddLogging(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addgroup"] = x => {
-                string name = Request.Form.NewGroupName;
-                DhcpConfig.MapFile.AddGroup(name);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcp/addkey"] = x => {
-                string name = Request.Form.NewKeyName;
-                DhcpConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/");
-            };
-            #endregion DHCP
 
             #region SSH
             //Post["/services/activate/ssh"] = x => {

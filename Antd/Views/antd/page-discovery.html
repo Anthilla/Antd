@@ -1,4 +1,5 @@
-﻿//-------------------------------------------------------------------------------------
+﻿@Master['layout.html']
+<!-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -25,53 +26,39 @@
 //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //     20141110
-//-------------------------------------------------------------------------------------
-
-using antdlib.common;
-
-namespace antdlib.Systemd {
-
-    public class Systemctl {
-
-        public static void DaemonReload() {
-            Bash.Execute("systemctl daemon-reload");
-        }
-
-        public static void Start(string unit) {
-            Bash.Execute("systemctl start " + unit);
-        }
-
-        public static void Stop(string unit) {
-            Bash.Execute("systemctl stop " + unit);
-        }
-
-        public static void Restart(string unit) {
-            Bash.Execute("systemctl restart " + unit);
-        }
-
-        public static void Reload(string unit) {
-            Bash.Execute("systemctl reload " + unit);
-        }
-
-        public static string Status(string unit) {
-            return Bash.Execute("systemctl status " + unit);
-        }
-
-        public static bool IsActive(string unit) {
-            var r = Bash.Execute("systemctl is-active " + unit);
-            return r != "inactive";
-        }
-
-        public static bool IsEnabled(string unit) {
-            var r = Bash.Execute("systemctl is-enabled " + unit);
-            return r != "disabled";
-        }
-
-        public static void Enable(string unit) {
-            Bash.Execute("systemctl enable " + unit);
-        }
-
-        public static void Disable(string unit) {
-        }
+//------------------------------------------------------------------------------------->
+@Section['PageBar']
+<style type="text/css">
+    #Discovery-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
     }
-}
+
+    div.row {
+        margin-top: 20px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
+    <nav class="navigation-bar-content">
+        @Each.AntdContext
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
+            @Current
+        </a>
+        @EndEach
+
+        <p class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px; cursor: pointer;">
+            <i class="icon-arrow-up"></i>
+        </p>
+    </nav>
+</nav>
+@EndSection
+
+@Section['MainContent']
+@Partial['antd/page-discovery-avahi', Model];
+@EndSection
+
+@Section['Scripts']
+<script data-context="discovery" type="text/javascript">
+    
+</script>
+@EndSection

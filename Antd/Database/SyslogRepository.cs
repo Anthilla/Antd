@@ -30,12 +30,12 @@ namespace Antd.Database {
                 PortNet1 = port1,
                 PortNet2 = port2,
                 PortNet3 = port3,
-                Services = new Dictionary<string, string>()
+                Services = new Dictionary<string, string>(),
+                IsEnabled = true
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
             return result;
         }
-
 
         public bool Set(string rootPath, string port1, string port2, string port3, Dictionary<string, string> services ) {
             var tryget = Get();
@@ -47,7 +47,8 @@ namespace Antd.Database {
                 PortNet1 = port1,
                 PortNet2 = port2,
                 PortNet3 = port3,
-                Services = services
+                Services = services,
+                IsEnabled = true
             };
             var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
             return result;
@@ -55,6 +56,32 @@ namespace Antd.Database {
 
         public bool Delete() {
             var result = DatabaseRepository.Delete<SyslogModel>(AntdApplication.Database, Guid.Parse(ConfigGuid));
+            return result;
+        }
+
+        public bool Enable() {
+            var tryget = Get();
+            if (tryget == null) {
+                return false;
+            }
+            Delete();
+            var obj = new SyslogModel(tryget) {
+                IsEnabled = true
+            };
+            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            return result;
+        }
+
+        public bool Disable() {
+            var tryget = Get();
+            if (tryget == null) {
+                return false;
+            }
+            Delete();
+            var obj = new SyslogModel(tryget) {
+                IsEnabled = false
+            };
+            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
             return result;
         }
     }

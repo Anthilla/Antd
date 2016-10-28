@@ -77,5 +77,11 @@ namespace Antd.Storage {
         public static void Import(string poolName) {
             Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}");
         }
+
+        public static List<string> History() {
+            var obj = Bash.Execute("zpool history");
+            var list = obj.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return list.ToList();
+        }
     }
 }

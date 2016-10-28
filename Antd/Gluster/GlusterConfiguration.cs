@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
-using Antd.Configuration;
 using Newtonsoft.Json;
 
 namespace Antd.Gluster {
@@ -39,6 +37,15 @@ namespace Antd.Gluster {
                     ConsoleLogger.Log("a gluster configuration file template has been created");
                 }
             }
+        }
+
+        public static void Set(GlusterSetup setup) {
+            Directory.CreateDirectory(Parameter.RepoConfig);
+            if (!File.Exists(FilePath)) {
+                return;
+            }
+            var text = JsonConvert.SerializeObject(setup, Formatting.Indented);
+            File.WriteAllText(FilePath, text);
         }
 
         public static bool IsConfigured => File.Exists(FilePath);
@@ -102,15 +109,14 @@ namespace Antd.Gluster {
             }
         }
 
-        public static List<Control> Get() {
+        public static GlusterSetup Get() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if (!File.Exists(FilePath)) {
-                return new List<Control>();
+                return new GlusterSetup();
             }
             var text = File.ReadAllText(FilePath);
-            var flow = JsonConvert.DeserializeObject<ConfigurationFlow>(text);
-            var controls = flow?.Controls?.OrderBy(_ => _.Index).ToList();
-            return controls;
+            var setup = JsonConvert.DeserializeObject<GlusterSetup>(text);
+            return setup;
         }
     }
 }

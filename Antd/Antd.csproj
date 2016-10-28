@@ -101,6 +101,11 @@
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
+    <Compile Include="Database\DhcpServerClassRepository.cs" />
+    <Compile Include="Database\DhcpServerSubnetRepository.cs" />
+    <Compile Include="Database\DhcpServerReservationRepository.cs" />
+    <Compile Include="Database\DhcpServerPoolRepository.cs" />
+    <Compile Include="Database\DhcpServerOptionsRepository.cs" />
     <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\NftRepository.cs" />
@@ -118,6 +123,7 @@
     <Compile Include="Database\ObjectRepository.cs" />
     <Compile Include="Database\UserClaimRepository.cs" />
     <Compile Include="Database\UserRepository.cs" />
+    <Compile Include="DhcpServer\DhcpdConfiguration.cs" />
     <Compile Include="DirectoryWatcher.cs" />
     <Compile Include="Firewall\FirewallLists.cs" />
     <Compile Include="Firewall\NFTables.cs" />
@@ -129,6 +135,8 @@
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
     <Compile Include="Info\MachineInfo.cs" />
+    <Compile Include="Log\Journalctl.cs" />
+    <Compile Include="Log\SyslogNg.cs" />
     <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\DiscoveryModule.cs" />
@@ -178,8 +186,6 @@
     <Compile Include="Storage\Zpool.cs" />
     <Compile Include="Svcs\Bind\BindConfig.cs" />
     <Compile Include="Svcs\Bind\BindStatement.cs" />
-    <Compile Include="Svcs\Dhcp\DhcpConfig.cs" />
-    <Compile Include="Svcs\Dhcp\DhcpStatement.cs" />
     <Compile Include="Svcs\Samba\SambaCommandModel.cs" />
     <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="SystemdTimer\Timers.cs" />
@@ -207,13 +213,35 @@
     <Content Include="Scripts\jquery-2.2.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\page-antd-system.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-time.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd2.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\page-antd-firewall-old.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-gluster.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\page-discovery-avahi.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-discovery.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-antd-dhcp.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\services\page-services-dhcpOLD.html" />
     <Content Include="Views\antd\page-apps.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\page-log-syslogng.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-ak.html">
@@ -264,9 +292,6 @@
     <Content Include="Views\antd\page-antd-dns-client.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-antd-dns-server.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\antd\page-antd-firewall.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -292,9 +317,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-samba.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-antd-storage_OLD.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-antd-users.html">
@@ -633,6 +655,10 @@
     <Content Include="Resources\.syslog-ng.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\.nxlog.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\dhcpd.conf" />
     <None Include="Svcs\Samba\json-schema1.json" />
     <None Include="Svcs\Samba\samba.command.list" />
     <None Include="Svcs\Samba\samba.json" />

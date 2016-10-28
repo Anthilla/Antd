@@ -28,175 +28,185 @@
     //
     //     20141110
     //------------------------------------------------------------------------------------->
-
 @Section['PageBar']
-    <style type="text/css">
-        #Services-TB {
-            border-bottom: 10px solid #A7BD39;
-            height: 80px !important;
-        }
-    </style>
-    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
-        <nav class="navigation-bar-content">
-            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-                <i class="icon-wrench on-left" style="line-height: 5px;"></i>
-                Services
-            </div>
-            <div class="element-divider"></div>
+<style type="text/css">
+    #Services-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
+    }
+</style>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
+    <nav class="navigation-bar-content">
+        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+            <i class="icon-wrench on-left" style="line-height: 5px;"></i>
+            Services
+        </div>
+        <div class="element-divider"></div>
 
 
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Bind" style="padding-top: 11px;">
-                Bind
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DHCP" style="padding-top: 11px;">
-                DHCP
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Glusterfs" style="padding-top: 11px;">
-                Glusterfs
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Libvirt" style="padding-top: 11px;">
-                Libvirt
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#LXC" style="padding-top: 11px;">
-                LXC
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#NFS" style="padding-top: 11px;">
-                NFS
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#NFTable" style="padding-top: 11px;">
-                NFTable
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Nginx" style="padding-top: 11px;">
-                Nginx
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Ntpd" style="padding-top: 11px;">
-                Ntpd
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Qemu" style="padding-top: 11px;">
-                Qemu
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Samba" style="padding-top: 11px;">
-                Samba
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Squid" style="padding-top: 11px;">
-                Squid
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#SSH" style="padding-top: 11px;">
-                SSH
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Syslogng" style="padding-top: 11px;">
-                Syslogng
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Hostnamectl" style="padding-top: 11px;">
-                Hostnamectl
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Journald" style="padding-top: 11px;">
-                Journald
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Networkd" style="padding-top: 11px;">
-                Networkd
-            </a>
-            <div class="element-divider"></div>
-            <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#ZFS" style="padding-top: 11px;">
-                ZFS
-            </a>
-            <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Bind" style="padding-top: 11px;">
+            Bind
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DHCP" style="padding-top: 11px;">
+            DHCP
+        </a>
+        <div class="element-divider"></div>
+        <!--<a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Glusterfs" style="padding-top: 11px;">
+            Glusterfs
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Libvirt" style="padding-top: 11px;">
+            Libvirt
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#LXC" style="padding-top: 11px;">
+            LXC
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#NFS" style="padding-top: 11px;">
+            NFS
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#NFTable" style="padding-top: 11px;">
+            NFTable
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Nginx" style="padding-top: 11px;">
+            Nginx
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Ntpd" style="padding-top: 11px;">
+            Ntpd
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Qemu" style="padding-top: 11px;">
+            Qemu
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Samba" style="padding-top: 11px;">
+            Samba
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Squid" style="padding-top: 11px;">
+            Squid
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#SSH" style="padding-top: 11px;">
+            SSH
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Syslogng" style="padding-top: 11px;">
+            Syslogng
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Hostnamectl" style="padding-top: 11px;">
+            Hostnamectl
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Journald" style="padding-top: 11px;">
+            Journald
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#Networkd" style="padding-top: 11px;">
+            Networkd
+        </a>
+        <div class="element-divider"></div>
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#ZFS" style="padding-top: 11px;">
+            ZFS
+        </a>
+        <div class="element-divider"></div>-->
 
-            <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
-                <i class="icon-arrow-up"></i>
-            </a>
-            <div class="element-divider place-right"></div>
-            <a onclick="SetCreate()" class="element place-right upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DashboardForm" style="padding-top: 11px;">
-                New Table
-            </a>
-        </nav>
+        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
+            <i class="icon-arrow-up"></i>
+        </a>
+        <div class="element-divider place-right"></div>
+        <a onclick="SetCreate()" class="element place-right upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#DashboardForm" style="padding-top: 11px;">
+            New Table
+        </a>
     </nav>
+</nav>
 @EndSection
 
 @Section['MainContent']
     @Html.Partial("page-services-bind")
     @Html.Partial("page-services-dhcp")
     @Html.Partial("page-services-samba")
-    @Html.Partial("page-services-ssh")
 @EndSection
 
 @Section['Scripts']
-    <script data-context="services" type="text/javascript">
-        $('.search-field').keyup(function () {
-            var tableReference = $(this).attr('data-table');
-            var searchIn = $('table[data-search="' + tableReference + '"]').find('tbody');
-            var queryString = $(this).val();
-            var row = searchIn.children('tr');
-            row.each(function (index) {
-                var thisRow = $(this);
-                var queriedText = $(this).text();
-                if (queriedText.indexOf(queryString) != -1) {
-                    thisRow.show();
-                }
-                if (queriedText.indexOf(queryString) < 0) {
-                    thisRow.hide();
-                }
-            });
+<script data-context="services" type="text/javascript">
+    $('.search-field').keyup(function () {
+        var tableReference = $(this).attr('data-table');
+        var searchIn = $('table[data-search="' + tableReference + '"]').find('tbody');
+        var queryString = $(this).val();
+        var row = searchIn.children('tr');
+        row.each(function (index) {
+            var thisRow = $(this);
+            var queriedText = $(this).text();
+            if (queriedText.indexOf(queryString) != -1) {
+                thisRow.show();
+            }
+            if (queriedText.indexOf(queryString) < 0) {
+                thisRow.hide();
+            }
         });
+    });
 
-        //START SAMBA
-        $('#ActivateSamba').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/activate/samba',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    //START SAMBA
+    $('#ActivateSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/samba',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#RefreshSamba').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/refresh/samba',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    $('#RefreshSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/samba',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#ReloadSamba').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/reloadconfig/samba',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    $('#ReloadSamba').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/samba',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#ShowSambaStructure').mousedown(function () {
-            $('#SambaStructure').show();
-        }).mouseup(function () {
-            $('#SambaStructure').hide();
-        });;
+    $('#ShowSambaStructure').mousedown(function () {
+        $('#SambaStructure').show();
+    }).mouseup(function () {
+        $('#SambaStructure').hide();
+    });;
 
-        $(document).ready(function () {
-            $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
+    $(document).ready(function () {
+        $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
+            dataKey.attr('name', dataKey.attr('name') + '_' + index);
+            var dataValue = $(this).find('[name="DataValue"]');
+            dataValue.attr('name', dataValue.attr('name') + '_' + index);
+            var dataFile = $(this).find('[name="DataFilePath"]');
+            dataFile.attr('name', dataFile.attr('name') + '_' + index);
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-share-form]').each(function (sindexx) {
+            $(this).find('[data-object="share-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
                 dataKey.attr('name', dataKey.attr('name') + '_' + index);
                 var dataValue = $(this).find('[name="DataValue"]');
@@ -205,161 +215,72 @@
                 dataFile.attr('name', dataFile.attr('name') + '_' + index);
             });
         });
+    });
 
-        $(document).ready(function () {
-            $('[data-share-form]').each(function (sindexx) {
-                $(this).find('[data-object="share-parameter"]').each(function (index) {
-                    var dataKey = $(this).find('[name="DataKey"]');
-                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
-                    var dataValue = $(this).find('[name="DataValue"]');
-                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
-                    var dataFile = $(this).find('[name="DataFilePath"]');
-                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
-                });
-            });
+    $('#AddNewParameterSamba').click(function () {
+        $('#NewParameterSambaDashboard').toggle();
+    });
+
+    $('#AddNewShare').click(function () {
+        $('#NewSambaShare').toggle();
+    });
+    //END SAMBA
+
+    //START BIND
+    $('#ActivateBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/bind',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#AddNewParameterSamba').click(function () {
-            $('#NewParameterSambaDashboard').toggle();
+    $('#RefreshBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/bind',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#AddNewShare').click(function () {
-            $('#NewSambaShare').toggle();
+    $('#ReloadBind').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/bind',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
         });
-        //END SAMBA
+    });
 
-        //START BIND
-        $('#ActivateBind').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/activate/bind',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('#RefreshBind').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/refresh/bind',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('#ReloadBind').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/reloadconfig/bind',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $(document).ready(function () {
-            $.when(
-                $('input[data-array="bind"]').selectize({
-                    delimiter: ';',
-                    persist: false,
-                    create: function (input) {
-                        return {
-                            value: input,
-                            text: input
-                        }
+    $(document).ready(function () {
+        $.when(
+            $('input[data-array="bind"]').selectize({
+                delimiter: ';',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
                     }
-                })
-            ).done(function (x) {
-                $('.selectize-input.items').find('div.item[data-Value=""]').remove();
-                $('input[data-array="bind"]').hide();
-            });
-        });
-
-        $(document).ready(function () {
-            $('form[data-role="bind-section-update"]').each(function (sindexx) {
-                $(this).find('[data-object="bind-parameter"]').each(function (index) {
-                    var dataKey = $(this).find('[name="DataKey"]');
-                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
-                    var dataValue = $(this).find('[name="DataValue"]');
-                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
-                    var dataFile = $(this).find('[name="DataFilePath"]');
-                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
-                });
-            });
-        });
-
-        $('#AddNewAclBind').click(function () {
-            $('#NewAclBindDashboard').toggle();
-        });
-
-        $('#AddNewKeyBind').click(function () {
-            $('#NewKeyBindDashboard').toggle();
-        });
-
-        $('#AddNewMastersBind').click(function () {
-            $('#NewMastersBindDashboard').toggle();
-        });
-
-        $('#AddNewServerBind').click(function () {
-            $('#NewServerBindDashboard').toggle();
-        });
-
-        $('#AddNewViewBind').click(function () {
-            $('#NewViewBindDashboard').toggle();
-        });
-
-        $('#AddNewZoneBind').click(function () {
-            $('#NewZoneBindDashboard').toggle();
-        });
-        //END BIND
-
-        //START DHCP
-        $('#ActivateDhcp').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/activate/dhcp',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
                 }
-            });
+            })
+        ).done(function (x) {
+            $('.selectize-input.items').find('div.item[data-Value=""]').remove();
+            $('input[data-array="bind"]').hide();
         });
+    });
 
-        $('#RefreshDhcp').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/refresh/dhcp',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('#ReloadDhcp').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/reloadconfig/dhcp',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
-        });
-
-        $('#ShowDhcpStructure').mousedown(function () {
-            $('#DhcpStructure').show();
-        }).mouseup(function () {
-            $('#DhcpStructure').hide();
-        });;
-
-        $(document).ready(function () {
-            $('#DhcpForm').find('tr[data-object="dhcp-parameter"]').each(function (index) {
+    $(document).ready(function () {
+        $('form[data-role="bind-section-update"]').each(function (sindexx) {
+            $(this).find('[data-object="bind-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
                 dataKey.attr('name', dataKey.attr('name') + '_' + index);
                 var dataValue = $(this).find('[name="DataValue"]');
@@ -368,89 +289,178 @@
                 dataFile.attr('name', dataFile.attr('name') + '_' + index);
             });
         });
+    });
 
-        $(document).ready(function () {
-            $('[data-share-form]').each(function (sindexx) {
-                $(this).find('[data-object="share-parameter"]').each(function (index) {
-                    var dataKey = $(this).find('[name="DataKey"]');
-                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
-                    var dataValue = $(this).find('[name="DataValue"]');
-                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
-                    var dataFile = $(this).find('[name="DataFilePath"]');
-                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
-                });
-            });
+    $('#AddNewAclBind').click(function () {
+        $('#NewAclBindDashboard').toggle();
+    });
+
+    $('#AddNewKeyBind').click(function () {
+        $('#NewKeyBindDashboard').toggle();
+    });
+
+    $('#AddNewMastersBind').click(function () {
+        $('#NewMastersBindDashboard').toggle();
+    });
+
+    $('#AddNewServerBind').click(function () {
+        $('#NewServerBindDashboard').toggle();
+    });
+
+    $('#AddNewViewBind').click(function () {
+        $('#NewViewBindDashboard').toggle();
+    });
+
+    $('#AddNewZoneBind').click(function () {
+        $('#NewZoneBindDashboard').toggle();
+    });
+    //END BIND
+
+    //START DHCP
+    $('#ReloadDhcpd').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/restart',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#AddNewParameterDhcp').click(function () {
-            $('#NewParameterDhcpDashboard').toggle();
+    $('#EnableDhcpd').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/enable',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#AddNewShare').click(function () {
-            $('#NewDhcpShare').toggle();
+    $('#StopDhcpd').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/stop',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
 
-        $(document).ready(function () {
-            $.when(
-                $('input[data-array="dhcp"]').selectize({
-                    delimiter: ';',
-                    persist: false,
-                    create: function (input) {
-                        return {
-                            value: input,
-                            text: input
-                        }
-                    }
-                })
-            ).done(function (x) {
-                $('.selectize-input.items').find('div.item[data-Value=""]').remove();
-                $('input[data-array="dhcp"]').hide();
-            });
+    $('#ApplyConfigDhcpd').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/set',
+            type: 'POST',
+            success: function () {
+                location.reload(true);
+            }
         });
-        //END DHCP
+    });
 
-        //START SSH
-        $('#ActivateSsh').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/activate/ssh',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    $('[data-role="DeleteDhcpdReservation"]').click(function () {
+        var guid = $().attr('data-id');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/reservation/del',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#RefreshSsh').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/refresh/ssh',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    $('[data-role="DeleteDhcpdClass"]').click(function () {
+        var guid = $().attr('data-id');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/class/del',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
 
-        $('#ReloadSsh').click(function () {
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/services/reloadconfig/ssh',
-                type: 'POST',
-                success: function (data) {
-                    location.reload(true);
-                }
-            });
+    $('[data-role="DeleteDhcpdPool"]').click(function () {
+        var guid = $().attr('data-id');
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/dhcpd/pool/del',
+            type: 'POST',
+            data: {
+                Guid: guid
+            },
+            success: function () {
+                location.reload(true);
+            }
         });
+    });
+    //END DHCP
 
-        $('#ShowSshStructure').mousedown(function () {
-            $('#SshStructure').show();
-        }).mouseup(function () {
-            $('#SshStructure').hide();
-        });;
+    //START SSH
+    $('#ActivateSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/activate/ssh',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
 
-        $(document).ready(function () {
-            $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
+    $('#RefreshSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/refresh/ssh',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ReloadSsh').click(function () {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: '/services/reloadconfig/ssh',
+            type: 'POST',
+            success: function (data) {
+                location.reload(true);
+            }
+        });
+    });
+
+    $('#ShowSshStructure').mousedown(function () {
+        $('#SshStructure').show();
+    }).mouseup(function () {
+        $('#SshStructure').hide();
+    });;
+
+    $(document).ready(function () {
+        $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
+            dataKey.attr('name', dataKey.attr('name') + '_' + index);
+            var dataValue = $(this).find('[name="DataValue"]');
+            dataValue.attr('name', dataValue.attr('name') + '_' + index);
+            var dataFile = $(this).find('[name="DataFilePath"]');
+            dataFile.attr('name', dataFile.attr('name') + '_' + index);
+        });
+    });
+
+    $(document).ready(function () {
+        $('[data-key-form]').each(function (sindexx) {
+            $(this).find('[data-object="key-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
                 dataKey.attr('name', dataKey.attr('name') + '_' + index);
                 var dataValue = $(this).find('[name="DataValue"]');
@@ -459,27 +469,15 @@
                 dataFile.attr('name', dataFile.attr('name') + '_' + index);
             });
         });
+    });
 
-        $(document).ready(function () {
-            $('[data-key-form]').each(function (sindexx) {
-                $(this).find('[data-object="key-parameter"]').each(function (index) {
-                    var dataKey = $(this).find('[name="DataKey"]');
-                    dataKey.attr('name', dataKey.attr('name') + '_' + index);
-                    var dataValue = $(this).find('[name="DataValue"]');
-                    dataValue.attr('name', dataValue.attr('name') + '_' + index);
-                    var dataFile = $(this).find('[name="DataFilePath"]');
-                    dataFile.attr('name', dataFile.attr('name') + '_' + index);
-                });
-            });
-        });
+    $('#AddNewParameterSsh').click(function () {
+        $('#NewParameterSshDashboard').toggle();
+    });
 
-        $('#AddNewParameterSsh').click(function () {
-            $('#NewParameterSshDashboard').toggle();
-        });
-
-        $('#AddNewKey').click(function () {
-            $('#NewSshKey').toggle();
-        });
-        //END SSH
-    </script>
+    $('#AddNewKey').click(function () {
+        $('#NewSshKey').toggle();
+    });
+    //END SSH
+</script>
 @EndSection

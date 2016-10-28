@@ -1,0 +1,83 @@
+﻿<div class="border-2-anthilla-gray" style="min-width: 100%; max-width: 100%; width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend id="Time">Date and Time</legend>
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>Local time</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-localtime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-localtime" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>Universal time</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-univtime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-univtime" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>RTC time</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-rtctime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-rtctime" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>Timezone</label>
+                    <select data="$host_timezone" style="width: 60%; height: 25px;" class="border-anthilla-green">
+                        @Each.Timezones
+                        <option value="@Current">@Current</option>
+                        @EndEach
+                    </select>
+                    <input type="button" data-role="CmdLaunch" data-name="set-timezone" data-par="$host_timezone" value="Update" class="float-right" />
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="timedatectl-get-timezone" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="timedatectl-get-timezone" data-par="" value="Update" class="float-right" />
+                </td>
+                <td>Set host timezone</td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>Network time on</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-nettimeon" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-nettimeon" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>NTP synchronized</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-ntpsync" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-ntpsync" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td data-role="CmdContainer">
+                    <label>RTC in local TZ</label>
+                </td>
+                <td data-role="CmdContainer">
+                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-rtcintz" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-rtcintz" data-par="" value="Update" class="float-right" />
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,5 +1,4 @@
-﻿
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -30,19 +29,38 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Net.Sockets;
 using antdlib;
 using antdlib.common;
 using Antd.Avahi;
 using Nancy;
+using Nancy.Security;
 using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {
     public class DiscoveryModule : CoreModule {
 
         public DiscoveryModule() {
+
+            Get["/discovery"] = x => {
+                this.RequiresAuthentication();
+                dynamic viewModel = new ExpandoObject();
+
+                viewModel.AntdContext = new[] {
+                    "Avahi"
+                };
+
+                var avahiBrowse = new AvahiBrowse();
+                avahiBrowse.DiscoverService("antd");
+                var localServices = avahiBrowse.Locals;
+                viewModel.AntdAvahiServices = localServices.Select(_ => new KeyValuePair<string, string>(_.Split(':')[0], _.Split(':')[1])).ToList();
+
+                return View["antd/page-discovery", viewModel];
+            };
 
             Get["/disc/hello"] = x => {
                 var myIp = "";

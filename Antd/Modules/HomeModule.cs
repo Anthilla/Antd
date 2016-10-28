@@ -32,13 +32,11 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib;
-using antdlib.common;
 using antdlib.Certificate;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
-using Antd.Firewall;
-using Antd.Info;
+using Antd.Gluster;
 using Nancy;
 using Nancy.Security;
 
@@ -46,7 +44,6 @@ namespace Antd.Modules {
     public class HomeModule : CoreModule {
 
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
-        private static readonly UserRepository UserRepository = new UserRepository();
 
         public HomeModule() {
             this.RequiresAuthentication();
@@ -59,73 +56,24 @@ namespace Antd.Modules {
 
             Get["/"] = x => {
                 dynamic viewModel = new ExpandoObject();
-
                 viewModel.AntdContext = new[] {
-                    "Info",
-                    "Host",
-                    "Time",
-                    "NS",
-                    "Net",
-                    "FW",
-                    "Proxy",
-                    "Acl",
-                    "Cron",
-                    "Storage",
-                    "Sync",
-                    "Overlay",
-                    "VM",
-                    "Mount",
-                    "Users",
-                    "Ssh"
+                    "info",
+                    "system",
+                    "host",
+                    "time",
+                    "ns",
+                    "dhcp",
+                    "net",
+                    "fw",
+                    "cron",
+                    "storage",
+                    "sync",
+                    "vm",
+                    "users"
                 };
-
-                var os = Bash.Execute("uname -a");
-                viewModel.VersionOS = os;
-
-                viewModel.Meminfo = MachineInfo.GetMeminfo();
-                viewModel.Cpuinfo = MachineInfo.GetCpuinfo();
-                viewModel.AosInfo = MachineInfo.GetAosrelease();
-                viewModel.SystemComponents = MachineInfo.GetSystemComponentModels();
-                viewModel.Uptime = MachineInfo.GetUptime();
-                viewModel.Free = MachineInfo.GetFree();
-
-                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
-                viewModel.Timezones = timezones;
-                ConsoleLogger.Log("Home load done > host info");
-
-                var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
-                var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkPhysicalIf = phyIf;
-                var brgIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkBridgeIf = brgIf;
-                var bndIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
-                viewModel.NetworkBondIf = bndIf;
-                var vrtIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name).ToList();
-                foreach (var v in vrtIf) {
-                    if (phyIf.Contains(v) || brgIf.Contains(v) || bndIf.Contains(v)) {
-                        vrtIf.Remove(v);
-                    }
-                }
-                viewModel.NetworkVirtualIf = vrtIf;
-                ConsoleLogger.Log("Home load done > network");
-                viewModel.NftTables = NfTables.Tables();
-                viewModel.MacAddressList = new MacAddressRepository().GetAll();
-                ConsoleLogger.Log("Home load done > firewall");
-                viewModel.Mounts = new MountRepository().GetAll();
-                ConsoleLogger.Log("Home load done > mounts");
-                //viewModel.DisksList = Disks.List();
-                //viewModel.ZpoolList = Zpool.List();
-                //viewModel.ZfsList = Zfs.List();
-                //viewModel.ZfsSnap = ZfsSnap.List();
-                //ConsoleLogger.Log("Home load done > storage");
-                viewModel.Overlay = OverlayWatcher.ChangedDirectories;
-                ConsoleLogger.Log("Home load done > overlay");
-
-                viewModel.Users = UserRepository.GetAll().OrderBy(_ => _.Alias);
-                ConsoleLogger.Log("Home load done > users");
-
-                return View["antd/page-antd", viewModel];
+                return View["antd/page-antd2", viewModel];
             };
+
 
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
@@ -171,6 +119,38 @@ namespace Antd.Modules {
             Post["/network/import"] = x => {
                 new NetworkInterfaceRepository().Import();
                 return HttpStatusCode.OK;
+            };
+
+            Post["/gluster/set"] = x => {
+                string name = Request.Form.Name;
+                string path = Request.Form.Path;
+                string nodes = Request.Form.Node;
+                var nodelist = nodes.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+                string volumeNames = Request.Form.GlusterVolumeName;
+                string volumeBrick = Request.Form.GlusterVolumeBrick;
+                string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
+                var volumeNamesList = volumeNames.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var volumeBrickList = volumeBrick.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var volumeMountPointList = volumeMountPoint.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var volumelist = new List<GfsVolume>();
+                for (var i = 0; i < 20; i++) {
+                    if (volumeNamesList.Length < i || volumeBrickList.Length < i || volumeMountPointList.Length < i) { continue; }
+                    var vol = new GfsVolume {
+                        Name = volumeNamesList[i],
+                        Brick = volumeBrickList[i],
+                        MountPoint = volumeMountPointList[i],
+                    };
+                    volumelist.Add(vol);
+                }
+                var setup = new GlusterSetup {
+                    Name = name,
+                    Path = path,
+                    Nodes = nodelist,
+                    Volumes = volumelist
+                };
+                GlusterConfiguration.Set(setup);
+                GlusterConfiguration.Launch();
+                return Response.AsRedirect("/");
             };
         }
     }

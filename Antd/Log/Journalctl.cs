@@ -33,7 +33,7 @@ using System.IO;
 using System.Linq;
 using antdlib.common;
 
-namespace antdlib.Log {
+namespace Antd.Log {
     public class Journalctl {
         public static IEnumerable<string> GetAllLog() {
             var result = Bash.Execute("journalctl --no-pager --quiet");
