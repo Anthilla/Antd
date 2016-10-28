@@ -886,6 +886,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\antd.commands\antd.commands.csproj">
+      <Project>{3e77920a-6201-48d8-a9ce-8d01a477e0f9}</Project>
+      <Name>antd.commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>

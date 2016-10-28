@@ -3,7 +3,7 @@
 namespace antd.commands {
     public class Commands {
 
-        public Dictionary<string, string[]> List => GetDict();
+        public static Dictionary<string, string[]> List => GetDict();
 
         private static Dictionary<string, string[]> GetDict() {
             var dict = new Dictionary<string, string[]> {

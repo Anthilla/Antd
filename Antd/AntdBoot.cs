@@ -109,7 +109,7 @@ namespace Antd {
             if (!Parameter.IsUnix)
                 return;
             if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Bash.Execute($"mount {"/mnt/cdrom/Kernel/active-firmware"} {"/lib64/firmware"}");
+                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Bash.Execute("uname -r").Trim();
