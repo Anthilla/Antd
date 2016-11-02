@@ -53,7 +53,7 @@
             <div class="element-divider place-right"></div>
             <div id="clock" class="element place-right no-overlay"></div>
             <div class="element-divider place-right"></div>
-            <a class="element place-right nav-button no-overlay" href="~/logout" id="LogOut">
+            <a class="element place-right nav-button no-overlay" href="/logout" id="LogOut">
                 <i class="icon-exit" style="line-height: 5px;"></i>
             </a>
             <div class="element-divider place-right"></div>
@@ -91,10 +91,6 @@
                     <p class="fg-anthilla-green">C.A. </p>
                 </a>
 
-                <!--       <a class="tool element place-right upcase bg-anthilla-gray fg-anthilla-green" href="/cmd" id="Cmd-TB" style="height: 80px; min-width: 80px; margin-right: 5px; border-top-left-radius: 5%; border-top-right-radius: 5%;">
-                    <i class="icon-equalizer on-left"></i>
-                    <p class="fg-anthilla-green">Cmd </p>
-                </a>-->
                 <a class="tool element place-right upcase bg-anthilla-gray fg-anthilla-green" href="/cfg" id="Cfg-TB" style="height: 80px; min-width: 80px; margin-right: 5px; border-top-left-radius: 5%; border-top-right-radius: 5%;">
                     <i class="icon-equalizer on-left"></i>
                     <p class="fg-anthilla-green">Cfg </p>
@@ -108,44 +104,48 @@
         @Section['MainContent'];
     </div>
 
-    <script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
-    <script src="/Scripts/vendor/jquery.ui.widget.js" type="text/javascript"></script>
-    <script src="/Scripts/js.cookie.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery.timepicker.min.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery.ptTimeSelect.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery.widget.min.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery.mousewheel.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery.windowed.min.js" type="text/javascript"></script>
-    <script src="/Scripts/jquery-ui-1.11.4.min.js" type="text/javascript"></script>
-    <script src="/Scripts/metro.min.js" type="text/javascript"></script>
-    <script src="/Scripts/metrojs/metro-scroll.js" type="text/javascript"></script>
-    <script src="/Scripts/metrojs/metro-treeview.js" type="text/javascript"></script>
-    <script src="/Scripts/metrojs/metro-dropdown.js" type="text/javascript"></script>
-    <script src="/Scripts/selectize.min.js" type="text/javascript"></script>
-    <script src="/Scripts/jqClock.min.js" type="text/javascript"></script>
-    <script src="/Scripts/antd.js" type="text/javascript"></script>
-    <script src="/Scripts/antd.selectize.js" type="text/javascript"></script>
-    <script src="/Scripts/antd.notify.js" type="text/javascript"></script>
-    <script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
+    <div data-script="container">
+        <script data-script="reload" src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/vendor/jquery.ui.widget.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/js.cookie.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery.timepicker.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery.ptTimeSelect.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery.widget.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery.mousewheel.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery.windowed.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jquery-ui-1.11.4.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metro.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metrojs/metro-scroll.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metrojs/metro-treeview.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metrojs/metro-dropdown.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/selectize.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/jqClock.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.page.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.xhr.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.users.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.firewall.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.storage.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.network.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.overlay.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.sync.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.cron.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.selectize.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.cmd.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/antd.services.js" type="text/javascript"></script>
+    </div>
+
     <script type="text/javascript">
-        var _requests = [];
-
-        var _abortAllRequests = function () {
-            $(_requests).each(function (i, xhr) {
-                xhr.abort();
+        function ReloadJS() {
+            var container = $('[data-script="container"]');
+            $('[data-script="reload"]').each(function () {
+                var src = $(this).attr('src');
+                var type = $(this).attr('type');
+                var data = $(this).attr('data-script');
+                $(this).remove();
+                $('<script>').attr('src', src).attr('type', type).attr('data-script', data).appendTo(container);
             });
-            _requests = [];
         }
-
-        $(window).on("beforeunload", function () {
-            _abortAllRequests();
-        });
-
-        function AbortAllAjaxRequests() {
-            _abortAllRequests();
-        }
-
-        $("#clock").clock({ "format": "24", "calendar": "false", "seconds": "false" });
     </script>
     @Section['Scripts'];
 </body>

@@ -81,8 +81,6 @@
             <li class="active"><a href="#_Memory_1">Memory</a></li>
             <li><a href="#_CPU_">CPU</a></li>
             <li><a href="#_Free_">Free</a></li>
-            <li><a href="#_Losetup_">Losetup</a></li>
-            <li><a href="#_SysComp_">System Components</a></li>
         </ul>
 
         <div class="frames">
@@ -166,51 +164,6 @@
                             </td>
                             <td>
                                 <p>@Current.Available</p>
-                            </td>
-                        </tr>
-                        @EndEach
-                    </tbody>
-                </table>
-            </div>
-            <div id="_Losetup_" class="frame" style="display: none;">
-                <div data-render="part-info-losetup"></div>
-            </div>
-            <div id="_SysComp_" class="frame" style="display: none;">
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <p>Alias</p>
-                            </th>
-                            <th>
-                                <p>Active</p>
-                            </th>
-                            <th>
-                                <p>Recovery</p>
-                            </th>
-                            <th>
-                                <p>Running</p>
-                            </th>
-                            <th>
-                                <p>Newest</p>
-                            </th>
-                        </tr>
-                        @Each.SystemComponents
-                        <tr>
-                            <td>
-                                <p>@Current.Alias</p>
-                            </td>
-                            <td>
-                                <p>@Current.Active</p>
-                            </td>
-                            <td>
-                                <p>@Current.Recovery</p>
-                            </td>
-                            <td>
-                                <p>@Current.Running</p>
-                            </td>
-                            <td>
-                                <p>@Current.Newest</p>
                             </td>
                         </tr>
                         @EndEach
