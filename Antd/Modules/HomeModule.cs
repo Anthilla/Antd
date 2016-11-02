@@ -71,7 +71,7 @@ namespace Antd.Modules {
                     "vm",
                     "users"
                 };
-                return View["antd/page-antd2", viewModel];
+                return View["antd/page-antd", viewModel];
             };
 
 
@@ -145,6 +145,7 @@ namespace Antd.Modules {
                 var setup = new GlusterSetup {
                     Name = name,
                     Path = path,
+                    IsConfigured = true,
                     Nodes = nodelist,
                     Volumes = volumelist
                 };

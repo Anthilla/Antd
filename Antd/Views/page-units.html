@@ -62,7 +62,8 @@
             <th class="text-left" style="width: 600px;">&nbsp</th>
         </tr>
     </thead>
-    <tbody>@Each.Model
+    <tbody>
+        @Each.Model
         <tr>
             <td>@Current.name </td>
             <!--<td>String.Join(", ", antdlib.MountPoint.MountRepository.GetListByUnit(unit.name)) </td>-->
@@ -73,7 +74,8 @@
                 <input type="button" class="bg-anthilla-green unit-enable" data-unit="@Current.name" value="Enable" />
                 <input type="button" class="bg-anthilla-green unit-disable" data-unit="@Current.name" value="Disable" />
             </td>
-        </tr>@EndEach
+        </tr>
+        @EndEach
     </tbody>
 </table>
 @EndSection
@@ -83,7 +85,7 @@
     $('input.unit-start').click(function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/units/mgmt/start/' + p,
             type: 'POST',
             data: JSON.stringify(p),
@@ -93,12 +95,13 @@
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('input.unit-stop').click(function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/units/mgmt/stop/' + p,
             type: 'POST',
             data: JSON.stringify(p),
@@ -108,36 +111,39 @@
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('input.unit-enable').click(function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/units/mgmt/enable/' + p,
             type: 'POST',
             data: JSON.stringify(p),
             contentType: "application/json;charset=utf-8",
-            success: function (data) {
+            success: function () {
                 location.reload(true);
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('input.unit-disable').click(function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/units/mgmt/disable/' + p,
             type: 'POST',
             data: JSON.stringify(p),
             contentType: "application/json;charset=utf-8",
-            success: function (data) {
+            success: function () {
                 location.reload(true);
                 return false;
             }
         });
+        _requests.push(aj);
     });
 </script>
 @EndSection

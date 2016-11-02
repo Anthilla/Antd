@@ -24,12 +24,12 @@ namespace Antd {
     public class AntdBoot {
 
         public void RemoveLimits() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             const string limitsFile = "/etc/security/limits.conf";
-            if (File.Exists(limitsFile)) {
+            if(File.Exists(limitsFile)) {
                 var t = File.ReadAllText(limitsFile);
-                if (!t.Contains("root - nofile 1024000")) {
+                if(!t.Contains("root - nofile 1024000")) {
                     File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
             }
@@ -48,7 +48,7 @@ namespace Antd {
         }
 
         public void SetWorkingDirectories() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             Mount.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
@@ -64,10 +64,10 @@ namespace Antd {
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
-            Global.EnableWebStudio = true;
-            Global.WebStudioPort = 9999;
-            Global.LocalOnlyWebStudio = false;
-            Global.FlushStorageFileImmediately = true;
+            //Global.EnableWebStudio = true;
+            //Global.WebStudioPort = 9999;
+            //Global.LocalOnlyWebStudio = false;
+            //Global.FlushStorageFileImmediately = true;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new BootModuleLoadView());
@@ -106,15 +106,15 @@ namespace Antd {
         }
 
         public void SetOsMount() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
-            if (Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+            if(Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                 Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware");
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = Bash.Execute("uname -r").Trim();
             var linkedRelease = Bash.Execute($"file {module}").Trim();
-            if (Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+            if(Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
                 ConsoleLogger.Log($"creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
@@ -125,14 +125,14 @@ namespace Antd {
         }
 
         public void SetOsParametersLocal() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var kvps = new BootOsParametersLoadRepository().Retrieve();
-            if (kvps != null) {
-                foreach (var kvp in kvps) {
+            if(kvps != null) {
+                foreach(var kvp in kvps) {
                     var file = kvp.Key;
                     var value = kvp.Value;
-                    if (!string.IsNullOrEmpty(file) && !string.IsNullOrEmpty(value)) {
+                    if(!string.IsNullOrEmpty(file) && !string.IsNullOrEmpty(value)) {
                         File.WriteAllText(file, value);
                     }
                 }
@@ -141,11 +141,11 @@ namespace Antd {
         }
 
         public void LoadModules() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var modules = new BootModuleLoadRepository().Retrieve();
-            if (modules != null) {
-                foreach (var module in modules) {
+            if(modules != null) {
+                foreach(var module in modules) {
                     Bash.Execute($"modprobe {module}");
                 }
             }
@@ -153,7 +153,7 @@ namespace Antd {
         }
 
         public void SetMounts() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             Mount.AllDirectories();
             ConsoleLogger.Log("mounts ready");
@@ -168,14 +168,14 @@ namespace Antd {
 
         private readonly UserRepository _userRepository = new UserRepository();
         public void ReloadUsers() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var sysUser = _userRepository.Import();
-            foreach (var user in _userRepository.GetAll()) {
-                if (!sysUser.ContainsKey(user.Alias)) {
+            foreach(var user in _userRepository.GetAll()) {
+                if(!sysUser.ContainsKey(user.Alias)) {
                     SystemUser.Create(user.Alias);
                 }
-                if (!string.IsNullOrEmpty(user.Password)) {
+                if(!string.IsNullOrEmpty(user.Password)) {
                     SystemUser.SetPassword(user.Alias, user.Password);
                 }
             }
@@ -183,31 +183,31 @@ namespace Antd {
         }
 
         public void CommandExecuteLocal() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             SetupConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }
 
         public void ImportNetworkConfiguration() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
-            if (!new NetworkInterfaceRepository().GetAll().Any()) {
+            if(!new NetworkInterfaceRepository().GetAll().Any()) {
                 new NetworkInterfaceRepository().Import();
             }
             ConsoleLogger.Log("network interfaces imported");
         }
 
         public void Ssh() {
-            if (!Parameter.IsUnix) {
+            if(!Parameter.IsUnix) {
                 return;
             }
             var storedKeyRepo = new AuthorizedKeysRepository();
             var storedKeys = storedKeyRepo.GetAll();
-            foreach (var storedKey in storedKeys) {
+            foreach(var storedKey in storedKeys) {
                 var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
                 var authorizedKeysPath = $"{home}/authorized_keys";
-                if (!File.Exists(authorizedKeysPath)) {
+                if(!File.Exists(authorizedKeysPath)) {
                     File.Create(authorizedKeysPath);
                 }
                 var line = $"{storedKey.KeyValue} {storedKey.RemoteUser}";
@@ -218,20 +218,20 @@ namespace Antd {
         }
 
         public void CommandExecuteNetwork() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             ConsoleLogger.Log("network configuration ready");
         }
 
         //todo
         public void SetOsParametersNetwork() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             ConsoleLogger.Log("os parameters ready");
         }
 
         public void SetFirewall() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             NfTables.Setup();
             NfTables.ReloadConfiguration();
@@ -242,12 +242,12 @@ namespace Antd {
         }
 
         public void LoadServices() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var services = new BootServiceLoadRepository().Retrieve();
-            if (services != null) {
-                foreach (var service in services) {
-                    if (Systemctl.IsActive(service) == false) {
+            if(services != null) {
+                foreach(var service in services) {
+                    if(Systemctl.IsActive(service) == false) {
                         Systemctl.Restart(service);
                     }
                 }
@@ -256,20 +256,20 @@ namespace Antd {
         }
 
         public void SetSyslogNg() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var s = SyslogConfiguration.Set();
-            if (s) {
+            if(s) {
                 ConsoleLogger.Log("syslog ready");
             }
         }
 
         public void InitAvahi() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             const string avahiServicePath = "/etc/avahi/services/antd.service";
             var xml = AvahiCustomXml.Generate(ApplicationSetting.HttpPort());
-            if (File.Exists(avahiServicePath)) {
+            if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
             File.WriteAllLines(avahiServicePath, xml);
@@ -281,22 +281,22 @@ namespace Antd {
         }
 
         public void ImportPools() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var pools = Zpool.ImportList().ToList();
-            foreach (var pool in pools) {
-                if (!string.IsNullOrEmpty(pool)) {
+            foreach(var pool in pools) {
+                if(!string.IsNullOrEmpty(pool)) {
                     ConsoleLogger.Log($"pool {pool} imported");
                     Zpool.Import(pool);
                 }
             }
-            if (pools.Count > 0) {
+            if(pools.Count > 0) {
                 ConsoleLogger.Log("pools imported");
             }
         }
 
         public void StartScheduler() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             Timers.CleanUp();
             Timers.Setup();
@@ -304,7 +304,7 @@ namespace Antd {
             Timers.Export();
 
             var pools = Zpool.List();
-            foreach (var zp in pools) {
+            foreach(var zp in pools) {
 
                 Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
             }
@@ -314,10 +314,10 @@ namespace Antd {
         }
 
         public void InitGlusterfs() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             GlusterConfiguration.Set();
-            if (GlusterConfiguration.IsConfigured) {
+            if(GlusterConfiguration.IsConfigured) {
                 GlusterConfiguration.Start();
                 GlusterConfiguration.Launch();
             }
@@ -330,7 +330,7 @@ namespace Antd {
         }
 
         public void LaunchInternalTimers() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             SnapshotCleanup.Start(new TimeSpan(2, 00, 00));
             ConsoleLogger.Log("internal timers ready");
@@ -339,14 +339,14 @@ namespace Antd {
         private readonly ApplicationRepository _applicationRepository = new ApplicationRepository();
 
         public void LaunchApps() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             AppTarget.Setup();
             var apps = _applicationRepository.GetAll().Select(_ => new ApplicationModel(_)).ToList();
-            foreach (var app in apps) {
+            foreach(var app in apps) {
                 var units = app.UnitLauncher;
-                foreach (var unit in units) {
-                    if (Systemctl.IsActive(unit) == false) {
+                foreach(var unit in units) {
+                    if(Systemctl.IsActive(unit) == false) {
                         Systemctl.Restart(unit);
                     }
                 }
@@ -357,10 +357,10 @@ namespace Antd {
 
         #region Unused Configuration
         public void SetWebsocketd() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var filePath = $"{Parameter.AntdCfg}/websocketd";
-            if (File.Exists(filePath))
+            if(File.Exists(filePath))
                 return;
             File.Copy($"{Parameter.Resources}/websocketd", filePath);
             Bash.Execute($"chmod 777 {filePath}");
@@ -368,15 +368,15 @@ namespace Antd {
         }
 
         public void SetSystemdJournald() {
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 return;
             }
             File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_systemd_journald.conf");
-            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Bash.Execute("systemctl restart systemd-journald.service");
@@ -387,7 +387,7 @@ namespace Antd {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
-            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Bash.Execute("systemctl restart collectd.service");
@@ -397,7 +397,7 @@ namespace Antd {
             var file = $"{Parameter.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
-            if (Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
             Bash.Execute("systemctl restart wpa_supplicant.service");

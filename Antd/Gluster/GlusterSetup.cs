@@ -4,7 +4,7 @@ namespace Antd.Gluster {
     public class GlusterSetup {
         public string Name { get; set; }
         public string Path { get; set; }
-
+        public bool IsConfigured { get; set; }
         /// <summary>
         /// Lista dei server/nodi
         /// es: srv01, srv02, srv03...

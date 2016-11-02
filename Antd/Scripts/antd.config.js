@@ -11,7 +11,7 @@ $('input[data-role="command-place"]').keyup(function () {
     }
     if (thisValue.length > 0) {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cfg/layouts",
             type: "GET",
             success: function (layoutJson) {
@@ -30,6 +30,7 @@ $('input[data-role="command-place"]').keyup(function () {
                 }
             }
         });
+        _requests.push(aj);
     }
     else {
         CleanResults();
@@ -129,7 +130,7 @@ function RefreshCommandIndexes() {
 $('i[data-role="remove-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/cfg/delcommand",
         type: "POST",
         data: {
@@ -139,12 +140,13 @@ $('i[data-role="remove-command"]').click(function () {
             location.reload(true);
         }
     });
+    _requests.push(aj);
 });
 
 $('i[data-role="disable-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/cfg/disablecommand",
         type: "POST",
         data: {
@@ -154,12 +156,13 @@ $('i[data-role="disable-command"]').click(function () {
             location.reload(true);
         }
     });
+    _requests.push(aj);
 });
 
 $('i[data-role="enable-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/cfg/enablecommand",
         type: "POST",
         data: {
@@ -169,12 +172,13 @@ $('i[data-role="enable-command"]').click(function () {
             location.reload(true);
         }
     });
+    _requests.push(aj);
 });
 
 $('i[data-role="play-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/cfg/launchcommand",
         type: "POST",
         data: {
@@ -184,6 +188,7 @@ $('i[data-role="play-command"]').click(function () {
             location.reload(true);
         }
     });
+    _requests.push(aj);
 });
 
 $('input[data-role="command-place"]').focusin(function () {

@@ -35,14 +35,14 @@
             height: 80px !important;
         }
     </style>
-    <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
-        <nav class="navigation-bar-content">
-            <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-                <i class="icon-console on-left" style="line-height: 5px;"></i>
-                Token Management
-            </div>
-        </nav>
+<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
+    <nav class="navigation-bar-content">
+        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
+            <i class="icon-console on-left" style="line-height: 5px;"></i>
+            Token Management
+        </div>
     </nav>
+</nav>
 @EndSection
 
 @Section['MainContent']
@@ -64,7 +64,7 @@
             </div>
         </div>
     </form>
-    <hr class="bg-anthilla-green" />
+<hr class="bg-anthilla-green" />
 @EndSection
 
 @Section['Scripts']
@@ -72,21 +72,22 @@
         $('#RemoveTokenUser').click(function () {
             var u = $(this).attr('data-username');
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: '/tkn/remove',
                 type: 'POST',
                 data: {
                     Username: u
                 },
-                success: function (data) {
+                success: function () {
                     location.reload(true);
                 }
             });
+            _requests.push(aj);
         });
 
         $(document).ready(function () {
             $('input.noenter').keypress(function (event) {
-                if (event.keyCode == 10 || event.keyCode == 13) {
+                if (event.keyCode === 10 || event.keyCode === 13) {
                     event.preventDefault();
                 }
             });

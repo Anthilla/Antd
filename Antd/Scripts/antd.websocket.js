@@ -25,7 +25,7 @@ $('[data-role="command-set"]').find('input[type="submit"]').click(function () {
     var parent = $(this).parents('[data-role="command-set"]');
     var command = parent.attr("data-command") + " " + parent.find('input[type="text"]').val();
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/ws/post",
         type: "POST",
         success: function (port) {
@@ -45,4 +45,5 @@ $('[data-role="command-set"]').find('input[type="submit"]').click(function () {
             };
         }
     });
+    _requests.push(aj);
 });

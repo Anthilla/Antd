@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 function Callback(callback, url) {
-    $.ajax({
+    var aj = $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
@@ -21,13 +21,14 @@ function Callback(callback, url) {
             callback(data);
         }
     });
+    _requests.push(aj);
 }
 
 var SelectizerOptions = function () {
     return {
         load: function (query, callback) {
             if (!query.length) return callback();
-            $.ajax({
+            var aj = $.ajax({
                 url: this.settings.remoteUrl,
                 type: "GET",
                 dataType: "json",
@@ -41,6 +42,7 @@ var SelectizerOptions = function () {
                     callback(data);
                 }
             });
+            _requests.push(aj);
         },
         render: function (data, escape) {
             return "<div>" +

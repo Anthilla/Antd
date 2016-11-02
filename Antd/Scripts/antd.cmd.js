@@ -18,7 +18,7 @@ $(document).ready(function () {
             });
         }
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/launch",
             type: "POST",
             data: {
@@ -29,6 +29,7 @@ $(document).ready(function () {
                 self.html(data.replace(/\n/g, "<br/>"));
             }
         });
+        _requests.push(aj);
     });
 });
 
@@ -49,7 +50,7 @@ $('[data-role="CmdLaunch"]').click(function () {
         }
     });
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/cmd/launch",
         type: "POST",
         data: {
@@ -60,6 +61,7 @@ $('[data-role="CmdLaunch"]').click(function () {
             container.find('[data-role="CmdResult"]').html(data.replace(/\n/g, "<br/>"));
         }
     });
+    _requests.push(aj);
 });
 
 $(document).ready(function () {

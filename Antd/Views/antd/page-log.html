@@ -65,7 +65,7 @@
     $('[data-role="SyslogNgUpdate"]').click(function () {
         jQuery.support.cors = true;
         var container = $(this).parents('[data-role="SyslogNgConfiguration"]');
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/syslog/set',
             type: 'POST',
             data: {
@@ -78,13 +78,14 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-row="report"]').dblclick(function () {
         var thisRow = $(this);
         var path = thisRow.attr('data-path');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/journalctl/report/' + path,
             type: 'GET',
             success: function (file) {
@@ -94,23 +95,25 @@
                 }
             }
         });
+        _requests.push(aj);
     });
 
     $('#GenerateNewReport').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/journalctl/report/',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ShowLogsVerb').click(function () {
         var filter = $('[name="LogVerb"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/journalctl/all/' + filter,
             type: 'GET',
             success: function (logs) {
@@ -121,12 +124,13 @@
                 });
             }
         });
+        _requests.push(aj);
     });
 
     $('#ShowLogsLastHours').click(function () {
         var h = $('[name="LogLastHours"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/journalctl/last/' + h,
             type: 'GET',
             success: function (logs) {
@@ -137,11 +141,12 @@
                 });
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/log/journalctl/antd/',
             type: 'GET',
             success: function (logs) {
@@ -152,6 +157,7 @@
                 });
             }
         });
+        _requests.push(aj);
     });
 </script>
 @EndSection

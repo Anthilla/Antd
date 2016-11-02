@@ -221,24 +221,26 @@
 
     $('#ExportCommandsAndValues').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj =$.ajax({
             url: "/cmd/export",
             type: "POST",
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ImportCommandsAndValues').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/import",
             type: "POST",
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,13 +248,14 @@
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/values",
             type: "GET",
             success: function (data) {
                 cachedValues = data;
             }
         });
+        _requests.push(aj);
     });
 
     $('[data="checkValuesOnKeyup"]').keyup(function () {
@@ -278,13 +281,14 @@
     $('[data-role="LaunchCommand"]').click(function () {
         var alias = $(this).attr('data-alias');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/ex/command/" + alias,
             type: "GET",
             success: function (data) {
                 console.log(data);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="UpdateCommands"]').click(function () {
@@ -293,7 +297,7 @@
             var name = $(this).find('[data-role="Name"]').val();
             var value = $(this).find('[data-role="Command"]').val();
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: "/cmd/commands",
                 type: "PUT",
                 data: {
@@ -305,13 +309,14 @@
                     location.reload(true);
                 }
             });
+            _requests.push(aj);
         });
     });
 
     $('[data-role="DeleteCommand"]').click(function () {
         var id = $(this).attr("data-id");
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/commands",
             type: "DELETE",
             data: {
@@ -321,13 +326,14 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="CreateCommand"]').click(function () {
         var name = $(this).parents("tr").find('[data-role="Name"]').val();
         var value = $(this).parents("tr").find('[data-role="Command"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/commands",
             type: "POST",
             data: {
@@ -338,6 +344,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data="checkForChange"]').keyup(function () {
@@ -356,7 +363,7 @@
             var name = $(this).find('[data-role="Name"]').val();
             var value = $(this).find('[data-role="Value"]').val();
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: "/cmd/values",
                 type: "PUT",
                 data: {
@@ -368,13 +375,14 @@
                     location.reload(true);
                 }
             });
+            _requests.push(aj);
         });
     });
 
     $('[data-role="DeleteCommandValue"]').click(function () {
         var id = $(this).attr("data-id");
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/values",
             type: "DELETE",
             data: {
@@ -384,13 +392,14 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="CreateCommandValue"]').click(function () {
         var name = $(this).parents("tr").find('[data-role="Name"]').val();
         var value = $(this).parents("tr").find('[data-role="Value"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/cmd/values",
             type: "POST",
             data: {
@@ -401,6 +410,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 @EndSection

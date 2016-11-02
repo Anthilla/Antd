@@ -29,52 +29,44 @@
 //------------------------------------------------------------------------------------->
 @Section['PageBar']
 <style type="text/css">
-    #Config-TB {
-        border-bottom: 10px solid #A7BD39;
-        height: 80px !important;
-    }
+	#Config-TB {
+		border-bottom: 10px solid #A7BD39;
+		height: 80px !important;
+	}
 
-    div.row {
-        margin-top: 20px !important;
-    }
+	div.row {
+		margin-top: 20px !important;
+	}
 </style>
-<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
-    <nav class="navigation-bar-content">
-        @Each.AntdContext
-        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
-            @Current
-        </a>
-        @EndEach
-
-        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px; cursor: pointer;">
-            <i class="icon-arrow-up"></i>
-        </a>
-    </nav>
-</nav>
 @EndSection
 
 @Section['MainContent']
-@Partial['antd/page-antd-info'];
-@Partial['antd/page-antd-host'];
-@Partial['antd/page-antd-dns-client'];
-@Partial['antd/page-antd-dns-server'];
-@Partial['antd/page-antd-network'];
-@Partial['antd/page-antd-firewall'];
-@Partial['antd/page-antd-dns-server'];
-@Partial['antd/page-antd-proxy'];
-@Partial['antd/page-antd-acl'];
-<div data-render="part-scheduler"></div>
-<div data-render="part-storage"></div>
-@Partial['antd/page-antd-gluster'];
-@Partial['antd/page-antd-overlay'];
-@Partial['antd/page-antd-vm'];
-@Partial['antd/page-antd-mount'];
-@Partial['antd/page-antd-users'];
-<div data-render="part-ssh"></div>
-<div data-render="part-update"></div>
+<nav class="vertical-menu">
+    <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
+        @Each.AntdContext
+		<li><a href="#" data-role="load-page" data-page="@Current" class="fg-hover-white upcase">@Current</a></li>
+        @EndEach
+    </ul>
+</nav>
+<div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">
+</div>
 @EndSection
 
 @Section['Scripts']
+<script data-context="new-pageload" type="text/javascript">
+    $('[data-role="load-page"]').click(function () {
+        var page = $(this).attr('data-page');
+        jQuery.support.cors = true;
+        var aj = $.ajax({
+            url: '/part/load/' + page,
+            type: 'GET',
+            success: function (data) {
+                $('[data-role="page-container"]').html(data);
+            }
+        });
+        _requests.push(aj);
+    });
+</script>
 <script type="text/javascript">
     $('[data-role="ToggleNextRow"]').click(function () {
         var id = $(this).attr('data-id');
@@ -95,57 +87,62 @@
 <script data-context="pageload" type="text/javascript">
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/part/update',
             type: 'GET',
             success: function (data) {
                 $('[data-render="part-update"]').html(data);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/part/storage',
             type: 'GET',
             success: function (data) {
                 $('[data-render="part-storage"]').html(data);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/part/info/losetup',
             type: 'GET',
             success: function (data) {
                 $('[data-render="part-info-losetup"]').html(data);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/part/scheduler',
             type: 'GET',
             success: function (data) {
                 $('[data-render="part-scheduler"]').html(data);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/part/ssh',
             type: 'GET',
             success: function (data) {
                 $('[data-render="part-ssh"]').html(data);
             }
         });
+        _requests.push(aj);
     });
 
 </script>
@@ -153,7 +150,7 @@
     $('[data-role="SetOverlayDirectory"]').click(function () {
         var dir = $(this).attr('data-dir');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/overlay/directory",
             type: "POST",
             data: {
@@ -163,6 +160,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="cron" type="text/javascript">
@@ -178,7 +176,7 @@
         var guid = $(this).attr('data-guid');
         var command = $(this).parents('td').find('textarea').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/scheduler/edit",
             type: "POST",
             data: {
@@ -189,12 +187,13 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="DeleteCronJob"]').click(function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/scheduler/delete",
             type: "POST",
             data: {
@@ -204,12 +203,13 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="DisableCronJob"]').click(function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/scheduler/disable",
             type: "POST",
             data: {
@@ -219,12 +219,13 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="EnableCronJob"]').click(function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/scheduler/enable",
             type: "POST",
             data: {
@@ -234,12 +235,13 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="LaunchCronJob"]').click(function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/scheduler/launch",
             type: "POST",
             data: {
@@ -249,6 +251,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="general" type="text/javascript">
@@ -258,13 +261,14 @@
 
     $('#ReloadSystemInfo').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/system/import/info',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('.search-field').keyup(function () {
@@ -294,7 +298,7 @@
         return {
             load: function (query, callback) {
                 if (!query.length) return callback();
-                $.ajax({
+                var aj = $.ajax({
                     url: this.settings.remoteUrl,
                     type: "GET",
                     dataType: "json",
@@ -308,6 +312,7 @@
                         callback(data);
                     }
                 });
+                _requests.push(aj);
                 return callback;
             },
             render: function (data, escape) {
@@ -366,19 +371,20 @@
 
     $('[data-role="CertificateAuthoritySetup"]').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/ca/setup',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="CreateNewCertificate"]').click(function () {
         var name = $(this).prev('input[name="CertificateName"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/ca/certificate/new',
             type: 'POST',
             data: {
@@ -388,23 +394,25 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="InvertSslOption"]').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/ca/ssl/toggle',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="ChangeCertificatePath"]').click(function () {
         var path = $(this).prev('input[name="CertificatePath"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/ca/cert/set',
             type: 'POST',
             data: {
@@ -414,13 +422,14 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="submit-general-function"]').click(function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="input-general-function"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/terminal/direct/post',
             type: 'POST',
             data: {
@@ -430,13 +439,14 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="submit-general-function-from-text"]').click(function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="show-general-function"]').text();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/terminal/direct',
             type: 'POST',
             data: {
@@ -446,6 +456,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
@@ -453,7 +464,7 @@
             var t = $(this);
             var command = t.attr('data-command');
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: '/terminal/direct',
                 type: 'POST',
                 data: {
@@ -463,12 +474,13 @@
                     t.text(data);
                 }
             });
+            _requests.push(aj);
         });
         $('select[data-role2="show-general-function"]').each(function () {
             var t = $(this);
             var command = t.attr('data-command');
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: '/terminal/direct',
                 type: 'POST',
                 data: {
@@ -481,13 +493,14 @@
                     });
                 }
             });
+            _requests.push(aj);
         });
     });
 
     $('p.edit-conf').click(function () {
         var path = $(this).attr('data-path');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/system/read/file/' + path,
             type: 'GET',
             dataType: 'json',
@@ -502,12 +515,13 @@
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('p.export-conf').click(function () {
         var p = $(this).attr('data-path');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/system/export/file/' + p,
             type: 'POST',
             data: JSON.stringify(p),
@@ -517,6 +531,7 @@
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('input#close').click(function () {
@@ -575,7 +590,7 @@
             tables.push(table);
         });
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/nft/save',
             type: 'POST',
             dataType: 'json',
@@ -586,6 +601,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
@@ -604,7 +620,7 @@
     $('input[data-role="enable-mac-address"]').click(function () {
         var guid = $(this).attr('data-object-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/enable/macadd',
             type: 'POST',
             data: {
@@ -614,12 +630,13 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('input[data-role="disable-mac-address"]').click(function () {
         var guid = $(this).attr('data-object-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/disable/macadd',
             type: 'POST',
             data: {
@@ -629,17 +646,19 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ReloadMacAddressList').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/discover/macadd',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('div[data-object="ruleset"]').dblclick(function () {
@@ -653,7 +672,7 @@
         $('[data-role="display-table-context"]').text(table + ' ' + type + ' ' + hook);
         $(window).scrollTop($('#ValueBundleDashboard').offset().top - 50);
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/getrule/' + table + '/' + type + '/' + hook,
             type: 'GET',
             dataType: 'json',
@@ -676,7 +695,7 @@
                     SaveListValues();
                 });
 
-                $.ajax({
+                var aj2 = $.ajax({
                     url: '/firewall/getruleset/' + table + '/' + type + '/' + hook,
                     type: 'GET',
                     dataType: 'json',
@@ -690,10 +709,12 @@
                         return false;
                     }
                 });
+                _requests.push(aj2);
 
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     function ReloadListValues() {
@@ -710,7 +731,7 @@
             var guid = $(this).attr('data-guid');
             var el = $('input[data-guid="' + guid + '"]').val();
             jQuery.support.cors = true;
-            $.ajax({
+            var aj = $.ajax({
                 url: networkUrl + '/ipv4/disable/if',
                 type: 'POST',
                 data: {
@@ -721,13 +742,14 @@
                     location.reload(true);
                 }
             });
+            _requests.push(aj);
         });
     }
 
     $('i[data-role="stop-rule"]').click(function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/stoprule',
             type: 'POST',
             data: {
@@ -737,28 +759,31 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ApplyFirewallConfiguration').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/conf/export',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ExportFirewallConfiguration').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/firewall/conf/export',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="network" type="text/javascript">
@@ -769,13 +794,14 @@
     $('#ReloadNetworkInterfacesInformation').click(function () {
         $(this).addClass();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/network/import',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="Mount" type="text/javascript">
@@ -795,7 +821,7 @@
         var g = $(this).attr('data-guid');
         var u = $(this).attr('data-unit');
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/system/Mount/unit',
             type: 'DELETE',
             data: {
@@ -806,6 +832,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="users" type="text/javascript">
@@ -823,7 +850,7 @@
         var container = $(this).parents('[data-role="UpdatePasswordPanel"]');
         var pass = container.find('[data-role="Password01"]').val();
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/users/change/password',
             type: 'POST',
             data: {
@@ -834,6 +861,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 <script data-context="services" type="text/javascript">
@@ -857,35 +885,38 @@
     //START SAMBA
     $('#ActivateSamba').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/activate/samba',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#RefreshSamba').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/refresh/samba',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ReloadSamba').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/reloadconfig/samba',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ShowSambaStructure').mousedown(function () {
@@ -930,35 +961,38 @@
     //START BIND
     $('#ActivateBind').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/activate/bind',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#RefreshBind').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/refresh/bind',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ReloadBind').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/reloadconfig/bind',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $(document).ready(function () {
@@ -1020,35 +1054,38 @@
     //START DHCP
     $('#ActivateDhcp').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/activate/dhcp',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#RefreshDhcp').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/refresh/dhcp',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ReloadDhcp').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/reloadconfig/dhcp',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ShowDhcpStructure').mousedown(function () {
@@ -1111,35 +1148,38 @@
     //START SSH
     $('#ActivateSsh').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/activate/ssh',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#RefreshSsh').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/refresh/ssh',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ReloadSsh').click(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/services/reloadconfig/ssh',
             type: 'POST',
             success: function () {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#ShowSshStructure').mousedown(function () {
@@ -1185,7 +1225,7 @@
     $('[data-role="CreatePartitionTable"]').click(function () {
         var d = $(this).attr('data-name');
         var t = $(this).parents('td').find('select > option:selected').val();
-        $.ajax({
+        var aj = $.ajax({
             url: "/parted/mklabel",
             type: "POST",
             data: {
@@ -1194,7 +1234,7 @@
                 Confirm: "Yes"
             },
             success: function () {
-                $.ajax({
+                var aj = $.ajax({
                     url: "/parted/print",
                     type: "POST",
                     data: {
@@ -1206,13 +1246,14 @@
                 });
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="show-disk-details-0"]').click(function () {
         var g = $(this).attr('data-guid');
         $('[data-row="' + g + '"]').toggle();
         var d = $(this).attr('data-name');
-        $.ajax({
+        var aj = $.ajax({
             url: "/parted/print",
             type: "POST",
             data: {
@@ -1225,6 +1266,7 @@
                 }
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="show-details"]').click(function () {
@@ -1235,7 +1277,7 @@
     $('[data-role="EnablePoolSnap"]').click(function () {
         var pool = $(this).attr('data-pool');
         var interval = $(this).parents('td').find('select > option:selected').val();
-        $.ajax({
+        var aj = $.ajax({
             url: "/zfs/snap",
             type: "POST",
             data: {
@@ -1246,11 +1288,12 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('[data-role="DisablePoolSnap"]').click(function () {
         var id = $(this).attr('data-id');
-        $.ajax({
+        var aj = $.ajax({
             url: "/zfs/snap/disable",
             type: "POST",
             data: {
@@ -1260,6 +1303,7 @@
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
 @EndSection

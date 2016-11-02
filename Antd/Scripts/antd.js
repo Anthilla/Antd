@@ -46,22 +46,23 @@ $('i[id="ReloadVolumes"]').mouseout(function (event) {
 $('i[id="ReloadVolumes"]').click(function (event) {
     event.preventDefault();
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/storage/reload/volumes/",
         type: "GET",
         dataType: "json",
         contentType: "application/json;charset=utf-8",
-        success: function (data) {
+        success: function () {
             location.reload(true);
             return false;
         }
     });
+    _requests.push(aj);
 });
 
 //2fa,,
 $("#Disable2FA").click(function () {
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/system/auth/disable/",
         type: "GET",
         dataType: "json",
@@ -71,11 +72,12 @@ $("#Disable2FA").click(function () {
             return false;
         }
     });
+    _requests.push(aj);
 });
 
 $("#Enable2FA").click(function () {
     jQuery.support.cors = true;
-    $.ajax({
+    var aj = $.ajax({
         url: "/system/auth/enable/",
         type: "GET",
         dataType: "json",
@@ -85,6 +87,7 @@ $("#Enable2FA").click(function () {
             return false;
         }
     });
+    _requests.push(aj);
 });
 
 //command management
@@ -167,7 +170,7 @@ function InitSubmitMount() {
         alert(g);
         alert(m);
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: "/apps/Mount",
             type: "POST",
             data: {
@@ -178,6 +181,7 @@ function InitSubmitMount() {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 }
 ///////////cookiecookiecookie////////////////////////

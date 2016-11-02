@@ -13,11 +13,12 @@ namespace Antd.Gluster {
 
         public static void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 ConsoleLogger.Log("gluster configuration file does not exist");
                 var tempFlow = new GlusterSetup {
                     Name = ".gluster.conf",
                     Path = $"{Parameter.RepoConfig}/.gluster.conf",
+                    IsConfigured = false,
                     Nodes = new List<string> { "server01", "server02" },
                     Volumes = new List<GfsVolume> {
                         new GfsVolume {
@@ -32,7 +33,7 @@ namespace Antd.Gluster {
                         }
                     }
                 };
-                if (!File.Exists(tempFlow.Path)) {
+                if(!File.Exists(tempFlow.Path)) {
                     File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
                     ConsoleLogger.Log("a gluster configuration file template has been created");
                 }
@@ -41,14 +42,31 @@ namespace Antd.Gluster {
 
         public static void Set(GlusterSetup setup) {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 return;
             }
             var text = JsonConvert.SerializeObject(setup, Formatting.Indented);
             File.WriteAllText(FilePath, text);
         }
 
-        public static bool IsConfigured => File.Exists(FilePath);
+        public static bool IsConfigured => CheckIfIsConfigured();
+
+        private static bool CheckIfIsConfigured() {
+            if(!File.Exists(FilePath)) {
+                return false;
+            }
+            try {
+                var t = File.ReadAllText(FilePath);
+                var m = JsonConvert.DeserializeObject<GlusterSetup>(t);
+                if(m == null) {
+                    return false;
+                }
+                return m.IsConfigured;
+            }
+            catch(Exception) {
+                return false;
+            }
+        }
 
         public static void Start() {
             Console.WriteLine($"systemctl start {ServiceName}");
@@ -56,20 +74,20 @@ namespace Antd.Gluster {
         }
 
         public static void Launch() {
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 return;
             }
             var text = File.ReadAllText(FilePath);
             var config = JsonConvert.DeserializeObject<GlusterSetup>(text);
 
-            foreach (var node in config.Nodes) {
+            foreach(var node in config.Nodes) {
                 Console.WriteLine($"glusterfs: setup {node} node");
                 Console.WriteLine(Bash.Execute($"gluster peer probe {node}"));
             }
 
             var numberOfNodes = config.Nodes.Count.ToString();
 
-            foreach (var volume in config.Volumes) {
+            foreach(var volume in config.Volumes) {
                 Console.WriteLine($"glusterfs: setup {volume.Name} volume");
                 var volumePath = $"{volume.Brick}{volume.Name}";
                 Directory.CreateDirectory(volumePath);
@@ -79,7 +97,7 @@ namespace Antd.Gluster {
                 //Terminal.Execute($"rm -fR {volumePath}/.glusterfs");
 
                 var volumesList = new List<string>();
-                foreach (var node in config.Nodes) {
+                foreach(var node in config.Nodes) {
                     volumesList.Add($"{node}:{volumePath}");
                 }
 
@@ -87,7 +105,7 @@ namespace Antd.Gluster {
                 VolumeStart(volume.Name);
 
                 Directory.CreateDirectory(volume.MountPoint);
-                foreach (var node in config.Nodes) {
+                foreach(var node in config.Nodes) {
                     VolumeMount(node, volume.Name, volume.MountPoint);
                 }
             }
@@ -104,14 +122,14 @@ namespace Antd.Gluster {
         }
 
         public static void VolumeMount(string node, string volumeName, string mountPoint) {
-            if (Mounts.IsAlreadyMounted(mountPoint) == false) {
+            if(Mounts.IsAlreadyMounted(mountPoint) == false) {
                 Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
             }
         }
 
         public static GlusterSetup Get() {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 return new GlusterSetup();
             }
             var text = File.ReadAllText(FilePath);

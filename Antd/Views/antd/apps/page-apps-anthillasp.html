@@ -52,58 +52,63 @@
 <script type="text/javascript">
     $(document).ready(function () {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/apps/set/anthillasp/',
             type: 'POST',
             contentType: "application/json;charset=utf-8",
-            success: function (data) {
+            success: function () {
                 $('#AnthilaspStatus').show();
                 return false;
             }
         });
+        _requests.push(aj);
     });
 
     $('#StartAnthillaSP').click(function (e) {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/apps/start/sp/',
             type: 'POST',
             success: function (data) {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#StartAnthillaServer').click(function (e) {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/apps/start/server/',
             type: 'POST',
             success: function (data) {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#StopAnthillaSP').click(function (e) {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/apps/stop/sp/',
             type: 'POST',
             success: function (data) {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 
     $('#StopAnthillaServer').click(function (e) {
         jQuery.support.cors = true;
-        $.ajax({
+        var aj = $.ajax({
             url: '/apps/stop/server/',
             type: 'POST',
             success: function (data) {
                 location.reload(true);
             }
         });
+        _requests.push(aj);
     });
 </script>
