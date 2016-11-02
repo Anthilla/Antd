@@ -62,7 +62,7 @@
 
 @Section['Scripts']
 <script data-context="log" type="text/javascript">
-    $('[data-role="SyslogNgUpdate"]').click(function () {
+    $('[data-role="SyslogNgUpdate"]').on("click", function () {
         jQuery.support.cors = true;
         var container = $(this).parents('[data-role="SyslogNgConfiguration"]');
         var aj = $.ajax({
@@ -98,7 +98,7 @@
         _requests.push(aj);
     });
 
-    $('#GenerateNewReport').click(function () {
+    $('#GenerateNewReport').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/log/journalctl/report/',
@@ -110,7 +110,7 @@
         _requests.push(aj);
     });
 
-    $('#ShowLogsVerb').click(function () {
+    $('#ShowLogsVerb').on("click", function () {
         var filter = $('[name="LogVerb"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -127,7 +127,7 @@
         _requests.push(aj);
     });
 
-    $('#ShowLogsLastHours').click(function () {
+    $('#ShowLogsLastHours').on("click", function () {
         var h = $('[name="LogLastHours"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -144,7 +144,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/log/journalctl/antd/',

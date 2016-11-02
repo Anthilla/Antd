@@ -59,11 +59,11 @@
 
 @Section['Scripts']
 <script data-context="general" type="text/javascript">
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('div[data-role="hide-selectize"]').find('#show-units').hide();
     });
 
-    $('#ReloadSystemInfo').click(function () {
+    $('#ReloadSystemInfo').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/system/import/info',
@@ -92,7 +92,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $.when(
             LoadUserEntitiesUnits()
         ).then();
@@ -161,7 +161,7 @@
         }
     });
 
-    $('select[name="Assignment"]').click(function () {
+    $('select[name="Assignment"]').on("click", function () {
         var selectedoption = $(this).find('option:selected').val();
         if (selectedoption === "user") {
             $('#UserAssignmentRow').show();
@@ -173,7 +173,7 @@
         }
     });
 
-    $('[data-role="CertificateAuthoritySetup"]').click(function () {
+    $('[data-role="CertificateAuthoritySetup"]').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/ca/setup',
@@ -185,7 +185,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="CreateNewCertificate"]').click(function () {
+    $('[data-role="CreateNewCertificate"]').on("click", function () {
         var name = $(this).prev('input[name="CertificateName"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -201,7 +201,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="InvertSslOption"]').click(function () {
+    $('[data-role="InvertSslOption"]').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/ca/ssl/toggle',
@@ -213,7 +213,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="ChangeCertificatePath"]').click(function () {
+    $('[data-role="ChangeCertificatePath"]').on("click", function () {
         var path = $(this).prev('input[name="CertificatePath"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -229,7 +229,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="submit-general-function"]').click(function () {
+    $('[data-role="submit-general-function"]').on("click", function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="input-general-function"]').val();
         jQuery.support.cors = true;
@@ -246,7 +246,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="submit-general-function-from-text"]').click(function () {
+    $('[data-role="submit-general-function-from-text"]').on("click", function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="show-general-function"]').text();
         jQuery.support.cors = true;
@@ -263,7 +263,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('textarea[data-role="show-general-function"]').each(function () {
             var t = $(this);
             var command = t.attr('data-command');
@@ -301,7 +301,7 @@
         });
     });
 
-    $('p.edit-conf').click(function () {
+    $('p.edit-conf').on("click", function () {
         var path = $(this).attr('data-path');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -322,7 +322,7 @@
         _requests.push(aj);
     });
 
-    $('p.export-conf').click(function () {
+    $('p.export-conf').on("click", function () {
         var p = $(this).attr('data-path');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -338,14 +338,14 @@
         _requests.push(aj);
     });
 
-    $('input#close').click(function () {
+    $('input#close').on("click", function () {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');
         form.hide();
     });
 
-    $('input#clear').click(function () {
+    $('input#clear').on("click", function () {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');

@@ -1,9 +1,7 @@
 (function ($) {
     $.fn.CommandTemplate = function () {
-        var options = $(this).attr('data-options');
+        var options = $(this).attr("data-options");
         if (str.toLowerCase().indexOf("button-only") >= 0) {
-            //button-only:([a-z 0-9]*);
-            var myString = "button-only:value 1;";
             var myRegexp = /button-only:([a-zAA-Z 0-9]*);/g;
             var match = myRegexp.exec(options);
             var buttonValue = match[1];
@@ -19,7 +17,8 @@
 
 $('[data-role="command-set"]').CommandTemplate();
 
-$('[data-role="command-set"]').find('input[type="submit"]').click(function () {
+$('[data-role="command-set"]').find('input[type="submit"]').on("click", function () {
+    //$('[data-role="command-set"]').find('input[type="submit"]').click(function () {
     var wsport;
     var wsconnection;
     var parent = $(this).parents('[data-role="command-set"]');

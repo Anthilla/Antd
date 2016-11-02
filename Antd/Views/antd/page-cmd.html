@@ -219,7 +219,7 @@
         });
     });
 
-    $('#ExportCommandsAndValues').click(function () {
+    $('#ExportCommandsAndValues').on("click", function () {
         jQuery.support.cors = true;
         var aj =$.ajax({
             url: "/cmd/export",
@@ -231,7 +231,7 @@
         _requests.push(aj);
     });
 
-    $('#ImportCommandsAndValues').click(function () {
+    $('#ImportCommandsAndValues').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/cmd/import",
@@ -246,7 +246,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var cachedValues = null;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/cmd/values",
@@ -278,7 +278,7 @@
         }
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $('[data-role="LaunchCommand"]').click(function () {
+    $('[data-role="LaunchCommand"]').on("click", function () {
         var alias = $(this).attr('data-alias');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -291,7 +291,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="UpdateCommands"]').click(function () {
+    $('[data-role="UpdateCommands"]').on("click", function () {
         $('[data-role="valueRow"]').not('[data-changed="false"]').each(function () {
             var id = $(this).attr("data-id");
             var name = $(this).find('[data-role="Name"]').val();
@@ -313,7 +313,7 @@
         });
     });
 
-    $('[data-role="DeleteCommand"]').click(function () {
+    $('[data-role="DeleteCommand"]').on("click", function () {
         var id = $(this).attr("data-id");
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -329,7 +329,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="CreateCommand"]').click(function () {
+    $('[data-role="CreateCommand"]').on("click", function () {
         var name = $(this).parents("tr").find('[data-role="Name"]').val();
         var value = $(this).parents("tr").find('[data-role="Command"]').val();
         jQuery.support.cors = true;
@@ -357,7 +357,7 @@
         }
     });
 
-    $('[data-role="UpdateCommandValues"]').click(function () {
+    $('[data-role="UpdateCommandValues"]').on("click", function () {
         $('[data-role="valueRow"]').not('[data-changed="false"]').each(function () {
             var id = $(this).attr("data-id");
             var name = $(this).find('[data-role="Name"]').val();
@@ -379,7 +379,7 @@
         });
     });
 
-    $('[data-role="DeleteCommandValue"]').click(function () {
+    $('[data-role="DeleteCommandValue"]').on("click", function () {
         var id = $(this).attr("data-id");
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -395,7 +395,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="CreateCommandValue"]').click(function () {
+    $('[data-role="CreateCommandValue"]').on("click", function () {
         var name = $(this).parents("tr").find('[data-role="Name"]').val();
         var value = $(this).parents("tr").find('[data-role="Value"]').val();
         jQuery.support.cors = true;

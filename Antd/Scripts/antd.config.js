@@ -127,7 +127,8 @@ function RefreshCommandIndexes() {
     });
 }
 
-$('i[data-role="remove-command"]').click(function () {
+$('i[data-role="remove-command"]').on("click", function () {
+    //$('i[data-role="remove-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -143,7 +144,8 @@ $('i[data-role="remove-command"]').click(function () {
     _requests.push(aj);
 });
 
-$('i[data-role="disable-command"]').click(function () {
+$('i[data-role="disable-command"]').on("click", function () {
+    //$('i[data-role="disable-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -159,7 +161,8 @@ $('i[data-role="disable-command"]').click(function () {
     _requests.push(aj);
 });
 
-$('i[data-role="enable-command"]').click(function () {
+$('i[data-role="enable-command"]').on("click", function () {
+    //$('i[data-role="enable-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -175,7 +178,8 @@ $('i[data-role="enable-command"]').click(function () {
     _requests.push(aj);
 });
 
-$('i[data-role="play-command"]').click(function () {
+$('i[data-role="play-command"]').on("click", function () {
+    //$('i[data-role="play-command"]').click(function () {
     var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
     var aj = $.ajax({

@@ -10,8 +10,7 @@
             <td>
                 <label>Anthilla SP</label>
             </td>
-            <td>
-                @IfNot.AnthillaSpIsActive
+            <td>@IfNot.AnthillaSpIsActive
                 <input type="button" id="StartAnthillaSP" class="bg-indigo" value="Start AnthillaSP" />
                 @EndIf
                 @If.AnthillaSpIsActive
@@ -30,8 +29,7 @@
             <td>
                 <label>Anthilla Server</label>
             </td>
-            <td>
-                @IfNot.AnthillaServerIsActive
+            <td>@IfNot.AnthillaServerIsActive
                 <input type="button" id="StartAnthillaServer" class="bg-indigo" value="Start AnthillaServer" />
                 @EndIf
                 @If.AnthillaServerIsActive
@@ -50,7 +48,7 @@
 </table>
 <hr />
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/apps/set/anthillasp/',
@@ -64,48 +62,48 @@
         _requests.push(aj);
     });
 
-    $('#StartAnthillaSP').click(function (e) {
+    $('#StartAnthillaSP').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/apps/start/sp/',
             type: 'POST',
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
         _requests.push(aj);
     });
 
-    $('#StartAnthillaServer').click(function (e) {
+    $('#StartAnthillaServer').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/apps/start/server/',
             type: 'POST',
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
         _requests.push(aj);
     });
 
-    $('#StopAnthillaSP').click(function (e) {
+    $('#StopAnthillaSP').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/apps/stop/sp/',
             type: 'POST',
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
         _requests.push(aj);
     });
 
-    $('#StopAnthillaServer').click(function (e) {
+    $('#StopAnthillaServer').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/apps/stop/server/',
             type: 'POST',
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });

@@ -154,7 +154,7 @@
     });
 
     //START SAMBA
-    $('#ActivateSamba').click(function () {
+    $('#ActivateSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/samba',
@@ -166,7 +166,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshSamba').click(function () {
+    $('#RefreshSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/samba',
@@ -178,7 +178,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadSamba').click(function () {
+    $('#ReloadSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/samba',
@@ -196,7 +196,7 @@
         $('#SambaStructure').hide();
     });;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
             var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr('name', dataKey.attr('name') + '_' + index);
@@ -207,7 +207,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('[data-share-form]').each(function () {
             $(this).find('[data-object="share-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -220,17 +220,17 @@
         });
     });
 
-    $('#AddNewParameterSamba').click(function () {
+    $('#AddNewParameterSamba').on("click", function () {
         $('#NewParameterSambaDashboard').toggle();
     });
 
-    $('#AddNewShare').click(function () {
+    $('#AddNewShare').on("click", function () {
         $('#NewSambaShare').toggle();
     });
     //END SAMBA
 
     //START BIND
-    $('#ActivateBind').click(function () {
+    $('#ActivateBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/bind',
@@ -242,7 +242,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshBind').click(function () {
+    $('#RefreshBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/bind',
@@ -254,7 +254,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadBind').click(function () {
+    $('#ReloadBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/bind',
@@ -266,7 +266,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $.when(
             $('input[data-array="bind"]').selectize({
                 delimiter: ';',
@@ -284,7 +284,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('form[data-role="bind-section-update"]').each(function () {
             $(this).find('[data-object="bind-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -297,33 +297,33 @@
         });
     });
 
-    $('#AddNewAclBind').click(function () {
+    $('#AddNewAclBind').on("click", function () {
         $('#NewAclBindDashboard').toggle();
     });
 
-    $('#AddNewKeyBind').click(function () {
+    $('#AddNewKeyBind').on("click", function () {
         $('#NewKeyBindDashboard').toggle();
     });
 
-    $('#AddNewMastersBind').click(function () {
+    $('#AddNewMastersBind').on("click", function () {
         $('#NewMastersBindDashboard').toggle();
     });
 
-    $('#AddNewServerBind').click(function () {
+    $('#AddNewServerBind').on("click", function () {
         $('#NewServerBindDashboard').toggle();
     });
 
-    $('#AddNewViewBind').click(function () {
+    $('#AddNewViewBind').on("click", function () {
         $('#NewViewBindDashboard').toggle();
     });
 
-    $('#AddNewZoneBind').click(function () {
+    $('#AddNewZoneBind').on("click", function () {
         $('#NewZoneBindDashboard').toggle();
     });
     //END BIND
 
     //START DHCP
-    $('#ReloadDhcpd').click(function () {
+    $('#ReloadDhcpd').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/dhcpd/restart',
@@ -335,7 +335,7 @@
         _requests.push(aj);
     });
 
-    $('#EnableDhcpd').click(function () {
+    $('#EnableDhcpd').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/dhcpd/enable',
@@ -347,7 +347,7 @@
         _requests.push(aj);
     });
 
-    $('#StopDhcpd').click(function () {
+    $('#StopDhcpd').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/dhcpd/stop',
@@ -359,7 +359,7 @@
         _requests.push(aj);
     });
 
-    $('#ApplyConfigDhcpd').click(function () {
+    $('#ApplyConfigDhcpd').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/dhcpd/set',
@@ -371,7 +371,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DeleteDhcpdReservation"]').click(function () {
+    $('[data-role="DeleteDhcpdReservation"]').on("click", function () {
         var guid = $().attr('data-id');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -387,7 +387,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DeleteDhcpdClass"]').click(function () {
+    $('[data-role="DeleteDhcpdClass"]').on("click", function () {
         var guid = $().attr('data-id');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -403,7 +403,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DeleteDhcpdPool"]').click(function () {
+    $('[data-role="DeleteDhcpdPool"]').on("click", function () {
         var guid = $().attr('data-id');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -421,7 +421,7 @@
     //END DHCP
 
     //START SSH
-    $('#ActivateSsh').click(function () {
+    $('#ActivateSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/ssh',
@@ -433,7 +433,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshSsh').click(function () {
+    $('#RefreshSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/ssh',
@@ -445,7 +445,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadSsh').click(function () {
+    $('#ReloadSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/ssh',
@@ -463,7 +463,7 @@
         $('#SshStructure').hide();
     });;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
             var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr('name', dataKey.attr('name') + '_' + index);
@@ -474,7 +474,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('[data-key-form]').each(function () {
             $(this).find('[data-object="key-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -487,11 +487,11 @@
         });
     });
 
-    $('#AddNewParameterSsh').click(function () {
+    $('#AddNewParameterSsh').on("click", function () {
         $('#NewParameterSshDashboard').toggle();
     });
 
-    $('#AddNewKey').click(function () {
+    $('#AddNewKey').on("click", function () {
         $('#NewSshKey').toggle();
     });
     //END SSH

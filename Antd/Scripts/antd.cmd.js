@@ -1,4 +1,5 @@
-$(document).ready(function () {
+$(document).on("ready", function() {
+//$(document).on("ready", function () {
     $('[data="CmdGet"]').each(function () {
         var self = $(this);
         var command = self.attr("data-name");
@@ -33,7 +34,8 @@ $(document).ready(function () {
     });
 });
 
-$('[data-role="CmdLaunch"]').click(function () {
+$('[data-role="CmdLaunch"]').on("click", function () {
+    //$('[data-role="CmdLaunch"]').on("click", function () {
     var container = $(this).parents('[data-role="CmdContainer"]');
     var button = container.find('[data-role="CmdLaunch"]');
     var command = button.attr("data-name");
@@ -64,30 +66,33 @@ $('[data-role="CmdLaunch"]').click(function () {
     _requests.push(aj);
 });
 
-$(document).ready(function () {
+$(document).on("ready", function () {
+    //$(document).on("ready", function () {
     $('[data-role="ContextSelection"]').each(function () {
         $(this).windowed({
             change: function (event, selected) {
                 selected = $(selected);
                 var val = selected.val();
-                var container = selected.parents('table.context');
-                container.find('[data-select]').hide();
+                var container = selected.parents("table.context");
+                container.find("[data-select]").hide();
                 container.find('[data-select="' + val + '"]').show();
             }
         });
     });
 });
 
-$(document).ready(function () {
-    $('textarea').each(function () {
-        this.style.height = (this.scrollHeight + 10) + 'px';
+$(document).on("ready", function () {
+    //$(document).on("ready", function () {
+    $("textarea").each(function () {
+        this.style.height = (this.scrollHeight + 10) + "px";
     });
 });
 
 
-data = "ReplaceNewLine"
+data = "ReplaceNewLine";
 
-$(document).ready(function () {
+$(document).on("ready", function () {
+    //$(document).on("ready", function () {
     $('[data="ReplaceNewLine"]').each(function () {
         var txt = $(this).text();
         $(this).html(txt.replace(/\n/g, "<br/>"));

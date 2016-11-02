@@ -69,7 +69,7 @@
 
 @Section['Scripts']
     <script type="text/javascript">
-        $('#RemoveTokenUser').click(function () {
+        $('#RemoveTokenUser').on("click", function () {
             var u = $(this).attr('data-username');
             jQuery.support.cors = true;
             var aj = $.ajax({
@@ -85,7 +85,7 @@
             _requests.push(aj);
         });
 
-        $(document).ready(function () {
+        $(document).on("ready", function () {
             $('input.noenter').keypress(function (event) {
                 if (event.keyCode === 10 || event.keyCode === 13) {
                     event.preventDefault();

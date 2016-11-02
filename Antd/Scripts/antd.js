@@ -1,17 +1,3 @@
-//terminal
-$("#OpenTerminal").click(function () {
-    $("#TerminalContainer").toggle();
-});
-
-$('input[data-role="open-console"]').click(function (event) {
-    event.preventDefault();
-    $("#TerminalContainer").toggle();
-});
-
-$("#TerminalClose").click(function () {
-    $("#TerminalContainer").hide();
-});
-
 //users
 function SetCreateUser() {
     $("#UserCreateDashboard").toggle();
@@ -35,15 +21,18 @@ $('select[name="UserType"]').windowed({
 
 //volumes
 
-$('i[id="ReloadVolumes"]').mouseover(function (event) {
+$('[id="ReloadVolumes"]').on("mouseover", function () {
+    //$('i[id="ReloadVolumes"]').mouseover(function () {
     $(this).addClass("fg-anthilla-green");
 });
 
-$('i[id="ReloadVolumes"]').mouseout(function (event) {
+$('[id="ReloadVolumes"').on("mouseout", function () {
+    //$('i[id="ReloadVolumes"]').mouseout(function () {
     $(this).removeClass("fg-anthilla-green");
 });
 
-$('i[id="ReloadVolumes"]').click(function (event) {
+$('[id="ReloadVolumes"').on("click", function () {
+    //$('i[id="ReloadVolumes"]').click(function (event) {
     event.preventDefault();
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -59,103 +48,8 @@ $('i[id="ReloadVolumes"]').click(function (event) {
     _requests.push(aj);
 });
 
-//2fa,,
-$("#Disable2FA").click(function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/system/auth/disable/",
-        type: "GET",
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function (data) {
-            location.reload(true);
-            return false;
-        }
-    });
-    _requests.push(aj);
-});
-
-$("#Enable2FA").click(function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/system/auth/enable/",
-        type: "GET",
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function (data) {
-            location.reload(true);
-            return false;
-        }
-    });
-    _requests.push(aj);
-});
-
-//command management
-$("#CmdMgmtButton").click(function () {
-    $("#CommandManagementForm").toggle();
-});
-
-function CloseCommandMgmtPanel() {
-    $("#CommandManagementForm").hide();
-}
-
-$(document).ready(function () {
-    var main = $('input[name="Command"]');
-    var layout = $('input[name="CommandLayout"]');
-    main.keyup(function () {
-        CopyInputLayout(main, layout);
-    });
-
-    $('input[type="text"]').not('input[name="Command"], input[name="CommandLayout"]').dblclick(function () {
-        AddInputIDReference($(this), main, layout);
-    });
-});
-
-function CopyInputLayout(main, layout) {
-    var mainVal = "",
-    layoutVal = "",
-    mainLength = "",
-    layoutLength = "",
-    tmpVal = "";
-
-    layout.val("");
-    if (main.val().length === 0) {
-        mainVal = "";
-        layoutVal = "";
-        mainLength = "";
-        layoutLength = "";
-        tmpVal = "";
-        layout.val("");
-    }
-    if (mainVal.length === 0 && layoutVal.length === 0) {
-        tmpVal = $('input[name="Command"]').val().replace(/_+/g, " ");
-        layout.val(tmpVal);
-    } else {
-        mainLength = mainVal.length;
-        layoutLength = layoutVal.length;
-        var mainString = main.val().substring(mainLength, main.val().length);
-        var layoutString = layout.val().substring(layoutLength, layout.val().length);
-        tmpVal = (layoutVal + mainString).replace(/_+/g, " ");
-        layout.val(tmpVal);
-    }
-}
-
-function AddInputIDReference(self, main, layout) {
-    var parameter = self;
-    var label = parameter.attr("id");
-    var value = parameter.val();
-    layout.val(layout.val() + "{" + label + "}");
-    main.val(main.val() + value);
-    mainVal = main.val();
-    layoutVal = layout.val();
-    var hiddenInputId = $('input[name="InputID"]');
-    hiddenInputId.val(label);
-    main.focus();
-}
-
-//////////////
-
-$('i[data-role="show-Mount"]').click(function () {
+$('[data-role="show-mount"').on("click", function () {
+    //$('i[data-role="show-Mount"]').click(function () {
     var self = $(this);
     var i = '<input type="text" data-role="value-Mount" data-folder="' + self.attr("data-folder") + '"/>' +
         '<i class="icon-plus fg-green" data-role="submit-Mount" data-folder="' + self.attr("data-folder") + '"></i>';
@@ -164,7 +58,8 @@ $('i[data-role="show-Mount"]').click(function () {
 });
 
 function InitSubmitMount() {
-    $('i[data-role="submit-Mount"]').click(function () {
+    $('[data-role="submit-mount"').on("click", function () {
+        //$('i[data-role="submit-Mount"]').click(function () {
         var g = $(this).attr("data-folder");
         var m = $('input[data-folder="' + g + '"]').val();
         alert(g);
@@ -177,7 +72,7 @@ function InitSubmitMount() {
                 Folder: g,
                 Mount: m
             },
-            success: function (data) {
+            success: function () {
                 location.reload(true);
             }
         });
@@ -185,9 +80,10 @@ function InitSubmitMount() {
     });
 }
 ///////////cookiecookiecookie////////////////////////
-$("#LockInput").click(function () {
+$("#LockInput").on("click", function () {
+    //$("#LockInput").click(function () {
     var value = cookie.get("_input");
-    if (value == "disabled") {
+    if (value === "disabled") {
         EnableInputs();
         var d = cookie.get("_input");
         ChangeLockIcon(d);
@@ -202,13 +98,14 @@ $("#LockInput").click(function () {
 
 var cookie = Cookies.noConflict();
 
-$(document).ready(function () {
+$(document).on("ready", function () {
+    //$(document).ready(function () {
     var value = cookie.get("_input");
     if (value == undefined) {
         cookie.set("_input", "enabled", { expires: 7 });
     }
 
-    if (value == "disabled") {
+    if (value === "disabled") {
         ChangeLockIcon(value);
         DisableInputs();
     }
@@ -220,7 +117,7 @@ $(document).ready(function () {
 
 function ChangeLockIcon(value) {
     var icon = $("#LockInput").find("i");
-    if (value == "disabled") {
+    if (value === "disabled") {
         icon.removeClass("icon-unlocked");
         icon.addClass("icon-locked");
     }
@@ -254,7 +151,8 @@ function DisableInputs() {
     cookie.set("_input", "disabled", { expires: 7 });
 }
 
-$("a.anchor").click(function (event) {
+$("a.anchor").on("click", function () {
+    //$("a.anchor").click(function (event) {
     event.preventDefault();
     var href = $(this).attr("data-scrollto");
     if (href === "top") {
@@ -286,7 +184,8 @@ $(window).scroll(function () {
     }
 });
 
-$(document).ready(function () {
+$(document).on("ready", function () {
+    //$(document).ready(function () {
     $("input:password").val("");
     $("input:text").attr("autocomplete", "off");
     $("input:password").attr("autocomplete", "off");

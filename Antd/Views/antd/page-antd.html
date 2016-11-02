@@ -54,7 +54,8 @@
 
 @Section['Scripts']
 <script data-context="new-pageload" type="text/javascript">
-    $('[data-role="load-page"]').click(function () {
+    $('[data-role="load-page"]').on("click", function () {
+        AbortAllAjaxRequests();
         var page = $(this).attr('data-page');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -68,24 +69,24 @@
     });
 </script>
 <script type="text/javascript">
-    $('[data-role="ToggleNextRow"]').click(function () {
+    $('[data-role="ToggleNextRow"]').on("click", function () {
         var id = $(this).attr('data-id');
         $('[data-hidden="' + id + '"]').toggle();
     });
 </script>
 <script data-context="gluster" type="text/javascript">
-    $('[data-role="AddGlusterConfigNewNode"]').click(function () {
+    $('[data-role="AddGlusterConfigNewNode"]').on("click", function () {
         var html = '<div class="input-control text" data-role="input-control"><input name="GlusterNode" type="text" value="@Current" style="width: 90%;"></div>';
         $('[data-role="GlusterConfigNewNodes"]').append(html);
     });
 
-    $('[data-role="AddGlusterConfigNewVolume"]').click(function () {
+    $('[data-role="AddGlusterConfigNewVolume"]').on("click", function () {
         var html = '<div class="input-control text border-anthilla-gray" data-role="input-control"><input name="GlusterVolumeName" type="text" value="@Current.Name" style="width: 90%;"><input name="GlusterVolumeBrick" type="text" value="@Current.Brick" style="width: 90%;"><input name="GlusterVolumeMountPoint" type="text" value="@Current.MountPoint" style="width: 90%;"></div>';
         $('[data-role="GlusterConfigNewVolumes"]').append(html);
     });
 </script>
 <script data-context="pageload" type="text/javascript">
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/part/update',
@@ -97,7 +98,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/part/storage',
@@ -109,7 +110,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/part/info/losetup',
@@ -121,7 +122,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/part/scheduler',
@@ -133,7 +134,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/part/ssh',
@@ -147,7 +148,7 @@
 
 </script>
 <script data-context="overlay" type="text/javascript">
-    $('[data-role="SetOverlayDirectory"]').click(function () {
+    $('[data-role="SetOverlayDirectory"]').on("click", function () {
         var dir = $(this).attr('data-dir');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -164,15 +165,15 @@
     });
 </script>
 <script data-context="cron" type="text/javascript">
-    $('#ShowCronInfo').click(function () {
+    $('#ShowCronInfo').on("click", function () {
         $('#CronDashboard').show();
     });
 
-    $('#HideCronInfo').click(function () {
+    $('#HideCronInfo').on("click", function () {
         $('#CronDashboard').hide();
     });
 
-    $('[data-role="EditCronJob"]').click(function () {
+    $('[data-role="EditCronJob"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         var command = $(this).parents('td').find('textarea').val();
         jQuery.support.cors = true;
@@ -190,7 +191,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DeleteCronJob"]').click(function () {
+    $('[data-role="DeleteCronJob"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -206,7 +207,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DisableCronJob"]').click(function () {
+    $('[data-role="DisableCronJob"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -222,7 +223,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="EnableCronJob"]').click(function () {
+    $('[data-role="EnableCronJob"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -238,7 +239,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="LaunchCronJob"]').click(function () {
+    $('[data-role="LaunchCronJob"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -255,11 +256,11 @@
     });
 </script>
 <script data-context="general" type="text/javascript">
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('div[data-role="hide-selectize"]').find('#show-units').hide();
     });
 
-    $('#ReloadSystemInfo').click(function () {
+    $('#ReloadSystemInfo').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/system/import/info',
@@ -288,7 +289,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $.when(
             LoadUserEntitiesUnits()
         ).then();
@@ -357,7 +358,7 @@
         }
     });
 
-    $('select[name="Assignment"]').click(function () {
+    $('select[name="Assignment"]').on("click", function () {
         var selectedoption = $(this).find('option:selected').val();
         if (selectedoption === "user") {
             $('#UserAssignmentRow').show();
@@ -369,7 +370,7 @@
         }
     });
 
-    $('[data-role="CertificateAuthoritySetup"]').click(function () {
+    $('[data-role="CertificateAuthoritySetup"]').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/ca/setup',
@@ -381,7 +382,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="CreateNewCertificate"]').click(function () {
+    $('[data-role="CreateNewCertificate"]').on("click", function () {
         var name = $(this).prev('input[name="CertificateName"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -397,7 +398,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="InvertSslOption"]').click(function () {
+    $('[data-role="InvertSslOption"]').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/ca/ssl/toggle',
@@ -409,7 +410,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="ChangeCertificatePath"]').click(function () {
+    $('[data-role="ChangeCertificatePath"]').on("click", function () {
         var path = $(this).prev('input[name="CertificatePath"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -425,7 +426,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="submit-general-function"]').click(function () {
+    $('[data-role="submit-general-function"]').on("click", function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="input-general-function"]').val();
         jQuery.support.cors = true;
@@ -442,7 +443,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="submit-general-function-from-text"]').click(function () {
+    $('[data-role="submit-general-function-from-text"]').on("click", function () {
         var command = $(this).attr('data-command');
         var param = $(this).prev('[data-role="show-general-function"]').text();
         jQuery.support.cors = true;
@@ -459,7 +460,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('textarea[data-role="show-general-function"]').each(function () {
             var t = $(this);
             var command = t.attr('data-command');
@@ -497,7 +498,7 @@
         });
     });
 
-    $('p.edit-conf').click(function () {
+    $('p.edit-conf').on("click", function () {
         var path = $(this).attr('data-path');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -518,7 +519,7 @@
         _requests.push(aj);
     });
 
-    $('p.export-conf').click(function () {
+    $('p.export-conf').on("click", function () {
         var p = $(this).attr('data-path');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -534,14 +535,14 @@
         _requests.push(aj);
     });
 
-    $('input#close').click(function () {
+    $('input#close').on("click", function () {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');
         form.hide();
     });
 
-    $('input#clear').click(function () {
+    $('input#clear').on("click", function () {
         var form = $('form');
         form.find('input').val('');
         form.find('textarea').text('');
@@ -549,7 +550,7 @@
 </script>
 <script data-context="firewall" type="text/javascript">
 
-    $('[data-role="SaveNftConfiguration"]').click(function () {
+    $('[data-role="SaveNftConfiguration"]').on("click", function () {
         var tables = [];
         $('[data-nft="Table"]').each(function () {
             var self = $(this);
@@ -604,7 +605,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('.autoheight').each(function () {
             this.style.height = "1px";
 
@@ -617,7 +618,7 @@
         });
     });
 
-    $('input[data-role="enable-mac-address"]').click(function () {
+    $('input[data-role="enable-mac-address"]').on("click", function () {
         var guid = $(this).attr('data-object-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -633,7 +634,7 @@
         _requests.push(aj);
     });
 
-    $('input[data-role="disable-mac-address"]').click(function () {
+    $('input[data-role="disable-mac-address"]').on("click", function () {
         var guid = $(this).attr('data-object-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -649,7 +650,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadMacAddressList').click(function () {
+    $('#ReloadMacAddressList').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/firewall/discover/macadd',
@@ -718,7 +719,7 @@
     });
 
     function ReloadListValues() {
-        $('[data-role="firewall-reload-values"]').click(function () {
+        $('[data-role="firewall-reload-values"]').on("click", function () {
             var guid = $(this).attr('data-guid');
             var bkup = $(this).attr('data-backup');
             $('input[data-guid="' + guid + '"]').val(bkup);
@@ -727,7 +728,7 @@
     }
 
     function SaveListValues() {
-        $('[data-role="firewall-update-values"]').click(function () {
+        $('[data-role="firewall-update-values"]').on("click", function () {
             var guid = $(this).attr('data-guid');
             var el = $('input[data-guid="' + guid + '"]').val();
             jQuery.support.cors = true;
@@ -746,7 +747,7 @@
         });
     }
 
-    $('i[data-role="stop-rule"]').click(function () {
+    $('i[data-role="stop-rule"]').on("click", function () {
         var guid = $(this).attr('data-guid');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -762,7 +763,7 @@
         _requests.push(aj);
     });
 
-    $('#ApplyFirewallConfiguration').click(function () {
+    $('#ApplyFirewallConfiguration').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/firewall/conf/export',
@@ -774,7 +775,7 @@
         _requests.push(aj);
     });
 
-    $('#ExportFirewallConfiguration').click(function () {
+    $('#ExportFirewallConfiguration').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/firewall/conf/export',
@@ -787,11 +788,11 @@
     });
 </script>
 <script data-context="network" type="text/javascript">
-    $('#ShowNetworkVirtualIf').click(function () {
+    $('#ShowNetworkVirtualIf').on("click", function () {
         $('[data-show="NetworkVirtualIf"]').toggle();
     });
 
-    $('#ReloadNetworkInterfacesInformation').click(function () {
+    $('#ReloadNetworkInterfacesInformation').on("click", function () {
         $(this).addClass();
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -805,19 +806,19 @@
     });
 </script>
 <script data-context="Mount" type="text/javascript">
-    $('i.show-units-mgmt').click(function () {
+    $('i.show-units-mgmt').on("click", function () {
         var g = $(this).attr('data-guid');
         $('tr.Mount-units[data-guid="' + g + '"]').toggle();
     });
 
-    $('input[data-role="show-dashboard"]').click(function () {
+    $('input[data-role="show-dashboard"]').on("click", function () {
         var g = $(this).attr('data-guid');
         $('#AntdMountdDashboard').toggle();
         $('#AntdMountdDashboard').find('input[name="Guid"]').val(g);
         $('#AntdMountdDashboard').find('input[name="Mount"]').val($(this).attr('data-mntpth'));
     });
 
-    $('i[data-role="remove-this-unit"]').click(function () {
+    $('i[data-role="remove-this-unit"]').on("click", function () {
         var g = $(this).attr('data-guid');
         var u = $(this).attr('data-unit');
         jQuery.support.cors = true;
@@ -836,7 +837,7 @@
     });
 </script>
 <script data-context="users" type="text/javascript">
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('input[type="text"]').each(function () {
             $(this).val('');
         });
@@ -845,7 +846,7 @@
         });
     });
 
-    $('[data-role="UpdateUserPassword"]').click(function () {
+    $('[data-role="UpdateUserPassword"]').on("click", function () {
         var user = $(this).attr('data-user');
         var container = $(this).parents('[data-role="UpdatePasswordPanel"]');
         var pass = container.find('[data-role="Password01"]').val();
@@ -883,7 +884,7 @@
     });
 
     //START SAMBA
-    $('#ActivateSamba').click(function () {
+    $('#ActivateSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/samba',
@@ -895,7 +896,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshSamba').click(function () {
+    $('#RefreshSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/samba',
@@ -907,7 +908,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadSamba').click(function () {
+    $('#ReloadSamba').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/samba',
@@ -925,7 +926,7 @@
         $('#SambaStructure').hide();
     });;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('#SambaForm').find('tr[data-object="samba-parameter"]').each(function (index) {
             var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr('name', dataKey.attr('name') + '_' + index);
@@ -936,7 +937,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('[data-share-form]').each(function () {
             $(this).find('[data-object="share-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -949,17 +950,17 @@
         });
     });
 
-    $('#AddNewParameterSamba').click(function () {
+    $('#AddNewParameterSamba').on("click", function () {
         $('#NewParameterSambaDashboard').toggle();
     });
 
-    $('#AddNewShare').click(function () {
+    $('#AddNewShare').on("click", function () {
         $('#NewSambaShare').toggle();
     });
     //END SAMBA
 
     //START BIND
-    $('#ActivateBind').click(function () {
+    $('#ActivateBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/bind',
@@ -971,7 +972,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshBind').click(function () {
+    $('#RefreshBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/bind',
@@ -983,7 +984,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadBind').click(function () {
+    $('#ReloadBind').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/bind',
@@ -995,7 +996,7 @@
         _requests.push(aj);
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $.when(
             $('input[data-array="bind"]').selectize({
                 delimiter: ';',
@@ -1013,7 +1014,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('form[data-role="bind-section-update"]').each(function () {
             $(this).find('[data-object="bind-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -1026,33 +1027,33 @@
         });
     });
 
-    $('#AddNewAclBind').click(function () {
+    $('#AddNewAclBind').on("click", function () {
         $('#NewAclBindDashboard').toggle();
     });
 
-    $('#AddNewKeyBind').click(function () {
+    $('#AddNewKeyBind').on("click", function () {
         $('#NewKeyBindDashboard').toggle();
     });
 
-    $('#AddNewMastersBind').click(function () {
+    $('#AddNewMastersBind').on("click", function () {
         $('#NewMastersBindDashboard').toggle();
     });
 
-    $('#AddNewServerBind').click(function () {
+    $('#AddNewServerBind').on("click", function () {
         $('#NewServerBindDashboard').toggle();
     });
 
-    $('#AddNewViewBind').click(function () {
+    $('#AddNewViewBind').on("click", function () {
         $('#NewViewBindDashboard').toggle();
     });
 
-    $('#AddNewZoneBind').click(function () {
+    $('#AddNewZoneBind').on("click", function () {
         $('#NewZoneBindDashboard').toggle();
     });
     //END BIND
 
     //START DHCP
-    $('#ActivateDhcp').click(function () {
+    $('#ActivateDhcp').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/dhcp',
@@ -1064,7 +1065,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshDhcp').click(function () {
+    $('#RefreshDhcp').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/dhcp',
@@ -1076,7 +1077,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadDhcp').click(function () {
+    $('#ReloadDhcp').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/dhcp',
@@ -1094,7 +1095,7 @@
         $('#DhcpStructure').hide();
     });;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('#DhcpForm').find('tr[data-object="dhcp-parameter"]').each(function (index) {
             var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr('name', dataKey.attr('name') + '_' + index);
@@ -1105,7 +1106,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('[data-share-form]').each(function () {
             $(this).find('[data-object="share-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -1118,15 +1119,15 @@
         });
     });
 
-    $('#AddNewParameterDhcp').click(function () {
+    $('#AddNewParameterDhcp').on("click", function () {
         $('#NewParameterDhcpDashboard').toggle();
     });
 
-    $('#AddNewShare').click(function () {
+    $('#AddNewShare').on("click", function () {
         $('#NewDhcpShare').toggle();
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $.when(
             $('input[data-array="dhcp"]').selectize({
                 delimiter: ';',
@@ -1146,7 +1147,7 @@
     //END DHCP
 
     //START SSH
-    $('#ActivateSsh').click(function () {
+    $('#ActivateSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/activate/ssh',
@@ -1158,7 +1159,7 @@
         _requests.push(aj);
     });
 
-    $('#RefreshSsh').click(function () {
+    $('#RefreshSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/refresh/ssh',
@@ -1170,7 +1171,7 @@
         _requests.push(aj);
     });
 
-    $('#ReloadSsh').click(function () {
+    $('#ReloadSsh').on("click", function () {
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: '/services/reloadconfig/ssh',
@@ -1188,7 +1189,7 @@
         $('#SshStructure').hide();
     });;
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('#SshForm').find('tr[data-object="ssh-parameter"]').each(function (index) {
             var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr('name', dataKey.attr('name') + '_' + index);
@@ -1199,7 +1200,7 @@
         });
     });
 
-    $(document).ready(function () {
+    $(document).on("ready", function () {
         $('[data-key-form]').each(function () {
             $(this).find('[data-object="key-parameter"]').each(function (index) {
                 var dataKey = $(this).find('[name="DataKey"]');
@@ -1212,17 +1213,17 @@
         });
     });
 
-    $('#AddNewParameterSsh').click(function () {
+    $('#AddNewParameterSsh').on("click", function () {
         $('#NewParameterSshDashboard').toggle();
     });
 
-    $('#AddNewKey').click(function () {
+    $('#AddNewKey').on("click", function () {
         $('#NewSshKey').toggle();
     });
     //END SSH
 </script>
 <script data-context="storage" type="text/javascript">
-    $('[data-role="CreatePartitionTable"]').click(function () {
+    $('[data-role="CreatePartitionTable"]').on("click", function () {
         var d = $(this).attr('data-name');
         var t = $(this).parents('td').find('select > option:selected').val();
         var aj = $.ajax({
@@ -1249,7 +1250,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="show-disk-details-0"]').click(function () {
+    $('[data-role="show-disk-details-0"]').on("click", function () {
         var g = $(this).attr('data-guid');
         $('[data-row="' + g + '"]').toggle();
         var d = $(this).attr('data-name');
@@ -1269,12 +1270,12 @@
         _requests.push(aj);
     });
 
-    $('[data-role="show-details"]').click(function () {
+    $('[data-role="show-details"]').on("click", function () {
         var g = $(this).attr('data-guid');
         $('[data-row="' + g + '"]').toggle();
     });
 
-    $('[data-role="EnablePoolSnap"]').click(function () {
+    $('[data-role="EnablePoolSnap"]').on("click", function () {
         var pool = $(this).attr('data-pool');
         var interval = $(this).parents('td').find('select > option:selected').val();
         var aj = $.ajax({
@@ -1291,7 +1292,7 @@
         _requests.push(aj);
     });
 
-    $('[data-role="DisablePoolSnap"]').click(function () {
+    $('[data-role="DisablePoolSnap"]').on("click", function () {
         var id = $(this).attr('data-id');
         var aj = $.ajax({
             url: "/zfs/snap/disable",

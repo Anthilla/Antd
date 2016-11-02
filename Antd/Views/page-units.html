@@ -82,7 +82,7 @@
 
 @Section['Scripts']
 <script type="text/javascript">
-    $('input.unit-start').click(function () {
+    $('input.unit-start').on("click", function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -98,7 +98,7 @@
         _requests.push(aj);
     });
 
-    $('input.unit-stop').click(function () {
+    $('input.unit-stop').on("click", function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -114,7 +114,7 @@
         _requests.push(aj);
     });
 
-    $('input.unit-enable').click(function () {
+    $('input.unit-enable').on("click", function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
         var aj = $.ajax({
@@ -130,7 +130,7 @@
         _requests.push(aj);
     });
 
-    $('input.unit-disable').click(function () {
+    $('input.unit-disable').on("click", function () {
         var p = $(this).attr('data-unit');
         jQuery.support.cors = true;
         var aj = $.ajax({
