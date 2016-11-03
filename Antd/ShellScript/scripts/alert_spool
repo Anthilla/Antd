@@ -1,0 +1,44 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+EVENT="$1"
+TYPE="$2"
+RECIPIENT="$3"
+[ -z "$EVENT" ] && exit 1
+CONFIG=$REGISTER/system/alerts/
+if [ "`cat $CONFIG/Enabled 2>/dev/null`" != yes ] ; then
+  exit 0
+fi
+SPOOLER=$CONFIG/Spooler
+QUEUE=$SPOOLER/Queue
+cd "$QUEUE"
+EDIR="$REGISTER/system/alerts/Events/$EVENT"
+[ -d "$EDIR" ] || exit 2
+SEVERITY="`cat $EDIR/Severity`"
+PRIORITY="`$SCRIPTS/alerts_s2p $SEVERITY`"
+SUBSYSTEM="`cat $EDIR/Subsystem`"
+DESCRIPTION="`cat $EDIR/Description`"
+STATUS="`$SCRIPTS/alerts_getstate $EVENT Status`"
+TS="`date +%s`"
+ID=`rand`
+echo $ID
+ENTRY="${PRIORITY}_${TS}_${SEVERITY}_${ID}_${EVENT}"
+mkdir "$ENTRY"
+echo "$STATUS: $DESCRIPTION" > $ENTRY/Subject
+echo "$TYPE" > $ENTRY/Type
+echo "$RECIPIENT" > $ENTRY/Recipient
+echo -n > $ENTRY/Body
+echo "HEADER:_:`cat $CONFIG/Identity`" >> $ENTRY/Body
+echo "HEADER:_:$SEVERITY" >> $ENTRY/Body
+echo "HEADER:_:$SUBSYSTEM" >> $ENTRY/Body
+echo "HEADER:_:`echo $TS |awk '{print strftime("%b %e %H:%M", $0);}'`" >> $ENTRY/Body
+if ! [ -t 0 ] ; then
+  cat >> $ENTRY/Body
+else
+  echo >> $ENTRY/Body
+fi
+$SCRIPTS/alerts_logger "$ID" "$EVENT ($SEVERITY): Message (ID:$ID) queued for delivery."
+RETRY="`cat $SPOOLER/Retry`"
+SLEEP=`ps -ef |grep sleep |grep $RETRY.23215 |awk '{print $2}'`
+[ -n "$SLEEP" ] && kill $SLEEP 2>/dev/null
+exit 0
+

@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+OPT="$1"
+CHAIN="$2"
+CONFIG="$REGISTER/system/net/FW"
+if [ "$CHAIN" != QoS -a "$CHAIN" != NetBalancer ] ; then
+  cd "$CONFIG/Chains/"
+  CHAINS=`ls`
+  for C in $CHAINS ; do
+    if [ "$C" != QoS -a "$C" != NetBalancer ] ; then
+
+      if [ "$OPT" == option ] ; then
+        echo "<option value='$C'>$C</option>"
+      else
+        if [ "$OPT" == jump ] ; then
+          if [ "$C" != FORWARD -a "$C" != INPUT -a "$C" != OUTPUT -a "$C" != QoS -a "$C" != NetBalancer ] ; then
+            echo "<option value=$C>$C</option>\\"
+          fi
+        else
+          echo $C
+        fi 
+     
+      fi
+    fi
+  done
+else
+  if [ "$OPT" == option ] ; then
+     if [ "$CHAIN" = QoS ] ; then
+       echo "<option value='QoS'>QoS</option>"
+     fi
+     if [ "$CHAIN" = NetBalancer ] ; then
+       echo "<option value='NetBalancer'>NetBalancer</option>"
+     fi
+   else
+      if [ "$OPT" == class ] ; then
+        :
+      fi
+   fi
+fi

@@ -1,0 +1,34 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/net/nb
+STATUSDIR=/tmp/nb/Gateways
+cd $CONFIG/Gateways || exit 1
+GWS=`ls -d *`
+FAKEWEIGHT=0
+FAKEGW=""
+for G in $GWS ; do
+  
+
+  ENABLED=`cat $G/Enabled 2>/dev/null`
+  if [ "$ENABLED" = yes ] ; then
+    IP=`cat $G/IP 2>/dev/null`
+    if [ -n "$IP" ] ; then
+      WEIGHT=`cat $G/Weight 2>/dev/null`
+      STATUS=`$SCRIPTS/nb_statusgw $G`
+      if echo $STATUS |grep -q -w Fault ; then 
+        if [ $WEIGHT -gt $FAKEWEIGHT ] ; then
+          FAKEIP=$IP
+          FAKEGW=$G
+          FAKEWEIGHT=$WEIGHT
+
+        fi
+      fi
+    fi    
+  fi
+done
+if [ -n "$FAKEGW" ] ; then
+  if ! ip ro |grep  -q ^default ; then
+    ip ro add default via $FAKEIP realm 1$FAKEGW 2>/dev/null
+  fi
+
+fi

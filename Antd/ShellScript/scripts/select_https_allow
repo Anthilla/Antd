@@ -1,0 +1,30 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+A=""
+for A in `cat $REGISTER/system/httpd/ACL 2>/dev/null` ; do
+  TXT=""
+  PART1=`echo "$A" | awk -F: '{print $1}'`
+  PART2=`echo "$A" | awk -F: '{print $2}'`
+  if ! [ -z "$PART1" ] ; then
+     if echo "$PART1" | grep -q "\-" ; then
+       TXT="IP range $PART1"
+     else
+       if echo "$PART1" | grep -q "/" ; then
+         TXT="Subnet $PART1"
+       else
+         TXT="IP $PART1"
+       fi
+     fi
+  fi
+  if ! [ -z "$PART2" ] ; then
+     [ -z "$TXT" ] || TXT="$TXT from "
+     I1=`echo "$PART2" | awk -F. '{print $1}'`
+     I2=`echo "$PART2" | awk -F. '{print $2}'`
+     TXT="${TXT}Interface $I1"
+     [ -z "$I2" ] || TXT="$TXT VLAN $I2"
+  fi
+  echo "<option value='$A'>$TXT</option>"
+done
+#if [ -z "$A" ] ; then
+#  echo "<option value='any'>Any IP address from any network interface</option>"
+#fi

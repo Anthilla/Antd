@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USER="$1"
+[ -z "$USER" ] && exit 1
+if [ -d "$REGISTER/system/acct/entries/$USER/" ] ; then
+   rm -rf "$REGISTER/system/acct/entries/$USER/" 
+   rm -rf "$REGISTER/system/acct/credits/$USER/" 
+else
+   exit 2
+fi

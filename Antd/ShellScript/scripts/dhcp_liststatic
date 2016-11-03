@@ -1,0 +1,21 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SUBNET="$1"
+[ -z "$SUBNET"  ] && exit 
+CONFIG="$REGISTER/system/dhcp"
+if ! [ -d $CONFIG/subnets/$SUBNET ] ; then
+  echo "Subnet does not exist." 1>&2
+  exit 3
+fi 
+if [ -d $CONFIG/subnets/$SUBNET/Statics ] ; then
+  cd $CONFIG/subnets/$SUBNET/Statics
+  ENTRIES=`ls 2>/dev/null`
+  for E in $ENTRIES ; do
+    IP="`cat $E/IP`" 
+    MAC="`cat $E/MAC`" 
+    DESC="`cat $E/Desc 2>/dev/null`" 
+    echo "<tr><td width=1%><input type=radio name=Entry value='$E'></td><td nowrap>&nbsp;&nbsp;$IP&nbsp;&nbsp;</td><td nowrap>&nbsp;&nbsp;$MAC&nbsp;&nbsp;</td><td>&nbsp;&nbsp;$DESC</td></tr>"
+
+  done
+fi
+

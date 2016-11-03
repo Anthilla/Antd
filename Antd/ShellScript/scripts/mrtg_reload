@@ -1,0 +1,5 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+export PATH=$PATH:/usr/local/mrtg-2/bin/
+( $SCRIPTS/mrtg_createcfg ;killall -w mrtg 2>/dev/null ; mrtg $REGISTER/system/mrtg/mrtg.conf 2>/dev/null >/dev/null ) &
+

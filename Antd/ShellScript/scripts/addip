@@ -1,0 +1,65 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACENAME="$1"
+IP="$2"
+NETMASK="$3"
+STATUS="$4"
+[ -z "$INTERFACENAME" -o -z "$IP" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+VLAN=`echo $INTERFACENAME | awk -F. '{print $2}'`
+INTERFACE=`echo $INTERFACENAME |cut -d. -f1`
+if $SCRIPTS/checkNetworkOverlap "$IP" "$NETMASK" "$INTERFACE" "$VLAN" ; then 
+  exit 5
+fi
+echo interface $INTERFACE
+echo vlan $VLAN
+IDIR="$CONFIG/$INTERFACE"
+if ! [ -d "$IDIR" ] ; then
+   echo "Interface $INTERFACE doesn't exist." 1>&2
+   exit 2
+fi
+if ! [ -z "$VLAN" ] ; then 
+  IDIR="$IDIR/VLAN/$VLAN"
+  if ! [ -d "$IDIR" ] ; then
+     echo "VLAN $VLAN doesn't exist." 1>&2
+     exit 3
+  fi
+fi
+IPDIR="$IDIR/IP"
+mkdir $IPDIR 2>/dev/null
+cd $IPDIR
+IPS=`ls | sort`
+if [ -z "$IPS" ] ; then
+  ALIAS=00
+else
+  for i in $IPS ; do
+     xIP=`cat $i/IP 2>/dev/null`
+     xNETMASK=`cat $i/Netmask 2>/dev/null`
+     if [ "$xIP" == "$IP" ] ; then
+       echo "IP $IP already exists." 1>&2
+       exit 4
+     fi
+  done
+  ALIAS="$i"
+  if [ "${ALIAS:0:1}" == 0 ] ; then
+     ALIAS=${ALIAS:1:1}
+  fi
+  ALIAS=`echo $((ALIAS+1)) | awk '{printf "%02s",$0 }'`
+fi
+if [ "$STATUS" != up ] ; then
+  STATUS=down
+fi
+if ifconfig $INTERFACENAME:$ALIAS $IP netmask $NETMASK broadcast `getbroadcast $IP $NETMASK` ; then
+  ifconfig $INTERFACENAME:$ALIAS $STATUS
+  mkdir $IPDIR/$ALIAS
+  echo $IP > $IPDIR/$ALIAS/IP
+  echo $NETMASK > $IPDIR/$ALIAS/Netmask
+  echo $STATUS > $IPDIR/$ALIAS/STATUS
+  $SCRIPTS/ip_restart_daemon 2>/dev/null >/dev/null &
+  exit 0
+else 
+  echo "No IP added."
+  exit 5
+fi
+

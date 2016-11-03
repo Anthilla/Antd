@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/cp/Auth/Domains
+cd "$CONFIG"
+DOMAINS=`ls -d * 2>/dev/null`
+OUTPUT=""
+for D in $DOMAINS ; do
+  OPTION="<option value='$D'>$D</option>"
+  if [ -f "$D/Default" ] ; then
+    OUTPUT="$OPTION$OUTPUT"   
+  else
+    OUTPUT="$OUTPUT$OPTION"   
+  fi
+done
+echo "$OUTPUT"

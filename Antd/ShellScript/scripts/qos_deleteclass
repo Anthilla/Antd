@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+NAME="$2"
+[ -z "$NAME" -o -z "$INTERFACE" ] && exit 1
+CDIR="$REGISTER/system/net/interfaces/$INTERFACE/QoS/Class/$NAME"
+rm -rf "$CDIR"

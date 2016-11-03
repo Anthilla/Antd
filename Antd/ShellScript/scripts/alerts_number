@@ -1,0 +1,3 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+grep ALERT $REGISTER/system/alerts/Events/*/State/Status 2>/dev/null | wc -l|awk '{print $1}'

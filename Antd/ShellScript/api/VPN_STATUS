@@ -1,0 +1,16 @@
+#!/bin/bash
+VPN="$1"
+[ -z "$VPN" ] && exit 1
+if ! ps -ef |grep -w openvpn |grep -w -q $VPN ; then
+  exit 2
+fi
+NUM=${VPN:3:2}
+if [ "${NUM:0:1}" == 0  ] ; then
+   NUM=${NUM:1:1}
+fi
+MGT=$[34000+$NUM]
+if echo state | nc -w1 127.0.0.1 $MGT 2>/dev/null | grep -q "CONNECTED" ; then
+  exit 0
+else
+  exit 3
+fi

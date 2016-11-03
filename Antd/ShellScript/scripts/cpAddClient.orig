@@ -1,0 +1,26 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DESC="$1"
+IP="$2"
+[ "$IP" == Any ] && IP=""
+MAC="$3"
+[ "$MAC" == Any ] && MAC=""
+CONFIG=$REGISTER/system/cp
+cd $CONFIG/FreeClients
+LAST=`ls -d * 2>/dev/null |tail -1`
+if [ -z "$LAST" ] ; then
+  NEW=00
+else
+  if [ "${LAST:0:1}" == 0 ] ; then
+    LAST="${LAST:1:1}"
+  fi
+  NEW="$((LAST+1))"
+  if [ "$NEW" -lt 10 ] ; then
+    NEW=0$NEW
+  fi
+fi
+mkdir $NEW
+echo "$DESC" > $CONFIG/FreeClients/$NEW/Desc
+echo "$IP" > $CONFIG/FreeClients/$NEW/IP
+echo "$MAC" > $CONFIG/FreeClients/$NEW/MAC
+$SCRIPTS/cpAddClientIPT "$IP" "$MAC"

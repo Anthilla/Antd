@@ -1,0 +1,29 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TZ="$1"
+
+TZDIR="/usr/share/zoneinfo/"
+if [ -z "$TZ" ] ; then
+   AUTO=yes
+   TZ="`cat $REGISTER/system/time/TZ 2>/dev/null`"
+   [ -z "$TZ" ] && TZ="Europe/Rome"
+else
+   AUTO=no
+fi
+sync
+if [ -f "$TZDIR/$TZ" ] ; then
+  echo "Setting Time Zone  [$TZ]"
+  ln -sf "$TZDIR/$TZ" /etc/localtime
+  echo "$TZ" > $REGISTER/system/time/TZ
+  if [ "$AUTO" != yes ] ; then
+    $SCRIPTS/hwclock -w
+  fi
+else
+  exit 2
+fi
+
+
+
+
+
+

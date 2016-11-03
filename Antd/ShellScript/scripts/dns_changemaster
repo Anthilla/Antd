@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DN="$1"
+OLD="$2"
+NEW="$3"
+[ -z "$NEW" ] && exit 1
+echo "dn: $DN" > /tmp/MasterServer.ldif
+echo "replace: nSRecord" >> /tmp/MasterServer.ldif
+echo "nSRecord: $NEW" >> /tmp/MasterServer.ldif
+ldapsearch -x -LLL -b "$DN" | egrep "^nSRecord:" | egrep -i -v "^nSRecord: $OLD\$" | egrep -i -v "^nSRecord: $NEW\$" >> /tmp/MasterServer.ldif
+ldapmodify -x -D"cn=Manager,`$SCRIPTS/getkey /system/ldap/base`" -w "`$SCRIPTS/getkey /system/ldap/rootpw`" < /tmp/MasterServer.ldif

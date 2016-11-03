@@ -1,0 +1,80 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+cd $REGISTER/system/acct/entries || exit 1
+USER_NAME=`echo "$USER_NAME" |sed 's/\"//g'`
+ACCT_SESSION_ID=`echo "$ACCT_SESSION_ID" |sed 's/\"//g'`
+if [ -n "$USER_NAME" -a -n "$ACCT_SESSION_ID" ] ; then
+  if [ -d "$USER_NAME/sessions/$ACCT_SESSION_ID" ] ; then
+    LIMITS=`$SCRIPTS/acct_userlimits "$USER_NAME"`
+    LCLASS=`echo "$LIMITS" | cut -d: -f2`
+    LHOURS=`echo "$LIMITS" | cut -d: -f3`
+    LMB=`echo "$LIMITS" | cut -d: -f4`
+    LMBITS=`echo "$LIMITS" | cut -d: -f5`
+    LCOSTH=`echo "$LIMITS" | cut -d: -f6`
+    LCOSTM=`echo "$LIMITS" | cut -d: -f7`
+    LEXPIRE=`echo "$LIMITS" | cut -d: -f8`
+    LCREDIT=`echo "$LIMITS" | cut -d: -f9`
+    [ -z "$ACCT_OUTPUT_OCTETS" ] && ACCT_OUTPUT_OCTETS=0
+    [ -z "$ACCT_INPUT_OCTETS" ] && ACCT_INPUT_OCTETS=0
+    [ -z "$ACCT_OUTPUT_GIGAWORDS" ] && ACCT_OUTPUT_GIGAWORDS=0
+    [ -z "$ACCT_INPUT_GIGAWORDS" ] && ACCT_INPUT_GIGAWORDS=0
+    [ -z "$ACCT_SESSION_TIME" ] && ACCT_SESSION_TIME=0
+    [ -z "$ACCT_DELAY_TIME" ] && ACCT_DELAY_TIME=0
+    S="$USER_NAME/sessions/$ACCT_SESSION_ID"
+    ACCT_OUTPUT_OCTETS=$(((ACCT_OUTPUT_GIGAWORDS<<32)|ACCT_OUTPUT_OCTETS))
+    ACCT_INPUT_OCTETS=$(((ACCT_INPUT_GIGAWORDS<<32)|ACCT_INPUT_OCTETS))
+    echo "$ACCT_OUTPUT_OCTETS" > "$S/RX"
+    echo "$ACCT_INPUT_OCTETS" > "$S/TX"
+    DATE=`date +%s`
+    DATE=$((DATE-ACCT_DELAY_TIME))
+    #echo $DATE > "$S/stop"
+    #cp "$S/stop" "$S/Last"
+    #cp "$S/stop" "$USER_NAME/Last"
+    echo $DATE > "$S/Last"
+    cp "$S/Last" "$USER_NAME/Last"
+    STIME=`cat "$S/Time" 2>/dev/null`
+    [ -z "$STIME" ] && STIME=0
+    TIME=`cat "$USER_NAME/Time" 2>/dev/null`
+    [ -z "$TIME" ] && TIME=0
+    TIME=$((TIME+ACCT_SESSION_TIME-STIME))
+    START=`cat "$S/start" 2>/dev/null `
+    STOP=$((START+ACCT_SESSION_TIME))
+    echo "$STOP" > "$S/stop"
+    if [ -n "$LCOSTH" ] ; then
+      TIMECOST=`echo $((ACCT_SESSION_TIME-STIME)) $LCOSTH | awk '{print $1*$2/3600}'`
+    else
+      TIMECOST=0
+    fi
+
+    echo "$TIME" > "$USER_NAME/Time"
+    echo "$ACCT_SESSION_TIME" > "$S/Time"
+    MB=`cat "$USER_NAME/MB" 2>/dev/null`
+    [ -z "$MB" ] && MB=0
+    TRAFFIC=`cat "$S/Traffic" 2>/dev/null`
+    [ -z "$TRAFFIC" ] && TRAFFIC=0
+    MB=$((MB+ACCT_INPUT_OCTETS+ACCT_OUTPUT_OCTETS-TRAFFIC))
+    [ "$MB" -ge 0 ] 2>/dev/null && echo $MB > "$USER_NAME/MB"
+    echo "$((ACCT_INPUT_OCTETS+ACCT_OUTPUT_OCTETS))" > "$S/Traffic"
+
+
+    if [ -n "$LCOSTM" ] ; then
+      MBCOST=`echo $((ACCT_INPUT_OCTETS+ACCT_OUTPUT_OCTETS-TRAFFIC)) $LCOSTM | awk '{print $1*$2/1048576}'`
+    else
+      MBCOST=0
+    fi
+
+    COST=`cat "$USER_NAME/Cost" 2>/dev/null`
+    [ -z "$COST" ] && COST=0
+    COST=`echo "$COST" "$TIMECOST" "$MBCOST" | awk '{print $1+$2+$3}'`
+    echo "$COST" > "$USER_NAME/Cost"
+    SCOST=`cat "$S/Cost" 2>/dev/null`
+    [ -z "$SCOST" ] && SCOST=0
+    echo  "$SCOST" "$TIMECOST" "$MBCOST" | awk '{print $1+$2+$3}' > "$S/Cost"
+    if [ -n "$LCREDIT" ] ; then
+      LCREDIT=`echo "$LCREDIT" "$TIMECOST" "$MBCOST" | awk '{print $1-$2-$3}'`
+      echo "$LCREDIT" > "$REGISTER/system/acct/credits/$USER_NAME/Credit"
+    fi
+    echo "Reply-Message = Acct:$LCLASS:$LHOURS:$LMB:$LMBITS:$LCOSTH:$LCOSTM:$LEXPIRE:$LCREDIT"
+  fi
+fi
+

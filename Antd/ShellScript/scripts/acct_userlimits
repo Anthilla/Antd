@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USERNAME="$1"
+[ -z "$USERNAME" ] && exit 1
+BASE="ou=Radius,`cat $REGISTER/system/ldap/base`"
+CLASS=`ldapsearch -LLL -x -b "$BASE" "cn=$USERNAME" radiusUserCategory 2>/dev/null |grep -w ^radiusUserCategory: | sed -r "s/^radiusUserCategory: (.*)/\1/"`
+[ -z "$CLASS" ] && CLASS=DEFAULT 
+D=$REGISTER/system/acct/classes
+[ -d "$D/$CLASS" ] || CLASS=DEFAULT
+D="$D/$CLASS"
+HOURS=`cat $D/Hours 2>/dev/null`
+MB=`cat $D/MB 2>/dev/null`
+Mbits=`cat $D/Mbits 2>/dev/null`
+COSTH=`cat $D/CostH 2>/dev/null`
+COSTM=`cat $D/CostM 2>/dev/null`
+CHARGETYPE=`cat $D/ChargeType 2>/dev/null`
+BASE="ou=People,`cat $REGISTER/system/ldap/base`"
+EXPIRE=`ldapsearch -LLL -x -b "$BASE" "uid=$USERNAME" shadowExpire 2>/dev/null |grep -w ^shadowExpire: | sed -r "s/^shadowExpire: (.*)/\1/"`
+if [ "$CHARGETYPE" = pre ] ; then
+  CREDIT=`cat "$REGISTER/system/acct/credits/$USERNAME/Credit" 2>/dev/null`
+  [ -z "$CREDIT" ] && CREDIT=0
+else 
+  CREDIT=""
+fi
+echo "Acct:$CLASS:$HOURS:$MB:$Mbits:$COSTH:$COSTM:$EXPIRE:$CREDIT"

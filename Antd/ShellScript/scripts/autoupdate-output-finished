@@ -1,0 +1,41 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+OP="$2"
+[ -z "$ID" ] && exit 1
+[ -z "$OP" ] && exit 2
+STk="`rand``cat /tmp/STk_Admin 2>/dev/null`"
+TYPE=`echo "$ID" |awk -F: '{print $2}'`
+ID=`echo "$ID" |awk -F: '{print $1}'`
+cat /tmp/installer-$ID 
+ERROR=`cat /tmp/installer-error-$ID 2>/dev/null`
+echo
+if [ -z "$ERROR" ] ; then
+  $SCRIPTS/autoupdate-logger "$ID:$TYPE" "$OP" "SUCCESS: Process completed"
+  logger -t Administration "SUCCESS: $OP: $ID" 
+  echo "<font class=Bigger1 color=#20A020>>>  Process successfully completed</font>"
+cat <<EOF  
+<script>
+var WO=window.parent.parent.opener;
+if (WO!=null) {
+  if (!WO.closed) {
+     WO.location="kerbynet?STk=$STk&Action=Render&Object=autoupdate";
+  }
+}
+</script>
+EOF
+if [ -f "/tmp/reboot-required" ] ; then 
+  echo
+  cat << EOF
+<font color=#00a060>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reboot required for changes to take effect</font>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=button value='Reboot Now' onclick='parent.parent.doreboot()'>   <input type=button value='Reboot Later' onclick='parent.parent.close()'>
+EOF
+fi
+else
+  echo "<font class=Bigger1 color=#f04040>>>  $ERROR</font>"
+fi
+STATUS=`$SCRIPTS/getFixStatus $ID`
+echo "<script>parent.parent.document.getElementById('Status').innerHTML='<font color=#6060F0>$STATUS</font>'</script>"
+
+

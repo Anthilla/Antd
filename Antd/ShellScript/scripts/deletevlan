@@ -1,0 +1,9 @@
+#!/bin/sh
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+cd /sys/class/net/
+for V in `ls -d $INTERFACE.* 2>/dev/null` ; do
+  vconfig rem $V
+done
+
+

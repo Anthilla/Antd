@@ -1,0 +1,7 @@
+#!/bin/bash
+FEATURE="$1"
+KEY="$2"
+echo "$FEATURE" | grep -q "^..............$" || exit 1
+echo "$KEY" | grep -q "^................................$" || echo "$KEY" | grep -q "^........................................$" || exit 2
+mkdir -p "/var/register/system/keys/$FEATURE/" 2>/dev/null
+echo "$KEY" > /var/register/system/keys/$FEATURE/code

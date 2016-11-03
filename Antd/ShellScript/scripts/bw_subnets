@@ -1,0 +1,6 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SUBNETS="`cat $REGISTER/system/bandwidthd/Subnets 2>/dev/null`"
+for S in $SUBNETS ; do
+  echo "subnet $S"
+done 

@@ -1,0 +1,28 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+export EVENT="$1"
+DIR="$REGISTER/system/alerts/Events/$EVENT"
+if [ -z "$EVENT" -o ! -d "$DIR" ] ; then
+  exit 1
+fi
+TMPOUT=/tmp/alert_testing_$$.tmpout
+tr -d '\r' >$DIR/Script/TXT.test
+export ERRLOG="/tmp/alert_test_$$.err"
+$SCRIPTS/alert "$EVENT" TestScript > $TMPOUT
+EVENTID=`grep "^[0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef]$" $TMPOUT`
+if [ -n "$EVENTID" ] ; then
+  echo "<font color=#3030f0><b>Event ID: $EVENTID</b></font>"
+else
+  echo "Event Canceled"
+fi
+echo
+grep -v "^[0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef][0123456789abcdef]$" $TMPOUT
+if [ -n "`cat $ERRLOG`" ] ; then
+  echo
+  echo '<font color=#f03030>'
+  echo "<b>ERROR</b>"
+  cat $ERRLOG | awk -F"/scripts/alert:" '{print $2}'
+  echo '</font>'
+fi
+rm $ERRLOG $TMPOUT
+rm $DIR/Script/TXT.test 

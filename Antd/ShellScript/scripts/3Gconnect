@@ -1,0 +1,76 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+export PPP="$1"
+[ -z "$PPP" ] && exit 1
+UNIT=${PPP:3:1}
+I=0
+PID=`ps -ef |grep -w pppd |grep $PPP| awk '{print $2}'`
+while [ -n "$PID" -a $I -lt 15 ] ; do
+   kill $PID
+   sleep 1
+   I=$((I+1))
+   PID=`ps -ef |grep -w pppd |grep $PPP| awk '{print $2}'`
+done
+if [ -n "$PID" ] ; then
+   kill -9 $PID
+   sleep 1
+   rm -f /var/run/$PPP.pid
+fi
+TTY="`cat $REGISTER/system/net/interfaces/$PPP/TTY 2>/dev/null`"
+if [ "$TTY" = NotDetected ] ; then
+  exit 1
+fi
+APN="`cat $REGISTER/system/net/interfaces/$PPP/APN 2>/dev/null`"
+DIAL="`cat $REGISTER/system/net/interfaces/$PPP/Dial 2>/dev/null`"
+OPTIONAL="`cat $REGISTER/system/net/interfaces/$PPP/Optional 2>/dev/null`"
+DEFAULTROUTE="`cat $REGISTER/system/net/interfaces/$PPP/DEFAULTROUTE 2>/dev/null`"
+if [ -n "$OPTIONAL" ] ; then
+  OPTIONAL="\"OK\" \"$OPTIONAL\""
+fi
+if [ -n "$APN" ] ; then
+  APN="\"OK\" 'AT+CGDCONT=1,\"IP\",\"$APN\",\"\",0,0'"
+fi
+if [ "$DEFAULTROUTE" == yes ] ; then
+  DEFAULTROUTE=defaultroute
+else
+  DEFAULTROUTE=""
+fi
+cat > /tmp/$PPP.3G <<EOF
+/dev/$TTY 
+460800 
+lock 
+crtscts 
+modem 
+noauth 
+$DEFAULTROUTE 
+connect "$SCRIPTS/chat.sh" 
+unit $UNIT
+EOF
+cat > /tmp/$PPP.chat <<EOF
+ABORT BUSY 
+ABORT 'NO CARRIER' 
+ABORT ERROR 
+REPORT CONNECT 
+TIMEOUT 15
+"" AT
+$OPTIONAL
+$APN
+"OK" "ATD$DIAL" 
+CONNECT \c
+EOF
+while true; do
+  PID=`ps -ef |grep -w pppd |grep $PPP| awk '{print $2}'`
+  if [ -z "$PID" ] ; then
+    if [ -r /dev/$TTY ] ; then
+      pppd file /tmp/$PPP.3G 2>/dev/null
+    else
+      $SCRIPTS/usb_modem_try.sh 2>/dev/null >/dev/null
+      sleep 5
+      if ! [ -r /dev/$TTY ] ; then
+        logger -t pppd "ppp$UNIT: ERROR: Modem /dev/$TTY unavailable."
+        sleep 20
+      fi
+    fi
+  fi
+  sleep 10
+done

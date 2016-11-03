@@ -1,0 +1,71 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/defaultvalue
+. $SCRIPTS/net.inc
+function PressKey () {
+  echo -n "Press any key to return to the Command Menu."
+  read -n1
+}
+cd /sys/class/net/
+ETHERNETS=`ls -d ETH?? 2>/dev/null`
+I=0
+for E in $ETHERNETS ; do
+  I=$((I+1))
+  echo "<$I> $E -`$SCRIPTS/getintdesc $E`"
+  ETHs[$I]=$E
+done
+echo
+if [ $I != 0 ] ; then
+  S=0
+  while [ "$S" -lt 1 -o "$S" -gt $I ] ; do
+    echo -n "Select an ethernet interface (1-$I): "
+    read S
+    S=`echo "$S" | sed 's/[^[:digit:]]//g'`
+    [ -z "$S" ] && S=0
+  done 
+  VALIDIP=false
+  while [ "$VALIDIP" == false ] ;do
+    echo -n "IP address to assign to ${ETHs[$S]} [$DEFAULTIP]: "
+    read IP
+    if [ -z "$IP" ] ; then
+      IP=$DEFAULTIP
+    fi
+    if IsValidIPAddr "$IP" ; then
+      VALIDIP=true
+    fi
+  done
+  cd /sys/class/net/
+  BRIDGES=`ls -d BRIDGE?? 2>/dev/null`
+  for B in $BRIDGES ; do
+    cd /sys/class/net/$B/brif/
+    for I in `ls -d * 2>/dev/null` ; do
+      brctl delif $B $I  
+    done
+  done
+  cd /sys/class/net/
+  for I in `ls -d * 2>/dev/null` ; do
+    if [ "$I" != lo -a "$I" != dummy1 ] ; then
+      ip addr flush dev $I 2>/dev/null
+      if [ "${I:0:3}" == ETH ] ; then
+        tc qdisc del dev $I root 2>/dev/null
+      fi
+    fi
+  done
+  ifconfig ${ETHs[$S]} up
+  ifconfig ${ETHs[$S]} $IP 
+  iptables -F SYS_HTTPS
+  iptables -A SYS_HTTPS -j ACCEPT
+  #iptables -I SYS_INPUT 1 -p tcp --dport 80 -j ACCEPT
+  iptables -I SYS_OUTPUT 1 -p tcp --sport 80 -j ACCEPT
+  #iptables -I SYS_INPUT 1 -p tcp --dport 443 -j ACCEPT
+  iptables -I SYS_OUTPUT 1 -p tcp --sport 443 -j ACCEPT
+  iptables -I SYS_INPUT 1 -p icmp -j ACCEPT
+  iptables -I SYS_OUTPUT 1 -p icmp  -j ACCEPT
+  iptables -t nat -F PREROUTING
+  iptables -t mangle -F FORWARD
+  touch /tmp/FailSave
+  touch /tmp/FailSave.warning
+  chown apache /tmp/FailSave.warning
+else
+  PressKey 
+fi

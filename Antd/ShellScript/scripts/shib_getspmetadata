@@ -1,0 +1,4 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+FQDN=`cat $REGISTER/system/cp/Auth/Shibboleth/FQDN`
+wget -T 15 -t 1 -O - https://127.0.0.1:12081/Shibboleth.sso/Metadata | sed "s/127.0.0.1/$FQDN/g" |sed 's/</\&lt;/g' |sed 's/>/\&gt;/g'

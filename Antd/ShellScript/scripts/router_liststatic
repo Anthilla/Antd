@@ -1,0 +1,33 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/net/router"
+if [ -d $CONFIG/Statics ] ; then
+  cd $CONFIG/Statics
+  ENTRIES=`ls -r 2>/dev/null`
+  for E in $ENTRIES ; do
+    export RouteType="`cat $E/RouteType`"
+    export Dest="`cat $E/Dest`"
+    export Netmask="`cat $E/Netmask`"
+    export Via="`cat $E/Via`"
+    export Gateway="`cat $E/Gateway`"
+    export Metric="`cat $E/Metric`"
+    export Interface="`cat $E/Interface`"
+    if ! [ -z "$Interface" ] ; then
+      VLAN="`echo $Interface |awk -F. '{print $2}'`"
+      Interface2="`echo $Interface |awk -F. '{print $1}'`"
+      if ! [ -z "$VLAN" ] ; then
+        Interface2="$Interface2 vlan $VLAN"
+      else
+        Interface2=$Interface
+      fi
+    else
+      Interface2=$Interface
+    fi
+    STATE="`route -n | $SCRIPTS/router_getroutestate`" 
+    if [ "$Via" == GW -a "$Netmask" == "0.0.0.0" -a "$Dest" == "0.0.0.0" -a "$Metric" == "0" ] ; then
+      Dest="DEFAULT GATEWAY"
+    fi    
+    echo "<tr align=center><td><input type=radio name=Entry value='$E'></td><td>$Dest</td><td>$Netmask</td><td>$RouteType</td><td>$Metric</td><td>$Gateway</td><td>$Interface2</td><td>$STATE</td></tr>"
+  done
+fi
+

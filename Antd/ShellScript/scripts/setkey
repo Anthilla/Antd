@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ -z "$1" ] ; then
+  exit 1
+fi
+KEY="/var/register/$1"
+DIR=`dirname "$KEY"`
+FILE=`basename "$KEY"`
+if ! [ -d "$DIR" ] ; then
+   mkdir -p "$DIR"
+fi
+if [ -z "$2" ] ; then
+  cat > "$KEY"
+else
+  echo "$2" > "$KEY"
+fi

@@ -1,0 +1,2 @@
+#!/bin/sh
+ifconfig | egrep "^ppp[0123456789]{2}" | wc -l

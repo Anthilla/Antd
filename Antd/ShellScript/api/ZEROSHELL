@@ -1,0 +1,3 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+echo "ZeroShell $($SCRIPTS/release).$($SCRIPTS/patchlevel)"

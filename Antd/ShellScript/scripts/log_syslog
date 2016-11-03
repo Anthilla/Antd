@@ -1,0 +1,43 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+YEAR="$1"
+MONTH="$2"
+DAY="$3"
+HOST="$4"
+PROCESS="$5"
+PAGE="$6"
+FILTER="$7"
+LINES=100
+[ -z "$YEAR" -o -z "$MONTH" -o -z "$DAY" -o -z "$£HOS" -o -z "$PROCESS" ] && exit 1
+LG1="$LOGDIR/$YEAR/$MONTH/$DAY/$HOST/$PROCESS"
+LG=${LG1%.gz}
+if [ "$LG" == "$LG1" ] ; then
+   CAT="cat '$LG'"
+else
+   CAT="zcat '$LG1'"
+fi
+
+if [ -r "$LG1" ] ; then
+  if [ -z "$PAGE" ] ; then
+    if [ -z "$FILTER" ] ; then
+#      CMD="tail -$LINES '$LG'"
+      CMD="$CAT |tail -$LINES"
+    else
+#      CMD="grep -i '$FILTER' '$LG' | tail -$LINES"
+      CMD="$CAT |grep -i '$FILTER' | tail -$LINES"
+    fi    
+  else
+    FROM=$((PAGE*LINES))
+    if [ -z "$FILTER" ] ; then
+      #CMD="tail -$FROM '$LG' | head -$LINES"
+      CMD="$CAT |tail -$FROM | head -$LINES"
+    else
+      CMD="$CAT |grep -i '$FILTER' | tail -$FROM | head -$LINES"
+    fi
+  fi
+  echo "<table width=100%>"
+  eval "$CMD" | awk '{printf "<tr style=\"font-family: Courier; color: #202020; font-size: 10pt\"><td nowrap valign=top width=1%><b>%s&nbsp;</b></td><td>%s</td></tr>\n",$3,substr($0,length($1)+length($2)+length($3)+length($4)+length($5)+6)}'
+  echo "</table>"
+
+
+fi

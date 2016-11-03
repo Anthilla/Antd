@@ -1,0 +1,11 @@
+#!/bin/sh
+TYPE="$1"
+if [ "$TYPE" == Proxy ] ; then
+  iptables -t nat -L Proxy -v -n || echo "Proxy service disabled."
+else
+  iptables -t nat -L PREROUTING -v -n
+  echo
+  iptables -t nat -L POSTROUTING -v -n
+  echo
+  iptables -t nat -L SNATVS -v -n
+fi

@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+ENABLE="$2"
+[ -z "$CHAIN" -o -z "$ENABLE" ] && exit 1
+CONFIG="$REGISTER/system/net/FW"
+if [ "$ENABLE" == false ] ; then
+  echo no > $CONFIG/Chains/$CHAIN/Enabled
+else
+  echo yes > $CONFIG/Chains/$CHAIN/Enabled
+fi
+$SCRIPTS/fw_initrules "$CHAIN"

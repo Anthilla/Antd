@@ -1,0 +1,20 @@
+#!/bin/bash
+SEVERITY="$1"
+[ -z "$SEVERITY" ] && exit 1
+case "$SEVERITY" in
+Emergency)
+	echo 1
+        ;;
+Critical)
+	echo 3
+        ;;
+Warning)
+	echo 5
+        ;;
+Info)
+	echo 7
+        ;;
+*)
+	echo 9
+	;;
+esac

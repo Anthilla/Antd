@@ -1,0 +1,36 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+if [ "$CHAIN" = NetBalancer ] ; then
+
+
+  CONFIG=$REGISTER/system/net/nb
+  echo "<option value=Auto>Auto</option>"
+  cd $CONFIG/Gateways || exit 1
+  GWS=`ls -d *`
+  for G in $GWS ; do
+    DESCRIPTION=`cat $G/Description 2>/dev/null`
+    IP=`cat $G/IP 2>/dev/null`
+    INTERFACE=`cat $G/Interface 2>/dev/null`
+    if [ -n "$IP" ] ; then
+      DESCRIPTION="$DESCRIPTION ($IP)"
+    else
+      DESCRIPTION="$DESCRIPTION ($INTERFACE)"
+    fi
+    echo "<option value=$G>$DESCRIPTION</option>"
+  done
+else
+  if [ "$CHAIN" = QoS ] ; then
+    cd "$REGISTER/system/net/QoS/Class"
+    CLASSES=`ls`
+    for C in $CLASSES ; do
+      echo "<option value=$C>$C</option>"
+    done
+  else
+    echo "<option value=ACCEPT>ACCEPT</option>"
+    echo "<option value=DROP>DROP</option>"
+    echo "<option value=REJECT>REJECT</option>"
+    echo "<option value=CHAIN>CHAIN</option>"
+    echo "<option value=RETURN>RETURN</option>"
+  fi
+fi

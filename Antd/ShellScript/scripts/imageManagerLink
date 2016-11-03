@@ -1,0 +1,5 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LINKPATH="$1"
+[ -z "$LINKPATH" ] && exit 1
+ln -sf "$REGISTER/$LINKPATH/File" /tmp/img.tpl

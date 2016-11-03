@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="/dev"
+cd $CONFIG
+INTERFACES=`ls -d ttyUSB* ttyACM* 2>/dev/null`
+if [ -z "$INTERFACES" ] ; then
+  echo "<option value='NotDetected'>Not detected</option>"
+  exit
+fi
+for I in $INTERFACES ; do
+      echo "<option value='$I'>$I</option>" 
+done
+
+

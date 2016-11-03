@@ -1,0 +1,64 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/wifi.inc
+XDEV="$1"
+if [ -z "$XDEV" ] ; then
+  WL=`wifi-list`
+  for WDEV in $WL ; do
+    echo -n "$WDEV - "
+    $SCRIPTS/getintdesc $WDEV | sed -r 's/(.*)Atheros Communications, Inc.(.*)/Chipset\1\2/'
+  done
+  echo
+  DEV_SELECTED=`echo $WL | awk '{print $1}'`
+  readvalue "WiFi device to use for scanning" "$DEV_SELECTED" "$WL" "lo" "" RejectNull 
+  XDEV=$READVALUE
+fi
+#if [ -d /sys/class/net/WSCAN0/ ] ; then
+#  wlanconfig WSCAN0 destroy
+#fi
+SCANNER=""
+VAPS=`wifi-listvaps $XDEV`
+if [ -n "$VAPS" ] ; then
+  for V in $VAPS ; do
+    if iwconfig $V | grep -q -w "Mode:Managed" ; then
+      SCANNER=$V     
+    fi
+  done
+fi
+if [ -z "$SCANNER" ] ; then
+#  if [ "`wifi-listvaps $XDEV | wc -l`" -lt 4 ] ; then
+#    if wlanconfig WSCAN0 create wlandev $XDEV wlanmode sta nosbeacon  >/dev/null ; then
+#      SCANNER=WSCAN0
+#    fi
+# fi
+ SCANNER=$XDEV
+fi
+#if [ -z "$SCANNER" ] ; then
+#  echo "ERROR: resources unavailable on $XDEV."
+#  exit 1  
+#fi
+echo "Using device $XDEV($SCANNER) for channel scanning ..."
+echo
+if ! ifconfig $SCANNER | grep -q -w UP ; then
+  ifconfig $SCANNER up
+  PUTDOWN=yes
+  sleep 5
+fi
+iwlist $SCANNER scan >/tmp/wifi-channel-scanning
+if [ "$PUTDOWN" == yes ] ; then
+  ifconfig $SCANNER down
+fi
+#if [ "$SCANNER" == WSCAN0 ] ; then
+#  wlanconfig WSCAN0 destroy
+#fi
+
+N=`grep "Frequency:" /tmp/wifi-channel-scanning | uniq | wc -l`
+echo "$N WiFi channel(s) found."
+echo
+if [ $N -gt 0 ] ; then
+  grep "Frequency:" /tmp/wifi-channel-scanning | uniq
+  echo
+  echo "---------------------------------------------------------"
+  cat /tmp/wifi-channel-scanning
+fi
+rm -f /tmp/wifi-channel-scanning

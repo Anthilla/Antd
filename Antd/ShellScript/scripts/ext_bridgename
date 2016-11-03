@@ -1,0 +1,6 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+BRIDGE=$1
+ext_bridgename $BRIDGE
+ 

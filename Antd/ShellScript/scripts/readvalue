@@ -1,0 +1,46 @@
+function readvalue {
+  jmsg="$1"
+  jdefault="$2"
+  jallowed="$3"
+  jmode="$4"
+  jnum="$5"
+  jopt="$6"
+  jmin="$7"
+  jmax="$8"
+  jrepeat=yes
+  while [ "$jrepeat" == yes ] ; do
+    if [ -z "$jdefault" ] ; then
+      echo -n "$jmsg: "
+    else
+      echo -n "$jmsg [$jdefault]: "
+    fi
+    read jvalue
+    if [ -z "$jvalue" ] ; then
+      jvalue="$jdefault"
+      jrepeat=no
+    else
+      if [ -n "$jallowed" ] ; then
+        if echo "$jallowed" | grep -q -i -w "$jvalue" ; then
+          jrepeat=no
+        fi
+      else
+        jrepeat=no
+      fi
+    fi
+    if [ -z "$jvalue" ] && echo "$jopt" | grep -i -w -q RejectNull ; then
+       jrepeat=yes
+    fi
+    if [ -n "$jmin" -a -n "$jmax" ] ; then
+      jlen=` echo -n "$jvalue" |wc -m`
+      if ! [  $jlen -ge $jmin -a $jlen -le $jmax ] ; then
+        echo "The size of this value must be between $jmin and $jmax."
+        echo
+        jrepeat=yes
+      fi
+    fi
+  done
+  [ "$jmode" == up ] && jvalue=`echo $jvalue | awk '{print toupper($0)}'`
+  [ "$jmode" == lo ] && jvalue=`echo $jvalue | awk '{print tolower($0)}'`
+  [ "$jmode" == num ] && jvalue=`echo $jnum | cut -f $jvalue -d ' '`
+  READVALUE="$jvalue"
+}

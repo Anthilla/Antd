@@ -1,0 +1,64 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+[ -z "$CHAIN" ] && exit 1
+CONFIG="$REGISTER/system/net/FW/"
+if [ "$CHAIN" == QoS ] ; then
+  TABLE="-t mangle"
+  CH=QoS
+else
+  if [ "$CHAIN" == NetBalancer ] ; then
+    TABLE="-t mangle"
+    CH=NetBalancer
+  else
+    TABLE=""
+    CH="$CHAIN"
+  fi
+fi
+
+HTTPPORT="`cat $REGISTER/system/httpd/HTTP 2> /dev/null`"
+HTTPSPORT="`cat $REGISTER/system/httpd/HTTPS 2> /dev/null`"
+if [ "`cat $CONFIG/Chains/$CHAIN/Enabled 2> /dev/null`" == yes ] ; then
+  iptables $TABLE -F $CH
+  if [ "$CHAIN" == INPUT ] ; then
+     iptables -A INPUT -j SYS_GUI
+     iptables -A INPUT -j SYS_INPUT
+     iptables -A INPUT -p tcp --dport $HTTPPORT -j SYS_HTTPS
+     iptables -A INPUT -p tcp --dport $HTTPSPORT -j SYS_HTTPS
+     iptables -A INPUT -p tcp --dport 22 -j SYS_SSH
+  fi
+  [ "$CHAIN" == OUTPUT ] && iptables -A OUTPUT -j SYS_OUTPUT
+  # If we are doing the QoS chain, thenlear any marks left over from
+  # Netbalancing/failover routing. The QoS chain is applied after
+  # routing so there is no conflict.
+  [ "$CHAIN" == "QoS" ] && iptables $TABLE -A $CH -j MARK --set-mark 0x0
+  if [ -d $CONFIG/Chains/$CHAIN/Rules ] ; then
+      cd $CONFIG/Chains/$CHAIN/Rules
+      RULES=`ls`
+      for RULE in $RULES ; do
+        ENABLED="`cat $RULE/Enabled 2>/dev/null`"
+        if [ "$ENABLED" == yes ] ; then
+          $SCRIPTS/fw_makerule $CHAIN $RULE
+        fi
+      done
+  fi
+  if [ "$CHAIN" == FORWARD -o "$CHAIN" == INPUT -o "$CHAIN" == OUTPUT ] ; then
+    POLICY="`$SCRIPTS/fw_getpolicy $CHAIN`"
+    iptables -P $CHAIN $POLICY
+  fi
+else
+  if [ "$CHAIN" == FORWARD -o "$CHAIN" == INPUT -o "$CHAIN" == OUTPUT ] ; then
+    iptables -P $CHAIN ACCEPT
+  fi
+  iptables $TABLE -F $CH
+  if [ "$CHAIN" == INPUT ] ; then
+    iptables -A INPUT -p tcp --dport $HTTPPORT -j SYS_HTTPS
+    iptables -A INPUT -p tcp --dport $HTTPSPORT -j SYS_HTTPS
+    iptables -A INPUT -p tcp --dport 22 -j SYS_SSH
+  fi
+fi
+export CHAIN
+$SCRIPTS/runscript firewallchain >/dev/null
+if [ "$CHAIN" == FORWARD ] && iptables -L CapPort -n 2>/dev/null >/dev/null ; then
+  $SCRIPTS/cp_start
+fi

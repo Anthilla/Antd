@@ -1,0 +1,148 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REQUEST="$1"
+OPT="$2"
+GW="$3"
+[ -z "$REQUEST" ] && REQUEST=LIST
+CONFIG=$REGISTER/system/net/nb
+cd $CONFIG/Gateways || exit 1
+function STATUS {
+  xG="$1"
+  TEMP=$($SCRIPTS/nb_statusgw $xG)
+  echo "$TEMP" | grep -q -w Disabled && echo DISABLED 
+  echo "$TEMP" | grep -q -w Standby && echo STANDBY
+  echo "$TEMP" | grep -q -w Fault && echo FAULT
+  echo "$TEMP" | grep -q -w "No link" && echo "NO LINK"  
+  echo "$TEMP" | grep -q -w Active && echo ACTIVE  
+  echo "$TEMP" | grep -q -w Spare && echo SPARE  
+}
+function OK {
+  G="$1"
+  [ -z "$G" ] && exit 6
+  STATUS=$(STATUS $G)
+  case "$STATUS" in
+    STANDBY)
+      exit 0
+          ;;
+    FAULT)
+      exit 61
+          ;;
+    "NO LINK")
+      exit 62
+          ;;
+    ACTIVE)
+      exit 0
+          ;;
+    SPARE)
+      exit 0
+          ;;
+  esac
+}
+function INFO {
+  GWS="$1"
+  [ -z "$GWS" ] && GWS=`ls -d *`
+  for G in $GWS ; do
+    DESCRIPTION=`cat $G/Description 2>/dev/null`
+    IP=`cat $G/IP 2>/dev/null`
+    INTERFACE=`cat $G/Interface 2>/dev/null`
+    if [ -n "$IP" ] ; then
+      DESCRIPTION="$DESCRIPTION ($IP)"
+    else
+      DESCRIPTION="$DESCRIPTION ($INTERFACE)"
+    fi
+    FAILURE=`cat /tmp/nb/Gateways/$G/Failure 2>/dev/null`
+    [ -z "$FAILURE" ] && FAILURE=0
+    STATUS=$(STATUS $G)
+    if [ "$STATUS" != DISABLED ] ; then
+      if echo "$OPT" | grep -q -w MLines ; then
+        echo "$DESCRIPTION"
+        echo "Status: $STATUS"
+        echo "Failures: $FAILURE" 
+      else
+        echo "$STATUS  $DESCRIPTION  (Failures: $FAILURE)"
+      fi
+    fi
+  done
+}
+function DESCRIPTION {
+  G="$1"
+  [ -z "$G" ] && exit 6
+  DESCRIPTION=`cat $G/Description 2>/dev/null`
+  STATUS=$(STATUS $G)
+  echo "($STATUS) $DESCRIPTION"
+}
+
+function STAT {
+  DISABLED=0
+  STANDBY=0
+  FAULT=0
+  NOLINK=0 
+  ACTIVE=0  
+  SPARE=0  
+  TOT=0  
+  GWS=`ls -d *`
+  for G in $GWS ; do
+    STATUS=$(STATUS $G)
+    case "$STATUS" in    
+      STANDBY)
+	STANDBY=$((STANDBY+1))
+	TOT=$((TOT+1))
+	;;
+      FAULT)
+	FAULT=$((FAULT+1))
+	TOT=$((TOT+1))
+	;;
+      "NO LINK")
+	NOLINK=$((NOLINK+1))  
+	TOT=$((TOT+1))
+	;;
+      ACTIVE)
+	ACTIVE=$((ACTIVE+1))
+	TOT=$((TOT+1))
+	;;
+      SPARE)
+	SPARE=$((SPARE+1))
+	TOT=$((TOT+1))
+	;;
+    esac
+  done
+  if echo "$OPT" | grep -q -w MLines ; then
+    PRINT="echo"
+    SP=""
+  else
+    PRINT="echo -n"
+    SP="  "
+  fi
+  [ $ACTIVE -ne 0 ] && $PRINT "Active: $ACTIVE/$TOT$SP"  
+  [ $SPARE -ne 0 ] && $PRINT "Spare: $SPARE/$TOT$SP"  
+  [ $FAULT -ne 0 ] && $PRINT "Fault: $FAULT/$TOT$SP"
+  [ $NOLINK -ne 0 ] && $PRINT "No Link: $NOLINK/$TOT$SP" 
+  [ $STANDBY -ne 0 ] && $PRINT "Standby: $STANDBY/$TOT$SP"
+  if [ "$PRINT" = "echo -n" ] ; then 
+    echo
+  fi
+}
+case "$REQUEST" in
+  LIST)
+      INFO
+      ;;
+  INFO)
+      [ -z "$GW" ] && exit 5
+      INFO "$GW"
+      ;;
+  DESCRIPTION)
+      [ -z "$GW" ] && exit 5
+      DESCRIPTION "$GW"
+      ;;
+  OK)
+      [ -z "$GW" ] && exit 5
+      OK "$GW"
+      ;;
+  STAT)
+      STAT
+      ;;
+  STATUS)
+      [ -z "$GW" ] && exit 5
+      STATUS "$GW"
+      ;;
+esac

@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+Status="$1"
+Every="$2"
+AutoInstall="$3"
+Language="$4"
+#echo $Status > $REGISTER/system/AutoUpdate/Status
+echo $Every > $REGISTER/system/AutoUpdate/Every
+#echo $AutoInstall > $REGISTER/system/AutoUpdate/AutoInstall
+echo $Language > $REGISTER/system/AutoUpdate/Language
+
+#$SCRIPTS/
+
+

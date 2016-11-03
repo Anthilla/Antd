@@ -1,0 +1,22 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+STATUS="$2"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+IDIR="$CONFIG/$INTERFACE"
+if [ -r $IDIR/Bond/Name ] ; then
+   BOND=`cat $IDIR/Bond/Name`
+   if [ "$STATUS" == on ] ; then
+      ifenslave $BOND $INTERFACE 2>/dev/null
+      rm -f /tmp/${BOND}_${INTERFACE}_OFF
+   else
+      ifenslave -d $BOND $INTERFACE 2>/dev/null
+      touch /tmp/${BOND}_${INTERFACE}_OFF 
+   fi
+fi
+
+
+
+

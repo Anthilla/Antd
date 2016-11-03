@@ -1,0 +1,18 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+if [ -d /etc/slots ] ; then
+   cd /etc/slots/ || exit 5
+   SELECTED="`cat conf/Slot 2>/dev/null`"
+   for S in 1 2 ; do
+     STATUS="`cat $S/conf/Status 2>/dev/null`"
+     if [ "$STATUS" = Ready ] ; then
+       DESC="`cat $S/conf/Description 2>/dev/null`"
+       [ -z "$SELECTED" ] && SELECTED="$S"
+       if [ "$S" = "$SELECTED" ] ; then
+         echo -n "<option value='$S' selected>SLOT $S - $DESC</option>"
+       else
+         echo -n "<option value='$S'>SLOT $S - $DESC</option>"
+       fi
+     fi
+   done
+fi

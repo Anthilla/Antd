@@ -1,0 +1,10 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+if ps -e -w | grep -w -q autoupdater  ; then
+  exit 5
+fi
+while  ps -e | grep -q "autoupdate-" ; do
+  sleep 310
+done
+$SCRIPTS/autoupdater
+

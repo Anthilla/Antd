@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DIR="$REGISTER/system/net/interfaces"
+for I in `seq 0 99` ; do
+  if [ "$I" -lt 10 ] ; then
+    NAME="BRIDGE0$I"
+  else
+    NAME="BRIDGE$I"
+  fi
+  if ! [ -d "$DIR/$NAME" ] ; then
+    echo $NAME
+    exit
+  fi
+done
+
+

@@ -1,0 +1,34 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+BY="$1"
+CONFIG=$REGISTER/system/net/router
+TMP=/tmp/rip_learned.tmp
+vtysh -c "show ip rip" |grep -v -w self |grep "/" > "$TMP"
+NLINE=`wc -l < "$TMP"`
+if [ "$NLINE" -gt 0 ] ; then
+  for I in `seq 1 $NLINE` ; do
+    LINE=`head -$I "$TMP" |tail -1` 
+    Dest=`echo $LINE | awk '{print $2}'`
+    Netmask=`ipcalc -b -n $Dest |grep Netmask: |awk '{print $2}'`
+    Dest=`echo $Dest | awk -F/ '{print $1}'`
+    Gateway=`echo $LINE | awk '{print $3}'`
+    Metric=`echo $LINE | awk '{print $4}'`
+    From=`echo $LINE | awk '{print $5}'`
+    Time=`echo $LINE | awk '{print $7}'`
+    if [ "$Metric" != 16 ] ; then
+      State=Up
+    else
+      State=Down
+    fi
+    if [ "$Netmask" == 255.255.255.255 ] ; then
+      Type=Host
+    else
+      Type=Net
+    fi
+    if [ "$Netmask" == "0.0.0.0" -a "$Dest" == "0.0.0.0" -a "$Metric" == "0" ] ; then
+      Dest="DEFAULT GATEWAY"
+    fi
+    echo "<tr $BGCOLOR ><td align=center><input type=radio name=SelectDyn value='${Dest}_${Netmask}_${Gateway}_${Metric}'></td><td align=center>$Dest</td><td align=center>$Netmask</td><td align=center>$Type</td><td align=center>$Metric</td><td align=center>$Gateway</td><td nowrap align=center>$From</td><td nowrap align=center>$State</td><td nowrap align=center>$Time</td></tr>"
+  done
+
+fi

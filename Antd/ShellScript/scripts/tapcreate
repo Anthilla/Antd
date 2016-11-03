@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/net/interfaces"
+cd "$CONFIG"
+INTERFACES=`ls -d VPN[0123456789][01234567890] 2> /dev/null`
+for i in $INTERFACES ; do
+   ifconfig $i 2>/dev/null >/dev/null || openvpn --dev-type tap --dev $i --mktun >/dev/null 2>/dev/null
+   $SCRIPTS/setvlans $i
+done
+
+
+
+
+

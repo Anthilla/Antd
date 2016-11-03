@@ -1,0 +1,40 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+if $SCRIPTS/umountdb ; then
+  if [ "`e2label /dev/ram1 2> /dev/null`" != DefaultDB ] ; then
+     echo "Initializing default Profile..."
+     RAM=`free -m |grep Mem: |awk '{print $2}'`
+     if [ "$RAM" -le 80 ] ; then
+       SIZE=8192
+     else
+       if [ "$RAM" -le 96 ] ; then
+         SIZE=16384
+       else 
+         if [ "$RAM" -le 128 ] ; then
+           SIZE=24576
+         else
+           if [ "$RAM" -le 160 ] ; then
+             SIZE=32768
+           else
+             if [ "$RAM" -le 192 ] ; then
+               SIZE=49152
+             else
+               if [ "$RAM" -le 224 ] ; then
+                 SIZE=65536
+               else
+                 SIZE=81920
+               fi
+             fi
+           fi
+         fi
+       fi
+     fi
+     mkfs -t ext2 /dev/ram1 $SIZE >/dev/null && e2label /dev/ram1 DefaultDB >/dev/null && mount /dev/ram1 /mpoint && tar --directory /mpoint -xjf "$DBTEMPLATE" 2>/dev/null && umount /mpoint
+  fi
+  mount /dev/ram1 /Database || exit 1
+  touch /tmp/DefaultDBMounted
+else
+  exit 1
+fi
+
+

@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+LIST="$REGISTER/system/AutoUpdate/Releases/$RELEASE.$PATCHLEVEL/UpdateList"
+BUFFER=/tmp/getFixInstalled.$$
+echo -n > $BUFFER
+cat $LIST | while read LINE  ;  do
+  ID=`echo "$LINE" | awk -F";" '{print $1}'` 
+  if [ -f "$REGISTER/system/AutoUpdate/pkgs/$ID/pkg/Installed" ] ; then
+    echo -n "$ID;" >> $BUFFER
+  fi
+done
+cat $BUFFER
+rm -f "$BUFFER"
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+if ps -ef |grep -w 3Gconnect |grep -q $NAME ; then
+  $SCRIPTS/3Gconnect_stop $NAME
+fi
+PPPDIR="$CONFIG/$NAME"
+rm -rf $PPPDIR

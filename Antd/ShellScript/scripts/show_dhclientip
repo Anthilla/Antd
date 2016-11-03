@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+IP=`/sbin/ifconfig $INTERFACE 2>/dev/null | grep "inet addr"| sed -r "s/.*inet addr:(.*) .*Bcast.*/\1/"`
+if [ -n "$IP" ] ; then
+  echo $IP
+else
+  echo "0.0.0.0"
+fi

@@ -1,0 +1,48 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+cd $REGISTER/system/acct/requests/toprocess || exit 3
+REQUESTS=$(ls -rt)
+for R in $REQUESTS ; do
+  for T in Start Stop Interim-Update ; do
+    E=$R/$T
+    if [ -d $E ] && [ "$T" != Stop -o ! -d $R/Start ] && [ "$T" != Interim-Update -o ! -d $R/Start ] && [ "$T" != Interim-Update -o ! -d $R/Stop ]; then
+      
+      NOW=`date +%s`
+      TIME="`cat $E/Time`"
+      RETRY="`cat $E/Retry`"
+      RETRYTIME=$((TIME+RETRY*RETRY*60))
+      if [ $NOW -ge $RETRYTIME ] ; then
+        USERNAME="`cat $E/Username`"
+        DELAY=$((NOW-TIME))
+	TMP=/tmp/acct_process.$$
+	cp $E/Value $TMP
+	echo "Acct-Delay-Time = $DELAY" >> $TMP
+        OUTFILE=/tmp/radclient-out.$$
+        if radclient 127.0.0.1 acct ZeroShell < $TMP > $OUTFILE ; then
+          LIMITS=`grep "Reply-Message =" $OUTFILE | sed -r "s/.*Acct:(.*)\"/\1/"`
+          if [ -n "$LIMITS" ] ; then
+            sudo $SCRIPTS/acct_writelimits "$USERNAME" "$LIMITS"
+          fi
+          if [ "$T" = Stop ] ; then
+            rm -rf $R
+	  else
+	    rm -rf $E
+	  fi
+        else
+          #cp $TMP /tmp/input.deb
+          #cp $OUTFILE /tmp/output.deb
+	  logger -t Accounting "$T operation for the user $USERNAME failed to be perfomed (Retry=$RETRY)" 
+          RETRY=$((RETRY+1))
+          echo $RETRY > $E/Retry
+        fi
+        rm $TMP $OUTFILE
+      fi
+    fi 
+  done 
+done
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+killall -w syslogd
+$SCRIPTS/rendertemplate syslog.conf
+if [ "`cat $REGISTER/system/logs/Remote 2>/dev/null`" == yes ] ; then
+  ARGS="-m 0 -r"
+else
+  ARGS="-m 0"
+fi
+syslogd $ARGS
+

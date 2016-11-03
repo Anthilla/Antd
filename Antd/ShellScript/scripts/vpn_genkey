@@ -1,0 +1,4 @@
+#!/bin/bash
+openvpn --genkey --secret /tmp/vpn_genkey
+grep -v "^#" /tmp/vpn_genkey |grep -v "^---" | tr -d "\n"
+rm -f /tmp/vpn_genkey

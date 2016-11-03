@@ -1,0 +1,36 @@
+{ "BOND_STATUS", new [] {
+"$param"
+}},
+{ "DISKSPACE", new [] {
+"$param"
+}},
+{ "GWINFO", new [] {
+"$param"
+}},
+{ "KERNEL", new [] {
+"$param"
+}},
+{ "LOAD15", new [] {
+"$param"
+}},
+{ "MEMINFO", new [] {
+"$param"
+}},
+{ "NCORES", new [] {
+"$param"
+}},
+{ "SLOT", new [] {
+"$param"
+}},
+{ "SYSTEM_STARTED", new [] {
+"$param"
+}},
+{ "UPTIME", new [] {
+"$param"
+}},
+{ "VPN_STATUS", new [] {
+"$param"
+}},
+{ "ZEROSHELL", new [] {
+"$param"
+}}

@@ -1,0 +1,136 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/defaultvalue
+cat <<EOF
+To be sure that the resulting profile is clean you should:
+1) Create a new profile;
+2) Activate the created profile;
+3) Deactivate it;
+4) mount /dev/hda2 /mpoint
+5) ./make_dbtpl /mpoint/_DB.002/
+
+
+EOF
+SOURCE="$1"
+[ -z "$SOURCE" ] && exit 1
+DB="/tmp/db-tpl.dir"
+rm -rf "$DB"
+cp -av $SOURCE/ "$DB"
+( cd $SOURCE/ && tar cf - . ) | ( cd $DB && tar xf - )
+echo "Temporary EXAMPLE.COM configuration" > $DB/.settings/Description
+rm -f $DB/.settings/{LastBackup,LastActivation}
+mv $DB/$REGISTER/system/net/interfaces/ETH00 /tmp
+rm -rf $DB/$REGISTER/system/net/FW/Chains/ $DB/$REGISTER/system/net/FW/tmp
+echo FORWARD > $DB/$REGISTER/system/net/FW/CurrentChain
+rm -rf $DB/$REGISTER/system/k5/client
+rm -rf $DB/$REGISTER/system/dns/Forwarders
+rm -rf $DB/$REGISTER/system/ssh
+rm -rf $DB/$REGISTER/system/havp
+rm -rf $DB/$REGISTER/system/ClamAV
+rm -rf $DB/$REGISTER/system/net/WiFi
+rm -f $DB/$REGISTER/system/ipsec/Enabled
+#rm -f $DB/$REGISTER/system/radius/Enabled
+echo checked > $DB/$REGISTER/system/radius/Enabled
+rm -f $DB/$REGISTER/system/radius/CheckCRL
+
+rm -rf $DB/$REGISTER/system/net/FW/ConnTrackLog $DB/$REGISTER/system/net/FW/ConnTrack $DB/$REGISTER/system/net/FW/ConnTrackNAT
+rm -f $DB/$REGISTER/system/dns/Options
+rm -rf $DB/$REGISTER/system/net/interfaces/*
+rm -rf $DB/$REGISTER/system/net/router/PAT/*
+rm -rf $DB/$REGISTER/system/dhcp/subnets/*
+rm -f $DB/$REGISTER/system/dhcp/dhcpd.*
+rm -f $DB/$REGISTER/system/dhcp/SelectedSubnet
+rm -rf $DB/$REGISTER/system/cp
+rm -rf $DB/$REGISTER/system/openvpn
+echo Eng > $DB/$REGISTER/system/AutoUpdate/Language
+echo no > $DB/$REGISTER/system/startup/EnabledScript
+echo "# Startup Script" > $DB/$REGISTER/system/startup/rc.local 
+echo yes > $DB/$REGISTER/system/net/FW/Chains/INPUT/Enabled
+echo yes > $DB/$REGISTER/system/net/FW/Chains/OUTPUT/Enabled
+echo yes > $DB/$REGISTER/system/net/FW/Chains/FORWARD/Enabled
+echo  ACCEPT > $DB/$REGISTER/system/net/FW/Chains/INPUT/Policy
+echo  ACCEPT > $DB/$REGISTER/system/net/FW/Chains/OUTPUT/Policy
+echo  ACCEPT > $DB/$REGISTER/system/net/FW/Chains/FORWARD/Policy
+rm -rf $DB/$REGISTER/system/radius/proxy/realms/*
+mkdir -p $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00
+echo Local >$DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/Type
+echo  > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/LB
+echo 1813 > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00/AcctPort
+echo 1812 > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00/AuthPort
+echo > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00/NoStrip
+echo > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00/Secret
+echo LOCAL > $DB/$REGISTER/system/radius/proxy/realms/EXAMPLE.COM/00/Server
+rm -f $DB/$REGISTER/system/ddnsclient/*
+echo "http://checkip.dyndns.org:8245/" > $DB/$REGISTER/system/ddnsclient/CheckIP
+rm -rf $DB/$REGISTER/system/logs/*
+rm -f $DB/$REGISTER/system/time/UTC
+echo "Europe/Rome" > $DB/$REGISTER/system/time/TZ
+rm -f $DB/$REGISTER/system/time/NTP/Server
+echo yes > $DB/$REGISTER/system/time/NTP/Client
+cat <<EOF > $DB/$REGISTER/system/time/NTP/ServerList
+0.pool.ntp.org
+1.pool.ntp.org
+2.pool.ntp.org
+3.pool.ntp.org
+EOF
+echo no > $DB/$REGISTER/system/ldap/LDAPACTIVE
+echo no > $DB/$REGISTER/system/ldap/LDAPSACTIVE
+echo no > $DB/$REGISTER/system/ldap/NISACTIVE
+rm -f $DB/$REGISTER/system/ldap/AD/*
+rm -rf $DB/LOG
+mv /tmp/ETH00 $DB/$REGISTER/system/net/interfaces/
+rm -rf $DB/$REGISTER/system/net/interfaces/ETH00/VLAN
+rm -f $DB/$REGISTER/system/net/interfaces/ETH00/Description
+rm -rf $DB/$REGISTER/system/net/interfaces/ETH00/MAC
+rm -rf $DB/$REGISTER/system/net/interfaces/ETH00/IP
+mkdir -p $DB/$REGISTER/system/net/interfaces/ETH00/IP/00
+echo $DEFAULTIP > $DB/$REGISTER/system/net/interfaces/ETH00/IP/00/IP
+echo 255.255.255.0 > $DB/$REGISTER/system/net/interfaces/ETH00/IP/00/Netmask 
+echo up > $DB/$REGISTER/system/net/interfaces/ETH00/IP/00/STATUS
+echo up > $DB/$REGISTER/system/net/interfaces/ETH00/STATUS
+echo > $DB/$REGISTER/system/httpd/ACL
+
+
+#rm -rf $DB/$REGISTER/system/net/FW/*
+rm -f "$DB/$REGISTER/system/dhcp/dhcpd.leases" "$DB/$REGISTER/system/dhcp/dhcpd.leases~"
+
+cat <<EOF > $DB/$REGISTER/system/k5/default_keys
+DES cbc mode with CRC-32, no salt
+DES cbc mode with CRC-32, Version 4
+DES cbc mode with CRC-32, AFS version 3
+Triple DES cbc mode with HMAC/sha1, no salt
+ArcFour with HMAC/md5, no salt
+AES-128 CTS mode with 96-bit SHA-1 HMAC, no salt
+AES-256 CTS mode with 96-bit SHA-1 HMAC, no salt
+EOF
+echo "01 00 00" > $DB/$REGISTER/system/k5/max_ticket_life
+echo "07 00 00" > $DB/$REGISTER/system/k5/max_renewable_life
+rm -rf $DB/var/kerberos/krb5kdc/* $DB/var/kerberos/krb5kdc/.*
+for SRV in radius ipsec httpd ldap ; do
+  TLS="$DB/$REGISTER/system/$SRV/TLS/"
+  mkdir $TLS 2>/dev/null
+  echo ".default.pem" > $TLS/CertSelected
+  echo "Local" > $TLS/CertType
+  ln -sf /etc/ssl/certs/.default.pem $TLS/cert.pem
+  ln -sf /etc/ssl/private/.default.pem $TLS/key.pem
+done
+
+
+
+
+SSLDIR="$DB/etc/ssl/"
+cd "$SSLDIR" 
+rm -rf previous
+mkdir  previous 2>/dev/null
+rm -rf $(cd template && echo *)
+cp -a template/* .
+echo "$DEFAULTPW" > $DB/$REGISTER/system/ldap/rootpw
+echo "setup_menu" > $DB/$REGISTER/system/misc/LastMenu
+cd $DB
+sleep 10
+tar cvfj "$DBTEMPLATE" .
+
+
+
+
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+PEMFILE="$1"
+CHECKCRL="$2"
+[ -z "$PEMFILE" -o ! -r "$PEMFILE" ] && echo "Certificate not found" && exit 1
+STATUS=`openssl verify -CApath "$SSLDIR/certs/trusted_CAs/" $CHECKCRL "$PEMFILE" 2>&1 |grep : |tail -1 | awk -F: '{print $2}'`
+echo $STATUS

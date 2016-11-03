@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+[ -z "$ID" ] && exit 1
+ID=`echo "$ID" | awk -F":" '{print $1}'`
+DETAILS="$REGISTER/system/AutoUpdate/pkgs/$ID/Cache/Details.html"
+cat "$DETAILS"
+
+
+
+

@@ -1,0 +1,6 @@
+#!/bin/sh
+if pidof ripd >/dev/null ; then
+  echo "<font color=#00f000>ACTIVE</font>"  
+else
+  echo "<font color=#ff0000>DISABLED</font>"
+fi

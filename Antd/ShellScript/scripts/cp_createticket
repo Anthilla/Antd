@@ -1,0 +1,94 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+AUTHTYPE="$1"
+USER="$2"
+PW="$3"
+REALM="$4"
+IP="$5"
+RENEW="$6"
+if [ -z "$RENEW" ] ; then
+  if [ "$AUTHTYPE" != X509 -a "$AUTHTYPE" != Shibboleth ] ; then
+    RADIUSREALM="`echo $REALM |awk '{print tolower($0)}'`"
+    if [ -f "$REGISTER/system/cp/Auth/Domains/$REALM/Type" ] ; then
+      RT="`cat $REGISTER/system/cp/Auth/Domains/$REALM/Type 2>/dev/null`"
+    else
+      if [ -f "$REGISTER/system/cp/Auth/Domains/$RADIUSREALM/Type" ] ; then 
+        RT="`cat $REGISTER/system/cp/Auth/Domains/$RADIUSREALM/Type 2>/dev/null`"
+      fi
+    fi
+    if [ -z "$RT" ] ; then
+      if [ "`cat $REGISTER/system/cp/Auth/AutoProxy`" == yes ] && [ -f "$REGISTER/system/radius/proxy/realms/$RADIUSREALM/Type" -o -f "$REGISTER/system/radius/proxy/realms/DEFAULT/Type" ] ; then
+         RT=Radius
+      else
+        if [ "`cat $REGISTER/system/cp/Auth/AutoTrust`" == yes ] ; then
+          RT=Trusted
+        else
+          echo "Domain $REALM not authorized" >&2
+          exit 18
+        fi
+      fi
+    fi
+    if [ "$RT" == Radius ] ; then
+      RADIUSREQ="`cat $REGISTER/system/cp/Auth/Domains/$RADIUSREALM/RadiusReq 2>/dev/null`"
+      if [ -z "$RADIUSREQ" ] ; then
+        RADIUSREQ="`cat $REGISTER/system/cp/Auth/RadiusReq 2>/dev/null`"
+        [ -z "$RADIUSREQ" ] && RADIUSREQ="PAP"
+      fi
+      logger -t CaptivePortal "AS: trying Radius authentication ($RADIUSREQ) for $USER@$RADIUSREALM (Client: $IP)"
+      if ! $SCRIPTS/radiusauth "$USER@$RADIUSREALM" "$PW" "$RADIUSREQ" "$IP" >/dev/null ; then
+        echo "Radius authentication ($RADIUSREQ) failed for $USER@$RADIUSREALM (Client: $IP)" >&2
+        exit 20
+      fi
+    else
+      logger -t CaptivePortal "AS: trying Kerberos 5 ($RT KDC) authentication for $USER@$REALM (Client: $IP)"
+      export KRB5CCNAME="FILE:/tmp/krb5cc_${USER}_${REALM}_$$"
+      kdestroy 2>/dev/null
+      if ! echo "$PW" | kinit "$USER@$REALM" >/dev/null ; then
+        kdestroy 2>/dev/null 
+        exit 10
+      fi
+      HOSTNAME=`cat $REGISTER/system/misc/hostname`
+      if [ "$RT" != External ] ; then
+        if ! kvno "host/$HOSTNAME" >&2 ; then
+          kdestroy 2>/dev/null
+          exit 11
+        fi
+      fi
+      kdestroy 2>/dev/null
+    fi
+  else
+    if [ "$AUTHTYPE" = Shibboleth ] ; then
+      if [ "`cat $REGISTER/system/cp/Auth/Shibboleth/AuthzMode 2>/dev/null`" = Filter -a -x $REGISTER/system/cp/Auth/Shibboleth/authz.pl ] ; then
+        if [ "`$REGISTER/system/cp/Auth/Shibboleth/authz.pl`" != Ok ] ; then
+          echo "Authorization Filter does not match the conditions" >&2
+          exit 21  
+        fi
+      fi 
+    else
+      #X.509 Authentication
+      :
+    fi
+  fi
+else
+  if ! $SCRIPTS/cp_checkauthenticator "$USER" "$REALM" "$IP" "$PW" "$RENEW" ; then
+    exit 12
+  fi
+fi
+if [ "`cat $REGISTER/system/cp/WebLogin 2>/dev/null`" == Local ] ; then
+  SECRET="`cat $REGISTER/system/cp/Auth/Secret 2>/dev/null`"
+else
+  if [ -z "$RENEW" ] ; then
+    SECRET="`cat $REGISTER/system/cp/Auth/Secret 2>/dev/null`"
+  else
+    SECRET="`cat $REGISTER/system/cp/Secret 2>/dev/null`"
+  fi
+fi
+TIMESTAMP=`date +%s`
+if [ -z "$RENEW" ] ; then
+  TYPE=I
+else
+  TYPE=R
+fi
+[ -f "$REGISTER/system/cp/Connected/$IP/User" ] && /etc/sudo /bin/touch "$REGISTER/system/cp/Connected/$IP/User"
+echo -e "$USER@$REALM\n$IP\n$TIMESTAMP\n$TYPE" | openssl aes-256-cbc -e -a -k "$SECRET"
+

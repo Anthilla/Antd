@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+DESCRIPTION="$2"
+BONDLIST="$3"
+TYPE="$4"
+PRIMARY="$5"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+BONDDIR="$CONFIG/$NAME"
+echo "$DESCRIPTION" > $BONDDIR/Description
+MEMBERS=""
+WEIGHTS=""
+for I in $BONDLIST ; do
+  M="`echo $I | awk -F: '{print $1}'`"
+  W="`echo $I | awk -F: '{print $2}'`"
+  MEMBERS="$MEMBERS $M" 
+  WEIGHTS="$WEIGHTS $W" 
+done
+
+echo "${MEMBERS:1}" > $BONDDIR/BondList
+echo "${WEIGHTS:1}" > $BONDDIR/Weights
+echo "$PRIMARY" > $BONDDIR/Primary
+OLDTYPE=`cat $BONDDIR/Type`
+[ -z "$OLDTYPE" ] && OLDTYPE=$TYPE
+echo "$TYPE" > $BONDDIR/Type
+if [ "$TYPE" = "$OLDTYPE" ] ; then
+  $SCRIPTS/setbond $NAME
+  $SCRIPTS/resetvlans $NAME
+else
+  echo restarting
+  $SCRIPTS/rmbonding 
+  $SCRIPTS/bondstart
+fi
+sleep 2
+
+
+

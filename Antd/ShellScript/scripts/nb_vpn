@@ -1,0 +1,27 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+VPNS="`cd $REGISTER/system/net/interfaces/ ; ls -d VPN?? 2>/dev/null |grep -v VPN99`"
+iptables -t mangle -F OpenVPN
+for VPN in $VPNS ; do
+  PROTO="`cat $REGISTER/system/net/interfaces/$VPN/TUNNEL/Proto 2>/dev/null`"
+  PORT="`cat $REGISTER/system/net/interfaces/$VPN/TUNNEL/Port 2>/dev/null`"
+  GW="`cat $REGISTER/system/net/interfaces/$VPN/Gateway 2>/dev/null`"
+  if [ -z "$GW" ] ; then
+    GW=Auto
+    echo Auto > $REGISTER/system/net/interfaces/$VPN/Gateway
+  fi
+  if [ "$GW" != Auto ] ; then
+    if [ -d $REGISTER/system/net/nb/Gateways/$GW/ ] ; then
+      ENABLEDGW="`cat $REGISTER/system/net/nb/Gateways/$GW/Enabled 2>/dev/null`"
+      if [ "$ENABLEDGW" = yes ] ; then
+        LIP=`$SCRIPTS/vpn_localip $VPN`
+        [ -n "$LIP" ] && LIP="-s $LIP"
+        iptables -t mangle -A OpenVPN $LIP -p $PROTO --dport $PORT -j MARK --set-mark 1$GW
+      fi
+    else
+      GW=Auto
+      echo Auto > $REGISTER/system/net/interfaces/$VPN/Gateway
+    fi 
+  fi
+done
+

@@ -1,0 +1,34 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ENTRY="${1}"
+[ -z "$ENTRY" ] && exit 1
+CONFIG="$REGISTER/system/net/router"
+EDIR=$CONFIG/Statics/$ENTRY
+if ! [ -d $EDIR ] ; then
+  echo "Entry does not exist" 1>&2
+  exit 2
+fi
+export RouteType="`cat $EDIR/RouteType`"
+export Dest="`cat $EDIR/Dest`"
+export Netmask="`cat $EDIR/Netmask`"
+export Via="`cat $EDIR/Via`"
+export Gateway="`cat $EDIR/Gateway`"
+export Metric="`cat $EDIR/Metric`"
+export Interface="`cat $EDIR/Interface`"
+if [ "$Netmask" != 255.255.255.255 ] ; then
+  TARGET=`ipcalc -b -n $Dest/$Netmask |grep -w Network: |awk '{print $2}'`
+else
+  TARGET=$Dest
+fi
+if [ "$Via" == GW ] ; then
+    if ! ip route del $TARGET metric $Metric via $Gateway 2> /tmp/router_err ; then
+      :
+    fi    
+else
+    if ! ip route del $TARGET metric $Metric dev $Interface 2> /tmp/router_err ; then
+      :
+    fi
+fi
+rm -rf $EDIR
+$SCRIPTS/routerconfig 2>/dev/null
+exit 0

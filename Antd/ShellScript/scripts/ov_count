@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+if ps -e |grep -q -w vpn ; then
+  echo "status 2" |nc  127.0.0.1 34099 | grep "^CLIENT_LIST," $TMP |wc -l
+else
+  echo "0"
+fi

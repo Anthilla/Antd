@@ -1,0 +1,44 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+IDIR="$CONFIG/$INTERFACE"
+if ! [ -d "$IDIR" ] ; then
+   echo "Interface $INTERFACE doesn't exist." 1>&2
+   exit 2
+fi
+FILE="/tmp/pppoe-$INTERFACE.conf"
+cd $IDIR
+ETHERNET="`cat ETHERNET 2> /dev/null`"
+SERVICENAME="`cat Servicename 2> /dev/null`"
+USER="`cat USER 2> /dev/null`"
+PW="`cat PW 2> /dev/null`"
+#DEMAND="`cat DEMAND 2> /dev/null`"
+DEMAND=no
+DEFAULTROUTE="`cat DEFAULTROUTE 2> /dev/null`"
+echo ETH=$ETHERNET > $FILE
+if [ -z "$USER" ] ; then
+  USER=NoUser_$INTERFACE && PW="" 
+fi
+grep -v "^\"$USER\"" /tmp/ppp-secrets > /tmp/ppp-secrets.2 2>/dev/null
+echo -e "\"$USER\"\t*\t\"$PW\"" >> /tmp/ppp-secrets.2
+rm -f /tmp/ppp-secrets 
+mv /tmp/ppp-secrets.2 /tmp/ppp-secrets && chmod 600 /tmp/ppp-secrets
+echo "USER=$USER" >> $FILE
+echo DEMAND=$DEMAND >> $FILE
+echo DNSTYPE=NOCHANGE >> $FILE
+echo PEERDNS=no >> $FILE
+echo DEFAULTROUTE=$DEFAULTROUTE >> $FILE
+echo CONNECT_TIMEOUT=0 >> $FILE
+echo CONNECT_POLL=2 >> $FILE
+echo PIDFILE="/tmp/pppoe-$INTERFACE.pid" >> $FILE
+echo SYNCHRONOUS=no >> $FILE
+echo CLAMPMSS=1412 >> $FILE
+echo LCP_INTERVAL=20 >> $FILE
+echo LCP_FAILURE=3 >> $FILE
+echo PPPOE_TIMEOUT=80 >> $FILE
+echo FIREWALL=NONE >> $FILE
+echo PPPOE_EXTRA= >> $FILE
+echo "PPPD_EXTRA='unit ${INTERFACE:3:1}'" >> $FILE
+[ -n "$SERVICENAME" ] && echo "SERVICENAME=\"$SERVICENAME\"" >> $FILE

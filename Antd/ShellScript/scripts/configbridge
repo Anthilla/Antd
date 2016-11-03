@@ -1,0 +1,29 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+DESCRIPTION="$2"
+BRIDGEDLIST="$3"
+STP="$4"
+ForwardDelay="$5"
+Ageing="$6"
+MaxAge="$7"
+BridgePrio="$8"
+HelloTime="$9"
+[ -z "$NAME" ] && exit 1
+export GUICONFIGBR=Yes
+CONFIG="$REGISTER/system/net/interfaces/"
+BRIDGEDIR="$CONFIG/$NAME"
+echo "$DESCRIPTION" > $BRIDGEDIR/Description
+echo "$STP" > $BRIDGEDIR/STP
+echo $BRIDGEDLIST > $BRIDGEDIR/BridgeList
+echo "$ForwardDelay" > $BRIDGEDIR/ForwardDelay
+echo "$Ageing" > $BRIDGEDIR/Ageing
+echo "$MaxAge" > $BRIDGEDIR/MaxAge
+echo "$BridgePrio" > $BRIDGEDIR/BridgePrio
+echo "$HelloTime" > $BRIDGEDIR/HelloTime
+$SCRIPTS/setbridge $NAME
+$SCRIPTS/resetvlans $NAME
+$SCRIPTS/proxy_fw
+
+

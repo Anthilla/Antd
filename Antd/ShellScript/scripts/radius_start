@@ -1,0 +1,43 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function TERM () {
+  I=0
+  ps -e |grep -w -q radiusd || return 0
+  while [ $I -lt 30 ] ; do
+    if ps -e |grep -w -q radiusd ; then
+      echo Killing
+      killall -TERM radiusd 2>/dev/null >/dev/null
+    else 
+       return 0
+    fi
+    I=$((I+1))
+  done
+  return 1
+}
+TERM
+cd "$REGISTER/system/radius/" 2>/dev/null || ( mkdir "$REGISTER/system/radius/" && echo checked > "$REGISTER/system/radius/Enabled" )
+if [ -r "$REGISTER/system/radius/Enabled" ] ; then
+  $SCRIPTS/rendertemplate eap.conf
+  $SCRIPTS/rendertemplate proxy.conf
+  $SCRIPTS/rendertemplate radiusd.conf
+  cat >/tmp/radiusclient.conf <<EOF
+client 127.0.0.1 {
+   secret  = ZeroShell
+   shortname = localhost
+   nastype     = other  
+}
+EOF
+  /usr/local/bin/ldapsearch -LLL -x -h 127.0.0.1 -b "ou=NAS,`$SCRIPTS/getkey /system/ldap/base`" | awk -F": " '
+/^cn: / {
+  SHORTNAME=$2;
+  getline;
+  IP=$2;
+  getline;
+  if ($2>0 && $2<32) IP=IP "/" $2;
+  getline;
+  SECRET=$2;
+  printf("client %s {\n  secret = %s\n  shortname = %s\n  nastype = other\n}\n",IP, SECRET, SHORTNAME);
+}
+' >> /tmp/radiusclient.conf
+  radiusd || exit 9 
+fi

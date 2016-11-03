@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+CLASSNAME="$2"
+
+[ -z "$INTERFACE" -o -z "$CLASSNAME" ] && exit 1
+CMDIR="$REGISTER/system/net/QoS/Class/$CLASSNAME"
+[ -d "$CMDIR" ] || exit 2
+CDIR="$REGISTER/system/net/interfaces/$INTERFACE/QoS/Class/$CLASSNAME"
+echo "$CDIR"
+mkdir -p "$CDIR"
+cp $CMDIR/Priority $CMDIR/Max $CMDIR/MaxUnit $CMDIR/Guaranteed $CMDIR/GuaranteedUnit $CDIR 2>/dev/null
+echo yes > $CDIR/Enabled

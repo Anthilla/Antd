@@ -1,0 +1,84 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+RouteType="${1}"
+Dest="${2}"
+Netmask="${3}"
+Via="${4}"
+Gateway="${5}"
+Metric="${6}"
+Interface="${7}"
+MODE="${8}"
+CONFIG="$REGISTER/system/net/router"
+if ! [ -d $CONFIG/Statics/ ] ; then
+  mkdir $CONFIG/Statics
+fi
+
+if [ "$RouteType" == Host ] ; then
+  Netmask="255.255.255.255"
+fi
+NUMDEST=`echo $Dest | awk -F"." '{printf "%010d",($1*256*256*256+$2*256*256+$3*256+$4)}'`
+NUMNETMASK=`echo $Netmask | awk -F"." '{printf "%010d",($1*256*256*256+$2*256*256+$3*256+$4)}'`
+NUMMETRIC=`echo $Metric | awk '{printf "%010d",(2147483648-$0)}'`
+ENTRY=${NUMNETMASK}_${NUMDEST}_${NUMMETRIC}
+EDIR=$CONFIG/Statics/$ENTRY
+if [ -d "$EDIR" ] ; then
+  echo "Static Route already exists." 1>&2
+  exit 5
+fi
+if [ "$Netmask" != 255.255.255.255 ] ; then
+  TARGET=`ipcalc -b -n $Dest/$Netmask |grep -w Network: |awk '{print $2}'`
+else
+  TARGET=$Dest
+fi
+if [ "$Via" == GW ] ; then
+  if [ "$MODE" == ByRIP ] ; then
+    if [ "$RouteType" == Host ] ; then
+      RT=host
+    else
+      RT=net
+    fi
+    if ! route add -$RT $TARGET metric $Metric gw $Gateway 2> /tmp/router_err ; then
+      cat /tmp/router_err 1>&2
+      exit 16
+    fi
+  else
+    if ! ip route add $TARGET metric $Metric via $Gateway 2> /tmp/router_err ; then
+      if grep -q "unreachable" /tmp/router_err ; then
+        echo "Gateway not directly connected" 1>&2
+        exit 7
+      fi
+      if grep -q "File exists" /tmp/router_err ; then
+        echo "Configured by Auto or RIPv2" 1>&2
+        exit 17
+      fi
+
+      cat /tmp/router_err 1>&2
+      exit 6
+    fi
+  fi    
+else
+    if ! ip route add $TARGET metric $Metric dev $Interface 2> /tmp/router_err ; then
+      if grep -q "No such device" /tmp/router_err ; then
+        echo "Interface has no IP or is down" 1>&2
+        exit 9
+      fi
+      if grep -q "File exists" /tmp/router_err ; then
+        echo "Configured by Auto or RIPv2" 1>&2
+        exit 19
+      fi
+      cat /tmp/router_err 1>&2
+      exit 8
+    fi
+
+fi
+mkdir $EDIR
+cd $EDIR
+echo $RouteType > RouteType 
+echo $Dest > Dest 
+echo $Netmask > Netmask 
+echo $Via > Via 
+echo $Gateway > Gateway
+echo $Metric > Metric
+echo $Interface > Interface
+$SCRIPTS/routerconfig 2>/dev/null
+exit 0

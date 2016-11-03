@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/net/interfaces/"
+cd $CONFIG
+modprobe bonding max_bonds=10
+BONDS=`ls -d BOND* 2>/dev/null`
+for BOND in $BONDS ; do
+  $SCRIPTS/setbond $BOND
+done
+

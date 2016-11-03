@@ -1,0 +1,5 @@
+#!/bin/sh
+
+umount /storage/_udev_*/_DB.* 2>/dev/null
+umount /storage/_udev_* 2> /dev/null
+rmdir /storage/*  2> /dev/null

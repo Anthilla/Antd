@@ -1,0 +1,355 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+IDIR="$REGISTER/system/net/interfaces/"
+function InterfaceList () {
+  INTERFACES=`( cd $IDIR ; ls -d BRIDGE* BOND* ETH* WLAN* VPN* 2>/dev/null | grep -v VPN99)`
+  echo $INTERFACES
+}
+function DefaultNetmask {
+  FIRST=`echo $1 | awk -F. '{print $1}'`
+  if [ "$FIRST" -lt 128 ] ; then
+     echo 255.0.0.0
+  else    
+    if [ "$FIRST" -lt 192 ] ; then
+       echo 255.255.0.0
+    else
+       echo 255.255.255.0
+    fi
+  fi
+}
+
+function ChangeStatus () {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  readvalue "Status (up/down)" "up" "up down" "low" "" RejectNull
+  if [ "$READVALUE" == down ] ; then 
+    NSTATUS=false
+  else
+    NSTATUS=true
+  fi
+  $SCRIPTS/net_updown IF,$SELECTED $NSTATUS
+}
+function isSlave {
+  if [ -f "$IDIR/$1/Bridge/Name" ] ; then
+    echo
+    echo "ABORTED: $1 is part of `cat $IDIR/$1/Bridge/Name`."
+    PressKey
+    return 1
+  fi
+  if [ -f "$IDIR/$1/Bond/Name" ] ; then
+    echo
+    echo "ABORTED: $1 is part of `cat $IDIR/$1/Bond/Name`."
+    PressKey
+    return 1
+  fi
+  return 0
+}
+function DynIP {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  isSlave $SELECTED || return
+  ShowIPConfig $SELECTED
+  dhstatus=`cat $IDIR/$SELECTED/dhclient/Status 2>/dev/null`
+  [ -z "$dhstatus" ] && dhstatus=Disabled
+  readvalue "DHCP Client" "$dhstatus" "enabled disabled" "lo" "" RejectNull
+  dhstatus=$READVALUE
+  if [ "$dhstatus" == enabled ] ; then
+    dhstatus=Enabled
+  else
+    dhstatus=Disabled
+  fi
+  mkdir $IDIR/$SELECTED/dhclient/ 2>/dev/null
+  $SCRIPTS/set_dhclient $SELECTED $dhstatus Wait  
+  echo $dhstatus > $IDIR/$SELECTED/dhclient/Status
+}
+
+function PressKey {
+  echo
+  echo -n "Press any key to continue."
+  read -n1 -s
+  echo
+}
+function DelIP () {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  isSlave $SELECTED || return
+  ShowIPConfig $SELECTED
+  if [ $N -eq 0 ] ; then
+    echo
+    echo "ABORTED: $SELECTED has no IP assigned!"
+    PressKey
+    return
+  fi
+  readvalue "IP" "$N" "`seq 1 $N`" "" "" RejectNull
+  ipn=$READVALUE
+  ipd=`( cd $IDIR/$SELECTED/IP ; ls -d * | head -$ipn | tail -1 )`
+  readvalue "Are you sure you want do delete the IP `cat $IDIR/$SELECTED/IP/$ipd/IP`" "no" "YES Y NO N" "up" "" RejectNull
+  CONFIRM="$READVALUE"
+  if [ "$CONFIRM" == YES -o "$CONFIRM" == Y ] ; then
+    $SCRIPTS/removeip $SELECTED $SELECTED/IP/$ipd
+  fi
+}
+function DefaultGateway {
+  gwold=`$SCRIPTS/getdefaultgw | awk '{print $1}'`
+  readvalue "Default Gateway" "$gwold"
+  gw=$READVALUE
+  if ! IsValidIPAddr $gw ; then
+    echo
+    echo "ABORTED: IP not valid!"
+    PressKey
+    return
+  fi
+  echo 
+  GWERR=""
+  if $SCRIPTS/getdefaultgw 2>/dev/null >/dev/null ; then
+    static=`$SCRIPTS/getdefaultgw | awk '{print $2}'` 
+    route del default gw $gwold 2>/dev/null
+    if ! route add default gw $gw ; then
+      route add default gw $gwold
+      GWERR=yes
+    else
+      echo $gw > $REGISTER/system/net/router/Statics/$static/Gateway
+    fi    
+  else
+    if ! $SCRIPTS/router_addstatic 'Net' '0.0.0.0' '0.0.0.0' 'GW' "$gw" '0' '' ; then
+      GWERR=yes
+    fi
+  fi
+  if [ -n "$GWERR" ] ; then
+    echo
+    PressKey
+    echo
+  fi
+
+
+}
+function AddIP () {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  isSlave $SELECTED || return
+  readvalue "IP" 
+  ip=$READVALUE
+  if ! IsValidIPAddr $ip ; then
+    echo
+    echo "ABORTED: IP not valid!"
+    PressKey
+    return
+  fi
+  readvalue "Netmask" "`DefaultNetmask $ip`"
+  netmask=$READVALUE
+  if IsValidIPAddr $netmask ; then
+    if ipcalc -n $ip/$netmask | grep -q INVALID ; then
+      echo
+      echo "ABORTED: Netmask not valid!"
+      PressKey
+      return
+    fi
+  else
+    echo
+    echo "ABORTED: Netmask not valid!"
+    PressKey
+    return
+  fi
+  echo
+  if ! $SCRIPTS/addip $SELECTED $ip $netmask up >/dev/null ; then
+    echo
+    PressKey
+    echo
+  fi
+}
+function ModifyIP () {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  isSlave $SELECTED || return
+  ShowIPConfig $SELECTED
+  if [ $N -eq 0 ] ; then
+    echo
+    echo "ABORTED: $SELECTED has no IP assigned!"
+    PressKey
+    return
+  fi
+  readvalue "IP to modify" "$N" "`seq 1 $N`" "" "" RejectNull
+  ipn=$READVALUE
+  ipd=`( cd $IDIR/$SELECTED/IP ; ls -d * | head -$ipn | tail -1 )`
+  ip=`cat $IDIR/$SELECTED/IP/$ipd/IP`
+  netmask=`cat $IDIR/$SELECTED/IP/$ipd/Netmask`
+  status=`cat $IDIR/$SELECTED/IP/$ipd/STATUS`
+
+  readvalue "IP" "$ip"
+  ip=$READVALUE
+  if ! IsValidIPAddr $ip ; then
+    echo
+    echo "ABORTED: IP not valid!"
+    PressKey
+    return
+  fi
+  readvalue "Netmask" "$netmask"
+  netmask=$READVALUE
+  if IsValidIPAddr $netmask ; then
+    if ipcalc -n $ip/$netmask | grep -q INVALID ; then
+      echo
+      echo "ABORTED: Netmask not valid!"
+      PressKey
+      return
+    fi
+  else
+    echo
+    echo "ABORTED: Netmask not valid!"
+    PressKey
+    return
+  fi
+  readvalue "IP status" "$status" "up down" "lo" "" RejectNull
+  status=$READVALUE
+  echo
+  if ! $SCRIPTS/editip $SELECTED $ip $netmask $SELECTED/IP/$ipd $status >/dev/null ; then
+    echo
+    PressKey
+    echo
+  fi
+}
+function ShowInfo () {
+  readvalue "Interface" "$SELECTED" "`InterfaceList`" "up" "" RejectNull
+  SELECTED=$READVALUE
+  echo
+  ip addr show dev $SELECTED
+  echo
+  route -n
+  echo
+  PressKey
+}
+function readvalue {
+  jmsg="$1"
+  jdefault="$2"
+  jallowed="$3"
+  jmode="$4"
+  jnum="$5"
+  jopt="$6"
+  jmin="$7"
+  jmax="$8"
+  jrepeat=yes
+  while [ "$jrepeat" == yes ] ; do
+    if [ -z "$jdefault" ] ; then
+      echo -n "$jmsg: "
+    else
+      echo -n "$jmsg [$jdefault]: "
+    fi
+    read jvalue
+    if [ -z "$jvalue" ] ; then
+      jvalue="$jdefault"
+      jrepeat=no
+    else
+      if [ -n "$jallowed" ] ; then
+        if echo "$jallowed" | grep -q -i -w "$jvalue" ; then
+          jrepeat=no
+        fi
+      else
+        jrepeat=no
+      fi
+    fi
+    if [ -z "$jvalue" ] && echo "$jopt" | grep -i -w -q RejectNull ; then
+       jrepeat=yes
+    fi
+    if [ -n "$jmin" -a -n "$jmax" ] ; then
+      jlen=` echo -n "$jvalue" |wc -m`
+      if ! [  $jlen -ge $jmin -a $jlen -le $jmax ] ; then
+        echo "The size of this value must be between $jmin and $jmax."
+        echo
+        jrepeat=yes
+      fi
+    fi
+  done
+  [ "$jmode" == up ] && jvalue=`echo $jvalue | awk '{print toupper($0)}'`
+  [ "$jmode" == lo ] && jvalue=`echo $jvalue | awk '{print tolower($0)}'`
+  [ "$jmode" == num ] && jvalue=`echo $jnum | cut -f $jvalue -d ' '`
+  READVALUE="$jvalue"
+}
+function ShowIPConfig () {
+  INTERFACES="$1"
+  cd $IDIR
+  if [ -z "$INTERFACES" ] ; then
+    INTERFACES=`InterfaceList`
+  fi
+  echo "--------------------------------------------------------------------------------"
+  for I in $INTERFACES ; do
+    echo "$I -`$SCRIPTS/getintdesc $I`"
+    SPACE="      "
+    [ "${I:0:6}" == BRIDGE ] && SPACE="         " && SEMISPACE="     "
+    [ "${I:0:4}" == BOND ] && SPACE="       " && SEMISPACE="   "
+    echo "$SPACE  Status: `$SCRIPTS/getlinkstatus $I TXT`"
+    if [ -r "$IDIR/$I/Bridge/Name" -o -r "$IDIR/$I/Bond/Name" ] ; then
+      if [ -r "$IDIR/$I/Bridge/Name" ] ; then
+        SETNAME=`cat $IDIR/$I/Bridge/Name`
+        EXTSETNAME=`$SCRIPTS/ext_bridgename $SETNAME`
+      else
+        SETNAME=`cat $IDIR/$I/Bond/Name`
+        EXTSETNAME=`$SCRIPTS/ext_bondname $SETNAME`
+      fi
+      echo "$SPACE  This device is member of $SETNAME($EXTSETNAME)"
+    else
+      if [ -d "$IDIR/$I/IP" ] ; then
+        cd $IDIR/$I/IP
+        IPs=`ls -d * 2>/dev/null`
+        N=0
+        for IPD in $IPs ; do
+          N=$((N+1))
+          echo "$SPACE  ($N)  `cat $IPD/IP 2>/dev/null` / `cat $IPD/Netmask 2>/dev/null` (`cat $IPD/STATUS 2>/dev/null`)"
+        done
+        cd $IDIR
+      fi
+      if [ "`cat $IDIR/$I/dhclient/Status 2>/dev/null`" == Enabled ] ; then
+        echo "$SPACE  Dynamic IP: `$SCRIPTS/show_dhclientip $I`"
+      fi
+    fi
+    echo "--------------------------------------------------------------------------------"
+  
+
+  done
+
+}
+INTERFACELIST=`InterfaceList`
+SELECTED=`echo $INTERFACELIST | awk '{print $1}'`
+while true ; do
+  ShowIPConfig
+  DGW=`$SCRIPTS/getdefaultgw | awk '{print $1}'`
+  [ -z "$DGW" ] && DGW=none
+  echo "                                                Default Gateway: $DGW" 
+  echo "COMMANDS"
+  echo "  <A> Add IP address               <D> Delete IP address"
+  echo "  <M> Modify IP address            <G> Set Default Gateway"
+  echo "  <S> Change Interface status      <H> Dynamic IP configuration"
+  echo "  <I> Show Info                    <Q> Quit"
+  echo -n ">> "
+  read -n1  X
+  X=`echo $X | awk '{print toupper($0)}'`
+  echo
+  echo
+  case "$X" in
+    Q)
+      exit
+    ;;
+    A)
+      AddIP
+    ;;
+    D)
+      DelIP
+    ;;
+    M)
+      ModifyIP
+    ;;
+    G)
+      DefaultGateway
+    ;;
+    H)
+      DynIP
+    ;;
+    I)
+      ShowInfo
+    ;;
+    S)
+      ChangeStatus
+    ;;
+  esac
+
+done
+

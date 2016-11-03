@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LDAPACTIVE="$1"
+LDAPSACTIVE="$2"
+NISACTIVE="$3"
+AutoSync="$4"
+ADDomain="$5"
+DomainController="$6"
+ADOU="$7"
+ADPW="$8"
+echo $LDAPACTIVE > $REGISTER/system/ldap/LDAPACTIVE
+echo $LDAPSACTIVE > $REGISTER/system/ldap/LDAPSACTIVE
+echo $NISACTIVE > $REGISTER/system/ldap/NISACTIVE
+echo $AutoSync > $REGISTER/system/ldap/AD/AutoSync
+echo $ADDomain > $REGISTER/system/ldap/AD/Domain
+echo $DomainController > $REGISTER/system/ldap/AD/DomainController
+echo $ADOU > $REGISTER/system/ldap/AD/OU
+echo $ADPW > $REGISTER/system/ldap/AD/PW
+
+
+
+
+$SCRIPTS/slapdrestart
+
+

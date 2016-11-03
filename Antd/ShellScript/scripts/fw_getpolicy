@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+[ -z "$CHAIN" ] && exit 1
+if [ "$CHAIN" != FORWARD -a "$CHAIN" != INPUT -a "$CHAIN" != OUTPUT ] ; then
+  exit
+fi
+CONFIG="$REGISTER/system/net/FW"
+POLICY=`cat "$CONFIG/Chains/$CHAIN/Policy" 2>/dev/null`
+if [ -z "$POLICY" ] ; then
+  echo ACCEPT
+else 
+  echo $POLICY
+fi

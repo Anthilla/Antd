@@ -1,0 +1,14 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+OPT="$1"
+REG=`iw reg get |grep country  |cut -d: -f1|cut -d' ' -f2`
+if [ "$OPT" = short ] ; then
+  echo $REG
+else 
+  if [ "$OPT" = long ] ; then
+    $SCRIPTS/countrycode2description $REG
+  else
+    iw reg get
+  fi
+fi
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+LIST="$1"
+cd "$REGISTER/system/openvpn/Auth/X509/CAs/" || exit 1
+rm -f $REGISTER/system/openvpn/Auth/X509/CAs/*
+for CA in $LIST ; do
+  ln -s /etc/ssl/certs/trusted_CAs/${CA}.0 
+  ln -s /etc/ssl/certs/trusted_CAs/${CA}.r0 
+done
+$SCRIPTS/vpn_restart_x509
+killall -1 vpn 2>/dev/null

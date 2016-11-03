@@ -1,0 +1,44 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+SLOT="$1"
+CONSOLE="$2"
+KERNEL1="$3"
+PARAMETERS1="$4"
+KERNEL2="$5"
+PARAMETERS2="$6"
+if [ -d /etc/slots ] ; then
+  cd /etc/slots
+  mkdir -p conf
+  echo $SLOT > conf/Slot
+  echo $CONSOLE > conf/Console
+  mkdir -p 1/conf/
+  echo $KERNEL1 > 1/conf/Kernel
+  echo $PARAMETERS1 > 1/conf/Parameters
+  mkdir -p 2/conf/
+  echo $KERNEL2 > 2/conf/Kernel
+  echo $PARAMETERS2 > 2/conf/Parameters
+  export LABEL="ZS-`rand |tr [a-z] [A-Z]`"
+  $SCRIPTS/slot_mkgrub
+  if ! touch /usr/CheckRO 2>/dev/null ; then
+    BOOTDEV="`cat /etc/slots/current/BootDev`"
+    if df |grep -q -w /boot ; then
+      echo "/boot has been already mounted" 1>&2
+      exit 21
+    fi   
+    if ! mount "$BOOTDEV" /boot ; then
+      exit 21
+    fi
+    cp -a /etc/slots/* /boot
+    $SCRIPTS/change_c_year /boot/grub/
+    umount /boot 
+    e2label "$BOOTDEV" "$LABEL" && echo "/dev/disk/by-label/$LABEL" > /etc/slots/current/BootDev
+    touch /tmp/reboot-required-grub
+  else
+    echo "ISO image not found" 1>&2
+    rm -f /usr/CheckRO
+    exit 30
+  fi
+else
+  echo "Boot Manager cannot act on Live CD version" 1>&2
+  exit 23
+fi

@@ -1,0 +1,9 @@
+#!/bin/sh
+source krb5.inc
+TEMPFILE=/tmp/`mktemp nb.XXXXXXX`
+KADMIN "listprincs" > $TEMPFILE
+for i in `cat $TEMPFILE` ; do 
+  echo "<tr><td>$i</td></tr>"
+done
+rm -f $TEMPFILE
+

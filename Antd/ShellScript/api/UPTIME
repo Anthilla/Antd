@@ -1,0 +1,2 @@
+#!/bin/bash
+awk '{Days=$1/86400; Sec=$1%86400; Hours=Sec/3600; Sec=Sec%3600 ; Minutes=Sec/60; printf "Uptime %d days, %02d:%02d\n",Days,Hours,Minutes }' < /proc/uptime

@@ -1,0 +1,123 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function TERM () {
+  I=0
+  while [ $I -lt 30 ] ; do
+    PID="`ps -ef |grep openvpn |grep " --dev $1 " |awk '{print $2}'`"
+    if ! [ -z "$PID" ] ; then
+        kill -TERM $PID
+        sleep 1
+    else 
+        return 0
+    fi
+    I=$((I+1))
+  done
+  PID="`ps -ef |grep openvpn |grep " --dev $1 " |awk '{print $2}'`"
+  if ! [ -z "$PID" ] ; then
+     kill -9 $PID
+     sleep 3
+  fi 
+  return 1
+}
+INTERFACE="$1"
+STATUS="$2"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/$INTERFACE"
+if [ "$INTERFACE" == VPN99 ] ; then
+  exit
+fi
+if cd "$CONFIG" 2> /dev/null ; then
+  if [ -z "$STATUS" ] ; then
+     STATUS=`cat $CONFIG/STATUS`
+  fi
+  if [ "$STATUS" == up ] ; then
+     if TERM $INTERFACE; then
+        NUM=${INTERFACE:3:2}
+        if [ "${NUM:0:1}" == 0  ] ; then
+          NUM=${NUM:1:1}
+        fi
+        MGT=$[34000+$NUM]
+        REMOTEIP=`cat TUNNEL/RemoteIP`
+        if ! [ -z "$REMOTEIP" ] ; then
+          REMOTEIP="--remote $REMOTEIP"
+        fi
+        LOCALIP="`$SCRIPTS/vpn_localip $INTERFACE 2>/dev/null`"
+        if ! [ -z "$LOCALIP" ] ; then
+          LOCALIP="--local $LOCALIP"
+        fi
+   	PORT=`cat TUNNEL/Port`
+        PROTO=`cat TUNNEL/Proto`
+        AUTHENTICATION=`cat TUNNEL/Authentication 2>/dev/null`
+        TLSROLE=`cat TUNNEL/TLSRole`
+        REMOTECN=`cat TUNNEL/RemoteCN`
+        COMPRESSION=`cat TUNNEL/Compression`
+        CRYPTO=`cat TUNNEL/Crypto`
+        PARAMETERS="`cat TUNNEL/Parameters`"
+        if ! [ -z "$REMOTECN" ] ; then
+          REMOTECN="--tls-remote `echo $REMOTECN | sed -r 's/[# {}\(\)\^?!*[]/_/g'`"
+        fi 
+        if [ "$TLSROLE" == Server ] ; then
+           TLSROLE=server
+           RESTART=7
+	else
+           TLSROLE=client 
+           RESTART=11
+        fi 
+        if [ "$PROTO" == TCP ] ; then
+           PROTO=tcp-$TLSROLE
+        else
+	   PROTO=udp
+        fi
+        if [ "$COMPRESSION" == yes ] ; then
+           COMPRESSION="--comp-lzo"
+        else
+           COMPRESSION=""
+        fi
+        if [ "$CRYPTO" != yes ] ; then
+           CRYPTO="--cipher none"
+        else
+           CRYPTO=""
+        fi
+        if [ "$AUTHENTICATION" = PSK ] ; then
+          AUTHSTRING="--secret /tmp/$INTERFACE.psk"
+          echo "-----BEGIN OpenVPN Static key V1-----" > "/tmp/$INTERFACE.psk" 
+          cat $CONFIG/TUNNEL/PSK >> "/tmp/$INTERFACE.psk" 
+          echo "-----END OpenVPN Static key V1-----" >> "/tmp/$INTERFACE.psk"
+          chmod 600 /tmp/$INTERFACE.psk 
+        else
+          AUTHSTRING="--tls-$TLSROLE --dh $SSLDIR/dh.pem --ca $SSLDIR/trusted_CAs.pem --cert $CONFIG/TLS/cert.pem --key $CONFIG/TLS/key.pem $REMOTECN"
+        fi
+        if ! ps -ef |grep -w "checkvpn"|grep -q -w $INTERFACE ; then
+	  $SCRIPTS/checkvpn $INTERFACE &
+        fi
+        if ! $SCRIPTS/vpn_checknbgw $INTERFACE ; then
+	  GW="`cat $CONFIG/Gateway 2>/dev/null`"
+	  GWDESC="`cat $REGISTER/system/net/nb/Gateways/$GW/Description 2>/dev/null`"
+          if [ ! -f /tmp/$INTERFACE.nogw ] ; then 
+            touch /tmp/$INTERFACE.nogw
+	    logger -t ${INTERFACE}_L2L "Unable to connect using the selected Gateway ($GWDESC)"
+	  else
+	    rm /tmp/$INTERFACE.nogw
+	  fi 
+          exit 25
+        fi
+        $SCRIPTS/nb_vpn
+        if bash -c "openvpn --dev $INTERFACE $LOCALIP $REMOTEIP --port $PORT --proto $PROTO $AUTHSTRING --dev-type tap --float --keepalive 1 11 --script-security 3 --management 127.0.0.1 $MGT --daemon ${INTERFACE}_L2L $COMPRESSION $CRYPTO $PARAMETERS --down '$SCRIPTS/vpn_mii'  --mute-replay-warnings" ; then
+           SEM="/tmp/VPN_MII_$INTERFACE"
+           rm -f $SEM
+           $SCRIPTS/vpn_mii $INTERFACE
+           [ -z "$NOVPNWAIT" ] && sleep 5
+        else
+           exit 5
+        fi
+     else 
+        exit 2
+     fi
+  else
+     kill `ps -ef |grep -w checkvpn |grep -w $INTERFACE |awk '{print $2}'` 2>/dev/null
+     TERM $INTERFACE || exit 1
+     ifconfig $INTERFACE down
+  fi 
+
+fi
+

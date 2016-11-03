@@ -1,0 +1,5 @@
+#!/bin/sh
+REALM="$1"
+[ -z "$REALM" ] && exit 1
+rm -f /tmp/k5realmtest*  /tmp/.k5.*
+kdb5_util -r "$REALM" -d /tmp/k5realmtest -sf "/tmp/.k5.$REALM" -P test create 2>/dev/null >/dev/null

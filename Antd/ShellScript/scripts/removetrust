@@ -1,0 +1,22 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FOREIGNREALM="$1"
+[ -z "$FOREIGNREALM" ] && exit 1
+LOCALREALM="`cat $REGISTER/system/k5/realm`"
+[ "$FOREIGNREALM" == "$LOCALREALM" ] && exit 2
+if kadmin.local -q "delprinc -force krbtgt/$FOREIGNREALM" 2>/dev/null | grep -q -w "deleted." ; then
+  DIRECTION=Incoming
+fi
+if kadmin.local -q "delprinc -force krbtgt/$LOCALREALM@$FOREIGNREALM" 2>/dev/null | grep -q -w "deleted." ; then
+  if [ -z "$DIRECTION" ] ; then
+    DIRECTION=Outgoing
+  else
+    DIRECTION=Bidirectional
+  fi
+fi
+if [ -z "$DIRECTION" ] ; then
+  exit 4
+else
+  echo $DIRECTION
+fi
+

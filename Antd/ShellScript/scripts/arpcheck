@@ -1,0 +1,24 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+HOST="$1"
+[ -z "$HOST" ] && exit 1
+IP="`gethostbyname $HOST`"
+if ! [ -z "$IP" ] ; then 
+  DEV="`getDEV $IP`"
+  if ! [ -z "$DEV" ] ; then
+    if ! arping -I "$DEV" -c3 -w6 $IP ; then
+      GW=`ip route get $IP |sed -r  's/.*(via.*)[ ]dev.*/\1/' |grep -w "via" |awk '{print $2}'`
+      if ! [ -z "$GW" ] ; then
+        echo
+        echo "<font color=#f06000 class=Smaller1 face=arial><b>WARNING:</b> the host $IP is not directly connected on the $DEV LAN but is reachable via"
+        echo "the gateway $GW: ARP is a Layer 2 Protocol and it cannot be routed by routers!</font>"
+      fi
+      exit 2
+    fi
+  else
+    exit 5
+  fi
+else
+  exit 4
+fi 

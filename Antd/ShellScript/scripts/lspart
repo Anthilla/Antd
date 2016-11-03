@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DEV="$1"
+[ "$DEV" == "" ] && exit
+NODEV=${DEV:2}
+W=`df | grep "$NODEV " | awk '{print $6}'`
+if [ -z "$W"] ; then 
+  W=`echo $DEV | sed -e "s/\//_/g"`;
+  mkdir -p /storage/$W
+  if mount -oro $DEV /storage/$W 2>/dev/null ; then
+     ls -lh /storage/$W
+     cd /storage/$W
+     echo "<br><b>Disk Usage</b>"
+     du -sh *
+     cd /
+     umount $DEV
+  fi
+  rmdir /storage/$W
+else
+  ls -lh "$W"
+  cd "$W"
+  echo "<br><b>Disk Usage</b>"
+  du -sh *
+  cd /
+fi 

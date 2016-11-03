@@ -1,0 +1,14 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+
+cd $SSLDIR/
+rm -rf previous
+mkdir  previous
+mv $(cd template ; echo *) previous 2> /dev/null
+cp -a template/* previous/certs/trusted_CAs .
+cp -a  previous/certs/trusted_CAs certs
+cp -a  previous/certs/imported_Certs certs
+
+
+
+

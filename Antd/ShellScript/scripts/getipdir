@@ -1,0 +1,31 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+INTERFACE="$1"
+IP="$2"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces"
+if echo $INTERFACE | grep -q '\.' ; then
+  TAG=`echo $INTERFACE | awk -F. '{print $2}'`
+  U=`echo $INTERFACE | awk -F. '{print $1}'`
+  IDIR="$CONFIG/$U/VLAN/$TAG"
+  RDIR="$U/VLAN/$TAG/IP"
+else
+  IDIR="$CONFIG/$INTERFACE"
+  RDIR="$INTERFACE/IP"
+fi
+if ! [ -d "$IDIR" ] ; then
+   echo "Interface $INTERFACE doesn't exist." 1>&2
+   exit 2
+fi
+if [ -d "$IDIR/IP" ] ; then
+  cd "$IDIR/IP"
+  IPs=`ls -d ?? 2>/dev/null`
+  if [ -n "$IPs" ] ; then
+     for I in $IPs ; do
+       if [ "`cat $IDIR/IP/$I/IP 2>/dev/null`" == "$IP" ] ; then
+         echo $RDIR/$I
+       fi        
+     done
+  fi
+fi

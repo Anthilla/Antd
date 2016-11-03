@@ -1,0 +1,14 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/cp
+cd $CONFIG/FreeServices
+SERVICES=`ls -d *`
+for S in $SERVICES ; do
+  Desc=`cat $S/Desc`
+  IP=`cat $S/IP`
+  [ -z "$IP" ] && IP=Any
+  Port=`cat $S/Port`
+  Proto=`cat $S/Proto`
+  echo "<tr align=center style='color: #404040;'><td><input type=radio name=SRV value=$S></td><td class=Smaller1 align=left>$Desc</td><td class=Smaller1>$IP</td><td class=Smaller1>$Port/$Proto</td></tr>"
+
+done

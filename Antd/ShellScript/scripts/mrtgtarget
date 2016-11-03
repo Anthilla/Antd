@@ -1,0 +1,50 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+INTERFACE="$1"
+CLASS="$2"
+[ -z "$INTERFACE" ] && exit 2
+CDIR=$REGISTER/system/mrtg/counters/${INTERFACE}_${CLASS}
+if [ -z "$CLASS" ] ; then
+  #RX=`ifconfig $INTERFACE 2>/dev/null |grep "RX bytes" |sed -r "s/.*RX bytes:([0123456789]*) .*/\1/"`
+   RX=`cat /sys/class/net/$INTERFACE/statistics/rx_bytes`
+else
+  RX=`$SCRIPTS/qos_getstat $INTERFACE $CLASS | awk -F: '{print $1}'`
+fi
+if [ -z "$RX" ] ; then
+  RX=0
+fi
+#TX=`ifconfig $INTERFACE 2>/dev/null |grep "TX bytes" |sed -r "s/.*TX bytes:([0123456789]*) .*/\1/"`
+TX=`cat /sys/class/net/$INTERFACE/statistics/tx_bytes`
+if [ -z "$TX" ] ; then
+  TX=0
+fi
+if ! [ -d "$CDIR/rx" ] ; then
+  mkdir -p "$CDIR/rx"
+  echo 0 > $CDIR/rx/Counter
+  echo 0 > $CDIR/rx/Delta
+fi
+if ! [ -d "$CDIR/tx" ] ; then
+  mkdir -p "$CDIR/tx"
+  echo 0 > $CDIR/tx/Counter
+  echo 0 > $CDIR/tx/Delta
+fi
+COUNTER=`cat $CDIR/rx/Counter`
+DELTA=`cat $CDIR/rx/Delta`
+echo $RX > $CDIR/rx/Delta
+if [ "$DELTA" -gt "$RX" ] ; then
+  COUNTER=$((DELTA+COUNTER))
+  echo "$COUNTER" > $CDIR/rx/Counter
+fi
+RX=$((RX+COUNTER))
+COUNTER=`cat $CDIR/tx/Counter`
+DELTA=`cat $CDIR/tx/Delta`
+echo $TX > $CDIR/tx/Delta
+if [ "$DELTA" -gt "$TX" ] ; then
+  COUNTER=$((DELTA+COUNTER))
+  echo "$COUNTER" > $CDIR/tx/Counter
+fi
+TX=$((TX+COUNTER))
+echo $RX
+echo $TX
+echo 100
+echo $INTERFACE 

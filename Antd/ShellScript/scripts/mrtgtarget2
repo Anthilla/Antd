@@ -1,0 +1,7 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+CPUS=$($SCRIPTS/cpus)
+cat /proc/loadavg |awk -vCPUS=$CPUS '{print $2*100/CPUS}'
+echo 0
+echo 100
+echo NA 

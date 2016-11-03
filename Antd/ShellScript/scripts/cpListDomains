@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/cp/Auth/Domains
+cd "$CONFIG" || exit 0
+
+DOMAINS=`ls -d * 2>/dev/null`
+for D in $DOMAINS ; do
+  TYPE=`cat $D/Type`
+  if [ "$TYPE" == Radius ] ; then
+    RADIUSREQ=`cat $D/RadiusReq 2>/dev/null`
+    [ -z "$RADIUSREQ" ] && RADIUSREQ=PAP
+    [ "$RADIUSREQ" == EAP-TTLS ] && RADIUSREQ=TTLS
+    TYPE="$TYPE <font class=Smaller1>($RADIUSREQ)</font>"
+  fi
+  [ "$TYPE" == Local ] && TYPE="Local K5" 
+  [ "$TYPE" == Trusted ] && TYPE="Trusted K5" 
+  [ "$TYPE" == External ] && TYPE="External K5" 
+  if [ -f "$D/Default" ] ; then
+    DEFAULT=" (Default)"
+  else
+    DEFAULT=""
+  fi
+  echo "<tr><td align=center><input type=radio name=Sel value='$D'</td><td>&nbsp;$D$DEFAULT</td><td align=center nowrap>$TYPE</td></tr>"
+
+done

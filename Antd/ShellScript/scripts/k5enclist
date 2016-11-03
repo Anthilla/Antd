@@ -1,0 +1,23 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function Convert () {
+  DESC="$1"
+  ENCDESC="`echo "$DESC" |egrep "^Key:" | awk -F", " '{print $2}'`"
+  SALTDESC="`echo "$DESC" |egrep "^Key:" | awk -F", " '{print $3}'`"
+  ENC=`egrep ",$ENCDESC$" $REGISTER/system/k5/supported_enctypes | awk -F"," '{print $1}'`
+  SALT=`egrep ",$SALTDESC$" $REGISTER/system/k5/supported_salts | awk -F"," '{print $1}'`
+  if ! [ -z "$ENC" -o -z "$SALT" ] ; then
+    echo -n "$ENC:$SALT "
+  fi
+}
+PRINCIPAL="$1"
+[ -z "$PRINCIPAL" ] && exit 1
+TMPFILE="/tmp/EncList$$"
+kadmin.local -q "getprinc \"$PRINCIPAL\"" 2>/dev/null | grep "^Key:" > "$TMPFILE"
+N=`cat "$TMPFILE" | wc -l` 
+if [ "$N" -ge 1 ] ; then
+  for I in `seq 1 $N` ; do
+    Convert "`head -$I "$TMPFILE" | tail -1`" 
+  done
+fi
+rm -f "$TMPFILE"

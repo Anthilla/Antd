@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+N=`$SCRIPTS/alerts_number`
+if [ "$N" != 0 ] ; then
+  S=""
+  [ $N -gt 1 ] && S="s"
+  echo "<a href='about:blank' onclick='monitoring_setup()' style='color:#ff5050;'><b>$N</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" 
+else
+  echo "<b>None</b>&nbsp;&nbsp;&nbsp;"
+fi

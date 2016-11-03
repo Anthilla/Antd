@@ -1,0 +1,8 @@
+#!/bin/bash
+ENTRY="$1"
+INTERFACE="$2"
+IP=`echo $ENTRY |cut -f2 -d/` 
+/root/kerbynet.cgi/scripts/cp_check_activity "$IP" "$INTERFACE" &
+
+
+

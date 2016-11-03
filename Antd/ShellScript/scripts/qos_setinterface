@@ -1,0 +1,64 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+IDIR="$REGISTER/system/net/interfaces/$INTERFACE"
+[ -d "$IDIR/QoS" ] || exit 2
+ifconfig $INTERFACE 2>/dev/null >/dev/null || exit 3
+if [ -r $IDIR/Bridge/Name ] ; then
+  #FWCOND="-m physdev --physdev-out $INTERFACE"
+  FWCOND="-o `cat $IDIR/Bridge/Name`"
+else
+  if [ -r $IDIR/Bond/Name ] ; then
+    FWCOND="-o `cat $IDIR/Bond/Name`"
+  else
+    FWCOND="-o $INTERFACE"
+  fi
+fi
+iptables -t mangle -I POSTROUTING 1 $FWCOND -j DROP
+tc qdisc del dev $INTERFACE root 2>/dev/null
+QDIR="$IDIR/QoS"
+if [ "`cat $QDIR/Enabled 2>/dev/null`" == yes ] ; then
+  echo -n "   $INTERFACE (Classes: "
+  QUANTUM="`cat $REGISTER/system/net/QoS/Quantum`"
+  GMAX="`cat $QDIR/Max`"
+  GMAXUNIT="`cat $QDIR/MaxUnit`"
+  GMAXUNIT=${GMAXUNIT%/s}
+  GGUARANTEED="`cat $QDIR/Guaranteed`"
+  GGUARANTEEDUNIT="`cat $QDIR/GuaranteedUnit`"
+  GGUARANTEEDUNIT=${GGUARANTEEDUNIT%/s}
+  if [ "`$SCRIPTS/qos_tot_guaranteed $INTERFACE`" != 0 ] ; then
+    #GMAX=$((GMAX*9/10))
+    GMAX=`echo|awk -v X=$GMAX '{print X*0.9}'`
+    #GGUARANTEED=$((GGUARANTEED*9/10))
+    GGUARANTEED=`echo|awk -v X=$GGUARANTEED '{print X*0.9}'`
+  fi
+  tc qdisc add dev $INTERFACE root handle 1:0 htb default 10
+  tc class add dev $INTERFACE parent 1:0 classid 1:1 htb rate ${GMAX}${GMAXUNIT} quantum $((QUANTUM*10))
+  cd $QDIR/Class
+  CLASSES=`ls`
+  ENABLEDCLASS=""
+  for C in $CLASSES ; do
+    if [ "`$SCRIPTS/qos_ison $INTERFACE $C`" == yes ] ; then
+      INDEX="`cat $REGISTER/system/net/QoS/Class/$C/Index`"
+      PRIORITY="`$SCRIPTS/qos_getpriority $INTERFACE $C`"
+      MAX="`$SCRIPTS/qos_getbw $INTERFACE $C Max`"
+      if [ -z "$MAX" ] ; then
+        MAX=${GMAX}${GMAXUNIT}
+      fi
+      MAX=${MAX%/s}
+      GUARANTEED="`$SCRIPTS/qos_getbw $INTERFACE $C Guaranteed`"
+      if [ -z "$GUARANTEED" ] ; then
+        GUARANTEED=0.01Kbit
+      fi
+      GUARANTEED=${GUARANTEED%/s}
+      tc class add dev $INTERFACE parent 1:1 classid 1:$INDEX htb rate ${GUARANTEED} ceil ${MAX} prio $PRIORITY quantum 1500
+      tc qdisc add dev $INTERFACE parent 1:$INDEX handle $INDEX: sfq perturb 10
+      tc filter add dev $INTERFACE protocol ip parent 1:0 handle $INDEX fw flowid 1:$INDEX
+      ENABLEDCLASS="$ENABLEDCLASS$C,"
+    fi 
+  done
+  ENABLEDCLASS=${ENABLEDCLASS%,}
+  echo "$ENABLEDCLASS)"
+fi
+iptables -t mangle -D POSTROUTING $FWCOND -j DROP

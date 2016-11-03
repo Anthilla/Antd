@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG=$REGISTER/system/cp
+if ! [ -d $CONFIG/Connected ] ; then
+   mkdir -p $CONFIG/Connected
+fi
+cd $CONFIG/Connected
+CLIENTS=`ls -d *`
+NUMCONN=0
+for IP in $CLIENTS ; do
+  MAC=`cat $IP/MAC 2>/dev/null`
+  USER=`cat $IP/User 2>/dev/null`
+  echo "<tr align=center style='color: #404040;'><td><input type=radio name=CLT value=$IP></td><td class=Smaller1>$USER</td><td class=Smaller1>$IP</td><td class=Smaller1>$MAC</td></tr>"
+  NUMCONN=$((NUMCONN+1))
+done
+echo "<script>parent.document.getElementById('NumConn').innerHTML=$NUMCONN;</script>"

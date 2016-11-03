@@ -1,0 +1,14 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+
+
+OFFLINE=/tmp/IPTfreeIdP.$$
+touch $OFFLINE
+for I in `sed 's/ //g'  $REGISTER/system/cp/Auth/Shibboleth/WhiteList 2>/dev/null |sed 's/\r//g'` ; do
+  if ! $SCRIPTS/shib_freeIdP "$I" "$OFFLINE" ; then
+    rm -f "$OFFLINE"
+    exit 1
+  fi
+done
+mv "$OFFLINE" "$REGISTER/system/cp/Auth/Shibboleth/WhiteList.iptables"
+$SCRIPTS/shib_create_ipt

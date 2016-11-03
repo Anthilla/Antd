@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ENABLED="$1"
+PROVIDER="$2"
+HOST="$3"
+DOMAIN="$4"
+USERNAME="$5"
+PW="$6"
+if [ "$ENABLED" != yes ] ; then
+  if [ "`cat $REGISTER/system/ddnsclient/Enabled 2>/dev/null`" = yes ] ; then
+     echo "<font color=#20e020>DISABLED</font>" > $REGISTER/system/ddnsclient/Status
+  fi
+else
+  if [ "`cat $REGISTER/system/ddnsclient/Enabled 2>/dev/null`" != yes ] ; then
+     echo "<font color=#20e020>CHECKING</font>" > $REGISTER/system/ddnsclient/Status
+  fi
+fi
+echo "$ENABLED" > $REGISTER/system/ddnsclient/Enabled
+echo "$PROVIDER" > $REGISTER/system/ddnsclient/Provider
+if [ "$PROVIDER" = OpenDNS ] ; then
+  HOST=""
+  DOMAIN="opendns"
+  CHECKIP="http://checkip.dyndns.org:8245/"
+elif [ "$PROVIDER" = DynDNS ] ; then
+  CHECKIP="http://checkip.dyndns.org:8245/"
+else
+  CHECKIP="http://ip1.dynupdate.no-ip.com:8245/"
+fi
+echo "$CHECKIP" > $REGISTER/system/ddnsclient/CheckIP
+echo "$HOST.$DOMAIN" > $REGISTER/system/ddnsclient/Host
+echo "$HOST.$DOMAIN" > $REGISTER/system/ddnsclient/Host.$PROVIDER
+echo "$USERNAME" > $REGISTER/system/ddnsclient/Username
+echo "$USERNAME" > $REGISTER/system/ddnsclient/Username.$PROVIDER
+echo "$PW" > $REGISTER/system/ddnsclient/Password
+echo "$PW" > $REGISTER/system/ddnsclient/Password.$PROVIDER
+kill `ps -ef |grep "sleep 304" | grep -v grep |awk '{print $2}'`
+exit 0
+
+

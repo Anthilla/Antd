@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+PORT="`cat $REGISTER/system/havp/PORT 2>/dev/null`"
+iptables -t nat -F Proxy 2>/dev/null
+iptables -t nat -D PREROUTING -p tcp --dport 80 -j Proxy 2>/dev/null
+iptables -t nat -D CapPortProxy -p tcp --dport 80 -j Proxy 2>/dev/null
+iptables -t nat -X Proxy 2>/dev/null
+iptables  -F Proxy 2>/dev/null
+iptables  -D INPUT -p tcp --dport $PORT -j Proxy 2>/dev/null
+iptables  -X Proxy 2>/dev/null

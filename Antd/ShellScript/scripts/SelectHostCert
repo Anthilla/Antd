@@ -1,0 +1,40 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TLSconfig="$REGISTER/$1"
+CertType="$2"
+CertSelected="$3"
+[ -z "$CertType" ] && CertType=`cat $TLSconfig/CertType`
+[ -z "$CertSelected" ] && CertSelected=`cat $TLSconfig/CertSelected`
+if [ "$CertType" == Local ] ; then
+  echo "<option value=''>Select a certificate</option>"
+  cd "$SSLDIR/certs" || exit 1
+  DEFAULT=`ls -l .default.pem | awk -F"/certs/" '{print $2}'`
+  ls .default.pem *_host.pem |grep -v -w "$DEFAULT" |awk -F"_host.pem" -vCertSelected="$CertSelected" '{ printf "<option value=\"%s\" %s>",$1, (CertSelected==$1?"selected":"") 
+  system("openssl x509 -in \"" $0 "\" -text -noout|grep Subject:|cut -d: -f2");
+  printf "</option>\n";
+} '
+fi
+if [ "$CertType" == Imported ] ; then
+  echo "<option value=''>Select a certificate</option>"
+  cd "$SSLDIR/certs/imported_Certs/" || exit 1
+  ENTRIES=`ls [0123456789][0123456789].pem 2>/dev/null`
+  for C in $ENTRIES ; do
+    NAME=${C%.pem}
+    TXT=`/usr/local/ssl/bin/openssl x509 -in $SSLDIR/certs/imported_Certs/$C -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'`
+    if [ "$C" == "${CertSelected}.pem" ] ; then
+      SELECTED="selected"
+    else
+      SELECTED=""
+    fi
+    echo "<option value='$NAME' $SELECTED>$TXT</option>"
+  done
+fi
+if [ "$CertType" == ThisHost ] ; then
+  cd "$SSLDIR/certs/ThisHost" || exit 1
+  TXT=`/usr/local/ssl/bin/openssl x509 -in cert.pem -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'`
+  if [ -z "$TXT" ] ; then
+    echo "<option value='' selects>ERROR: certificate not defined</option>"
+  else
+    echo "<option value='ThisHost' selects>$TXT</option>"
+  fi
+fi

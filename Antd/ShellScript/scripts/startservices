@@ -1,0 +1,6 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+if ps -e | grep -q -w named ; then
+   service ldap start
+   service kerberos5 start
+fi

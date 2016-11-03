@@ -1,0 +1,10 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+$_ = (join ' ', @ARGV);
+
+chomp;
+
+    print scalar localtime $_;
+    print "\n";

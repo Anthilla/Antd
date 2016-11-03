@@ -1,0 +1,2 @@
+#!/bin/bash
+uptime |awk -F"average:" '{print $2}' |awk -F"," '{print $3}' |awk '{print $1}'

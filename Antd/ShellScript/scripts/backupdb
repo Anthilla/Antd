@@ -1,0 +1,67 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+function  UMOUNT () {
+  cd /
+  umount $MP/$DB.AUX 2> /dev/null 
+  if [ "$ALREADYMOUNTED" == No ] ; then
+     umount "$MP" && rmdir "$MP"
+  fi
+}
+function ERROR () {
+  cd /
+  echo ERROR > "$MP/$DB/.settings/LastBackup"
+  UMOUNT
+  exit 1
+}
+DEV="$1"
+DB="$2"
+COMPRESSED="$3"
+WOLOGS="$4"
+[ -z "$DEV" -o -z "$DB" ] && exit 1
+$SCRIPTS/umountstorage >/dev/null
+NODEV=${DEV:2}
+LINE=`df -T -P | grep "$NODEV "`
+if [ -z "$LINE" ] ; then 
+   MP=/storage/`echo $DEV | sed -e "s/\//_/g"`;
+   mkdir -p "$MP"
+   mount -o rw "$DEV" "$MP" || exit 1
+   if [ -r /$MP/$DB.AUX ] ; then
+      if ! mount -oloop $MP/$DB.AUX /$MP/$DB ; then
+         UMOUNT
+         exit 2 
+      fi
+   fi
+   ALREADYMOUNTED=No
+else 
+   MP=`echo $LINE | cut -f7 -d' '`
+   mount -oremount,rw "$MP" || exit 1
+   ALREADYMOUNTED=Yes
+   if [ -r /$MP/$DB.AUX ] ; then   
+     if ! mount -oloop $MP/$DB.AUX /$MP/$DB ; then
+       UMOUNT
+       exit 2 
+     fi
+   fi
+fi
+cd "$MP/$DB"
+if ! [ -d .settings ]; then
+   UMOUNT
+   exit 3
+fi
+if [ "$WOLOGS" = Yes ] ; then
+  EXCLUDE='--exclude LOG'
+else
+  EXCLUDE=''
+fi
+if [ "$COMPRESSED" == Yes ] ; then
+   for N in `seq 1 100` ; do
+      echo "$N BACKUP $DEV $DB `date` ================================================================================================"
+   done 
+   tar cfzv - --exclude var/register/system/ClamAV/db/\* --exclude var/register/system/ClamAV/WR/\* --exclude var/register/system/ClamAV/tmp/\* --exclude var/register/system/havp/tmp/\* --exclude var/register/system/havp/clamav.tmp/\* $EXCLUDE . | uuencode /dev/stdout || ERROR
+else
+   tar cf - --exclude var/register/system/ClamAV/db/\* --exclude var/register/system/ClamAV/WR/\* --exclude var/register/system/ClamAV/tmp/\* --exclude var/register/system/havp/tmp/\* --exclude var/register/system/havp/clamav.tmp/\* --exclude var/register/system/havp/tmp/\* $EXCLUDE .  || ERROR
+fi 
+date +"%d %b %Y %H:%M" > "$MP/$DB/.settings/LastBackup" 
+UMOUNT
+
+

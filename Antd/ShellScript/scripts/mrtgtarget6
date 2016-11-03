@@ -1,0 +1,11 @@
+#  !/bin/bash
+. /etc/kerbynet.conf
+MEMTOTAL=`grep ^MemTotal /proc/meminfo | awk '{print $2}'`
+MEMFREE=`grep ^MemFree /proc/meminfo | awk '{print $2}'`
+BUFFERS=`grep ^Buffers /proc/meminfo | awk '{print $2}'`
+CACHED=`grep ^Cached /proc/meminfo | awk '{print $2}'`
+MEMUSED=$((MEMTOTAL-MEMFREE-BUFFERS-CACHED))
+echo $MEMUSED | awk '{printf("%.0f\n",$0/1024)}'
+grep ^SwapCached /proc/meminfo | awk '{printf("%.0f\n",$2/1024)}'
+echo 100
+echo NA 

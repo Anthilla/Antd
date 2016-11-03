@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES=`ls |sort -f`
+for I in $INTERFACES ; do
+   cd $CONFIG
+   if ! [ -d $I/Bridge/ -o -d $I/Bond/ ] ; then 
+     if ! [ -d $I/NAT/Masquerade ] ; then
+       echo "<option value='$I'>$I</option>"
+     fi
+     if [ -d "$I/VLAN" ] ; then
+       cd $I/VLAN
+       VLANS=`ls`
+       for V in $VLANS ; do
+          if ! [ -d $V/NAT/Masquerade ] ; then
+            echo "<option value='$I.$V'>$I vlan $V</option>"
+          fi
+       done
+     fi
+   fi
+done
+
+

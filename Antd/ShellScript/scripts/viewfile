@@ -1,0 +1,6 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FILENAME="$1"
+cat $FILENAME 2>/dev/null
+exit 0
+

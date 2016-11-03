@@ -1,0 +1,62 @@
+#!/bin/bash
+function IPT {
+  IP="$1"
+  PORT="$2"
+  if [ -z "$OFFLINE" ] ; then
+    if iptables -L CapPortIdP -n |grep -w $IP |grep -q -w dpt:$PORT ; then
+      :
+    else
+      iptables -A CapPortIdP -d $IP -p tcp --dport $PORT -j ACCEPT
+      [ "$PORT" = 80 ] && iptables -t nat -A CapPortIdP80 -d $IP -j ACCEPT 
+      [ "$PORT" = 443 ] && iptables -t nat -A CapPortIdP443 -d $IP -j ACCEPT 
+    fi
+  else
+    if grep -e " -d $IP " "$OFFLINE" 2>/dev/null | grep -q -e " --dport $PORT " ; then
+      :
+    else
+      echo "iptables -A CapPortIdP -d $IP -p tcp --dport $PORT -j ACCEPT" >> "$OFFLINE"
+      [ "$PORT" = 80 ] && echo "iptables -t nat -A CapPortIdP80 -d $IP -j ACCEPT" >> "$OFFLINE"
+      [ "$PORT" = 443 ] && echo "iptables -t nat -A CapPortIdP443 -d $IP -j ACCEPT" >> "$OFFLINE" 
+    fi
+    
+
+  fi
+}
+IDPURL="$1"
+OFFLINE="$2"
+[ -z "$IDPURL" ] && exit 1
+IDPURL="$IDPURL/"
+IDP=`echo "$IDPURL" | sed -r 's/.*:\/\/([^/?]+)[/?].*/\1/'` 
+[ -z "$IDP" ] && exit 2
+
+PORT=`echo "$IDP" | awk -F: '{print $2}'`
+PORT=`echo "$PORT" | awk -F/ '{print $1}'`
+IDP=`echo "$IDP" | awk -F: '{print $1}'`
+IDP=`echo "$IDP" | awk -F/ '{print $1}'`
+echo "$PORT" | grep  -q -E '^[0123456789]+$' || PORT=100000
+if [ "$PORT" -gt 65535 ] ; then
+  if echo "$IDPURL" | grep -q -i 'http://' ; then
+    PORT=80
+  else
+    PORT=443
+  fi
+fi
+
+
+ERROR=true
+if ipcalc -n "$IDP" |grep -q "INVALID ADDRESS" ; then
+  for I in  `host $IDP 2>/dev/null | awk -F'has address ' '{print $2}'` ; do
+    ERROR=false
+    IPT $I $PORT
+  done
+else
+  ERROR=false
+  IP=$IDP
+  IPT $IP $PORT
+fi
+if [ "$ERROR" = true ] ; then
+  exit 10
+else
+  exit 0
+fi
+

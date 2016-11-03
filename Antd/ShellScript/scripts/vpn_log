@@ -1,0 +1,13 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/$INTERFACE"
+NUM=${INTERFACE:3:2}
+if [ "${NUM:0:1}" == 0  ] ; then
+   NUM=${NUM:1:1}
+fi
+echo "<table width=100%>"
+MGT=$[34000+$NUM]
+echo "log all" | nc -w1 127.0.0.1 $MGT | awk -F"," '{print "<tr><td nowrap valign=top>" strftime("%b %e %R,%S",$1) "&nbsp;&nbsp;&nbsp;&nbsp;</td><td>" $3 "</td></tr>"}' 
+echo "</table>"

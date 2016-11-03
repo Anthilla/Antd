@@ -1,0 +1,258 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/defaultvalue
+dmesg -n1
+function PressKey () {
+  echo -n "Press any key to return to the Command Menu."
+  read -n1
+}
+function Confirm () {
+  echo -n "Are you sure you want to continue (y/n)? "
+  read -n1 Y
+  echo
+  Y=`echo $Y | awk '{print toupper($0)}'`
+  if [ "$Y" == "Y" ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+function ChangePW () {
+  RETRY=0
+  CPW="$DEFAULTPW"
+  while [ $RETRY -lt 3 -a "`cat $REGISTER/system/ldap/rootpw`" != "$CPW" ] ; do
+    RETRY=$((RETRY+1))
+    echo -n "Current admin password: "
+    read -s CPW
+    echo
+    if [ "$CPW" != "`cat $REGISTER/system/ldap/rootpw`" ] ; then
+      echo "Wrong password entered!!!"
+      echo
+    fi
+  done
+  if [ "$CPW" == "`cat $REGISTER/system/ldap/rootpw`" -o "$CPW" == "$DEFAULTPW" ] ; then 
+    RETRY=0
+    NPW=1
+    NPW2=2
+    while [ $RETRY -lt 3 -a "$NPW" != "$NPW2" ] ; do
+      RETRY=$((RETRY+1))
+      echo -n "New admin password: "
+      read -s NPW
+      echo 
+      echo -n "Confirm password: "
+      read -s NPW2
+      echo
+      if [ "$NPW" != "$NPW2" ] ; then
+        echo "Passwords do not match!!!"
+      fi
+      if [ -z "$NPW" ] ; then
+        echo "Password cannot be empty!!!"
+        NPW=1
+        NPW2=2
+      fi
+    done
+    if [ "$NPW" == "$NPW2" ] ; then
+      
+       $SCRIPTS/cpw admin "$CPW" "$NPW" && echo "Password successfully changed."
+    fi
+  fi
+  
+  sleep 3 
+}
+function Authenticated () {
+  if ! [ -r "$REGISTER/system/ldap/rootpw" ] ; then
+    return 1
+  fi
+  if [ "$PW" == "`cat $REGISTER/system/ldap/rootpw`" -o "`cat $REGISTER/system/ldap/rootpw`" == "$DEFAULTPW" ] ; then 
+    return 0
+  else
+    echo "-----------------------"
+    echo "Authentication Required"
+    echo "-----------------------"
+    RETRY=0
+    while [ $RETRY -lt 3 ] ; do
+      RETRY=$((RETRY+1))
+      echo -n "admin password: "
+      read -s PW
+      echo
+      if [ -n "$SSH_CONNECTION" ] ; then
+        VIA=SSH
+        REMIP=$(echo $SSH_CONNECTION | awk '{print $1}')
+      else
+        VIA=CONSOLE
+        REMIP=""
+      fi
+      if [ "$PW" == "`cat $REGISTER/system/ldap/rootpw`" ] ; then
+        echo "Successfully authenticated"
+        echo
+        $SCRIPTS/alert LOGIN "$VIA" "$REMIP" >/dev/null
+        return 0
+      else
+        echo "Authentication failed!!!"
+        $SCRIPTS/alert LOGFAIL "$VIA" "$REMIP" >/dev/null
+        echo
+      fi
+    done
+    sleep 2
+    return 1
+  fi
+}
+export HOME=/root
+export PATH="$PATH:/usr/local/bin/:/usr/local/sbin/"
+export QUERY_STRING=onlyrender
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+export KERNEL=`uname -r`
+export CPU=`grep "model name" /proc/cpuinfo |head -1 | cut -d: -f2|sed "s/^ *//g"`
+export MHZ=`grep "cpu MHz" /proc/cpuinfo | cut -d: -f2 | head -1 | cut -d. -f1`
+export NCPU=`$SCRIPTS/cpus`
+export MEMORY=`grep "MemTotal" /proc/meminfo |cut -d: -f2|sed "s/^ *//g"`
+PW=""
+while true ; do
+  clear
+  export LOADAVG="`awk '{printf "%s %s %s",$1,$2,$3}' </proc/loadavg`"
+  export UPTIME=`awk '{Days=$1/86400; Sec=$1%86400; Hours=Sec/3600; Sec=Sec%3600 ; Minutes=Sec/60; printf "%d days, %02d:%02d",Days,Hours,Minutes }' < /proc/uptime`
+  export DBDESC="`cat /Database/.settings/Description`"
+  export DATE=`date +"%B %d, %Y - %R"`
+  if ip addr show | grep -w -q "$DEFAULTIP/24"  ; then
+    HTTPPORT="`cat $REGISTER/system/httpd/HTTP 2>/dev/null`"
+    if [ "$HTTPPORT" != 80 ] ; then
+      export MSG1="http://$DEFAULTIP:$HTTPPORT"
+    else
+      export MSG1="http://$DEFAULTIP"
+    fi
+  else
+    export MSG1=""
+  fi
+  if [ "`cat $REGISTER/system/ldap/rootpw`" == "$DEFAULTPW" ] ; then
+    export MSG2="User     : admin"
+    export MSG3="Password : $DEFAULTPW"
+  else
+    export MSG2=""
+    export MSG3=""
+  fi
+  if [ -r "/tmp/FailSave" ] ; then
+    export FSMSG="!!!FAIL-SAFE ACTIVE!!!"
+  else
+    export FSMSG=""
+  fi
+  if [ "$PW" == "`cat $REGISTER/system/ldap/rootpw`" -a "$PW" != "$DEFAULTPW" ] ; then
+    export AUTHMSG="Press Ctrl+C to logout."
+  else
+    export AUTHMSG=""
+  fi
+  if [ -r /tmp/LowDiskSpace ] ; then
+    export AUTHMSG="WARNING: Low storage space available for the profile. The syslog is disabled."
+  fi
+  
+  render $TEMPLATE/localman
+  echo -e -n "\t\t\t\t\t\tSelect: "
+  SEL="" 
+  read -t 60 -s -n1 SEL 
+  SEL=`echo $SEL | awk '{print toupper($0)}'` 
+  echo $SEL
+  case "$SEL" in
+    Z)
+        clear
+cat <<EOF
+*****************
+ FAIL-SAFE MODE
+*****************
+You should put the system into Fail-Safe mode only in the event you are not
+able to reach it via the web interface. You will have to select an ethernet
+interface on which the IP address $DEFAULTIP will be added.
+Any other IP address will be disabled and the firewall will accept any http
+and https packet.
+To exit from Fail-Safe mode you have to reboot the system.
+                                                                                
+EOF
+        if Confirm ; then
+          if Authenticated ; then
+	    $SCRIPTS/failsafe
+          fi
+        fi
+	;;
+    S)  
+        clear
+        if Authenticated ; then
+          echo "Type exit or Ctrl+D to return to main menu."
+          echo
+          REMOTE=`echo "$SSH_CONNECTION" |awk '{print $1}'`
+          if [ -n "$REMOTE" ] ; then
+            logger -t Administration "SUCCESS: Remote Shell opened from $REMOTE (Admin)"
+          else
+            logger -t Administration "SUCCESS: Local Shell opened (Admin)"
+	  fi	
+          bash -l
+        fi
+	;;
+    A)  
+        clear
+        if Authenticated ; then 
+           $SCRIPTS/inst-manager
+           PressKey
+        fi
+	;;
+    D)  
+        clear
+        if Authenticated ; then
+          $SCRIPTS/profile-manager
+        fi
+	;;
+    N)
+        clear
+	$SCRIPTS/showinterfacestxt |more -d
+        PressKey
+	;;
+    P)
+        clear
+        ChangePW	
+	;;
+    T)
+        clear
+	route -n | more -d
+        PressKey
+	;;
+    F)
+        clear
+	iptables -L -n -v | more -d
+        PressKey
+	;;
+    R)
+        clear
+        echo "WARNING: if you continue the system will be restarted."	
+        if Confirm ; then
+          echo "The system is rebooting..."
+          reboot
+        fi
+	;;
+    H)
+        clear
+        echo "WARNING: if you continue the system will be halted."	
+        if Confirm ; then
+          echo "The system is going down..."
+          poweroff
+        fi
+	;;
+    U)  
+        clear
+        if Authenticated ; then 
+          $SCRIPTS/utilities
+        fi
+	;;
+    W)  
+        clear
+        if Authenticated ; then 
+          wifi-manager || PressKey 
+        fi
+	;;
+    I)  
+        clear
+        if Authenticated ; then 
+          $SCRIPTS/ip-manager
+        fi
+	;;
+
+
+  esac
+done

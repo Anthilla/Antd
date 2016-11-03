@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+FEATURE="$1"
+[ -z "$FEATURE" ] && exit 1
+CODE="`cat $REGISTER/system/keys/$FEATURE/code 2>/dev/null`"
+SALT="${CODE:32:8}"
+echo -n $SALT

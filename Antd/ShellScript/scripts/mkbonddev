@@ -1,0 +1,30 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+BOND="$1"
+MODE="$2"
+[ -z "$BOND" ] && exit 1
+[ -z "$MODE" ] && MODE=0
+SYS=/sys/class/net/$BOND/bonding/
+if ! [ -d /sys/class/net/$BOND ] ; then
+  modprobe bonding
+  NEW=`ls /proc/net/bonding/ |grep bond | tail -1`
+  if ip link set name $BOND dev $NEW ; then
+    echo $NEW > /tmp/$BOND.dev
+  else
+    echo "Max number of bond interface reached" >&2
+    exit 2
+  fi
+fi
+[ "$MODE" = "0" ] &&  echo "balance-rr 0" > $SYS/mode 2>/dev/null
+[ "$MODE" = "1" ] &&  echo "active-backup 1" > $SYS/mode 2>/dev/null
+[ "$MODE" = "7" ] &&  echo "balance-dyn 7" > $SYS/mode 2>/dev/null
+PRIMARY=`cat $REGISTER/system/net/interfaces/$BOND/Primary`
+echo $PRIMARY > $SYS/primary 2>/dev/null
+echo 100 > $SYS/miimon
+echo 0 > $SYS/use_carrier
+echo 2000 > $SYS/updelay
+if [ -f "$REGISTER/system/net/interfaces/$BOND/STATUS" ] ; then
+  ifconfig $BOND `cat $REGISTER/system/net/interfaces/$BOND/STATUS 2>/dev/null`
+else
+  ifconfig $BOND up
+fi

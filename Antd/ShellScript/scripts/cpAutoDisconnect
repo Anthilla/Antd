@@ -1,0 +1,15 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+X="$1"
+IP=`echo "$X" | awk -F/ '{print $2}'`
+[ -z "$IP" ] && exit 1
+U=`cat $X`
+logger -t "CaptivePortal" "GW: warning: authenticator expired for $U (Client: $IP)"
+$SCRIPTS/cp_disconnect $IP
+
+
+
+
+
+
+

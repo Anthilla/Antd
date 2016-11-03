@@ -1,0 +1,41 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+BRIDGE="$1"
+COMBO="$2"
+[ -z "$BRIDGE" ] && exit
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES=`ls | grep -v BRIDGE`
+for I in $INTERFACES ; do
+   cd $CONFIG
+   if  [ -d $I/Bridge/ ] ; then
+      NAME=`cat $I/Bridge/Name 2>/dev/null`
+      if [ "$NAME" == "$BRIDGE" ] ; then
+         if [ -z "$COMBO" ] ; then
+           echo $I
+         else
+           echo "<option value='$I'>$I</option>"
+         fi
+      fi
+   else    
+      if [ -d "$I/VLAN" ] ; then
+        cd $I/VLAN
+        VLANS=`ls`
+        for V in $VLANS ; do
+          if [ -d $V/Bridge/ ] ; then
+            NAME=`cat $V/Bridge/Name 2>/dev/null`
+            if [ "$NAME" == "$BRIDGE" ] ; then
+              if [ -z "$COMBO" ] ; then
+                echo "$I.$V"
+              else
+                echo "<option value='$I.$V'>$I vlan $V</option>"
+              fi
+            fi
+          fi
+        done
+      fi
+   fi
+done
+
+

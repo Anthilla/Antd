@@ -1,0 +1,32 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DESCRIPTION="$1"
+ENABLED="$2"
+WEIGHT="$3"
+IP="$4"
+INTERFACE="$5"
+TC="$6"
+CONFIG="$REGISTER/system/net/nb/Gateways"
+cd $CONFIG || exit 1
+LAST=`ls -d ?? | sort | tail -1`
+if [ -z "$LAST" ] ; then
+  LAST=00
+else
+  if [ "${LAST:0:1}" == 0 ] ; then
+     LAST=${LAST:1:1}
+  fi
+  LAST=`echo $((LAST+1)) | awk '{printf "%02s",$0 }'`
+fi
+mkdir $LAST
+cd $LAST
+echo "$DESCRIPTION" > Description
+echo "$ENABLED" > Enabled
+echo "$WEIGHT" > Weight
+echo "$IP" > IP
+echo "$INTERFACE" > Interface
+echo "$TC" > TC
+echo 0 > Failure
+$SCRIPTS/nb_setautomarking $LAST
+ip ro sh | $SCRIPTS/routeupd $LAST flush
+$SCRIPTS/mrtg_reload
+$SCRIPTS/nb_startfo

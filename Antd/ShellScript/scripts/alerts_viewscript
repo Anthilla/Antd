@@ -1,0 +1,16 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+EVENT="$1"
+OPT="$2"
+[ -z "$EVENT" ] && exit
+DIR="$REGISTER/system/alerts/Events/$EVENT/"
+if ! cd $DIR/Script 2>/dev/null ; then
+  echo "# Event: $EVENT" 
+  exit
+fi
+if [ "$OPT" == status ] ; then
+  cat Enabled 2>/dev/null
+else
+  cat TXT  2>/dev/null
+fi
+exit 0

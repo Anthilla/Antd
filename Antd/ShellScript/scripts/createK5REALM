@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DIRECTORY="$1"
+BASE="$2"
+ACTION="$3"
+[ -z "$DIRECTORY" ] && exit 1
+[ -z "$BASE" ] && exit 1
+
+TMP=`echo $BASE |awk -F"," '{print $1}'`
+TYPE=`echo $TMP |awk -F"=" '{print $1}'`
+CONTAINER=`echo $TMP |awk -F"=" '{print $2}'`
+if echo $TYPE | egrep -w -i -q 'o' ; then
+cat <<EOF >/tmp/template.ldif
+dn: $BASE 
+o: $CONTAINER
+objectclass: top
+objectclass: organization
+EOF
+fi
+if echo $TYPE | egrep -w -i -q 'dc' ; then
+cat <<EOF >/tmp/template.ldif
+dn: $BASE
+dc: $CONTAINER
+objectclass: top
+objectClass: domain
+EOF
+fi
+egrep "^include" /etc/openldap/slapd.conf |egrep ".schema$" > /tmp/slapadd.conf
+cat <<EOF >> /tmp/slapadd.conf
+database        bdb
+suffix          "$BASE"
+directory       "$DIRECTORY"
+EOF
+mkdir $DIRECTORY 2>/dev/null
+rm -f $DIRECTORY/*
+SED="s/xvar/$BASE/g"
+sed -e "$SED" < $TEMPLATE/template.ldif >> /tmp/template.ldif
+slapadd -f /tmp/slapadd.conf < /tmp/template.ldif
+ 

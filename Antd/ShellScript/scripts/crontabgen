@@ -1,0 +1,77 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+DIR=$REGISTER/system/startup/scripts
+cd $DIR 2>/dev/null || exit
+rm -f /tmp/crontab
+echo "PATH=$PATH" > /tmp/crontab
+echo "15 * * * * /root/kerbynet.cgi/scripts/cleantmp" >> /tmp/crontab
+CRONS="*-Cron"
+for C in $CRONS ; do
+  ENABLED="`cat $C/Enabled 2>/dev/null`"
+  if [ "$ENABLED" = yes ] ; then
+    STEP="`cat $C/cron/Step 2>/dev/null`"
+    if [ -z "$STEP" ] ; then
+      MINUTE="`cat $C/cron/Minute 2>/dev/null`"
+      HOUR="`cat $C/cron/Hour 2>/dev/null`"
+      DOM="`cat $C/cron/DoM 2>/dev/null`"
+      MONTH="`cat $C/cron/Month 2>/dev/null`"
+      DOW="`cat $C/cron/DoW 2>/dev/null`"
+      echo "$MINUTE $HOUR $DOM $MONTH $DOW $SCRIPTS/runscript $C" >>/tmp/crontab
+    else
+      UNIT=`echo $STEP | awk '{print $2}'`
+      STEP=`echo $STEP | awk '{print $1}'`
+      if [ "$UNIT" = m ] ; then
+        echo "0-59/$STEP * * * * $SCRIPTS/runscript $C" >>/tmp/crontab
+      else
+        if [ "$UNIT" = h ] ; then
+          echo "0 0-23/$STEP * * * $SCRIPTS/runscript $C" >>/tmp/crontab
+        else
+          echo "5 0 * * 0-6/$STEP $SCRIPTS/runscript $C" >>/tmp/crontab
+        fi
+      fi
+    fi
+  fi
+done
+
+
+if [ "`cat $REGISTER/system/alerts/Enabled 2>/dev/null`" = yes ] ; then
+
+  DIR=$REGISTER/system/alerts/Events/
+  cd $DIR 2>/dev/null || exit
+  EVENTS=`ls -d *`
+  for E in $EVENTS ; do
+    ENABLED="`cat $E/Enabled 2>/dev/null`"
+     
+    if [ "$ENABLED" = yes -a "`cat $E/Script/Processing`" = OnSchedule ] ; then
+      D="$E/Script/Cron"
+      STEP="`cat $D/Step 2>/dev/null`"
+      if [ -z "$STEP" ] ; then
+        MINUTE="`cat $D/Minute 2>/dev/null`"
+        HOUR="`cat $D/Hour 2>/dev/null`"
+        DOM="`cat $D/DoM 2>/dev/null`"
+        MONTH="`cat $D/Month 2>/dev/null`"
+        DOW="`cat $D/DoW 2>/dev/null`"
+        echo "$MINUTE $HOUR $DOM $MONTH $DOW $SCRIPTS/alert $E" >>/tmp/crontab
+      else
+        UNIT=`echo $STEP | awk '{print $2}'`
+        STEP=`echo $STEP | awk '{print $1}'`
+        if [ "$UNIT" = m ] ; then
+          echo "0-59/$STEP * * * * $SCRIPTS/alert $E" >>/tmp/crontab
+        else
+          if [ "$UNIT" = h ] ; then
+            echo "0 0-23/$STEP * * * $SCRIPTS/alert $E" >>/tmp/crontab
+          else
+            echo "5 0 * * 0-6/$STEP $SCRIPTS/alert $E" >>/tmp/crontab
+          fi
+        fi
+      fi
+    fi
+  done
+fi
+
+
+crontab -u root /tmp/crontab
+$SCRIPTS/terminate cron
+rm -f /var/run/cron.pid
+cron
+rm -f /tmp/crontab

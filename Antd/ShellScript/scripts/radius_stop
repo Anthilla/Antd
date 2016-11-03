@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function TERM () {
+  I=0
+  ps -e |grep -w -q radiusd || return 0
+  while [ $I -lt 30 ] ; do
+    if ps -e |grep -w -q radiusd ; then
+      killall -TERM radiusd 2>/dev/null >/dev/null
+    else 
+       return 0
+    fi
+    I=$((I+1))
+    sleep 0.5
+  done
+  return 1
+}
+TERM || exit 1

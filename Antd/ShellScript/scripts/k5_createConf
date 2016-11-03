@@ -1,0 +1,28 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+REALM="`cat $REGISTER/system/k5/realm`"
+if ! [ -r "$REGISTER/system/k5/client/DNSLookup" ] ; then
+  mkdir -p "$REGISTER/system/k5/client/realms/00"
+  echo no > "$REGISTER/system/k5/client/DNSLookup"
+  echo "$REALM" > "$REGISTER/system/k5/client/realms/00/name"
+  echo "Local" > "$REGISTER/system/k5/client/realms/00/KDC"
+fi
+cd $REGISTER/system/k5/client/realms/
+REALMS=`ls -d [0123456789][0123456789] 2>/dev/null`
+echo > $REGISTER/system/k5/client/realms.conf
+for R in $REALMS ; do
+  if [ "$R" != 00 ] ; then
+    NAME="`cat $R/name`"    
+    KDC="`cat $R/KDC`"
+    echo " $NAME = {" >> $REGISTER/system/k5/client/realms.conf
+    echo $KDC | awk -v RS="," '{printf "   kdc = %s\n",$0 }' >> $REGISTER/system/k5/client/realms.conf
+    echo " }" >> $REGISTER/system/k5/client/realms.conf
+  fi
+done
+cd $REGISTER/system/k5/client/
+if [ "`cat DNSLookup 2>/dev/null`" == yes ] ; then
+  echo true >"DNSLookup.conf"
+else
+  echo false >"DNSLookup.conf"
+fi
+$SCRIPTS/rendertemplate krb5.conf

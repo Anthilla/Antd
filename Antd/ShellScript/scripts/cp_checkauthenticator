@@ -1,0 +1,64 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TIMESTAMP=`date +%s`
+USER="$1"
+REALM="$2"
+IP="$3"
+AUTHENTICATOR=`echo "$4" |sed 's/ /\+/g'`
+RENEW="$5"
+if [ "`cat $REGISTER/system/cp/WebLogin 2>/dev/null`" == Local ] ; then 
+  SECRET="`cat $REGISTER/system/cp/Auth/Secret 2>/dev/null`"
+else
+  SECRET="`cat $REGISTER/system/cp/Secret 2>/dev/null`"
+fi
+TMP="/tmp/cpgw_decript_$$"
+if echo "$AUTHENTICATOR" | openssl aes-256-cbc -d -a -k "$SECRET" 2>/dev/null >$TMP ; then
+  DUSER="`head -1 $TMP |tail -1`" 
+  DIP="`head -2 $TMP |tail -1`"
+  DTS="`head -3 $TMP |tail -1`"
+  DTYPE="`head -4 $TMP |tail -1`"
+  if [ -z "$RENEW" ] ; then
+    if [ $((TIMESTAMP-DTS)) -gt 120 -o $((DTS-TIMESTAMP)) -gt 120 ] ; then
+      logger -t CaptivePortal "GW: warning: authenticator message expired for the client $IP (User: $USER@$REALM) or GW and AS are  not time synchronized"
+      rm -f "$TMP"
+      exit 11
+    fi
+  else
+    TIMEOUT=`cat $REGISTER/system/cp/Timeout`
+    if [ "$TIMEOUT" == 0.5 ] ; then
+      TIMEOUT=30
+    else
+      TIMEOUT=$((TIMEOUT*60))
+    fi
+    if [ $((TIMESTAMP-DTS)) -gt $TIMEOUT ] ; then
+      logger -t CaptivePortal "GW: warning: authenticator message expired for the user $USER@$REALM (client: $IP) and cannot be renewed"
+      rm -f "$TMP"
+      exit 11
+    fi
+  fi
+  if [ "$USER@$REALM" == "$DUSER" ] ; then
+    if [ "$DTYPE" != I -a "$IP" != "$DIP" ] ; then
+      logger -t CaptivePortal "GW: warning: $USER@$REALM (client: $IP) identity check failed because the authenticator is only valid for the client $DIP"
+      rm -f "$TMP"
+      exit 12
+    fi
+  else
+    logger -t CaptivePortal "GW: warning: $USER@$REALM (client: $IP) identity check failed because the authenticator is only valid for $DUSER"
+    rm -f "$TMP"
+    exit 24
+  fi
+  if [ -z "$RENEW" -a "$DTYPE" != I ] ; then
+    logger -t CaptivePortal "GW: warning: $USER@$REALM (client: $IP) identity check failed because the authenticator is not an initial authenticator."
+    rm -f "$TMP"
+    exit 13
+  fi
+
+
+else
+  logger -t CaptivePortal "GW: warning: decryption failed for the user $USER@$REALM (client: $IP). Check the Shared Secret."
+  rm -f "$TMP"
+  exit 10
+fi
+rm -f "$TMP"
+
+

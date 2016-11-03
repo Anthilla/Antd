@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CONFIG="$REGISTER/system/net/interfaces/"
+cd $CONFIG
+if ! [ -d ppp0 ] ; then echo ppp0 ; exit 0 ; fi
+if ! [ -d ppp1 ] ; then echo ppp1 ; exit 0 ; fi
+if ! [ -d ppp2 ] ; then echo ppp2 ; exit 0 ; fi
+if ! [ -d ppp3 ] ; then echo ppp3 ; exit 0 ; fi
+if ! [ -d ppp4 ] ; then echo ppp4 ; exit 0 ; fi
+if ! [ -d ppp5 ] ; then echo ppp5 ; exit 0 ; fi
+if ! [ -d ppp6 ] ; then echo ppp6 ; exit 0 ; fi
+if ! [ -d ppp7 ] ; then echo ppp7 ; exit 0 ; fi
+if ! [ -d ppp8 ] ; then echo ppp8 ; exit 0 ; fi
+if ! [ -d ppp9 ] ; then echo ppp9 ; exit 0 ; fi
+exit 1
+
+

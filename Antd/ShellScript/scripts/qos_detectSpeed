@@ -1,0 +1,79 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+SPEED=100
+if [ "${INTERFACE:0:3}" == ETH ] ; then
+  TXT="`ethtool $INTERFACE | grep -A4 'Supported link modes'`"
+  if echo "$TXT" | grep -q 1000 ; then
+    SPEED=1000
+  else
+    if echo "$TXT" | grep -q 100 ; then
+      SPEED=100
+    else  
+      if echo "$TXT" | grep -q 10 ; then
+        SPEED=10
+      else
+        SPEED=100
+      fi
+    fi
+  fi
+fi
+if [ "${INTERFACE:0:3}" == VPN ] ; then
+  SPEED=100
+fi
+if [ "${INTERFACE:0:6}" == BRIDGE ] ; then
+  TEMP=0
+  for I in `cat $REGISTER/system/net/interfaces/$INTERFACE/BridgeList 2>/dev/null` ; do
+    X=`cat $REGISTER/system/net/interfaces/$I/QoS/Max 2>/dev/null`
+    if [ -z "$X" ] ; then
+      X=`$SCRIPTS/qos_detectSpeed $I`
+    fi
+    if [ "$X" -gt "$TEMP" ] ; then
+      TEMP=$X
+    fi
+  done
+  if [ "$TEMP" -gt 0 ] ; then
+    SPEED=$TEMP
+  else
+    SPEED=100
+  fi
+fi
+if [ "${INTERFACE:0:4}" == BOND ] ; then
+  if [ "`cat $REGISTER/system/net/interfaces/$INTERFACE/Type 2>/dev/null`" == 0 ] ; then
+    TEMP=
+    N=0
+    for I in `cat $REGISTER/system/net/interfaces/$INTERFACE/BondList 2>/dev/null` ; do
+      X=`cat $REGISTER/system/net/interfaces/$I/QoS/Max 2>/dev/null`
+      if [ -z "$X" ] ; then
+        X=`$SCRIPTS/qos_detectSpeed $I`
+      fi
+      if [ -z "$TEMP" ] ; then
+        TEMP=$X
+      fi
+      if [ "$X" -lt "$TEMP" ] ; then
+        TEMP=$X
+      fi
+      N=$((N+1))
+    done
+    if [ "$TEMP" -gt 0 ] ; then
+      SPEED=$TEMP
+    else
+      SPEED=100
+    fi
+    if [ "$N" -gt 1 ] ; then
+      SPEED=$((SPEED * N))
+    fi
+  else
+    PRIMARY=`cat $REGISTER/system/net/interfaces/$INTERFACE/Primary`
+    X=`cat $REGISTER/system/net/interfaces/$PRIMARY/QoS/Max 2>/dev/null`
+    if [ -z "$X" ] ; then
+      X=`$SCRIPTS/qos_detectSpeed $PRIMARY`
+    fi
+    SPEED=$X
+  fi
+fi
+if [ "${INTERFACE:0:3}" == ppp ] ; then
+  SPEED=1
+fi
+echo $SPEED

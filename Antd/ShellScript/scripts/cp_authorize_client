@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ENABLE="$1"
+echo "$2" | grep -q "\." && IP=$2
+echo "$3" | grep -q "\." && IP=$3
+echo "$2" | grep -q ":" && MAC=$2
+echo "$3" | grep -q ":" && MAC=$3
+if [ "$IP" == "" -a "$MAC" == "" ] ; then
+  echo "Usage: cp_authorize_client yes|no {IP [MAC]}|{MAC [IP]} [TX-Packets TX-Octets RX-Packets RX-Octets]"
+  exit 1
+fi
+if iptables -w -L CapPortWL -n 2>/dev/null >/dev/null ; then
+  [ "$IP" != "" ] && FILTER="-s $IP"
+  [ "$MAC" != "" ] && FILTER="$FILTER -m mac --mac-source $MAC"
+  iptables -w -D CapPortWL $FILTER -j ACCEPT 2>/dev/null
+  iptables -w -D CapPortOut -d $IP -j ACCEPT 2>/dev/null
+  iptables -w -D CapProxyIn -s $IP -j ACCEPT 2>/dev/null
+  iptables -w -D CapProxyOut -d $IP -j ACCEPT 2>/dev/null
+  iptables -w -D CapPortOut -d $IP -j ACCEPT 2>/dev/null
+  iptables -w -t nat -D CapPortHTTP $FILTER -j CapPortProxy 2>/dev/null
+  iptables -w -t nat -D CapPortHTTPS $FILTER -j ACCEPT 2>/dev/null
+  
+  if [ "$ENABLE" == yes ] ; then
+    TXP="$4"
+    TXO="$5"
+    RXP="$6"
+    RXO="$7"
+    [ -z "$TXP" ] && TXP=0 
+    [ -z "$TXO" ] && TXO=0 
+    [ -z "$RXP" ] && RXP=0 
+    [ -z "$RXO" ] && RXO=0 
+    iptables -w -I CapPortWL 1 $FILTER -j ACCEPT -c $TXP $TXO
+    iptables -w -I CapPortOut 1 -d $IP -j ACCEPT -c $RXP $RXO 
+    iptables -w -I CapProxyIn 1 -s $IP -j ACCEPT 2>/dev/null
+    iptables -w -I CapProxyOut 1 -d $IP -j ACCEPT 2>/dev/null
+    iptables -w -t nat -I CapPortHTTP 1 $FILTER -j CapPortProxy
+    iptables -w -t nat -I CapPortHTTPS 1 $FILTER -j ACCEPT
+  fi
+fi

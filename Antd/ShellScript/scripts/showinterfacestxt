@@ -1,0 +1,29 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+cd /sys/class/net/
+INTERFACES="`ls -d BOND* BRIDGE* ETH* VPN* ppp* 2>/dev/null`"
+for I in $INTERFACES ; do
+  VLAN="`echo $I | awk -F. '{print $2}'`"
+  NAME="`echo $I | awk -F. '{print $1}'`"
+  if [ -z "$VLAN" ] ; then
+    echo -n "********* "
+    if [ "${I:3}" == ETH ] ; then
+      $SCRIPTS/getintdesc $I
+    else
+      cat "$REGISTER/system/net/interfaces/$I/Description" 2>/dev/null
+    fi
+    if [ "${I:0:6}" == BRIDGE ] ; then 
+      echo "          Components: `( cd /sys/class/net/$I/brif/ ; ls -d * 2>/dev/null |tr '\n' ' ' )`"
+    fi
+    if [ "${I:0:4}" == BOND ] ; then 
+      echo "          Components: `cat /sys/class/net/$I/bonding/slaves 2>/dev/null`"
+    fi
+    echo "          Status: `$SCRIPTS/getlinkstatus $I TXT`"
+  else
+    echo "+++++++++ VLAN $VLAN on $NAME"
+  fi
+  ifconfig $I 2>/dev/null |grep -v '^$'
+  ip addr show dev $I |grep -w inet |sed -r "s/.*inet (.*) scope .*/          IP \1/"
+
+
+done

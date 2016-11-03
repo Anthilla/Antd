@@ -1,0 +1,51 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+RIPPEDLIST=" $1 "
+CONFIGURATION="$2"
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+INTERFACES="`ls`"
+for I in $INTERFACES ; do
+  cd $CONFIG
+  if echo "$RIPPEDLIST" | grep -q " $I " ; then
+    [ -d "$I/RIP" ] || mkdir "$I/RIP" ;
+    touch $I/RIP/Enabled
+  else
+    [ -r "$I/RIP/Enabled" ] && rm -f "$I/RIP/Enabled"
+  fi
+  if [ -d "$I/VLAN" ] ; then
+    cd $I/VLAN
+    VLANS=`ls`
+    for V in $VLANS ; do
+      if echo "$RIPPEDLIST" |grep -q " $I.$V " ; then
+        [ -d "$V/RIP" ] || mkdir "$V/RIP" ;
+        touch $V/RIP/Enabled
+      else
+        [ -r "$V/RIP/Enabled" ] && rm -f "$V/RIP/Enabled"
+      fi
+    done
+  fi
+done
+for C in `echo "$CONFIGURATION" | sed 's/|/ /g'` ; do
+  NAME=`echo $C |awk -F'~' '{print $1}'`
+  INTERFACE=`echo $NAME |awk -F'.' '{print $1}'`
+  VLAN=`echo $NAME |awk -F'.' '{print $2}'`
+  cd $CONFIG/$INTERFACE
+  if  ! [ -z "$VLAN" ] ; then
+    cd VLAN/$VLAN
+  fi
+  if ! [ -d RIP ] ; then
+    mkdir RIP
+    echo RIP
+  fi
+  cd RIP
+  echo $C |awk -F'~' '{print $3}' > SplitHorizon
+  echo $C |awk -F'~' '{print $4}' > PoisonedReverse 
+  echo $C |awk -F'~' '{print $5}' > PassiveMode
+  echo $C |awk -F'~' '{print $6}' > Authentication
+  echo $C |awk -F'~' '{print $7}' > Secret
+done
+$SCRIPTS/rip_start
+
+

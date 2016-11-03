@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+PROTOCOLS=$(iptables -mndpi -h |grep -A 100 "Enabled protocols:" |grep -v "Enabled protocols:"|for I in $(cat) ; do echo $I ; done |sort)
+OUT=""
+for P in $PROTOCOLS ; do
+  #echo "<option value='$P'>$P</option>" 
+  OUT="$OUT,\"$P\"" 
+done
+echo ${OUT:1}
+
+

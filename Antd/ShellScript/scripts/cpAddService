@@ -1,0 +1,28 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+DESC="$1"
+IP="$2"
+[ "$IP" == Any ] && IP=""
+PORT="$3"
+PROTO="$4"
+CONFIG=$REGISTER/system/cp
+cd $CONFIG/FreeServices
+LAST=`ls -d * 2>/dev/null |tail -1`
+if [ -z "$LAST" ] ; then
+  NEW=00
+else
+  if [ "${LAST:0:1}" == 0 ] ; then
+    LAST="${LAST:1:1}"
+  fi
+  NEW="$((LAST+1))"
+  if [ "$NEW" -lt 10 ] ; then
+    NEW=0$NEW
+  fi
+fi
+mkdir $NEW
+echo "$DESC" > $CONFIG/FreeServices/$NEW/Desc
+echo "$IP" > $CONFIG/FreeServices/$NEW/IP
+echo "$PROTO" > $CONFIG/FreeServices/$NEW/Proto
+echo "$PORT" > $CONFIG/FreeServices/$NEW/Port
+$SCRIPTS/cpAddServiceIPT "$IP" "$PORT" "$PROTO"
+

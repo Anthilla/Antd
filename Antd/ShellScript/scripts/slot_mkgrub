@@ -1,0 +1,52 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+TMP=/tmp/grub_menuentries
+OUT=/etc/slots/grub/grub.cfg 
+export QUERY_STRING="onlyrender"
+
+if [ -d /etc/slots ] ; then
+   echo > "$TMP"
+   SELECTED="`cat /etc/slots/conf/Slot 2>/dev/null`"
+   CONSOLE="`cat /etc/slots/conf/Console 2>/dev/null`"
+   [ "$CONSOLE" = VGA ] && CONSOLE=""
+   if [ -z "$CONSOLE" ] ; then
+     export CAT="cat /grub/zeroshell.txt"
+   else
+     export CAT=""
+     CONSOLE="console=ttyS0,${CONSOLE}n8"
+   fi
+   export CONSOLE
+   DEFAULT=0
+   ENTRY=0
+   for S in 1 2 ; do
+     export SLOT=$S
+     cd /etc/slots/$S
+     STATUS="`cat conf/Status 2>/dev/null`"
+     if [ "$STATUS" = Ready ] ; then
+       export DESC="`cat conf/Description 2>/dev/null`"
+       export RELEASE="`cat conf/Release 2>/dev/null`"
+       [ -z "$SELECTED" ] && SELECTED="$S"
+       SELECTED_KERNEL="`cat conf/Kernel 2>/dev/null`"
+       KERNELS=`ls -d *.*.* 2>/dev/null`
+       for K in $KERNELS ; do
+         [ -z "$SELECTED_KERNEL" ] && SELECTED_KERNEL="$S"
+         export KERNEL=$K
+         export PARAMETERS="`cat conf/Parameters 2>/dev/null`"
+         render $TEMPLATE/grub_menuentry >> "$TMP"
+         if [ "$SELECTED" = "$S" -a "$SELECTED_KERNEL" = "$K" ] ; then
+           DEFAULT=$ENTRY
+           SELECTED_RELEASE=$RELEASE
+           echo "Zeroshell $RELEASE (Kernel $KERNEL) selected for boot"
+         fi
+         ENTRY=$((ENTRY+1))
+       done
+     fi
+   done
+   cat << EOF > $OUT
+set default=$DEFAULT
+set timeout=3
+search  --set root --label $LABEL
+EOF
+   cat "$TMP" >> $OUT
+   rm -f "$TMP"
+fi

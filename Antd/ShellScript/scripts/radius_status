@@ -1,0 +1,6 @@
+#!/bin/sh
+if ps -e |grep -w -q radiusd ; then
+  echo "<font color=#20e020>ACTIVE</font>"
+else
+  echo "<font color=#ff2020>DOWN</font>"
+fi

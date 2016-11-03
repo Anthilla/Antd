@@ -1,0 +1,3 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+sed 's/<ZS_TAG /<xvar /g' <"$REGISTER/system/cp/Auth/Template/cp_showauth_custom.tmp" >"$REGISTER/system/cp/Auth/Template/cp_showauth_custom"

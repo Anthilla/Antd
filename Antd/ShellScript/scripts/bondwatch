@@ -1,0 +1,63 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+BOND="$1"
+SLEEP=5.6
+[ -z "$BOND" ] && exit 1
+STATEDIR=/tmp/$BOND.STATE
+ps -ef | grep -w bondwatch |grep -w $BOND | awk '{print $2}' |grep -w -v $$ > /tmp/bondwatch-$$.pid
+PID=$(cat /tmp/bondwatch-$$.pid)
+rm /tmp/bondwatch-$$.pid
+if [ -n "$PID" ] ; then
+  kill $PID  
+fi
+rm -rf "$STATEDIR"
+if [ "`cat $REGISTER/system/net/interfaces/$BOND/STATUS 2>/dev/null`" != up ] ; then
+  exit 5
+fi
+mkdir -p "$STATEDIR/Faults"
+sleep $SLEEP
+while true ; do
+  N=0
+  I=0
+  CHANGED=no
+  BONDSTATUS=""
+  for S in `cat $REGISTER/system/net/interfaces/$BOND/BondList 2>/dev/null` ; do
+     N=$((N+1))
+     if grep -A3 -w "Slave Interface: $S" /proc/net/bonding/$BOND |grep "MII Status:" |grep -q -w up ; then
+      I=$((I+1))
+      BONDSTATUS=up
+      if [ -f "$STATEDIR/Faults/$S" ] ; then
+        rm "$STATEDIR/Faults/$S"
+        logger -t Bonding "$BOND: Slave $S: OK"
+        $SCRIPTS/alert BONDMEMBER $BOND $S UP &
+        CHANGED=yes
+      fi 
+    else
+      if [ ! -f "$STATEDIR/Faults/$S" ] ; then
+        touch  "$STATEDIR/Faults/$S"
+        logger -t Bonding "$BOND: Slave $S: FAULT"
+        $SCRIPTS/alert BONDMEMBER $BOND $S DOWN &
+        CHANGED=yes
+      fi
+    fi
+  done
+  if [ "$BONDSTATUS" = up ] ; then
+    if [ -f "$STATEDIR/Faults/Master" ] ; then
+      rm  "$STATEDIR/Faults/Master"
+      $SCRIPTS/alert BONDFAULT $BOND UP &
+    fi
+    if [ "$CHANGED" = yes ] ; then
+      logger -t Bonding "$BOND: OK ($I/$N slaves are forwarding)"
+    fi
+  else
+    if [ ! -f "$STATEDIR/Faults/Master" ] ; then
+      touch  "$STATEDIR/Faults/Master"
+      logger -t Bonding "$BOND: FAULT: no interface is forwarding"
+      $SCRIPTS/alert BONDFAULT $BOND DOWN &
+    fi
+
+
+
+  fi 
+  sleep  $SLEEP
+done

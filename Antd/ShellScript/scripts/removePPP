@@ -1,0 +1,11 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/"
+PPPDIR="$CONFIG/$NAME"
+if ps -ef |grep pppoe-connect |grep -q $NAME ; then
+  $SCRIPTS/pppoe_stop $NAME
+fi
+rm -rf $PPPDIR

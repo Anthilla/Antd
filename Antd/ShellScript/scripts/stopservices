@@ -1,0 +1,21 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+#
+# Manual Stop Services
+#
+#
+
+if df | grep -q -w "/Database$" ; then
+  killall havp 2>/dev/null
+  for i in `seq 1 10` ; do
+     if fuser  -m /Database/ > /dev/null 2> /dev/null ; then
+        fuser  -k -m /Database/ 2>/dev/null >/dev/null 
+     fi
+     swapoff /DB/swap-file 2>/dev/null
+     if fuser  -m /Database/ > /dev/null 2>/dev/null; then
+        fuser  -k -m /Database/ 2>/dev/null >/dev/null
+        sleep 1
+     fi
+  done
+fi
+

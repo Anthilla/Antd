@@ -1,0 +1,8 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+if [ -f "$REGISTER/system/cp/Auth/Shibboleth/WhiteList.iptables" ] ; then
+  iptables -F CapPortIdP
+  iptables -F CapPortIdP80 -t nat
+  iptables -F CapPortIdP443 -t nat
+  source "$REGISTER/system/cp/Auth/Shibboleth/WhiteList.iptables"
+fi

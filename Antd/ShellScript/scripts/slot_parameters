@@ -1,0 +1,5 @@
+#!/bin/bash
+. /etc/kerbynet.conf
+SLOT="$1"
+cat /etc/slots/$SLOT/conf/Parameters 2>/dev/null
+exit 0

@@ -1,0 +1,39 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+. $SCRIPTS/net.inc
+OPTIONS="$1"
+CONFIG="$REGISTER/system/net/interfaces"
+cd $CONFIG
+MULTI=`cat $REGISTER/system/PPPoE/Multi 2>/dev/null`
+INTERFACES=`ls |sort -f`
+for I in $INTERFACES ; do
+   cd $CONFIG
+   if [ "$OPTIONS" != nomulti ] || ! echo "$MULTI " | grep  -q "$I "   ; then
+     if ! [ -r "$I/Bond/Name" -o -r "$I/Bridge/Name" -o "${I:0:3}" == ppp ] ; then
+       if [ "$OPTIONS" = nomulti ] ; then
+         echo "<option value='$I'>$I</option>"
+       else
+         ROUTED="$ROUTED;$I"
+       fi
+       if [ -d "$I/VLAN" ] ; then
+         cd $I/VLAN
+         VLANS=`ls`
+         for V in $VLANS ; do
+           if [ "$OPTIONS" != nomulti ] || ! echo "$MULTI " | grep -q  "$I.$V "  ; then
+             if [ "$OPTIONS" = nomulti ] ; then
+               echo "<option value='$I.$V'>$I vlan $V</option>"
+	     else
+               ROUTED="$ROUTED;$I.$V"
+	     fi
+	   fi
+         done
+       fi
+     fi
+   fi
+done
+if [ "$OPTIONS" != nomulti ] ; then
+  RESULT="$ROUTED;MULTI"
+  RESULT=${RESULT:1}
+  echo "$RESULT"
+fi
+

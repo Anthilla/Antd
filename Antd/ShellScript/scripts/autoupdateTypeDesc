@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TYPE="$1"
+case $TYPE in
+        Security)
+                TYPEDESC="Security Updates"
+                ;;
+        Add-On)
+                TYPEDESC="Add-Ons"
+                ;;
+        BugFix)
+                TYPEDESC="Bug Fixes"
+                ;;
+        Release)
+                TYPEDESC="New Releases"
+                ;;
+        Feature)
+                TYPEDESC="New Features"
+                ;;
+        *)
+                TYPEDESC="Packages"
+                ;;
+esac
+echo "$TYPEDESC"
+

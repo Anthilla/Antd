@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+TYPE="$1"
+[ -z "$TYPE" ] && exit 1
+if [ "$TYPE" == host ] ; then
+  OU=Computers
+  FIELD=cn
+else
+  OU=People
+  FIELD=uid
+fi
+ldapsearch -LLL -x -h 127.0.0.1 -b "ou=$OU,`$SCRIPTS/getkey /system/ldap/base`" $FIELD | egrep ^$FIELD: | awk -F"${FIELD}: " '{print $2}' | sort| awk '{ printf "<option value=\"%s\">%s</option>\n",$0,$0}' 

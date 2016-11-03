@@ -1,0 +1,7 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+ENTRY="$1"
+[ -z "$ENTRY" ] && exit 1
+cd "$SSLDIR/certs/imported_Certs/" || exit 2
+SUBJECT=`/usr/local/ssl/bin/openssl x509 -in "$SSLDIR/certs/imported_Certs/${ENTRY}.pem" -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'`
+rm -f "$ENTRY".pem && echo $SUBJECT 

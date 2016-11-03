@@ -1,0 +1,157 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function isNewer {
+  MJ=${ID:0:3}
+  PRES=`( cd $REGISTER/system/AutoUpdate/pkgs/ && ls ${MJ}??/pkg/Installed 2>/dev/null )`
+  if [ -n "$PRES" ] ; then
+    for P in $PRES ; do
+       PRE=`echo $P | awk -F/ '{print $1}'`
+       if [[ 0x${PRE:3:2} -lt 0x${ID:3:2} ]] ; then
+         return 0
+       else
+         return 1
+       fi
+    done
+  else
+    return 1
+  fi
+}
+function isAlreadyInstalled {
+  MJ=${ID:0:3}
+  PRES=`( cd $REGISTER/system/AutoUpdate/pkgs/ && ls ${MJ}??/pkg/Installed 2>/dev/null )`
+  if [ -n "$PRES" ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+function rebootRequired {
+  if [ "`cat $REGISTER/system/AutoUpdate/Automatic/Reboot 2>/dev/null`" = yes ] ; then
+    if [ -f "/tmp/reboot-required" ] ; then
+      return 0
+    fi
+  fi
+  return 1
+}
+function isUpdatable {
+  case $TYPE in   
+    Security )
+      W=USecurity ;;
+    Add-On )
+      W=UAddOn ;;
+    BugFix )
+      W=UBug ;;
+    Release )
+      W=no ;;
+    Feature )
+      W=UFeature ;;
+  esac
+  if [ "$TYPE" != Release ] ; then
+    V=`cat $REGISTER/system/AutoUpdate/Automatic/$W 2>/dev/null`
+    if [ "$V" = yes ] ; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+
+}
+function isInstallable {
+  case $TYPE in   
+    Security )
+      W=ISecurity ;;
+    Add-On )
+      W=IAddOn ;;
+    BugFix )
+      W=IBug ;;
+    Release )
+      W=IRelease ;;
+    Feature )
+      W=IFeature ;;
+  esac
+  V=`cat $REGISTER/system/AutoUpdate/Automatic/$W 2>/dev/null`
+  if [ "$V" = yes ] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+if touch /usr/CheckRO 2>/dev/null ; then
+  rm -f /usr/CheckRO
+  logger -t PkgManager "AUTOUPDATE: Process skipped"
+  exit 4
+else
+  logger -t PkgManager "AUTOUPDATE: Starting process ..."
+fi
+export RELEASE=`$SCRIPTS/release`
+export PATCHLEVEL=`$SCRIPTS/patchlevel`
+LIST="$REGISTER/system/AutoUpdate/Releases/$RELEASE.$PATCHLEVEL/UpdateList"
+ERROR=0
+echo $ERROR > /tmp/autoupdater-ERROR
+UPDATED=0
+echo $UPDATED > /tmp/autoupdater-UPDATED
+cat $LIST | while read LINE  ;  do  
+  ID=`echo "$LINE" | awk -F";" '{print $1}'` 
+  TYPE=`echo "$LINE" | awk -F";" '{print $2}'` 
+  if [ ! -f "$REGISTER/system/AutoUpdate/pkgs/$ID/NoAuto" -a ! -f "$REGISTER/system/AutoUpdate/pkgs/$ID/pkg/Installed" ] ; then
+    if isUpdatable ; then
+      if isNewer ; then
+        date +%s > /tmp/installer-elapsed-$ID
+        $SCRIPTS/autoupdate-logger "$ID:$TYPE" "UPDATE" "Updating ..."
+        export ERRORFILE=/tmp/installer-error-c$ID
+        rm -f "$ERRORFILE"
+        $SCRIPTS/autoupdate-installer-bg "$ID:$TYPE" INSTALL "D" > "/tmp/installer-$ID" 2>&1
+        if [ -z "`cat $ERRORFILE 2>/dev/null`" ] ; then
+          UPDATED=$((UPDATED+1))
+          echo $UPDATED > /tmp/autoupdater-UPDATED
+          $SCRIPTS/autoupdate-logger "$ID:$TYPE" "UPDATE" "SUCCESS: Process completed"
+        else
+          ERROR=$((ERROR+1))
+          echo $ERROR > /tmp/autoupdater-ERROR
+          
+        fi
+	rm -f "$ERRORFILE"
+      fi
+    fi
+  fi
+done
+INSTALLED=0
+echo $INSTALLED > /tmp/autoupdater-INSTALLED
+cat $LIST | while read LINE  ;  do  
+  ID=`echo "$LINE" | awk -F";" '{print $1}'` 
+  TYPE=`echo "$LINE" | awk -F";" '{print $2}'` 
+  if  ! isAlreadyInstalled ; then
+    if isInstallable && [ ! -f "$REGISTER/system/AutoUpdate/pkgs/$ID/NoAuto" ] ; then
+      date +%s > /tmp/installer-elapsed-$ID
+      $SCRIPTS/autoupdate-logger "$ID:$TYPE" "INSTALL" "Installing ..."
+      export ERRORFILE=/tmp/installer-error-$ID
+      rm -f "$ERRORFILE"
+      $SCRIPTS/autoupdate-installer-bg "$ID:$TYPE" INSTALL "D" > "/tmp/installer-$ID" 2>&1
+      if [ -z "`cat $ERRORFILE 2>/dev/null`" ] ; then
+        INSTALLED=$((INSTALLED+1))
+        echo $INSTALLED > /tmp/autoupdater-INSTALLED
+        $SCRIPTS/autoupdate-logger "$ID:$TYPE" "INSTALL" "SUCCESS: Process completed"
+      else
+        ERROR=$((ERROR+1))
+        echo $ERROR > /tmp/autoupdater-ERROR
+      fi
+      rm -f "$ERRORFILE"
+    fi
+  fi
+done
+INSTALLED=`cat /tmp/autoupdater-INSTALLED 2>/dev/null`
+UPDATED=`cat /tmp/autoupdater-UPDATED 2>/dev/null`
+ERROR=`cat /tmp/autoupdater-ERROR 2>/dev/null`
+rm -f /tmp/autoupdater-*
+logger -t PkgManager "AUTOUPDATE: Terminated (Updated: $UPDATED  Installed: $INSTALLED  Errors: $ERROR)"
+if [ -f "/tmp/reboot-required" ] ; then
+  logger -t PkgManager "AUTOUPDATE: System Reboot required to activate the changes"
+  if rebootRequired ; then
+     logger -t PkgManager "AUTOUPDATE: The system is being restarted"
+     logger -t Administration "AUTOUPDATE: The system is being restarted"
+     sleep 15
+     reboot
+  fi
+fi

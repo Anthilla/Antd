@@ -1,0 +1,4 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+conntrack -F
+

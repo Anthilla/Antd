@@ -1,0 +1,71 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USERNAME="$1"
+PASSWORD="$2"
+RADIUSREQ="$3"
+IP="$4"
+[ -z "$USERNAME" ] && exit 1
+OUTFILE=/tmp/radiusauth.$$
+ACCT=`cat $REGISTER/system/acct/Enabled 2>/dev/null`
+if [ "$RADIUSREQ" == PAP -o -z "$RADIUSREQ" ] ; then
+  if radtest "$USERNAME" "$PASSWORD" 127.0.0.1 1 ZeroShell 2>/dev/null >$OUTFILE ; then
+    if [ "$ACCT" = yes ] ; then 
+      LIMITS=`grep "Reply-Message =" $OUTFILE | sed -r "s/.*Acct:(.*)\"/\1/"`
+      if [ -n "$LIMITS" ] ; then
+        sudo $SCRIPTS/acct_writelimits "$USERNAME" "$LIMITS"
+        LCODE=`echo "$LIMITS" | cut -f9 -d":"`
+        [ -n "$LCODE" ] && echo "LCode:$LCODE" >&2
+      fi
+    fi
+    rm -f "$OUTFILE"
+    exit 0
+  else
+    rm -f "$OUTFILE"
+    exit 1
+  fi
+else
+  RADIUS=127.0.0.1
+  SECRET=ZeroShell
+  CONF="$(mktemp)"
+  if [ "$RADIUSREQ" == EAP-TTLS ] ; then
+    cat > "$CONF" <<EOF
+network={
+  ssid="Captive Portal"
+  key_mgmt=IEEE8021X
+  eap=TTLS
+  phase2="auth=PAP"
+  anonymous_identity="$USERNAME"
+  identity="$USERNAME"
+  password="$PASSWORD"
+}
+EOF
+  else
+    cat > "$CONF" <<EOF
+network={
+  ssid="Captive Portal"
+  key_mgmt=IEEE8021X
+  eap=PEAP
+  phase2="auth=MSCHAPV2"
+  anonymous_identity="$USERNAME"
+  identity="$USERNAME"
+  password="$PASSWORD"
+}
+EOF
+
+  fi
+  if eapol_test-0.7.3 -c "$CONF" -a$RADIUS -p1812 -s"$SECRET" -C "Captive Portal 802.1x ($RADIUSREQ) authentication" > $OUTFILE ; then
+    LIMITS=`grep "Value: 'Acct:"  $OUTFILE |sed -r "s/.*Acct:(.*)'/\1/"`
+    if [ -n "$LIMITS" ] ; then
+      sudo $SCRIPTS/acct_writelimits "$USERNAME" "$LIMITS"
+      LCODE=`echo "$LIMITS" | cut -f9 -d":"`
+      [ -n "$LCODE" ] && echo "LCode:$LCODE" >&2
+    fi
+    rm -f "$CONF" "$OUTFILE"
+    exit 0
+  else
+    rm -f "$CONF" "$OUTFILE"
+    exit 1
+  fi
+fi
+
+

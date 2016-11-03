@@ -1,0 +1,17 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+INTERFACE="$1"
+[ -z "$INTERFACE" ] && exit 1
+CONFIG="$REGISTER/system/net/interfaces/$INTERFACE/WiFi/"
+[ -d "$CONFIG" ] || exit 2
+echo
+echo "----------------------------"
+echo " WiFi configuration ($INTERFACE)"
+echo "----------------------------"
+[ "`cat $CONFIG/Mode 2>/dev/null`" == ap ] && MODE="Access Point"
+[ "`cat $CONFIG/Mode 2>/dev/null`" == adhoc ] && MODE="ad-hoc"
+[ -z "$MODE" ] && MODE="Station"
+SSID="`cat $CONFIG/SSID`"
+echo " Mode   : $MODE"
+echo " SSID   : $SSID"
+echo

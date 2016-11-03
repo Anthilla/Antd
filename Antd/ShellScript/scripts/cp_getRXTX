@@ -1,0 +1,42 @@
+#/bin/bash
+IP="$1"
+[ -z "$IP" ] && exit 1
+RXRECORD=`iptables -w -L CapPortOut -n -v -x |grep -w "$IP"`
+TXRECORD=`iptables -w -L CapPortWL -n -v -x |grep -w "$IP"`
+RXP=`echo $RXRECORD |awk '{print $1}'`
+[ -z "$RXP" ] && RXP=0
+RX=`echo $RXRECORD |awk '{print $2}'`
+[ -z "$RX" ] && RX=0
+TXP=`echo $TXRECORD |awk '{print $1}'`
+[ -z "$TXP" ] && TXP=0
+TX=`echo $TXRECORD |awk '{print $2}'`
+[ -z "$TX" ] && TX=0
+
+
+RXRECORD=`iptables -w -L CapProxyOut -n -v -x |grep -w "$IP"`
+if [ -n "$RXRECORD" ] ; then
+  TXRECORD=`iptables -w -L CapProxyIn -n -v -x |grep -w "$IP"`
+  xRXP=`echo $RXRECORD |awk '{print $1}'`
+  [ -n "$xRXP" ] && RXP=$((RXP+xRXP))
+  xRX=`echo $RXRECORD |awk '{print $2}'`
+  [ -n "$xRX" ] && RX=$((RX+xRX))
+  xTXP=`echo $TXRECORD |awk '{print $1}'`
+  [ -n "$xTXP" ] && TXP=$((TXP+xTXP))
+  xTX=`echo $TXRECORD |awk '{print $2}'`
+  [ -n "$xTX" ] && TX=$((TX+xTX))
+fi
+if [ $RX = 0 ] ; then
+  if cd "/var/register/system/cp/Connected/$IP" 2>/dev/null ; then
+    RX=`cat "RX-Octets" 2>/dev/null`
+    [ -z "$RX" ] && sRX=0
+    RXP=`cat "RX-Packets" 2>/dev/null`
+  fi
+fi
+if [ $TX = 0 ] ; then
+  if cd "/var/register/system/cp/Connected/$IP" 2>/dev/null ; then
+    TX=`cat "TX-Octets" 2>/dev/null`
+    [ -z "$TX" ] && sTX=0
+    TXP=`cat "TX-Packets" 2>/dev/null`
+  fi
+fi
+echo "$RXP $RX $TXP $TX"

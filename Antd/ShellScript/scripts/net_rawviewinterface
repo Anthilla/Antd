@@ -1,0 +1,75 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+function updateThroughput () {
+  NEWTIME=`date +%s`
+#  NEWRX=`ip -s link show dev $i | tail -3 |head -1 |awk '{print $1}'`
+#  NEWTX=`ip -s link show dev $i | tail -1 |awk '{print $1}'`
+NEWRX=`cat /sys/class/net/$i/statistics/rx_bytes`
+NEWTX=`cat /sys/class/net/$i/statistics/tx_bytes`
+  echo $NEWTIME > $TIMEFILE
+  echo $NEWRX > $RXFILE
+  echo $NEWTX > $TXFILE
+}
+INTERFACE=$1
+INTS=`ip link show |grep -w "$INTERFACE" |grep -v -w mon.$INTERFACE | sed -r 's/[0123456789]*: (.*):.*/\1/'`
+for i in $INTS ; do
+   i=`echo $i |awk -F@ '{print $1}'`
+   VLAN=`echo $i |awk -F. '{print $2}'`
+   if [ -z "$VLAN" ] ; then
+     VLAN=none   
+   fi
+   
+   echo "<hr><b><font color=#3030d0>VLAN: $VLAN</font></b>"
+   ip -4 addr show dev $i |awk -F" scope global " '{print $1}' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
+   if [ "`ip -4 addr show dev $i`" != "" ] ; then
+      ip -s link show dev $i |grep -v "$i" |grep -v "link/"
+   else
+      ip -s link show dev $i | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
+   fi
+   TIMEFILE="/tmp/TIME_$i"   
+   RXFILE="/tmp/RX_$i"   
+   TXFILE="/tmp/TX_$i"
+   if [ -r $TIMEFILE -a -r $RXFILE -a -r $TXFILE ] ; then
+      OLDTIME=`cat $TIMEFILE`
+      OLDRX=`cat $RXFILE`     
+      OLDTX=`cat $TXFILE`     
+      updateThroughput
+      DELTA=$(( NEWTIME - OLDTIME  ))
+      if [ $DELTA -lt 30 ] ; then
+         DELTARX=$(( NEWRX - OLDRX )) 
+         DELTATX=$(( NEWTX - OLDTX )) 
+         RXThroughput=$(( 8 * DELTARX / DELTA ))
+         TXThroughput=$(( 8 * DELTATX / DELTA ))
+         if [ $RXThroughput -lt 1024 ] ; then
+            RXThroughput="$RXThroughput bit/s"
+         else if [ $RXThroughput -lt 1048576 ] ; then
+                 RXThroughput="`echo $RXThroughput | awk '{printf "%.2f",$1/1024}'` Kbit/s"
+              else 
+                 RXThroughput="`echo $RXThroughput | awk '{printf "%.2f",$1/1048576}'` Mbit/s"
+              fi 
+         fi
+         if [ $TXThroughput -lt 1024 ] ; then
+            TXThroughput="$TXThroughput bit/s"
+         else if [ $TXThroughput -lt 1048576 ] ; then
+                 TXThroughput="`echo $TXThroughput | awk '{printf "%.2f",$1/1024}'` Kbit/s"
+              else 
+                 TXThroughput="`echo $TXThroughput | awk '{printf "%.2f",$1/1048576}'` Mbit/s"
+              fi 
+         fi
+
+      else
+         RXThroughput='?'
+         TXThroughput='?'
+      fi
+   else
+      updateThroughput
+      RXThroughput='?' 
+      TXThroughput='?' 
+   fi
+   echo "<font color=#3030d0><b>Throughput:  RX $RXThroughput      TX $TXThroughput</b></font>"
+   echo
+done
+if [ -d "$REGISTER/system/net/interfaces/$INTERFACE/WiFi" ] ; then
+  iwconfig $INTERFACE 
+  $SCRIPTS/wifi-list-station $INTERFACE html
+fi

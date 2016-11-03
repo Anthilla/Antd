@@ -1,0 +1,21 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+CHAIN="$1"
+[ -z "$CHAIN" ] && exit 1
+CONFIG="$REGISTER/system/net/FW"
+if ! [ -r "$CONFIG/tmp/Chains/$CHAIN/NotSaved" ] ; then
+  echo "chain already updated." >&2
+  exit 2
+fi
+rm -rf /tmp/Chain.bck
+mv "$CONFIG/Chains/$CHAIN/Rules" /tmp/Chain.bck
+if cp -a "$CONFIG/tmp/Chains/$CHAIN/Rules" "$CONFIG/Chains/$CHAIN" ; then
+  find "$CONFIG/Chains/$CHAIN" "$CONFIG/tmp/Chains/$CHAIN" -name NotSaved -exec rm {} \;
+  $SCRIPTS/fw_initrules $CHAIN
+  rm -rf /tmp/Chain.bck
+else
+  rm -rf "$CONFIG/Chains/$CHAIN/Rules"
+  mv /tmp/Chain.bck "$CONFIG/Chains/$CHAIN/Rules"
+  exit 5
+fi
+

@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+SEVERITY=$1
+[ -z "$SEVERITY" ] && SEVERITY=Info
+QDIR="$REGISTER/system/alerts/"
+cd "$QDIR/Recipients"
+RECIPIENTS=`ls -d * 2>/dev/null`
+if [ -n "$RECIPIENTS" ] ; then
+  for R in $RECIPIENTS ; do
+    ENABLED="`cat $R/Enabled`"
+    if [ "$ENABLED" = yes ] ; then
+      TYPE="`cat $R/Type`"
+      if [ "$TYPE" = "e-Mail" ] ; then
+        XSEVERITY="`cat $R/Severity`"
+        [ -z "$XSEVERITY" ] && XSEVERITY=Info
+        XPRIORITY=`$SCRIPTS/alerts_s2p $XSEVERITY`
+        PRIORITY=`$SCRIPTS/alerts_s2p $SEVERITY`
+        if [ $XPRIORITY -ge $PRIORITY ] ; then    
+          echo $R
+        fi
+      fi
+    fi
+  done
+fi
+

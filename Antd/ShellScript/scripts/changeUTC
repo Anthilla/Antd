@@ -1,0 +1,5 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+UTC="$1"
+echo "$UTC" > $REGISTER/system/time/UTC
+$SCRIPTS/hwclock -w

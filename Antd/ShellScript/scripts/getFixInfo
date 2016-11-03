@@ -1,0 +1,25 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+ID="$1"
+[ -z "$ID" ] && exit 1
+ID=`echo "$ID" | awk -F":" '{print $1}'`
+if ! [ -d "$REGISTER/system/AutoUpdate/pkgs/$ID/Cache" ] ; then
+  mkdir -p "$REGISTER/system/AutoUpdate/pkgs/$ID/Cache"
+fi
+REPO="`cat /etc/updates.rep`"
+DETAILS="$REGISTER/system/AutoUpdate/pkgs/$ID/Cache/Details.html"
+if wget --timeout=10 -t1  -O $DETAILS.1 -N http://$REPO/pkgs/$ID/Details.php ; then
+   mv "$DETAILS.1" "$DETAILS"
+fi
+if [ -f "$DETAILS" ] ; then
+  STk="`rand``cat /tmp/STk_Admin 2>/dev/null`"
+  echo "<script>location='kerbynet?STk="$STk"&Action=Render&Object=getFixInfoShow&ID=$ID'</script>";
+else
+  echo "<br><br><font color=#ff3030><b>ERROR</b>: http://$REPO is unreachable</font>"
+fi
+rm -f "$DETAILS.1" 
+
+
+
+
+

@@ -1,0 +1,35 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+iptables -t mangle -D PREROUTING -j CONNMARK --restore-mark 2>/dev/null
+iptables -t mangle -D PREROUTING -m state --state NEW -j NB_CT_PRE 2>/dev/null
+iptables -t mangle -D PREROUTING -m state --state NEW -j NetBalancer 2>/dev/null
+iptables -t mangle -D INPUT -m state --state NEW -j NB_CT_POST 2>/dev/null
+iptables -t mangle -D OUTPUT -j CONNMARK --restore-mark 2>/dev/null
+iptables -t mangle -D OUTPUT -m state --state NEW -j NB_FO_PRE 2>/dev/null
+iptables -t mangle -D OUTPUT -m state --state NEW -j NetBalancer 2>/dev/null
+iptables -t mangle -D OUTPUT -j OpenVPN 2>/dev/null
+iptables -t mangle -D POSTROUTING -m state --state NEW -j NB_CT_POST 2>/dev/null
+iptables -t mangle -D POSTROUTING  -j NB_STAT 2>/dev/null
+# Need QoS to be done in mangle POSTROUTING. Note that if NetBalance
+# is enabled then we will insert those rules/chains first. So any
+# routing marks will be handled before we blow them away with QoS
+# marks.
+iptables -t mangle -D POSTROUTING  -j QoS 2>/dev/null
+iptables -t mangle -I POSTROUTING 1 -j QoS 2>/dev/null
+if [ "`cat $REGISTER/system/net/nb/Enabled 2>/dev/null`" = yes ] ; then
+  iptables -t mangle -I PREROUTING 1 -j CONNMARK --restore-mark
+  iptables -t mangle -I PREROUTING 2 -m state --state NEW -j NB_CT_PRE 2>/dev/null
+  iptables -t mangle -I PREROUTING 3 -m state --state NEW -j NetBalancer
+  iptables -t mangle -I INPUT 1 -m state --state NEW -j NB_CT_POST 2>/dev/null
+  iptables -t mangle -I OUTPUT 1 -j CONNMARK --restore-mark
+  iptables -t mangle -I OUTPUT 2 -m state --state NEW -j NB_FO_PRE
+  iptables -t mangle -I OUTPUT 3 -m state --state NEW -j NetBalancer
+  iptables -t mangle -I OUTPUT 4 -j OpenVPN
+  iptables -t mangle -I POSTROUTING 1 -m state --state NEW -j NB_CT_POST 2>/dev/null
+  iptables -t mangle -I POSTROUTING 2 -j NB_STAT 2>/dev/null
+fi
+$SCRIPTS/nb_vpn 2> /dev/null
+$SCRIPTS/nb_setautomarking 2>/dev/null
+echo 300 > /proc/sys/net/ipv4/route/gc_min_interval
+echo 360 > /proc/sys/net/ipv4/route/gc_timeout
+

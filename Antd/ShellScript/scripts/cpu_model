@@ -1,0 +1,2 @@
+#!/bin/bash
+grep "model name" /proc/cpuinfo |head -1 | cut -d: -f2

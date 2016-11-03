@@ -1,0 +1,45 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+NAME="$1"
+[ -z "$NAME" ] && exit 1
+DESC="$2"
+MAX="$3"
+MAXUNIT="$4"
+GUARANTEED="$5"
+GUARANTEEDUNIT="$6"
+PRIORITY="$7"
+DSCP="$8"
+CDIR="$REGISTER/system/net/QoS/Class/$NAME"
+if ! [ -d "$CDIR" ] ; then
+  mkdir -p "$CDIR"
+  OLD_DSCP="$DSCP"
+  if [ "$NAME" == DEFAULT ] ; then
+    INDEX=10
+  else
+    INDEX="`cat $REGISTER/system/net/QoS/Index 2>/dev/null`"    
+    if [ -z "$INDEX" ] ; then
+      INDEX=11
+    fi
+    echo $((INDEX+1)) > $REGISTER/system/net/QoS/Index
+  fi 
+  echo "$INDEX" >"$CDIR/Index"
+  OP=created
+else
+  OLD_DSCP=`cat $CDIR/DSCP 2>/dev/null`
+  OP=modified
+fi
+echo "$DESC" > "$CDIR/Description" 
+echo "$MAX" > "$CDIR/Max"
+echo "$MAXUNIT" > "$CDIR/MaxUnit"
+echo "$GUARANTEED" > "$CDIR/Guaranteed"
+echo "$GUARANTEEDUNIT" > "$CDIR/GuaranteedUnit"
+echo "$PRIORITY" > "$CDIR/Priority"
+echo "$DSCP" > "$CDIR/DSCP"
+echo yes > "$CDIR/Enabled"
+if [ "$DSCP" != "$OLD_DSCP" ] ; then
+  $SCRIPTS/fw_initrules QoS 2>/dev/null >/dev/null
+fi 
+echo $OP
+
+
+

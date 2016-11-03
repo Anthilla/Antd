@@ -1,0 +1,12 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+USERNAME="$1"
+[ -z "$USERNAME" ] && exit 2
+VALUE="$2"
+[ -z "$VALUE" ] && VALUE=0
+CONFIG="$REGISTER/system/acct/credits/$USERNAME"
+[ -d "$CONFIG" ] || mkdir -p "$CONFIG"
+CREDIT=`cat "$CONFIG/Credit" 2>/dev/null`
+[ -z "$CREDIT" ] && CREDIT=0
+CREDIT=`echo "$CREDIT" "$VALUE" |awk '{printf "%f\n", $1+$2}'`
+echo "$CREDIT" > "$CONFIG/Credit"

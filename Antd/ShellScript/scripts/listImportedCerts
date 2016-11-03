@@ -1,0 +1,12 @@
+#!/bin/sh
+source /etc/kerbynet.conf
+cd "$SSLDIR/certs/imported_Certs/" || mkdir "$SSLDIR/certs/imported_Certs/"
+ENTRIES=`ls [0123456789][0123456789].pem 2>/dev/null`
+for C in $ENTRIES ; do
+  NAME=${C%.pem}
+  TXT=`/usr/local/ssl/bin/openssl x509 -in $SSLDIR/certs/imported_Certs/$C -text -noout |grep Subject: |awk -F'Subject: ' '{print $2}'`
+  TXT=${TXT:0:120}
+  echo "<option value='$NAME'>$TXT</option>"
+done
+
+ 

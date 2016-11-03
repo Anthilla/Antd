@@ -1,0 +1,10 @@
+#!/bin/sh
+. /etc/kerbynet.conf
+BRIDGE=$1
+echo "<hr>"
+echo "<b>SPANNING TREE PROTOCOL (STP: `brctl show |grep $BRIDGE |awk '{print $3}'`)</b>"
+brctl showstp $BRIDGE |egrep -v ^$BRIDGE$
+echo "<hr>"
+echo "<b>FORWARDIND DATABASE</b>"
+brctl showmacs $BRIDGE
+ 
