@@ -63,7 +63,7 @@ namespace Antd {
             Boot.SetOsParametersLocal();
             Boot.LoadModules();
             Boot.SetMounts();
-            //Boot.ImportCommands();
+            Boot.ImportCommands();
             Boot.ReloadUsers();
             Boot.CommandExecuteLocal();
             Boot.ImportNetworkConfiguration();

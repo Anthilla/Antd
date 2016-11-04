@@ -1,36 +1,12 @@
-{ "BOND_STATUS", new [] {
-"$param"
-}},
-{ "DISKSPACE", new [] {
-"$param"
-}},
-{ "GWINFO", new [] {
-"$param"
-}},
-{ "KERNEL", new [] {
-"$param"
-}},
-{ "LOAD15", new [] {
-"$param"
-}},
-{ "MEMINFO", new [] {
-"$param"
-}},
-{ "NCORES", new [] {
-"$param"
-}},
-{ "SLOT", new [] {
-"$param"
-}},
-{ "SYSTEM_STARTED", new [] {
-"$param"
-}},
-{ "UPTIME", new [] {
-"$param"
-}},
-{ "VPN_STATUS", new [] {
-"$param"
-}},
-{ "ZEROSHELL", new [] {
-"$param"
-}}
+{ "BOND_STATUS*", new [] { "BOND_STATUS*", "param" } },
+{ "DISKSPACE*", new [] { "DISKSPACE*", "param" } },
+{ "GWINFO*", new [] { "GWINFO*", "param" } },
+{ "KERNEL*", new [] { "KERNEL*", "param" } },
+{ "LOAD15*", new [] { "LOAD15*", "param" } },
+{ "MEMINFO*", new [] { "MEMINFO*", "param" } },
+{ "NCORES*", new [] { "NCORES*", "param" } },
+{ "SLOT*", new [] { "SLOT*", "param" } },
+{ "SYSTEM_STARTED*", new [] { "SYSTEM_STARTED*", "param" } },
+{ "UPTIME*", new [] { "UPTIME*", "param" } },
+{ "VPN_STATUS*", new [] { "VPN_STATUS*", "param" } },
+{ "ZEROSHELL*", new [] { "ZEROSHELL*", "param" } },

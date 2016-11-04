@@ -49,7 +49,7 @@ namespace antdlib.common {
         public static string RootFramework => "/framework";
         public static string RootFrameworkAntd => $"{RootFramework}/antd";
         public static string RootFrameworkAntdResources => $"{RootFrameworkAntd}/Resources";
-        public static string RootFrameworkAntdShellScripts => $"{RootFrameworkAntd}/ShellScripts";
+        public static string RootFrameworkAntdShellScript => $"{RootFrameworkAntd}/ShellScript";
         public static string RootFrameworkAntdsh => $"{RootFramework}/antdsh";
         public static string RootSystem => "/System";
         public static string RootPorts => "/ports";

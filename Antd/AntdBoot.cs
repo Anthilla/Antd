@@ -160,10 +160,9 @@ namespace Antd {
         }
 
         public void ImportCommands() {
-            Directory.CreateDirectory(Parameter.AntdCfgCommands);
-            new CommandRepository().Import();
-            new CommandValuesRepository().Import();
-            ConsoleLogger.Log("commands imported");
+            var storedconf = $"{Parameter.RootFrameworkAntdShellScript}/var/kerbynet.conf";
+            File.Copy(storedconf, "/etc/kerbynet.conf", true);
+            ConsoleLogger.Log("commands and scripts configuration imported");
         }
 
         private readonly UserRepository _userRepository = new UserRepository();

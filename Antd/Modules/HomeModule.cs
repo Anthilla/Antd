@@ -74,6 +74,12 @@ namespace Antd.Modules {
                 return View["antd/page-antd", viewModel];
             };
 
+            Get["/api"] = x => {
+                dynamic vmod = new ExpandoObject();
+                var list = antd.commands.Commands.PartialList;
+                vmod.List = list.Select(_=>_.Key);
+                return View["antd/page-api", vmod];
+            };
 
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();

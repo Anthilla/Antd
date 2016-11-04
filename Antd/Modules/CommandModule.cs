@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
@@ -61,6 +62,7 @@ namespace Antd.Modules {
                     command = command.Replace(match.ToString(), val.Value);
                 }
                 var commands = command.SplitToList("$$");
+                ConsoleLogger.Log(commands);
                 var result = commands.Aggregate("", (current, c) => current + Bash.Execute(c));
                 return Response.AsJson(result);
             };
