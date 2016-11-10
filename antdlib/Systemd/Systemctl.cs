@@ -33,24 +33,26 @@ namespace antdlib.Systemd {
 
     public class Systemctl {
 
+        private static readonly Bash Bash = new Bash();
+
         public static void DaemonReload() {
-            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl daemon-reload", false);
         }
 
         public static void Start(string unit) {
-            Bash.Execute("systemctl start " + unit);
+            Bash.Execute("systemctl start " + unit, false);
         }
 
         public static void Stop(string unit) {
-            Bash.Execute("systemctl stop " + unit);
+            Bash.Execute("systemctl stop " + unit, false);
         }
 
         public static void Restart(string unit) {
-            Bash.Execute("systemctl restart " + unit);
+            Bash.Execute("systemctl restart " + unit, false);
         }
 
         public static void Reload(string unit) {
-            Bash.Execute("systemctl reload " + unit);
+            Bash.Execute("systemctl reload " + unit, false);
         }
 
         public static string Status(string unit) {
@@ -68,10 +70,11 @@ namespace antdlib.Systemd {
         }
 
         public static void Enable(string unit) {
-            Bash.Execute("systemctl enable " + unit);
+            Bash.Execute("systemctl enable " + unit, false);
         }
 
         public static void Disable(string unit) {
+            Bash.Execute("systemctl disable " + unit, false);
         }
     }
 }

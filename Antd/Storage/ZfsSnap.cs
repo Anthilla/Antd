@@ -21,13 +21,14 @@ namespace Antd.Storage {
         }
 
         public static List<Model> List() {
-            var result = Bash.Execute("zfs list -t snap");
+            var bash = new Bash();
+            var result = bash.Execute("zfs list -t snap");
             var list = new List<Model>();
-            if (string.IsNullOrEmpty(result)) {
+            if(string.IsNullOrEmpty(result)) {
                 return list;
             }
             var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList().Skip(1);
-            foreach (var line in lines) {
+            foreach(var line in lines) {
                 var cells = Regex.Split(line, @"\s+");
                 var model = new Model {
                     Guid = Guid.NewGuid().ToString(),

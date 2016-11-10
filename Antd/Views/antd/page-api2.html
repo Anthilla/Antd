@@ -39,12 +39,10 @@
     <nav class="navigation-bar-content">
         <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
             <i class="icon-wrench on-left" style="line-height: 5px;"></i>
-            Apps
+            Network
         </div>
         <div class="element-divider"></div>
-        <a id="DiscoverInstalledApplications" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
-            Discover
-        </a>
+
 
         <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
             <i class="icon-arrow-up"></i>
@@ -56,17 +54,28 @@
 @Section['MainContent']
 <div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend>Apis & Scripts</legend>
-    <table class="table">
+    <table class="table" style="table-layout: fixed;">
         <tbody>
-        @Each.List
             <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td>@Current</td>
+                <td>
+                    <label></label>
+                </td>
                 <td>
                     <span data="CmdGet" data-role="CmdResult" data-name="@Current" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                </td>
+                <td>
                     <input type="button" data-role="CmdLaunch" data-name="@Current" data-par="" value="Update" class="float-right" />
                 </td>
             </tr>
-        @EndEach
+
+            <tr data-role="CmdContainer" data-select="0" style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td>script-net_list</td>
+                <td>
+                    <input type="hidden" data="$type" value="all" style="width: 60%;" />
+                    <span data="CmdGet" data-role="CmdResult" data-name="script-net_list" data-par="$type" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
+                    <input data-role="CmdLaunch" data-name="script-net_list" data-par="$type" value="Update" class="float-right" style="display: block;" type="button">
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

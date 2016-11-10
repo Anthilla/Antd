@@ -39,6 +39,8 @@ using antdlib.common.Helpers;
 namespace antdsh {
     public class Execute {
 
+        private static readonly Bash Bash = new Bash();
+
         public static void RemounwRwOs() {
             Bash.Execute($"{Parameter.Aossvc} reporemountrw");
         }

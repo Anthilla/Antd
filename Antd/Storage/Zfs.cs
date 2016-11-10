@@ -20,6 +20,8 @@ namespace Antd.Storage {
             public string Snapshot { get; set; } = "";
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static List<Model> List() {
             var result = Bash.Execute("zfs list");
             var list = new List<Model>();

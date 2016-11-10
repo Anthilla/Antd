@@ -34,16 +34,18 @@ namespace antdlib.Info {
 
     public class Ifconfig {
 
+        private static readonly Bash Bash = new Bash();
+
         public static string GetEther() {
             const string dir = "/sys/devices";
             var find = Bash.Execute("find ./ -name address", dir).ConvertCommandToModel();
-            if (find.isError()) {
+            if(find.isError()) {
                 return find.error;
             }
             var row = (from i in find.outputTable
                        where i.Contains("eth")
                        select i).FirstOrDefault();
-            if (row == null)
+            if(row == null)
                 return null;
             var cat = Bash.Execute("cat " + row.Replace("\"", ""), dir).ConvertCommandToModel();
             return cat.outputTable.FirstOrDefault();

@@ -81,6 +81,10 @@ namespace Antd.Modules {
                 return View["antd/page-api", vmod];
             };
 
+            Get["/api/network"] = x => {
+                return View["antd/page-api2"];
+            };
+
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Detected = AppsManagement.Detect();

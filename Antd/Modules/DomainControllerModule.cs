@@ -49,14 +49,16 @@ namespace Antd.Modules {
             "/var/log/samba"
         };
 
+        private readonly Bash _bash = new Bash();
+
         public DomainControllerModule() {
             this.RequiresAuthentication();
 
             Post["/dc/setup"] = x => {
                 foreach (var dir in _directories) {
                     var mntDir = Mounts.GetDirsPath(dir);
-                    Bash.Execute($"mkdir -p {mntDir}");
-                    Bash.Execute($"cp /mnt/livecd{dir} {mntDir}");
+                    _bash.Execute($"mkdir -p {mntDir}", false);
+                    _bash.Execute($"cp /mnt/livecd{dir} {mntDir}", false);
                     Mount.Dir(dir);
                 }
 
@@ -72,23 +74,23 @@ namespace Antd.Modules {
                     return Response.AsText("error: a value is missing. go back.");
                 }
 
-                Bash.Execute($"samba-tool domain provision --option=\"interfaces = lo br0\" --option=\"bind interfaces only = yes\" --use-rfc2307 --domain={domainName} --realm={domainRealmname} --host-name={domainHostname} --host-ip={domainHostip} --adminpass={domainAdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc");
+                _bash.Execute($"samba-tool domain provision --option=\"interfaces = lo br0\" --option=\"bind interfaces only = yes\" --use-rfc2307 --domain={domainName} --realm={domainRealmname} --host-name={domainHostname} --host-ip={domainHostip} --adminpass={domainAdminPassword} --dns-backend=SAMBA_INTERNAL --server-role=dc", false);
                 ConsoleLogger.Log($"domain {domainName} created");
 
                 if (!Mounts.IsAlreadyMounted("/etc/hosts")) {
                     Mount.File("/etc/hosts");
                 }
-                Bash.Execute("echo 127.0.0.1 localhost.localdomain localhost > /etc/hosts");
-                Bash.Execute($"echo {domainHostip} {domainHostname}.{domainRealmname} {domainHostname} >> /etc/hosts");
+                _bash.Execute("echo 127.0.0.1 localhost.localdomain localhost > /etc/hosts", false);
+                _bash.Execute($"echo {domainHostip} {domainHostname}.{domainRealmname} {domainHostname} >> /etc/hosts", false);
 
                 if (!Mounts.IsAlreadyMounted("/etc/resolv.conf")) {
                     Mount.File("/etc/resolv.conf");
                 }
-                Bash.Execute(!File.Exists("/etc/resolv.conf")
+                _bash.Execute(!File.Exists("/etc/resolv.conf")
                     ? $"echo nameserver {domainHostip} > /etc/resolv.conf"
-                    : $"echo nameserver {domainHostip} >> /etc/resolv.conf");
-                Bash.Execute($"echo search {domainRealmname} >> /etc/resolv.conf");
-                Bash.Execute($"echo domain {domainRealmname} >> /etc/resolv.conf");
+                    : $"echo nameserver {domainHostip} >> /etc/resolv.conf", false);
+                _bash.Execute($"echo search {domainRealmname} >> /etc/resolv.conf", false);
+                _bash.Execute($"echo domain {domainRealmname} >> /etc/resolv.conf", false);
 
                 const string sambaRealConf = "/etc/samba/smb.conf";
                 var sambaConf = $"{Parameter.Resources}/smb.conf.template";
@@ -107,9 +109,9 @@ namespace Antd.Modules {
                 }
                 File.WriteAllText(sambaRealConf, sambaCnfText);
 
-                Bash.Execute("systemctl restart samba");
+                _bash.Execute("systemctl restart samba", false);
 
-                Bash.Execute("mkdir -p /var/lib/samba/private");
+                _bash.Execute("mkdir -p /var/lib/samba/private", false);
                 var krbConf = $"{Parameter.Resources}/krb5.conf.template";
                 const string realmAlt = "$realmalt$";
                 var krbCnfText = File.ReadAllText(krbConf)
@@ -140,7 +142,7 @@ namespace Antd.Modules {
                     return Response.AsText("error: a value is missing. go back.");
                 }
 
-                Bash.Execute($"samba-tool user create {username} --password={userPassword} --username={username} --mail-address={username}@{domainName} --given-name={username}");
+                _bash.Execute($"samba-tool user create {username} --password={userPassword} --username={username} --mail-address={username}@{domainName} --given-name={username}", false);
                 return Response.AsRedirect("/");
             };
 

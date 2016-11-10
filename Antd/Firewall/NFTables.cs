@@ -39,6 +39,7 @@ namespace Antd.Firewall {
     public class NfTables {
 
         private static readonly string FilePath = $"{Parameter.RepoDirs}/FILE_etc_nftables.conf";
+        private static readonly Bash Bash = new Bash();
 
         public static void Setup() {
             if (!File.Exists(FilePath)) {

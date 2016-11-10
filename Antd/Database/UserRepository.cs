@@ -19,7 +19,7 @@ namespace Antd.Database {
             var result = DatabaseRepository.Query<UserSchema>(AntdApplication.Database, ViewName).Select(_ => _.Alias).ToList();
             var stringAlias = ShortenUserName(firstName) + ShortenUserName(lastName);
             var lastAlias = result.Where(_ => _.Contains(stringAlias)).OrderBy(_ => _).LastOrDefault();
-            if (!result.Contains(stringAlias + "01") || lastAlias == null) {
+            if(!result.Contains(stringAlias + "01") || lastAlias == null) {
                 return stringAlias + "01";
             }
             var newNumber = (Convert.ToInt32(lastAlias.Substring(6, 2)) + 1).ToString("D2");
@@ -125,7 +125,7 @@ namespace Antd.Database {
         }
 
         public void DeleteAll() {
-            foreach (var u in GetAll()) {
+            foreach(var u in GetAll()) {
                 Delete(u.Id);
             }
         }
@@ -138,11 +138,11 @@ namespace Antd.Database {
             var users = File.ReadAllLines(EtcPasswd);
             var passwords = File.ReadAllLines(EtcShadow);
             var sysUsers = new Dictionary<string, string>();
-            foreach (var user in users) {
+            foreach(var user in users) {
                 var u = Map(user, passwords);
-                if (u.Key == null)
+                if(u.Key == null)
                     continue;
-                if (u.Value != null) {
+                if(u.Value != null) {
                     sysUsers.Add(u.Key, u.Value);
                 }
             }
@@ -151,24 +151,24 @@ namespace Antd.Database {
 
         private KeyValuePair<string, string> Map(string userLine, IEnumerable<string> passwords) {
             var userInfo = userLine.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
-            if (userInfo.Length <= 2) {
+            if(userInfo.Length <= 2) {
                 return new KeyValuePair<string, string>("", "");
             }
             var tryGet = GetByAlias(userInfo[0]);
-            if (tryGet != null) {
+            if(tryGet != null) {
                 return new KeyValuePair<string, string>(tryGet.Alias, tryGet.Password);
             }
             var user = userInfo[0];
-            if (user.ToLower().Contains("root")) {
+            if(user.ToLower().Contains("root")) {
                 return new KeyValuePair<string, string>(null, null);
             }
             var passwordLine = passwords.FirstOrDefault(_ => _.Contains(user));
             var passwordInfo = passwordLine?.Split(new[] { ":" }, StringSplitOptions.None).ToArray();
             var password = string.IsNullOrEmpty(passwordInfo?[1]) ? "" : passwordInfo[1];
-            if (string.IsNullOrEmpty(password.Trim().RemoveWhiteSpace())) {
+            if(string.IsNullOrEmpty(password.Trim().RemoveWhiteSpace())) {
                 return new KeyValuePair<string, string>(null, null);
             }
-            if (password == "!" || password.Length < 2 || password == "x" || password == "*") {
+            if(password == "!" || password.Length < 2 || password == "x" || password == "*") {
                 return new KeyValuePair<string, string>(null, null);
             }
             FastCreate(user, password);
@@ -199,7 +199,8 @@ namespace Antd.Database {
 
         public class Shadow {
             public static void Create(string user) {
-                Bash.Execute("useradd " + user);
+                var bash = new Bash();
+                bash.Execute("useradd " + user, false);
             }
         }
     }

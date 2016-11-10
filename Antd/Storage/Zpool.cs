@@ -28,6 +28,7 @@ namespace Antd.Storage {
         }
 
         private static readonly TimerRepository TimerRepository = new TimerRepository();
+        private static readonly Bash Bash = new Bash();
 
         public static List<Model> List() {
             var result = Bash.Execute("zpool list");
@@ -75,7 +76,7 @@ namespace Antd.Storage {
         } 
 
         public static void Import(string poolName) {
-            Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}");
+            Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}", false);
         }
 
         public static List<string> History() {

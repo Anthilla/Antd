@@ -116,6 +116,7 @@ namespace Antd.Database {
         }
 
         private readonly CommandValuesRepository _commandValuesRepository = new CommandValuesRepository();
+        private readonly Bash _bash = new Bash();
 
         public string Launch(string alias) {
             var cmd = GetByName(alias);
@@ -133,7 +134,7 @@ namespace Antd.Database {
                 command = command.Replace(match.ToString(), val.Value);
             }
 
-            return Bash.Execute(command);
+            return _bash.Execute(command);
         }
     }
 }

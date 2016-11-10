@@ -15,7 +15,7 @@ namespace Antd.Configuration {
 
         public static void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 ConsoleLogger.Log("machine configuration file does not exist");
                 var tempFlow = new AntdConfigurationModel {
                     Name = ".machine.conf",
@@ -24,7 +24,7 @@ namespace Antd.Configuration {
                     LoadServices = new List<string> { "service#1", "service#2" },
                     LoadOsParameters = new Dictionary<string, string> { { "file", "value" } }
                 };
-                if (!File.Exists(tempFlow.Path)) {
+                if(!File.Exists(tempFlow.Path)) {
                     File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
                     ConsoleLogger.Log("a machine configuration file template has been created");
                 }
@@ -39,7 +39,7 @@ namespace Antd.Configuration {
 
         public static void Export(List<string> loadModules, List<string> loadService, Dictionary<string, string> loadOsParam) {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (File.Exists(FilePath)) {
+            if(File.Exists(FilePath)) {
                 File.Delete(FilePath);
             }
             var configuration = new AntdConfigurationModel {
@@ -49,7 +49,7 @@ namespace Antd.Configuration {
                 LoadServices = loadService,
                 LoadOsParameters = loadOsParam
             };
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(configuration, Formatting.Indented));
             }
         }

@@ -35,6 +35,9 @@ using Newtonsoft.Json;
 
 namespace antdlib.Info {
     public class Proc {
+
+        private static readonly Bash Bash = new Bash();
+
         private static List<ProcModel> GetAllAllProc() {
             return MapProcJson(JsonConvert.SerializeObject(Bash.Execute("ps -aef").ConvertCommandToModel().output));
         }
@@ -63,13 +66,13 @@ namespace antdlib.Info {
                 Stime = procJsonCell[4],
                 Tty = procJsonCell[5]
             };
-            if (procJsonCell.Length > 6) {
+            if(procJsonCell.Length > 6) {
                 proc.Time = procJsonCell[6];
             }
-            if (procJsonCell.Length > 8) {
+            if(procJsonCell.Length > 8) {
                 proc.Cmd = procJsonCell[7] + " " + procJsonCell[8];
             }
-            else if (procJsonCell.Length > 7) {
+            else if(procJsonCell.Length > 7) {
                 proc.Cmd = procJsonCell[7];
             }
             return proc;

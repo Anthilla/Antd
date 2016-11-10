@@ -39,6 +39,7 @@ using antdlib.common;
 namespace antdlib.Status {
 
     public class Sysctl {
+        private static readonly Bash Bash = new Bash();
 
         private static List<SysctlModel> GetAllSysctls() {
             var output = JsonConvert.SerializeObject(Bash.Execute("sysctl --all").ConvertCommandToModel().output);
@@ -71,7 +72,7 @@ namespace antdlib.Status {
 
         private static SysctlModel MapSysctl(string[] sysctlJsonCell) {
             var sysctl = new SysctlModel();
-            if (sysctlJsonCell.Length <= 1)
+            if(sysctlJsonCell.Length <= 1)
                 return sysctl;
             sysctl.param = sysctlJsonCell[0];
             sysctl.value = sysctlJsonCell[1];
@@ -87,13 +88,13 @@ namespace antdlib.Status {
         public static void WriteConfig() {
             Directory.CreateDirectory(Parameter.AntdCfg);
             var path = Path.Combine(Parameter.AntdCfg, "antd.sysctl.conf");
-            if (File.Exists(path)) {
+            if(File.Exists(path)) {
                 File.Delete(path);
             }
-            using (var sw = File.CreateText(path)) {
+            using(var sw = File.CreateText(path)) {
                 sw.WriteLine("# " + path);
                 sw.WriteLine("# Custom Configuration for Antd");
-                foreach (var p in Stock) {
+                foreach(var p in Stock) {
                     sw.WriteLine(p.param + " = " + p.value);
                 }
                 sw.WriteLine("");
@@ -101,7 +102,7 @@ namespace antdlib.Status {
         }
 
         public static void LoadConfig() {
-            Bash.Execute("sysctl -p " + Path.Combine(Parameter.AntdCfg, "antd.sysctl.conf"));
+            Bash.Execute("sysctl -p " + Path.Combine(Parameter.AntdCfg, "antd.sysctl.conf"), false);
         }
     }
 }

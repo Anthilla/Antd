@@ -7,6 +7,8 @@ namespace antdsh {
         public static void Check() {
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static void Setup() {
             if (IsTargetActive()) return;
             Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");

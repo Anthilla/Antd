@@ -42,6 +42,7 @@ namespace Antd.Modules {
     public class AuthorizedKeysModule : CoreModule {
 
         private readonly AuthorizedKeysRepository _authorizedKeysRepository = new AuthorizedKeysRepository();
+        private readonly Bash _bash = new Bash();
 
         public AuthorizedKeysModule() {
             this.RequiresAuthentication();
@@ -73,8 +74,8 @@ namespace Antd.Modules {
                 }
                 var line = $"{key} {remoteUser}";
                 File.AppendAllLines(authorizedKeysPath, new List<string> { line });
-                Bash.Execute($"chmod 600 {authorizedKeysPath}");
-                Bash.Execute($"chown {user}:{user} {authorizedKeysPath}");
+                _bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                _bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
 
                 return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
             };
@@ -106,8 +107,8 @@ namespace Antd.Modules {
                 }
                 var line = $"{key} {remoteUser}";
                 File.AppendAllLines(authorizedKeysPath, new List<string> { line });
-                Bash.Execute($"chmod 600 {authorizedKeysPath}");
-                Bash.Execute($"chown {user}:{user} {authorizedKeysPath}");
+                _bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                _bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
                 ConsoleLogger.Log("hs > keys inserted");
 
                 return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;

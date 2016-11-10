@@ -33,6 +33,9 @@ using System.IO;
 
 namespace antdlib.common {
     public class MapToModel {
+
+        private readonly Bash _bash = new Bash();
+
         public IEnumerable<T> FromFile<T>(string filePath, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
             if (!File.Exists(filePath)) {
                 return new List<T>();
@@ -59,7 +62,7 @@ namespace antdlib.common {
         }
 
         public IEnumerable<T> FromCommand<T>(string command, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
-            var commandResult = Bash.Execute(command);
+            var commandResult = _bash.Execute(command);
             if (commandResult.Length < 1) {
                 return new List<T>();
             }

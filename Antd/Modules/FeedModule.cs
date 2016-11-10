@@ -27,53 +27,25 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.ServiceModel.Syndication;
 using Nancy;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
     public class FeedModule : CoreModule {
         public FeedModule() {
-            Get["/feed"] = x => {
-                var feed = new SyndicationFeed { Title = new TextSyndicationContent("Directory Watcher Feed") };
-                feed.Authors.Add(new SyndicationPerson("info@anthilla.com"));
-                feed.Categories.Add(new SyndicationCategory("Directory Watcher Feed"));
-                feed.Description = new TextSyndicationContent("Directory Watcher Feed");
-                var item1 = new SyndicationItem(
-                    "Item One",
-                    "This is the content for item one",
-                    new Uri("http://localhost/Content/One"),
-                    "ItemOneID",
-                    DateTime.Now);
-                feed.Items = new List<SyndicationItem> { item1 };
-                return new RssResponse(feed);
-            };
 
-            Get["/feed2"] = x => {
-                var feed = new SyndicationFeed { Title = new TextSyndicationContent("AnthillaSP Ticket") };
-                feed.Authors.Add(new SyndicationPerson("info@anthilla.com"));
-                feed.Categories.Add(new SyndicationCategory("AnthillaSP Ticket"));
-                feed.Description = new TextSyndicationContent("AnthillaSP Ticket");
-
-                var directories = new List<string>();
-                var list = new List<SyndicationItem>();
-
-                foreach (var dir in directories) {
-                    var f = new SyndicationItem(
-                    dir,
-                    dir,
-                    new Uri("http://localhost/feed"),
-                    Guid.NewGuid().ToString(),
-                    DateTime.Now);
-                    list.Add(f);
-                }
-
-                feed.Items = list;
-                return new RssResponse(feed);
+            Get["/feed/list"] = x => {
+                var feed = new List<string> {
+                    "/feed/notification",
+                    "/feed/message",
+                    "/feed/task",
+                    "/feed/file"
+                };
+                return JsonConvert.SerializeObject(feed);
             };
 
             Get["/hello"] = x => {

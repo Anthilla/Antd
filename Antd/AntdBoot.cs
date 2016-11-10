@@ -23,6 +23,8 @@ using RaptorDB;
 namespace Antd {
     public class AntdBoot {
 
+        private readonly Bash _bash = new Bash();
+
         public void RemoveLimits() {
             if(!Parameter.IsUnix)
                 return;
@@ -33,9 +35,7 @@ namespace Antd {
                     File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
             }
-
-            Bash.Execute("ulimit -n 1024000");
-            ConsoleLogger.Log("removed open files limit");
+            _bash.Execute("ulimit -n 1024000", false);
         }
 
         public void StartOverlayWatcher() {
@@ -44,7 +44,7 @@ namespace Antd {
         }
 
         public void CheckOsIsRw() {
-            Bash.Execute($"{Parameter.Aossvc} reporemountrw");
+            _bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
         }
 
         public void SetWorkingDirectories() {
@@ -109,18 +109,17 @@ namespace Antd {
             if(!Parameter.IsUnix)
                 return;
             if(Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware");
+                _bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
-            var kernelRelease = Bash.Execute("uname -r").Trim();
-            var linkedRelease = Bash.Execute($"file {module}").Trim();
+            var kernelRelease = _bash.Execute("uname -r").Trim();
+            var linkedRelease = _bash.Execute($"file {module}").Trim();
             if(Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                ConsoleLogger.Log($"creating {moduleDir} to mount OS-modules");
                 Directory.CreateDirectory(moduleDir);
-                Bash.Execute($"mount {module} {moduleDir}");
+                _bash.Execute($"mount {module} {moduleDir}", false);
             }
-            Bash.Execute("systemctl restart systemd-modules-load.service");
+            _bash.Execute("systemctl restart systemd-modules-load.service", false);
             ConsoleLogger.Log("os mounts ready");
         }
 
@@ -146,7 +145,7 @@ namespace Antd {
             var modules = new BootModuleLoadRepository().Retrieve();
             if(modules != null) {
                 foreach(var module in modules) {
-                    Bash.Execute($"modprobe {module}");
+                    _bash.Execute($"modprobe {module}", false);
                 }
             }
             ConsoleLogger.Log("modules ready");
@@ -211,8 +210,8 @@ namespace Antd {
                 }
                 var line = $"{storedKey.KeyValue} {storedKey.RemoteUser}";
                 File.AppendAllLines(authorizedKeysPath, new List<string> { line });
-                Bash.Execute($"chmod 600 {authorizedKeysPath}");
-                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
+                _bash.Execute($"chmod 600 {authorizedKeysPath}");
+                _bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
         }
 
@@ -272,8 +271,8 @@ namespace Antd {
                 File.Delete(avahiServicePath);
             }
             File.WriteAllLines(avahiServicePath, xml);
-            Bash.Execute("chmod 755 /etc/avahi/services");
-            Bash.Execute($"chmod 644 {avahiServicePath}");
+            _bash.Execute("chmod 755 /etc/avahi/services", false);
+            _bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");
             Systemctl.Restart("avahi-daemon.socket");
             ConsoleLogger.Log("avahi ready");
@@ -362,14 +361,14 @@ namespace Antd {
             if(File.Exists(filePath))
                 return;
             File.Copy($"{Parameter.Resources}/websocketd", filePath);
-            Bash.Execute($"chmod 777 {filePath}");
+            _bash.Execute($"chmod 777 {filePath}", false);
             ConsoleLogger.Log("websocketd ready");
         }
 
         public void SetSystemdJournald() {
             if(!Parameter.IsUnix)
                 return;
-            var file = $"{Parameter.RepoDirs}/{"FILE_etc_systemd_journald.conf"}";
+            var file = $"{Parameter.RepoDirs}/FILE_etc_systemd_journald.conf";
             if(File.Exists(file)) {
                 return;
             }
@@ -378,28 +377,28 @@ namespace Antd {
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Bash.Execute("systemctl restart systemd-journald.service");
+            _bash.Execute("systemctl restart systemd-journald.service", false);
             ConsoleLogger.Log("journald config ready");
         }
 
         public void LoadCollectd() {
-            var file = $"{Parameter.RepoDirs}/{"FILE_etc_collectd.conf"}";
+            var file = $"{Parameter.RepoDirs}/FILE_etc_collectd.conf";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Bash.Execute("systemctl restart collectd.service");
+            _bash.Execute("systemctl restart collectd.service", false);
         }
 
         public void LoadWpaSupplicant() {
-            var file = $"{Parameter.RepoDirs}/{"FILE_etc_wpa_supplicant_wpa_suplicant.conf"}";
+            var file = $"{Parameter.RepoDirs}/FILE_etc_wpa_supplicant_wpa_suplicant.conf";
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
                 Mount.File(realFileName);
             }
-            Bash.Execute("systemctl restart wpa_supplicant.service");
+            _bash.Execute("systemctl restart wpa_supplicant.service", false);
         }
         #endregion
     }

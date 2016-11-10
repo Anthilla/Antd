@@ -51,7 +51,8 @@ namespace Antd.Modules {
                 var password = (string)Request.Form.Password;
                 var tryGet = _userRepositoryRepo.GetByAlias(user);
                 if (tryGet != null) {
-                    var hp = Bash.Execute($"mkpasswd -m sha-512 '{password}'");
+                    var bash = new Bash();
+                    var hp = bash.Execute($"mkpasswd -m sha-512 '{password}'", false);
                     SystemUser.SetPassword(user, hp);
                     _userRepositoryRepo.Delete(tryGet.Id);
                     _userRepositoryRepo.FastCreate(user, hp);

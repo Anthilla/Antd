@@ -35,10 +35,13 @@ using antdlib.common;
 
 namespace antdlib.Status {
     public class Local {
+
+        private static readonly Bash Bash = new Bash();
+
         private static string GetSystemVersion() {
             var sq = Bash.Execute("losetup | grep /dev/loop0");
             var sqSplt = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            if (sqSplt.Length <= 1)
+            if(sqSplt.Length <= 1)
                 return "";
             var file = sqSplt[sqSplt.Length - 1];
             return new Regex("_.+_").Matches(file)[0].Value.Replace("_", "");
@@ -51,7 +54,7 @@ namespace antdlib.Status {
             var activeLinkData = Bash.Execute($"find {Parameter.Repo} -type l | grep active");
             ConsoleLogger.Warn(activeLinkData);
             var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var link in activeLinks) {
+            foreach(var link in activeLinks) {
                 ConsoleLogger.Warn(link);
                 var linkInfoData = Bash.Execute($"file {link}");
                 ConsoleLogger.Warn(linkInfoData);

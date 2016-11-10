@@ -15,17 +15,19 @@ namespace antdsh {
         private static readonly string Antdsh03MountServicePath = $"{Parameter.TimerUnits}/{Antdsh03MountService}";
         #endregion
 
+        private static readonly Bash Bash = new Bash();
+
         public static void CreateRemountUnits() {
-            if (!File.Exists(Antdsh01RemountServicePath)) {
+            if(!File.Exists(Antdsh01RemountServicePath)) {
                 CreateRemountServiceFile();
             }
-            if (!File.Exists(Antdsh01RemountTimerPath)) {
+            if(!File.Exists(Antdsh01RemountTimerPath)) {
                 CreateRemountTimerFile();
             }
-            if (!File.Exists(Antdsh02UmountServicePath)) {
+            if(!File.Exists(Antdsh02UmountServicePath)) {
                 CreateUmountServiceFile();
             }
-            if (!File.Exists(Antdsh03MountServicePath)) {
+            if(!File.Exists(Antdsh03MountServicePath)) {
                 CreateMountServiceFile();
             }
             Bash.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");

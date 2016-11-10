@@ -3,9 +3,11 @@ using antdlib.common;
 
 namespace Antd.Ssh {
     public class RootKeys {
-        public string PathToPublic { get; private set; }
-        public string PathToPrivate { get; private set; }
-        public bool Exist { get; private set; } = false;
+        public string PathToPublic { get; }
+        public string PathToPrivate { get; }
+        public bool Exist { get; private set; }
+
+        private readonly Bash _bash = new Bash();
 
         public RootKeys() {
             PathToPublic = "/root/.ssh/antd-root-key.pub";
@@ -17,7 +19,7 @@ namespace Antd.Ssh {
         }
 
         public void Create() {
-            Bash.Execute("ssh-keygen -t rsa -N '' -f /root/.ssh/antd-root-key");
+            _bash.Execute("ssh-keygen -t rsa -N '' -f /root/.ssh/antd-root-key", false);
         }
     }
 }

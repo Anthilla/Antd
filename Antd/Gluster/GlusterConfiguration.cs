@@ -68,9 +68,11 @@ namespace Antd.Gluster {
             }
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static void Start() {
             Console.WriteLine($"systemctl start {ServiceName}");
-            Bash.Execute($"systemctl start {ServiceName}");
+            Bash.Execute($"systemctl start {ServiceName}", false);
         }
 
         public static void Launch() {
@@ -114,16 +116,16 @@ namespace Antd.Gluster {
         public static void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
             var volString = string.Join(" ", volumesList);
             Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
-            Bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
+            Bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force", false);
         }
 
         public static void VolumeStart(string volumeName) {
-            Bash.Execute($"gluster volume start {volumeName}");
+            Bash.Execute($"gluster volume start {volumeName}", false);
         }
 
         public static void VolumeMount(string node, string volumeName, string mountPoint) {
             if(Mounts.IsAlreadyMounted(mountPoint) == false) {
-                Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}");
+                Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
             }
         }
 

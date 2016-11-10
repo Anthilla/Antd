@@ -18,13 +18,15 @@ namespace Antd.Storage {
             public long Dimension { get; set; }
         }
 
+        private readonly Bash _bash = new Bash();
+
         /// <summary>
         /// Lista effettiva degli snapshot da rimuovere
         /// Viene generata partendo dalla lista completa degli snapshot dopo essere stata filtrata secondo le Regole definite sotto
         /// </summary>
         public HashSet<string> GetRemovableSnapshots(IEnumerable<string> t = null) {
             var snapshots = new List<Model>();
-            var text = Bash.Execute("zfs list -t snap -o name,used -p");
+            var text = _bash.Execute("zfs list -t snap -o name,used -p");
             var lines = t ?? text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1);
             foreach (var line in lines) {
                 var snap = new Model();
@@ -74,15 +76,15 @@ namespace Antd.Storage {
                 }
                 Thread.Sleep(1000 * 60 * 2 - Convert.ToInt32(s.ElapsedMilliseconds));
             }
-            ConsoleLogger.Log($"{DateTime.Now.ToString("yyyyMMdd")} - snapshot cleanup done, time elapsed: {DateTime.Now - dtn}");
+            ConsoleLogger.Log($"{DateTime.Now:yyyyMMdd} - snapshot cleanup done, time elapsed: {DateTime.Now - dtn}");
         }
 
         public bool DestroySnapshot(string snapshotName) {
             if (snapshotName.Contains("@")) {
-                Bash.Execute($"zfs destroy {snapshotName}");
+                _bash.Execute($"zfs destroy {snapshotName}", false);
             }
             else {
-                Bash.Execute($"zfs destroy @{snapshotName}");
+                _bash.Execute($"zfs destroy @{snapshotName}", false);
             }
             return true;
         }

@@ -37,7 +37,8 @@ namespace antdlib.Install {
         private static string _diskBiosBoot;
         private static string _diskEfi;
         private static string _diskData;
-        private static string _tmpDataFolder = "/Data/newsystem";
+        private const string TmpDataFolder = "/Data/newsystem";
+        private readonly Bash _bash = new Bash();
 
         public InstallOperativeSystem(string disk) {
             ConsoleLogger.Log($"AOS INSTALLATION on: {_diskname}");
@@ -46,7 +47,7 @@ namespace antdlib.Install {
             _diskBiosBoot = $"{disk}1";
             _diskEfi = $"{disk}2";
             _diskData = $"{disk}3";
-            Directory.CreateDirectory(_tmpDataFolder);
+            Directory.CreateDirectory(TmpDataFolder);
             SetDiskAndInstall();
         }
 
@@ -54,25 +55,25 @@ namespace antdlib.Install {
             ConsoleLogger.Log($"creating partitions on: {_diskname}");
             const string n = "\n";
             var fdiskOptions1 = $"p{n}n{n}1{n}1M{n}{n}{n}t{n}1{n}4{n}{n}{n}w{n}";
-            Bash.Execute($"echo -e \"{fdiskOptions1}\" | fdisk {_diskname}");
+            _bash.Execute($"echo -e \"{fdiskOptions1}\" | fdisk {_diskname}", false);
             ConsoleLogger.Log($"{_diskBiosBoot} created");
             var fdiskOptions2 = $"p{n}n{n}2{n}-512M{n}{n}{n}t{n}2{n}1{n}{n}{n}w{n}";
-            Bash.Execute($"echo -e \"{fdiskOptions2}\" | fdisk {_diskname}");
+            _bash.Execute($"echo -e \"{fdiskOptions2}\" | fdisk {_diskname}", false);
             ConsoleLogger.Log($"{_diskEfi} created");
             var fdiskOptions3 = $"p{n}n{n}3{n}-32G{n}{n}{n}t{n}3{n}15{n}{n}{n}w{n}";
-            Bash.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {_diskname}");
+            _bash.Execute($"echo -e \"{fdiskOptions3}\" | fdisk {_diskname}", false);
             ConsoleLogger.Log($"{_diskData} created");
 
-            Bash.Execute($"parted -a optimal -s {_diskname} name 2 \"EFI System Partition\"");
-            Bash.Execute($"parted -a optimal -s {_diskname} name 3 BootExt");
+            _bash.Execute($"parted -a optimal -s {_diskname} name 2 \"EFI System Partition\"", false);
+            _bash.Execute($"parted -a optimal -s {_diskname} name 3 BootExt", false);
 
-            Bash.Execute($"mkfs.ext4 {_diskData} -L BootExt");
-            Bash.Execute($"mkfs.fat -n EFI {_diskEfi}");
+            _bash.Execute($"mkfs.ext4 {_diskData} -L BootExt", false);
+            _bash.Execute($"mkfs.fat -n EFI {_diskEfi}", false);
 
             ConsoleLogger.Log("Copying files (this step will take a few minutes)");
-            Bash.Execute($"mount -o discard,noatime,rw {_diskData} {_tmpDataFolder}");
-            Bash.Execute($"rsync -aHAz /mnt/cdrom/ {_tmpDataFolder}");
-            Bash.Execute($"grub2-install {_diskname}");
+            _bash.Execute($"mount -o discard,noatime,rw {_diskData} {TmpDataFolder}", false);
+            _bash.Execute($"rsync -aHAz /mnt/cdrom/ {TmpDataFolder}", false);
+            _bash.Execute($"grub2-install {_diskname}", false);
             ConsoleLogger.Log("INSTALLATION DONE");
         }
     }

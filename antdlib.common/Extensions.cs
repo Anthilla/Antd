@@ -36,9 +36,12 @@ using Newtonsoft.Json;
 
 namespace antdlib.common {
     public static class Extensions {
+
+        private static readonly Bash Bash = new Bash();
+
         public static void DosToUnix(this string file, string otherFile = "") {
             var fileToConvert = otherFile.Length > 0 ? otherFile : file;
-            Bash.Execute($"dos2unix {fileToConvert}");
+            Bash.Execute($"dos2unix {fileToConvert}", false);
         }
 
         public static bool ToNnBoolean(this string str) {

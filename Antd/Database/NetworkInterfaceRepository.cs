@@ -50,49 +50,51 @@ namespace Antd.Database {
         }
 
         private void FlushDb() {
-            foreach (var obj in GetAll()) {
+            foreach(var obj in GetAll()) {
                 Delete(obj.Id);
             }
         }
 
+        private readonly Bash _bash = new Bash();
+
         public void Import() {
             FlushDb();
-            if (!Parameter.IsUnix)
+            if(!Parameter.IsUnix)
                 return;
             var dirs = Directory.GetDirectories("/sys/class/net");
             var physical = from dir in dirs
-                           let f = Bash.Execute($"file {dir}")
+                           let f = _bash.Execute($"file {dir}")
                            where !f.Contains("virtual") && !f.Contains("fake")
                            select Path.GetFileName(dir);
-            foreach (var iface in physical) {
+            foreach(var iface in physical) {
                 Create(new Dictionary<string, string> {
                     {"Name", iface},
                     {"Type", NetworkInterfaceType.Physical.ToString()}
                 });
             }
             var virtualIf = (from dir in dirs
-                             let f = Bash.Execute($"file {dir}")
+                             let f = _bash.Execute($"file {dir}")
                              where f.Contains("virtual") || f.Contains("fake")
                              select Path.GetFileName(dir)).Where(_ => !_.Contains("bond"));
-            foreach (var iface in virtualIf) {
+            foreach(var iface in virtualIf) {
                 Create(new Dictionary<string, string> {
                     {"Name", iface},
                     {"Type", NetworkInterfaceType.Virtual.ToString()}
                 });
             }
             var bondIf = (from dir in dirs
-                          let f = Bash.Execute($"file {dir}")
+                          let f = _bash.Execute($"file {dir}")
                           where f.Contains("virtual") || f.Contains("fake")
                           select Path.GetFileName(dir)).Where(_ => _.Contains("bond"));
-            foreach (var iface in bondIf) {
+            foreach(var iface in bondIf) {
                 Create(new Dictionary<string, string> {
                     {"Name", iface},
                     {"Type", NetworkInterfaceType.Bond.ToString()}
                 });
             }
-            var bridgeIf = Bash.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
+            var bridgeIf = _bash.Execute("brctl show").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
             var brList = bridgeIf.Select(bbrr => bbrr.Replace("\t", " ").Replace("/t", " ").Replace("  ", " ").Split(' ')[0]).Select(brAttr => brAttr.Trim()).ToList();
-            foreach (var iface in brList) {
+            foreach(var iface in brList) {
                 Create(new Dictionary<string, string> {
                     {"Name", iface},
                     {"Type", NetworkInterfaceType.Bridge.ToString()}

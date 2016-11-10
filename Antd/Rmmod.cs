@@ -3,7 +3,8 @@
 namespace Antd {
     public class Rmmod {
         public static void Ex(string module) {
-            Bash.Execute($"rmmod {module}");
+            var bash = new Bash();
+            bash.Execute($"rmmod {module}", false);
         }
     }
 }

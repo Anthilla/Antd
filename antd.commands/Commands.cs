@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace antd.commands {
-     public class Commands {
+    public class Commands {
 
         public static string RootFrameworkAntdShellScripts => "/framework/antd/ShellScript";
 
@@ -13,7 +13,7 @@ namespace antd.commands {
             var d2 = GetScriptDict();
             var d3 = GetApiDict();
             var dict = new Dictionary<string, string[]>();
-            foreach (var d in d1) {
+            foreach(var d in d1) {
                 dict[d.Key] = d.Value;
             }
             foreach(var d in d2) {
@@ -40,6 +40,9 @@ namespace antd.commands {
 
         private static Dictionary<string, string[]> GetDict() {
             var dict = new Dictionary<string, string[]> {
+                {"anthilla", new [] {
+                    "$custom"
+                }},
                 {"bond-add-if", new [] {
                     "ifenslave $bond $net_if"
                 }},
@@ -83,7 +86,7 @@ namespace antd.commands {
                     "brctl show $bridge | grep -ho \'$bridge.\' | awk \'{print $2}\'"
                 }},
                 {"brctl-show-brif", new [] {
-      "brctl show $bridge | grep -ho '$bridge.' | awk \'{print $4}\'"
+                    "brctl show $bridge | grep -ho '$bridge.' | awk \'{print $4}\'"
                 }},
                 {"brctl-show-brstpstatus", new [] {
                     "brctl show $bridge | grep -ho \'$bridge.\' | awk \'{print $3}\'"
@@ -99,6 +102,9 @@ namespace antd.commands {
                 }},
                 {"brctl-stp-on", new [] {
                     "brctl stp $bridge on"
+                }},
+                {"cat", new [] {
+                    "cat $file"
                 }},
                 {"cat-etc-gentoorel", new [] {
                     "cat /etc/gentoo-release | grep -v \'^#\' | grep -v \'^$\'"
@@ -118,22 +124,31 @@ namespace antd.commands {
                 {"cat-etc-resolv", new [] {
                     "cat /etc/resolv.conf | grep -v \'^#\' | grep -v \'^$\'"
                 }},
+                {"dhclient-killall", new [] {
+                    "killall dhclient"
+                }},
                 {"dhclient4", new [] {
-      "dhclient $net_if"
+                    "dhclient $net_if"
                 }},
                 {"dhclient6", new [] {
-      "dhclient -6 $net_if"
+                    "dhclient -6 $net_if"
                 }},
                 {"echo", new [] {
-      "echo $var1 $var2"
+                    "echo $var1 $var2"
+                }},
+                {"echo-write", new [] {
+                    "echo $value > $file"
+                }},
+                {"echo-append", new [] {
+                    "echo $value >> $file"
                 }},
                 {"fdisk-print", new [] {
-      "echo -e \"p\" | fdisk $disk_device"
+                    "echo -e \"p\" | fdisk $disk_device"
                 }},
                 {"fdisk-set-partition", new [] {
-      "echo -e \"n\\n $part_number\\n $part_first_sector\\n $part_size\\n w\\n\" | fdisk $disk_device",
-      "parted $disk_device $part_number 1 $name",
-      "parted $disk_device align-check opt $part_number"
+                    "echo -e \"n\\n $part_number\\n $part_first_sector\\n $part_size\\n w\\n\" | fdisk $disk_device",
+                    "parted $disk_device $part_number 1 $name",
+                    "parted $disk_device align-check opt $part_number"
                 }},
                 {"hostnamectl-get-arch", new [] {
                     "hostnamectl | grep -ho \'Architecture: .\' | awk -F: \'{print $2}\'"
@@ -148,7 +163,7 @@ namespace antd.commands {
                     "hostnamectl | grep -ho 'Deployment: .' | awk -F: '{print $2}"
                 }},
                 {"hostnamectl-get-hostname", new [] {
-      "hostnamectl | grep -ho \'Static hostname: .\' | awk -F: \'{print $2}\'"
+                    "hostnamectl | grep -ho \'Static hostname: .\' | awk -F: \'{print $2}\'"
                 }},
                 {"hostnamectl-get-iconname", new [] {
                     "hostnamectl | grep -ho \'Icon name: .\' | awk -F: \'{print $2}\'"
@@ -172,202 +187,223 @@ namespace antd.commands {
                     "ip addr add $address/$range dev $net_if"
                 }},
                 {"ip4-add-addr-broadcast", new [] {
-      "ip addr add $address/$range broadcast $broadcast dev $net_if"
+                    "ip addr add $address/$range broadcast $broadcast dev $net_if"
                 }},
                 {"ip4-add-multipath-route", new [] {
-      "ip route add default scope global nexthop dev $net1 nexthop dev $net2"
+                    "ip route add default scope global nexthop dev $net1 nexthop dev $net2"
                 }},
                 {"ip4-add-nat", new [] {
-      "ip route add nat $ip_address via $ip_via_address"
+                          "ip route add nat $ip_address via $ip_via_address"
                 }},
                 {"ip4-add-route", new [] {
-      "ip route add $ip_address via $gateway dev $net_if"
+                    "ip route add $ip_address via $gateway dev $net_if"
                 }},
                 {"ip4-add-tunnel-point-to-point", new [] {
-      "ip tunnel add $net_if mode sit ttl $ttl remote $tunnel local $local_address"
+                    "ip tunnel add $net_if mode sit ttl $ttl remote $tunnel local $local_address"
                 }},
                 {"ip4-del-addr", new [] {
-      "ip addr del $address/$range dev $net_if"
+                    "ip addr del $address/$range dev $net_if"
                 }},
                 {"ip4-del-addr-broadcast", new [] {
-      "ip addr del $address/$range broadcast $broadcast dev $net_if"
+                          "ip addr del $address/$range broadcast $broadcast dev $net_if"
                 }},
                 {"ip4-del-route", new [] {
-      "ip route del $ip_address via $gateway dev $net_if"
+                    "ip route del $ip_address via $gateway dev $net_if"
                 }},
                 {"ip4-del-tunnel-point-to-point", new [] {
-      "ip tunnel del $net_if"
+                    "ip tunnel del $net_if"
                 }},
                 {"ip4-disable-if", new [] {
-      "ip link set $net_if down"
+                    "ip link set $net_if down"
                 }},
                 {"ip4-enable-if", new [] {
-      "ip link set $net_if up"
+                    "ip link set $net_if up"
                 }},
                 {"ip4-flush-configuration", new [] {
-      "ip addr flush dev $net_if"
+                    "ip addr flush dev $net_if"
                 }},
                 {"ip4-get-if-addr", new [] {
-      "ip addr show $net_if | grep -ho 'inet .' | awk '{print $2}"
+                    "ip addr show $net_if | grep -ho 'inet .' | awk '{print $2}"
                 }},
                 {"ip4-get-if-brd", new [] {
-      "ip addr show $net_if | grep -ho 'inet .' | awk '{print $4}"
+                    "ip addr show $net_if | grep -ho 'inet .' | awk '{print $4}"
                 }},
                 {"ip4-get-if-macaddress", new [] {
-      "cat /sys/class/net/$net_if/address"
+                    "cat /sys/class/net/$net_if/address"
                 }},
                 {"ip4-get-if-mtu", new [] {
-      "cat /sys/class/net/$net_if/mtu"
+                    "cat /sys/class/net/$net_if/mtu"
                 }},
                 {"ip4-if-isdown", new [] {
-      "ip addr show eth0 | grep -c 'state DOWN"
+                    "ip addr show eth0 | grep -c 'state DOWN"
                 }},
                 {"ip4-if-isup", new [] {
-      "ip addr show eth0 | grep -c 'state UP"
+                    "ip addr show eth0 | grep -c 'state UP"
                 }},
                 {"ip4-set-macaddress", new [] {
-       "ip link set $net_if down",
-      "ip link set dev $net_if address $address",
-      "ip link set $net_if up"
+                    "ip link set $net_if down",
+                    "ip link set dev $net_if address $address",
+                    "ip link set $net_if up"
                 }},
                 {"ip4-set-mtu", new [] {
-      "ip link set dev $net_if mtu $mtu"
+                    "ip link set dev $net_if mtu $mtu"
                 }},
                 {"ip4-show-if-addr", new [] {
-      "ip addr show $net_if"
+                    "ip addr show $net_if"
                 }},
                 {"ip4-show-if-link", new [] {
-      "ip link show $net_if"
+                    "ip link show $net_if"
                 }},
                 {"ip4-show-if-stats", new [] {
-      "ip -s link ls $net_if"
+                    "ip -s link ls $net_if"
                 }},
                 {"ip4-show-routes", new [] {
-      "ip route show $net_if"
+                    "ip route show $net_if"
                 }},
                 {"ip4-show-tunnels", new [] {
-      "ip tunnel show $net_if"
+                          "ip tunnel show $net_if"
                 }},
                 {"ip4-show-updown", new [] {
-      "ip link show $net_if | grep -ho \' UP \\| DOWN \'| grep -v \'^$\'"
+                    "ip link show $net_if | grep -ho \' UP \\| DOWN \'| grep -v \'^$\'"
                 }},
                 {"ip6-add-addr", new [] {
                     "ip -6 addr add $address/$range dev $net_if"
                 }},
                 {"ip6-add-neigh", new [] {
-      "ip -6 neigh add $ip_address lladdr $ip_lay_address dev $net_if"
+                    "ip -6 neigh add $ip_address lladdr $ip_lay_address dev $net_if"
                 }},
                 {"ip6-add-new-address", new [] {
-      "ip -6 addr add $ip_address dev $net_if"
+                    "ip -6 addr add $ip_address dev $net_if"
                 }},
                 {"ip6-add-route", new [] {
-      "ip -6 route add $ip_address via $gateway"
+                    "ip -6 route add $ip_address via $gateway"
                 }},
                 {"ip6-add-route-dev", new [] {
-      "ip -6 route add $gateway dev $net_if"
+                    "ip -6 route add $gateway dev $net_if"
                 }},
                 {"ip6-del-addr", new [] {
-      "ip -6 addr del $address/$range dev $net_if"
+                    "ip -6 addr del $address/$range dev $net_if"
                 }},
                 {"ip6-del-address", new [] {
-      "ip -6 addr del $ip_address dev $net_if"
+                    "ip -6 addr del $ip_address dev $net_if"
                 }},
                 {"ip6-del-neigh", new [] {
-      "ip -6 neigh del $ip_address lladdr $ip_lay_address dev $net_if"
+                    "ip -6 neigh del $ip_address lladdr $ip_lay_address dev $net_if"
                 }},
                 {"ip6-del-route", new [] {
-      "ip -6 route del $ip_address via $gateway"
+                    "ip -6 route del $ip_address via $gateway"
                 }},
                 {"ip6-del-route-dev", new [] {
-      "ip -6 route del $gateway dev $net_if"
+                    "ip -6 route del $gateway dev $net_if"
                 }},
                 {"ip6-flush-configuration", new [] {
-      "ip -6 addr flush dynamic"
+                    "ip -6 addr flush dynamic"
                 }},
                 {"ip6-show-if-link", new [] {
-      "ip -6 link show $net_if"
+                    "ip -6 link show $net_if"
                 }},
                 {"ip6-show-if-stats", new [] {
-      "ip -6 -s link ls $net_if"
+                    "ip -6 -s link ls $net_if"
                 }},
                 {"ip6-show-neigh", new [] {
-      "ip -6 neigh show dev $net_if"
+                    "ip -6 neigh show dev $net_if"
                 }},
                 {"ip6-show-routes", new [] {
-      "ip -6 route show $net_if"
+                    "ip -6 route show $net_if"
                 }},
                 {"ip6-show-tunnels", new [] {
-      "ip -6 tunnel show $net_if"
+                    "ip -6 tunnel show $net_if"
+                }},
+                {"modprobe", new [] {
+                    "modprobe $package"
                 }},
                 {"mono-antdsh-update", new [] {
-      "mono /framework/antdsh/antdsh.exe update $context"
+                    "mono /framework/antdsh/antdsh.exe update $context"
                 }},
                 {"mono-antdsh-update-check", new [] {
-      "mono /framework/antdsh/antdsh.exe update check"
+                    "mono /framework/antdsh/antdsh.exe update check"
+                }},
+                {"ntpdate", new [] {
+                    "ntpdate $server"
+                }},
+                {"rmmod", new [] {
+                    "rmmod $modules"
                 }},
                 {"rsync", new [] {
-      "rsync -aHA $source/ $destination/"
+                    "rsync -aHA $source/ $destination/"
                 }},
                 {"rsync-delete-after", new [] {
-      "rsync -aHA --delete-after $source/ $destination/"
+                    "rsync -aHA --delete-after $source/ $destination/"
                 }},
                 {"rsync-delete-during", new [] {
-      "rsync -aHA --delete-during $source/ $destination/"
+                    "rsync -aHA --delete-during $source/ $destination/"
                 }},
                 {"set-bond", new [] {
-                 "ip link set $bond_name down",
-      "ip link del $bond_name",
-      "ip link add name $bond_name type bond",
-      "ip link set $bond_name txqueuelen 10000",
-      "ip link set $bond_name down",
-      "echo 4 > /sys/class/net/$bond_name/bonding/mode",
-      "echo 1 > /sys/class/net/$bond_name/bonding/lacp_rate",
-      "echo 1 > /sys/class/net/$bond_name/lacp_rate",
-      "echo 100 > /sys/class/net/$bond_name/bonding/miimon",
-      "ip link set $bond_name up"
+                    "ip link set $bond_name down",
+                    "ip link del $bond_name",
+                    "ip link add name $bond_name type bond",
+                    "ip link set $bond_name txqueuelen 10000",
+                    "ip link set $bond_name down",
+                    "echo 4 > /sys/class/net/$bond_name/bonding/mode",
+                    "echo 1 > /sys/class/net/$bond_name/bonding/lacp_rate",
+                    "echo 1 > /sys/class/net/$bond_name/lacp_rate",
+                    "echo 100 > /sys/class/net/$bond_name/bonding/miimon",
+                    "ip link set $bond_name up"
                 }},
                 {"set-chassis", new [] {
-      "hostnamectl set-chassis $host_chassis"
+                    "hostnamectl set-chassis $host_chassis"
                 }},
                 {"set-deployment", new [] {
-      "hostnamectl set-deployment $host_deployment"
+                    "hostnamectl set-deployment $host_deployment"
                 }},
                 {"set-hostname", new [] {
-      "hostnamectl set-hostname $host_name"
+                    "hostnamectl set-hostname $host_name"
                 }},
                 {"set-location", new [] {
-      "hostnamectl set-location $host_location"
+                    "hostnamectl set-location \"$host_location\""
                 }},
                 {"set-network-interface", new [] {
-                     "ip link set dev $interface_name down",
-      "ip link set dev $interface_name up",
-      "ip link set $interface_name txqueuelen 10000",
-      "ip link set dev $interface_name up"
+                    "ip link set dev $interface_name down",
+                    "ip link set dev $interface_name up",
+                    "ip link set $interface_name txqueuelen 10000",
+                    "ip link set dev $interface_name up"
                 }},
                 {"set-ntpdate", new [] {
-                         "ntpdate $date_server",
-      "timedatectl --no-pager --no-ask-password --adjust-system-clock set-ntp yes"
+                    "ntpdate $date_server",
+                    "timedatectl --no-pager --no-ask-password --adjust-system-clock set-ntp yes"
 
                 }},
                 {"set-timezone", new [] {
-      "timedatectl --no-pager --no-ask-password --adjust-system-clock set-timezone $host_timezone"
+                    "timedatectl --no-pager --no-ask-password --adjust-system-clock set-timezone $host_timezone"
                 }},
                 {"set-vlan", new [] {
                     "ip link set $vlan_interface_name down",
-      "ip link del $vlan_interface_name",
-      "ip link add name $vlan_interface_name link $interface_name type vlan id $vlan_id",
-      "ip link set $vlan_interface_name txqueuelen 10000",
-      "ip link set $vlan_interface_name up"
+                    "ip link del $vlan_interface_name",
+                    "ip link add name $vlan_interface_name link $interface_name type vlan id $vlan_id",
+                    "ip link set $vlan_interface_name txqueuelen 10000",
+                    "ip link set $vlan_interface_name up"
                 }},
                 {"sync-clock", new [] {
-          "hwclock --systohc",
-      "hwclock --hctosys"
+                    "hwclock --systohc",
+                    "hwclock --hctosys"
+                }},
+                {"sysctl-p", new [] {
+                    "sysctl -p"
+                }},
+                {"systemctl-start", new [] {
+                    "systemctl start $service"
+                }},
+                {"systemctl-stop", new [] {
+                    "systemctl stop $service"
+                }},
+                {"systemd-machine-id-setup", new [] {
+                    "systemd-machine-id-setup"
                 }},
                 {"timedatectl-get-localtime", new [] {
-      "timedatectl | grep -ho \'Local time: .\'| awk -F: \'{print $2}\'"
+                    "timedatectl | grep -ho \'Local time: .\'| awk -F: \'{print $2}\'"
                 }},
                 {"timedatectl-get-nettimeon", new [] {
-      "timedatectl | grep -ho \'Network time on: .\'| awk -F: \'{print $2}\'"
+                    "timedatectl | grep -ho \'Network time on: .\'| awk -F: \'{print $2}\'"
                 }},
                 {"timedatectl-get-ntpsync", new [] {
                     "timedatectl | grep -ho \'NTP synchronized: .\'| awk -F: \'{print $2}\'"

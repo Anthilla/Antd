@@ -73,6 +73,8 @@ namespace antdlib.common {
             path.DosToUnix();
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static void CopyDirectory(string source, string destination) {
             Directory.CreateDirectory(source);
             Directory.CreateDirectory(destination);
@@ -81,7 +83,7 @@ namespace antdlib.common {
                     Directory.CreateDirectory(dirPath.Replace(source, destination));
                 }
                 catch (Exception) {
-                    Bash.Execute($"mkdir -p {dirPath.Replace(source, destination)}");
+                    Bash.Execute($"mkdir -p {dirPath.Replace(source, destination)}", false);
                 }
             }
             foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
@@ -90,7 +92,7 @@ namespace antdlib.common {
                     newPath.DosToUnix();
                 }
                 catch (Exception) {
-                    Bash.Execute($"cp {newPath} {newPath.Replace(source, destination)}");
+                    Bash.Execute($"cp {newPath} {newPath.Replace(source, destination)}", false);
                     newPath.DosToUnix();
                 }
             }

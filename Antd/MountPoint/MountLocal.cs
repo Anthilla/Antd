@@ -89,7 +89,8 @@ namespace Antd.MountPoint {
         }
 
         public static string GetSquashMount(string device) {
-            var sq = Bash.Execute($"losetup | grep {device}");
+            var bash = new Bash();
+            var sq = bash.Execute($"losetup | grep {device}");
             if (sq.Length <= 0)
                 return "";
             var data = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();

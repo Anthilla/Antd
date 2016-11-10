@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace antdlib.common.Helpers {
     public class Mounts {
+
+        private static readonly Bash Bash = new Bash();
+
         public static string SetDirsPath(string source) {
             return $"{Parameter.RepoDirs}/DIR{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
         }
@@ -37,7 +40,7 @@ namespace antdlib.common.Helpers {
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount1Retry}");
-                Bash.Execute($"umount {directory}");
+                Bash.Execute($"umount {directory}", false);
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
             }
@@ -48,8 +51,8 @@ namespace antdlib.common.Helpers {
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount2Retry}");
-                Bash.Execute($"umount {source}");
-                Bash.Execute($"umount {destination}");
+                Bash.Execute($"umount {source}", false);
+                Bash.Execute($"umount {destination}", false);
                 _umount2Retry = _umount2Retry + 1;
                 Umount(source, destination);
             }

@@ -38,13 +38,14 @@ namespace Antd.Network {
     public class NetworkFirstConfiguration {
 
         private static readonly string FileName = $"{Parameter.RepoDirs}/{Parameter.NetworkConfig}";
+        private static readonly Bash Bash = new Bash();
 
         private static bool CheckNetworkHasConfiguration() {
             return File.Exists(FileName) && FileSystem.ReadFile(FileName).Length > 0;
         }
 
         public static void Set() {
-            if (CheckNetworkHasConfiguration())
+            if(CheckNetworkHasConfiguration())
                 return;
             ConsoleLogger.Log("Network config => no configuration found...");
             ConsoleLogger.Log("Network config => applying a default configuration!");
@@ -54,9 +55,9 @@ namespace Antd.Network {
         private static IEnumerable<string> DetectAllNetworkInterfaces() {
             var niFlist = new List<string>();
             const int m = 15;
-            for (var i = 0; i < m; i++) {
+            for(var i = 0; i < m; i++) {
                 var r = Bash.Execute($"ip link set eth{i} up");
-                if (r.Length > 0) {
+                if(r.Length > 0) {
                     break;
                 }
                 niFlist.Add($"eth{i}");
@@ -71,10 +72,10 @@ namespace Antd.Network {
 
         private static bool IsIpAvailable(string input) {
             var reply = new Ping().Send(input);
-            if (reply != null && reply.Status == IPStatus.DestinationHostUnreachable) { return true; }
-            if (reply != null && reply.Status == IPStatus.DestinationNetworkUnreachable) { return true; }
-            if (reply != null && reply.Status == IPStatus.DestinationPortUnreachable) { return true; }
-            if (reply != null && reply.Status == IPStatus.DestinationUnreachable) { return true; }
+            if(reply != null && reply.Status == IPStatus.DestinationHostUnreachable) { return true; }
+            if(reply != null && reply.Status == IPStatus.DestinationNetworkUnreachable) { return true; }
+            if(reply != null && reply.Status == IPStatus.DestinationPortUnreachable) { return true; }
+            if(reply != null && reply.Status == IPStatus.DestinationUnreachable) { return true; }
             return reply != null && reply.Status == IPStatus.TimedOut;
         }
 
@@ -82,7 +83,7 @@ namespace Antd.Network {
             var octets = input.Split('.').ToIntArray();
             var octet2 = octets[2];
             var octet3 = octets[3] + 1;
-            if (octet3 == 255) {
+            if(octet3 == 255) {
                 octet2 = octets[2] + 1;
                 octet3 = octets[3];
             }
@@ -97,7 +98,7 @@ namespace Antd.Network {
 
         private static string GetFirstAvailableIpFrom(string input) {
             var ip = input;
-            while (IsIpAvailable(ip) == false) {
+            while(IsIpAvailable(ip) == false) {
                 ip = AugmentIpValue(input);
             }
             return ip;
@@ -111,16 +112,16 @@ namespace Antd.Network {
         private static readonly List<string> Commands = new List<string>();
 
         private static void SetNetworkInterfaceUp() {
-            if (DetectActiveNetworkInterfaces().Count > 0) {
+            if(DetectActiveNetworkInterfaces().Count > 0) {
                 var selectedNif = DetectActiveNetworkInterfaces().LastOrDefault();
                 ConsoleLogger.Log($"_> Network will be initialized on: {selectedNif}");
                 var ip = PickIp();
                 ConsoleLogger.Log($"_> Assigning {ip} to {selectedNif}");
                 var cmd1 = $"ip addr add {ip} dev {selectedNif}";
-                Bash.Execute(cmd1);
+                Bash.Execute(cmd1, false);
                 Commands.Add(cmd1);
                 var cmd2 = $"ip route add default via {ip}";
-                Bash.Execute(cmd2);
+                Bash.Execute(cmd2, false);
                 Commands.Add(cmd2);
                 ShowNetworkInfo(selectedNif, ip);
             }
@@ -135,15 +136,15 @@ namespace Antd.Network {
             var bluetoothConnectionName = $"{nif}_S{ip.Replace("/", "-")}";
             ConsoleLogger.Log("Showing network configuration with a bluetooth connection ;)");
             ConsoleLogger.Log("bt >> set up all wireless connections");
-            Bash.Execute("rfkill unblock all");
+            Bash.Execute("rfkill unblock all", false);
             var btDirs = Directory.EnumerateDirectories("/var/lib/bluetooth").ToArray();
-            if (btDirs.Length > 0) {
+            if(btDirs.Length > 0) {
                 ConsoleLogger.Log("bt >> create bt configuration file");
                 var btDir = btDirs.FirstOrDefault();
-                if (btDir != null) {
+                if(btDir != null) {
                     var dirName = Path.GetFullPath(btDir);
                     var replace = $"{dirName}/settings".Replace("//", "/");
-                    if (File.Exists(replace)) {
+                    if(File.Exists(replace)) {
                         File.Delete(replace);
                     }
                     var fileLines = new[] {
@@ -154,10 +155,10 @@ namespace Antd.Network {
                     FileSystem.WriteFile(replace, string.Join(n, fileLines));
                 }
                 ConsoleLogger.Log("bt >> restart bluetooth service");
-                Bash.Execute("systemctl restart bluetooth");
+                Bash.Execute("systemctl restart bluetooth", false);
                 ConsoleLogger.Log("bt >> activate bluetooth connection");
                 var btCombo = $"power on{n}discoverable on{n}agent on{n}quit{n}";
-                Bash.Execute($"echo -e \"{btCombo}\" | bluetoothctl");
+                Bash.Execute($"echo -e \"{btCombo}\" | bluetoothctl", false);
                 ConsoleLogger.Log("bt >> done!");
             }
             else {

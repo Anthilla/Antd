@@ -4,17 +4,19 @@ namespace Antd.Users {
     public class SystemUser {
 
         public static void Create(string user) {
-            Bash.Execute($"useradd {user}");
+            var bash = new Bash();
+            bash.Execute($"useradd {user}", false);
         }
 
         public static void SetPassword(string user, string password) {
-            if (string.IsNullOrEmpty(user)) {
+            if(string.IsNullOrEmpty(user)) {
                 return;
             }
-            if (string.IsNullOrEmpty(password)) {
+            if(string.IsNullOrEmpty(password)) {
                 return;
             }
-            Bash.Execute($"usermod -p '{password}' {user}");
+            var bash = new Bash();
+            bash.Execute($"usermod -p '{password}' {user}", false);
         }
     }
 }

@@ -157,6 +157,8 @@ namespace antdsh {
             }
         }
 
+        private static readonly Bash Bash = new Bash();
+
         private static bool IsAntdRunning() => Bash.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
 
         private static int _startCount;

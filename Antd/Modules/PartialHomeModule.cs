@@ -50,13 +50,14 @@ namespace Antd.Modules {
         private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
         private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
         private static readonly UserRepository UserRepository = new UserRepository();
+        private readonly Bash _bash = new Bash();
 
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
             Get["/part/load/info"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var os = Bash.Execute("uname -a");
+                var os = _bash.Execute("uname -a");
                 viewModel.VersionOS = os;
                 viewModel.Meminfo = MachineInfo.GetMeminfo();
                 viewModel.Cpuinfo = MachineInfo.GetCpuinfo();
@@ -81,7 +82,7 @@ namespace Antd.Modules {
 
             Get["/part/load/time"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
+                var timezones = _bash.Execute("timedatectl list-timezones --no-pager").SplitToList(Environment.NewLine);
                 viewModel.Timezones = timezones;
                 return View["antd/page-antd-time", viewModel];
             };

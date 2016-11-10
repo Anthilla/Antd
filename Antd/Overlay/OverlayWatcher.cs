@@ -54,7 +54,7 @@ namespace Antd {
                 watcher.Renamed += OnRenamed;
                 watcher.EnableRaisingEvents = true;
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Log(ex.Message);
             }
         }
@@ -74,10 +74,12 @@ namespace Antd {
 
         public static IDictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();
 
+        private static readonly Bash Bash = new Bash();
+
         private static void OnChanged(object source, FileSystemEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -86,7 +88,7 @@ namespace Antd {
         private static void OnRenamed(object source, RenamedEventArgs e) {
             //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if (!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -98,11 +100,11 @@ namespace Antd {
             var path = overlayPath.Replace(Parameter.Overlay, "");
             //creo cartella in mntDIRS
             var dirsPath = Mounts.SetDirsPath(path);
-            Bash.Execute($"mkdir -p {dirsPath}");
+            Bash.Execute($"mkdir -p {dirsPath}", false);
             //copio rsync overlayPath in mntDIRS
-            Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/");
+            Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/", false);
             //cancello/pulisco dir equivalente
-            Bash.Execute($"rm -fR {path}");
+            Bash.Execute($"rm -fR {path}", false);
             //monto mntDIRS - dir
             Mount.Dir(path);
         }

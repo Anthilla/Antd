@@ -39,6 +39,7 @@ namespace Antd.Modules {
     public class StorageModule : CoreModule {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
+        private readonly Bash _bash = new Bash();
 
         public StorageModule() {
             this.RequiresAuthentication();
@@ -61,7 +62,7 @@ namespace Antd.Modules {
             Post["/zfs/snap"] = x => {
                 var pool = (string)Request.Form.Pool;
                 var interval = (string)Request.Form.Interval;
-                if (string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
+                if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
                 Timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
@@ -71,14 +72,15 @@ namespace Antd.Modules {
             Post["/zfs/snap/disable"] = x => {
                 string guid = Request.Form.Guid;
                 var tt = _timerRepository.GetByGuid(guid);
-                if (tt == null) return HttpStatusCode.InternalServerError;
+                if(tt == null)
+                    return HttpStatusCode.InternalServerError;
                 Timers.Disable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 
             Post["/parted/print"] = x => {
                 var disk = (string)Request.Form.Disk;
-                var result = Bash.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
+                var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 
@@ -86,7 +88,7 @@ namespace Antd.Modules {
                 var disk = (string)Request.Form.Disk;
                 var type = (string)Request.Form.Type;
                 var yn = (string)Request.Form.Confirm;
-                var result = Bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
+                var result = _bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
                 return Response.AsText(result);
             };
         }

@@ -43,6 +43,8 @@ namespace Antd.MountPoint {
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
+        private static readonly Bash Bash = new Bash();
+
         //"mount -o remount,nodev,nosuid,mode=1777 /dev/shm"
         //"mount -o mode=1770,gid=78 -t hugetlbfs hugetlbfs /hugepages"
         //"mount -o default -t ocfs2_dlmfs dlm /sys/kernel/dlm"
@@ -53,17 +55,18 @@ namespace Antd.MountPoint {
         };
 
         public static void WorkingDirectories() {
-            foreach (var dir in DefaultWorkingDirectories) {
+            foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = Mounts.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
-                if (Mounts.IsAlreadyMounted(dir)) continue;
+                if(Mounts.IsAlreadyMounted(dir))
+                    continue;
                 ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                 SetBind(mntDir, dir);
             }
-            foreach (var kvp in DefaultWorkingDirectoriesWithOptions) {
-                if (Mounts.IsAlreadyMounted(kvp.Key) == false) {
-                    Bash.Execute($"mount {kvp.Value} {kvp.Key}");
+            foreach(var kvp in DefaultWorkingDirectoriesWithOptions) {
+                if(Mounts.IsAlreadyMounted(kvp.Key) == false) {
+                    Bash.Execute($"mount {kvp.Value} {kvp.Key}", false);
                 }
             }
         }
@@ -73,8 +76,8 @@ namespace Antd.MountPoint {
 
             var all = MountRepository.GetAll().ToList();
 
-            if (!all.Any()) {
-                foreach (var path in DefaultWorkingDirectories.Where(path => MountRepository.GetByPath(path) == null)) {
+            if(!all.Any()) {
+                foreach(var path in DefaultWorkingDirectories.Where(path => MountRepository.GetByPath(path) == null)) {
                     MountRepository.Create(new Dictionary<string, string> {
                         {"Path", path},
                         {"MountContext", MountContext.Core.ToString()},
@@ -91,49 +94,49 @@ namespace Antd.MountPoint {
             all = MountRepository.GetAll().ToList();
 
             var directoryMounts = all.Where(m => m.MountEntity == MountEntity.Directory.ToString()).ToArray();
-            foreach (var t in directoryMounts) {
+            foreach(var t in directoryMounts) {
                 try {
                     var dir = t.Path.Replace("\\", "");
                     var mntDir = Mounts.SetDirsPath(dir);
-                    if (Mounts.IsAlreadyMounted(dir) == false) {
+                    if(Mounts.IsAlreadyMounted(dir) == false) {
                         Directory.CreateDirectory(dir);
                         Directory.CreateDirectory(mntDir);
                         ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                         SetBind(mntDir, dir);
 
                         var associatedUnits = t.AssociatedUnits.SplitToList();
-                        foreach (var unit in associatedUnits) {
-                            if (Systemctl.IsActive(unit) == false) {
+                        foreach(var unit in associatedUnits) {
+                            if(Systemctl.IsActive(unit) == false) {
                                 Systemctl.Restart(unit);
                             }
                         }
                     }
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
             ConsoleLogger.Log("directories mounted");
 
             var fileMounts = all.Where(m => m.MountEntity == MountEntity.File.ToString()).ToArray();
-            foreach (var t in fileMounts) {
+            foreach(var t in fileMounts) {
                 var file = t.Path.Replace("\\", "");
                 var mntFile = Mounts.SetFilesPath(file);
-                if (System.IO.File.Exists(mntFile)) {
+                if(System.IO.File.Exists(mntFile)) {
                     var path = Path.GetDirectoryName(file);
                     var mntPath = Path.GetDirectoryName(mntFile);
-                    if (Mounts.IsAlreadyMounted(file) == false) {
-                        Bash.Execute($"mkdir -p {path}");
-                        Bash.Execute($"mkdir -p {mntPath}");
-                        if (!System.IO.File.Exists(file)) {
-                            Bash.Execute($"cp {mntFile} {file}");
+                    if(Mounts.IsAlreadyMounted(file) == false) {
+                        Bash.Execute($"mkdir -p {path}", false);
+                        Bash.Execute($"mkdir -p {mntPath}", false);
+                        if(!System.IO.File.Exists(file)) {
+                            Bash.Execute($"cp {mntFile} {file}", false);
                         }
                         ConsoleLogger.Log($"mount {mntFile} -> {file}");
                         SetBind(mntFile, file);
 
                         var associatedUnits = t.AssociatedUnits.SplitToList();
-                        foreach (var unit in associatedUnits) {
-                            if (Systemctl.IsActive(unit) == false) {
+                        foreach(var unit in associatedUnits) {
+                            if(Systemctl.IsActive(unit) == false) {
                                 Systemctl.Restart(unit);
                             }
                         }
@@ -142,7 +145,7 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("files mounted");
 
-            foreach (var t in directoryMounts) {
+            foreach(var t in directoryMounts) {
                 CheckMount(t.Path);
             }
             ConsoleLogger.Log("detected directories status checked");
@@ -152,10 +155,10 @@ namespace Antd.MountPoint {
         private static void RemoveDuplicates() {
             var all = MountRepository.GetAll().ToList();
             var sorted = all.GroupBy(a => a.Path);
-            foreach (var group in sorted) {
-                if (group.Count() > 1) {
+            foreach(var group in sorted) {
+                if(group.Count() > 1) {
                     var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
-                    foreach (var g in old) {
+                    foreach(var g in old) {
                         MountRepository.Delete(g.Id);
                     }
                 }
@@ -164,10 +167,10 @@ namespace Antd.MountPoint {
 
         public static void CheckCurrentStatus() {
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
-            foreach (var t in directories) {
+            foreach(var t in directories) {
                 var realPath = Mounts.GetDirsPath(t);
                 var mount = MountRepository.GetByPath(realPath);
-                if (mount == null) {
+                if(mount == null) {
                     MountRepository.Create(new Dictionary<string, string> {
                         {"Path", realPath},
                         {"MountContext", MountContext.External.ToString()},
@@ -175,21 +178,21 @@ namespace Antd.MountPoint {
                     });
                 }
                 try {
-                    Bash.Execute($"mkdir -p {t}");
-                    Bash.Execute($"mkdir -p {realPath}");
-                    Bash.Execute($"cp {t} {realPath}");
+                    Bash.Execute($"mkdir -p {t}", false);
+                    Bash.Execute($"mkdir -p {realPath}", false);
+                    Bash.Execute($"cp {t} {realPath}", false);
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
             ConsoleLogger.Log("current directories status checked");
 
             var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
-            foreach (var t in files) {
+            foreach(var t in files) {
                 var realPath = Mounts.GetFilesPath(t);
                 var mount = MountRepository.GetByPath(realPath);
-                if (mount == null) {
+                if(mount == null) {
                     MountRepository.Create(new Dictionary<string, string> {
                         {"Path", realPath},
                         {"MountContext", MountContext.External.ToString()},
@@ -199,11 +202,11 @@ namespace Antd.MountPoint {
                 try {
                     var path = t.GetAllStringsButLast('/');
                     var mntPath = realPath.GetAllStringsButLast('/');
-                    Bash.Execute($"mkdir -p {path}");
-                    Bash.Execute($"mkdir -p {mntPath}");
-                    Bash.Execute($"cp {t} {realPath}");
+                    Bash.Execute($"mkdir -p {path}", false);
+                    Bash.Execute($"mkdir -p {mntPath}", false);
+                    Bash.Execute($"cp {t} {realPath}", false);
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Warn(ex.Message);
                 }
             }
@@ -212,9 +215,9 @@ namespace Antd.MountPoint {
 
         public static void Check() {
             var mounts = MountRepository.GetAll().ToList();
-            if (!mounts.Any())
+            if(!mounts.Any())
                 return;
-            foreach (var t in mounts) {
+            foreach(var t in mounts) {
                 ConsoleLogger.Log($"{t.Path}:");
                 CheckMount(t.Path);
             }
@@ -222,7 +225,7 @@ namespace Antd.MountPoint {
 
         public static void Dir(string directory) {
             var tryget = MountRepository.GetByPath(directory);
-            if (tryget == null) {
+            if(tryget == null) {
                 MountRepository.Create(new Dictionary<string, string> {
                         {"Path", directory},
                         {"MountContext", MountContext.External.ToString()},
@@ -237,7 +240,7 @@ namespace Antd.MountPoint {
 
         public static void File(string file) {
             var tryget = MountRepository.GetByPath(file);
-            if (tryget == null) {
+            if(tryget == null) {
                 MountRepository.Create(new Dictionary<string, string> {
                         {"Path", file},
                         {"MountContext", MountContext.External.ToString()},
@@ -258,24 +261,24 @@ namespace Antd.MountPoint {
             var dirsDfp = dirsTimestamp != null;
             var directoryTimestamp = Dfp.GetTimestamp(directory);
             var directoryDfp = directoryTimestamp != null;
-            if (isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
+            if(isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
                 MountRepository.SetAsMountedReadOnly(directory);
             }
-            else if (isMntd && dirsDfp && directoryDfp) {
-                if (dirsTimestamp == directoryTimestamp) {
+            else if(isMntd && dirsDfp && directoryDfp) {
+                if(dirsTimestamp == directoryTimestamp) {
                     MountRepository.SetAsMounted(directory, mntDirectory);
                 }
                 else {
                     MountRepository.SetAsDifferentMounted(directory);
                 }
             }
-            else if (isMntd == false && dirsDfp && directoryDfp == false) {
+            else if(isMntd == false && dirsDfp && directoryDfp == false) {
                 MountRepository.SetAsNotMounted(directory);
             }
-            else if (isMntd && dirsDfp == false && directoryDfp) {
+            else if(isMntd && dirsDfp == false && directoryDfp) {
                 MountRepository.SetAsTmpMounted(directory);
             }
-            else if (isMntd == false && dirsDfp == false && directoryDfp == false) {
+            else if(isMntd == false && dirsDfp == false && directoryDfp == false) {
                 MountRepository.SetAsError(directory);
             }
             else {
@@ -286,9 +289,9 @@ namespace Antd.MountPoint {
         }
 
         private static void SetBind(string source, string destination) {
-            if (Mounts.IsAlreadyMounted(source, destination))
+            if(Mounts.IsAlreadyMounted(source, destination))
                 return;
-            Bash.Execute($"mount -o bind {source} {destination}");
+            Bash.Execute($"mount -o bind {source} {destination}", false);
         }
     }
 }

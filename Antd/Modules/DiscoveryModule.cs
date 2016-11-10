@@ -43,6 +43,7 @@ using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {
     public class DiscoveryModule : CoreModule {
+        private readonly Bash _bash = new Bash();
 
         public DiscoveryModule() {
 
@@ -65,8 +66,8 @@ namespace Antd.Modules {
             Get["/disc/hello"] = x => {
                 var myIp = "";
                 var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (var ip in host.AddressList) {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork) {
+                foreach(var ip in host.AddressList) {
+                    if(ip.AddressFamily == AddressFamily.InterNetwork) {
                         myIp = ip.ToString();
                     }
                 }
@@ -86,22 +87,22 @@ namespace Antd.Modules {
                 ConsoleLogger.Log("hs > 1139");
                 const string pathToPrivateKey = "/root/.ssh/antd-root-key";
                 const string pathToPublicKey = "/root/.ssh/antd-root-key.pub";
-                if (!File.Exists(pathToPublicKey)) {
+                if(!File.Exists(pathToPublicKey)) {
                     ConsoleLogger.Log("hs > create keys");
-                    var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                    var k = _bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
                     ConsoleLogger.Log(k);
                 }
                 var ava = new AvahiBrowse();
                 ava.DiscoverService("antd");
                 var hosts = ava.Locals;
 
-                var key = "";
+                string key;
 
                 try {
-                    key = Bash.Execute($"cat {pathToPublicKey}");
+                    key = _bash.Execute($"cat {pathToPublicKey}");
                     ConsoleLogger.Log($"hs > {key}");
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Log($"hs exc1 > {ex}");
                     return HttpStatusCode.ImATeapot;
                 }
@@ -110,7 +111,7 @@ namespace Antd.Modules {
                     var key2 = File.ReadAllText(pathToPublicKey);
                     ConsoleLogger.Log($"hs > {key2}");
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Log($"hs exc2 > {ex}");
                     return HttpStatusCode.ImATeapot;
                 }
@@ -120,12 +121,12 @@ namespace Antd.Modules {
                 //var key2 = File.ReadAllText(pathToPublicKey);
                 //ConsoleLogger.Log($"hs > {key2}");
 
-                if (string.IsNullOrEmpty(key)) {
+                if(string.IsNullOrEmpty(key)) {
                     ConsoleLogger.Log("hs > no key to share");
                     return HttpStatusCode.ImATeapot;
                 }
 
-                foreach (var host in hosts) {
+                foreach(var host in hosts) {
                     ConsoleLogger.Log($"hs > send request to http://{host}/ak/handshake");
                     var dict = new Dictionary<string, string> {
                             {"ApplePie", key}

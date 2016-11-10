@@ -8,19 +8,22 @@ using Nancy.IO;
 
 namespace antdlib {
     public static class Extensions {
+
+        private static readonly Bash Bash = new Bash();
+
         public static void DosToUnix(this string file, string otherFile = "") {
             var fileToConvert = otherFile.Length > 0 ? otherFile : file;
-            Bash.Execute($"dos2unix {fileToConvert}");
+            Bash.Execute($"dos2unix {fileToConvert}", false);
         }
 
         public static string ReadAsString(this RequestStream requestStream) {
-            using (var reader = new StreamReader(requestStream)) {
+            using(var reader = new StreamReader(requestStream)) {
                 return reader.ReadToEnd();
             }
         }
 
         public static CommandModel ConvertCommandToModel(this string commandOutput) {
-            if (commandOutput == null)
+            if(commandOutput == null)
                 throw new ArgumentNullException(nameof(commandOutput));
             var command = new CommandModel {
                 date = DateTime.Now,

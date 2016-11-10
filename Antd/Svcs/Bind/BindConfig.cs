@@ -43,8 +43,10 @@ namespace antdlib.Svcs.Bind {
         private static readonly string MntDir = Mounts.SetDirsPath(Dir);
         private const string MainFile = "named.conf";
 
+        private static readonly Bash Bash = new Bash();
+
         public static void SetReady() {
-            Bash.Execute($"cp {Dir} {MntDir}");
+            Bash.Execute($"cp {Dir} {MntDir}", false);
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -173,7 +175,7 @@ namespace antdlib.Svcs.Bind {
 
             public static BindModel Get() {
                 var dhcpCgf = Repository.GetByGuid(ServiceGuid);
-                if (string.IsNullOrEmpty(dhcpCgf.Config)) {
+                if(string.IsNullOrEmpty(dhcpCgf.Config)) {
                     return null;
                 }
                 var bind = JsonConvert.DeserializeObject<BindModel>(dhcpCgf.Config);
@@ -249,18 +251,18 @@ namespace antdlib.Svcs.Bind {
                     Data = data
                 };
                 options.Add(option);
-                if (section == "controls") { bind.BindControls = options; }
-                else if (section == "include") { bind.BindInclude = options; }
-                else if (section == "key") { bind.BindKey = options; }
-                else if (section == "logging") { bind.BindLogging = options; }
-                else if (section == "lwres") { bind.BindLwres = options; }
-                else if (section == "masters") { bind.BindMasters = options; }
-                else if (section == "options") { bind.BindOptions = options; }
-                else if (section == "server") { bind.BindServer = options; }
-                else if (section == "statistics-channels") { bind.BindStatisticsChannels = options; }
-                else if (section == "trusted-keys") { bind.BindTrustedKeys = options; }
-                else if (section == "managed-leys") { bind.BindManagedKeys = options; }
-                else if (section == "view") { bind.BindView = options; }
+                if(section == "controls") { bind.BindControls = options; }
+                else if(section == "include") { bind.BindInclude = options; }
+                else if(section == "key") { bind.BindKey = options; }
+                else if(section == "logging") { bind.BindLogging = options; }
+                else if(section == "lwres") { bind.BindLwres = options; }
+                else if(section == "masters") { bind.BindMasters = options; }
+                else if(section == "options") { bind.BindOptions = options; }
+                else if(section == "server") { bind.BindServer = options; }
+                else if(section == "statistics-channels") { bind.BindStatisticsChannels = options; }
+                else if(section == "trusted-keys") { bind.BindTrustedKeys = options; }
+                else if(section == "managed-leys") { bind.BindManagedKeys = options; }
+                else if(section == "view") { bind.BindView = options; }
                 Repository.Dump(ServiceGuid, JsonConvert.SerializeObject(bind));
             }
 
@@ -291,44 +293,44 @@ namespace antdlib.Svcs.Bind {
                 var bind = MapFile.Get();
                 CleanFile(filePath);
 
-                foreach (var section in bind.BindOptions) {
+                foreach(var section in bind.BindOptions) {
                     WriteSimpleSection("options", filePath, section.Data);
                 }
                 WriteAcl(filePath, bind.BindAcl);
-                foreach (var section in bind.BindControls) {
+                foreach(var section in bind.BindControls) {
                     WriteMutipleSection("controls", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindInclude) {
+                foreach(var section in bind.BindInclude) {
                     WriteMutipleSection("include", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindKey) {
+                foreach(var section in bind.BindKey) {
                     WriteMutipleSection("key", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindLogging) {
+                foreach(var section in bind.BindLogging) {
                     WriteSimpleSection("logging", filePath, section.Data);
                 }
-                foreach (var section in bind.BindLwres) {
+                foreach(var section in bind.BindLwres) {
                     WriteSimpleSection("lwres", filePath, section.Data);
                 }
-                foreach (var section in bind.BindMasters) {
+                foreach(var section in bind.BindMasters) {
                     WriteMutipleSection("masters", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindServer) {
+                foreach(var section in bind.BindServer) {
                     WriteMutipleSection("server", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindStatisticsChannels) {
+                foreach(var section in bind.BindStatisticsChannels) {
                     WriteSimpleSection("statistics-channel", filePath, section.Data);
                 }
-                foreach (var section in bind.BindTrustedKeys) {
+                foreach(var section in bind.BindTrustedKeys) {
                     WriteSimpleSection("trusted-keys", filePath, section.Data);
                 }
-                foreach (var section in bind.BindManagedKeys) {
+                foreach(var section in bind.BindManagedKeys) {
                     WriteSimpleSection("managed-keys", filePath, section.Data);
                 }
-                foreach (var section in bind.BindView) {
+                foreach(var section in bind.BindView) {
                     WriteMutipleSection("view", section.Name, filePath, section.Data);
                 }
-                foreach (var section in bind.BindZone) {
+                foreach(var section in bind.BindZone) {
                     WriteMutipleSection("zone", section.Name, filePath, section.Data);
                 }
             }
@@ -339,7 +341,7 @@ namespace antdlib.Svcs.Bind {
 
             private static void WriteAcl(string filePath, IEnumerable<LineModel> lines) {
                 var linesToAppend = new List<string>();
-                foreach (var line in lines) {
+                foreach(var line in lines) {
                     linesToAppend.Add($"acl {line.Key} {{");
                     linesToAppend.Add($"{line.Value}");
                     linesToAppend.Add("};\n");
@@ -349,8 +351,8 @@ namespace antdlib.Svcs.Bind {
 
             private static void WriteSimpleSection(string section, string filePath, IEnumerable<LineModel> lines) {
                 var linesToAppend = new List<string> { $"{section} {{" };
-                foreach (var line in lines) {
-                    if (line.Type == ServiceDataType.StringArray) {
+                foreach(var line in lines) {
+                    if(line.Type == ServiceDataType.StringArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
                     }
                     else {
@@ -375,11 +377,11 @@ namespace antdlib.Svcs.Bind {
                 var linesToAppend = new List<string>();
                 var nametowrite = section == "zone" ? $" \"{name}\" " : $" {name} ";
                 linesToAppend.Add($"{section}{nametowrite}{{");
-                foreach (var line in lines) {
-                    if (line.Type == ServiceDataType.StringArray) {
+                foreach(var line in lines) {
+                    if(line.Type == ServiceDataType.StringArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value} }};");
                     }
-                    else if (line.Type == ServiceDataType.DataArray) {
+                    else if(line.Type == ServiceDataType.DataArray) {
                         linesToAppend.Add($"{line.Key} {{ {line.Value.Replace(",", ";")} }};");
                     }
                     else {

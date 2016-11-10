@@ -34,6 +34,8 @@ namespace antdlib.Acl {
 
     public class AclManagement {
 
+        private static readonly Bash Bash = new Bash();
+
         public class Permissions {
             public class Rwx {
                 public string Value { get; } = "rwx";
@@ -70,17 +72,17 @@ namespace antdlib.Acl {
         }
 
         public static void GetAcl(string path) {
-            Bash.Execute($"getfacl {path}");
+            Bash.Execute($"getfacl {path}", false);
         }
 
         public static void SetUserAcl(string path, string perms, string user = "") {
             try {
-                var r = Bash.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}");
-                if (r.Trim().Length > 0) {
+                var r = Bash.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}", false);
+                if(r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }
@@ -88,11 +90,11 @@ namespace antdlib.Acl {
         public static void SetGroupAcl(string path, string perms, string group = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -m \"g:{group}:{perms}\" {path}");
-                if (r.Trim().Length > 0) {
+                if(r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }
@@ -100,11 +102,11 @@ namespace antdlib.Acl {
         public static void RemoveUserAcl(string path, string user = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -x \"u:{user}\" {path}");
-                if (r.Trim().Length > 0) {
+                if(r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }
@@ -112,11 +114,11 @@ namespace antdlib.Acl {
         public static void RemoveGroupAcl(string path, string group = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -x \"g:{group}\" {path}");
-                if (r.Trim().Length > 0) {
+                if(r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }
@@ -124,11 +126,11 @@ namespace antdlib.Acl {
         public static void SetOwner(string path, string userOwner, string groupOwner) {
             try {
                 var r = Bash.Execute($"chown {userOwner}:{groupOwner} -R {path}");
-                if (r.Trim().Length > 0) {
+                if(r.Trim().Length > 0) {
                     throw new Exception(r);
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"There's been an error while setting acl: {ex.Message}");
             }
         }

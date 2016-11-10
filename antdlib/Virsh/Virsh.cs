@@ -43,6 +43,8 @@ namespace antdlib.Virsh {
             public string VncPort { get; set; }
         }
 
+        private static Bash Bash = new Bash();
+
         public static IEnumerable<VirtualMachineInfo> GetVmList() {
             var vms = new List<VirtualMachineInfo>();
             var res = Bash.Execute("virsh list --all | sed '1,2d'");

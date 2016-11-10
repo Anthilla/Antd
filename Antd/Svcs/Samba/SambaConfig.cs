@@ -74,8 +74,10 @@ namespace Antd.Svcs.Samba {
         private const string MainFile = "smb.conf";
         private const string AntdSambaFile = "antd.samba.conf";
 
+        private static readonly Bash Bash = new Bash();
+
         public static void SetReady() {
-            Bash.Execute($"cp {Dir} {MntDir}");
+            Bash.Execute($"cp {Dir} {MntDir}", false);
             FileSystem.CopyDirectory(Dir, MntDir);
             Mount.Dir(Dir);
         }
@@ -85,7 +87,7 @@ namespace Antd.Svcs.Samba {
         public static bool IsActive => CheckIsActive();
 
         public static void ReloadConfig() {
-            Bash.Execute("smbcontrol all reload-config");
+            Bash.Execute("smbcontrol all reload-config", false);
         }
 
         private static List<string> GetServiceSimpleStructure() {

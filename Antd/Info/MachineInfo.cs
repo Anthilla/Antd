@@ -66,6 +66,8 @@ namespace Antd.Info {
             return result;
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static UptimeModel GetUptime() {
             var result = Bash.Execute("uptime");
             var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);

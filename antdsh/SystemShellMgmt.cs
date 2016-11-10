@@ -35,6 +35,8 @@ using antdlib.common;
 namespace antdsh {
     public class SystemShellMgmt {
 
+        private static readonly Bash Bash = new Bash();
+
         /// <summary>
         /// 01 - recupero il volume su cui è montato BootExt
         /// 02 - uso df {volume} per trovare lo spazio libero, espresso in byte

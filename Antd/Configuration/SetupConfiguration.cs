@@ -9,6 +9,7 @@ namespace Antd.Configuration {
     public class SetupConfiguration {
 
         private static readonly string FilePath = $"{Parameter.RepoConfig}/setup.conf";
+        private static readonly Bash Bash = new Bash();
 
         public static void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
@@ -19,7 +20,7 @@ namespace Antd.Configuration {
                     var importControls = new List<Control>();
 
                     for (var i = 0; i < lines.Length; i++) {
-                        Bash.Execute(lines[i]);
+                        Bash.Execute(lines[i], false);
                         importControls.Add(new Control {
                             Index = i,
                             FirstCommand = lines[i],
@@ -83,7 +84,7 @@ namespace Antd.Configuration {
                 return;
             }
             if (string.IsNullOrEmpty(control.ControlCommand)) {
-                Bash.Execute(firstCommand);
+                Bash.Execute(firstCommand, false);
                 _counter = 0;
                 return;
             }
@@ -93,7 +94,7 @@ namespace Antd.Configuration {
                 _counter = 0;
                 return;
             }
-            Bash.Execute(firstCommand);
+            Bash.Execute(firstCommand, false);
             controlResult = Bash.Execute(controlCommand);
             var secondCheck = controlResult.Contains(control.Check);
             if (secondCheck) {

@@ -137,6 +137,8 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public static void Kernel(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");

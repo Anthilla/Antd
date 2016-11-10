@@ -36,7 +36,7 @@ namespace antdlib.Storage {
     public class Volumes {
 
         public class Block {
-            public string _Id { get; set; }
+            public string Id { get; set; }
 
             public string Name { get; set; }
 
@@ -75,7 +75,10 @@ namespace antdlib.Storage {
             }
         }
 
+        private static readonly Bash Bash = new Bash();
+
         public class Get {
+
             public static string[] ById() {
                 return Bash.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
@@ -99,7 +102,7 @@ namespace antdlib.Storage {
 
         public static void PopulateBlocks() {
             var rows = Bash.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var row in rows) {
+            foreach(var row in rows) {
                 var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block {
                     Name = cells[0],
@@ -112,7 +115,7 @@ namespace antdlib.Storage {
                     MountPoint = cells.Length > 6 ? cells[6] : ""
                 };
                 var fromBlkid = GetBlockFromBlkid(blk.Name);
-                if (fromBlkid != null) {
+                if(fromBlkid != null) {
                     blk.Label = fromBlkid.Label;
                     blk.Uuid = fromBlkid.Uuid;
                     blk.PartLabel = fromBlkid.PartLabel;
@@ -159,15 +162,22 @@ namespace antdlib.Storage {
 
         private static IEnumerable<Block> Lsblk() {
             var rows = Bash.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            return rows.Select(row => row.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToArray()).Select(cells => new Block {
-                Name = cells[0], Maj = cells[1], Min = cells[1], Rm = cells[2], Size = cells[3], Ro = cells[4], DiskType = cells[5], MountPoint = cells.Length > 6 ? cells[6] : ""
+            return rows.Select(row => row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()).Select(cells => new Block {
+                Name = cells[0],
+                Maj = cells[1],
+                Min = cells[1],
+                Rm = cells[2],
+                Size = cells[3],
+                Ro = cells[4],
+                DiskType = cells[5],
+                MountPoint = cells.Length > 6 ? cells[6] : ""
             }).ToList();
         }
 
         private static IEnumerable<Block> Blkid() {
             var list = new List<Block>();
             var rows = Bash.Execute("blkid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach (var row in rows) {
+            foreach(var row in rows) {
                 var cells = row.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var blk = new Block {
                     Name = cells[0],
@@ -188,7 +198,8 @@ namespace antdlib.Storage {
         private static string AssignValue(string label, IEnumerable<string> arr) => GetValue(arr.FirstOrDefault(a => a.Contains(label)));
 
         private static string GetValue(string input) {
-            if (input == null) return "";
+            if(input == null)
+                return "";
             var val = input.Split('=').ToArray()[1];
             return val.Substring(1, val.Length - 2);
         }

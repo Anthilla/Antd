@@ -18,32 +18,36 @@ namespace Antd.SystemdTimer {
         }
 
         public static void Setup() {
-            if (IsTargetActive()) return;
-            Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
-            Bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
+            if(IsTargetActive())
+                return;
+            var bash = new Bash();
+            bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants", false);
+            bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants", false);
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
-            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
-            Bash.Execute("systemctl daemon-reload");
-            Bash.Execute("systemctl start tt.service");
-            Bash.Execute("systemctl start tt.target");
-            Bash.Execute("systemctl daemon-reload");
+            bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants", false);
+            bash.Execute("systemctl daemon-reload", false);
+            bash.Execute("systemctl start tt.service", false);
+            bash.Execute("systemctl start tt.target", false);
+            bash.Execute("systemctl daemon-reload", false);
         }
 
         public static void StartAll() {
-            Bash.Execute("systemctl restart tt.target");
+            var bash = new Bash();
+            bash.Execute("systemctl restart tt.target", false);
         }
 
         #region TT Target
         private static bool IsTargetActive() {
-            var result = Bash.Execute("systemctl is-active tt.target");
+            var bash = new Bash();
+            var result = bash.Execute("systemctl is-active tt.target");
             return result.Trim() == "active";
         }
 
         private static void WriteTimerTargetFile() {
             const string file = "/usr/lib64/systemd/system/tt.target";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
@@ -61,7 +65,7 @@ namespace Antd.SystemdTimer {
 
         private static void WriteTimerServiceFile() {
             const string file = "/usr/lib64/systemd/system/tt.service";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
@@ -85,7 +89,7 @@ namespace Antd.SystemdTimer {
 
         private static void WriteTimerMountFile() {
             const string file = "/usr/lib64/systemd/system/etc-systemd-system-tt.target.wants.mount";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
@@ -114,10 +118,10 @@ namespace Antd.SystemdTimer {
         public static void CleanUp() {
             var all = TimerRepository.GetAll().ToList();
             var sorted = all.GroupBy(a => a.Alias);
-            foreach (var group in sorted) {
-                if (group.Count() > 1) {
+            foreach(var group in sorted) {
+                if(group.Count() > 1) {
                     var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
-                    foreach (var g in old) {
+                    foreach(var g in old) {
                         TimerRepository.Delete(g.Id);
                     }
                 }
@@ -126,7 +130,7 @@ namespace Antd.SystemdTimer {
 
         public static IEnumerable<TimerSchema> GetAll() {
             var list = TimerRepository.GetAll().ToList();
-            foreach (var el in list) {
+            foreach(var el in list) {
                 el.IsEnabled = IsActive(el.Alias);
             }
             return list;
@@ -137,7 +141,7 @@ namespace Antd.SystemdTimer {
 
         public static void Create(string name, string time, string command) {
             var timerFile = $"{TargetDirectory}/{name}.timer";
-            if (File.Exists(timerFile)) {
+            if(File.Exists(timerFile)) {
                 File.Delete(timerFile);
             }
             var timerText = new List<string> {
@@ -155,7 +159,7 @@ namespace Antd.SystemdTimer {
             File.WriteAllLines(timerFile, timerText);
 
             var serviceFile = $"{TargetDirectory}/{name}.service";
-            if (File.Exists(serviceFile)) {
+            if(File.Exists(serviceFile)) {
                 File.Delete(serviceFile);
             }
             var serviceText = new List<string> {
@@ -174,7 +178,7 @@ namespace Antd.SystemdTimer {
             File.WriteAllLines(serviceFile, serviceText);
 
             var tryget = TimerRepository.GetByName(name);
-            if (tryget == null) {
+            if(tryget == null) {
                 TimerRepository.Create(new Dictionary<string, string> {
                     {"Guid", Guid.NewGuid().ToString()},
                     {"Alias", name},
@@ -182,60 +186,63 @@ namespace Antd.SystemdTimer {
                     {"Command", command}
                 });
             }
-
-            Bash.Execute($"chown root:wheel {timerFile}");
-            Bash.Execute($"chown root:wheel {serviceFile}");
-            Bash.Execute("systemctl daemon-reload");
+            var bash = new Bash();
+            bash.Execute($"chown root:wheel {timerFile}", false);
+            bash.Execute($"chown root:wheel {serviceFile}", false);
+            bash.Execute("systemctl daemon-reload", false);
         }
 
         public static void Remove(string name) {
-            Bash.Execute($"systemctl stop {name}.target");
+            var bash = new Bash();
+            bash.Execute($"systemctl stop {name}.target", false);
             var timerFile = $"{TargetDirectory}/{name}.target";
-            if (File.Exists(timerFile)) {
+            if(File.Exists(timerFile)) {
                 File.Delete(timerFile);
             }
 
-            Bash.Execute($"systemctl stop {name}.service");
+            bash.Execute($"systemctl stop {name}.service", false);
             var serviceFile = $"{TargetDirectory}/{name}.service";
-            if (File.Exists(serviceFile)) {
+            if(File.Exists(serviceFile)) {
                 File.Delete(serviceFile);
             }
 
             var tryget = TimerRepository.GetByName(name);
-            if (tryget != null) {
+            if(tryget != null) {
                 TimerRepository.Delete(tryget.Id);
             }
 
-            Bash.Execute("systemctl daemon-reload");
+            bash.Execute("systemctl daemon-reload", false);
         }
 
         public static void Import() {
             var files = Directory.EnumerateFiles(TargetDirectory).ToList();
-            foreach (var file in files.Where(_ => _.EndsWith(".target"))) {
+            foreach(var file in files.Where(_ => _.EndsWith(".target"))) {
                 var name = Path.GetFileName(file);
-                if (name != null) {
+                if(name != null) {
                     var coreName = name.Replace(".timer", "");
                     var tryget = TimerRepository.GetByName(coreName);
                     var time = "";
-                    if (!File.Exists(file)) continue;
+                    if(!File.Exists(file))
+                        continue;
                     var lines = File.ReadAllLines(file);
                     var t = lines.FirstOrDefault(_ => _.Contains("OnCalendar"));
-                    if (t != null) {
+                    if(t != null) {
                         time = t.SplitToList("=").Last();
                     }
 
                     var command = "";
                     var eqPath = files.FirstOrDefault(_ => _.Contains(coreName) && _.EndsWith(".service"));
-                    if (eqPath != null) {
-                        if (!File.Exists(eqPath)) continue;
+                    if(eqPath != null) {
+                        if(!File.Exists(eqPath))
+                            continue;
                         var clines = File.ReadAllLines(eqPath);
                         var c = clines.FirstOrDefault(_ => _.Contains("ExecStart"));
-                        if (c != null) {
+                        if(c != null) {
                             command = c.SplitToList("=").Last();
                         }
                     }
 
-                    if (tryget == null) {
+                    if(tryget == null) {
                         TimerRepository.Create(new Dictionary<string, string> {
                             {"Guid", Guid.NewGuid().ToString()},
                             {"Alias", coreName},
@@ -249,21 +256,24 @@ namespace Antd.SystemdTimer {
 
         public static void Export() {
             var all = TimerRepository.GetAll();
-            foreach (var tt in all) {
+            foreach(var tt in all) {
                 Create(tt.Alias, tt.Time, tt.Command);
             }
         }
 
         public static void Enable(string ttName) {
-            Bash.Execute($"systemctl restart {ttName}.target");
+            var bash = new Bash();
+            bash.Execute($"systemctl restart {ttName}.target", false);
         }
 
         public static void Disable(string ttName) {
-            Bash.Execute($"systemctl stop {ttName}.target");
+            var bash = new Bash();
+            bash.Execute($"systemctl stop {ttName}.target", false);
         }
 
         public static bool IsActive(string ttName) {
-            var result = Bash.Execute($"systemctl is-active {ttName}.target");
+            var bash = new Bash();
+            var result = bash.Execute($"systemctl is-active {ttName}.target");
             return result.Trim() == "active";
         }
     }
