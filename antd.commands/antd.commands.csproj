@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="Commands - OLD.cs" />
     <Compile Include="CommandsFunction.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

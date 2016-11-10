@@ -61,6 +61,7 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tool\GrepExtension.cs" />
+    <Compile Include="Tool\ReplaceExtensions.cs" />
     <Compile Include="Tool\Write.cs" />
     <Compile Include="Tool\Read.cs" />
     <Compile Include="Tool\Grep.cs" />
