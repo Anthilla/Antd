@@ -27,7 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
+using System.Linq;
+using antdlib.common.Tool;
 using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
@@ -80,7 +81,7 @@ namespace Antd.Modules {
 
             Post["/parted/print"] = x => {
                 var disk = (string)Request.Form.Disk;
-                var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null | grep 'Partition Table: '");
+                var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 

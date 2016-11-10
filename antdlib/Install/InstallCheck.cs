@@ -31,12 +31,13 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdlib.Install {
     public class InstallCheck {
         private static bool IsOnUsb() {
-            var cmdResult = Bash.Execute("lsblk -npl | grep /mnt/cdrom");
-            var deviceName = cmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var cmdResult = Bash.Execute("lsblk -npl").SplitBash().Grep("/mnt/cdrom");
+            var deviceName = cmdResult.First().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
             if(deviceName == null)
                 throw new ArgumentNullException(nameof(deviceName));
             var diskName = deviceName.Substring(0, deviceName.Length - 1);
@@ -58,7 +59,7 @@ namespace antdlib.Install {
         private static readonly Bash Bash = new Bash();
 
         public static bool IsDiskEligibleForOs(string disk) {
-            var diskSizeCmdResult = Bash.Execute($"lsblk -npl --output NAME,SIZE | grep \"{disk} \"");
+            var diskSizeCmdResult = Bash.Execute("lsblk -npl --output NAME,SIZE").SplitBash().Grep(disk).First();
             var size = diskSizeCmdResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
             if(size != null && !size.Contains("G")) {
                 //var num = Convert.ToInt32(size.Replace("M", ""));
@@ -67,13 +68,12 @@ namespace antdlib.Install {
                     return false;
                 }
             }
-            var isPartitionCmdResult = Bash.Execute($"lsblk -npl --output NAME,TYPE | grep \"{disk} \"");
+            var hasPartitionCmdResult = Bash.Execute("lsblk -npl --output NAME,TYPE").Grep(disk).ToList();
+            var isPartitionCmdResult = hasPartitionCmdResult.First();
             if(isPartitionCmdResult.Contains("part") && !isPartitionCmdResult.Contains("disk")) {
                 return false;
             }
-            var hasPartitionCmdResult = Bash.Execute($"lsblk -npl --output NAME,TYPE | grep {disk}");
-            var results = hasPartitionCmdResult.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
-            return results <= 1;
+            return hasPartitionCmdResult.Count <= 1;
         }
     }
 }

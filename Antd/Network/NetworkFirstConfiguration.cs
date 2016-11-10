@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace Antd.Network {
     public class NetworkFirstConfiguration {

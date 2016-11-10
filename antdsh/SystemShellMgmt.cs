@@ -31,6 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdsh {
     public class SystemShellMgmt {
@@ -43,8 +44,8 @@ namespace antdsh {
         /// </summary>
         public static bool ChechDiskSpace() {
             Console.WriteLine("Checking Disk Space");
-            var blkid = Bash.Execute("blkid | grep /dev/sda | grep BootExt");
-            var volume = blkid.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
+            var blkid = Bash.Execute("blkid").SplitBash().Grep("/dev/sda").Grep("BootExt");
+            var volume = blkid.First().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
             var available = Bash.Execute($"df -k {volume} | sed -e 1d|head -3").
                 Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
             var availableInt = Convert.ToInt32(available);

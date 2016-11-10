@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------------
+﻿////-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -27,38 +27,36 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Tool;
+using SysFiles = System.IO.File;
 
-namespace antdlib {
-    public class RepositoryCheck {
-        public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bash = new Bash();
-            var bootExtData = bash.Execute("blkid").SplitBash().Grep("BootExt").ToList();
-            if (!bootExtData.Any()) return;
-            var data = bootExtData.First();
-            var bootExtDevice = new Regex(".*:").Matches(data)[0].Value.Replace(":", "").Trim();
-            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(data)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-            ConsoleLogger.Log($"global repository -> checking");
-            var procMounts = File.ReadAllLines("/proc/mounts");
-            var line = procMounts.FirstOrDefault(_ => _.Contains($"'{bootExtDevice} /mnt/cdrom '"));
-            if (!string.IsNullOrEmpty(line)) {
-                if (line.Contains("ro") && !line.Contains("rw")) {
-                    ConsoleLogger.Log($"is RO -> remounting");
-                    bash.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom", false);
-                }
-                else if (line.Contains("rw") && !line.Contains("ro")) {
-                    ConsoleLogger.Log($"is RW -> ok!");
-                }
+namespace antdlib.common.Tool {
+
+    public class Read {
+
+        private readonly string[] _empty = { };
+
+        public string File(string path) {
+            return SysFiles.Exists(path) ? SysFiles.ReadAllText(path) : string.Empty;
+        }
+
+        public string Files(IEnumerable<string> paths) {
+            var result = "";
+            foreach(var path in paths) {
+                result += File(path);
+                result += Environment.NewLine;
             }
-            else {
-                ConsoleLogger.Log("is not mounted -> IMPOSSIBLE");
-            }
-            ConsoleLogger.Log($"global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log("global repository -> checked");
+            return result;
+        }
+
+        public string[] FileLines(string path) {
+            return SysFiles.Exists(path) ? SysFiles.ReadAllLines(path) : _empty;
+        }
+
+        public string[] FilesLines(IEnumerable<string> paths) {
+            return paths.Select(FileLines).Aggregate(_empty, (current, lines) => current.Concat(lines).ToArray());
         }
     }
 }

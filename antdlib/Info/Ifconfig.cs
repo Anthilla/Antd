@@ -28,7 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Linq;
-using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdlib.Info {
 

@@ -27,38 +27,36 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Tool;
 
-namespace antdlib {
-    public class RepositoryCheck {
-        public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bash = new Bash();
-            var bootExtData = bash.Execute("blkid").SplitBash().Grep("BootExt").ToList();
-            if (!bootExtData.Any()) return;
-            var data = bootExtData.First();
-            var bootExtDevice = new Regex(".*:").Matches(data)[0].Value.Replace(":", "").Trim();
-            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(data)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-            ConsoleLogger.Log($"global repository -> checking");
-            var procMounts = File.ReadAllLines("/proc/mounts");
-            var line = procMounts.FirstOrDefault(_ => _.Contains($"'{bootExtDevice} /mnt/cdrom '"));
-            if (!string.IsNullOrEmpty(line)) {
-                if (line.Contains("ro") && !line.Contains("rw")) {
-                    ConsoleLogger.Log($"is RO -> remounting");
-                    bash.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom", false);
-                }
-                else if (line.Contains("rw") && !line.Contains("ro")) {
-                    ConsoleLogger.Log($"is RW -> ok!");
+namespace antdlib.common.Tool {
+    public static class AwkExtension {
+
+        private static readonly string Empty = string.Empty;
+        private static readonly IEnumerable<string> EmptyList = new List<string>();
+
+        public static string Print(this string input, int elementIndex, char divider = ' ') {
+            if(string.IsNullOrEmpty(input)) {
+                return Empty;
+            }
+            var inputArr = input.Split(divider);
+            return elementIndex > inputArr.Length ? Empty : inputArr[elementIndex];
+        }
+
+        public static IEnumerable<string> Print(this IEnumerable<string> inputLines, int elementIndex, char divider = ' ') {
+            var inputList = inputLines as IList<string> ?? inputLines.ToList();
+            if(!inputList.Any()) {
+                return EmptyList;
+            }
+            var list = new List<string>();
+            foreach(var input in inputList) {
+                var inputArr = input.Split(divider);
+                if(inputArr.Length < elementIndex) {
+                    list.Add(inputArr[elementIndex]);
                 }
             }
-            else {
-                ConsoleLogger.Log("is not mounted -> IMPOSSIBLE");
-            }
-            ConsoleLogger.Log($"global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log("global repository -> checked");
+            return list;
         }
     }
 }

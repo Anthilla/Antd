@@ -1,125 +1,132 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace antdlib.common.Tool {
-    class Program {
-        private static string pattern = string.Empty;
-        private static string path = "";
-        private static bool recursive = false;
-        private static bool supress = false;
-        private static bool IgnoreCase = false;
-        public static bool inverse = false;
-        private static string Help = @"This application lists files based on matching Regular Expression.
-                Arguments:
-                -?                  Show help message.
-                -r                  Recursive search
-                -l                  Supress results to show only file names.
-                -i                  ignore case.
-                -v                  invert pattern.
-                path must look like this: C:\folder\.
-                pattern must begin with %.
-                ";
+    public class Grep {
 
-        static void Main(string[] args) {
-            readArgs(args);
-            DisplayArgs(args);
-            if(path == "") {
-                path = Directory.GetCurrentDirectory();
-            }
-            else if(path != "") {
-                var x = path;
-                path = x;
-            }
+        private readonly IEnumerable<KeyValuePair<string, string>> _empty = new List<KeyValuePair<string, string>>();
 
-            if(pattern == "") {
-                string msg = string.Format("Pattern can not be empty ");
-                Console.Write(msg);
+        public IEnumerable<KeyValuePair<string, string>> InText(string input, string pattern, bool caseInsensitive = false) {
+            if(string.IsNullOrEmpty(pattern)) {
+                return _empty;
             }
-            if(pattern != "") {
-                System.Console.WriteLine(@"Your search in {0} for {1} returned the following:       
-****************************************************************************
-****************************************************************************
-            ", path, pattern);
-                SearchDirectory(path, pattern, recursive, supress, IgnoreCase);
+            if(string.IsNullOrEmpty(input)) {
+                return _empty;
             }
-            System.Console.ReadKey();
-        }
-        //Reads and parses argumets that are passed in from the command line
-        private static void readArgs(string[] args) {
-            foreach(string arg in args) {
-                if(arg.ToLower().Contains(":" + "\\")) {
-                    path = arg;
-                }
-                else if(arg.StartsWith("-?")) {
-                    System.Console.WriteLine(Help);
-                }
-                else if(arg.ToLower().StartsWith("-r")) {
-                    recursive = true;
-                }
-                else if(arg.ToLower().StartsWith("-l")) {
-                    supress = true;
-                }
-                else if(arg.ToLower().StartsWith("-i")) {
-                    IgnoreCase = true;
-                }
-                else if(arg.ToLower().StartsWith("-v")) {
-                    inverse = true;
-                }
-                else if(arg.StartsWith("%")) {
-                    var x = arg.Substring(1);
-                    pattern = x;
-                }
-                else {
-                    System.Console.WriteLine("{0} is not a valid argument. Type -? for help", arg);
-                }
-            }
-        }
-        //Displays the arguments and number of arguments in the results
-        private static void DisplayArgs(string[] args) {
-            string msg = string.Format("There were {0} args passed", args.Length);
-            System.Console.WriteLine(msg);
-            foreach(string arg in args) {
-                Console.WriteLine(arg);
-            }
-        }
-        //Searches directory based on parameters gathered from the arguments that were parsed
-        public static void SearchDirectory(string path, string pattern, bool recursive, bool supress, bool IgnoreCase) {
-            string[] files;
             try {
-                if(recursive == true) {
-                    files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                var list = new List<KeyValuePair<string, string>>();
+                if(caseInsensitive) {
+                    if(Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase)) {
+                        list.Add(new KeyValuePair<string, string>("", input));
+                    }
                 }
                 else {
-                    files = Directory.GetFiles(path);
+                    if(Regex.IsMatch(input, pattern)) {
+                        list.Add(new KeyValuePair<string, string>("", input));
+                    }
                 }
-                foreach(var f in files) {
-                    var file = new FileInfo(f);
-                    {
-                        if(IgnoreCase == true) {
-                            if(Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == true) {
-                                Console.WriteLine(file.Name);
-                            }
-                            else if(Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase) && supress == false) {
-                                Console.WriteLine(file.DirectoryName + "\\" + file.Name);
-                            }
-                        }
-                        else if(IgnoreCase == false) {
-                            if(Regex.IsMatch(file.Name, pattern) && supress == true) {
-                                Console.WriteLine(file.Name);
-                            }
-                            else if(Regex.IsMatch(file.Name, pattern) && supress == false) {
-                                Console.WriteLine(file.DirectoryName + "\\" + file.Name);
-                            }
+                return list;
+            }
+            catch(Exception) {
+                return _empty;
+            }
+        }
 
+        public IEnumerable<KeyValuePair<string, string>> InText(IEnumerable<string> inputLines, string pattern, bool caseInsensitive = false) {
+            if(string.IsNullOrEmpty(pattern)) {
+                return _empty;
+            }
+            var inputList = inputLines as IList<string> ?? inputLines.ToList();
+            if(!inputList.Any()) {
+                return _empty;
+            }
+            try {
+                var list = new List<KeyValuePair<string, string>>();
+                foreach(var input in inputList) {
+                    if(caseInsensitive) {
+                        if(Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase)) {
+                            list.Add(new KeyValuePair<string, string>("", input));
+                        }
+                    }
+                    else {
+                        if(Regex.IsMatch(input, pattern)) {
+                            list.Add(new KeyValuePair<string, string>("", input));
                         }
                     }
                 }
+                return list;
             }
-            catch(Exception e) {
-                Console.WriteLine(e);
+            catch(Exception) {
+                return _empty;
             }
         }
 
+        public IEnumerable<KeyValuePair<string, string>> InFiles(string directoryPath, string pattern, bool recursive = true, bool caseInsensitive = false) {
+            if(string.IsNullOrEmpty(pattern)) {
+                return _empty;
+            }
+            if(directoryPath == "") {
+                directoryPath = Directory.GetCurrentDirectory();
+            }
+            else if(directoryPath != "") {
+                var x = directoryPath;
+                directoryPath = x;
+            }
+            var results = SearchDirectory(directoryPath, pattern, recursive, caseInsensitive);
+            return results;
+        }
+
+        private IEnumerable<KeyValuePair<string, string>> SearchDirectory(string path, string pattern, bool recursive, bool caseInsensitive) {
+            var list = new List<KeyValuePair<string, string>>();
+            try {
+                var files = recursive ? Directory.GetFiles(path, "*.*", SearchOption.AllDirectories) : Directory.GetFiles(path);
+                foreach(var f in files) {
+                    var file = new FileInfo(f);
+                    if(caseInsensitive) {
+                        if(Regex.IsMatch(file.Name, pattern, RegexOptions.IgnoreCase)) {
+                            list.Add(new KeyValuePair<string, string>(file.Name, file.Name));
+                            if(file.DirectoryName != null) {
+                                list.Add(new KeyValuePair<string, string>(file.Name, Path.Combine(file.DirectoryName, file.Name)));
+                            }
+                        }
+
+                        using(var fileRead = new FileStream(f, FileMode.Open, FileAccess.Read))
+                        using(var streamRead = new StreamReader(fileRead)) {
+                            string srccurrline;
+                            while((srccurrline = streamRead.ReadLine()) != null) {
+                                if(Regex.IsMatch(srccurrline, pattern, RegexOptions.IgnoreCase)) {
+                                    list.Add(new KeyValuePair<string, string>(file.Name, srccurrline));
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if(Regex.IsMatch(file.Name, pattern)) {
+                            list.Add(new KeyValuePair<string, string>(file.Name, file.Name));
+                            if(file.DirectoryName != null) {
+                                list.Add(new KeyValuePair<string, string>(file.Name, Path.Combine(file.DirectoryName, file.Name)));
+                            }
+                        }
+
+                        using(var fileRead = new FileStream(f, FileMode.Open, FileAccess.Read))
+                        using(var streamRead = new StreamReader(fileRead)) {
+                            string srccurrline;
+                            while((srccurrline = streamRead.ReadLine()) != null) {
+                                if(Regex.IsMatch(srccurrline, pattern)) {
+                                    list.Add(new KeyValuePair<string, string>(file.Name, srccurrline));
+                                }
+                            }
+                        }
+                    }
+                }
+                return list.ToArray();
+            }
+            catch(Exception) {
+                return _empty;
+            }
+        }
     }
 }

@@ -35,6 +35,7 @@ using System.Linq;
 using System.Threading;
 using antdlib.common;
 using antdlib.common.Helpers;
+using antdlib.common.Tool;
 
 namespace antdsh {
     public class Execute {
@@ -42,20 +43,20 @@ namespace antdsh {
         private static readonly Bash Bash = new Bash();
 
         public static void RemounwRwOs() {
-            Bash.Execute($"{Parameter.Aossvc} reporemountrw");
+            Bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
         }
 
         private static int _retryCountTryStopProcess;
         private static void TryStopProcess(string query) {
-            while (true) {
-                var psResult = Bash.Execute($"ps -aef|grep '{query}'|grep -v grep");
-                if (psResult.Length <= 0)
+            while(true) {
+                var psResult = Bash.Execute("ps -aef").SplitBash().Grep(query).ToList();
+                if(!psResult.Any())
                     return;
-                var split = psResult.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                if (split.Length <= 0)
+                var split = psResult.First()?.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if(split?.Length <= 0)
                     return;
-                var pid = split[1];
-                Bash.Execute($"kill -9 {pid.Trim()}");
+                var pid = split?[1];
+                Bash.Execute($"kill -9 {pid?.Trim()}");
                 _retryCountTryStopProcess = _retryCountTryStopProcess + 1;
                 Thread.Sleep(500);
             }
@@ -67,8 +68,8 @@ namespace antdsh {
         }
 
         public static void CheckRunningExists() {
-            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
-            if (running.Contains(Parameter.AntdRunning))
+            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir).SplitBash().Grep(Parameter.AntdRunning);
+            if(running.First().Contains(Parameter.AntdRunning))
                 return;
             Console.WriteLine("There's no running version of antd.");
         }
@@ -78,23 +79,23 @@ namespace antdsh {
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
             var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
+            if(zips.Length > 0) {
+                foreach(var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
             var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
+            if(squashes.Length > 0) {
+                foreach(var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
                 }
             }
             var versionsOrdered = new KeyValuePair<string, string>[] { };
-            if (versions.ToArray().Length > 0) {
+            if(versions.ToArray().Length > 0) {
                 versionsOrdered = versions.OrderByDescending(i => i.Value).ToArray();
             }
             var newestVersionFound = new KeyValuePair<string, string>(null, null);
-            if (versionsOrdered.Length > 0) {
+            if(versionsOrdered.Length > 0) {
                 newestVersionFound = versionsOrdered.FirstOrDefault();
             }
             return newestVersionFound;
@@ -112,8 +113,8 @@ namespace antdsh {
         }
 
         public static string GetRunningVersion() {
-            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir + " | grep " + Parameter.AntdRunning);
-            if (!running.Contains(Parameter.AntdRunning)) {
+            var running = Bash.Execute("ls -la " + Parameter.AntdVersionsDir).SplitBash().Grep(Parameter.AntdRunning);
+            if(!running.First().Contains(Parameter.AntdRunning)) {
                 Console.WriteLine("There's no running version of antd.");
                 return null;
             }
@@ -153,15 +154,15 @@ namespace antdsh {
         }
 
         public static void UmountTmpRam() {
-            while (true) {
+            while(true) {
                 var procMounts = File.ReadAllLines("/proc/mounts");
-                if (procMounts.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----"))) {
+                if(procMounts.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----"))) {
                     Bash.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
                     UmountTmpRam();
                 }
 
                 var f = File.ReadAllLines("/proc/mounts");
-                if (f.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----")))
+                if(f.Any(_ => _.Contains(Parameter.AntdTmpDir) && !_.StartsWith("----")))
                     return;
                 Bash.Execute($"umount -t tmpfs {Parameter.AntdTmpDir}");
             }
@@ -177,7 +178,7 @@ namespace antdsh {
 
         public static void RemoveTmpZips() {
             var files = Directory.EnumerateFiles(Parameter.AntdTmpDir, "*.*").Where(f => f.EndsWith(".7z") || f.EndsWith(".zip"));
-            foreach (var file in files) {
+            foreach(var file in files) {
                 Console.WriteLine("Deleting {0}", file);
                 File.Delete(file);
             }
@@ -189,7 +190,7 @@ namespace antdsh {
 
         public static void CreateSquash(string squashName) {
             var src = Directory.EnumerateDirectories(Parameter.AntdTmpDir).FirstOrDefault(d => d.Contains("antd"));
-            if (src == null) {
+            if(src == null) {
                 Console.WriteLine("Unexpected error while creating the squashfs");
                 return;
             }
@@ -207,20 +208,20 @@ namespace antdsh {
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
             var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
+            if(zips.Length > 0) {
+                foreach(var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
             var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
+            if(squashes.Length > 0) {
+                foreach(var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
                 }
             }
-            if (versions.ToArray().Length <= 0)
+            if(versions.ToArray().Length <= 0)
                 return;
-            foreach (var version in versions) {
+            foreach(var version in versions) {
                 Console.WriteLine($"{0}    -    {1}", version.Key, version.Value);
             }
         }
@@ -230,19 +231,19 @@ namespace antdsh {
             var files = Directory.EnumerateFiles(Parameter.AntdVersionsDir, "*.*");
             var enumerable = files as string[] ?? files.ToArray();
             var zips = enumerable.Where(s => s.EndsWith(Parameter.ZipEndsWith)).ToArray();
-            if (zips.Length > 0) {
-                foreach (var zip in zips) {
+            if(zips.Length > 0) {
+                foreach(var zip in zips) {
                     versions.Add(SetVersionKeyValuePair(zip));
                 }
             }
             var squashes = enumerable.Where(s => s.EndsWith(Parameter.SquashEndsWith)).ToArray();
-            if (squashes.Length > 0) {
-                foreach (var squash in squashes) {
+            if(squashes.Length > 0) {
+                foreach(var squash in squashes) {
                     versions.Add(SetVersionKeyValuePair(squash));
                 }
             }
             var newestVersionFound = new KeyValuePair<string, string>(null, null);
-            if (versions.ToArray().Length > 0) {
+            if(versions.ToArray().Length > 0) {
                 newestVersionFound = versions.FirstOrDefault(v => v.Value == number);
             }
             return newestVersionFound;
@@ -265,7 +266,7 @@ namespace antdsh {
 
         public static void ExtractDownloadedFile() {
             var downloadedFile = Parameter.AntdTmpDir + "/" + Parameter.DownloadName;
-            if (!File.Exists(downloadedFile)) {
+            if(!File.Exists(downloadedFile)) {
                 Console.WriteLine("The file you're looking for does not exist!");
                 return;
             }
@@ -281,7 +282,7 @@ namespace antdsh {
 
         public static void PickAndMoveZipFileInDownloadedDirectory() {
             var mainDownloadedDir = Parameter.AntdTmpDir + "/" + Parameter.DownloadFirstDir;
-            if (!Directory.Exists(mainDownloadedDir)) {
+            if(!Directory.Exists(mainDownloadedDir)) {
                 Console.WriteLine("This {0} directory does not exist.", mainDownloadedDir);
                 return;
             }
@@ -289,13 +290,13 @@ namespace antdsh {
             Console.WriteLine("Trying to pick: {0}", fileToPick);
             var destination = Parameter.AntdTmpDir + "/" + Path.GetFileName(fileToPick);
             Console.WriteLine("and moving it here: {0}", destination);
-            if (fileToPick != null)
+            if(fileToPick != null)
                 File.Move(fileToPick, destination);
         }
 
         public static void ExtractPickedZip() {
             var downloadedZip = Directory.GetFiles(Parameter.AntdTmpDir, "*.*").FirstOrDefault(f => f.Contains("antd"));
-            if (!File.Exists(downloadedZip)) {
+            if(!File.Exists(downloadedZip)) {
                 Console.WriteLine("A file does not exist!");
                 return;
             }
@@ -310,8 +311,8 @@ namespace antdsh {
         }
 
         public static void Umount(string dir) {
-            while (true) {
-                if (Mounts.IsAlreadyMounted(dir) != true)
+            while(true) {
+                if(Mounts.IsAlreadyMounted(dir) != true)
                     return;
                 Bash.Execute($"umount {dir}");
             }

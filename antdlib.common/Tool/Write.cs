@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------------
+﻿////-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -27,38 +27,54 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Tool;
+using System;
+using System.Collections.Generic;
+using SysFile = System.IO.File;
 
-namespace antdlib {
-    public class RepositoryCheck {
-        public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bash = new Bash();
-            var bootExtData = bash.Execute("blkid").SplitBash().Grep("BootExt").ToList();
-            if (!bootExtData.Any()) return;
-            var data = bootExtData.First();
-            var bootExtDevice = new Regex(".*:").Matches(data)[0].Value.Replace(":", "").Trim();
-            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(data)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-            ConsoleLogger.Log($"global repository -> checking");
-            var procMounts = File.ReadAllLines("/proc/mounts");
-            var line = procMounts.FirstOrDefault(_ => _.Contains($"'{bootExtDevice} /mnt/cdrom '"));
-            if (!string.IsNullOrEmpty(line)) {
-                if (line.Contains("ro") && !line.Contains("rw")) {
-                    ConsoleLogger.Log($"is RO -> remounting");
-                    bash.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom", false);
+namespace antdlib.common.Tool {
+
+    public class Write {
+
+        public enum ExitCode {
+            WriteOk = 0,
+            FileAlreadyExists = -1,
+            WriteFailed = -2
+        }
+
+        public ExitCode WriteFile(string path, string text, bool overwrite = true) {
+            try {
+                if(SysFile.Exists(path) && overwrite) {
+                    SysFile.Delete(path);
+                    SysFile.WriteAllText(path, text);
+                    return ExitCode.WriteOk;
                 }
-                else if (line.Contains("rw") && !line.Contains("ro")) {
-                    ConsoleLogger.Log($"is RW -> ok!");
+                if(SysFile.Exists(path) && !overwrite) {
+                    return ExitCode.FileAlreadyExists;
                 }
+                SysFile.WriteAllText(path, text);
+                return ExitCode.WriteOk;
             }
-            else {
-                ConsoleLogger.Log("is not mounted -> IMPOSSIBLE");
+            catch(Exception) {
+                return ExitCode.WriteFailed;
             }
-            ConsoleLogger.Log($"global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log("global repository -> checked");
+        }
+
+        public ExitCode WriteFile(string path, IEnumerable<string> text, bool overwrite = true) {
+            try {
+                if(SysFile.Exists(path) && overwrite) {
+                    SysFile.Delete(path);
+                    SysFile.WriteAllLines(path, text);
+                    return ExitCode.WriteOk;
+                }
+                if(SysFile.Exists(path) && !overwrite) {
+                    return ExitCode.FileAlreadyExists;
+                }
+                SysFile.WriteAllLines(path, text);
+                return ExitCode.WriteOk;
+            }
+            catch(Exception) {
+                return ExitCode.WriteFailed;
+            }
         }
     }
 }

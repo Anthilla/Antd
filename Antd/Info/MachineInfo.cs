@@ -33,6 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using antdlib.common;
+using antdlib.common.Tool;
 using antdlib.Models;
 
 namespace Antd.Info {

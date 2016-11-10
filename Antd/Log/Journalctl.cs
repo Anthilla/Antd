@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace Antd.Log {
     public class Journalctl {
@@ -39,13 +40,13 @@ namespace Antd.Log {
         private static readonly Bash Bash = new Bash();
 
         public static IEnumerable<string> GetAllLog() {
-            var result = Bash.Execute("journalctl --no-pager --quiet");
-            return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash();
+            return result;
         }
 
         public static IEnumerable<string> GetAllLog(string filter) {
-            var result = Bash.Execute($"journalctl --no-pager --quiet | grep {filter}");
-            return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var result = Bash.Execute($"journalctl --no-pager --quiet").SplitBash().Grep(filter);
+            return result;
         }
 
         public static IEnumerable<string> GetAllLogSinceHour(string hours) {

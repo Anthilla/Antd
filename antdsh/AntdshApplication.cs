@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdsh {
     internal class AntdshApplication {
@@ -11,15 +12,15 @@ namespace antdsh {
         private static readonly IDictionary<string, string> CommandList = new Dictionary<string, string>();
 
         private static void Main(string[] args) {
-            if (args.Length < 1) {
-                while (true) {
+            if(args.Length < 1) {
+                while(true) {
                     Console.Write($"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} > antdsh > ");
                     var command = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(command)) {
+                    if(!string.IsNullOrEmpty(command)) {
                         AddCommand(command);
                         var commandMain = command.Split(' ').First();
                         var arguments = command.Split(' ').Skip(1).ToArray();
-                        if (LCommands.ContainsKey(commandMain)) {
+                        if(LCommands.ContainsKey(commandMain)) {
                             Action<string[]> functionToExecute;
                             LCommands.TryGetValue(commandMain, out functionToExecute);
                             functionToExecute?.Invoke(arguments);
@@ -33,7 +34,7 @@ namespace antdsh {
             else {
                 var commandMain = args.First();
                 var arguments = args.Skip(1).ToArray();
-                if (LCommands.ContainsKey(commandMain)) {
+                if(LCommands.ContainsKey(commandMain)) {
                     Action<string[]> functionToExecute;
                     LCommands.TryGetValue(commandMain, out functionToExecute);
                     functionToExecute?.Invoke(arguments);
@@ -45,7 +46,7 @@ namespace antdsh {
         }
 
         private static void AddCommand(string command) {
-            if (command == "history")
+            if(command == "history")
                 return;
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
             CommandList.Add(new KeyValuePair<string, string>(timestamp, command));
@@ -78,7 +79,7 @@ namespace antdsh {
         }
 
         private static void HistoryFunc(string[] args) {
-            foreach (var cmd in CommandList) {
+            foreach(var cmd in CommandList) {
                 Console.WriteLine(cmd.Value);
             }
         }
@@ -91,7 +92,7 @@ namespace antdsh {
 
         private static void UpdateFunc(string[] args) {
             Units.CreateRemountUnits();
-            if (args.Length < 1) {
+            if(args.Length < 1) {
                 WriteHelp("update usage", "update [options] [verb]");
                 Console.WriteLine("");
                 Console.WriteLine("update options:");
@@ -108,10 +109,10 @@ namespace antdsh {
                 Console.WriteLine("");
                 return;
             }
-            if (args.Length > 2) {
+            if(args.Length > 2) {
                 Console.WriteLine("Too many arguments, try 'update --help' to check its usage.");
             }
-            if (args.Contains("-h") || args.Contains("--help")) {
+            if(args.Contains("-h") || args.Contains("--help")) {
                 WriteHelp("update usage", "update [options] [verb]");
                 Console.WriteLine("");
                 Console.WriteLine("update options:");
@@ -132,7 +133,7 @@ namespace antdsh {
 
             var forced = args.Contains("-f") || args.Contains("--force");
 
-            switch (verb) {
+            switch(verb) {
                 case "check":
                     Update.Check();
                     break;
@@ -159,20 +160,20 @@ namespace antdsh {
 
         private static readonly Bash Bash = new Bash();
 
-        private static bool IsAntdRunning() => Bash.Execute("ps -aef | grep Antd.exe | grep -v grep").Length > 0;
+        private static bool IsAntdRunning() => Bash.Execute("ps -aef").Grep("Antd.exe").Any();
 
         private static int _startCount;
         private static void StartFunc(string[] args) {
             var versionToRun = args.First();
-            while (true) {
+            while(true) {
                 _startCount++;
                 Console.WriteLine($"Retry #{_startCount}");
-                if (_startCount < 5) {
+                if(_startCount < 5) {
                     Execute.LinkVersionToRunning(versionToRun);
                     Console.WriteLine($"New antd '{versionToRun}' linked to running version");
                     Console.WriteLine("Restarting services now...");
                     Execute.RestartSystemctlAntdServices();
-                    if (IsAntdRunning()) {
+                    if(IsAntdRunning()) {
                         Console.WriteLine("Antd is running now!");
                     }
                     else {
@@ -190,14 +191,14 @@ namespace antdsh {
 
         private static int _stopCount;
         private static void StopFunc(string[] args) {
-            while (true) {
+            while(true) {
                 _stopCount++;
                 Console.WriteLine($"Retry #{_stopCount}");
-                if (_stopCount < 5) {
+                if(_stopCount < 5) {
                     Console.WriteLine("Removing everything and stopping antd.");
                     Execute.StopServices();
                     UmountAll();
-                    if (IsAntdRunning() == false) {
+                    if(IsAntdRunning() == false) {
                         Console.WriteLine("Antd has been stopped now!");
                     }
                     else {
@@ -215,10 +216,10 @@ namespace antdsh {
 
         private static void UmountAll() {
             Console.WriteLine("Unmounting Antd");
-            while (true) {
-                if (File.Exists("/proc/mounts")) {
+            while(true) {
+                if(File.Exists("/proc/mounts")) {
                     var procMounts = File.ReadAllLines("/proc/mounts");
-                    if (procMounts.Any(_ => _.Contains("/antd")))
+                    if(procMounts.Any(_ => _.Contains("/antd")))
                         return;
                     Bash.Execute($"umount {Parameter.AntdCfg}");
                     Bash.Execute($"umount {Parameter.AntdCfgDatabase}");
@@ -228,11 +229,10 @@ namespace antdsh {
         }
 
         private static void StatusFunc(string[] args) {
-            var res = Bash.Execute("ps -aef | grep Antd.exe | grep -v grep");
-            Console.WriteLine(res.Length > 0 ? "Antd is running." : "Antd is NOT running");
+            var res = Bash.Execute("ps -aef").Grep("Antd.exe");
+            Console.WriteLine(res.Any() ? "Antd is running." : "Antd is NOT running");
             Console.WriteLine("");
             Console.WriteLine(Bash.Execute("systemctl status "));
-
         }
 
         //private static void CleanTmp() {

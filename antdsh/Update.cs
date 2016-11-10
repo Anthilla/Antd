@@ -34,6 +34,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdsh {
     public class Update {

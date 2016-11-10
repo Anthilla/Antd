@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdlib.Status {
     public class Local {
@@ -39,7 +40,7 @@ namespace antdlib.Status {
         private static readonly Bash Bash = new Bash();
 
         private static string GetSystemVersion() {
-            var sq = Bash.Execute("losetup | grep /dev/loop0");
+            var sq = Bash.Execute("losetup").SplitBash().Grep("/dev/loop0").First();
             var sqSplt = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             if(sqSplt.Length <= 1)
                 return "";
@@ -51,13 +52,10 @@ namespace antdlib.Status {
 
         private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
             var list = new List<SystemComponentModel>();
-            var activeLinkData = Bash.Execute($"find {Parameter.Repo} -type l | grep active");
-            ConsoleLogger.Warn(activeLinkData);
+            var activeLinkData = Bash.Execute($"find {Parameter.Repo} -type l").SplitBash().Grep("active").First();
             var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach(var link in activeLinks) {
-                ConsoleLogger.Warn(link);
                 var linkInfoData = Bash.Execute($"file {link}");
-                ConsoleLogger.Warn(linkInfoData);
                 var linkInfos = linkInfoData.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
                 var sc = new SystemComponentModel() {
                     Active = linkInfos[0].Replace(":", "").Trim(),

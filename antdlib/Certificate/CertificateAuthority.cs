@@ -30,6 +30,7 @@
 using System;
 using System.IO;
 using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdlib.Certificate {
     public class CertificateAuthority {

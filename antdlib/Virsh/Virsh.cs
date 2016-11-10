@@ -29,8 +29,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
-using antdlib.common;
+using antdlib.common.Tool;
 
 namespace antdlib.Virsh {
     public class Virsh {
@@ -48,11 +49,11 @@ namespace antdlib.Virsh {
         public static IEnumerable<VirtualMachineInfo> GetVmList() {
             var vms = new List<VirtualMachineInfo>();
             var res = Bash.Execute("virsh list --all | sed '1,2d'");
-            if (res.Length < 1) {
+            if(res.Length < 1) {
                 return vms;
             }
             var virshVms = res.Split(new[] { Environment.NewLine }, 3, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var i in virshVms) {
+            foreach(var i in virshVms) {
                 var info = i.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 var vm = new VirtualMachineInfo {
                     Id = info[0],
@@ -68,10 +69,8 @@ namespace antdlib.Virsh {
         }
 
         private static KeyValuePair<string, string> GetVmVncAddress(string domain) {
-            //virsh dumpxml 004_NET_HWK_AnthillaOS | grep "graphics type='vnc'"
-            //<graphics type='vnc' port='22004' autoport='no' websocket='23004' listen='10.1.19.1' keymap='it' sharePolicy='force-shared'>
-            var res = Bash.Execute($"virsh dumpxml {domain} | grep \"graphics type='vnc'\"");
-            if (res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
+            var res = Bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
+            if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
                 return new KeyValuePair<string, string>(null, null);
             }
             var portRegex = "port='([\\d]*)'";

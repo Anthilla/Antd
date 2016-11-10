@@ -36,6 +36,7 @@ using System.Linq;
 using System.Net.Sockets;
 using antdlib;
 using antdlib.common;
+using antdlib.common.Tool;
 using Antd.Avahi;
 using Nancy;
 using Nancy.Security;

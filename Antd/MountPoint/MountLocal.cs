@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
+using antdlib.common.Tool;
 using antdlib.views;
 
 namespace Antd.MountPoint {
@@ -90,7 +91,7 @@ namespace Antd.MountPoint {
 
         public static string GetSquashMount(string device) {
             var bash = new Bash();
-            var sq = bash.Execute($"losetup | grep {device}");
+            var sq = bash.Execute("losetup").SplitBash().Grep(device).First();
             if (sq.Length <= 0)
                 return "";
             var data = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();

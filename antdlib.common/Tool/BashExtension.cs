@@ -27,38 +27,16 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Tool;
+using System;
+using System.Collections.Generic;
 
-namespace antdlib {
-    public class RepositoryCheck {
-        public static void CheckIfGlobalRepositoryIsWriteable() {
-            var bash = new Bash();
-            var bootExtData = bash.Execute("blkid").SplitBash().Grep("BootExt").ToList();
-            if (!bootExtData.Any()) return;
-            var data = bootExtData.First();
-            var bootExtDevice = new Regex(".*:").Matches(data)[0].Value.Replace(":", "").Trim();
-            var bootExtUid = new Regex("[\\s]UUID=\"[\\d\\w\\-]+\"").Matches(data)[0].Value.Replace("UUID=", "").Replace("\"", "").Trim();
-            ConsoleLogger.Log($"global repository -> checking");
-            var procMounts = File.ReadAllLines("/proc/mounts");
-            var line = procMounts.FirstOrDefault(_ => _.Contains($"'{bootExtDevice} /mnt/cdrom '"));
-            if (!string.IsNullOrEmpty(line)) {
-                if (line.Contains("ro") && !line.Contains("rw")) {
-                    ConsoleLogger.Log($"is RO -> remounting");
-                    bash.Execute("Mount -o remount,rw,discard,noatime /mnt/cdrom", false);
-                }
-                else if (line.Contains("rw") && !line.Contains("ro")) {
-                    ConsoleLogger.Log($"is RW -> ok!");
-                }
-            }
-            else {
-                ConsoleLogger.Log("is not mounted -> IMPOSSIBLE");
-            }
-            ConsoleLogger.Log($"global repository -> {bootExtDevice} - {bootExtUid}");
-            ConsoleLogger.Log("global repository -> checked");
+namespace antdlib.common.Tool {
+    public static class BashExtension {
+
+        private static readonly IEnumerable<string> Empty = new List<string>();
+
+        public static IEnumerable<string> SplitBash(this string input, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries) {
+            return string.IsNullOrEmpty(input) ? Empty : input.Split(new[] { Environment.NewLine }, options);
         }
     }
 }
