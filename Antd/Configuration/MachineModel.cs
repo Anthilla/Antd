@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Tool;
+using antd.commands;
 
 namespace Antd.Configuration {
 
@@ -180,7 +178,7 @@ namespace Antd.Configuration {
     /// </summary>
     public class MachineParameter {
 
-        private readonly Bash _bash = new Bash();
+        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
         public MachineParameter() {
         }
@@ -189,7 +187,7 @@ namespace Antd.Configuration {
         /// Initialize the class MachineParameter with known StoredValues
         /// </summary>
         /// <param name="storedValues"></param>
-        public MachineParameter(IDictionary<string, string> storedValues) {
+        public MachineParameter(Dictionary<string, string> storedValues) {
             StoredValues = storedValues;
         }
 
@@ -198,7 +196,7 @@ namespace Antd.Configuration {
         /// Where Value.Key == parameter name, ex "$host_name"
         /// Where Value.Value == parameter value, ex "myhost01"
         /// </summary>
-        public IDictionary<string, string> StoredValues { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> StoredValues { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// This SetCmd belongs to antd.commands.Commands.List keys
@@ -219,21 +217,7 @@ namespace Antd.Configuration {
             if(IsApplied) {
                 return;
             }
-            var cmd = antd.commands.Commands.List[SetCmd];
-            if(cmd == null) {
-                return;
-            }
-            var command = cmd.JoinToString("$$");
-            var matches = Regex.Matches(command, "\\$[a-zA-Z0-9_]+");
-            foreach(var match in matches) {
-                var val = StoredValues.FirstOrDefault(_ => _.Key == match.ToString());
-                if(string.IsNullOrEmpty(val.Value)) {
-                    continue;
-                }
-                command = command.Replace(match.ToString(), val.Value);
-            }
-            var commands = command.SplitToList("$$");
-            commands.Aggregate("", (current, c) => current + _bash.Execute(c));
+            _commandLauncher.Launch(SetCmd, StoredValues);
         }
 
         /// <summary>
@@ -243,26 +227,12 @@ namespace Antd.Configuration {
         ///     Where values.Key == parameter name, ex "$host_name"
         ///     Where values.Value == parameter value, ex "myhost01"
         /// </param>
-        public void Apply(IDictionary<string, string> values) {
+        public void Apply(Dictionary<string, string> values) {
             if(IsApplied) {
                 return;
             }
             StoredValues = values;
-            var cmd = antd.commands.Commands.List[SetCmd];
-            if(cmd == null) {
-                return;
-            }
-            var command = cmd.JoinToString("$$");
-            var matches = Regex.Matches(command, "\\$[a-zA-Z0-9_]+");
-            foreach(var match in matches) {
-                var val = StoredValues.FirstOrDefault(_ => _.Key == match.ToString());
-                if(string.IsNullOrEmpty(val.Value)) {
-                    continue;
-                }
-                command = command.Replace(match.ToString(), val.Value);
-            }
-            var commands = command.SplitToList("$$");
-            commands.Aggregate("", (current, c) => current + _bash.Execute(c));
+            _commandLauncher.Launch(SetCmd, StoredValues);
         }
 
         /// <summary>
@@ -274,8 +244,7 @@ namespace Antd.Configuration {
                 if(string.IsNullOrEmpty(GetCmd)) {
                     return true;
                 }
-                var cmd = antd.commands.Commands.List[GetCmd];
-                var result = cmd.Aggregate("", (current, c) => current + _bash.Execute(c));
+                var result = _commandLauncher.Launch(SetCmd, StoredValues);
                 return result.Contains(StoredValues.First().Value);
             }
         }

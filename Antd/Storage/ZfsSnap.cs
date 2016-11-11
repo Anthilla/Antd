@@ -20,7 +20,7 @@ namespace Antd.Storage {
             public long Dimension { get; set; }
         }
 
-        public static List<Model> List() {
+        public  List<Model> List() {
             var bash = new Bash();
             var result = bash.Execute("zfs list -t snap");
             var list = new List<Model>();

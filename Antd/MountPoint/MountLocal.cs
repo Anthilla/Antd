@@ -36,15 +36,15 @@ using antdlib.views;
 
 namespace Antd.MountPoint {
     public class MountLocal {
-        public static IEnumerable<MountModel> Get() {
+        public IEnumerable<MountModel> Get() {
             var list = new List<MountModel>();
             var deny = new List<string>();
             var procmounts = FileSystem.ReadFile("/proc/mounts");
-            if (procmounts.Length > 0) {
+            if(procmounts.Length > 0) {
                 var rows = procmounts.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                foreach (var row in rows) {
+                foreach(var row in rows) {
                     var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                    if (cells.Length <= 0)
+                    if(cells.Length <= 0)
                         continue;
                     var mm = new MountModel {
                         Device = cells[0].Trim(),
@@ -53,22 +53,22 @@ namespace Antd.MountPoint {
                         Type = cells[2].Trim(),
                         Options = cells[3].Trim()
                     };
-                    if (mm.Options.Contains("rw")) {
+                    if(mm.Options.Contains("rw")) {
                         mm.MountStatus = MountStatus.MountedReadWrite;
                     }
-                    else if (mm.Options.Contains("ro")) {
+                    else if(mm.Options.Contains("ro")) {
                         mm.MountStatus = MountStatus.MountedReadOnly;
                     }
                     else {
                         mm.MountStatus = MountStatus.Mounted;
                     }
 
-                    if (mm.Type.Contains("squash")) {
+                    if(mm.Type.Contains("squash")) {
                         mm.MountedPath = GetSquashMount(mm.Device);
                     }
                     else {
                         var mntpt = GetBindMount(mm.Path);
-                        if (mntpt == null) {
+                        if(mntpt == null) {
                             mm.MountedPath = "";
                         }
                         else {
@@ -82,27 +82,27 @@ namespace Antd.MountPoint {
 
             var preList = list.Where(m => !deny.Contains(m.Path)).OrderBy(m => m.Device).ThenBy(m => m.Path).ToList();
 
-            foreach (var el in deny.Select(d => preList.FirstOrDefault(m => m.Path == d)).Where(el => el != null)) {
+            foreach(var el in deny.Select(d => preList.FirstOrDefault(m => m.Path == d)).Where(el => el != null)) {
                 preList.Remove(el);
             }
 
             return preList;
         }
 
-        public static string GetSquashMount(string device) {
+        public string GetSquashMount(string device) {
             var bash = new Bash();
             var sq = bash.Execute("losetup").SplitBash().Grep(device).First();
-            if (sq.Length <= 0)
+            if(sq.Length <= 0)
                 return "";
             var data = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             var src = "";
-            if (data.Length > 1) {
+            if(data.Length > 1) {
                 src = data[data.Length - 1];
             }
             return src;
         }
 
-        public static string GetBindMount(string path) {
+        public string GetBindMount(string path) {
             var mnt = new Database.MountRepository().GetByPath(path);
             return mnt.MountedPath.Length > 0 ? mnt.MountedPath : null;
         }

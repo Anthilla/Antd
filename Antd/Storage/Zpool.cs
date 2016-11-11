@@ -29,8 +29,9 @@ namespace Antd.Storage {
 
         private static readonly TimerRepository TimerRepository = new TimerRepository();
         private static readonly Bash Bash = new Bash();
+        private readonly Timers _timers = new Timers();
 
-        public static List<Model> List() {
+        public List<Model> List() {
             var result = Bash.Execute("zpool list");
             var list = new List<Model>();
             if(string.IsNullOrEmpty(result)) {
@@ -58,7 +59,7 @@ namespace Antd.Storage {
                 if(jobs.Any()) {
                     var j = jobs.FirstOrDefault();
                     if(j != null) {
-                        model.HasSnapshot = Timers.IsActive(model.Name);
+                        model.HasSnapshot = _timers.IsActive(model.Name);
                         model.Snapshot = j.Time;
                         model.SnapshotGuid = j.Id;
                     }
@@ -69,17 +70,17 @@ namespace Antd.Storage {
             return list;
         }
 
-        public static IEnumerable<string> ImportList() {
+        public  IEnumerable<string> ImportList() {
             var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2);
             //var importPools = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return text;
         }
 
-        public static void Import(string poolName) {
+        public  void Import(string poolName) {
             Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}", false);
         }
 
-        public static List<string> History() {
+        public  List<string> History() {
             var obj = Bash.Execute("zpool history");
             var list = obj.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return list.ToList();

@@ -34,55 +34,55 @@ using antdlib.common;
 
 namespace Antd.MountPoint {
     public class Dfp {
-        public static void Set(string directory, string timestamp) {
+        public void Set(string directory, string timestamp) {
             try {
-                if (!Directory.Exists(directory)) {
+                if(!Directory.Exists(directory)) {
                     return;
                 }
                 var file = $".antd.dfp.{Guid.NewGuid().ToString().Substring(0, 8)}.dfp";
                 var path = Path.Combine(directory, file);
                 FileSystem.WriteFile(path, timestamp);
             }
-            catch (UnauthorizedAccessException unauthEx) {
+            catch(UnauthorizedAccessException unauthEx) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {unauthEx.Message}");
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {ex.Message}");
             }
         }
 
-        public static string GetTimestamp(string directory) {
+        public string GetTimestamp(string directory) {
             try {
-                if (!Directory.Exists(directory)) {
+                if(!Directory.Exists(directory)) {
                     return null;
                 }
                 var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
                 return !File.Exists(Path.GetFullPath(dfp)) ? null : FileSystem.ReadFile(Path.GetFullPath(dfp));
             }
-            catch (UnauthorizedAccessException unauthEx) {
+            catch(UnauthorizedAccessException unauthEx) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {unauthEx.Message}");
                 return "unauthorizedaccessexception";
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {ex.Message}");
                 return null;
             }
         }
 
-        public static void Delete(string directory) {
+        public void Delete(string directory) {
             try {
-                if (!Directory.Exists(directory)) {
+                if(!Directory.Exists(directory)) {
                     return;
                 }
                 var dfp = Directory.EnumerateFiles(directory, ".antd.dfp.*.dfp", SearchOption.TopDirectoryOnly).First();
-                if (File.Exists(Path.GetFullPath(dfp))) {
+                if(File.Exists(Path.GetFullPath(dfp))) {
                     File.Delete(Path.GetFullPath(dfp));
                 }
             }
-            catch (UnauthorizedAccessException unauthEx) {
+            catch(UnauthorizedAccessException unauthEx) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {unauthEx.Message}");
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Warn($"cannot access  to {directory}: {ex.Message}");
             }
         }

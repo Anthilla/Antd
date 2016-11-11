@@ -188,16 +188,6 @@ namespace Antd.Database {
             return result;
         }
 
-        //private static string[] MapPassword(string passwdString) {
-        //    var passwdInfo = passwdString.Split(new[] { "$" }, StringSplitOptions.None).ToArray();
-        //    //var passwd = new SystemUserPassword {
-        //    //    Type = passwdInfo[0],
-        //    //    Salt = passwdInfo[1],
-        //    //    Result = passwdInfo[2]
-        //    //};
-        //    return passwdInfo;
-        //}
-
         public class Shadow {
             public static void Create(string user) {
                 var bash = new Bash();

@@ -48,7 +48,7 @@ namespace Antd.Apps {
 
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
 
-        public static IEnumerable<AppInfo> Detect() {
+        public IEnumerable<AppInfo> Detect() {
             var allDetected = Directory.EnumerateFiles(Parameter.RepoApps, "*.appinfo", SearchOption.AllDirectories).Select(MapFromFile).ToArray();
             var notInstalled = new List<AppInfo>();
             foreach(var app in allDetected) {
@@ -60,9 +60,11 @@ namespace Antd.Apps {
             return notInstalled;
         }
 
-        private static readonly Bash Bash = new Bash();
+        private readonly Bash _bash = new Bash();
+        private readonly AppsUnits _appsUnits = new AppsUnits();
+        private readonly Mount _mount = new Mount();
 
-        public static void Setup(string appName) {
+        public void Setup(string appName) {
             ConsoleLogger.Log("=========================================");
             ConsoleLogger.Log($"Installing {appName}");
             var apps = Detect();
@@ -81,11 +83,11 @@ namespace Antd.Apps {
                     File.Delete($"{repoPath}/{squashName}");
                 }
                 ConsoleLogger.Log($">> mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%");
-                Bash.Execute($"mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%", false);
+                _bash.Execute($"mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%", false);
                 ConsoleLogger.Log("compressed fs for application created");
                 var activeVersionPath = $"{repoPath}/active-version";
                 ConsoleLogger.Log($"activeVersionPath => {activeVersionPath}");
-                Bash.Execute($"ln -s {squashName} {activeVersionPath}", false);
+                _bash.Execute($"ln -s {squashName} {activeVersionPath}", false);
                 ConsoleLogger.Log("link created");
                 var frameworkDir = $"/framework/{name.ToLower().Replace("/", "-")}";
                 ConsoleLogger.Log($"frameworkDir => {frameworkDir}");
@@ -94,11 +96,11 @@ namespace Antd.Apps {
                 ConsoleLogger.Log("framework directories created");
                 if(Mounts.IsAlreadyMounted(frameworkDir) == false) {
                     ConsoleLogger.Log($">> mount {activeVersionPath} {frameworkDir}");
-                    Bash.Execute($"mount {activeVersionPath} {frameworkDir}", false);
+                    _bash.Execute($"mount {activeVersionPath} {frameworkDir}", false);
                     ConsoleLogger.Log("application fs mounted");
                 }
-                var prepareUnitName = AppsUnits.CreatePrepareUnit(name, frameworkDir);
-                var mountUnitName = AppsUnits.CreateMountUnit(name, activeVersionPath, frameworkDir);
+                var prepareUnitName = _appsUnits.CreatePrepareUnit(name, frameworkDir);
+                var mountUnitName = _appsUnits.CreateMountUnit(name, activeVersionPath, frameworkDir);
                 ConsoleLogger.Log($"prepareUnitName => {prepareUnitName}");
                 ConsoleLogger.Log($"mountUnitName => {mountUnitName}");
                 ConsoleLogger.Log("units created");
@@ -111,7 +113,7 @@ namespace Antd.Apps {
                     var exePath = frameworkDirContent.FirstOrDefault(_ => _.EndsWith(exe));
                     ConsoleLogger.Log($"exePath? => {exePath}");
                     if(File.Exists(exePath)) {
-                        var lun = AppsUnits.CreateLauncherUnit(name, exe, exePath);
+                        var lun = _appsUnits.CreateLauncherUnit(name, exe, exePath);
                         ConsoleLogger.Log($"launcherUnitName => {lun}");
                         launcherUnitName.Add(lun);
                     }
@@ -121,7 +123,7 @@ namespace Antd.Apps {
                 var mounts = appInfo.Values.Where(_ => _.Key == "app_path").Select(_ => _.Value).ToList();
                 foreach(var mount in mounts) {
                     ConsoleLogger.Log($"workingDir => {mount}");
-                    Mount.Dir(mount);
+                    _mount.Dir(mount);
                 }
                 ConsoleLogger.Log("working directories created and mounted");
 

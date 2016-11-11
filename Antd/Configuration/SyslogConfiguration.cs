@@ -12,7 +12,7 @@ namespace Antd.Configuration {
         private const string ServiceName = "syslog-ng.service";
         private static readonly SyslogRepository SyslogRepository = new SyslogRepository();
 
-        public static bool Set() {
+        public  bool Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             var config = SyslogRepository.Get();
             if (config == null) {
@@ -106,7 +106,7 @@ namespace Antd.Configuration {
             File.WriteAllLines(ConfigurationPath, headLines);
         }
 
-        public static void RestartService() {
+        public  void RestartService() {
             if (Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }

@@ -41,23 +41,23 @@ namespace antdlib {
                 CoreFileName + "002"
             };
 
-        public static readonly XmlWriter Writer = new XmlWriter(Files);
+        public readonly XmlWriter Writer = new XmlWriter(Files);
 
         #region core CRUD
-        public static void Set(string key, string value) {
+        public void Set(string key, string value) {
             Writer.Write(key, value);
         }
 
-        public static string Get(string key) {
+        public string Get(string key) {
             return Writer.ReadValue(key);
         }
 
-        public static void Delete(string key) {
+        public void Delete(string key) {
             throw new NotImplementedException();
         }
         #endregion core CRUD
 
-        public static void WriteDefaults() {
+        public void WriteDefaults() {
             if (Writer.CheckValue("AntdHttpPort") == false) {
                 Writer.Write("AntdHttpPort", "8084");
             }
@@ -90,108 +90,108 @@ namespace antdlib {
             }
         }
 
-        public static string X509() {
+        public string X509() {
             return Get("x509") ?? Parameter.CertificateAuthorityX509;
         }
 
-        public static void SetX509(string val) {
+        public void SetX509(string val) {
             Writer.Write("x509", val);
         }
 
-        public static string CaPath() {
+        public string CaPath() {
             return Get("ca_path") ?? Parameter.CertificateAuthority;
         }
 
-        public static void SetCaPath(string path) {
+        public void SetCaPath(string path) {
             Writer.Write("ca_path", path);
         }
 
-        public static string HttpsPort() {
+        public string HttpsPort() {
             return Get("AntdHttpsPort") ?? "443";
         }
 
-        public static void SetHttpsPort(string port) {
+        public void SetHttpsPort(string port) {
             Writer.Write("AntdHttpsPort", port);
         }
 
-        public static string HttpPort() {
+        public string HttpPort() {
             return Get("AntdHttpPort") ?? "7777";
         }
 
-        public static void SetHttpPort(string port) {
+        public void SetHttpPort(string port) {
             Writer.Write("AntdHttpPort", port);
         }
 
-        public static string HttpProtocol() {
+        public string HttpProtocol() {
             return Get("protocol") ?? "https";
         }
 
-        public static void SwitchToHttps() {
+        public void SwitchToHttps() {
             Writer.Write("protocol", "https");
         }
 
-        public static void SwitchToHttp() {
+        public void SwitchToHttp() {
             Writer.Write("protocol", "http");
         }
 
-        public static bool TwoFactorAuth() {
+        public bool TwoFactorAuth() {
             var value = Get(Parameter.LabelAuthIsEnabled) ?? "false";
             return Convert.ToBoolean(value);
         }
 
-        public static void EnableTwoFactorAuth() {
+        public void EnableTwoFactorAuth() {
             Writer.Write(Parameter.LabelAuthIsEnabled, "true");
         }
 
-        public static void DisableTwoFactorAuth() {
+        public void DisableTwoFactorAuth() {
             Writer.Write(Parameter.LabelAuthIsEnabled, "false");
         }
 
-        public static string CertificatePath() {
+        public string CertificatePath() {
             return Get("certificate") ?? $"{Parameter.AntdCfg}/certificate.pfx";
         }
 
-        public static void SetCertificatePath(string newCert) {
+        public void SetCertificatePath(string newCert) {
             Writer.Write("certificate", $"{Parameter.AntdCfg}/certificate.pfx");
         }
 
-        public static string Ssl() {
+        public string Ssl() {
             return Get("ssl") ?? "yes";
         }
 
-        public static void EnableSsl() {
+        public void EnableSsl() {
             Writer.Write("ssl", "yes");
         }
 
-        public static void DisableSsl() {
+        public void DisableSsl() {
             Writer.Write("ssl", "no");
         }
 
-        public static string CertificateAuthority() {
+        public string CertificateAuthority() {
             return Get("ca") ?? "no";
         }
 
-        public static void EnableCertificateAuthority() {
+        public void EnableCertificateAuthority() {
             Writer.Write("ca", "yes");
         }
 
-        public static void DisableCertificateAuthority() {
+        public void DisableCertificateAuthority() {
             Writer.Write("ca", "no");
         }
 
-        public static string DatabasePath() {
+        public string DatabasePath() {
             return Get(Parameter.LabelAntdDatabase) ?? Parameter.AntdCfgDatabase;
         }
 
-        public static string HostUri() {
+        public string HostUri() {
             return Get(Parameter.LabelAntdPort) == null ? "http://+:7777/" : $"http://+:{Writer.ReadValue(Parameter.LabelAntdPort)}/";
         }
 
-        public static string WebsocketPort() {
+        public string WebsocketPort() {
             return Get("AntdWebsocketPort") ?? "12345";
         }
 
-        public static void SetWebsocketPort(string port) {
+        public void SetWebsocketPort(string port) {
             Writer.Write("AntdWebsocketPort", port);
         }
     }

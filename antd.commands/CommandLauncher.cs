@@ -10,10 +10,10 @@ namespace antd.commands {
                 if(string.IsNullOrEmpty(name)) {
                     return string.Empty;
                 }
-                if(!CommandsFunction.List.ContainsKey(name)) {
+                if(!Commands.List.ContainsKey(name)) {
                     return string.Empty;
                 }
-                var cmd = CommandsFunction.List[name];
+                var cmd = Commands.List[name];
                 if(cmd == null) {
                     return string.Empty;
                 }
@@ -32,10 +32,10 @@ namespace antd.commands {
                 if(string.IsNullOrEmpty(name)) {
                     return string.Empty;
                 }
-                if(!CommandsFunction.List.ContainsKey(name)) {
+                if(!Commands.List.ContainsKey(name)) {
                     return string.Empty;
                 }
-                var cmd = CommandsFunction.List[name];
+                var cmd = Commands.List[name];
                 if(cmd == null) {
                     return string.Empty;
                 }

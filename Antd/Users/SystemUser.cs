@@ -3,12 +3,12 @@
 namespace Antd.Users {
     public class SystemUser {
 
-        public static void Create(string user) {
+        public void Create(string user) {
             var bash = new Bash();
             bash.Execute($"useradd {user}", false);
         }
 
-        public static void SetPassword(string user, string password) {
+        public void SetPassword(string user, string password) {
             if(string.IsNullOrEmpty(user)) {
                 return;
             }

@@ -43,8 +43,11 @@ namespace Antd.Modules {
 
         private readonly UserRepository _userRepositoryRepo = new UserRepository();
         private readonly UserClaimRepository _userClaimRepositoryRepo = new UserClaimRepository();
+        private readonly SystemGroup _systemGroup = new SystemGroup();
+        private readonly SystemUser _systemUser = new SystemUser();
 
         public UsersModule() {
+
             this.RequiresAuthentication();
 
             Post["/users/change/password"] = x => {
@@ -54,7 +57,7 @@ namespace Antd.Modules {
                 if (tryGet != null) {
                     var bash = new Bash();
                     var hp = bash.Execute($"mkpasswd -m sha-512 '{password}'", false);
-                    SystemUser.SetPassword(user, hp);
+                    _systemUser.SetPassword(user, hp);
                     _userRepositoryRepo.Delete(tryGet.Id);
                     _userRepositoryRepo.FastCreate(user, hp);
                 }
@@ -69,7 +72,7 @@ namespace Antd.Modules {
             };
 
             Post["/users/refresh/group"] = x => {
-                SystemGroup.ImportGroupsToDatabase();
+                _systemGroup.ImportGroupsToDatabase();
                 return HttpStatusCode.OK;
             };
 
@@ -81,7 +84,7 @@ namespace Antd.Modules {
 
             Post["/users/create/group"] = x => {
                 string name = Request.Form.Name;
-                SystemGroup.CreateGroup(name);
+                _systemGroup.CreateGroup(name);
                 return Response.AsRedirect("/");
             };
 

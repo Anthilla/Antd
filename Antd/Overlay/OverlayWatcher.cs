@@ -95,7 +95,9 @@ namespace Antd {
             }
         }
 
-        public static void SetOverlayDirectory(string overlayPath) {
+        private readonly Mount _mount = new Mount();
+
+        public void SetOverlayDirectory(string overlayPath) {
             //check overlayPath con du -ms
             var overlayDir = Parameter.Overlay;
             var path = overlayPath.Replace(Parameter.Overlay, "");
@@ -107,7 +109,7 @@ namespace Antd {
             //cancello/pulisco dir equivalente
             Bash.Execute($"rm -fR {path}", false);
             //monto mntDIRS - dir
-            Mount.Dir(path);
+            _mount.Dir(path);
         }
     }
 }

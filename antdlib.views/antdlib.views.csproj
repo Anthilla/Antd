@@ -65,8 +65,6 @@
     <Compile Include="GlusterModel.cs" />
     <Compile Include="DhcpConfigModel.cs" />
     <Compile Include="SambaConfigModel.cs" />
-    <Compile Include="Default\Commands.cs" />
-    <Compile Include="Default\CommandValues.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetworkInterfaceModel.cs" />

@@ -42,14 +42,14 @@ namespace Antd.Firewall {
         private static readonly string FilePath = $"{Parameter.RepoDirs}/FILE_etc_nftables.conf";
         private static readonly Bash Bash = new Bash();
 
-        public static void Setup() {
-            if (!File.Exists(FilePath)) {
+        public void Setup() {
+            if(!File.Exists(FilePath)) {
                 File.Copy($"{Parameter.Resources}/FILE_etc_nftables.conf", FilePath);
             }
         }
 
-        public static bool ReloadConfiguration() {
-            if (File.Exists(FilePath)) {
+        public bool ReloadConfiguration() {
+            if(File.Exists(FilePath)) {
                 return false;
             }
             var result = Bash.Execute($"nft -f {FilePath}");
@@ -58,28 +58,28 @@ namespace Antd.Firewall {
 
         private static readonly NftRepository NftRepository = new NftRepository();
 
-        public static void Import() {
-            if (File.Exists(FilePath)) {
+        public void Import() {
+            if(File.Exists(FilePath)) {
                 var tryGet = NftRepository.Get();
-                if (tryGet == null) {
+                if(tryGet == null) {
                     var config = File.ReadAllText(FilePath);
                     NftRepository.Set(config);
                 }
             }
         }
 
-        public static void Export() {
-            if (File.Exists(FilePath)) {
+        public void Export() {
+            if(File.Exists(FilePath)) {
                 var tryGet = NftRepository.Get();
-                if (tryGet != null) {
+                if(tryGet != null) {
                     var config = tryGet.Configuration;
                     File.WriteAllText(FilePath, config);
                 }
             }
         }
 
-        public static void Export(IEnumerable<NftModel.Table> tables) {
-            if (File.Exists(FilePath)) {
+        public void Export(IEnumerable<NftModel.Table> tables) {
+            if(File.Exists(FilePath)) {
                 File.Delete(FilePath);
             }
             var lines = new List<string>();
@@ -88,17 +88,17 @@ namespace Antd.Firewall {
             lines.Add("flush ruleset;");
             lines.Add("flush ruleset;");
             lines.Add("flush ruleset;");
-            foreach (var table in tables) {
+            foreach(var table in tables) {
                 lines.Add($"table {table.Type} {table.Name} {{");
-                foreach (var set in table.Sets) {
+                foreach(var set in table.Sets) {
                     lines.Add($"    set {set.Name} {{");
                     lines.Add($"        type {set.Type}");
                     lines.Add($"        elements = {{ {set.Elements}}}");
                     lines.Add("    }");
                 }
-                foreach (var chain in table.Chains) {
+                foreach(var chain in table.Chains) {
                     lines.Add($"    chain {chain.Name} {{");
-                    foreach (var rule in chain.Rules) {
+                    foreach(var rule in chain.Rules) {
                         lines.Add($"        {rule}");
                     }
                     lines.Add("    }");
@@ -110,11 +110,11 @@ namespace Antd.Firewall {
             ReloadConfiguration();
         }
 
-        public static IEnumerable<NftModel.Table> Tables() {
+        public IEnumerable<NftModel.Table> Tables() {
             var list = new List<NftModel.Table>();
-            if (File.Exists(FilePath)) {
+            if(File.Exists(FilePath)) {
                 var result = Bash.Execute("nft list tables").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var match in result) {
+                foreach(var match in result) {
                     var arr = match.Replace("table", "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                     var tableType = arr[0];
                     var tableName = arr[1];
@@ -132,11 +132,11 @@ namespace Antd.Firewall {
             return list;
         }
 
-        public static List<NftModel.Set> Sets(string tableType, string tableName) {
+        public List<NftModel.Set> Sets(string tableType, string tableName) {
             var list = new List<NftModel.Set>();
             var result = Bash.Execute($"nft list table {tableType} {tableName}");
             var matches = new Regex("set [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
-            foreach (var match in matches) {
+            foreach(var match in matches) {
                 var arr = match.ToString().Replace(new[] { " {", "}", "set " }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var setName = arr[0];
                 var setResult = Bash.Execute($"nft list set {tableType} {tableName} {setName}");
@@ -155,11 +155,11 @@ namespace Antd.Firewall {
             return list;
         }
 
-        public static List<NftModel.Chain> Chains(string tableType, string tableName) {
+        public List<NftModel.Chain> Chains(string tableType, string tableName) {
             var list = new List<NftModel.Chain>();
             var result = Bash.Execute($"nft list table {tableType} {tableName}");
             var matches = new Regex("chain [\\w\\d]* {", RegexOptions.Multiline).Matches(result);
-            foreach (var match in matches) {
+            foreach(var match in matches) {
                 var arr = match.ToString().Replace(new[] { "chain", "{", "}" }, "").Trim().Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
                 var chainName = arr[0];
                 var chainResult = Bash.Execute($"nft list chain {tableType} {tableName} {chainName}");

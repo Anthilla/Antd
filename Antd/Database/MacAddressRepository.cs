@@ -83,14 +83,5 @@ namespace Antd.Database {
             var result = DatabaseRepository.Delete<MacAddressModel>(AntdApplication.Database, Guid.Parse(guid));
             return result;
         }
-
-        //public static void Discover() {
-        //    //todo trova comando
-        //    var lines = Terminal.Terminal.Execute("comando per recuperare dei mac address...").Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-        //    foreach (var line in lines) {
-        //        //todo fai qualcosa
-        //        AddMacAddress("", "");
-        //    }
-        //}
     }
 }

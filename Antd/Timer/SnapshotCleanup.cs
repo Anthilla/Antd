@@ -5,12 +5,12 @@ using Antd.Storage;
 namespace Antd.Timer {
     public class SnapshotCleanup {
 
-        public static System.Threading.Timer Timer { get; private set; } = null;
+        public System.Threading.Timer Timer { get; private set; } = null;
 
-        public static void Start(TimeSpan alertTime) {
+        public void Start(TimeSpan alertTime) {
             var current = DateTime.Now;
             var timeToGo = alertTime - current.TimeOfDay;
-            if (timeToGo < TimeSpan.Zero) {
+            if(timeToGo < TimeSpan.Zero) {
                 return;
             }
             Timer = new System.Threading.Timer(x => {
@@ -18,7 +18,7 @@ namespace Antd.Timer {
             }, null, timeToGo, Timeout.InfiniteTimeSpan);
         }
 
-        public static void Stop() {
+        public void Stop() {
             Timer?.Dispose();
         }
 

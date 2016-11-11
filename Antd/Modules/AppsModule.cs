@@ -36,6 +36,8 @@ namespace Antd.Modules {
 
     public class AppsModule : CoreModule {
 
+        private readonly AppsManagement _appsManagement = new AppsManagement();
+
         public AppsModule() {
             this.RequiresAuthentication();
 
@@ -44,7 +46,7 @@ namespace Antd.Modules {
                 if (string.IsNullOrEmpty(app)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                AppsManagement.Setup(app);
+                _appsManagement.Setup(app);
                 return HttpStatusCode.OK;
             };
 

@@ -5,14 +5,14 @@ using antdlib.Systemd;
 
 namespace Antd.Apps {
     public class AppsUnits {
-        public static string CreatePrepareUnit(string name, string frameworkDir) {
+        public string CreatePrepareUnit(string name, string frameworkDir) {
             var unitName = $"app-{name.ToLower()}-01-prepare.service".Replace(" ", "");
             var fileName = $"{Parameter.AppsUnits}/{unitName}";
-            if (File.Exists(fileName)) {
+            if(File.Exists(fileName)) {
                 File.Delete(fileName);
             }
-            var oldUnitName= $"{Parameter.ApplicativeUnits}/{unitName}";
-            if (File.Exists(oldUnitName)) {
+            var oldUnitName = $"{Parameter.ApplicativeUnits}/{unitName}";
+            if(File.Exists(oldUnitName)) {
                 File.Delete(oldUnitName);
             }
             var lines = new List<string> {
@@ -33,14 +33,14 @@ namespace Antd.Apps {
             return unitName;
         }
 
-        public static string CreateMountUnit(string name, string sourcePath, string frameworkDir) {
+        public string CreateMountUnit(string name, string sourcePath, string frameworkDir) {
             var unitName = $"app-{name.ToLower()}-02-mount.service".Replace(" ", "");
             var fileName = $"{Parameter.AppsUnits}/{unitName}";
-            if (File.Exists(fileName)) {
+            if(File.Exists(fileName)) {
                 File.Delete(fileName);
             }
             var oldUnitName = $"{Parameter.ApplicativeUnits}/{unitName}";
-            if (File.Exists(oldUnitName)) {
+            if(File.Exists(oldUnitName)) {
                 File.Delete(oldUnitName);
             }
             var lines = new List<string> {
@@ -60,14 +60,14 @@ namespace Antd.Apps {
             return unitName;
         }
 
-        public static string CreateLauncherUnit(string name, string exeName, string exePath) {
+        public string CreateLauncherUnit(string name, string exeName, string exePath) {
             var unitName = $"app-{name.ToLower()}-{exeName.ToLower().Replace(".exe", "")}-launcher.service";
             var fileName = $"{Parameter.AppsUnits}/{unitName}";
-            if (File.Exists(fileName)) {
+            if(File.Exists(fileName)) {
                 File.Delete(fileName);
             }
             var oldUnitName = $"{Parameter.ApplicativeUnits}/{unitName}";
-            if (File.Exists(oldUnitName)) {
+            if(File.Exists(oldUnitName)) {
                 File.Delete(oldUnitName);
             }
             var lines = new List<string> {

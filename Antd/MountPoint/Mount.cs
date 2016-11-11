@@ -55,7 +55,7 @@ namespace Antd.MountPoint {
             {"/sys/kernel/dlm", "-o default -t ocfs2_dlmfs dlm"}
         };
 
-        public static void WorkingDirectories() {
+        public void WorkingDirectories() {
             foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = Mounts.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
@@ -72,7 +72,7 @@ namespace Antd.MountPoint {
             }
         }
 
-        public static void AllDirectories() {
+        public void AllDirectories() {
             MountRepository.DeleteAll();
 
             var all = MountRepository.GetAll().ToList();
@@ -166,7 +166,7 @@ namespace Antd.MountPoint {
             }
         }
 
-        public static void CheckCurrentStatus() {
+        public void CheckCurrentStatus() {
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var t in directories) {
                 var realPath = Mounts.GetDirsPath(t);
@@ -214,7 +214,7 @@ namespace Antd.MountPoint {
             ConsoleLogger.Log("current files status checked");
         }
 
-        public static void Check() {
+        public void Check() {
             var mounts = MountRepository.GetAll().ToList();
             if(!mounts.Any())
                 return;
@@ -224,7 +224,7 @@ namespace Antd.MountPoint {
             }
         }
 
-        public static void Dir(string directory) {
+        public void Dir(string directory) {
             var tryget = MountRepository.GetByPath(directory);
             if(tryget == null) {
                 MountRepository.Create(new Dictionary<string, string> {
@@ -239,7 +239,7 @@ namespace Antd.MountPoint {
             }
         }
 
-        public static void File(string file) {
+        public void File(string file) {
             var tryget = MountRepository.GetByPath(file);
             if(tryget == null) {
                 MountRepository.Create(new Dictionary<string, string> {
@@ -252,15 +252,17 @@ namespace Antd.MountPoint {
             }
         }
 
-        private static void CheckMount(string directory) {
+        private readonly Dfp _dfp = new Dfp();
+
+        private void CheckMount(string directory) {
             var isMntd = Mounts.IsAlreadyMounted(directory);
             var mntDirectory = Mounts.SetDirsPath(directory);
             var timestampNow = Timestamp.Now;
-            Dfp.Set(mntDirectory, timestampNow);
-            Dfp.Set(directory, timestampNow);
-            var dirsTimestamp = Dfp.GetTimestamp(mntDirectory);
+            _dfp.Set(mntDirectory, timestampNow);
+            _dfp.Set(directory, timestampNow);
+            var dirsTimestamp = _dfp.GetTimestamp(mntDirectory);
             var dirsDfp = dirsTimestamp != null;
-            var directoryTimestamp = Dfp.GetTimestamp(directory);
+            var directoryTimestamp = _dfp.GetTimestamp(directory);
             var directoryDfp = directoryTimestamp != null;
             if(isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
                 MountRepository.SetAsMountedReadOnly(directory);
@@ -285,8 +287,8 @@ namespace Antd.MountPoint {
             else {
                 MountRepository.SetAsError(directory);
             }
-            Dfp.Delete(mntDirectory);
-            Dfp.Delete(directory);
+            _dfp.Delete(mntDirectory);
+            _dfp.Delete(directory);
         }
 
         private static void SetBind(string source, string destination) {

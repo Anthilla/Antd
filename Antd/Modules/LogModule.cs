@@ -40,13 +40,17 @@ using Nancy.Security;
 namespace Antd.Modules {
 
     public class LogModule : CoreModule {
-        private static readonly SyslogRepository SyslogRepository = new SyslogRepository();
+        private readonly SyslogRepository _syslogRepository = new SyslogRepository();
+        private readonly SyslogConfiguration _syslogConfiguration = new SyslogConfiguration();
+        private readonly Journalctl _journalctl = new Journalctl();
+        private readonly Journalctl.Report _journalctlReport = new Journalctl.Report();
+        private readonly SyslogNg _syslogNg = new SyslogNg();
 
         public LogModule() {
             this.RequiresAuthentication();
 
             After += ctx => {
-                if (ctx.Response.ContentType == "text/html") {
+                if(ctx.Response.ContentType == "text/html") {
                     ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
             };
@@ -59,11 +63,11 @@ namespace Antd.Modules {
                     "LogReport",
                     "SyslogNG"
                 };
-                var syslogConfig = SyslogRepository.Get();
+                var syslogConfig = _syslogRepository.Get();
                 viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
                 viewModel.Logs = ConsoleLogger.GetAll();
-                viewModel.LogReports = Journalctl.Report.Get();
-                viewModel.SyslogNgContent = SyslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
+                viewModel.LogReports = _journalctlReport.Get();
+                viewModel.SyslogNgContent = _syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
                 return View["antd/page-log", viewModel];
             };
 
@@ -72,35 +76,35 @@ namespace Antd.Modules {
                 var p1 = Request.Form.Path1;
                 var p2 = Request.Form.Path2;
                 var p3 = Request.Form.Path3;
-                SyslogRepository.Set(root, p1, p2, p3);
-                SyslogConfiguration.Set();
+                _syslogRepository.Set(root, p1, p2, p3);
+                _syslogConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/log/syslog/enable"] = x => {
-                SyslogRepository.Enable();
+                _syslogRepository.Enable();
                 return HttpStatusCode.OK;
             };
 
             Post["/log/syslog/disable"] = x => {
-                SyslogRepository.Disable();
+                _syslogRepository.Disable();
                 return HttpStatusCode.OK;
             };
 
-            Get["/log/journalctl/all"] = x => Response.AsJson(Journalctl.GetAllLog());
+            Get["/log/journalctl/all"] = x => Response.AsJson(_journalctl.GetAllLog());
 
-            Get["/log/journalctl/all/{filter}"] = x => Response.AsJson(Journalctl.GetAllLog((string)x.filter));
+            Get["/log/journalctl/all/{filter}"] = x => Response.AsJson(_journalctl.GetAllLog((string)x.filter));
 
-            Get["/log/journalctl/last/{hours}"] = x => Response.AsXml(Journalctl.GetAllLogSinceHour((string)x.hours));
+            Get["/log/journalctl/last/{hours}"] = x => Response.AsXml(_journalctl.GetAllLogSinceHour((string)x.hours));
 
-            Get["/log/journalctl/antd"] = x => Response.AsJson(Journalctl.GetAntdLog());
+            Get["/log/journalctl/antd"] = x => Response.AsJson(_journalctl.GetAntdLog());
 
-            Get["/log/journalctl/context"] = x => Response.AsJson(Journalctl.GetLogContexts());
+            Get["/log/journalctl/context"] = x => Response.AsJson(_journalctl.GetLogContexts());
 
-            Get["/log/journalctl/report/{path*}"] = x => Response.AsJson(Journalctl.Report.ReadReport((string)x.path));
+            Get["/log/journalctl/report/{path*}"] = x => Response.AsJson(_journalctlReport.ReadReport((string)x.path));
 
             Post["/log/journalctl/report"] = x => {
-                Journalctl.Report.GenerateReport();
+                _journalctlReport.GenerateReport();
                 return HttpStatusCode.OK;
             };
 

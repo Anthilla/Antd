@@ -31,8 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using antdlib;
-using antdlib.Certificate;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
@@ -44,12 +42,14 @@ namespace Antd.Modules {
     public class HomeModule : CoreModule {
 
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
+        private readonly AppsManagement _appsManagement = new AppsManagement();
+        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
 
         public HomeModule() {
             this.RequiresAuthentication();
 
             After += ctx => {
-                if (ctx.Response.ContentType == "text/html") {
+                if(ctx.Response.ContentType == "text/html") {
                     ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
             };
@@ -74,20 +74,9 @@ namespace Antd.Modules {
                 return View["antd/page-antd", viewModel];
             };
 
-            Get["/api"] = x => {
-                dynamic vmod = new ExpandoObject();
-                var list = antd.commands.Commands.PartialList;
-                vmod.List = list.Select(_=>_.Key);
-                return View["antd/page-api", vmod];
-            };
-
-            Get["/api/network"] = x => {
-                return View["antd/page-api2"];
-            };
-
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Detected = AppsManagement.Detect();
+                vmod.Detected = _appsManagement.Detect();
                 vmod.AppList = ApplicationRepository.GetAll().Select(_ => new ApplicationModel(_));
                 return View["antd/page-apps", vmod];
             };
@@ -98,18 +87,18 @@ namespace Antd.Modules {
                     "Manage"
                 };
 
-                viewModel.SslStatus = "Enabled";
-                viewModel.SslStatusAction = "Disable";
-                if (ApplicationSetting.Ssl() == "no") {
-                    viewModel.SslStatus = "Disabled";
-                    viewModel.SslStatusAction = "Enable";
-                }
-                viewModel.CertificatePath = ApplicationSetting.CertificatePath();
-                viewModel.CaStatus = "Enabled";
-                if (ApplicationSetting.CertificateAuthority() == "no") {
-                    viewModel.CaStatus = "Disabled";
-                }
-                viewModel.CaIsActive = CertificateAuthority.IsActive;
+                //viewModel.SslStatus = "Enabled";
+                //viewModel.SslStatusAction = "Disable";
+                //if (ApplicationSetting.Ssl() == "no") {
+                //    viewModel.SslStatus = "Disabled";
+                //    viewModel.SslStatusAction = "Enable";
+                //}
+                //viewModel.CertificatePath = ApplicationSetting.CertificatePath();
+                //viewModel.CaStatus = "Enabled";
+                //if (ApplicationSetting.CertificateAuthority() == "no") {
+                //    viewModel.CaStatus = "Disabled";
+                //}
+                //viewModel.CaIsActive = CertificateAuthority.IsActive;
                 //viewModel.Certificates = CertificateRepository.GetAll();
 
                 return View["antd/page-ca", viewModel];
@@ -143,8 +132,8 @@ namespace Antd.Modules {
                 var volumeBrickList = volumeBrick.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 var volumeMountPointList = volumeMountPoint.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 var volumelist = new List<GfsVolume>();
-                for (var i = 0; i < 20; i++) {
-                    if (volumeNamesList.Length < i || volumeBrickList.Length < i || volumeMountPointList.Length < i) { continue; }
+                for(var i = 0; i < 20; i++) {
+                    if(volumeNamesList.Length < i || volumeBrickList.Length < i || volumeMountPointList.Length < i) { continue; }
                     var vol = new GfsVolume {
                         Name = volumeNamesList[i],
                         Brick = volumeBrickList[i],
@@ -159,8 +148,8 @@ namespace Antd.Modules {
                     Nodes = nodelist,
                     Volumes = volumelist
                 };
-                GlusterConfiguration.Set(setup);
-                GlusterConfiguration.Launch();
+                _glusterConfiguration.Set(setup);
+                _glusterConfiguration.Launch();
                 return Response.AsRedirect("/");
             };
         }

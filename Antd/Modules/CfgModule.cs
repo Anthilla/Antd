@@ -49,14 +49,16 @@ namespace Antd.Modules {
         private readonly BootServiceLoadRepository _bootServiceLoadRepo = new BootServiceLoadRepository();
         private readonly BootOsParametersLoadRepository _bootOsParametersLoadRepo = new BootOsParametersLoadRepository();
 
+        private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
+
         public CfgModule() {
             this.RequiresAuthentication();
 
             Get["/cfg"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.HasConfiguration = true;
-                vmod.Controls = SetupConfiguration.Get();
-                if (SetupConfiguration.Get().Count < 1) {
+                vmod.Controls = _setupConfiguration.Get();
+                if(_setupConfiguration.Get().Count < 1) {
                     vmod.HasConfiguration = false;
                 }
 
@@ -74,7 +76,7 @@ namespace Antd.Modules {
             Post["/cfg/export"] = x => {
                 var control = this.Bind<List<Control>>();
                 var checkedControl = new List<Control>();
-                foreach (var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
+                foreach(var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
                     var s = new Control {
                         Index = cr.Index,
                         FirstCommand = cr.FirstCommand,
@@ -84,7 +86,7 @@ namespace Antd.Modules {
 
                     checkedControl.Add(s);
                 }
-                SetupConfiguration.Export(checkedControl);
+                _setupConfiguration.Export(checkedControl);
                 return Response.AsRedirect("/cfg");
             };
 
@@ -170,12 +172,12 @@ namespace Antd.Modules {
                 var osparamText = (string)Request.Form.Config;
                 var services = osparamText.SplitToList(Environment.NewLine);
                 var dict = new Dictionary<string, string>();
-                foreach (var serv in services) {
+                foreach(var serv in services) {
                     try {
                         var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
                         dict.Add(kvp[0], kvp[1]);
                     }
-                    catch (Exception) {
+                    catch(Exception) {
                         continue;
                     }
                 }

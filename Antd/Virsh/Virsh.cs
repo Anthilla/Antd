@@ -26,46 +26,58 @@
 //
 //     20141110
 //-------------------------------------------------------------------------------------
+
 using System;
-using antdlib.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using antdlib.common;
 using antdlib.common.Tool;
 
-namespace antdlib.Status {
-    public class Local {
+namespace Antd.Virsh {
+    public class Virsh {
 
-        private static readonly Bash Bash = new Bash();
-
-        private static string GetSystemVersion() {
-            var sq = Bash.Execute("losetup").SplitBash().Grep("/dev/loop0").First();
-            var sqSplt = sq.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            if(sqSplt.Length <= 1)
-                return "";
-            var file = sqSplt[sqSplt.Length - 1];
-            return new Regex("_.+_").Matches(file)[0].Value.Replace("_", "");
+        public class VirtualMachineInfo {
+            public string Id { get; set; }
+            public string Domain { get; set; }
+            public string State { get; set; }
+            public string VncIp { get; set; }
+            public string VncPort { get; set; }
         }
 
-        public static string SystemVersion => GetSystemVersion();
+        private readonly Bash _bash = new Bash();
 
-        private static IEnumerable<SystemComponentModel> GetActiveSystemComponents() {
-            var list = new List<SystemComponentModel>();
-            var activeLinkData = Bash.Execute($"find {Parameter.Repo} -type l").SplitBash().Grep("active").First();
-            var activeLinks = activeLinkData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-            foreach(var link in activeLinks) {
-                var linkInfoData = Bash.Execute($"file {link}");
-                var linkInfos = linkInfoData.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
-                var sc = new SystemComponentModel() {
-                    Active = linkInfos[0].Replace(":", "").Trim(),
-                    Recovery = linkInfos[1].Replace("symbolic link to", "").Trim()
-                };
-                list.Add(sc);
+        public IEnumerable<VirtualMachineInfo> GetVmList() {
+            var vms = new List<VirtualMachineInfo>();
+            var res = _bash.Execute("virsh list --all | sed '1,2d'");
+            if(res.Length < 1) {
+                return vms;
             }
-            return list;
+            var virshVms = res.Split(new[] { Environment.NewLine }, 3, StringSplitOptions.RemoveEmptyEntries);
+            foreach(var i in virshVms) {
+                var info = i.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                var vm = new VirtualMachineInfo {
+                    Id = info[0],
+                    Domain = info[1],
+                    State = info[2],
+                };
+                var vnc = GetVmVncAddress(vm.Domain);
+                vm.VncIp = vnc.Key;
+                vm.VncPort = vnc.Value;
+                vms.Add(vm);
+            }
+            return vms;
         }
 
-        public static IEnumerable<SystemComponentModel> ActiveSystemComponents => GetActiveSystemComponents();
+        private KeyValuePair<string, string> GetVmVncAddress(string domain) {
+            var res = _bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
+            if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
+                return new KeyValuePair<string, string>(null, null);
+            }
+            var portRegex = "port='([\\d]*)'";
+            var ipRegex = "listen='([\\d. ]*)'";
+            var port = new Regex(portRegex, RegexOptions.Multiline).Matches(res)[0].Value;
+            var ip = new Regex(ipRegex, RegexOptions.Multiline).Matches(res)[0].Value;
+            return new KeyValuePair<string, string>(ip, port);
+        }
     }
 }

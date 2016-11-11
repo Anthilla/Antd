@@ -40,6 +40,7 @@ namespace Antd {
         public static RaptorDB.RaptorDB Database;
 
         private static readonly AntdBoot Boot = new AntdBoot();
+        private static readonly ApplicationSetting ApplicationSetting = new ApplicationSetting();
 
         private static void Main() {
             ConsoleLogger.Log("");

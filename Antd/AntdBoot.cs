@@ -48,20 +48,24 @@ namespace Antd {
             _bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
         }
 
+        private readonly Mount _mount = new Mount();
+
         public void SetWorkingDirectories() {
             if(!Parameter.IsUnix)
                 return;
-            Mount.WorkingDirectories();
+            _mount.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
         }
 
+        private readonly ApplicationSetting _applicationSetting = new ApplicationSetting();
+
         public void SetCoreParameters() {
-            ApplicationSetting.WriteDefaults();
+            _applicationSetting.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
         }
 
         public RaptorDB.RaptorDB StartDatabase() {
-            var path = ApplicationSetting.DatabasePath();
+            var path = _applicationSetting.DatabasePath();
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
@@ -97,8 +101,10 @@ namespace Antd {
             return database;
         }
 
+        private readonly MachineConfiguration _machineConfiguration = new MachineConfiguration();
+
         public void PrepareConfiguration() {
-            MachineConfiguration.Set();
+            _machineConfiguration.Set();
             ConsoleLogger.Log("configuration prepared");
         }
 
@@ -151,7 +157,7 @@ namespace Antd {
         public void SetMounts() {
             if(!Parameter.IsUnix)
                 return;
-            Mount.AllDirectories();
+            _mount.AllDirectories();
             ConsoleLogger.Log("mounts ready");
         }
 
@@ -164,25 +170,29 @@ namespace Antd {
         }
 
         private readonly UserRepository _userRepository = new UserRepository();
+        private readonly SystemUser _systemUser = new SystemUser();
+
         public void ReloadUsers() {
             if(!Parameter.IsUnix)
                 return;
             var sysUser = _userRepository.Import();
             foreach(var user in _userRepository.GetAll()) {
                 if(!sysUser.ContainsKey(user.Alias)) {
-                    SystemUser.Create(user.Alias);
+                    _systemUser.Create(user.Alias);
                 }
                 if(!string.IsNullOrEmpty(user.Password)) {
-                    SystemUser.SetPassword(user.Alias, user.Password);
+                    _systemUser.SetPassword(user.Alias, user.Password);
                 }
             }
             ConsoleLogger.Log("users config ready");
         }
 
+        private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
+
         public void CommandExecuteLocal() {
             if(!Parameter.IsUnix)
                 return;
-            SetupConfiguration.Set();
+            _setupConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }
 
@@ -227,14 +237,16 @@ namespace Antd {
             ConsoleLogger.Log("os parameters ready");
         }
 
+        private readonly NfTables _nfTables = new NfTables();
+
         public void SetFirewall() {
             if(!Parameter.IsUnix)
                 return;
-            NfTables.Setup();
-            NfTables.ReloadConfiguration();
-            NfTables.Import();
-            NfTables.Export();
-            NfTables.ReloadConfiguration();
+            _nfTables.Setup();
+            _nfTables.ReloadConfiguration();
+            _nfTables.Import();
+            _nfTables.Export();
+            _nfTables.ReloadConfiguration();
             ConsoleLogger.Log("firewall ready");
         }
 
@@ -252,10 +264,12 @@ namespace Antd {
             ConsoleLogger.Log("services ready");
         }
 
+        private readonly SyslogConfiguration _syslogConfiguration = new SyslogConfiguration();
+
         public void SetSyslogNg() {
             if(!Parameter.IsUnix)
                 return;
-            var s = SyslogConfiguration.Set();
+            var s = _syslogConfiguration.Set();
             if(s) {
                 ConsoleLogger.Log("syslog ready");
             }
@@ -265,7 +279,7 @@ namespace Antd {
             if(!Parameter.IsUnix)
                 return;
             const string avahiServicePath = "/etc/avahi/services/antd.service";
-            var xml = AvahiCustomXml.Generate(ApplicationSetting.HttpPort());
+            var xml = AvahiCustomXml.Generate(_applicationSetting.HttpPort());
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
@@ -277,14 +291,16 @@ namespace Antd {
             ConsoleLogger.Log("avahi ready");
         }
 
+        private readonly Zpool _zpool = new Zpool();
+
         public void ImportPools() {
             if(!Parameter.IsUnix)
                 return;
-            var pools = Zpool.ImportList().ToList();
+            var pools = _zpool.ImportList().ToList();
             foreach(var pool in pools) {
                 if(!string.IsNullOrEmpty(pool)) {
                     ConsoleLogger.Log($"pool {pool} imported");
-                    Zpool.Import(pool);
+                    _zpool.Import(pool);
                 }
             }
             if(pools.Count > 0) {
@@ -292,31 +308,35 @@ namespace Antd {
             }
         }
 
+        private readonly Timers _timers = new Timers();
+
         public void StartScheduler() {
             if(!Parameter.IsUnix)
                 return;
-            Timers.CleanUp();
-            Timers.Setup();
-            Timers.Import();
-            Timers.Export();
+            _timers.CleanUp();
+            _timers.Setup();
+            _timers.Import();
+            _timers.Export();
 
-            var pools = Zpool.List();
+            var pools = _zpool.List();
             foreach(var zp in pools) {
 
-                Timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
+                _timers.Create(zp.Name.ToLower() + "snap", "hourly", $"/sbin/zfs snap -r {zp.Name}@${{TTDATE}}");
             }
 
-            Timers.StartAll();
+            _timers.StartAll();
             ConsoleLogger.Log("scheduler ready");
         }
+
+        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
 
         public void InitGlusterfs() {
             if(!Parameter.IsUnix)
                 return;
-            GlusterConfiguration.Set();
-            if(GlusterConfiguration.IsConfigured) {
-                GlusterConfiguration.Start();
-                GlusterConfiguration.Launch();
+            _glusterConfiguration.Set();
+            if(_glusterConfiguration.IsConfigured) {
+                _glusterConfiguration.Start();
+                _glusterConfiguration.Launch();
             }
             ConsoleLogger.Log("glusterfs ready");
         }
@@ -329,16 +349,16 @@ namespace Antd {
         public void LaunchInternalTimers() {
             if(!Parameter.IsUnix)
                 return;
-            SnapshotCleanup.Start(new TimeSpan(2, 00, 00));
+            new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             ConsoleLogger.Log("internal timers ready");
         }
 
         private readonly ApplicationRepository _applicationRepository = new ApplicationRepository();
-
+        private readonly AppTarget _appTarget = new AppTarget();
         public void LaunchApps() {
             if(!Parameter.IsUnix)
                 return;
-            AppTarget.Setup();
+            _appTarget.Setup();
             var apps = _applicationRepository.GetAll().Select(_ => new ApplicationModel(_)).ToList();
             foreach(var app in apps) {
                 var units = app.UnitLauncher;
@@ -374,7 +394,7 @@ namespace Antd {
             File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_systemd_journald.conf");
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
-                Mount.File(realFileName);
+                _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart systemd-journald.service", false);
             ConsoleLogger.Log("journald config ready");
@@ -385,7 +405,7 @@ namespace Antd {
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
-                Mount.File(realFileName);
+                _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart collectd.service", false);
         }
@@ -395,7 +415,7 @@ namespace Antd {
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
             var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
             if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
-                Mount.File(realFileName);
+                _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart wpa_supplicant.service", false);
         }

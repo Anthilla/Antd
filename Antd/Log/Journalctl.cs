@@ -39,33 +39,33 @@ namespace Antd.Log {
 
         private static readonly Bash Bash = new Bash();
 
-        public static IEnumerable<string> GetAllLog() {
+        public IEnumerable<string> GetAllLog() {
             var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash();
             return result;
         }
 
-        public static IEnumerable<string> GetAllLog(string filter) {
-            var result = Bash.Execute($"journalctl --no-pager --quiet").SplitBash().Grep(filter);
+        public IEnumerable<string> GetAllLog(string filter) {
+            var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash().Grep(filter);
             return result;
         }
 
-        public static IEnumerable<string> GetAllLogSinceHour(string hours) {
+        public IEnumerable<string> GetAllLogSinceHour(string hours) {
             var cmd = $"journalctl --no-pager --quiet --since='{hours}h ago'";
             var result = Bash.Execute(cmd);
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static IEnumerable<string> GetAntdLog() {
+        public IEnumerable<string> GetAntdLog() {
             var result = Bash.Execute($"journalctl --no-pager --quiet -u {Parameter.UnitAntdLauncher}");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static IEnumerable<string> GetLogContexts() {
+        public IEnumerable<string> GetLogContexts() {
             var result = Bash.Execute("journalctl --quiet | awk '{print $5}'| awk -F '[' '{print $1}'| sort -u");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Replace(":", ""));
         }
 
-        public static IEnumerable<string> GetLogContextsSinceHour(string hours) {
+        public IEnumerable<string> GetLogContextsSinceHour(string hours) {
             var result = Bash.Execute($"journalctl --quiet --since='{hours}h ago' | awk '{{print $5}}'| awk -F '[' '{{print $1}}'| sort -u");
             return result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(value => value.Replace(":", ""));
         }
@@ -73,12 +73,12 @@ namespace Antd.Log {
         public class Report {
             private static readonly string ReportDir = Parameter.AntdCfgReport;
 
-            public static IEnumerable<string> Get() {
+            public IEnumerable<string> Get() {
                 Directory.CreateDirectory(ReportDir);
                 return Directory.EnumerateFiles(ReportDir).Where(_ => _.EndsWith("antd-report.txt"));
             }
 
-            public static void GenerateReport() {
+            public void GenerateReport() {
                 Directory.CreateDirectory(ReportDir);
                 try {
                     var lines = new List<string> {
@@ -98,7 +98,7 @@ namespace Antd.Log {
 
                     File.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines);
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     ConsoleLogger.Error($"unable to create the log report: {ex.Message}", ConsoleLogger.Method());
                 }
             }
@@ -117,15 +117,15 @@ namespace Antd.Log {
                 var session = Bash.Execute("aureport -au");
                 var sessionSplit = session.Split(new[] { Environment.NewLine }, StringSplitOptions.None).Skip(5).ToList();
                 var ipList = new HashSet<string>();
-                foreach (var infoRow in sessionSplit.Where(_ => _.Length > 0)) {
+                foreach(var infoRow in sessionSplit.Where(_ => _.Length > 0)) {
                     ipList.Add(infoRow.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4].Trim());
                 }
                 //formato liena: 67. 11/20/2015 13:26:38 root 10.1.19.1 ssh /usr/sbin/sshd yes 753
                 //lines.Add($"@ {infoArr[1]} {infoArr[2]} - someone tried to authenticate from {infoArr[4]} as {infoArr[3]}: result {infoArr[7]}");
-                foreach (var ip in ipList) {
+                foreach(var ip in ipList) {
                     var ipLines = sessionSplit.Where(line => line.Contains(ip)).ToList();
                     var userList = new HashSet<string>();
-                    foreach (var infoRow in ipLines.Where(_ => _.Length > 0)) {
+                    foreach(var infoRow in ipLines.Where(_ => _.Length > 0)) {
                         userList.Add(infoRow.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries)[3].Trim());
                     }
                     var failureAttempts = ipLines.Where(_ => _.EndsWith("no")).ToList().Count;
@@ -135,7 +135,7 @@ namespace Antd.Log {
                 return lines;
             }
 
-            public static string ReadReport(string reportFile) {
+            public string ReadReport(string reportFile) {
                 return !File.Exists(reportFile) ? "ERR" : Bash.Execute($"cat {reportFile}");
             }
         }

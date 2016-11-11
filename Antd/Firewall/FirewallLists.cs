@@ -49,15 +49,8 @@ namespace Antd.Firewall {
     }
 
     public class FirewallLists {
-        //public static IEnumerable<FirewallListModel> GetAll() => DeNSo.Session.New.Get<FirewallListModel>(_ => _.IsEnabled);
 
-        //public static IEnumerable<FirewallListModel> GetAllHidden() => DeNSo.Session.New.Get<FirewallListModel>();
-
-        //public static IEnumerable<FirewallListModel> GetForRule(string table, string type, string hook) {
-        //    return GetAll().Where(_ => _.IdTable == table && _.IdType == type && _.IdHook == hook);
-        //}
-
-        public static IEnumerable<string> GetRuleSet(string table, string type, string hook) {
+        public IEnumerable<string> GetRuleSet(string table, string type, string hook) {
             var startMark = $"#start_{table}_{type}_{hook}";
             var endMark = $"#end_{table}_{type}_{hook}";
             var templateTextLines = File.ReadAllLines($"{Parameter.RepoConfig}/antd.firewall.template.conf").ToList();
@@ -67,7 +60,7 @@ namespace Antd.Firewall {
             return relevantLines.Where(_ => !_.Contains("#"));
         }
 
-        public static void AddList(string guid, string table, string type, string hook, string label) {
+        public void AddList(string guid, string table, string type, string hook, string label) {
             var model = new FirewallListModel {
                 // _Id = Guid.NewGuid().ToString(),
                 Guid = guid,
@@ -81,7 +74,7 @@ namespace Antd.Firewall {
             //DeNSo.Session.New.Set(model);
         }
 
-        public static void AddValueToList(string guid, IEnumerable<string> values) {
+        public void AddValueToList(string guid, IEnumerable<string> values) {
             //if (!GetAllHidden().Any()) {
             //    return;
             //}
@@ -92,9 +85,9 @@ namespace Antd.Firewall {
             //DeNSo.Session.New.Set(list);
         }
 
-        //public static IEnumerable<string> GetLabels() => GetAllHidden().Select(_ => _.TemplateWord);
+        //public  IEnumerable<string> GetLabels() => GetAllHidden().Select(_ => _.TemplateWord);
 
-        public static void SetDefaultLists() {
+        public void SetDefaultLists() {
             //if (GetAllHidden().Any()) {
             //    return;
             //}

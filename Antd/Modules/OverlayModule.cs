@@ -33,12 +33,14 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class OverlayModule : CoreModule {
 
+        private readonly OverlayWatcher _overlayWatcher = new OverlayWatcher();
+
         public OverlayModule() {
             this.RequiresAuthentication();
 
             Post["/overlay/directory"] = x => {
                 string dir = Request.Form.Directory;
-                OverlayWatcher.SetOverlayDirectory(dir);
+                _overlayWatcher.SetOverlayDirectory(dir);
                 return HttpStatusCode.OK;
             };
         }

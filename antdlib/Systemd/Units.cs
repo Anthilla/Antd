@@ -38,7 +38,7 @@ namespace antdlib.Systemd {
 
     public class Units {
 
-        private static List<UnitModel> GetAllUnits() {
+        private List<UnitModel> GetAllUnits() {
             var bash = new Bash();
             var command = bash.Execute("systemctl --no-pager list-unit-files").ConvertCommandToModel();
             var output = JsonConvert.SerializeObject(command.output);
@@ -51,9 +51,9 @@ namespace antdlib.Systemd {
             return units;
         }
 
-        public static List<UnitModel> All => GetAllUnits();
+        public List<UnitModel> All => GetAllUnits();
 
-        public static List<UnitModel> MapUnitJson(string unitJson) {
+        public List<UnitModel> MapUnitJson(string unitJson) {
             unitJson = System.Text.RegularExpressions.Regex.Replace(unitJson, @"\s{2,}", " ").Replace("\"", "");
             var unitJsonRow = unitJson.Split(new[] { "\\n" }, StringSplitOptions.None).ToArray();
             var units = new List<UnitModel>();
@@ -61,7 +61,7 @@ namespace antdlib.Systemd {
             return units;
         }
 
-        public static UnitModel MapUnit(string[] unitJsonCell) {
+        public UnitModel MapUnit(string[] unitJsonCell) {
             var unit = new UnitModel { name = unitJsonCell[0] };
             if(unitJsonCell.Length > 1 && unitJsonCell[1] != null) {
                 unit.status = unitJsonCell[1];

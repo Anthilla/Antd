@@ -7,7 +7,7 @@ namespace Antd.Apps {
 
         private static readonly Bash Bash = new Bash();
 
-        public static void Setup() {
+        public void Setup() {
             if(IsTargetActive())
                 return;
             Bash.Execute("mkdir -p /etc/systemd/system/app.target.wants", false);
@@ -22,7 +22,7 @@ namespace Antd.Apps {
             Bash.Execute("systemctl daemon-reload", false);
         }
 
-        public static void StartAll() {
+        public void StartAll() {
             Bash.Execute("systemctl restart app.target", false);
         }
 

@@ -22,15 +22,16 @@ namespace Antd.Storage {
         }
 
         private static readonly Bash Bash = new Bash();
+        private readonly Zpool _zpool = new Zpool();
 
-        public static List<Model> List() {
+        public  List<Model> List() {
             var result = Bash.Execute("zfs list");
             var list = new List<Model>();
             if (string.IsNullOrEmpty(result)) {
                 return list;
             }
 
-            var pools = Zpool.List();
+            var pools = _zpool.List();
 
             var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList().Skip(1);
             foreach (var line in lines) {

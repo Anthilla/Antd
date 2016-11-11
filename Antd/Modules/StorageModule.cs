@@ -29,7 +29,6 @@
 
 using System.Linq;
 using antdlib.common.Tool;
-using antdlib.Install;
 using antdlib.Storage;
 using Antd.Database;
 using Antd.SystemdTimer;
@@ -41,19 +40,10 @@ namespace Antd.Modules {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Bash _bash = new Bash();
+        private readonly Timers _timers = new Timers();
 
         public StorageModule() {
             this.RequiresAuthentication();
-
-            Get["/storage/reload/volumes"] = x => {
-                Volumes.PopulateBlocks();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/storage/install"] = x => {
-                new InstallOperativeSystem((string)Request.Form.DiskName).SetDiskAndInstall();
-                return HttpStatusCode.OK;
-            };
 
             Get["/zfs/cron"] = x => {
                 var list = _timerRepository.GetAll();
@@ -66,7 +56,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                Timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
+                _timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
                 return HttpStatusCode.OK;
             };
 
@@ -75,7 +65,7 @@ namespace Antd.Modules {
                 var tt = _timerRepository.GetByGuid(guid);
                 if(tt == null)
                     return HttpStatusCode.InternalServerError;
-                Timers.Disable(tt.Alias);
+                _timers.Disable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 

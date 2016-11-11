@@ -79,28 +79,28 @@ namespace antdlib.Storage {
 
         public class Get {
 
-            public static string[] ById() {
+            public string[] ById() {
                 return Bash.Execute("ls -1 /dev/disk/by-id").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
-            public static string[] ByLabel() {
+            public string[] ByLabel() {
                 return Bash.Execute("ls -1 /dev/disk/by-label").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
-            public static string[] ByPartLabel() {
+            public string[] ByPartLabel() {
                 return Bash.Execute("ls -1 /dev/disk/by-partlabel").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
-            public static string[] ByPartUuid() {
+            public string[] ByPartUuid() {
                 return Bash.Execute("ls -1 /dev/disk/by-partuuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
 
-            public static string[] ByUuid() {
+            public string[] ByUuid() {
                 return Bash.Execute("ls -1 /dev/disk/by-uuid").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             }
         }
 
-        public static void PopulateBlocks() {
+        public void PopulateBlocks() {
             var rows = Bash.Execute("lsblk -npl").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             foreach(var row in rows) {
                 var cells = row.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -126,7 +126,7 @@ namespace antdlib.Storage {
             }
         }
 
-        public static List<Block> BlocksFromDd() {
+        public List<Block> BlocksFromDd() {
             throw new NotImplementedException();
             //var list = DeNSo.Session.New.Get<Block>(b => b != null).OrderBy(n => n.Name).ToList();
             //if (list.ToArray().Length < 1) {
@@ -135,7 +135,7 @@ namespace antdlib.Storage {
             //return list;
         }
 
-        public static void SaveToDb(Block model) {
+        public void SaveToDb(Block model) {
             throw new NotImplementedException();
             //model._Id = Guid.NewGuid().ToString();
             //var old = DeNSo.Session.New.Get<Block>(b => b != null && b.Name == model.Name).FirstOrDefault();
@@ -145,7 +145,7 @@ namespace antdlib.Storage {
             //DeNSo.Session.New.Set(model);
         }
 
-        public static List<string> BlockList() {
+        public List<string> BlockList() {
             var blocks = new List<string>();
             var rows = Bash.Execute("lsblk -lnp --output=NAME").ConvertCommandToModel().output.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToArray();
             blocks.AddRange(rows);

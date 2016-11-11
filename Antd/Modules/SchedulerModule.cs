@@ -37,6 +37,7 @@ namespace Antd.Modules {
     public class SchedulerModule : CoreModule {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
+        private readonly Timers _timers = new Timers();
 
         public SchedulerModule() {
             this.RequiresAuthentication();
@@ -46,7 +47,7 @@ namespace Antd.Modules {
                 var command = (string)Request.Form.Command;
                 var hi = (string)Request.Form.Interval;
                 if (!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(hi)) {
-                    Timers.Create(alias, hi, command);
+                    _timers.Create(alias, hi, command);
                 }
                 return Response.AsRedirect("/");
             };
@@ -55,7 +56,7 @@ namespace Antd.Modules {
                 string guid = Request.Form.Guid;
                 var tt = _timerRepository.GetByGuid(guid);
                 if (tt == null) return HttpStatusCode.InternalServerError;
-                Timers.Enable(tt.Alias);
+                _timers.Enable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 
@@ -63,7 +64,7 @@ namespace Antd.Modules {
                 string guid = Request.Form.Guid;
                 var tt = _timerRepository.GetByGuid(guid);
                 if (tt == null) return HttpStatusCode.InternalServerError;
-                Timers.Disable(tt.Alias);
+                _timers.Disable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 

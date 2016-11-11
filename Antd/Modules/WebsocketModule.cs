@@ -34,11 +34,15 @@ using WebSocket = antdlib.Websocket.Client.WebSocket;
 
 namespace Antd.Modules {
     public class WebsocketModule : CoreModule {
+
+        private readonly ApplicationSetting _applicationSetting = new ApplicationSetting();
+        private readonly PortManagement _portManagement = new PortManagement();
+
         public WebsocketModule() {
-            Get["/ws/port"] = x => Response.AsJson(ApplicationSetting.WebsocketPort());
+            Get["/ws/port"] = x => Response.AsJson(_applicationSetting.WebsocketPort());
 
             Post["/ws/post"] = x => {
-                var port = PortManagement.GetFirstAvailable(45000, 45999);
+                var port = _portManagement.GetFirstAvailable(45000, 45999);
                 var ws = new WebSocket();
                 ws.Start(port);
                 return Response.AsJson(port);

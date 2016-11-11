@@ -42,36 +42,37 @@ namespace Antd.Users {
         private const string File = "/etc/group";
 
         private static readonly string MntFile = Mounts.SetFilesPath(File);
+        private readonly Mount _mount = new Mount();
 
-        public static void SetReady() {
-            if (!System.IO.File.Exists(MntFile) && System.IO.File.Exists(File)) {
+        public void SetReady() {
+            if(!System.IO.File.Exists(MntFile) && System.IO.File.Exists(File)) {
                 System.IO.File.Copy(File, MntFile, true);
             }
-            else if (System.IO.File.Exists(MntFile) && FileSystem.IsNewerThan(File, MntFile)) {
+            else if(System.IO.File.Exists(MntFile) && FileSystem.IsNewerThan(File, MntFile)) {
                 System.IO.File.Delete(MntFile);
                 System.IO.File.Copy(File, MntFile, true);
             }
-            Mount.File(File);
+            _mount.File(File);
         }
 
         private static bool CheckIsActive() {
             return new MountRepository().GetByPath(File) != null;
         }
 
-        public static bool IsActive => CheckIsActive();
+        public bool IsActive => CheckIsActive();
 
-        public static void ImportGroupsToDatabase() {
-            if (!System.IO.File.Exists(File))
+        public void ImportGroupsToDatabase() {
+            if(!System.IO.File.Exists(File))
                 return;
             var groupsString = FileSystem.ReadFile(File);
             var groups = groupsString.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToArray();
-            foreach (var mu in groups.Select(MapGroup)) {
+            foreach(var mu in groups.Select(MapGroup)) {
                 throw new NotImplementedException();
                 //DeNSo.Session.New.Set(mu);
             }
         }
 
-        public static IEnumerable<GroupModel> GetAllFromDatabase() {
+        public IEnumerable<GroupModel> GetAllFromDatabase() {
             throw new NotImplementedException();
             //ImportGroupsToDatabase();
         }
@@ -84,14 +85,14 @@ namespace Antd.Users {
                 Password = groupInfo[1],
                 Gid = groupInfo[2]
             };
-            if (groupInfo[3].Length <= 0)
+            if(groupInfo[3].Length <= 0)
                 return groupObject;
             var users = groupInfo[3].Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
             groupObject.UserList = users;
             return groupObject;
         }
 
-        public static void CreateGroup(string group) {
+        public void CreateGroup(string group) {
             var bash = new Bash();
             bash.Execute($"groupadd {group}", false);
         }

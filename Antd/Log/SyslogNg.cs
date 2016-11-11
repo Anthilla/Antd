@@ -15,23 +15,23 @@ namespace Antd.Log {
         }
         private static readonly SyslogRepository SyslogRepository = new SyslogRepository();
 
-        public static List<Model> GetAll() {
+        public List<Model> GetAll() {
             var list = new List<Model>();
             var config = SyslogRepository.Get();
-            if (config == null) {
+            if(config == null) {
                 return list;
             }
-            if (string.IsNullOrEmpty(config.RootPath)) {
+            if(string.IsNullOrEmpty(config.RootPath)) {
                 return list;
             }
             var dir = config.RootPath;
             var files = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories);
-            foreach (var file in files) {
+            foreach(var file in files) {
                 var path = file.Replace(dir, "");
                 var dd = path.Contains("/") ? '/' : path.Contains("\\") ? '\\' : ' ';
-                if (string.IsNullOrEmpty(dd.ToString())) { continue; }
+                if(string.IsNullOrEmpty(dd.ToString())) { continue; }
                 var pathel = path.Split(dd);
-                if (pathel.Length < 3) { continue; }
+                if(pathel.Length < 3) { continue; }
                 try {
                     var date = DateTime.ParseExact($"{pathel[1]}{pathel[2]}{pathel[3]}", "yyMMMdd", CultureInfo.InvariantCulture);
                     var log = File.ReadAllText(file);
@@ -43,7 +43,7 @@ namespace Antd.Log {
                     };
                     list.Add(l);
                 }
-                catch (Exception) {  }
+                catch(Exception) { }
             }
             return list;
         }

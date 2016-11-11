@@ -13,7 +13,7 @@ namespace Antd.Configuration {
 
         private static readonly string FilePath = $"{Parameter.RepoConfig}/machine.conf";
 
-        public static void Set() {
+        public void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if(!File.Exists(FilePath)) {
                 ConsoleLogger.Log("machine configuration file does not exist");
@@ -37,7 +37,7 @@ namespace Antd.Configuration {
             BootOsParametersLoadRepository.Dump(configuration.LoadOsParameters);
         }
 
-        public static void Export(List<string> loadModules, List<string> loadService, Dictionary<string, string> loadOsParam) {
+        public void Export(List<string> loadModules, List<string> loadService, Dictionary<string, string> loadOsParam) {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if(File.Exists(FilePath)) {
                 File.Delete(FilePath);

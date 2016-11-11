@@ -35,16 +35,19 @@ using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class UnitsModule : CoreModule {
+
+        private readonly Units _units = new Units();
+
         public UnitsModule() {
             this.RequiresAuthentication();
 
             Get["/units"] = x => {
-                var units = Units.All;
+                var units = _units.All;
                 return View["page-units", units];
             };
 
             Get["/units/list"] = x => {
-                return JsonConvert.SerializeObject(Units.All.OrderBy(u => u.name));
+                return JsonConvert.SerializeObject(_units.All.OrderBy(u => u.name));
             };
 
             Post["/units/mgmt/enable/{unit}"] = x => {
@@ -73,7 +76,7 @@ namespace Antd.Modules {
 
             Post["/units/mgmt/restart/{unit}"] = x => {
                 string unit = x.unit;
-                 Systemctl.Restart(unit);
+                Systemctl.Restart(unit);
                 return HttpStatusCode.OK;
             };
 

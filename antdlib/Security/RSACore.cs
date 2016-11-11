@@ -38,7 +38,7 @@ namespace antdlib.Security {
         private static string _publicKey;
         private static readonly UnicodeEncoding Encoder = new UnicodeEncoding();
 
-        public static RsaKeys.Pair GenerateKeys() {
+        public RsaKeys.Pair GenerateKeys() {
             var rsa = new RSACryptoServiceProvider(3072);
             _privateKey = rsa.ToXmlString(true);
             _publicKey = rsa.ToXmlString(false);
@@ -54,7 +54,7 @@ namespace antdlib.Security {
         }
 
         private static RsaKeys.Private MapPrivateKey(RSAParameters key, string xml) {
-            return new RsaKeys.Private{
+            return new RsaKeys.Private {
                 Param = key,
                 Xml = xml,
                 Modulus = key.Modulus,
@@ -77,7 +77,7 @@ namespace antdlib.Security {
             };
         }
 
-        public static string CoreEncrypt(string data) {
+        public string CoreEncrypt(string data) {
             var rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(_publicKey);
             var dataToEncrypt = Encoder.GetBytes(data);
@@ -85,21 +85,21 @@ namespace antdlib.Security {
             var length = encryptedByteArray.Length;
             var item = 0;
             var sb = new StringBuilder();
-            foreach (var x in encryptedByteArray) {
+            foreach(var x in encryptedByteArray) {
                 item++;
                 sb.Append(x);
 
-                if (item < length)
+                if(item < length)
                     sb.Append(",");
             }
             return sb.ToString();
         }
 
-        public static string CoreDecrypt(string data) {
+        public string CoreDecrypt(string data) {
             var rsa = new RSACryptoServiceProvider();
             var dataArray = data.Split(',');
             var dataByte = new byte[dataArray.Length];
-            for (var i = 0; i < dataArray.Length; i++) {
+            for(var i = 0; i < dataArray.Length; i++) {
                 dataByte[i] = Convert.ToByte(dataArray[i]);
             }
             rsa.FromXmlString(_privateKey);

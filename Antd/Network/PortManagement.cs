@@ -32,7 +32,7 @@ using System.Net.NetworkInformation;
 
 namespace Antd.Network {
     public class PortManagement {
-        public static int GetFirstAvailable(int port, int portMax) {
+        public int GetFirstAvailable(int port, int portMax) {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             var tcpConnPortList = ipGlobalProperties.GetActiveTcpConnections().Select(_ => _.LocalEndPoint.Port).ToList();
             if (tcpConnPortList.Contains(port)) {

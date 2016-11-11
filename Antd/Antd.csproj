@@ -131,7 +131,6 @@
     <Compile Include="Firewall\NftModels.cs" />
     <Compile Include="Gluster\GlusterSetup.cs" />
     <Compile Include="Gluster\GlusterConfiguration.cs" />
-    <Compile Include="Helpers\CertificateAssignmentType.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
     <Compile Include="Hubs\Websocketd.cs" />
@@ -141,7 +140,7 @@
     <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\DiscoveryModule.cs" />
-    <Compile Include="Modules\DomainControllerModule.cs" />
+    <Compile Include="Modules\renew\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\OverlayModule.cs" />
     <Compile Include="Modules\PartialHomeModule.cs" />
@@ -149,7 +148,7 @@
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />
     <Compile Include="Modules\CCTableModule.cs" />
-    <Compile Include="Modules\CertificateAuthorityModule.cs" />
+    <Compile Include="Modules\renew\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\CfgModule.cs" />
     <Compile Include="Modules\DirectoryModule.cs" />
@@ -161,7 +160,6 @@
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Modules\ServicesModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
-    <Compile Include="Modules\SystemModule.cs" />
     <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
@@ -174,11 +172,8 @@
     <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="MountPoint\MountLocal.cs" />
-    <Compile Include="Network\NetworkConfig.cs" />
-    <Compile Include="Network\NetworkFirstConfiguration.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
-    <Compile Include="Rmmod.cs" />
     <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
@@ -195,7 +190,7 @@
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserModel.cs" />
-    <Compile Include="vsync\Vsync.cs" />
+    <Compile Include="Virsh\Virsh.cs" />
     <Content Include="Content\Style\img\disk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

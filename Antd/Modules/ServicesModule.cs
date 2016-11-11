@@ -31,12 +31,10 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading;
 using antdlib.common;
-using antdlib.Svcs.Bind;
 using antdlib.views;
 using antdlib.ViewBinds;
 using Antd.Database;
 using Antd.DhcpServer;
-using Antd.Svcs.Samba;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
@@ -44,11 +42,13 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class ServicesModule : CoreModule {
 
-        private static readonly DhcpServerOptionsRepository DhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private static readonly DhcpServerSubnetRepository DhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private static readonly DhcpServerClassRepository DhcpServerClassRepository = new DhcpServerClassRepository();
-        private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
+        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
+        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
+        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
+
+        private readonly DhcpdConfiguration _dhcpdConfiguration = new DhcpdConfiguration();
 
         public ServicesModule() {
             this.RequiresAuthentication();
@@ -56,34 +56,34 @@ namespace Antd.Modules {
             Get["/services"] = x => {
                 dynamic vmod = new ExpandoObject();
 
-                vmod.SambaIsActive = SambaConfig.IsActive;
-                vmod.SambaStructure = SambaConfig.SimpleStructure;
-                var sambaMapFile = SambaConfig.MapFile.Get();
-                vmod.SambaData = sambaMapFile.Data;
-                vmod.SambaShareData = sambaMapFile.Share;
+                //vmod.SambaIsActive = SambaConfig.IsActive;
+                //vmod.SambaStructure = SambaConfig.SimpleStructure;
+                //var sambaMapFile = SambaConfig.MapFile.Get();
+                //vmod.SambaData = sambaMapFile.Data;
+                //vmod.SambaShareData = sambaMapFile.Share;
 
-                vmod.BindIsActive = BindConfig.IsActive;
-                var bindMapFile = BindConfig.MapFile.Get();
-                vmod.BindOptions = bindMapFile.BindOptions;
-                vmod.BindLogging = bindMapFile.BindLogging;
-                vmod.BindLwres = bindMapFile.BindLwres;
-                vmod.BindStatisticsChannels = bindMapFile.BindStatisticsChannels;
-                vmod.BindTrustedKeys = bindMapFile.BindTrustedKeys;
-                vmod.BindManagedKeys = bindMapFile.BindManagedKeys;
-                vmod.BindZone = bindMapFile.BindZone;
-                vmod.BindAcl = bindMapFile.BindAcl;
-                vmod.BindKey = bindMapFile.BindKey;
-                vmod.BindMasters = bindMapFile.BindMasters;
-                vmod.BindServer = bindMapFile.BindServer;
-                vmod.BindView = bindMapFile.BindView;
+                //vmod.BindIsActive = BindConfig.IsActive;
+                //var bindMapFile = BindConfig.MapFile.Get();
+                //vmod.BindOptions = bindMapFile.BindOptions;
+                //vmod.BindLogging = bindMapFile.BindLogging;
+                //vmod.BindLwres = bindMapFile.BindLwres;
+                //vmod.BindStatisticsChannels = bindMapFile.BindStatisticsChannels;
+                //vmod.BindTrustedKeys = bindMapFile.BindTrustedKeys;
+                //vmod.BindManagedKeys = bindMapFile.BindManagedKeys;
+                //vmod.BindZone = bindMapFile.BindZone;
+                //vmod.BindAcl = bindMapFile.BindAcl;
+                //vmod.BindKey = bindMapFile.BindKey;
+                //vmod.BindMasters = bindMapFile.BindMasters;
+                //vmod.BindServer = bindMapFile.BindServer;
+                //vmod.BindView = bindMapFile.BindView;
 
-                var dhcpdIsActive = DhcpServerOptionsRepository.Get() != null && DhcpServerSubnetRepository.Get() != null;
+                var dhcpdIsActive = _dhcpServerOptionsRepository.Get() != null && _dhcpServerSubnetRepository.Get() != null;
                 vmod.DhcpdIsActive = dhcpdIsActive;
-                vmod.DhcpdOptions = DhcpServerOptionsRepository.Get();
-                vmod.DhcpdSubnet = DhcpServerSubnetRepository.Get();
-                vmod.DhcpdClass = DhcpServerClassRepository.GetAll();
-                vmod.DhcpdPools = DhcpServerPoolRepository.GetAll();
-                vmod.DhcpdReservation = DhcpServerReservationRepository.GetAll();
+                vmod.DhcpdOptions = _dhcpServerOptionsRepository.Get();
+                vmod.DhcpdSubnet = _dhcpServerSubnetRepository.Get();
+                vmod.DhcpdClass = _dhcpServerClassRepository.GetAll();
+                vmod.DhcpdPools = _dhcpServerPoolRepository.GetAll();
+                vmod.DhcpdReservation = _dhcpServerReservationRepository.GetAll();
 
                 vmod.CurrentContext = Request.Path;
                 return View["_page-services", vmod];
@@ -91,28 +91,28 @@ namespace Antd.Modules {
 
             #region [    DHCPD    ]
             Post["/services/dhcpd/enable"] = x => {
-                DhcpdConfiguration.Enable();
+                _dhcpdConfiguration.Enable();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/disable"] = x => {
-                DhcpdConfiguration.Disable();
+                _dhcpdConfiguration.Disable();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/set"] = x => {
-                DhcpdConfiguration.Set();
+                _dhcpdConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/restart"] = x => {
-                DhcpdConfiguration.Enable();
-                DhcpdConfiguration.Restart();
+                _dhcpdConfiguration.Enable();
+                _dhcpdConfiguration.Restart();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/stop"] = x => {
-                DhcpdConfiguration.Stop();
+                _dhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -155,7 +155,7 @@ namespace Antd.Modules {
                     KeyName = keyName,
                     KeySecret = keySecret
                 };
-                DhcpServerOptionsRepository.Set(model);
+                _dhcpServerOptionsRepository.Set(model);
                 return Response.AsRedirect("/services");
             };
 
@@ -182,32 +182,32 @@ namespace Antd.Modules {
                     ZoneName = zoneName,
                     ZonePrimaryAddress = zonePrimaryAddress,
                 };
-                DhcpServerSubnetRepository.Set(model);
+                _dhcpServerSubnetRepository.Set(model);
                 return Response.AsRedirect("/services");
             };
 
             Post["/services/dhcpd/class/add"] = x => {
                 string name = Request.Form.Name;
                 string macVendor = Request.Form.MacVendor;
-                DhcpServerClassRepository.Create(name, macVendor);
+                _dhcpServerClassRepository.Create(name, macVendor);
                 return Response.AsRedirect("/services");
             };
 
             Post["/services/dhcpd/class/del"] = x => {
                 string id = Request.Form.Guid;
-                DhcpServerClassRepository.Delete(id);
+                _dhcpServerClassRepository.Delete(id);
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/pool/add"] = x => {
                 string option = Request.Form.Option;
-                DhcpServerPoolRepository.Create(option.SplitToList());
+                _dhcpServerPoolRepository.Create(option.SplitToList());
                 return Response.AsRedirect("/services");
             };
 
             Post["/services/dhcpd/pool/del"] = x => {
                 string id = Request.Form.Guid;
-                DhcpServerPoolRepository.Delete(id);
+                _dhcpServerPoolRepository.Delete(id);
                 return HttpStatusCode.OK;
             };
 
@@ -215,154 +215,154 @@ namespace Antd.Modules {
                 string hostName = Request.Form.HostName;
                 string macAddress = Request.Form.MacAddress;
                 string ipAddress = Request.Form.IpAddress;
-                DhcpServerReservationRepository.Create(hostName, macAddress, ipAddress);
+                _dhcpServerReservationRepository.Create(hostName, macAddress, ipAddress);
                 return Response.AsRedirect("/services");
             };
 
             Post["/services/dhcpd/reservation/del"] = x => {
                 string id = Request.Form.Guid;
-                DhcpServerReservationRepository.Delete(id);
+                _dhcpServerReservationRepository.Delete(id);
                 return HttpStatusCode.OK;
             };
 
             #endregion [    DHCPD    ]
 
-            #region SAMBA
-            Post["/services/activate/samba"] = x => {
-                SambaConfig.SetReady();
-                SambaConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
+            //#region SAMBA
+            //Post["/services/activate/samba"] = x => {
+            //    SambaConfig.SetReady();
+            //    SambaConfig.MapFile.Render();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/refresh/samba"] = x => {
-                SambaConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
+            //Post["/services/refresh/samba"] = x => {
+            //    SambaConfig.MapFile.Render();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/reloadconfig/samba"] = x => {
-                SambaConfig.ReloadConfig();
-                return HttpStatusCode.OK;
-            };
+            //Post["/services/reloadconfig/samba"] = x => {
+            //    SambaConfig.ReloadConfig();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/update/samba"] = x => {
-                var parameters = this.Bind<List<ServiceSamba>>();
-                SambaConfig.WriteFile.SaveGlobalConfig(parameters);
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.DumpGlobalConfig();
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSmbconf();
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/update/samba"] = x => {
+            //    var parameters = this.Bind<List<ServiceSamba>>();
+            //    SambaConfig.WriteFile.SaveGlobalConfig(parameters);
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.DumpGlobalConfig();
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.RewriteSmbconf();
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/update/sambashares"] = x => {
-                var parameters = this.Bind<List<ServiceSamba>>();
-                string file = Request.Form.ShareFile;
-                string name = Request.Form.ShareName;
-                string query = Request.Form.ShareQueryName;
-                SambaConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.DumpShare(name);
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSmbconf();
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/update/sambashares"] = x => {
+            //    var parameters = this.Bind<List<ServiceSamba>>();
+            //    string file = Request.Form.ShareFile;
+            //    string name = Request.Form.ShareName;
+            //    string query = Request.Form.ShareQueryName;
+            //    SambaConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.DumpShare(name);
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.RewriteSmbconf();
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/samba/addparam"] = x => {
-                string key = Request.Form.NewParameterKey;
-                string value = Request.Form.NewParameterValue;
-                SambaConfig.WriteFile.AddParameterToGlobal(key, value);
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSmbconf();
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/samba/addparam"] = x => {
+            //    string key = Request.Form.NewParameterKey;
+            //    string value = Request.Form.NewParameterValue;
+            //    SambaConfig.WriteFile.AddParameterToGlobal(key, value);
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.RewriteSmbconf();
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/samba/addshare"] = x => {
-                string name = Request.Form.NewShareName;
-                string directory = Request.Form.NewShareDirectory;
-                SambaConfig.WriteFile.AddShare(name, directory);
-                Thread.Sleep(1000);
-                SambaConfig.WriteFile.RewriteSmbconf();
-                return Response.AsRedirect("/");
-            };
-            #endregion SAMBA
+            //Post["/services/samba/addshare"] = x => {
+            //    string name = Request.Form.NewShareName;
+            //    string directory = Request.Form.NewShareDirectory;
+            //    SambaConfig.WriteFile.AddShare(name, directory);
+            //    Thread.Sleep(1000);
+            //    SambaConfig.WriteFile.RewriteSmbconf();
+            //    return Response.AsRedirect("/");
+            //};
+            //#endregion SAMBA
 
-            #region BIND
-            Post["/services/activate/bind"] = x => {
-                BindConfig.SetReady();
-                BindConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
+            //#region BIND
+            //Post["/services/activate/bind"] = x => {
+            //    BindConfig.SetReady();
+            //    BindConfig.MapFile.Render();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/refresh/bind"] = x => {
-                BindConfig.MapFile.Render();
-                return HttpStatusCode.OK;
-            };
+            //Post["/services/refresh/bind"] = x => {
+            //    BindConfig.MapFile.Render();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/reloadconfig/bind"] = x => {
-                BindConfig.ReloadConfig();
-                return HttpStatusCode.OK;
-            };
+            //Post["/services/reloadconfig/bind"] = x => {
+            //    BindConfig.ReloadConfig();
+            //    return HttpStatusCode.OK;
+            //};
 
-            Post["/services/update/bind/{section}"] = x => {
-                var section = (string)x.section;
-                var parameters = this.Bind<List<ServiceBind>>();
-                if (section == "acl") {
-                    BindConfig.WriteFile.SaveAcls(parameters);
-                }
-                else {
-                    BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
-                }
-                Thread.Sleep(1000);
-                BindConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/update/bind/{section}"] = x => {
+            //    var section = (string)x.section;
+            //    var parameters = this.Bind<List<ServiceBind>>();
+            //    if (section == "acl") {
+            //        BindConfig.WriteFile.SaveAcls(parameters);
+            //    }
+            //    else {
+            //        BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
+            //    }
+            //    Thread.Sleep(1000);
+            //    BindConfig.WriteFile.DumpGlobalConfig();
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/update/bind/zone/{zone}"] = x => {
-                var zoneName = (string)x.zone;
-                var parameters = this.Bind<List<ServiceBind>>();
-                BindConfig.WriteFile.SaveZoneConfig(zoneName, parameters);
-                Thread.Sleep(1000);
-                BindConfig.WriteFile.DumpGlobalConfig();
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/update/bind/zone/{zone}"] = x => {
+            //    var zoneName = (string)x.zone;
+            //    var parameters = this.Bind<List<ServiceBind>>();
+            //    BindConfig.WriteFile.SaveZoneConfig(zoneName, parameters);
+            //    Thread.Sleep(1000);
+            //    BindConfig.WriteFile.DumpGlobalConfig();
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addacl"] = x => {
-                string k = Request.Form.NewAclKey;
-                string v = Request.Form.NewAclValue;
-                BindConfig.MapFile.AddAcl(k, v);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/bind/addacl"] = x => {
+            //    string k = Request.Form.NewAclKey;
+            //    string v = Request.Form.NewAclValue;
+            //    BindConfig.MapFile.AddAcl(k, v);
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addkey"] = x => {
-                string name = Request.Form.NewKeyName;
-                BindConfig.MapFile.AddKey(name);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/bind/addkey"] = x => {
+            //    string name = Request.Form.NewKeyName;
+            //    BindConfig.MapFile.AddKey(name);
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addmasters"] = x => {
-                string name = Request.Form.NewMastersName;
-                BindConfig.MapFile.AddMasters(name);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/bind/addmasters"] = x => {
+            //    string name = Request.Form.NewMastersName;
+            //    BindConfig.MapFile.AddMasters(name);
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addserver"] = x => {
-                string name = Request.Form.NewServerName;
-                BindConfig.MapFile.AddServer(name);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/bind/addserver"] = x => {
+            //    string name = Request.Form.NewServerName;
+            //    BindConfig.MapFile.AddServer(name);
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addview"] = x => {
-                string name = Request.Form.NewViewName;
-                BindConfig.MapFile.AddView(name);
-                return Response.AsRedirect("/");
-            };
+            //Post["/services/bind/addview"] = x => {
+            //    string name = Request.Form.NewViewName;
+            //    BindConfig.MapFile.AddView(name);
+            //    return Response.AsRedirect("/");
+            //};
 
-            Post["/services/bind/addzone"] = x => {
-                string name = Request.Form.NewZoneName;
-                BindConfig.MapFile.AddZone(name);
-                return Response.AsRedirect("/");
-            };
-            #endregion BIND
+            //Post["/services/bind/addzone"] = x => {
+            //    string name = Request.Form.NewZoneName;
+            //    BindConfig.MapFile.AddZone(name);
+            //    return Response.AsRedirect("/");
+            //};
+            //#endregion BIND
 
             #region SSH
             //Post["/services/activate/ssh"] = x => {

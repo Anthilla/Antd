@@ -77,7 +77,7 @@ namespace Antd.Modules {
                 var data = (string)Request.Form.Data;
                 var tab = JsonConvert.DeserializeObject<IEnumerable<NftModel.Table>>(data);
                 //Console.WriteLine(JsonConvert.SerializeObject(tab, Formatting.Indented));
-                NfTables.Export(tab);
+                new NfTables().Export(tab);
                 return HttpStatusCode.OK;
             };
         }

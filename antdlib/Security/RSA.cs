@@ -37,7 +37,7 @@ namespace antdlib.Security {
     public class Rsa : RsaCore {
         private static readonly UnicodeEncoding Encoder = new UnicodeEncoding();
 
-        public static void Test() {
+        public void Test() {
             var keys = GenerateKeys();
             var rsa = new RSACryptoServiceProvider();
             var param = keys.Public.Param;
@@ -51,7 +51,7 @@ namespace antdlib.Security {
             Console.WriteLine("");
         }
 
-        public static string Encrypt(string data, RsaKeys.Public key) {
+        public string Encrypt(string data, RsaKeys.Public key) {
             var rsa = new RSACryptoServiceProvider();
             var param = key.Param;
             rsa.ImportParameters(param);
@@ -60,21 +60,21 @@ namespace antdlib.Security {
             var length = encryptedByteArray.Length;
             var item = 0;
             var sb = new StringBuilder();
-            foreach (var x in encryptedByteArray) {
+            foreach(var x in encryptedByteArray) {
                 item++;
                 sb.Append(x);
 
-                if (item < length)
+                if(item < length)
                     sb.Append(",");
             }
             return sb.ToString();
         }
 
-        public static string Decrypt(string data, RsaKeys.Private key) {
+        public string Decrypt(string data, RsaKeys.Private key) {
             var rsa = new RSACryptoServiceProvider();
             var dataArray = data.Split(',');
             var dataByte = new byte[dataArray.Length];
-            for (var i = 0; i < dataArray.Length; i++) {
+            for(var i = 0; i < dataArray.Length; i++) {
                 dataByte[i] = Convert.ToByte(dataArray[i]);
             }
             var param = key.Param;

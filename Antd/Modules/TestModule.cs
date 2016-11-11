@@ -49,11 +49,6 @@ namespace Antd.Modules {
 
             Get["/test/vnc"] = x => View["page-vnc"];
 
-            Get["/test/nft"] = x => {
-                var t = NfTables.Tables();
-                return JsonConvert.SerializeObject(t, Formatting.Indented);
-            };
-
             Get["/test/clearnsnapshots"] = x => {
                 new BackupClean().Launch();
                 return HttpStatusCode.ImATeapot;

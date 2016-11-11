@@ -40,36 +40,36 @@ namespace Antd.Info {
     public class MachineInfo {
 
         private static string GetFileHash(string filePath) {
-            using (var fileStreamToRead = File.OpenRead(filePath)) {
+            using(var fileStreamToRead = File.OpenRead(filePath)) {
                 return BitConverter.ToString(new SHA1Managed().ComputeHash(fileStreamToRead)).Replace("-", string.Empty);
             }
         }
 
         private static readonly MapToModel Mapper = new MapToModel();
 
-        public static IEnumerable<CpuinfoModel> GetCpuinfo() {
+        public IEnumerable<CpuinfoModel> GetCpuinfo() {
             var result = Mapper.FromFile<CpuinfoModel>("/proc/cpuinfo", ":");
             return result;
         }
 
-        public static IEnumerable<MeminfoModel> GetMeminfo() {
+        public IEnumerable<MeminfoModel> GetMeminfo() {
             var result = Mapper.FromFile<MeminfoModel>("/proc/meminfo", ":");
             return result;
         }
 
-        public static IEnumerable<AosReleaseModel> GetAosrelease() {
+        public IEnumerable<AosReleaseModel> GetAosrelease() {
             var result = Mapper.FromFile<AosReleaseModel>("/etc/aos-release", ":");
             return result;
         }
 
-        public static IEnumerable<LosetupModel> GetLosetup() {
+        public IEnumerable<LosetupModel> GetLosetup() {
             var result = Mapper.FromCommand<LosetupModel>("losetup --list -n").ToList();
             return result;
         }
 
         private static readonly Bash Bash = new Bash();
 
-        public static UptimeModel GetUptime() {
+        public UptimeModel GetUptime() {
             var result = Bash.Execute("uptime");
             var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);
             var model = new UptimeModel {
@@ -80,12 +80,12 @@ namespace Antd.Info {
             return model;
         }
 
-        public static IEnumerable<FreeModel> GetFree() {
+        public IEnumerable<FreeModel> GetFree() {
             var result = Mapper.FromCommand<FreeModel>("free -lth").ToList().Skip(1);
             return result;
         }
 
-        public static IEnumerable<SystemComponentModel> GetSystemComponentModels() {
+        public IEnumerable<SystemComponentModel> GetSystemComponentModels() {
             var repoSystem = Parameter.RepoSystem;
             var actives = Directory.EnumerateFileSystemEntries(repoSystem).Where(_ => _.Contains("active-")).ToList();
             var repoKernel = Parameter.RepoKernel;
@@ -93,7 +93,7 @@ namespace Antd.Info {
 
             var components = new List<SystemComponentModel>();
             var losetup = GetLosetup().ToList();
-            foreach (var file in actives) {
+            foreach(var file in actives) {
                 var alias = file.SplitToList("-").Last();
                 var dir = file.SplitToList("active-").Last();
                 var active = Bash.Execute($"file {file}").SplitToList("symbolic link to ").Last();

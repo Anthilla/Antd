@@ -17,14 +17,14 @@ namespace Antd.DhcpServer {
         private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
         private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
 
-        public static void Set() {
+        public void Set() {
             var o = DhcpServerOptionsRepository.Get();
             var s = DhcpServerSubnetRepository.Get();
-            if (o == null || s == null) {
+            if(o == null || s == null) {
                 return;
             }
-            if (File.Exists(MainFilePath)) {
-                if (File.Exists(MainFilePathBackup)) {
+            if(File.Exists(MainFilePath)) {
+                if(File.Exists(MainFilePathBackup)) {
                     File.Delete(MainFilePathBackup);
                 }
                 File.Copy(MainFilePath, MainFilePathBackup);
@@ -33,27 +33,27 @@ namespace Antd.DhcpServer {
                 "authoritative;"
             };
             var options = new DhcpServerOptionsModel(o);
-            foreach (var allow in options.Allow) {
+            foreach(var allow in options.Allow) {
                 lines.Add($"allow {allow};");
             }
-            if (!string.IsNullOrEmpty(options.UpdateStaticLeases)) { lines.Add($"update-static-leases {options.UpdateStaticLeases}"); }
-            if (!string.IsNullOrEmpty(options.UpdateConflictDetection)) { lines.Add($"update-conflict-detection {options.UpdateConflictDetection}"); }
-            if (!string.IsNullOrEmpty(options.UseHostDeclNames)) { lines.Add($"use-host-decl-names {options.UseHostDeclNames}"); }
-            if (!string.IsNullOrEmpty(options.DoForwardUpdates)) { lines.Add($"do-forward-updates {options.DoForwardUpdates}"); }
-            if (!string.IsNullOrEmpty(options.DoReverseUpdates)) { lines.Add($"do-reverse-updates {options.DoReverseUpdates}"); }
-            if (!string.IsNullOrEmpty(options.LogFacility)) { lines.Add($"log-facility {options.LogFacility}"); }
-            foreach (var option in options.Option) {
+            if(!string.IsNullOrEmpty(options.UpdateStaticLeases)) { lines.Add($"update-static-leases {options.UpdateStaticLeases}"); }
+            if(!string.IsNullOrEmpty(options.UpdateConflictDetection)) { lines.Add($"update-conflict-detection {options.UpdateConflictDetection}"); }
+            if(!string.IsNullOrEmpty(options.UseHostDeclNames)) { lines.Add($"use-host-decl-names {options.UseHostDeclNames}"); }
+            if(!string.IsNullOrEmpty(options.DoForwardUpdates)) { lines.Add($"do-forward-updates {options.DoForwardUpdates}"); }
+            if(!string.IsNullOrEmpty(options.DoReverseUpdates)) { lines.Add($"do-reverse-updates {options.DoReverseUpdates}"); }
+            if(!string.IsNullOrEmpty(options.LogFacility)) { lines.Add($"log-facility {options.LogFacility}"); }
+            foreach(var option in options.Option) {
                 lines.Add($"option {option};");
             }
-            if (!string.IsNullOrEmpty(options.ZoneName) && !string.IsNullOrEmpty(options.ZonePrimaryAddress)) { lines.Add($"zone {options.ZoneName} {{ primary {options.ZonePrimaryAddress}; }}"); }
-            if (!string.IsNullOrEmpty(options.DdnsUpdateStyle)) { lines.Add($"ddns-update-style {options.DdnsUpdateStyle}"); }
-            if (!string.IsNullOrEmpty(options.DdnsUpdates)) { lines.Add($"ddns-updates {options.DdnsUpdates}"); }
-            if (!string.IsNullOrEmpty(options.DdnsDomainName)) { lines.Add($"ddns-domainname \"{options.DdnsDomainName}\""); }
-            if (!string.IsNullOrEmpty(options.DdnsRevDomainName)) { lines.Add($"ddns-rev-domainname \"{options.DdnsRevDomainName}\""); }
-            if (!string.IsNullOrEmpty(options.DefaultLeaseTime)) { lines.Add($"default-lease-time {options.DefaultLeaseTime}"); }
-            if (!string.IsNullOrEmpty(options.MaxLeaseTime)) { lines.Add($"max-lease-time {options.MaxLeaseTime}"); }
+            if(!string.IsNullOrEmpty(options.ZoneName) && !string.IsNullOrEmpty(options.ZonePrimaryAddress)) { lines.Add($"zone {options.ZoneName} {{ primary {options.ZonePrimaryAddress}; }}"); }
+            if(!string.IsNullOrEmpty(options.DdnsUpdateStyle)) { lines.Add($"ddns-update-style {options.DdnsUpdateStyle}"); }
+            if(!string.IsNullOrEmpty(options.DdnsUpdates)) { lines.Add($"ddns-updates {options.DdnsUpdates}"); }
+            if(!string.IsNullOrEmpty(options.DdnsDomainName)) { lines.Add($"ddns-domainname \"{options.DdnsDomainName}\""); }
+            if(!string.IsNullOrEmpty(options.DdnsRevDomainName)) { lines.Add($"ddns-rev-domainname \"{options.DdnsRevDomainName}\""); }
+            if(!string.IsNullOrEmpty(options.DefaultLeaseTime)) { lines.Add($"default-lease-time {options.DefaultLeaseTime}"); }
+            if(!string.IsNullOrEmpty(options.MaxLeaseTime)) { lines.Add($"max-lease-time {options.MaxLeaseTime}"); }
             lines.Add("");
-            if (!string.IsNullOrEmpty(options.KeyName) && !string.IsNullOrEmpty(options.KeySecret)) {
+            if(!string.IsNullOrEmpty(options.KeyName) && !string.IsNullOrEmpty(options.KeySecret)) {
                 lines.Add($"key \"{options.KeyName}\" {{");
                 lines.Add("algorithm hmac-md5;");
                 lines.Add($"secret \"{options.KeySecret}\";");
@@ -61,7 +61,7 @@ namespace Antd.DhcpServer {
             }
             lines.Add("");
             var classes = DhcpServerClassRepository.GetAll();
-            foreach (var cls in classes) {
+            foreach(var cls in classes) {
                 lines.Add($"class \"{cls.Name}\" {{");
                 lines.Add($"match if binary-to-ascii(16,8,\":\",substring(hardware, 1, 2)) = \"{cls.MacVendor}\";");
                 lines.Add("}");
@@ -69,17 +69,17 @@ namespace Antd.DhcpServer {
             lines.Add("");
             var subnet = new DhcpServerSubnetModel(s);
             lines.Add($"subnet {subnet.IpFamily} netmask {subnet.IpMask} {{");
-            if (!string.IsNullOrEmpty(subnet.OptionRouters)) { lines.Add($"option routers {subnet.OptionRouters}"); }
-            if (!string.IsNullOrEmpty(subnet.NtpServers)) { lines.Add($"option ntp-servers {subnet.NtpServers}"); }
-            if (!string.IsNullOrEmpty(subnet.TimeServers)) { lines.Add($"option time-servers {subnet.TimeServers}"); }
-            if (!string.IsNullOrEmpty(subnet.DomainNameServers)) { lines.Add($"option domain-name-servers {subnet.DomainNameServers}"); }
-            if (!string.IsNullOrEmpty(subnet.BroadcastAddress)) { lines.Add($"option broadcast-address {subnet.BroadcastAddress}"); }
-            if (!string.IsNullOrEmpty(subnet.SubnetMask)) { lines.Add($"option subnet-mask {subnet.SubnetMask}"); }
-            if (!string.IsNullOrEmpty(subnet.ZoneName) && !string.IsNullOrEmpty(subnet.ZonePrimaryAddress)) { lines.Add($"zone {subnet.ZoneName} {{ primary {subnet.ZonePrimaryAddress}; }}"); }
+            if(!string.IsNullOrEmpty(subnet.OptionRouters)) { lines.Add($"option routers {subnet.OptionRouters}"); }
+            if(!string.IsNullOrEmpty(subnet.NtpServers)) { lines.Add($"option ntp-servers {subnet.NtpServers}"); }
+            if(!string.IsNullOrEmpty(subnet.TimeServers)) { lines.Add($"option time-servers {subnet.TimeServers}"); }
+            if(!string.IsNullOrEmpty(subnet.DomainNameServers)) { lines.Add($"option domain-name-servers {subnet.DomainNameServers}"); }
+            if(!string.IsNullOrEmpty(subnet.BroadcastAddress)) { lines.Add($"option broadcast-address {subnet.BroadcastAddress}"); }
+            if(!string.IsNullOrEmpty(subnet.SubnetMask)) { lines.Add($"option subnet-mask {subnet.SubnetMask}"); }
+            if(!string.IsNullOrEmpty(subnet.ZoneName) && !string.IsNullOrEmpty(subnet.ZonePrimaryAddress)) { lines.Add($"zone {subnet.ZoneName} {{ primary {subnet.ZonePrimaryAddress}; }}"); }
             var pools = DhcpServerPoolRepository.GetAll().Select(_ => new DhcpServerPoolModel(_)).ToList();
-            foreach (var pool in pools) {
+            foreach(var pool in pools) {
                 lines.Add("pool {");
-                foreach (var opt in pool.Options) {
+                foreach(var opt in pool.Options) {
                     lines.Add(opt + (opt.EndsWith(";") ? "" : ";"));
                 }
                 lines.Add("}");
@@ -87,31 +87,31 @@ namespace Antd.DhcpServer {
             lines.Add("}");
             lines.Add("");
             var reservations = DhcpServerReservationRepository.GetAll().Select(_ => new DhcpServerReservationModel(_)).ToList();
-            foreach (var reservation in reservations) {
+            foreach(var reservation in reservations) {
                 lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
             }
             File.WriteAllLines(MainFilePath, lines);
         }
 
-        public static void Enable() {
-            if (Systemctl.IsEnabled(ServiceName) == false) {
+        public void Enable() {
+            if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
         }
 
-        public static void Disable() {
+        public void Disable() {
             Systemctl.Disable(ServiceName);
         }
 
-        public static void Stop() {
+        public void Stop() {
             Systemctl.Stop(ServiceName);
         }
 
-        public static void Restart() {
-            if (Systemctl.IsEnabled(ServiceName) == false) {
+        public void Restart() {
+            if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
-            if (Systemctl.IsActive(ServiceName) == false) {
+            if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
         }

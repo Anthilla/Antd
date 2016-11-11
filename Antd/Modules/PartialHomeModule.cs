@@ -35,7 +35,6 @@ using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
 using antdlib.views;
-using antdlib.Virsh;
 using Antd.Database;
 using Antd.Firewall;
 using Antd.Gluster;
@@ -47,26 +46,35 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
 
-        private static readonly DhcpServerOptionsRepository DhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private static readonly DhcpServerSubnetRepository DhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private static readonly DhcpServerClassRepository DhcpServerClassRepository = new DhcpServerClassRepository();
-        private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
-        private static readonly UserRepository UserRepository = new UserRepository();
+        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
+        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
+        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
+        private readonly UserRepository _userRepository = new UserRepository();
         private readonly Bash _bash = new Bash();
         private readonly CommandLauncher _launcher = new CommandLauncher();
+        private readonly Virsh.Virsh _virsh = new Virsh.Virsh();
+        private readonly NfTables _nfTables = new NfTables();
+        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
+        private readonly MachineInfo _machineInfo = new MachineInfo();
+        private readonly ZfsSnap _zfsSnap = new ZfsSnap();
+        private readonly Zfs _zfs = new Zfs();
+        private readonly Timers _timers = new Timers();
+        private readonly Zpool _zpool = new Zpool();
 
+        
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
             Get["/part/load/info"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.VersionOS = _bash.Execute("uname -a");
-                viewModel.Meminfo = MachineInfo.GetMeminfo();
-                viewModel.Cpuinfo = MachineInfo.GetCpuinfo();
-                viewModel.AosInfo = MachineInfo.GetAosrelease();
-                viewModel.Uptime = MachineInfo.GetUptime();
-                viewModel.Free = MachineInfo.GetFree();
+                viewModel.Meminfo = _machineInfo.GetMeminfo();
+                viewModel.Cpuinfo = _machineInfo.GetCpuinfo();
+                viewModel.AosInfo = _machineInfo.GetAosrelease();
+                viewModel.Uptime = _machineInfo.GetUptime();
+                viewModel.Free = _machineInfo.GetFree();
                 viewModel.GentooRelease = _launcher.Launch("cat-etc-gentoorel");
                 viewModel.LsbRelease = _launcher.Launch("cat-etc-lsbrel");
                 viewModel.OsRelease = _launcher.Launch("cat-etc-osrel");
@@ -75,8 +83,8 @@ namespace Antd.Modules {
 
             Get["/part/load/system"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                viewModel.SystemComponents = MachineInfo.GetSystemComponentModels();
-                viewModel.LosetupInfo = MachineInfo.GetLosetup();
+                viewModel.SystemComponents = _machineInfo.GetSystemComponentModels();
+                viewModel.LosetupInfo = _machineInfo.GetLosetup();
                 viewModel.AntdUpdateCheck = _launcher.Launch("mono-antdsh-update-check");
                 return View["antd/page-antd-system", viewModel];
             };
@@ -131,13 +139,13 @@ namespace Antd.Modules {
 
             Get["/part/load/dhcp"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var dhcpdIsActive = DhcpServerOptionsRepository.Get() != null && DhcpServerSubnetRepository.Get() != null;
+                var dhcpdIsActive = _dhcpServerOptionsRepository.Get() != null && _dhcpServerSubnetRepository.Get() != null;
                 viewModel.DhcpdIsActive = dhcpdIsActive;
-                viewModel.DhcpdOptions = DhcpServerOptionsRepository.Get();
-                viewModel.DhcpdSubnet = DhcpServerSubnetRepository.Get();
-                viewModel.DhcpdClass = DhcpServerClassRepository.GetAll();
-                viewModel.DhcpdPools = DhcpServerPoolRepository.GetAll();
-                viewModel.DhcpdReservation = DhcpServerReservationRepository.GetAll();
+                viewModel.DhcpdOptions = _dhcpServerOptionsRepository.Get();
+                viewModel.DhcpdSubnet = _dhcpServerSubnetRepository.Get();
+                viewModel.DhcpdClass = _dhcpServerClassRepository.GetAll();
+                viewModel.DhcpdPools = _dhcpServerPoolRepository.GetAll();
+                viewModel.DhcpdReservation = _dhcpServerReservationRepository.GetAll();
                 return View["antd/page-antd-dhcp", viewModel];
             };
 
@@ -162,14 +170,14 @@ namespace Antd.Modules {
 
             Get["/part/load/fw"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                viewModel.NftTables = NfTables.Tables();
+                viewModel.NftTables = _nfTables.Tables();
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
                 return View["antd/page-antd-firewall", viewModel];
             };
 
             Get["/part/load/cron"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var scheduledJobs = Timers.GetAll();
+                var scheduledJobs = _timers.GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
                 return View["_partial/part-scheduler", viewModel];
             };
@@ -179,16 +187,16 @@ namespace Antd.Modules {
                 viewModel.Mounts = new MountRepository().GetAll();
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                 viewModel.DisksList = Disks.List();
-                viewModel.ZpoolList = Zpool.List();
-                viewModel.ZfsList = Zfs.List();
-                viewModel.ZfsSnap = ZfsSnap.List();
-                viewModel.ZpoolHistory = Zpool.History();
+                viewModel.ZpoolList = _zpool.List();
+                viewModel.ZfsList = _zfs.List();
+                viewModel.ZfsSnap = _zfsSnap.List();
+                viewModel.ZpoolHistory = _zpool.History();
                 return View["_partial/part-antd-storage", viewModel];
             };
 
             Get["/part/load/sync"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var glusterConfig = GlusterConfiguration.Get();
+                var glusterConfig = _glusterConfiguration.Get();
                 viewModel.GlusterName = glusterConfig.Name;
                 viewModel.GlusterPath = glusterConfig.Path;
                 viewModel.GlusterNodes = glusterConfig.Nodes;
@@ -198,7 +206,7 @@ namespace Antd.Modules {
 
             Get["/part/load/vm"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var vmList = Virsh.GetVmList();
+                var vmList = _virsh.GetVmList();
                 viewModel.VMListAny = vmList.Any();
                 viewModel.VMList = vmList;
                 return View["antd/page-antd-vm", viewModel];
@@ -206,7 +214,7 @@ namespace Antd.Modules {
 
             Get["/part/load/users"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                viewModel.Users = UserRepository.GetAll().OrderBy(_ => _.Alias);
+                viewModel.Users = _userRepository.GetAll().OrderBy(_ => _.Alias);
                 return View["antd/page-antd-users", viewModel];
             };
 

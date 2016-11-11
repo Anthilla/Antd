@@ -52,29 +52,6 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(result, Formatting.Indented);
             };
 
-            Post["/cmd/launch/OLD"] = x => {
-                string name = Request.Form.Command;
-                string strValues = Request.Form.Matches;
-                var cmd = Commands.List[name];
-                if(cmd == null) {
-                    return string.Empty;
-                }
-                var command = cmd.JoinToString("$$");
-                var values = strValues.SplitToList(";").Select(kv => kv.SplitToList(":").ToArray()).ToDictionary(s => s.First(), s => s.Last());
-                var matches = Regex.Matches(command, "\\$[a-zA-Z0-9_]+");
-                foreach(var match in matches) {
-                    var val = values.FirstOrDefault(_ => _.Key == match.ToString());
-                    if(string.IsNullOrEmpty(val.Value)) {
-                        continue;
-                    }
-                    command = command.Replace(match.ToString(), val.Value);
-                }
-                var commands = command.SplitToList("$$");
-                var bash = new Bash();
-                var result = commands.Aggregate("", (current, c) => current + bash.Execute(c));
-                return Response.AsJson(result);
-            };
-
             //Get["/cmd"] = x => {
             //    dynamic vmod = new ExpandoObject();
             //    vmod.Command = _commandRepo.GetAll().OrderBy(_ => _.Name);

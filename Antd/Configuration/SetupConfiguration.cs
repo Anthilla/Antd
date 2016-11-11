@@ -12,15 +12,15 @@ namespace Antd.Configuration {
         private static readonly string FilePath = $"{Parameter.RepoConfig}/setup.conf";
         private static readonly Bash Bash = new Bash();
 
-        public static void Set() {
+        public void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 var backupConfigFile = $"{Parameter.RepoConfig}/network/000network.cfg";
-                if (File.Exists(backupConfigFile)) {
+                if(File.Exists(backupConfigFile)) {
                     var lines = File.ReadAllLines(backupConfigFile).ToArray();
                     var importControls = new List<Control>();
 
-                    for (var i = 0; i < lines.Length; i++) {
+                    for(var i = 0; i < lines.Length; i++) {
                         Bash.Execute(lines[i], false);
                         importControls.Add(new Control {
                             Index = i,
@@ -35,7 +35,7 @@ namespace Antd.Configuration {
                         Path = $"{Parameter.RepoConfig}/setup.conf",
                         Controls = importControls
                     };
-                    if (!File.Exists(importFlow.Path)) {
+                    if(!File.Exists(importFlow.Path)) {
                         File.WriteAllText(importFlow.Path, JsonConvert.SerializeObject(importFlow, Formatting.Indented));
                         ConsoleLogger.Log("a setup configuration file template has been created");
                     }
@@ -60,7 +60,7 @@ namespace Antd.Configuration {
                         }
                     }
                 };
-                if (!File.Exists(tempFlow.Path)) {
+                if(!File.Exists(tempFlow.Path)) {
                     File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
                     ConsoleLogger.Log("a setup configuration file template has been created");
                 }
@@ -69,8 +69,9 @@ namespace Antd.Configuration {
             var text = File.ReadAllText(FilePath);
             var flow = JsonConvert.DeserializeObject<ConfigurationFlow>(text);
             var controls = flow?.Controls?.OrderBy(_ => _.Index);
-            if (controls == null) return;
-            foreach (var control in controls) {
+            if(controls == null)
+                return;
+            foreach(var control in controls) {
                 Launch(control);
             }
         }
@@ -79,26 +80,26 @@ namespace Antd.Configuration {
         private static void Launch(Control control) {
             var firstCommand = control.FirstCommand.SplitToList(Environment.NewLine);
             var controlCommand = control.ControlCommand.SplitToList(Environment.NewLine);
-            if (_counter > 5) {
+            if(_counter > 5) {
                 ConsoleLogger.Log($"{control.FirstCommand} - failed, too many retry...");
                 _counter = 0;
                 return;
             }
-            if (string.IsNullOrEmpty(control.ControlCommand)) {
+            if(string.IsNullOrEmpty(control.ControlCommand)) {
                 Bash.Execute(firstCommand, false);
                 _counter = 0;
                 return;
             }
             var controlResult = Bash.Execute(controlCommand);
             var firstCheck = controlResult.Contains(control.Check);
-            if (firstCheck) {
+            if(firstCheck) {
                 _counter = 0;
                 return;
             }
             Bash.Execute(firstCommand, false);
             controlResult = Bash.Execute(controlCommand);
             var secondCheck = controlResult.Contains(control.Check);
-            if (secondCheck) {
+            if(secondCheck) {
                 _counter = 0;
                 return;
             }
@@ -107,9 +108,9 @@ namespace Antd.Configuration {
             Launch(control);
         }
 
-        public static List<Control> Get() {
+        public List<Control> Get() {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 return new List<Control>();
             }
             var text = File.ReadAllText(FilePath);
@@ -118,9 +119,9 @@ namespace Antd.Configuration {
             return controls;
         }
 
-        public static void Export(List<Control> controls) {
+        public void Export(List<Control> controls) {
             Directory.CreateDirectory(Parameter.RepoConfig);
-            if (File.Exists(FilePath)) {
+            if(File.Exists(FilePath)) {
                 File.Delete(FilePath);
             }
             var flow = new ConfigurationFlow {
@@ -128,7 +129,7 @@ namespace Antd.Configuration {
                 Path = FilePath,
                 Controls = controls
             };
-            if (!File.Exists(FilePath)) {
+            if(!File.Exists(FilePath)) {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(flow, Formatting.Indented));
             }
         }
