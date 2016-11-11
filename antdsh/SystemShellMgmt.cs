@@ -42,7 +42,7 @@ namespace antdsh {
         /// 01 - recupero il volume su cui è montato BootExt
         /// 02 - uso df {volume} per trovare lo spazio libero, espresso in byte
         /// </summary>
-        public static bool ChechDiskSpace() {
+        public bool ChechDiskSpace() {
             Console.WriteLine("Checking Disk Space");
             var blkid = Bash.Execute("blkid").SplitBash().Grep("/dev/sda").Grep("BootExt");
             var volume = blkid.First().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
@@ -64,7 +64,7 @@ namespace antdsh {
         /// 04 - e in /mnt/cdrom/System
         ///     - active-system
         /// </summary>
-        public static void DownloadNewFiles() {
+        public void DownloadNewFiles() {
             var firmwareTmp = $"{Parameter.AntdTmpDir}/firmare";
             new ApiConsumer().GetFile("/url/download/firmware", $"{firmwareTmp}");
             var initrdTmp = $"{Parameter.AntdTmpDir}/initrd";
@@ -94,21 +94,21 @@ namespace antdsh {
             Bash.Execute($"ln -s {Parameter.RepoKernel}/modules {Parameter.RepoKernel}/active-modules");
             Bash.Execute($"ln -s {Parameter.RepoSystem}/system {Parameter.RepoSystem}/active-system");
 
-            Execute.CleanTmp();
+            new Execute().CleanTmp();
         }
 
         /// <summary>
         /// 05 - copia il file di grub
         /// </summary>
-        public static void CopyGrub() {
+        public void CopyGrub() {
             Console.WriteLine("Copying grub.conf file");
-            Bash.Execute($"cp /mnt/cdrom/grub/grub.cfg /mnt/cdrom/DIRS/DIR_cfg_antd_config/grub{DateTime.Now.ToString("yyyyMMdd")}.conf");
+            Bash.Execute($"cp /mnt/cdrom/grub/grub.cfg /mnt/cdrom/DIRS/DIR_cfg_antd_config/grub{DateTime.Now:yyyyMMdd}.conf");
         }
 
         /// <summary>
         /// 06 - riavvia il sistema
         /// </summary>
-        public static void Reboot() {
+        public void Reboot() {
             Console.WriteLine("Rebooting system right now!");
             Bash.Execute("reboot");
         }
@@ -116,7 +116,7 @@ namespace antdsh {
         /// <summary>
         /// 07 - il sistema è stato aggiornato (forse) e riavviato con i nuovi file: controlla lo status
         /// </summary>
-        public static void VerifyUpdate() {
+        public void VerifyUpdate() {
             var versionInfo = Bash.Execute("uname -a").Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[2];
             Console.WriteLine($"This aos version is: {versionInfo}");
         }
@@ -124,7 +124,7 @@ namespace antdsh {
         /// <summary>
         /// 08 - se ve tutto bene antd si avvia in automatico al riavvio, la prima cosa che fa è create le units di sistema
         /// </summary>
-        public static void CreateUnitsForSystem() {
+        public void CreateUnitsForSystem() {
             Console.WriteLine("Setting system units");
 
             Console.WriteLine("Reload daemon now...");
@@ -135,12 +135,12 @@ namespace antdsh {
         /// 09 - controlla la cartella /mnt/cdrom/DIRS e monta il suo contenuto
         /// todo: crea file o cartelle se non ci sono
         /// </summary>
-        public static void SetAndMountDirs() {
+        public void SetAndMountDirs() {
             Console.WriteLine("Mounting directories and files: ");
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs).Where(d => !d.Contains(".ori"));
-            foreach (var t in directories) {
+            foreach(var t in directories) {
                 var path = Path.GetFileName(t);
-                if (path == null)
+                if(path == null)
                     continue;
                 var newPath = path.Replace("_", "/");
                 Console.WriteLine($"{t} mounted on {newPath}");
@@ -148,9 +148,9 @@ namespace antdsh {
             }
 
             var files = Directory.EnumerateFiles(Parameter.RepoDirs).Where(f => !f.Contains(".ori"));
-            foreach (var t in files) {
+            foreach(var t in files) {
                 var path = Path.GetFileName(t);
-                if (path == null)
+                if(path == null)
                     continue;
                 var newPath = path.Replace("_", "/");
                 Console.WriteLine($"{t} mounted on {newPath}");

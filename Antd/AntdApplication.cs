@@ -29,6 +29,7 @@
 
 using System;
 using System.IO;
+using antd.commands;
 using antdlib;
 using antdlib.common;
 using Nancy;
@@ -47,7 +48,7 @@ namespace Antd {
             Boot.RemoveLimits();
             Boot.StartOverlayWatcher();
 
-            if (Parameter.IsUnix == false) {
+            if(Parameter.IsUnix == false) {
                 Directory.CreateDirectory("/cfg/antd");
                 Directory.CreateDirectory("/cfg/antd/database");
                 Directory.CreateDirectory("/mnt/cdrom/DIRS");
@@ -120,9 +121,12 @@ namespace Antd {
             Database.Shutdown();
         }
 
+        private static readonly CommandLauncher Launcher = new CommandLauncher();
+
         private static void KeepAlive() {
             var r = Console.ReadLine();
-            while (r != "quit") {
+            while(r != "quit") {
+                ConsoleLogger.Log(Launcher.Launch(r));
                 r = Console.ReadLine();
             }
         }

@@ -1,8 +1,5 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Info">
-        Info
-        <i id="ReloadSystemInfo" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-    </legend>
+    <legend id="Info">Info </legend>
     <table class="table">
         <tbody>
             <tr>
@@ -29,24 +26,24 @@
                 </td>
             </tr>
             <tr>
-                <td> <label>Gentoo release</label></td>
-                <td data-role="CmdContainer" colspan="2">
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-gentoorel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-gentoorel" data-par="" value="Update" class="float-right" />
+                <td>
+                    <label>Gentoo release</label></td>
+                <td>
+                    <p>@Model.GentooRelease</p>
                 </td>
             </tr>
             <tr>
-                <td> <label>lsb release</label></td>
-                <td data-role="CmdContainer" colspan="2">
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-lsbrel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-lsbrel" data-par="" value="Update" class="float-right" />
+                <td>
+                    <label>lsb release</label></td>
+                <td>
+                    <p>@Model.LsbRelease</p>
                 </td>
             </tr>
             <tr>
-                <td> <label>os release</label></td>
-                <td data-role="CmdContainer" colspan="2">
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-osrel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-osrel" data-par="" value="Update" class="float-right" />
+                <td>
+                    <label>os release</label></td>
+                <td>
+                    <p>@Model.OsRelease</p>
                 </td>
             </tr>
             <tr>
@@ -85,7 +82,7 @@
 
         <div class="frames">
             <div id="_Memory_1" class="frame" style="display: block;">
-                <table class="table">
+                <table class="table" style="table-layout: fixed;">
                     <tbody>
                         @Each.Meminfo
                         <tr>
@@ -101,7 +98,7 @@
                 </table>
             </div>
             <div id="_CPU_" class="frame" style="display: none;">
-                <table class="table">
+                <table class="table" style="table-layout: fixed;">
                     <tbody>
                         @Each.Cpuinfo
                         <tr>
@@ -117,7 +114,7 @@
                 </table>
             </div>
             <div id="_Free_" class="frame" style="display: none;">
-                <table class="table">
+                <table class="table" style="table-layout: fixed;">
                     <tbody>
                         <tr>
                             <td>

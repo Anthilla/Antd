@@ -90,6 +90,9 @@ namespace antdsh {
             Environment.Exit(0);
         }
 
+        private static readonly Units Units = new Units();
+        private static readonly Update Update = new Update();
+
         private static void UpdateFunc(string[] args) {
             Units.CreateRemountUnits();
             if(args.Length < 1) {
@@ -159,6 +162,7 @@ namespace antdsh {
         }
 
         private static readonly Bash Bash = new Bash();
+        private static readonly Execute Execute = new Execute();
 
         private static bool IsAntdRunning() => Bash.Execute("ps -aef").Grep("Antd.exe").Any();
 

@@ -28,7 +28,7 @@
                             </th>
                         </tr>
                         @Each.SystemComponents
-				        <tr>
+                        <tr>
                             <td>
                                 <p>@Current.Alias</p>
                             </td>
@@ -51,7 +51,69 @@
             </div>
 
             <div id="_Losetup_" class="frame" style="display: none;">
-                <div data-render="part-info-losetup"></div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td colspan="8">
+                                <label>Losetup</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p>Name</p>
+                            </th>
+                            <th>
+                                <p>Sizelimit</p>
+                            </th>
+                            <th>
+                                <p>Offset</p>
+                            </th>
+                            <th>
+                                <p>Autoclear</p>
+                            </th>
+                            <th>
+                                <p>Readonly</p>
+                            </th>
+                            <th>
+                                <p>Backfile</p>
+                            </th>
+                            <th>
+                                <p>Dio</p>
+                            </th>
+                            <th>
+                                <p>Hash</p>
+                            </th>
+                        </tr>
+                        @Each.LosetupInfo
+                        <tr>
+                            <td>
+                                <p>@Current.Name</p>
+                            </td>
+                            <td>
+                                <p>@Current.Sizelimit</p>
+                            </td>
+                            <td>
+                                <p>@Current.Offset</p>
+                            </td>
+                            <td>
+                                <p>@Current.Autoclear</p>
+                            </td>
+                            <td>
+                                <p>@Current.Readonly</p>
+                            </td>
+                            <td>
+                                <p>@Current.Backfile</p>
+                            </td>
+                            <td>
+                                <p>@Current.Dio</p>
+                            </td>
+                            <td>
+                                <p>@Current.Hash</p>
+                            </td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -59,9 +121,8 @@
     <table class="table">
         <tbody>
             <tr>
-                <td data-role="CmdContainer" colspan="4">
-                    <span data="CmdGet" data-role="CmdResult" data-name="mono-antdsh-update-check" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="mono-antdsh-update-check" data-par="" value="Update" class="float-right" />
+                <td colspan="4">
+                    @Model.AntdUpdateCheck
                 </td>
             </tr>
             <tr>

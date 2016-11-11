@@ -6,9 +6,7 @@
                 <td data-role="CmdContainer">
                     <label>Local time</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-localtime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-localtime" data-par="" value="Update" class="float-right" />
+                <td>@Model.LocalTime
                 </td>
                 <td></td>
             </tr>
@@ -16,9 +14,7 @@
                 <td data-role="CmdContainer">
                     <label>Universal time</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-univtime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-univtime" data-par="" value="Update" class="float-right" />
+                <td>@Model.UnivTime
                 </td>
                 <td></td>
             </tr>
@@ -26,9 +22,7 @@
                 <td data-role="CmdContainer">
                     <label>RTC time</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-rtctime" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-rtctime" data-par="" value="Update" class="float-right" />
+                <td>@Model.RTCTime
                 </td>
                 <td></td>
             </tr>
@@ -42,9 +36,7 @@
                     </select>
                     <input type="button" data-role="CmdLaunch" data-name="set-timezone" data-par="$host_timezone" value="Update" class="float-right" />
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="timedatectl-get-timezone" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="timedatectl-get-timezone" data-par="" value="Update" class="float-right" />
+                <td>@Model.Timezone
                 </td>
                 <td>Set host timezone</td>
             </tr>
@@ -52,9 +44,7 @@
                 <td data-role="CmdContainer">
                     <label>Network time on</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-nettimeon" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-nettimeon" data-par="" value="Update" class="float-right" />
+                <td>@Model.Nettimeon
                 </td>
                 <td></td>
             </tr>
@@ -62,9 +52,7 @@
                 <td data-role="CmdContainer">
                     <label>NTP synchronized</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-ntpsync" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-ntpsync" data-par="" value="Update" class="float-right" />
+                <td>@Model.Ntpsync
                 </td>
                 <td></td>
             </tr>
@@ -72,9 +60,7 @@
                 <td data-role="CmdContainer">
                     <label>RTC in local TZ</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-rtcintz" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-rtcintz" data-par="" value="Update" class="float-right" />
+                <td>@Model.Rtcintz
                 </td>
                 <td></td>
             </tr>

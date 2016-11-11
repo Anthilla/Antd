@@ -29,17 +29,17 @@
 
 using System.Linq;
 using System.Text.RegularExpressions;
+using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
     public class CommandModule : CoreModule {
-
-        //private readonly CommandRepository _commandRepo = new CommandRepository();
-        //private readonly CommandValuesRepository _commandValuesRepo = new CommandValuesRepository();
+        private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public CommandModule() {
             this.RequiresAuthentication();
@@ -47,7 +47,15 @@ namespace Antd.Modules {
             Post["/cmd/launch"] = x => {
                 string name = Request.Form.Command;
                 string strValues = Request.Form.Matches;
-                var cmd = antd.commands.Commands.List[name];
+                var dict = strValues.SplitToList(";").Select(kv => kv.SplitToList(":").ToArray()).ToDictionary(s => s.First(), s => s.Last());
+                var result = _launcher.Launch(name, dict);
+                return JsonConvert.SerializeObject(result, Formatting.Indented);
+            };
+
+            Post["/cmd/launch/OLD"] = x => {
+                string name = Request.Form.Command;
+                string strValues = Request.Form.Matches;
+                var cmd = Commands.List[name];
                 if(cmd == null) {
                     return string.Empty;
                 }

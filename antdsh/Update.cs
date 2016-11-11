@@ -75,7 +75,7 @@ namespace antdsh {
 
         #region Public Medhod
 
-        public static void Check() {
+        public void Check() {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
@@ -86,7 +86,7 @@ namespace antdsh {
             Console.WriteLine("");
         }
 
-        public static void All(bool forced) {
+        public void All(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -104,7 +104,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public static void Antd(bool forced) {
+        public void Antd(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -116,7 +116,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public static void Antdsh(bool forced) {
+        public void Antdsh(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -128,7 +128,7 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public static void System(bool forced) {
+        public void System(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -140,7 +140,7 @@ namespace antdsh {
 
         private static readonly Bash Bash = new Bash();
 
-        public static void Kernel(bool forced) {
+        public void Kernel(bool forced) {
             _publicRepositoryUrl = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrl}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -154,7 +154,7 @@ namespace antdsh {
 
         #region Private Methods
         private static int _updateCounter;
-        public static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+        public void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             while (true) {
                 _updateCounter++;
                 if (_updateCounter > 5) {
@@ -215,7 +215,7 @@ namespace antdsh {
         }
 
         private static bool _updateRetry;
-        public static void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+        public void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
@@ -302,7 +302,7 @@ namespace antdsh {
             _updateCounter = 0;
         }
 
-        public static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
+        public void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
             Console.WriteLine("");
             Console.WriteLine($"Updating units for {currentContext}");
 
@@ -435,6 +435,9 @@ namespace antdsh {
             Bash.Execute("systemctl restart app-antd-02-mount.service");
             Bash.Execute("systemctl restart app-antd-03-launcher.service");
         }
+
+        private static readonly Target Target = new Target();
+        private static readonly Units Units = new Units();
 
         private static void RestartAntdsh() {
             Target.Setup();

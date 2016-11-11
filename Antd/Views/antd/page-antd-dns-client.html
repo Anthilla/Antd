@@ -3,36 +3,32 @@
     <table class="table" style="table-layout: fixed;">
         <tbody>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer" colspan="2">
+                <td>
                     <label>resolv.conf</label>
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-resolv" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-resolv" data-par="" value="Update" class="float-right" />
                 </td>
-                <td> Get /etc/resolv.conf content</td>
+                <td>@Model.Resolv</td>
+                <td>Get /etc/resolv.conf content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer" colspan="2">
+                <td>
                     <label>hostname</label>
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-hostname" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-hostname" data-par="" value="Update" class="float-right" />
                 </td>
-                <td> Get /etc/hostname content</td>
+                <td>@Model.Hostname</td>
+                <td>Get /etc/hostname content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer" colspan="2">
+                <td>
                     <label>hosts</label>
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-hosts" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-hosts" data-par="" value="Update" class="float-right" />
                 </td>
-                <td> Get /etc/hosts content</td>
+                <td>@Model.Hosts</td>
+                <td>Get /etc/hosts content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer" colspan="2">
+                <td>
                     <label>networks</label>
-                    <span data="CmdGet" data-role="CmdResult" data-name="cat-etc-networks" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="cat-etc-networks" data-par="" value="Update" class="float-right" />
                 </td>
-                <td> Get /etc/networks content</td>
+                <td>@Model.Networks</td>
+                <td>Get /etc/networks content</td>
             </tr>
         </tbody>
     </table>

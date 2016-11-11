@@ -4,13 +4,11 @@
         <tbody>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td data-role="CmdContainer">
-                    <label>Static Hostname</label>
+                    <label>Hostname</label>
                     <input type="text" data="$host_name" style="width: 60%;" />
                     <input type="button" data-role="CmdLaunch" data-name="set-hostname" data-par="$host_name" value="Update" class="float-right" />
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-hostname" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-hostname" data-par="" value="Update" class="float-right" />
+                <td>@Model.StaticHostname
                 </td>
                 <td>Set host name</td>
             </tr>
@@ -18,9 +16,7 @@
                 <td data-role="CmdContainer">
                     <label>Icon Name</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-iconname" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-iconname" data-par="" value="Update" class="float-right" />
+                <td>@Model.IconName
                 </td>
                 <td>Set icon name</td>
             </tr>
@@ -40,9 +36,7 @@
                     </select>
                     <input type="button" data-role="CmdLaunch" data-name="set-chassis" data-par="$host_chassis" value="Update" class="float-right" />
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-chassis" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-chassis" data-par="" value="Update" class="float-right" />
+                <td>@Model.Chassis
                 </td>
                 <td>Set host chassis</td>
             </tr>
@@ -52,9 +46,7 @@
                     <input type="text" data="$host_deployment" style="width: 60%;" />
                     <input type="button" data-role="CmdLaunch" data-name="set-deployment" data-par="$host_deployment" value="Update" class="float-right" />
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-deployment" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-deployment" data-par="" value="Update" class="float-right" />
+                <td>@Model.Deployment
                 </td>
                 <td>Set host deployment</td>
             </tr>
@@ -64,9 +56,7 @@
                     <input type="text" data="$host_location" style="width: 60%;" />
                     <input type="button" data-role="CmdLaunch" data-name="set-location" data-par="$host_location" value="Update" class="float-right" />
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-location" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-location" data-par="" value="Update" class="float-right" />
+                <td>@Model.Location
                 </td>
                 <td>Set host location</td>
             </tr>
@@ -75,9 +65,7 @@
                 <td data-role="CmdContainer">
                     <label>Machine ID</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-machineid" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-machineid" data-par="" value="Update" class="float-right" />
+                <td>@Model.MachineID
                 </td>
                 <td></td>
             </tr>
@@ -85,9 +73,7 @@
                 <td data-role="CmdContainer">
                     <label>Boot ID</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-bootid" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-bootid" data-par="" value="Update" class="float-right" />
+                <td>@Model.BootID
                 </td>
                 <td></td>
             </tr>
@@ -95,9 +81,7 @@
                 <td data-role="CmdContainer">
                     <label>Virtualization</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-virtualization" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-virtualization" data-par="" value="Update" class="float-right" />
+                <td>@Model.Virtualization
                 </td>
                 <td></td>
             </tr>
@@ -105,9 +89,7 @@
                 <td data-role="CmdContainer">
                     <label>Operating System</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-os" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-os" data-par="" value="Update" class="float-right" />
+                <td>@Model.OS
                 </td>
                 <td></td>
             </tr>
@@ -115,9 +97,7 @@
                 <td data-role="CmdContainer">
                     <label>Kernel</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-kernel" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-kernel" data-par="" value="Update" class="float-right" />
+                <td>@Model.Kernel
                 </td>
                 <td></td>
             </tr>
@@ -125,9 +105,7 @@
                 <td data-role="CmdContainer">
                     <label>Architecture</label>
                 </td>
-                <td data-role="CmdContainer">
-                    <span data="CmdGet" data-role="CmdResult" data-name="hostnamectl-get-arch" data-par="" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
-                    <input type="button" data-role="CmdLaunch" data-name="hostnamectl-get-arch" data-par="" value="Update" class="float-right" />
+                <td>@Model.Architecture
                 </td>
                 <td></td>
             </tr>

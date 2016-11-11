@@ -65,10 +65,6 @@ namespace Antd {
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
-            //Global.EnableWebStudio = true;
-            //Global.WebStudioPort = 9999;
-            //Global.LocalOnlyWebStudio = false;
-            //Global.FlushStorageFileImmediately = true;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new BootModuleLoadView());
@@ -160,6 +156,8 @@ namespace Antd {
         }
 
         public void ImportCommands() {
+            if(!Parameter.IsUnix)
+                return;
             var storedconf = $"{Parameter.RootFrameworkAntdShellScript}/var/kerbynet.conf";
             File.Copy(storedconf, "/etc/kerbynet.conf", true);
             ConsoleLogger.Log("commands and scripts configuration imported");

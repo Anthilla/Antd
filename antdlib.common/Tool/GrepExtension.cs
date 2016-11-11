@@ -62,5 +62,34 @@ namespace antdlib.common.Tool {
                 return Empty;
             }
         }
+
+        public static IEnumerable<string> GrepIgnore(this IEnumerable<string> inputLines, string pattern, bool caseInsensitive = false) {
+            if(string.IsNullOrEmpty(pattern)) {
+                return Empty;
+            }
+            var inputList = inputLines as IList<string> ?? inputLines.ToList();
+            if(!inputList.Any()) {
+                return Empty;
+            }
+            try {
+                var list = new List<string>();
+                foreach(var input in inputList) {
+                    if(caseInsensitive) {
+                        if(!Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase)) {
+                            list.Add(input);
+                        }
+                    }
+                    else {
+                        if(!Regex.IsMatch(input, pattern)) {
+                            list.Add(input);
+                        }
+                    }
+                }
+                return list;
+            }
+            catch(Exception) {
+                return Empty;
+            }
+        }
     }
 }

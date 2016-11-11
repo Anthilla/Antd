@@ -29,14 +29,14 @@
 //------------------------------------------------------------------------------------->
 @Section['PageBar']
 <style type="text/css">
-	#Config-TB {
-		border-bottom: 10px solid #A7BD39;
-		height: 80px !important;
-	}
+    #Config-TB {
+        border-bottom: 10px solid #A7BD39;
+        height: 80px !important;
+    }
 
-	div.row {
-		margin-top: 20px !important;
-	}
+    div.row {
+        margin-top: 20px !important;
+    }
 </style>
 @EndSection
 
@@ -44,9 +44,9 @@
 <nav class="vertical-menu">
     <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
         @Each.AntdContext
-	    <li>
+        <li>
             <a href="#" data-role="load-page" data-page="@Current" class="fg-hover-white upcase">@Current
-			    <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
             </a>
         </li>
         @EndEach

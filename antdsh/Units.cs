@@ -18,7 +18,7 @@ namespace antdsh {
 
         private static readonly Bash Bash = new Bash();
 
-        public static void CreateRemountUnits() {
+        public void CreateRemountUnits() {
             if(!File.Exists(Antdsh01RemountServicePath)) {
                 CreateRemountServiceFile();
             }

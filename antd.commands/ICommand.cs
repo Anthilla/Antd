@@ -1,6 +1,4 @@
-﻿
-namespace antd.commands {
+﻿namespace antd.commands {
     public interface ICommand {
-
     }
 }

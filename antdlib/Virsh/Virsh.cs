@@ -44,7 +44,7 @@ namespace antdlib.Virsh {
             public string VncPort { get; set; }
         }
 
-        private static Bash Bash = new Bash();
+        private static readonly Bash Bash = new Bash();
 
         public static IEnumerable<VirtualMachineInfo> GetVmList() {
             var vms = new List<VirtualMachineInfo>();

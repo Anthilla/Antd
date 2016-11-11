@@ -70,9 +70,9 @@ namespace Antd.Storage {
         }
 
         public static IEnumerable<string> ImportList() {
-            var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2).First();
-            var importPools = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            return importPools;
+            var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2);
+            //var importPools = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return text;
         }
 
         public static void Import(string poolName) {

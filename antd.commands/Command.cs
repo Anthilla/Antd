@@ -7,14 +7,17 @@ namespace antd.commands {
 
         public TInput Arguments { get; set; }
 
-        public Func<TInput, string, TOutput> Functions { get; set; }
+        public Func<TInput, string, TOutput> Function { get; set; }
 
         public string Grep { get; set; }
+
+        public Type InputType { get; set; }
+        public Type OutputType { get; set; }
 
         public TOutput Launch() {
             var arguments = Arguments;
             try {
-                return Functions(arguments, Grep);
+                return Function(arguments, Grep);
             }
             catch(Exception) {
                 return default(TOutput);
@@ -33,7 +36,7 @@ namespace antd.commands {
                 grep = grep.ReplaceX(sub.Key, sub.Value);
             }
             try {
-                return Functions(arguments, Grep);
+                return Function(arguments, Grep);
             }
             catch(Exception) {
                 return default(TOutput);

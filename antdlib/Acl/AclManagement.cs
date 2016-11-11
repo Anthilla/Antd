@@ -72,11 +72,11 @@ namespace antdlib.Acl {
             }
         }
 
-        public static void GetAcl(string path) {
+        public void GetAcl(string path) {
             Bash.Execute($"getfacl {path}", false);
         }
 
-        public static void SetUserAcl(string path, string perms, string user = "") {
+        public void SetUserAcl(string path, string perms, string user = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -m \"u:{user}:{perms}\" {path}", false);
                 if(r.Trim().Length > 0) {
@@ -88,7 +88,7 @@ namespace antdlib.Acl {
             }
         }
 
-        public static void SetGroupAcl(string path, string perms, string group = "") {
+        public void SetGroupAcl(string path, string perms, string group = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -m \"g:{group}:{perms}\" {path}");
                 if(r.Trim().Length > 0) {
@@ -100,7 +100,7 @@ namespace antdlib.Acl {
             }
         }
 
-        public static void RemoveUserAcl(string path, string user = "") {
+        public void RemoveUserAcl(string path, string user = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -x \"u:{user}\" {path}");
                 if(r.Trim().Length > 0) {
@@ -112,7 +112,7 @@ namespace antdlib.Acl {
             }
         }
 
-        public static void RemoveGroupAcl(string path, string group = "") {
+        public void RemoveGroupAcl(string path, string group = "") {
             try {
                 var r = Bash.Execute($"setfacl -R -x \"g:{group}\" {path}");
                 if(r.Trim().Length > 0) {
@@ -124,7 +124,7 @@ namespace antdlib.Acl {
             }
         }
 
-        public static void SetOwner(string path, string userOwner, string groupOwner) {
+        public void SetOwner(string path, string userOwner, string groupOwner) {
             try {
                 var r = Bash.Execute($"chown {userOwner}:{groupOwner} -R {path}");
                 if(r.Trim().Length > 0) {

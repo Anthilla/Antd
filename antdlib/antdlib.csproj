@@ -85,7 +85,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="Boot.cs" />
     <Compile Include="ApplicationSetting.cs" />
     <Compile Include="CCTable\CCTableExtensions.cs" />
     <Compile Include="CCTable\CCTableModel.cs" />

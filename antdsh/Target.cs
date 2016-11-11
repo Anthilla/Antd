@@ -4,13 +4,14 @@ using antdlib.common.Tool;
 
 namespace antdsh {
     public class Target {
-        public static void Check() {
+        public void Check() {
         }
 
         private static readonly Bash Bash = new Bash();
 
-        public static void Setup() {
-            if (IsTargetActive()) return;
+        public void Setup() {
+            if(IsTargetActive())
+                return;
             Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
             Bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
             WriteTimerTargetFile();
@@ -23,7 +24,7 @@ namespace antdsh {
             Bash.Execute("systemctl daemon-reload");
         }
 
-        public static void StartAll() {
+        public void StartAll() {
             Bash.Execute("systemctl restart tt.target");
         }
 
@@ -35,7 +36,7 @@ namespace antdsh {
 
         private static void WriteTimerTargetFile() {
             const string file = "/usr/lib64/systemd/system/tt.target";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
@@ -53,7 +54,7 @@ namespace antdsh {
 
         private static void WriteTimerServiceFile() {
             const string file = "/usr/lib64/systemd/system/tt.service";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
@@ -77,7 +78,7 @@ namespace antdsh {
 
         private static void WriteTimerMountFile() {
             const string file = "/usr/lib64/systemd/system/etc-systemd-system-tt.target.wants.mount";
-            if (File.Exists(file)) {
+            if(File.Exists(file)) {
                 File.Delete(file);
             }
             var timerText = new List<string> {
