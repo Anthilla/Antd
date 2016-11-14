@@ -1,0 +1,70 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Free </legend>
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            <tr>
+                <td>
+                    <label>Name</label>
+                </td>
+                <td>
+                    <label>Total</label>
+                </td>
+                <td>
+                    <label>Used</label>
+                </td>
+                <td>
+                    <label>Free</label>
+                </td>
+                <td>
+                    <label>Shared</label>
+                </td>
+                <td>
+                    <label>BuffCache</label>
+                </td>
+                <td>
+                    <label>Available</label>
+                </td>
+            </tr>
+            @Each.Free
+            <tr>
+                <td>
+                    <p>@Current.Name</p>
+                </td>
+                <td>
+                    <p>@Current.Total</p>
+                </td>
+                <td>
+                    <p>@Current.Used</p>
+                </td>
+                <td>
+                    <p>@Current.Free</p>
+                </td>
+                <td>
+                    <p>@Current.Shared</p>
+                </td>
+                <td>
+                    <p>@Current.BuffCache</p>
+                </td>
+                <td>
+                    <p>@Current.Available</p>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+    <legend>Memory </legend>
+    <table class="table" style="table-layout: fixed;">
+        <tbody>
+            @Each.Meminfo
+            <tr>
+                <td>
+                    <label>@Current.Key</label>
+                </td>
+                <td>
+                    <p>@Current.Value</p>
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

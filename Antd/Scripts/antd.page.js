@@ -7,7 +7,7 @@ $('[data-role="load-page"]').on("click", function () {
     });
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/part/load/" + page,
+        url: "/part/" + page,
         type: "GET",
         beforeSend: function () {
             ico.show();

@@ -27,8 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antd.commands;
@@ -67,29 +65,49 @@ namespace Antd.Modules {
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
-            Get["/part/load/info"] = x => {
+            Get["/part/info"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.VersionOS = _bash.Execute("uname -a");
-                viewModel.Meminfo = _machineInfo.GetMeminfo();
-                viewModel.Cpuinfo = _machineInfo.GetCpuinfo();
                 viewModel.AosInfo = _machineInfo.GetAosrelease();
                 viewModel.Uptime = _machineInfo.GetUptime();
-                viewModel.Free = _machineInfo.GetFree();
                 viewModel.GentooRelease = _launcher.Launch("cat-etc-gentoorel");
                 viewModel.LsbRelease = _launcher.Launch("cat-etc-lsbrel");
                 viewModel.OsRelease = _launcher.Launch("cat-etc-osrel");
-                return View["antd/page-antd-info", viewModel];
+                return View["antd/part/page-antd-info", viewModel];
             };
 
-            Get["/part/load/system"] = x => {
+            Get["/part/info/memory"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.Meminfo = _machineInfo.GetMeminfo();
+                viewModel.Free = _machineInfo.GetFree();
+                return View["antd/part/page-antd-info-memory", viewModel];
+            };
+
+            Get["/part/info/cpu"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.Cpuinfo = _machineInfo.GetCpuinfo();
+                return View["antd/part/page-antd-info-cpu", viewModel];
+            };
+
+            Get["/part/system"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.SystemComponents = _machineInfo.GetSystemComponentModels();
-                viewModel.LosetupInfo = _machineInfo.GetLosetup();
-                viewModel.AntdUpdateCheck = _launcher.Launch("mono-antdsh-update-check");
-                return View["antd/page-antd-system", viewModel];
+                return View["antd/part/page-antd-system", viewModel];
             };
 
-            Get["/part/load/host"] = x => {
+            Get["/part/system/losetup"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.LosetupInfo = _machineInfo.GetLosetup();
+                return View["antd/part/page-antd-system-losetup", viewModel];
+            };
+
+            Get["/part/system/update"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                viewModel.AntdUpdateCheck = _launcher.Launch("mono-antdsh-update-check");
+                return View["antd/part/page-antd-system-update", viewModel];
+            };
+
+            Get["/part/host"] = x => {
                 dynamic viewModel = new ExpandoObject();
 
                 var hostnamectl = _launcher.Launch("hostnamectl");
@@ -107,10 +125,10 @@ namespace Antd.Modules {
                 viewModel.OS = _launcher.Launch("hostnamectl-get-os");
                 viewModel.Kernel = _launcher.Launch("hostnamectl-get-kernel");
                 viewModel.Architecture = _launcher.Launch("hostnamectl-get-arch");
-                return View["antd/page-antd-host", viewModel];
+                return View["antd/part/page-antd-host", viewModel];
             };
 
-            Get["/part/load/time"] = x => {
+            Get["/part/time"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var timezones = _bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
                 viewModel.Timezones = timezones;
@@ -125,19 +143,19 @@ namespace Antd.Modules {
                 viewModel.Nettimeon = _launcher.Launch("timedatectl-get-nettimeon");
                 viewModel.Ntpsync = _launcher.Launch("timedatectl-get-ntpsync");
                 viewModel.Rtcintz = _launcher.Launch("timedatectl-get-rtcintz");
-                return View["antd/page-antd-time", viewModel];
+                return View["antd/part/page-antd-time", viewModel];
             };
 
-            Get["/part/load/ns"] = x => {
+            Get["/part/ns"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.Resolv = _launcher.Launch("cat-etc-resolv");
                 viewModel.Hostname = _launcher.Launch("cat-etc-hostname");
                 viewModel.Hosts = _launcher.Launch("cat-etc-hosts");
-                viewModel.ResolvNetworks = _launcher.Launch("cat-etc-networks");
-                return View["antd/page-antd-dns-client", viewModel];
+                viewModel.Networks = _launcher.Launch("cat-etc-networks");
+                return View["antd/part/page-antd-ns", viewModel];
             };
 
-            Get["/part/load/dhcp"] = x => {
+            Get["/part/dhcp"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var dhcpdIsActive = _dhcpServerOptionsRepository.Get() != null && _dhcpServerSubnetRepository.Get() != null;
                 viewModel.DhcpdIsActive = dhcpdIsActive;
@@ -146,10 +164,10 @@ namespace Antd.Modules {
                 viewModel.DhcpdClass = _dhcpServerClassRepository.GetAll();
                 viewModel.DhcpdPools = _dhcpServerPoolRepository.GetAll();
                 viewModel.DhcpdReservation = _dhcpServerReservationRepository.GetAll();
-                return View["antd/page-antd-dhcp", viewModel];
+                return View["antd/part/page-antd-dhcp", viewModel];
             };
 
-            Get["/part/load/net"] = x => {
+            Get["/part/net"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
                 var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
@@ -165,24 +183,24 @@ namespace Antd.Modules {
                     }
                 }
                 viewModel.NetworkVirtualIf = vrtIf;
-                return View["antd/page-antd-network", viewModel];
+                return View["antd/part/page-antd-network", viewModel];
             };
 
-            Get["/part/load/fw"] = x => {
+            Get["/part/fw"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.NftTables = _nfTables.Tables();
                 viewModel.MacAddressList = new MacAddressRepository().GetAll();
-                return View["antd/page-antd-firewall", viewModel];
+                return View["antd/part/page-antd-firewall", viewModel];
             };
 
-            Get["/part/load/cron"] = x => {
+            Get["/part/cron"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var scheduledJobs = _timers.GetAll();
                 viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
-                return View["_partial/part-scheduler", viewModel];
+                return View["antd/part/page-antd-scheduler", viewModel];
             };
 
-            Get["/part/load/storage"] = x => {
+            Get["/part/storage"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.Mounts = new MountRepository().GetAll();
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
@@ -191,37 +209,37 @@ namespace Antd.Modules {
                 viewModel.ZfsList = _zfs.List();
                 viewModel.ZfsSnap = _zfsSnap.List();
                 viewModel.ZpoolHistory = _zpool.History();
-                return View["_partial/part-antd-storage", viewModel];
+                return View["antd/part/page-antd-storage", viewModel];
             };
 
-            Get["/part/load/sync"] = x => {
+            Get["/part/sync"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var glusterConfig = _glusterConfiguration.Get();
                 viewModel.GlusterName = glusterConfig.Name;
                 viewModel.GlusterPath = glusterConfig.Path;
                 viewModel.GlusterNodes = glusterConfig.Nodes;
                 viewModel.GlusterVolumes = glusterConfig.Volumes;
-                return View["antd/page-antd-gluster", viewModel];
+                return View["antd/part/page-antd-gluster", viewModel];
             };
 
-            Get["/part/load/vm"] = x => {
+            Get["/part/vm"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var vmList = _virsh.GetVmList();
                 viewModel.VMListAny = vmList.Any();
                 viewModel.VMList = vmList;
-                return View["antd/page-antd-vm", viewModel];
+                return View["antd/part/page-antd-vm", viewModel];
             };
 
-            Get["/part/load/users"] = x => {
+            Get["/part/users"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.Users = _userRepository.GetAll().OrderBy(_ => _.Alias);
-                return View["antd/page-antd-users", viewModel];
+                return View["antd/part/page-antd-users", viewModel];
             };
 
-            Get["/part/load/ssh"] = x => {
+            Get["/part/ssh"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 viewModel.Keys = null;
-                return View["_partial/part-ssh", viewModel];
+                return View["antd/part/page-antd-ssh", viewModel];
             };
         }
     }

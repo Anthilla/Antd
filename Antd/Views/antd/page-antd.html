@@ -30,12 +30,23 @@
 @Section['PageBar']
 <style type="text/css">
     #Config-TB {
-        border-bottom: 10px solid #A7BD39;
-        height: 80px !important;
+        background-color: #A7BD39 !important;
+        color: #3a3a3a !important;
+        border-color: #A7BD39 !important;
+    }
+
+    #Config-TB *{
+        color: #3a3a3a !important;
     }
 
     div.row {
         margin-top: 20px !important;
+    }
+
+    #BottomContent {
+        padding: 0 !important;
+        border-top-color: #3a3a3a;
+        border-top-width: 4px;
     }
 </style>
 @EndSection
@@ -43,13 +54,103 @@
 @Section['MainContent']
 <nav class="vertical-menu">
     <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
-        @Each.AntdContext
+
         <li>
-            <a href="#" data-role="load-page" data-page="@Current" class="fg-hover-white upcase">@Current
+            <a href="#" data-role="load-page" data-page="info" class="fg-hover-white upcase">info
                 <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
             </a>
         </li>
-        @EndEach
+        <li style="padding-left: 15px;">
+            <a href="#" data-role="load-page" data-page="info/memory" class="fg-hover-white capitalize">memory
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li style="padding-left: 15px;">
+            <a href="#" data-role="load-page" data-page="info/cpu" class="fg-hover-white upcase">cpu
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="system" class="fg-hover-white upcase">system
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li style="padding-left: 15px;">
+            <a href="#" data-role="load-page" data-page="system/losetup" class="fg-hover-white capitalize">loop devices 
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li style="padding-left: 15px;">
+            <a href="#" data-role="load-page" data-page="system/update" class="fg-hover-white capitalize">update
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="host" class="fg-hover-white upcase">host
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="time" class="fg-hover-white upcase">time
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="ns" class="fg-hover-white upcase">name service
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="dhcp" class="fg-hover-white upcase">dhcp
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="net" class="fg-hover-white upcase">network
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="fw" class="fg-hover-white upcase">firewall
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="cron" class="fg-hover-white upcase">scheduler
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="storage" class="fg-hover-white upcase">storage
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-role="load-page" data-page="sync" class="fg-hover-white upcase">sync
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="vm" class="fg-hover-white upcase">vm
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" data-role="load-page" data-page="users" class="fg-hover-white upcase">users
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
     </ul>
 </nav>
 <div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">

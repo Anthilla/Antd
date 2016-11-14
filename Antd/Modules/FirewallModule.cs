@@ -76,7 +76,6 @@ namespace Antd.Modules {
             Post["/nft/save"] = x => {
                 var data = (string)Request.Form.Data;
                 var tab = JsonConvert.DeserializeObject<IEnumerable<NftModel.Table>>(data);
-                //Console.WriteLine(JsonConvert.SerializeObject(tab, Formatting.Indented));
                 new NfTables().Export(tab);
                 return HttpStatusCode.OK;
             };

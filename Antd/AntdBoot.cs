@@ -74,29 +74,21 @@ namespace Antd {
             database.RegisterView(new BootModuleLoadView());
             database.RegisterView(new BootServiceLoadView());
             database.RegisterView(new BootOsParametersLoadView());
-            database.RegisterView(new CommandView());
-            database.RegisterView(new CommandValuesView());
-            database.RegisterView(new CustomTableView());
             database.RegisterView(new FirewallListView());
+            database.RegisterView(new NftView());
             database.RegisterView(new TimerView());
-            database.RegisterView(new LogView());
             database.RegisterView(new MountView());
             database.RegisterView(new NetworkInterfaceView());
-            database.RegisterView(new ObjectView());
             database.RegisterView(new RsyncView());
             database.RegisterView(new UserClaimView());
             database.RegisterView(new UserView());
             database.RegisterView(new MacAddressView());
-            database.RegisterView(new SambaConfigView());
             database.RegisterView(new SyslogView());
-            database.RegisterView(new DhcpConfigView());
             database.RegisterView(new DhcpServerOptionsView());
             database.RegisterView(new DhcpServerClassView());
             database.RegisterView(new DhcpServerSubnetView());
             database.RegisterView(new DhcpServerPoolView());
             database.RegisterView(new DhcpServerReservationView());
-            database.RegisterView(new BindConfigView());
-            database.RegisterView(new NftView());
             ConsoleLogger.Log("database ready");
             return database;
         }
@@ -224,19 +216,6 @@ namespace Antd {
             }
         }
 
-        public void CommandExecuteNetwork() {
-            if(!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("network configuration ready");
-        }
-
-        //todo
-        public void SetOsParametersNetwork() {
-            if(!Parameter.IsUnix)
-                return;
-            ConsoleLogger.Log("os parameters ready");
-        }
-
         private readonly NfTables _nfTables = new NfTables();
 
         public void SetFirewall() {
@@ -337,8 +316,8 @@ namespace Antd {
             if(_glusterConfiguration.IsConfigured) {
                 _glusterConfiguration.Start();
                 _glusterConfiguration.Launch();
+                ConsoleLogger.Log("glusterfs ready");
             }
-            ConsoleLogger.Log("glusterfs ready");
         }
 
         public void StartDirectoryWatcher() {

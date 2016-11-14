@@ -11,15 +11,15 @@ namespace Antd.DhcpServer {
         private const string ServiceName = "dhcpd4.service";
         private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
         private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
-        private static readonly DhcpServerOptionsRepository DhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private static readonly DhcpServerSubnetRepository DhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private static readonly DhcpServerClassRepository DhcpServerClassRepository = new DhcpServerClassRepository();
-        private static readonly DhcpServerPoolRepository DhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private static readonly DhcpServerReservationRepository DhcpServerReservationRepository = new DhcpServerReservationRepository();
+        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
+        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
+        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
 
         public void Set() {
-            var o = DhcpServerOptionsRepository.Get();
-            var s = DhcpServerSubnetRepository.Get();
+            var o = _dhcpServerOptionsRepository.Get();
+            var s = _dhcpServerSubnetRepository.Get();
             if(o == null || s == null) {
                 return;
             }
@@ -60,7 +60,7 @@ namespace Antd.DhcpServer {
                 lines.Add("};");
             }
             lines.Add("");
-            var classes = DhcpServerClassRepository.GetAll();
+            var classes = _dhcpServerClassRepository.GetAll();
             foreach(var cls in classes) {
                 lines.Add($"class \"{cls.Name}\" {{");
                 lines.Add($"match if binary-to-ascii(16,8,\":\",substring(hardware, 1, 2)) = \"{cls.MacVendor}\";");
@@ -76,7 +76,7 @@ namespace Antd.DhcpServer {
             if(!string.IsNullOrEmpty(subnet.BroadcastAddress)) { lines.Add($"option broadcast-address {subnet.BroadcastAddress}"); }
             if(!string.IsNullOrEmpty(subnet.SubnetMask)) { lines.Add($"option subnet-mask {subnet.SubnetMask}"); }
             if(!string.IsNullOrEmpty(subnet.ZoneName) && !string.IsNullOrEmpty(subnet.ZonePrimaryAddress)) { lines.Add($"zone {subnet.ZoneName} {{ primary {subnet.ZonePrimaryAddress}; }}"); }
-            var pools = DhcpServerPoolRepository.GetAll().Select(_ => new DhcpServerPoolModel(_)).ToList();
+            var pools = _dhcpServerPoolRepository.GetAll().Select(_ => new DhcpServerPoolModel(_)).ToList();
             foreach(var pool in pools) {
                 lines.Add("pool {");
                 foreach(var opt in pool.Options) {
@@ -86,7 +86,7 @@ namespace Antd.DhcpServer {
             }
             lines.Add("}");
             lines.Add("");
-            var reservations = DhcpServerReservationRepository.GetAll().Select(_ => new DhcpServerReservationModel(_)).ToList();
+            var reservations = _dhcpServerReservationRepository.GetAll().Select(_ => new DhcpServerReservationModel(_)).ToList();
             foreach(var reservation in reservations) {
                 lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
             }

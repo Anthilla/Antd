@@ -29,7 +29,6 @@
 
 using System;
 using System.IO;
-using antd.commands;
 using antdlib;
 using antdlib.common;
 using Nancy;
@@ -57,15 +56,11 @@ namespace Antd {
             }
 
             Boot.CheckOsIsRw();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.SetWorkingDirectories();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.SetCoreParameters();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Database = Boot.StartDatabase();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.PrepareConfiguration();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+
             Boot.SetOsMount();
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.SetOsParametersLocal();
@@ -83,10 +78,6 @@ namespace Antd {
             Boot.ImportNetworkConfiguration();
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.Ssh();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-            Boot.CommandExecuteNetwork();
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-            Boot.SetOsParametersNetwork();
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             Boot.LoadServices();
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
@@ -122,12 +113,9 @@ namespace Antd {
             Database.Shutdown();
         }
 
-        private static readonly CommandLauncher Launcher = new CommandLauncher();
-
         private static void KeepAlive() {
             var r = Console.ReadLine();
             while(r != "quit") {
-                ConsoleLogger.Log(Launcher.Launch(r));
                 r = Console.ReadLine();
             }
         }

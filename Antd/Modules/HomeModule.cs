@@ -54,25 +54,7 @@ namespace Antd.Modules {
                 }
             };
 
-            Get["/"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                viewModel.AntdContext = new[] {
-                    "info",
-                    "system",
-                    "host",
-                    "time",
-                    "ns",
-                    "dhcp",
-                    "net",
-                    "fw",
-                    "cron",
-                    "storage",
-                    "sync",
-                    "vm",
-                    "users"
-                };
-                return View["antd/page-antd", viewModel];
-            };
+            Get["/"] = x => View["antd/page-antd"];
 
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();

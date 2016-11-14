@@ -42,9 +42,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class CfgModule : CoreModule {
 
-        private readonly CommandRepository _commandRepositoryRepo = new CommandRepository();
-        private readonly CommandValuesRepository _commandValuesRepositoryRepo = new CommandValuesRepository();
-
         private readonly BootModuleLoadRepository _bootModuleLoadRepo = new BootModuleLoadRepository();
         private readonly BootServiceLoadRepository _bootServiceLoadRepo = new BootServiceLoadRepository();
         private readonly BootOsParametersLoadRepository _bootOsParametersLoadRepo = new BootOsParametersLoadRepository();
@@ -88,70 +85,6 @@ namespace Antd.Modules {
                 }
                 _setupConfiguration.Export(checkedControl);
                 return Response.AsRedirect("/cfg");
-            };
-
-            Post["/cfg/addvalue"] = x => {
-                var name = (string)Request.Form.Name;
-                var index = (string)Request.Form.Index;
-                var value = (string)Request.Form.Value;
-                _commandValuesRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Name", name },
-                    { "Index", index },
-                    { "Value", value }
-                });
-                return Response.AsRedirect("/");
-            };
-
-            Post["/cfg/delvalue"] = x => {
-                var guid = (string)Request.Form.Guid;
-                _commandValuesRepositoryRepo.Delete(guid);
-                return Response.AsRedirect("/");
-            };
-
-            Get["/cfg/tags"] = x => {
-                var data = _commandValuesRepositoryRepo.GetAll().Select(_ => _.Name);
-                var map = SelectizerMapModel.MapRawTagOfValueBundle(data);
-                return Response.AsJson(map);
-            };
-
-            Post["/cfg/addcommand"] = x => {
-                var command = (string)Request.Form.Command;
-                _commandRepositoryRepo.Create(new Dictionary<string, string> {
-                    { "Command", command },
-                    { "Layout", "" },
-                    { "Notes", "" }
-                });
-                return Response.AsRedirect("/");
-            };
-
-            Post["/cfg/delcommand"] = x => {
-                var guid = (string)Request.Form.Guid;
-                _commandRepositoryRepo.Delete(guid);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/cfg/enablecommand"] = x => {
-                var guid = (string)Request.Form.Guid;
-                _commandRepositoryRepo.Edit(new Dictionary<string, string> {
-                    { "Id", guid },
-                    { "IsEnabled", "true" }
-                });
-                return HttpStatusCode.OK;
-            };
-
-            Post["/cfg/disablecommand"] = x => {
-                var guid = (string)Request.Form.Guid;
-                _commandRepositoryRepo.Edit(new Dictionary<string, string> {
-                    { "Id", guid },
-                    { "IsEnabled", "false" }
-                });
-                return HttpStatusCode.OK;
-            };
-
-            Post["/cfg/launchcommand"] = x => {
-                var guid = (string)Request.Form.Guid;
-                _commandRepositoryRepo.Launch(guid);
-                return Response.AsRedirect("/");
             };
 
             Post["/cfg/modules"] = x => {

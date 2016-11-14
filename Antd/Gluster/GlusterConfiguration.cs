@@ -15,7 +15,6 @@ namespace Antd.Gluster {
         public void Set() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if(!File.Exists(FilePath)) {
-                ConsoleLogger.Log("gluster configuration file does not exist");
                 var tempFlow = new GlusterSetup {
                     Name = ".gluster.conf",
                     Path = $"{Parameter.RepoConfig}/.gluster.conf",
@@ -36,7 +35,6 @@ namespace Antd.Gluster {
                 };
                 if(!File.Exists(tempFlow.Path)) {
                     File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
-                    ConsoleLogger.Log("a gluster configuration file template has been created");
                 }
             }
         }

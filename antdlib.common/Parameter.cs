@@ -123,6 +123,5 @@ namespace antdlib.common {
         public static string UnitAntdLauncher => "app-antd-03-launcher.service";
 
         public static string EtcSsh => "/etc/ssh";
-
     }
 }

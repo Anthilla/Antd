@@ -27,10 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Antd.Firewall;
 using Antd.Storage;
 using Nancy;
-using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class TestModule : CoreModule {
