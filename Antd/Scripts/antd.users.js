@@ -55,15 +55,6 @@ function LoadUserEntitiesUnits() {
     }
 }
 
-$(document).on("ready", function () {
-    $('input[type="text"]').each(function () {
-        $(this).val("");
-    });
-    $('input[type="password"]').each(function () {
-        $(this).val("");
-    });
-});
-
 $('[data-role="UpdateUserPassword"]').on("click", function () {
     var user = $(this).attr("data-user");
     var container = $(this).parents('[data-role="UpdatePasswordPanel"]');

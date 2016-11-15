@@ -44,8 +44,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
 
-
-
         private readonly UserRepository _userRepository = new UserRepository();
         private readonly Bash _bash = new Bash();
         private readonly CommandLauncher _launcher = new CommandLauncher();
@@ -57,7 +55,6 @@ namespace Antd.Modules {
         private readonly Zfs _zfs = new Zfs();
         private readonly Timers _timers = new Timers();
         private readonly Zpool _zpool = new Zpool();
-
 
         public PartialHomeModule() {
             this.RequiresAuthentication();
@@ -158,8 +155,7 @@ namespace Antd.Modules {
                 var bindServerZoneRepository = new BindServerZoneRepository();
                 var bindIsActive = bindServerOptionsRepository.Get() != null;
                 viewModel.BindIsActive = bindIsActive;
-                var options = new BindServerOptionsModel(bindServerOptionsRepository.Get());
-                viewModel.BindOptions = bindIsActive ? options : bindServerOptionsRepository.Default;
+                viewModel.BindOptions = bindIsActive ? new BindServerOptionsModel(bindServerOptionsRepository.Get()) : bindServerOptionsRepository.Default;
                 viewModel.BindZones = bindServerZoneRepository.GetAll();
                 return View["antd/part/page-antd-bind", viewModel];
             };

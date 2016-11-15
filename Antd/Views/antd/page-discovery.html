@@ -34,15 +34,24 @@
         color: #3a3a3a !important;
     }
 
+    #Discovery-TB *{
+        color: #3a3a3a !important;
+    }
+
     div.row {
         margin-top: 20px !important;
+    }
+
+    #BottomContent {
+        padding: 0 !important;
+        border-top-color: #3a3a3a;
+        border-top-width: 4px;
     }
 </style>
 <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
     <nav class="navigation-bar-content">
         @Each.AntdContext
-        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">
-            @Current
+        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">@Current
         </a>
         @EndEach
 

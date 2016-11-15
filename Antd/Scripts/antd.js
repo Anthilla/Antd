@@ -99,12 +99,6 @@ $(window).scroll(function () {
     }
 });
 
-$(document).on("ready", function () {
-    $("input:password").val("");
-    $("input:text").attr("autocomplete", "off");
-    $("input:password").attr("autocomplete", "off");
-});
-
 function Reset() {
     $(".item").hide();
     $("select").prop("selectedIndex", 0);
