@@ -99,11 +99,14 @@
     <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\BindConfigRepository.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
+    <Compile Include="Database\BindServerZoneFileRepository.cs" />
     <Compile Include="Database\BootOsParametersLoadRepository.cs" />
     <Compile Include="Database\BootServiceLoadRepository.cs" />
     <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
     <Compile Include="Database\DhcpServerClassRepository.cs" />
+    <Compile Include="Database\BindServerOptionsRepository.cs" />
+    <Compile Include="Database\BindServerZoneRepository.cs" />
     <Compile Include="Database\DhcpServerSubnetRepository.cs" />
     <Compile Include="Database\DhcpServerReservationRepository.cs" />
     <Compile Include="Database\DhcpServerPoolRepository.cs" />
@@ -143,7 +146,6 @@
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AppsModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />
-    <Compile Include="Modules\CCTableModule.cs" />
     <Compile Include="Modules\renew\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\CfgModule.cs" />
@@ -156,7 +158,6 @@
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Modules\ServicesModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
-    <Compile Include="Modules\TerminalModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
@@ -177,8 +178,6 @@
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
     <Compile Include="Storage\Zpool.cs" />
-    <Compile Include="Svcs\Bind\BindConfig.cs" />
-    <Compile Include="Svcs\Bind\BindStatement.cs" />
     <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
@@ -237,6 +236,9 @@
     </Content>
     <Content Include="ShellScript\apilist.txt" />
     <Content Include="ShellScript\scriptslist.txt" />
+    <Content Include="Views\antd\part\page-antd-bind.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-info-cpu.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -17,7 +17,7 @@ namespace antd.commands {
                 if(cmd == null) {
                     return string.Empty;
                 }
-                var result = cmd.Launch(new Dictionary<string, string>());
+                var result = cmd.Launch();
                 return result;
             }
             catch(Exception ex) {

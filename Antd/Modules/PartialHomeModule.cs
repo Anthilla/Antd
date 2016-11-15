@@ -44,11 +44,8 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
 
-        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
-        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
+
+
         private readonly UserRepository _userRepository = new UserRepository();
         private readonly Bash _bash = new Bash();
         private readonly CommandLauncher _launcher = new CommandLauncher();
@@ -61,7 +58,7 @@ namespace Antd.Modules {
         private readonly Timers _timers = new Timers();
         private readonly Zpool _zpool = new Zpool();
 
-        
+
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
@@ -155,15 +152,32 @@ namespace Antd.Modules {
                 return View["antd/part/page-antd-ns", viewModel];
             };
 
+            Get["/part/named"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                var bindServerOptionsRepository = new BindServerOptionsRepository();
+                var bindServerZoneRepository = new BindServerZoneRepository();
+                var bindIsActive = bindServerOptionsRepository.Get() != null;
+                viewModel.BindIsActive = bindIsActive;
+                var options = new BindServerOptionsModel(bindServerOptionsRepository.Get());
+                viewModel.BindOptions = bindIsActive ? options : bindServerOptionsRepository.Default;
+                viewModel.BindZones = bindServerZoneRepository.GetAll();
+                return View["antd/part/page-antd-bind", viewModel];
+            };
+
             Get["/part/dhcp"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var dhcpdIsActive = _dhcpServerOptionsRepository.Get() != null && _dhcpServerSubnetRepository.Get() != null;
+                var dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+                var dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+                var dhcpServerClassRepository = new DhcpServerClassRepository();
+                var dhcpServerPoolRepository = new DhcpServerPoolRepository();
+                var dhcpServerReservationRepository = new DhcpServerReservationRepository();
+                var dhcpdIsActive = dhcpServerOptionsRepository.Get() != null && dhcpServerSubnetRepository.Get() != null;
                 viewModel.DhcpdIsActive = dhcpdIsActive;
-                viewModel.DhcpdOptions = _dhcpServerOptionsRepository.Get();
-                viewModel.DhcpdSubnet = _dhcpServerSubnetRepository.Get();
-                viewModel.DhcpdClass = _dhcpServerClassRepository.GetAll();
-                viewModel.DhcpdPools = _dhcpServerPoolRepository.GetAll();
-                viewModel.DhcpdReservation = _dhcpServerReservationRepository.GetAll();
+                viewModel.DhcpdOptions = dhcpServerOptionsRepository.Get();
+                viewModel.DhcpdSubnet = dhcpServerSubnetRepository.Get();
+                viewModel.DhcpdClass = dhcpServerClassRepository.GetAll();
+                viewModel.DhcpdPools = dhcpServerPoolRepository.GetAll();
+                viewModel.DhcpdReservation = dhcpServerReservationRepository.GetAll();
                 return View["antd/part/page-antd-dhcp", viewModel];
             };
 

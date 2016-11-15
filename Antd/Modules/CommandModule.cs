@@ -43,6 +43,34 @@ namespace Antd.Modules {
         public CommandModule() {
             this.RequiresAuthentication();
 
+            Get["/cmd/test/{name}"] = x => {
+                string name = x.name;
+                ConsoleLogger.Log($"cmd_test > command name: {name}");
+                try {
+                    if(string.IsNullOrEmpty(name)) {
+                        ConsoleLogger.Log("cmd_test > name is empty");
+                        return string.Empty;
+                    }
+                    if(!Commands.List.ContainsKey(name)) {
+                        ConsoleLogger.Log("cmd_test > no key exists in Commands.List");
+                        return string.Empty;
+                    }
+                    var cmd = Commands.List[name];
+                    ConsoleLogger.Log("cmd_test > command exists in Commands.List!");
+                    if(cmd == null) {
+                        return string.Empty;
+                    }
+                    var result = cmd.Launch();
+                    ConsoleLogger.Log($"cmd_test > result: {result}");
+                    return result;
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Log($"Failed to Launch {name} command");
+                    ConsoleLogger.Error(ex);
+                    return string.Empty;
+                }
+            };
+
             Get["/cmd/launch/{name}"] = x => {
                 string name = x.name;
                 try {

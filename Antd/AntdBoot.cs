@@ -84,11 +84,16 @@ namespace Antd {
             database.RegisterView(new UserView());
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SyslogView());
+
             database.RegisterView(new DhcpServerOptionsView());
             database.RegisterView(new DhcpServerClassView());
             database.RegisterView(new DhcpServerSubnetView());
             database.RegisterView(new DhcpServerPoolView());
             database.RegisterView(new DhcpServerReservationView());
+            database.RegisterView(new BindServerOptionsView());
+            database.RegisterView(new BindServerZoneView());
+            database.RegisterView(new BindServerZoneFileView());
+
             ConsoleLogger.Log("database ready");
             return database;
         }

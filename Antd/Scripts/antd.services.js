@@ -92,22 +92,10 @@ $("#AddNewShare").on("click", function () {
 //END SAMBA
 
 //START BIND
-$("#ActivateBind").on("click", function () {
+$("#EnableBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/bind",
-        type: "POST",
-        success: function () {
-            location.reload(true);
-        }
-    });
-    _requests.push(aj);
-});
-
-$("#RefreshBind").on("click", function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/services/refresh/bind",
+        url: "/services/activate/enable",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -119,7 +107,7 @@ $("#RefreshBind").on("click", function () {
 $("#ReloadBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/reloadconfig/bind",
+        url: "/services/activate/reload",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -128,59 +116,40 @@ $("#ReloadBind").on("click", function () {
     _requests.push(aj);
 });
 
-$(document).on("ready", function () {
-    $.when(
-        $('input[data-array="bind"]').selectize({
-            delimiter: ";",
-            persist: false,
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input
-                }
-            }
-        })
-    ).done(function () {
-        $(".selectize-input.items").find('div.item[data-Value=""]').remove();
-        $('input[data-array="bind"]').hide();
+$("#ReconfigBind").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/activate/reconfig",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
     });
+    _requests.push(aj);
 });
 
-$(document).on("ready", function () {
-    $('form[data-role="bind-section-update"]').each(function () {
-        $(this).find('[data-object="bind-parameter"]').each(function (index) {
-            var dataKey = $(this).find('[name="DataKey"]');
-            dataKey.attr("name", dataKey.attr("name") + "_" + index);
-            var dataValue = $(this).find('[name="DataValue"]');
-            dataValue.attr("name", dataValue.attr("name") + "_" + index);
-            var dataFile = $(this).find('[name="DataFilePath"]');
-            dataFile.attr("name", dataFile.attr("name") + "_" + index);
-        });
+$("#StopBind").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/activate/stop",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
     });
+    _requests.push(aj);
 });
 
-$("#AddNewAclBind").on("click", function () {
-    $("#NewAclBindDashboard").toggle();
-});
-
-$("#AddNewKeyBind").on("click", function () {
-    $("#NewKeyBindDashboard").toggle();
-});
-
-$("#AddNewMastersBind").on("click", function () {
-    $("#NewMastersBindDashboard").toggle();
-});
-
-$("#AddNewServerBind").on("click", function () {
-    $("#NewServerBindDashboard").toggle();
-});
-
-$("#AddNewViewBind").on("click", function () {
-    $("#NewViewBindDashboard").toggle();
-});
-
-$("#AddNewZoneBind").on("click", function () {
-    $("#NewZoneBindDashboard").toggle();
+$("#ApplyConfigBind").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/activate/set",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
 });
 //END BIND
 

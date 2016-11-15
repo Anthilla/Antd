@@ -1,0 +1,505 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Named
+    @If.BindIsActive
+        <i id="ReloadBind" class="icon-cycle fg-lightGreen" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReconfigBind" class="icon-cycle fg-green" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="StopBind" class="icon-cancel fg-anthilla-orange" style="float: right; cursor: pointer;"></i>
+        <i id="ApplyConfigBind" class="icon-plus fg-anthilla-blu" style="float: right; cursor: pointer;"></i>
+        @EndIf
+    @IfNot.BindIsActive
+        <i id="EnableBind" class="icon-upload fg-anthilla-orange" style="float: right; cursor: pointer;"></i>
+        @EndIf
+    </legend>
+
+    <div data-role="tab-control" class="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#bind_global">Global Options</a></li>
+            <li><a href="#bind_zones">Zones</a></li>
+        </ul>
+
+        <div class="frames">
+            <div id="bind_global" class="frame">
+                <form action="/services/dhcpd/options" method="POST" enctype="multipart/form-data">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>Notify</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="Notify" style="width: 90%;" type="text" value="@Model.BindOptions.Notify" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Max Cache Size</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="MaxCacheSize" style="width: 90%;" type="text" value="@Model.BindOptions.MaxCacheSize" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>MaxCacheTtl</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="MaxCacheTtl" style="width: 90%;" type="text" value="@Model.BindOptions.MaxCacheTtl" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>MaxNcacheTtl</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="MaxNcacheTtl" style="width: 90%;" type="text" value="@Model.BindOptions.MaxNcacheTtl" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Forwarders</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="Forwarders" style="width: 90%;" type="text" value="@Model.BindOptions.Forwarders" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowNotify</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AllowNotify" style="width: 90%;" type="text" value="@Model.BindOptions.AllowNotify" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowTransfer</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AllowTransfer" style="width: 90%;" type="text" value="@Model.BindOptions.AllowTransfer" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Recursion</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="Recursion" style="width: 90%;" type="text" value="@Model.BindOptions.Recursion" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>TransferFormat</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="TransferFormat" style="width: 90%;" type="text" value="@Model.BindOptions.TransferFormat" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>QuerySourceAddress</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="QuerySourceAddress" style="width: 90%;" type="text" value="@Model.BindOptions.QuerySourceAddress" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>QuerySourcePort</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="QuerySourcePort" style="width: 90%;" type="text" value="@Model.BindOptions.QuerySourcePort" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Version</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="Version" style="width: 90%;" type="text" value="@Model.BindOptions.Version" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowQuery</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AllowQuery" style="width: 90%;" type="text" value="@Model.BindOptions.AllowQuery" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowRecursion</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AllowRecursion" style="width: 90%;" type="text" value="@Model.BindOptions.AllowRecursion" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>IxfrFromDifferences</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="IxfrFromDifferences" style="width: 90%;" type="text" value="@Model.BindOptions.IxfrFromDifferences" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ListenOnV6</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="ListenOnV6" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnV6" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ListenOnPort53</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="ListenOnPort53" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnPort53" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>DnssecEnabled</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="DnssecEnabled" style="width: 90%;" type="text" value="@Model.BindOptions.DnssecEnabled" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>DnssecValidation</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="DnssecValidation" style="width: 90%;" type="text" value="@Model.BindOptions.DnssecValidation" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>DnssecLookaside</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="DnssecLookaside" style="width: 90%;" type="text" value="@Model.BindOptions.DnssecLookaside" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AuthNxdomain</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="AuthNxdomain" style="width: 90%;" type="text" value="@Model.BindOptions.AuthNxdomain" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>KeyName</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="KeyName" style="width: 90%;" type="text" value="@Model.BindOptions.KeyName" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>KeySecret</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="KeySecret" style="width: 90%;" type="text" value="@Model.BindOptions.KeySecret" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ControlAcl</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="ControlAcl" style="width: 90%;" type="text" value="@Model.BindOptions.ControlAcl" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ControlIp</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="ControlIp" style="width: 90%;" type="text" value="@Model.BindOptions.ControlIp" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ControlPort</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="ControlPort" style="width: 90%;" type="text" value="@Model.BindOptions.ControlPort" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ControlAllow</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="ControlAllow" style="width: 90%;" type="text" value="@Model.BindOptions.ControlAllow" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingChannel</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingChannel" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingChannel" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingDaemon</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingDaemon" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingDaemon" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingSeverity</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingSeverity" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingSeverity" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingPrintCategory</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingPrintCategory" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingPrintCategory" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingPrintSeverity</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingPrintSeverity" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingPrintSeverity" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>LoggingPrintTime</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="LoggingPrintTime" style="width: 90%;" type="text" value="@Model.BindOptions.LoggingPrintTime" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>TrustedKey</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="TrustedKeys" style="width: 90%;" type="text" value="@Model.BindOptions.TrustedKeys" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclLocalInterfaces</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclLocalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalInterfaces" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclInternalInterfaces</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclInternalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalInterfaces" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclExternalInterfaces</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclExternalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalInterfaces" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclLocalNetworks</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclLocalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalNetworks" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclInternalNetworks</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclInternalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalNetworks" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AclExternalNetworks</label>
+                                </td>
+                                <td colspan="2">
+                                    <!--each-->
+                                    <input name="AclExternalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalNetworks" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <input style="width: 90%;" type="submit" value="SET" class="bg-anthilla-geen" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <div id="bind_zones" class="frame" style="display: none;">
+                <form action="/services/bind/zone" method="POST" enctype="multipart/form-data">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>Name</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="Name" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Type</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="Type" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>File</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="File" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>SerialUpdateMethod</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="SerialUpdateMethod" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowUpdate</label>
+                                </td>
+                                <td colspan="2">
+                                    <!-- > 1 -->
+                                    <input name="AllowUpdate" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowQuery</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="AllowQuery" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>AllowTransfer</label>
+                                </td>
+                                <td colspan="2">
+                                    <input name="AllowTransfer" style="width: 90%;" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <input style="width: 90%;" type="submit" value="ADD" class="bg-anthilla-geen" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <br />
+                @Each.BindZones
+                    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+                        <div class="panel-header bg-anthilla-gray fg-white">
+                            Zone: @Current.Name
+                        </div>
+                        <div class="panel-content" style="display: none;">
+                            <table class="table" style="table-layout: fixed;">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Name</label></td>
+                                        <td>
+                                            <label>@Current.Name</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Type</label></td>
+                                        <td>
+                                            <label>@Current.Type</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>File</label></td>
+                                        <td>
+                                            <label>@Current.File</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>SerialUpdateMethod</label></td>
+                                        <td>
+                                            <label>@Current.SerialUpdateMethod</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>AllowUpdate</label></td>
+                                        <td>
+                                            <label>@Current.AllowUpdate</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>AllowQuery</label></td>
+                                        <td>
+                                            <label>@Current.AllowQuery</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>AllowTransfer</label></td>
+                                        <td>
+                                            <label>@Current.AllowTransfer</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input data-role="RemoveBindZone" data-id="@Current.Id" type="button" value="Remove Zone" class="bg-anthilla-orange" style="color: #3a3a3a !important; width: 90%;" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @EndEach
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,9 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
 using antdlib.common;
 using antdlib.views;
+using Antd.Bind;
 using Antd.Database;
 using Antd.DhcpServer;
 using Nancy;
@@ -46,44 +46,13 @@ namespace Antd.Modules {
 
         private readonly DhcpdConfiguration _dhcpdConfiguration = new DhcpdConfiguration();
 
+        private readonly BindServerOptionsRepository _bindServerOptionsRepository = new BindServerOptionsRepository();
+        private readonly BindServerZoneRepository _bindServerZoneRepository = new BindServerZoneRepository();
+
+        private readonly BindConfiguration _bindConfiguration = new BindConfiguration();
+
         public ServicesModule() {
             this.RequiresAuthentication();
-
-            Get["/services"] = x => {
-                dynamic vmod = new ExpandoObject();
-
-                //vmod.SambaIsActive = SambaConfig.IsActive;
-                //vmod.SambaStructure = SambaConfig.SimpleStructure;
-                //var sambaMapFile = SambaConfig.MapFile.Get();
-                //vmod.SambaData = sambaMapFile.Data;
-                //vmod.SambaShareData = sambaMapFile.Share;
-
-                //vmod.BindIsActive = BindConfig.IsActive;
-                //var bindMapFile = BindConfig.MapFile.Get();
-                //vmod.BindOptions = bindMapFile.BindOptions;
-                //vmod.BindLogging = bindMapFile.BindLogging;
-                //vmod.BindLwres = bindMapFile.BindLwres;
-                //vmod.BindStatisticsChannels = bindMapFile.BindStatisticsChannels;
-                //vmod.BindTrustedKeys = bindMapFile.BindTrustedKeys;
-                //vmod.BindManagedKeys = bindMapFile.BindManagedKeys;
-                //vmod.BindZone = bindMapFile.BindZone;
-                //vmod.BindAcl = bindMapFile.BindAcl;
-                //vmod.BindKey = bindMapFile.BindKey;
-                //vmod.BindMasters = bindMapFile.BindMasters;
-                //vmod.BindServer = bindMapFile.BindServer;
-                //vmod.BindView = bindMapFile.BindView;
-
-                var dhcpdIsActive = _dhcpServerOptionsRepository.Get() != null && _dhcpServerSubnetRepository.Get() != null;
-                vmod.DhcpdIsActive = dhcpdIsActive;
-                vmod.DhcpdOptions = _dhcpServerOptionsRepository.Get();
-                vmod.DhcpdSubnet = _dhcpServerSubnetRepository.Get();
-                vmod.DhcpdClass = _dhcpServerClassRepository.GetAll();
-                vmod.DhcpdPools = _dhcpServerPoolRepository.GetAll();
-                vmod.DhcpdReservation = _dhcpServerReservationRepository.GetAll();
-
-                vmod.CurrentContext = Request.Path;
-                return View["_page-services", vmod];
-            };
 
             #region [    DHCPD    ]
             Post["/services/dhcpd/enable"] = x => {
@@ -223,189 +192,148 @@ namespace Antd.Modules {
 
             #endregion [    DHCPD    ]
 
-            //#region SAMBA
-            //Post["/services/activate/samba"] = x => {
-            //    SambaConfig.SetReady();
-            //    SambaConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
+            #region [    BIND    ]
+            Post["/services/bind/enable"] = x => {
+                _bindConfiguration.Enable();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/refresh/samba"] = x => {
-            //    SambaConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
+            Post["/services/bind/disable"] = x => {
+                _bindConfiguration.Disable();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/reloadconfig/samba"] = x => {
-            //    SambaConfig.ReloadConfig();
-            //    return HttpStatusCode.OK;
-            //};
+            Post["/services/bind/set"] = x => {
+                _bindConfiguration.Set();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/update/samba"] = x => {
-            //    var parameters = this.Bind<List<ServiceSamba>>();
-            //    SambaConfig.WriteFile.SaveGlobalConfig(parameters);
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.DumpGlobalConfig();
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.RewriteSmbconf();
-            //    return Response.AsRedirect("/");
-            //};
+            Post["/services/bind/restart"] = x => {
+                _bindConfiguration.Enable();
+                _bindConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/update/sambashares"] = x => {
-            //    var parameters = this.Bind<List<ServiceSamba>>();
-            //    string file = Request.Form.ShareFile;
-            //    string name = Request.Form.ShareName;
-            //    string query = Request.Form.ShareQueryName;
-            //    SambaConfig.WriteFile.SaveShareConfig(file, name, query, parameters);
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.DumpShare(name);
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.RewriteSmbconf();
-            //    return Response.AsRedirect("/");
-            //};
+            Post["/services/bind/stop"] = x => {
+                _bindConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/samba/addparam"] = x => {
-            //    string key = Request.Form.NewParameterKey;
-            //    string value = Request.Form.NewParameterValue;
-            //    SambaConfig.WriteFile.AddParameterToGlobal(key, value);
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.RewriteSmbconf();
-            //    return Response.AsRedirect("/");
-            //};
+            Post["/services/bind/reload"] = x => {
+                _bindConfiguration.RndcReload();
+                return HttpStatusCode.OK;
+            };
 
-            //Post["/services/samba/addshare"] = x => {
-            //    string name = Request.Form.NewShareName;
-            //    string directory = Request.Form.NewShareDirectory;
-            //    SambaConfig.WriteFile.AddShare(name, directory);
-            //    Thread.Sleep(1000);
-            //    SambaConfig.WriteFile.RewriteSmbconf();
-            //    return Response.AsRedirect("/");
-            //};
-            //#endregion SAMBA
+            Post["/services/bind/reconfig"] = x => {
+                _bindConfiguration.RndcReconfig();
+                return HttpStatusCode.OK;
+            };
 
-            //#region BIND
-            //Post["/services/activate/bind"] = x => {
-            //    BindConfig.SetReady();
-            //    BindConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
+            Post["/services/bind/options"] = x => {
+                string notify = Request.Form.Notify;
+                string maxCacheSize = Request.Form.MaxCacheSize;
+                string maxCacheTtl = Request.Form.MaxCacheTtl;
+                string maxNcacheTtl = Request.Form.MaxNcacheTtl;
+                string forwarders = Request.Form.Forwarders;
+                string allowNotify = Request.Form.AllowNotify;
+                string allowTransfer = Request.Form.AllowTransfer;
+                string recursion = Request.Form.Recursion;
+                string transferFormat = Request.Form.TransferFormat;
+                string querySourceAddress = Request.Form.QuerySourceAddress;
+                string querySourcePort = Request.Form.QuerySourcePort;
+                string version = Request.Form.Version;
+                string allowQuery = Request.Form.AllowQuery;
+                string allowRecursion = Request.Form.AllowRecursion;
+                string ixfrFromDifferences = Request.Form.IxfrFromDifferences;
+                string listenOnV6 = Request.Form.ListenOnV6;
+                string listenOnPort53 = Request.Form.ListenOnPort53;
+                string dnssecEnabled = Request.Form.DnssecEnabled;
+                string dnssecValidation = Request.Form.DnssecValidation;
+                string dnssecLookaside = Request.Form.DnssecLookaside;
+                string authNxdomain = Request.Form.AuthNxdomain;
+                string keyName = Request.Form.KeyName;
+                string keySecret = Request.Form.KeySecret;
+                string controlAcl = Request.Form.ControlAcl;
+                string controlIp = Request.Form.ControlIp;
+                string controlPort = Request.Form.ControlPort;
+                string controlAllow = Request.Form.ControlAllow;
+                string loggingChannel = Request.Form.LoggingChannel;
+                string loggingDaemon = Request.Form.LoggingDaemon;
+                string loggingSeverity = Request.Form.LoggingSeverity;
+                string loggingPrintCategory = Request.Form.LoggingPrintCategory;
+                string loggingPrintSeverity = Request.Form.LoggingPrintSeverity;
+                string loggingPrintTime = Request.Form.LoggingPrintTime;
+                string trustedKeys = Request.Form.TrustedKey;
+                string aclLocalInterfaces = Request.Form.AclLocalInterfaces;
+                string aclInternalInterfaces = Request.Form.AclInternalInterfaces;
+                string aclExternalInterfaces = Request.Form.AclExternalInterfaces;
+                string aclLocalNetworks = Request.Form.AclLocalNetworks;
+                string aclInternalNetworks = Request.Form.AclInternalNetworks;
+                string aclExternalNetworks = Request.Form.AclExternalNetworks;
+                var model = new BindServerOptionsModel {
+                    Notify = notify,
+                    MaxCacheSize = maxCacheSize,
+                    MaxCacheTtl = maxCacheTtl,
+                    MaxNcacheTtl = maxNcacheTtl,
+                    Forwarders = forwarders.SplitToList(),
+                    AllowNotify = allowNotify.SplitToList(),
+                    AllowTransfer = allowTransfer.SplitToList(),
+                    Recursion = recursion,
+                    TransferFormat = transferFormat,
+                    QuerySourceAddress = querySourceAddress,
+                    QuerySourcePort = querySourcePort,
+                    Version = version,
+                    AllowQuery = allowQuery.SplitToList(),
+                    AllowRecursion = allowRecursion.SplitToList(),
+                    IxfrFromDifferences = ixfrFromDifferences,
+                    ListenOnV6 = listenOnV6.SplitToList(),
+                    ListenOnPort53 = listenOnPort53.SplitToList(),
+                    DnssecEnabled = dnssecEnabled,
+                    DnssecValidation = dnssecValidation,
+                    DnssecLookaside = dnssecLookaside,
+                    AuthNxdomain = authNxdomain,
+                    KeyName = keyName,
+                    KeySecret = keySecret,
+                    ControlAcl = controlAcl,
+                    ControlIp = controlIp,
+                    ControlPort = controlPort,
+                    ControlAllow = controlAllow.SplitToList(),
+                    LoggingChannel = loggingChannel,
+                    LoggingDaemon = loggingDaemon,
+                    LoggingSeverity = loggingSeverity,
+                    LoggingPrintCategory = loggingPrintCategory,
+                    LoggingPrintSeverity = loggingPrintSeverity,
+                    LoggingPrintTime = loggingPrintTime,
+                    TrustedKeys = trustedKeys,
+                    AclLocalInterfaces = aclLocalInterfaces.SplitToList(),
+                    AclInternalInterfaces = aclInternalInterfaces.SplitToList(),
+                    AclExternalInterfaces = aclExternalInterfaces.SplitToList(),
+                    AclLocalNetworks = aclLocalNetworks.SplitToList(),
+                    AclInternalNetworks = aclInternalNetworks.SplitToList(),
+                    AclExternalNetworks = aclExternalNetworks.SplitToList()
+                };
+                _bindServerOptionsRepository.Set(model);
+                return Response.AsRedirect("/services");
+            };
 
-            //Post["/services/refresh/bind"] = x => {
-            //    BindConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
+            Post["/services/bind/zone/add"] = x => {
+                string name = Request.Form.Name;
+                string type = Request.Form.Type;
+                string file = Request.Form.File;
+                string serialUpdateMethod = Request.Form.NameSerialUpdateMethod;
+                string allowUpdate = Request.Form.AllowUpdate;
+                string allowQuery = Request.Form.AllowQuery;
+                string allowTransfer = Request.Form.AllowTransfer;
+                _bindServerZoneRepository.Create(name, type, file, serialUpdateMethod, allowUpdate.SplitToList(), allowQuery.SplitToList(), allowTransfer.SplitToList());
+                return Response.AsRedirect("/services");
+            };
 
-            //Post["/services/reloadconfig/bind"] = x => {
-            //    BindConfig.ReloadConfig();
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Post["/services/update/bind/{section}"] = x => {
-            //    var section = (string)x.section;
-            //    var parameters = this.Bind<List<ServiceBind>>();
-            //    if (section == "acl") {
-            //        BindConfig.WriteFile.SaveAcls(parameters);
-            //    }
-            //    else {
-            //        BindConfig.WriteFile.SaveGlobalConfig(section, parameters);
-            //    }
-            //    Thread.Sleep(1000);
-            //    BindConfig.WriteFile.DumpGlobalConfig();
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/update/bind/zone/{zone}"] = x => {
-            //    var zoneName = (string)x.zone;
-            //    var parameters = this.Bind<List<ServiceBind>>();
-            //    BindConfig.WriteFile.SaveZoneConfig(zoneName, parameters);
-            //    Thread.Sleep(1000);
-            //    BindConfig.WriteFile.DumpGlobalConfig();
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addacl"] = x => {
-            //    string k = Request.Form.NewAclKey;
-            //    string v = Request.Form.NewAclValue;
-            //    BindConfig.MapFile.AddAcl(k, v);
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addkey"] = x => {
-            //    string name = Request.Form.NewKeyName;
-            //    BindConfig.MapFile.AddKey(name);
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addmasters"] = x => {
-            //    string name = Request.Form.NewMastersName;
-            //    BindConfig.MapFile.AddMasters(name);
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addserver"] = x => {
-            //    string name = Request.Form.NewServerName;
-            //    BindConfig.MapFile.AddServer(name);
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addview"] = x => {
-            //    string name = Request.Form.NewViewName;
-            //    BindConfig.MapFile.AddView(name);
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/bind/addzone"] = x => {
-            //    string name = Request.Form.NewZoneName;
-            //    BindConfig.MapFile.AddZone(name);
-            //    return Response.AsRedirect("/");
-            //};
-            //#endregion BIND
-
-            #region SSH
-            //Post["/services/activate/ssh"] = x => {
-            //    SshConfig.SetReady();
-            //    SshConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Post["/services/refresh/ssh"] = x => {
-            //    SshConfig.MapFile.Render();
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Post["/services/reloadconfig/ssh"] = x => {
-            //    SshConfig.ReloadConfig();
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Post["/services/update/ssh/{section}"] = x => {
-            //    var parameters = this.Bind<List<ServiceSsh>>();
-            //    var section = (string)x.section;
-            //    if (section == "global") {
-            //        SshConfig.WriteFile.SaveGlobal(parameters);
-            //    }
-            //    if (section == "prefix6") {
-            //        SshConfig.WriteFile.SavePrefix6(parameters);
-            //    }
-            //    if (section == "range6") {
-            //        SshConfig.WriteFile.SaveRange6(parameters);
-            //    }
-            //    if (section == "range") {
-            //        SshConfig.WriteFile.SaveRange(parameters);
-            //    }
-            //    else {
-            //        SshConfig.WriteFile.SaveConfigFor(section, parameters);
-            //    }
-            //    Thread.Sleep(1000);
-            //    SshConfig.WriteFile.DumpGlobalConfig();
-            //    return Response.AsRedirect("/");
-            //};
-
-            //Post["/services/ssh/addkey"] = x => {
-            //    string name = Request.Form.NewKeyName;
-            //    SshConfig.Keys.PropagateKeys(name);
-            //    return Response.AsRedirect("/");
-            //};
-            #endregion SSH
+            Post["/services/bind/zone/del"] = x => {
+                string id = Request.Form.Guid;
+                _bindServerZoneRepository.Delete(id);
+                return HttpStatusCode.OK;
+            };
+            #endregion [    DHCPD    ]
         }
     }
 }
