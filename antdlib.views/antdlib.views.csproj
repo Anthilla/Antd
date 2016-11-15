@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BindConfigModel.cs" />
     <Compile Include="AuthorizedKeysModel.cs" />
     <Compile Include="BindServerZoneModel.cs" />
     <Compile Include="BindServerZoneFileModel.cs" />
@@ -64,9 +63,10 @@
     <Compile Include="DhcpServerClassModel.cs" />
     <Compile Include="DhcpServerOptionsModel.cs" />
     <Compile Include="NftModel.cs" />
+    <Compile Include="SambaResourceModel.cs" />
+    <Compile Include="SambaGlobalModel.cs" />
     <Compile Include="SyslogModel.cs" />
     <Compile Include="GlusterModel.cs" />
-    <Compile Include="SambaConfigModel.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetworkInterfaceModel.cs" />

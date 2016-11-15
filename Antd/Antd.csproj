@@ -97,8 +97,9 @@
     <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />
     <Compile Include="Configuration\SyslogConfiguration.cs" />
-    <Compile Include="Database\BindConfigRepository.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
+    <Compile Include="Database\SambaResourceRepository.cs" />
+    <Compile Include="Database\SambaGlobalRepository.cs" />
     <Compile Include="Database\BindServerZoneFileRepository.cs" />
     <Compile Include="Database\BootOsParametersLoadRepository.cs" />
     <Compile Include="Database\BootServiceLoadRepository.cs" />
@@ -114,7 +115,6 @@
     <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
-    <Compile Include="Database\SambaConfigRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\NetworkInterfaceRepository.cs" />
@@ -178,7 +178,6 @@
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
     <Compile Include="Storage\Zpool.cs" />
-    <Compile Include="Svcs\Samba\SambaConfig.cs" />
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Users\GroupModel.cs" />
@@ -239,6 +238,9 @@
     <Content Include="Views\antd\part\page-antd-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-antd-samba.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-info-cpu.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -278,7 +280,6 @@
     <Content Include="Views\antd\part\page-antd-dhcp.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\services\page-services-dhcpOLD.html" />
     <Content Include="Views\antd\page-apps.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -286,12 +287,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-ak.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\page-services-bind.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\services\_page-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-storage.html">
@@ -2695,9 +2690,6 @@
     <None Include="ShellScript\var\kerbynet.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Svcs\Samba\samba.command.list" />
-    <Content Include="Views\services\page-services-dhcp.html" />
-    <Content Include="Views\services\page-services-samba.html" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\antd.websocket.js">

@@ -32,6 +32,7 @@ using antdlib.views;
 using Antd.Bind;
 using Antd.Database;
 using Antd.DhcpServer;
+using Antd.Samba;
 using Nancy;
 using Nancy.Security;
 
@@ -43,13 +44,15 @@ namespace Antd.Modules {
         private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
         private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
         private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
-
         private readonly DhcpdConfiguration _dhcpdConfiguration = new DhcpdConfiguration();
 
         private readonly BindServerOptionsRepository _bindServerOptionsRepository = new BindServerOptionsRepository();
         private readonly BindServerZoneRepository _bindServerZoneRepository = new BindServerZoneRepository();
-
         private readonly BindConfiguration _bindConfiguration = new BindConfiguration();
+
+        private readonly SambaGlobalRepository _sambaGlobalRepository = new SambaGlobalRepository();
+        private readonly SambaResourceRepository _sambaResourceRepository = new SambaResourceRepository();
+        private readonly SambaConfiguration _sambaConfiguration = new SambaConfiguration();
 
         public ServicesModule() {
             this.RequiresAuthentication();
@@ -121,7 +124,7 @@ namespace Antd.Modules {
                     KeySecret = keySecret
                 };
                 _dhcpServerOptionsRepository.Set(model);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/subnet"] = x => {
@@ -148,14 +151,14 @@ namespace Antd.Modules {
                     ZonePrimaryAddress = zonePrimaryAddress,
                 };
                 _dhcpServerSubnetRepository.Set(model);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/class/add"] = x => {
                 string name = Request.Form.Name;
                 string macVendor = Request.Form.MacVendor;
                 _dhcpServerClassRepository.Create(name, macVendor);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/class/del"] = x => {
@@ -167,7 +170,7 @@ namespace Antd.Modules {
             Post["/services/dhcpd/pool/add"] = x => {
                 string option = Request.Form.Option;
                 _dhcpServerPoolRepository.Create(option.SplitToList());
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/pool/del"] = x => {
@@ -181,7 +184,7 @@ namespace Antd.Modules {
                 string macAddress = Request.Form.MacAddress;
                 string ipAddress = Request.Form.IpAddress;
                 _dhcpServerReservationRepository.Create(hostName, macAddress, ipAddress);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/reservation/del"] = x => {
@@ -190,7 +193,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            #endregion [    DHCPD    ]
+            #endregion
 
             #region [    BIND    ]
             Post["/services/bind/enable"] = x => {
@@ -313,7 +316,7 @@ namespace Antd.Modules {
                     AclExternalNetworks = aclExternalNetworks.SplitToList()
                 };
                 _bindServerOptionsRepository.Set(model);
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/zone/add"] = x => {
@@ -325,7 +328,7 @@ namespace Antd.Modules {
                 string allowQuery = Request.Form.AllowQuery;
                 string allowTransfer = Request.Form.AllowTransfer;
                 _bindServerZoneRepository.Create(name, type, file, serialUpdateMethod, allowUpdate.SplitToList(), allowQuery.SplitToList(), allowTransfer.SplitToList());
-                return Response.AsRedirect("/services");
+                return Response.AsRedirect("/");
             };
 
             Post["/services/bind/zone/del"] = x => {
@@ -333,7 +336,162 @@ namespace Antd.Modules {
                 _bindServerZoneRepository.Delete(id);
                 return HttpStatusCode.OK;
             };
-            #endregion [    DHCPD    ]
+            #endregion
+
+            #region [    SAMBA    ]
+            Post["/services/samba/enable"] = x => {
+                _sambaConfiguration.Enable();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/disable"] = x => {
+                _sambaConfiguration.Disable();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/set"] = x => {
+                _sambaConfiguration.Set();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/restart"] = x => {
+                _sambaConfiguration.Enable();
+                _sambaConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/stop"] = x => {
+                _sambaConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/options"] = x => {
+                string dosCharset = Request.Form.DosCharset;
+                string workgroup = Request.Form.Workgroup;
+                string serverString = Request.Form.ServerString;
+                string mapToGuest = Request.Form.MapToGuest;
+                string obeyPamRestrictions = Request.Form.ObeyPamRestrictions;
+                string guestAccount = Request.Form.GuestAccount;
+                string pamPasswordChange = Request.Form.PamPasswordChange;
+                string passwdProgram = Request.Form.PasswdProgram;
+                string unixPasswordSync = Request.Form.UnixPasswordSync;
+                string resetOnZeroVc = Request.Form.ResetOnZeroVc;
+                string hostnameLookups = Request.Form.HostnameLookups;
+                string loadPrinters = Request.Form.LoadPrinters;
+                string printcapName = Request.Form.PrintcapName;
+                string disableSpoolss = Request.Form.DisableSpoolss;
+                string templateShell = Request.Form.TemplateShell;
+                string winbindEnumUsers = Request.Form.WinbindEnumUsers;
+                string winbindEnumGroups = Request.Form.WinbindEnumGroups;
+                string winbindUseDefaultDomain = Request.Form.WinbindUseDefaultDomain;
+                string winbindNssInfo = Request.Form.WinbindNssInfo;
+                string winbindRefreshTickets = Request.Form.WinbindRefreshTickets;
+                string winbindNormalizeNames = Request.Form.WinbindNormalizeNames;
+                string recycleTouch = Request.Form.RecycleTouch;
+                string recycleKeeptree = Request.Form.RecycleKeeptree;
+                string recycleRepository = Request.Form.RecycleRepository;
+                string nfs4Chown = Request.Form.Nfs4Chown;
+                string nfs4Acedup = Request.Form.Nfs4Acedup;
+                string nfs4Mode = Request.Form.Nfs4Mode;
+                string shadowFormat = Request.Form.ShadowFormat;
+                string shadowLocaltime = Request.Form.ShadowLocaltime;
+                string shadowSort = Request.Form.ShadowSort;
+                string shadowSnapdir = Request.Form.ShadowSnapdir;
+                string rpcServerDefault = Request.Form.RpcServerDefault;
+                string rpcServerSvcctl = Request.Form.RpcServerSvcctl;
+                string rpcServerSrvsvc = Request.Form.RpcServerSrvsvc;
+                string rpcServerEventlog = Request.Form.RpcServerEventlog;
+                string rpcServerNtsvcs = Request.Form.RpcServerNtsvcs;
+                string rpcServerWinreg = Request.Form.RpcServerWinreg;
+                string rpcServerSpoolss = Request.Form.RpcServerSpoolss;
+                string rpcDaemonSpoolssd = Request.Form.RpcDaemonSpoolssd;
+                string rpcServerTcpip = Request.Form.RpcServerTcpip;
+                string idmapConfigBackend = Request.Form.IdmapConfigBackend;
+                string readOnly = Request.Form.ReadOnly;
+                string guestOk = Request.Form.GuestOk;
+                string aioReadSize = Request.Form.AioReadSize;
+                string aioWriteSize = Request.Form.AioWriteSize;
+                string eaSupport = Request.Form.EaSupport;
+                string directoryNameCacheSize = Request.Form.DirectoryNameCacheSize;
+                string caseSensitive = Request.Form.CaseSensitive;
+                string mapReadonly = Request.Form.MapReadonly;
+                string storeDosAttributes = Request.Form.StoreDosAttributes;
+                string wideLinks = Request.Form.WideLinks;
+                string dosFiletimeResolution = Request.Form.DosFiletimeResolution;
+                string vfsObjects = Request.Form.VfsObjects;
+                var model = new SambaGlobalModel {
+                    DosCharset = dosCharset,
+                    Workgroup = workgroup,
+                    ServerString = serverString,
+                    MapToGuest = mapToGuest,
+                    ObeyPamRestrictions = obeyPamRestrictions,
+                    GuestAccount = guestAccount,
+                    PamPasswordChange = pamPasswordChange,
+                    PasswdProgram = passwdProgram,
+                    UnixPasswordSync = unixPasswordSync,
+                    ResetOnZeroVc = resetOnZeroVc,
+                    HostnameLookups = hostnameLookups,
+                    LoadPrinters = loadPrinters,
+                    PrintcapName = printcapName,
+                    DisableSpoolss = disableSpoolss,
+                    TemplateShell = templateShell,
+                    WinbindEnumUsers = winbindEnumUsers,
+                    WinbindEnumGroups = winbindEnumGroups,
+                    WinbindUseDefaultDomain = winbindUseDefaultDomain,
+                    WinbindNssInfo = winbindNssInfo,
+                    WinbindRefreshTickets = winbindRefreshTickets,
+                    WinbindNormalizeNames = winbindNormalizeNames,
+                    RecycleTouch = recycleTouch,
+                    RecycleKeeptree = recycleKeeptree,
+                    RecycleRepository = recycleRepository,
+                    Nfs4Chown = nfs4Chown,
+                    Nfs4Acedup = nfs4Acedup,
+                    Nfs4Mode = nfs4Mode,
+                    ShadowFormat = shadowFormat,
+                    ShadowLocaltime = shadowLocaltime,
+                    ShadowSort = shadowSort,
+                    ShadowSnapdir = shadowSnapdir,
+                    RpcServerDefault = rpcServerDefault,
+                    RpcServerSvcctl = rpcServerSvcctl,
+                    RpcServerSrvsvc = rpcServerSrvsvc,
+                    RpcServerEventlog = rpcServerEventlog,
+                    RpcServerNtsvcs = rpcServerNtsvcs,
+                    RpcServerWinreg = rpcServerWinreg,
+                    RpcServerSpoolss = rpcServerSpoolss,
+                    RpcDaemonSpoolssd = rpcDaemonSpoolssd,
+                    RpcServerTcpip = rpcServerTcpip,
+                    IdmapConfigBackend = idmapConfigBackend,
+                    ReadOnly = readOnly,
+                    GuestOk = guestOk,
+                    AioReadSize = aioReadSize,
+                    AioWriteSize = aioWriteSize,
+                    EaSupport = eaSupport,
+                    DirectoryNameCacheSize = directoryNameCacheSize,
+                    CaseSensitive = caseSensitive,
+                    MapReadonly = mapReadonly,
+                    StoreDosAttributes = storeDosAttributes,
+                    WideLinks = wideLinks,
+                    DosFiletimeResolution = dosFiletimeResolution,
+                    VfsObjects = vfsObjects
+                };
+                _sambaGlobalRepository.Set(model);
+                return Response.AsRedirect("/");
+            };
+
+            Post["/services/samba/resource"] = x => {
+                string name = Request.Form.Name;
+                string path = Request.Form.Path;
+                string comment = Request.Form.Comment;
+                _sambaResourceRepository.Create(name, path, comment);
+                return Response.AsRedirect("/");
+            };
+
+            Post["/services/samba/resource/del"] = x => {
+                string id = Request.Form.Guid;
+                _sambaResourceRepository.Delete(id);
+                return HttpStatusCode.OK;
+            };
+            #endregion 
         }
     }
 }

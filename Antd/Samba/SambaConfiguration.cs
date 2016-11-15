@@ -8,112 +8,139 @@ using Antd.Database;
 namespace Antd.Samba {
     public class SambaConfiguration {
 
-        //private const string ServiceName = "dhcpd4.service";
-        //private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
-        //private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
-        //private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        //private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        //private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
-        //private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
-        //private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
+        private const string ServiceName1 = "smbd.service";
+        private const string ServiceName2 = "nmbd.service";
+        private const string ServiceName3 = "winbindd.service";
+        private const string MainFilePath = "/etc/samba/smb.conf";
+        private const string MainFilePathBackup = "/etc/samba/.smb.conf";
+        private readonly SambaGlobalRepository _sambaGlobalRepository = new SambaGlobalRepository();
+        private readonly SambaResourceRepository _sambaResourceRepository = new SambaResourceRepository();
 
         public void Set() {
-            //var o = _dhcpServerOptionsRepository.Get();
-            //var s = _dhcpServerSubnetRepository.Get();
-            //if(o == null || s == null) {
-            //    return;
-            //}
-            //if(File.Exists(MainFilePath)) {
-            //    if(File.Exists(MainFilePathBackup)) {
-            //        File.Delete(MainFilePathBackup);
-            //    }
-            //    File.Copy(MainFilePath, MainFilePathBackup);
-            //}
-            //var lines = new List<string> {
-            //    "authoritative;"
-            //};
-            //var options = new DhcpServerOptionsModel(o);
-            //foreach(var allow in options.Allow) {
-            //    lines.Add($"allow {allow};");
-            //}
-            //if(!string.IsNullOrEmpty(options.UpdateStaticLeases)) { lines.Add($"update-static-leases {options.UpdateStaticLeases}"); }
-            //if(!string.IsNullOrEmpty(options.UpdateConflictDetection)) { lines.Add($"update-conflict-detection {options.UpdateConflictDetection}"); }
-            //if(!string.IsNullOrEmpty(options.UseHostDeclNames)) { lines.Add($"use-host-decl-names {options.UseHostDeclNames}"); }
-            //if(!string.IsNullOrEmpty(options.DoForwardUpdates)) { lines.Add($"do-forward-updates {options.DoForwardUpdates}"); }
-            //if(!string.IsNullOrEmpty(options.DoReverseUpdates)) { lines.Add($"do-reverse-updates {options.DoReverseUpdates}"); }
-            //if(!string.IsNullOrEmpty(options.LogFacility)) { lines.Add($"log-facility {options.LogFacility}"); }
-            //foreach(var option in options.Option) {
-            //    lines.Add($"option {option};");
-            //}
-            //if(!string.IsNullOrEmpty(options.ZoneName) && !string.IsNullOrEmpty(options.ZonePrimaryAddress)) { lines.Add($"zone {options.ZoneName} {{ primary {options.ZonePrimaryAddress}; }}"); }
-            //if(!string.IsNullOrEmpty(options.DdnsUpdateStyle)) { lines.Add($"ddns-update-style {options.DdnsUpdateStyle}"); }
-            //if(!string.IsNullOrEmpty(options.DdnsUpdates)) { lines.Add($"ddns-updates {options.DdnsUpdates}"); }
-            //if(!string.IsNullOrEmpty(options.DdnsDomainName)) { lines.Add($"ddns-domainname \"{options.DdnsDomainName}\""); }
-            //if(!string.IsNullOrEmpty(options.DdnsRevDomainName)) { lines.Add($"ddns-rev-domainname \"{options.DdnsRevDomainName}\""); }
-            //if(!string.IsNullOrEmpty(options.DefaultLeaseTime)) { lines.Add($"default-lease-time {options.DefaultLeaseTime}"); }
-            //if(!string.IsNullOrEmpty(options.MaxLeaseTime)) { lines.Add($"max-lease-time {options.MaxLeaseTime}"); }
-            //lines.Add("");
-            //if(!string.IsNullOrEmpty(options.KeyName) && !string.IsNullOrEmpty(options.KeySecret)) {
-            //    lines.Add($"key \"{options.KeyName}\" {{");
-            //    lines.Add("algorithm hmac-md5;");
-            //    lines.Add($"secret \"{options.KeySecret}\";");
-            //    lines.Add("};");
-            //}
-            //lines.Add("");
-            //var classes = _dhcpServerClassRepository.GetAll();
-            //foreach(var cls in classes) {
-            //    lines.Add($"class \"{cls.Name}\" {{");
-            //    lines.Add($"match if binary-to-ascii(16,8,\":\",substring(hardware, 1, 2)) = \"{cls.MacVendor}\";");
-            //    lines.Add("}");
-            //}
-            //lines.Add("");
-            //var subnet = new DhcpServerSubnetModel(s);
-            //lines.Add($"subnet {subnet.IpFamily} netmask {subnet.IpMask} {{");
-            //if(!string.IsNullOrEmpty(subnet.OptionRouters)) { lines.Add($"option routers {subnet.OptionRouters}"); }
-            //if(!string.IsNullOrEmpty(subnet.NtpServers)) { lines.Add($"option ntp-servers {subnet.NtpServers}"); }
-            //if(!string.IsNullOrEmpty(subnet.TimeServers)) { lines.Add($"option time-servers {subnet.TimeServers}"); }
-            //if(!string.IsNullOrEmpty(subnet.DomainNameServers)) { lines.Add($"option domain-name-servers {subnet.DomainNameServers}"); }
-            //if(!string.IsNullOrEmpty(subnet.BroadcastAddress)) { lines.Add($"option broadcast-address {subnet.BroadcastAddress}"); }
-            //if(!string.IsNullOrEmpty(subnet.SubnetMask)) { lines.Add($"option subnet-mask {subnet.SubnetMask}"); }
-            //if(!string.IsNullOrEmpty(subnet.ZoneName) && !string.IsNullOrEmpty(subnet.ZonePrimaryAddress)) { lines.Add($"zone {subnet.ZoneName} {{ primary {subnet.ZonePrimaryAddress}; }}"); }
-            //var pools = _dhcpServerPoolRepository.GetAll().Select(_ => new DhcpServerPoolModel(_)).ToList();
-            //foreach(var pool in pools) {
-            //    lines.Add("pool {");
-            //    foreach(var opt in pool.Options) {
-            //        lines.Add(opt + (opt.EndsWith(";") ? "" : ";"));
-            //    }
-            //    lines.Add("}");
-            //}
-            //lines.Add("}");
-            //lines.Add("");
-            //var reservations = _dhcpServerReservationRepository.GetAll().Select(_ => new DhcpServerReservationModel(_)).ToList();
-            //foreach(var reservation in reservations) {
-            //    lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
-            //}
-            //File.WriteAllLines(MainFilePath, lines);
+            var g = _sambaGlobalRepository.Get();
+            if(g == null) {
+                return;
+            }
+            if(File.Exists(MainFilePath)) {
+                if(File.Exists(MainFilePathBackup)) {
+                    File.Delete(MainFilePathBackup);
+                }
+                File.Copy(MainFilePath, MainFilePathBackup);
+            }
+            var lines = new List<string> {
+                "[global]"
+            };
+            var global = new SambaGlobalModel(g);
+            lines.Add($"dos charset = {global.DosCharset}");
+            lines.Add($"workgroup = {global.Workgroup}");
+            lines.Add($"server string = {global.ServerString}");
+            lines.Add($"map to guest = {global.MapToGuest}");
+            lines.Add($"obey pam restrictions = {global.ObeyPamRestrictions}");
+            lines.Add($"guest account = {global.GuestAccount}");
+            lines.Add($"pam password change = {global.PamPasswordChange}");
+            lines.Add($"passwd program = {global.PasswdProgram}");
+            lines.Add($"unix password sync = {global.UnixPasswordSync}");
+            lines.Add($"reset on zero vc = {global.ResetOnZeroVc}");
+            lines.Add($"hostname lookups = {global.HostnameLookups}");
+            lines.Add($"load printers = {global.LoadPrinters}");
+            lines.Add($"printcap name = {global.PrintcapName}");
+            lines.Add($"disable spoolss = {global.DisableSpoolss}");
+            lines.Add($"template shell = {global.TemplateShell}");
+            lines.Add($"winbind enum users = {global.WinbindEnumUsers}");
+            lines.Add($"winbind enum groups = {global.WinbindEnumGroups}");
+            lines.Add($"winbind use default domain = {global.WinbindUseDefaultDomain}");
+            lines.Add($"winbind nss info = {global.WinbindNssInfo}");
+            lines.Add($"winbind refresh tickets = {global.WinbindRefreshTickets}");
+            lines.Add($"winbind normalize names = {global.WinbindNormalizeNames}");
+            lines.Add($"recycle:touch = {global.RecycleTouch}");
+            lines.Add($"recycle:keeptree = {global.RecycleKeeptree}");
+            lines.Add($"recycle:repository = {global.RecycleRepository}");
+            lines.Add($"nfs4:chown = {global.Nfs4Chown}");
+            lines.Add($"nfs4:acedup = {global.Nfs4Acedup}");
+            lines.Add($"nfs4:mode = {global.Nfs4Mode}");
+            lines.Add($"shadow:format = {global.ShadowFormat}");
+            lines.Add($"shadow:localtime = {global.ShadowLocaltime}");
+            lines.Add($"shadow:sort = {global.ShadowSort}");
+            lines.Add($"shadow:snapdir = {global.ShadowSnapdir}");
+            lines.Add($"rpc_server:default = {global.RpcServerDefault}");
+            lines.Add($"rpc_server:svcctl = {global.RpcServerSvcctl}");
+            lines.Add($"rpc_server:srvsvc = {global.RpcServerSrvsvc}");
+            lines.Add($"rpc_server:eventlog = {global.RpcServerEventlog}");
+            lines.Add($"rpc_server:ntsvcs = {global.RpcServerNtsvcs}");
+            lines.Add($"rpc_server:winreg = {global.RpcServerWinreg}");
+            lines.Add($"rpc_server:spoolss = {global.RpcServerSpoolss}");
+            lines.Add($"rpc_daemon:spoolssd = {global.RpcDaemonSpoolssd}");
+            lines.Add($"rpc_server:tcpip = {global.RpcServerTcpip}");
+            lines.Add($"idmap config * : backend = {global.IdmapConfigBackend}");
+            lines.Add($"read only = {global.ReadOnly}");
+            lines.Add($"guest ok = {global.GuestOk}");
+            lines.Add($"aio read size = {global.AioReadSize}");
+            lines.Add($"aio write size = {global.AioWriteSize}");
+            lines.Add($"ea support = {global.EaSupport}");
+            lines.Add($"directory name cache size = {global.DirectoryNameCacheSize}");
+            lines.Add($"case sensitive = {global.CaseSensitive}");
+            lines.Add($"map readonly = {global.MapReadonly}");
+            lines.Add($"store dos attributes = {global.StoreDosAttributes}");
+            lines.Add($"wide links = {global.WideLinks}");
+            lines.Add($"dos filetime resolution = {global.DosFiletimeResolution}");
+            lines.Add($"vfs objects = {global.VfsObjects}");
+            lines.Add("");
+
+            var resources = _sambaResourceRepository.GetAll().Select(_ => new SambaResourceModel(_)).ToList();
+            foreach(var resource in resources) {
+                lines.Add($"[{resource.Name}]");
+                if(!string.IsNullOrEmpty(resource.Comment)) {
+                    lines.Add($"comment = {resource.Comment}");
+                }
+                lines.Add($"path = {resource.Path}");
+                lines.Add("");
+            }
+            File.WriteAllLines(MainFilePath, lines);
         }
 
         public void Enable() {
-            //if(Systemctl.IsEnabled(ServiceName) == false) {
-            //    Systemctl.Enable(ServiceName);
-            //}
+            if(Systemctl.IsEnabled(ServiceName1) == false) {
+                Systemctl.Enable(ServiceName1);
+            }
+            if(Systemctl.IsEnabled(ServiceName2) == false) {
+                Systemctl.Enable(ServiceName2);
+            }
+            if(Systemctl.IsEnabled(ServiceName3) == false) {
+                Systemctl.Enable(ServiceName3);
+            }
         }
 
         public void Disable() {
-            //Systemctl.Disable(ServiceName);
+            Systemctl.Disable(ServiceName1);
+            Systemctl.Disable(ServiceName2);
+            Systemctl.Disable(ServiceName3);
         }
 
         public void Stop() {
-            //Systemctl.Stop(ServiceName);
+            Systemctl.Stop(ServiceName1);
+            Systemctl.Stop(ServiceName2);
+            Systemctl.Stop(ServiceName3);
         }
 
         public void Restart() {
-            //    if(Systemctl.IsEnabled(ServiceName) == false) {
-            //        Systemctl.Enable(ServiceName);
-            //    }
-            //    if(Systemctl.IsActive(ServiceName) == false) {
-            //        Systemctl.Restart(ServiceName);
-            //    }
+            if(Systemctl.IsEnabled(ServiceName1) == false) {
+                Systemctl.Enable(ServiceName1);
+            }
+            if(Systemctl.IsActive(ServiceName1) == false) {
+                Systemctl.Restart(ServiceName1);
+            }
+            if(Systemctl.IsEnabled(ServiceName2) == false) {
+                Systemctl.Enable(ServiceName2);
+            }
+            if(Systemctl.IsActive(ServiceName2) == false) {
+                Systemctl.Restart(ServiceName2);
+            }
+            if(Systemctl.IsEnabled(ServiceName3) == false) {
+                Systemctl.Enable(ServiceName3);
+            }
+            if(Systemctl.IsActive(ServiceName3) == false) {
+                Systemctl.Restart(ServiceName3);
+            }
         }
     }
 }

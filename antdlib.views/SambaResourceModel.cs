@@ -4,8 +4,8 @@ using RaptorDB;
 
 namespace antdlib.views {
     [Serializable]
-    public class SambaConfigModel : EntityModel {
-        public SambaConfigModel() {
+    public class SambaResourceModel : EntityModel {
+        public SambaResourceModel() {
             Id = System.Guid.NewGuid();
             Guid = System.Guid.NewGuid().ToString();
             Key = System.Guid.NewGuid();
@@ -14,16 +14,21 @@ namespace antdlib.views {
             IsEncrypted = false;
             Dump = new byte[] { 0 };
         }
-        public SambaConfigModel(SambaConfigSchema sourceModel) {
+        public SambaResourceModel(SambaResourceSchema sourceModel) {
             Id = System.Guid.Parse(sourceModel.Id);
             Guid = sourceModel.Guid;
-            Config = sourceModel.Config;
+            Name = sourceModel.Name;
+            Comment = sourceModel.Comment;
+            Path = sourceModel.Path;
         }
-        public string Config { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
+        public string Path { get; set; }
     }
 
     #region [    View    ]
-    public class SambaConfigSchema : RDBSchema {
+
+    public class SambaResourceSchema : RDBSchema {
         //---
         public string Id { get; set; }
         public string Guid { get; set; }
@@ -31,35 +36,40 @@ namespace antdlib.views {
         public string EntityCode { get; set; }
         public string Tags { get; set; }
         //---
-        public string Config { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
+        public string Path { get; set; }
     }
 
     [RegisterView]
-    public class SambaConfigView : View<SambaConfigModel> {
-        public SambaConfigView() {
-            Name = "SambaConfig";
-            Description = "Primary view for SambaConfigModel";
+    public class SambaResourceView : View<SambaResourceModel> {
+        public SambaResourceView() {
+            Name = "SambaResource";
+            Description = "Primary view for SambaResourceModel";
             isPrimaryList = true;
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
             Version = 8;
-            Schema = typeof(SambaConfigSchema);
+            Schema = typeof(SambaResourceSchema);
             Mapper = (api, docid, doc) => {
-                if (doc.Status != EntityStatus.New) return;
+                if(doc.Status != EntityStatus.New)
+                    return;
                 var k = doc.Key.ToKey();
                 var v = doc.Vector.ToVector();
-                var decryptedDoc = Encryption.DbDecrypt<SambaConfigModel>(doc.Dump, k, v);
+                var decryptedDoc = Encryption.DbDecrypt<SambaResourceModel>(doc.Dump, k, v);
                 doc = decryptedDoc;
-                object[] schemaSambaConfigs = {
+                object[] schemaSambaResources = {
                     doc.Id.ToString(),
                     doc.Guid,
                     doc.Timestamp,
                     doc.EntityCode,
                     doc.Tags.JoinToString(),
-                    doc.Config
+                    doc.Name,
+                    doc.Comment,
+                    doc.Path
                 };
-                api.Emit(docid, schemaSambaConfigs);
+                api.Emit(docid, schemaSambaResources);
             };
         }
     }

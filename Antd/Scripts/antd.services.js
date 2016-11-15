@@ -19,19 +19,7 @@ $(".search-field").keyup(function () {
 $("#ActivateSamba").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/samba",
-        type: "POST",
-        success: function () {
-            location.reload(true);
-        }
-    });
-    _requests.push(aj);
-});
-
-$("#RefreshSamba").on("click", function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/services/refresh/samba",
+        url: "/services/samba/set",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -43,51 +31,13 @@ $("#RefreshSamba").on("click", function () {
 $("#ReloadSamba").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/reloadconfig/samba",
+        url: "/services/samba/restart",
         type: "POST",
         success: function () {
             location.reload(true);
         }
     });
     _requests.push(aj);
-});
-
-$("#ShowSambaStructure").mousedown(function () {
-    $("#SambaStructure").show();
-}).mouseup(function () {
-    $("#SambaStructure").hide();
-});;
-
-$(document).on("ready", function () {
-    $("#SambaForm").find('tr[data-object="samba-parameter"]').each(function (index) {
-        var dataKey = $(this).find('[name="DataKey"]');
-        dataKey.attr("name", dataKey.attr("name") + "_" + index);
-        var dataValue = $(this).find('[name="DataValue"]');
-        dataValue.attr("name", dataValue.attr("name") + "_" + index);
-        var dataFile = $(this).find('[name="DataFilePath"]');
-        dataFile.attr("name", dataFile.attr("name") + "_" + index);
-    });
-});
-
-$(document).on("ready", function () {
-    $("[data-share-form]").each(function () {
-        $(this).find('[data-object="share-parameter"]').each(function (index) {
-            var dataKey = $(this).find('[name="DataKey"]');
-            dataKey.attr("name", dataKey.attr("name") + "_" + index);
-            var dataValue = $(this).find('[name="DataValue"]');
-            dataValue.attr("name", dataValue.attr("name") + "_" + index);
-            var dataFile = $(this).find('[name="DataFilePath"]');
-            dataFile.attr("name", dataFile.attr("name") + "_" + index);
-        });
-    });
-});
-
-$("#AddNewParameterSamba").on("click", function () {
-    $("#NewParameterSambaDashboard").toggle();
-});
-
-$("#AddNewShare").on("click", function () {
-    $("#NewSambaShare").toggle();
 });
 //END SAMBA
 

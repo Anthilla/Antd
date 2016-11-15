@@ -181,6 +181,17 @@ namespace Antd.Modules {
                 return View["antd/part/page-antd-dhcp", viewModel];
             };
 
+            Get["/part/samba"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                var sambaGlobalRepository = new SambaGlobalRepository();
+                var sambaResourceRepository = new SambaResourceRepository();
+                var sambaIsActive = sambaGlobalRepository.Get() != null;
+                viewModel.SambaIsActive = sambaIsActive;
+                viewModel.SambaOptions = sambaGlobalRepository.Get();
+                viewModel.SambaResources = sambaResourceRepository.GetAll();
+                return View["antd/part/page-antd-samba", viewModel];
+            };
+
             Get["/part/net"] = x => {
                 dynamic viewModel = new ExpandoObject();
                 var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();

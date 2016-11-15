@@ -93,6 +93,8 @@ namespace Antd {
             database.RegisterView(new BindServerOptionsView());
             database.RegisterView(new BindServerZoneView());
             database.RegisterView(new BindServerZoneFileView());
+            database.RegisterView(new SambaGlobalView());
+            database.RegisterView(new SambaResourceView());
 
             ConsoleLogger.Log("database ready");
             return database;
