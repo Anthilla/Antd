@@ -6,22 +6,22 @@ using antdlib.common;
 namespace antd.commands {
     public class CommandLauncher {
 
-        public dynamic Launch(string name) {
+        public IEnumerable<string> Launch(string name) {
             try {
                 if(string.IsNullOrEmpty(name)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 if(!Commands.List.ContainsKey(name)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 var cmd = Commands.List[name];
                 if(cmd == null) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 var type = cmd.GetType();
                 var methodInfo = type.GetMethods().First(m => m.Name == "Launch");
                 var result = methodInfo.Invoke(cmd, null);
-                return result;
+                return result as IEnumerable<string>;
             }
             catch(Exception) {
                 ConsoleLogger.Log($"Failed to Launch {name} command");
@@ -29,22 +29,22 @@ namespace antd.commands {
             }
         }
 
-        public dynamic Launch(string name, Dictionary<string, string> dict) {
+        public IEnumerable<string> Launch(string name, Dictionary<string, string> dict) {
             try {
                 if(string.IsNullOrEmpty(name)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 if(!Commands.List.ContainsKey(name)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 var cmd = Commands.List[name];
                 if(cmd == null) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 var type = cmd.GetType();
                 var methodInfo = type.GetMethods().First(m => m.Name == "LaunchD");
                 var result = methodInfo.Invoke(cmd, new object[] { dict });
-                return result;
+                return result as IEnumerable<string>;
             }
             catch(Exception) {
                 ConsoleLogger.Log($"Failed to Launch {name} command");

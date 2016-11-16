@@ -1,37 +1,60 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.common.Tool;
 using antdlib.Systemd;
-using antdlib.views;
-using Antd.Database;
+using Newtonsoft.Json;
 using IoDir = System.IO.Directory;
 
 namespace Antd.Bind {
     public class BindConfiguration {
 
-        private const string Directory = "/etc/bind";
+        private readonly BindConfigurationModel _serviceModel;
+
+        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/bind.conf";
+        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/bind.conf.bck";
         private const string ServiceName = "named.service";
         private const string MainFilePath = "/etc/bind/named.conf";
         private const string MainFilePathBackup = "/etc/bind/.named.conf";
-        private readonly BindServerOptionsRepository _bindServerOptionsRepository = new BindServerOptionsRepository();
-        private readonly BindServerZoneRepository _bindServerZoneRepository = new BindServerZoneRepository();
-        private readonly BindServerZoneFileRepository _bindServerZoneFileRepository = new BindServerZoneFileRepository();
-        private readonly Bash _bash = new Bash();
+
+        public BindConfiguration() {
+            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+            if(!File.Exists(_cfgFile)) {
+                _serviceModel = null;
+            }
+            else {
+                try {
+                    var text = File.ReadAllText(_cfgFile);
+                    var obj = JsonConvert.DeserializeObject<BindConfigurationModel>(text);
+                    _serviceModel = obj;
+                }
+                catch(Exception) {
+                    _serviceModel = null;
+                }
+
+            }
+        }
+
+        public void Save(BindConfigurationModel model) {
+            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            if(File.Exists(_cfgFile)) {
+                File.Copy(_cfgFile, _cfgFileBackup, true);
+            }
+            File.WriteAllText(_cfgFile, text);
+        }
+
 
         public void Set() {
-            if(!IoDir.Exists(Directory)) {
-                IoDir.CreateDirectory(Directory);
+            if(_serviceModel == null) {
+                return;
             }
+
             Enable();
             Stop();
 
             #region [    named.conf generation    ]
-            var o = _bindServerOptionsRepository.Get();
-            if(o == null) {
-                return;
-            }
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
                     File.Delete(MainFilePathBackup);
@@ -41,7 +64,7 @@ namespace Antd.Bind {
             var lines = new List<string> {
                 "options {"
             };
-            var options = new BindServerOptionsModel(o);
+            var options = _serviceModel;
             lines.Add($"notify {options.Notify};");
             lines.Add($"max-cache-size {options.MaxCacheSize};");
             lines.Add($"max-cache-ttl {options.MaxCacheTtl};");
@@ -126,7 +149,7 @@ namespace Antd.Bind {
             lines.Add("};");
             lines.Add("");
 
-            var zones = _bindServerZoneRepository.GetAll().Select(_ => new BindServerZoneModel(_));
+            var zones = options.Zones;
             foreach(var zone in zones) {
                 lines.Add($"zone \"{zone.Name}\" {{");
                 lines.Add($"type {zone.Type};");
@@ -156,6 +179,17 @@ namespace Antd.Bind {
             RndcReconfig();
         }
 
+        public bool IsActive() {
+            if(!File.Exists(_cfgFile)) {
+                return false;
+            }
+            return _serviceModel != null && _serviceModel.IsActive;
+        }
+
+        public BindConfigurationModel Get() {
+            return _serviceModel;
+        }
+
         public void Enable() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
@@ -179,12 +213,41 @@ namespace Antd.Bind {
             }
         }
 
+        private readonly Bash _bash = new Bash();
+
         public void RndcReconfig() {
             _bash.Execute("rndc reconfig");
         }
 
         public void RndcReload() {
             _bash.Execute("rndc reload");
+        }
+
+        public void AddZone(BindConfigurationZoneModel model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var zones = _serviceModel.Zones;
+            if(zones.Any(_ => _.Name == model.Name)) {
+                return;
+            }
+            zones.Add(model);
+            _serviceModel.Zones = zones;
+            Save(_serviceModel);
+        }
+
+        public void RemoveZone(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var zones = _serviceModel.Zones;
+            var model = zones.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            zones.Remove(model);
+            _serviceModel.Zones = zones;
+            Save(_serviceModel);
         }
     }
 }

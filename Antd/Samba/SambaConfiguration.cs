@@ -1,45 +1,70 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.common;
 using antdlib.Systemd;
-using antdlib.views;
-using Antd.Database;
+using Newtonsoft.Json;
 using IoDir = System.IO.Directory;
 
 namespace Antd.Samba {
     public class SambaConfiguration {
 
-        private const string Directory = "/etc/samba";
+        private readonly SambaConfigurationModel _serviceModel;
+
+        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/samba.conf";
+        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/samba.conf.bck";
         private const string ServiceName1 = "smbd.service";
         private const string ServiceName2 = "nmbd.service";
         private const string ServiceName3 = "winbindd.service";
         private const string MainFilePath = "/etc/samba/smb.conf";
         private const string MainFilePathBackup = "/etc/samba/.smb.conf";
-        private readonly SambaGlobalRepository _sambaGlobalRepository = new SambaGlobalRepository();
-        private readonly SambaResourceRepository _sambaResourceRepository = new SambaResourceRepository();
+
+        public SambaConfiguration() {
+            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+            if(!File.Exists(_cfgFile)) {
+                _serviceModel = null;
+            }
+            else {
+                try {
+                    var text = File.ReadAllText(_cfgFile);
+                    var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
+                    _serviceModel = obj;
+                }
+                catch(Exception) {
+                    _serviceModel = null;
+                }
+
+            }
+        }
+
+        public void Save(SambaConfigurationModel model) {
+            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            if(File.Exists(_cfgFile)) {
+                File.Copy(_cfgFile, _cfgFileBackup, true);
+            }
+            File.WriteAllText(_cfgFile, text);
+        }
 
         public void Set() {
-            if(!IoDir.Exists(Directory)) {
-                IoDir.CreateDirectory(Directory);
+            if(_serviceModel == null) {
+                return;
             }
+
             Enable();
             Stop();
 
             #region [    smb.conf generation    ]
-            var g = _sambaGlobalRepository.Get();
-            if(g == null) {
-                return;
-            }
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
                     File.Delete(MainFilePathBackup);
                 }
                 File.Copy(MainFilePath, MainFilePathBackup);
             }
+            var global = _serviceModel;
             var lines = new List<string> {
                 "[global]"
             };
-            var global = new SambaGlobalModel(g);
             lines.Add($"dos charset = {global.DosCharset}");
             lines.Add($"workgroup = {global.Workgroup}");
             lines.Add($"server string = {global.ServerString}");
@@ -95,7 +120,7 @@ namespace Antd.Samba {
             lines.Add($"vfs objects = {global.VfsObjects}");
             lines.Add("");
 
-            var resources = _sambaResourceRepository.GetAll().Select(_ => new SambaResourceModel(_)).ToList();
+            var resources = _serviceModel.Resources;
             foreach(var resource in resources) {
                 lines.Add($"[{resource.Name}]");
                 if(!string.IsNullOrEmpty(resource.Comment)) {
@@ -108,6 +133,17 @@ namespace Antd.Samba {
             #endregion
 
             Restart();
+        }
+
+        public bool IsActive() {
+            if(!File.Exists(_cfgFile)) {
+                return false;
+            }
+            return _serviceModel != null && _serviceModel.IsActive;
+        }
+
+        public SambaConfigurationModel Get() {
+            return _serviceModel;
         }
 
         public void Enable() {
@@ -153,6 +189,33 @@ namespace Antd.Samba {
             if(Systemctl.IsActive(ServiceName3) == false) {
                 Systemctl.Restart(ServiceName3);
             }
+        }
+
+        public void AddResource(SambaConfigurationResourceModel model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var resources = _serviceModel.Resources;
+            if(resources.Any(_ => _.Name == model.Name)) {
+                return;
+            }
+            resources.Add(model);
+            _serviceModel.Resources = resources;
+            Save(_serviceModel);
+        }
+
+        public void RemoveResource(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var resources = _serviceModel.Resources;
+            var model = resources.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            resources.Remove(model);
+            _serviceModel.Resources = resources;
+            Save(_serviceModel);
         }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Antd.Bind {
     public class BindConfigurationModel {
+        public bool IsActive { get; set; }
+
         public string Notify { get; set; } = "no";
         public string MaxCacheSize { get; set; } = "128M";
         public string MaxCacheTtl { get; set; } = "108000";
@@ -46,10 +48,10 @@ namespace Antd.Bind {
 
         public List<BindConfigurationZoneModel> Zones { get; set; } = new List<BindConfigurationZoneModel>();
         public List<BindConfigurationZoneFileModel> ZoneFiles { get; set; } = new List<BindConfigurationZoneFileModel>();
-
     }
 
     public class BindConfigurationZoneModel {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Type { get; set; }
         public string File { get; set; }
@@ -60,6 +62,7 @@ namespace Antd.Bind {
     }
 
     public class BindConfigurationZoneFileModel {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Configuration { get; set; }
     }

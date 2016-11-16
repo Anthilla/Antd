@@ -88,17 +88,6 @@ namespace Antd {
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SyslogView());
 
-            database.RegisterView(new DhcpServerOptionsView());
-            database.RegisterView(new DhcpServerClassView());
-            database.RegisterView(new DhcpServerSubnetView());
-            database.RegisterView(new DhcpServerPoolView());
-            database.RegisterView(new DhcpServerReservationView());
-            database.RegisterView(new BindServerOptionsView());
-            database.RegisterView(new BindServerZoneView());
-            database.RegisterView(new BindServerZoneFileView());
-            database.RegisterView(new SambaGlobalView());
-            database.RegisterView(new SambaResourceView());
-
             ConsoleLogger.Log("database ready");
             return database;
         }
@@ -259,11 +248,8 @@ namespace Antd {
         public void StartDhcpd() {
             if(!Parameter.IsUnix)
                 return;
-            var dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-            var dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
             var dhcpdConfiguration = new DhcpdConfiguration();
-            var dhcpdIsActive = dhcpServerOptionsRepository.Get() != null && dhcpServerSubnetRepository.Get() != null;
-            if(dhcpdIsActive) {
+            if(dhcpdConfiguration.IsActive()) {
                 dhcpdConfiguration.Set();
                 dhcpdConfiguration.Enable();
                 dhcpdConfiguration.Restart();
@@ -274,10 +260,8 @@ namespace Antd {
         public void StartBind() {
             if(!Parameter.IsUnix)
                 return;
-            var bindServerOptionsRepository = new BindServerOptionsRepository();
             var bindConfiguration = new BindConfiguration();
-            var bindIsActive = bindServerOptionsRepository.Get() != null;
-            if(bindIsActive) {
+            if(bindConfiguration.IsActive()) {
                 bindConfiguration.Set();
                 bindConfiguration.Enable();
                 bindConfiguration.Restart();
@@ -288,10 +272,8 @@ namespace Antd {
         public void StartSamba() {
             if(!Parameter.IsUnix)
                 return;
-            var sambaGlobalRepository = new SambaGlobalRepository();
             var sambaConfiguration = new SambaConfiguration();
-            var sambaIsActive = sambaGlobalRepository.Get() != null;
-            if(sambaIsActive) {
+            if(sambaConfiguration.IsActive()) {
                 sambaConfiguration.Set();
                 sambaConfiguration.Enable();
                 sambaConfiguration.Restart();

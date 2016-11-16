@@ -2,6 +2,8 @@
 
 namespace Antd.Samba {
     public class SambaConfigurationModel {
+        public bool IsActive { get; set; }
+
         public string DosCharset { get; set; }
         public string Workgroup { get; set; }
         public string ServerString { get; set; }
@@ -60,6 +62,7 @@ namespace Antd.Samba {
     }
 
     public class SambaConfigurationResourceModel {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Comment { get; set; }
         public string Path { get; set; }

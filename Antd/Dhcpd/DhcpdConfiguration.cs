@@ -1,37 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.common;
 using antdlib.Systemd;
-using antdlib.views;
-using Antd.Database;
+using Newtonsoft.Json;
 using IoDir = System.IO.Directory;
 
 namespace Antd.Dhcpd {
     public class DhcpdConfiguration {
 
-        private const string Directory = "/etc/dhcp";
+        private readonly DhcpdConfigurationModel _serviceModel;
+
+        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/dhcp.conf";
+        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/dhcp.conf.bck";
         private const string ServiceName = "dhcpd4.service";
         private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
         private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
-        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
-        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
+
+        public DhcpdConfiguration() {
+            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+            if(!File.Exists(_cfgFile)) {
+                _serviceModel = null;
+            }
+            else {
+                try {
+                    var text = File.ReadAllText(_cfgFile);
+                    var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
+                    _serviceModel = obj;
+                }
+                catch(Exception) {
+                    _serviceModel = null;
+                }
+
+            }
+        }
+
+        public void Save(DhcpdConfigurationModel model) {
+            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            if(File.Exists(_cfgFile)) {
+                File.Copy(_cfgFile, _cfgFileBackup, true);
+            }
+            File.WriteAllText(_cfgFile, text);
+        }
 
         public void Set() {
-            if(!IoDir.Exists(Directory)) {
-                IoDir.CreateDirectory(Directory);
+            if(_serviceModel == null) {
+                return;
             }
+
             Enable();
             Stop();
 
             #region [    dhcpd.conf generation    ]
-            var o = _dhcpServerOptionsRepository.Get();
-            var s = _dhcpServerSubnetRepository.Get();
-            if(o == null || s == null) {
-                return;
-            }
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
                     File.Delete(MainFilePathBackup);
@@ -41,7 +62,7 @@ namespace Antd.Dhcpd {
             var lines = new List<string> {
                 "authoritative;"
             };
-            var options = new DhcpServerOptionsModel(o);
+            var options = _serviceModel;
             foreach(var allow in options.Allow) {
                 lines.Add($"allow {allow};");
             }
@@ -69,23 +90,22 @@ namespace Antd.Dhcpd {
                 lines.Add("};");
             }
             lines.Add("");
-            var classes = _dhcpServerClassRepository.GetAll();
+            var classes = options.Classes;
             foreach(var cls in classes) {
                 lines.Add($"class \"{cls.Name}\" {{");
                 lines.Add($"match if binary-to-ascii(16,8,\":\",substring(hardware, 1, 2)) = \"{cls.MacVendor}\";");
                 lines.Add("}");
             }
             lines.Add("");
-            var subnet = new DhcpServerSubnetModel(s);
-            lines.Add($"subnet {subnet.IpFamily} netmask {subnet.IpMask} {{");
-            if(!string.IsNullOrEmpty(subnet.OptionRouters)) { lines.Add($"option routers {subnet.OptionRouters}"); }
-            if(!string.IsNullOrEmpty(subnet.NtpServers)) { lines.Add($"option ntp-servers {subnet.NtpServers}"); }
-            if(!string.IsNullOrEmpty(subnet.TimeServers)) { lines.Add($"option time-servers {subnet.TimeServers}"); }
-            if(!string.IsNullOrEmpty(subnet.DomainNameServers)) { lines.Add($"option domain-name-servers {subnet.DomainNameServers}"); }
-            if(!string.IsNullOrEmpty(subnet.BroadcastAddress)) { lines.Add($"option broadcast-address {subnet.BroadcastAddress}"); }
-            if(!string.IsNullOrEmpty(subnet.SubnetMask)) { lines.Add($"option subnet-mask {subnet.SubnetMask}"); }
-            if(!string.IsNullOrEmpty(subnet.ZoneName) && !string.IsNullOrEmpty(subnet.ZonePrimaryAddress)) { lines.Add($"zone {subnet.ZoneName} {{ primary {subnet.ZonePrimaryAddress}; }}"); }
-            var pools = _dhcpServerPoolRepository.GetAll().Select(_ => new DhcpServerPoolModel(_)).ToList();
+            lines.Add($"subnet {options.SubnetIpFamily} netmask {options.SubnetIpMask} {{");
+            if(!string.IsNullOrEmpty(options.SubnetOptionRouters)) { lines.Add($"option routers {options.SubnetOptionRouters}"); }
+            if(!string.IsNullOrEmpty(options.SubnetNtpServers)) { lines.Add($"option ntp-servers {options.SubnetNtpServers}"); }
+            if(!string.IsNullOrEmpty(options.SubnetTimeServers)) { lines.Add($"option time-servers {options.SubnetTimeServers}"); }
+            if(!string.IsNullOrEmpty(options.SubnetDomainNameServers)) { lines.Add($"option domain-name-servers {options.SubnetDomainNameServers}"); }
+            if(!string.IsNullOrEmpty(options.SubnetBroadcastAddress)) { lines.Add($"option broadcast-address {options.SubnetBroadcastAddress}"); }
+            if(!string.IsNullOrEmpty(options.SubnetMask)) { lines.Add($"option subnet-mask {options.SubnetMask}"); }
+            if(!string.IsNullOrEmpty(options.ZoneName) && !string.IsNullOrEmpty(options.ZonePrimaryAddress)) { lines.Add($"zone {options.ZoneName} {{ primary {options.ZonePrimaryAddress}; }}"); }
+            var pools = options.Pools;
             foreach(var pool in pools) {
                 lines.Add("pool {");
                 foreach(var opt in pool.Options) {
@@ -95,7 +115,7 @@ namespace Antd.Dhcpd {
             }
             lines.Add("}");
             lines.Add("");
-            var reservations = _dhcpServerReservationRepository.GetAll().Select(_ => new DhcpServerReservationModel(_)).ToList();
+            var reservations = options.Reservations;
             foreach(var reservation in reservations) {
                 lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
             }
@@ -103,6 +123,17 @@ namespace Antd.Dhcpd {
             #endregion
 
             Restart();
+        }
+
+        public bool IsActive() {
+            if(!File.Exists(_cfgFile)) {
+                return false;
+            }
+            return _serviceModel != null && _serviceModel.IsActive;
+        }
+
+        public DhcpdConfigurationModel Get() {
+            return _serviceModel;
         }
 
         public void Enable() {
@@ -126,6 +157,87 @@ namespace Antd.Dhcpd {
             if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
+        }
+
+        public void AddClass(DhcpConfigurationClassModel model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var cls = _serviceModel.Classes;
+            if(cls.Any(_ => _.Name == model.Name)) {
+                return;
+            }
+            cls.Add(model);
+            _serviceModel.Classes = cls;
+            Save(_serviceModel);
+        }
+
+        public void RemoveClass(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var cls = _serviceModel.Classes;
+            var model = cls.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            cls.Remove(model);
+            _serviceModel.Classes = cls;
+            Save(_serviceModel);
+        }
+
+        public void AddPool(DhcpConfigurationPoolModel model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var pool = _serviceModel.Pools;
+            if(pool.Any(_ => _.Guid == model.Guid)) {
+                return;
+            }
+            pool.Add(model);
+            _serviceModel.Pools = pool;
+            Save(_serviceModel);
+        }
+
+        public void RemovePool(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var pool = _serviceModel.Pools;
+            var model = pool.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            pool.Remove(model);
+            _serviceModel.Pools = pool;
+            Save(_serviceModel);
+        }
+
+        public void AddReservation(DhcpConfigurationReservationModel model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var hostres = _serviceModel.Reservations;
+            if(hostres.Any(_ => _.Guid == model.Guid)) {
+                return;
+            }
+            hostres.Add(model);
+            _serviceModel.Reservations = hostres;
+            Save(_serviceModel);
+        }
+
+        public void RemoveReservation(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var hostres = _serviceModel.Reservations;
+            var model = hostres.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            hostres.Remove(model);
+            _serviceModel.Reservations = hostres;
+            Save(_serviceModel);
         }
     }
 }

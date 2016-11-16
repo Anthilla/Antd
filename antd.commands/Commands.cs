@@ -355,7 +355,7 @@ namespace antd.commands {
                 InputType = typeof(string),
                 OutputType = typeof(string),
                 Arguments = "hostnamectl",
-                Grep = "Static hostname: ",
+                Grep = "Transient hostname: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-iconname"] = new Command<string> {

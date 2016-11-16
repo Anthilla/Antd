@@ -1,7 +1,18 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend>DHCP Leases</legend>
- 
-    @Each.DhcpdLeases
 
+    @If.EmptyList
+    <h3 class="fg-white">Leases list is empty</h3>
+    @EndIf
+
+    @Each.DhcpdLeases
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            @Current.Item1
+        </div>
+        <div class="panel-content" style="display: none;">
+            @Current.Item2
+        </div>
+    </div>
     @EndEach
 </div>

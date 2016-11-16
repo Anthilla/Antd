@@ -28,9 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib.common;
-using antdlib.views;
 using Antd.Bind;
-using Antd.Database;
 using Antd.Dhcpd;
 using Antd.Samba;
 using Nancy;
@@ -39,37 +37,25 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class ServicesModule : CoreModule {
 
-        private readonly DhcpServerOptionsRepository _dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-        private readonly DhcpServerSubnetRepository _dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-        private readonly DhcpServerClassRepository _dhcpServerClassRepository = new DhcpServerClassRepository();
-        private readonly DhcpServerPoolRepository _dhcpServerPoolRepository = new DhcpServerPoolRepository();
-        private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
-        private readonly DhcpdConfiguration _dhcpdConfiguration = new DhcpdConfiguration();
-
-        private readonly BindServerOptionsRepository _bindServerOptionsRepository = new BindServerOptionsRepository();
-        private readonly BindServerZoneRepository _bindServerZoneRepository = new BindServerZoneRepository();
-        private readonly BindConfiguration _bindConfiguration = new BindConfiguration();
-
-        private readonly SambaGlobalRepository _sambaGlobalRepository = new SambaGlobalRepository();
-        private readonly SambaResourceRepository _sambaResourceRepository = new SambaResourceRepository();
-        private readonly SambaConfiguration _sambaConfiguration = new SambaConfiguration();
-
         public ServicesModule() {
             this.RequiresAuthentication();
 
             #region [    DHCPD    ]
             Post["/services/dhcpd/set"] = x => {
-                _dhcpdConfiguration.Set();
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/restart"] = x => {
-                _dhcpdConfiguration.Restart();
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Restart();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/stop"] = x => {
-                _dhcpdConfiguration.Stop();
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -92,7 +78,16 @@ namespace Antd.Modules {
                 string maxLeaseTime = Request.Form.MaxLeaseTime;
                 string keyName = Request.Form.KeyName;
                 string keySecret = Request.Form.KeySecret;
-                var model = new DhcpServerOptionsModel {
+                string ipFamily = Request.Form.IpFamily;
+                string ipMask = Request.Form.IpMask;
+                string optionRouters = Request.Form.OptionRouters;
+                string ntpServers = Request.Form.NtpServers;
+                string timeServers = Request.Form.DoForTimeServerswardUpdates;
+                string domainNameServers = Request.Form.DomainNameServers;
+                string broadcastAddress = Request.Form.BroadcastAddress;
+                string subnetMask = Request.Form.SubnetMask;
+
+                var model = new DhcpdConfigurationModel {
                     Allow = allow.SplitToList(),
                     UpdateStaticLeases = updateStaticLeases,
                     UpdateConflictDetection = updateConflictDetection,
@@ -110,61 +105,54 @@ namespace Antd.Modules {
                     DefaultLeaseTime = defaultLeaseTime,
                     MaxLeaseTime = maxLeaseTime,
                     KeyName = keyName,
-                    KeySecret = keySecret
-                };
-                _dhcpServerOptionsRepository.Set(model);
-                return Response.AsRedirect("/");
-            };
-
-            Post["/services/dhcpd/subnet"] = x => {
-                string ipFamily = Request.Form.IpFamily;
-                string ipMask = Request.Form.IpMask;
-                string optionRouters = Request.Form.OptionRouters;
-                string ntpServers = Request.Form.NtpServers;
-                string timeServers = Request.Form.DoForTimeServerswardUpdates;
-                string domainNameServers = Request.Form.DomainNameServers;
-                string broadcastAddress = Request.Form.BroadcastAddress;
-                string subnetMask = Request.Form.SubnetMask;
-                string zoneName = Request.Form.ZoneName;
-                string zonePrimaryAddress = Request.Form.ZonePrimaryAddress;
-                var model = new DhcpServerSubnetModel {
-                    IpFamily = ipFamily,
-                    IpMask = ipMask,
-                    OptionRouters = optionRouters,
-                    NtpServers = ntpServers,
-                    TimeServers = timeServers,
-                    DomainNameServers = domainNameServers,
-                    BroadcastAddress = broadcastAddress,
+                    KeySecret = keySecret,
+                    SubnetIpFamily = ipFamily,
+                    SubnetIpMask = ipMask,
+                    SubnetOptionRouters = optionRouters,
+                    SubnetNtpServers = ntpServers,
+                    SubnetTimeServers = timeServers,
+                    SubnetDomainNameServers = domainNameServers,
+                    SubnetBroadcastAddress = broadcastAddress,
                     SubnetMask = subnetMask,
-                    ZoneName = zoneName,
-                    ZonePrimaryAddress = zonePrimaryAddress,
                 };
-                _dhcpServerSubnetRepository.Set(model);
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Save(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/class"] = x => {
                 string name = Request.Form.Name;
                 string macVendor = Request.Form.MacVendor;
-                _dhcpServerClassRepository.Create(name, macVendor);
+                var model = new DhcpConfigurationClassModel {
+                    Name = name,
+                    MacVendor = macVendor
+                };
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.AddClass(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/class/del"] = x => {
-                string id = Request.Form.Guid;
-                _dhcpServerClassRepository.Delete(id);
+                string guid = Request.Form.Guid;
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.RemoveClass(guid);
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/pool"] = x => {
                 string option = Request.Form.Option;
-                _dhcpServerPoolRepository.Create(option.SplitToList());
+                var model = new DhcpConfigurationPoolModel {
+                    Options = option.SplitToList(),
+                };
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.AddPool(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/pool/del"] = x => {
-                string id = Request.Form.Guid;
-                _dhcpServerPoolRepository.Delete(id);
+                string guid = Request.Form.Guid;
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.RemovePool(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -172,13 +160,20 @@ namespace Antd.Modules {
                 string hostName = Request.Form.HostName;
                 string macAddress = Request.Form.MacAddress;
                 string ipAddress = Request.Form.IpAddress;
-                _dhcpServerReservationRepository.Create(hostName, macAddress, ipAddress);
+                var model = new DhcpConfigurationReservationModel {
+                    HostName = hostName,
+                    MacAddress = macAddress,
+                    IpAddress = ipAddress
+                };
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.AddReservation(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/dhcpd/reservation/del"] = x => {
-                string id = Request.Form.Guid;
-                _dhcpServerReservationRepository.Delete(id);
+                string guid = Request.Form.Guid;
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.RemoveReservation(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -186,19 +181,22 @@ namespace Antd.Modules {
 
             #region [    BIND    ]
             Post["/services/bind/set"] = x => {
-                _bindConfiguration.Set();
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/bind/restart"] = x => {
-                _bindConfiguration.Restart();
-                _bindConfiguration.RndcReconfig();
-                _bindConfiguration.RndcReload();
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.Restart();
+                bindConfiguration.RndcReconfig();
+                bindConfiguration.RndcReload();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/bind/stop"] = x => {
-                _bindConfiguration.Stop();
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -243,7 +241,7 @@ namespace Antd.Modules {
                 string aclLocalNetworks = Request.Form.AclLocalNetworks;
                 string aclInternalNetworks = Request.Form.AclInternalNetworks;
                 string aclExternalNetworks = Request.Form.AclExternalNetworks;
-                var model = new BindServerOptionsModel {
+                var model = new BindConfigurationModel {
                     Notify = notify,
                     MaxCacheSize = maxCacheSize,
                     MaxCacheTtl = maxCacheTtl,
@@ -285,7 +283,8 @@ namespace Antd.Modules {
                     AclInternalNetworks = aclInternalNetworks.SplitToList(),
                     AclExternalNetworks = aclExternalNetworks.SplitToList()
                 };
-                _bindServerOptionsRepository.Set(model);
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.Save(model);
                 return Response.AsRedirect("/");
             };
 
@@ -297,30 +296,44 @@ namespace Antd.Modules {
                 string allowUpdate = Request.Form.AllowUpdate;
                 string allowQuery = Request.Form.AllowQuery;
                 string allowTransfer = Request.Form.AllowTransfer;
-                _bindServerZoneRepository.Create(name, type, file, serialUpdateMethod, allowUpdate.SplitToList(), allowQuery.SplitToList(), allowTransfer.SplitToList());
+                var model = new BindConfigurationZoneModel {
+                    Name = name,
+                    Type = type,
+                    File = file,
+                    SerialUpdateMethod = serialUpdateMethod,
+                    AllowQuery = allowQuery.SplitToList(),
+                    AllowUpdate = allowUpdate.SplitToList(),
+                    AllowTransfer = allowTransfer.SplitToList()
+                };
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.AddZone(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/bind/zone/del"] = x => {
-                string id = Request.Form.Guid;
-                _bindServerZoneRepository.Delete(id);
+                string guid = Request.Form.Guid;
+                var bindConfiguration = new BindConfiguration();
+                bindConfiguration.RemoveZone(guid);
                 return HttpStatusCode.OK;
             };
             #endregion
 
             #region [    SAMBA    ]
             Post["/services/samba/set"] = x => {
-                _sambaConfiguration.Set();
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/samba/restart"] = x => {
-                _sambaConfiguration.Restart();
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.Restart();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/samba/stop"] = x => {
-                _sambaConfiguration.Stop();
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -378,7 +391,7 @@ namespace Antd.Modules {
                 string wideLinks = Request.Form.WideLinks;
                 string dosFiletimeResolution = Request.Form.DosFiletimeResolution;
                 string vfsObjects = Request.Form.VfsObjects;
-                var model = new SambaGlobalModel {
+                var model = new SambaConfigurationModel() {
                     DosCharset = dosCharset,
                     Workgroup = workgroup,
                     ServerString = serverString,
@@ -433,7 +446,8 @@ namespace Antd.Modules {
                     DosFiletimeResolution = dosFiletimeResolution,
                     VfsObjects = vfsObjects
                 };
-                _sambaGlobalRepository.Set(model);
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.Save(model);
                 return Response.AsRedirect("/");
             };
 
@@ -441,13 +455,20 @@ namespace Antd.Modules {
                 string name = Request.Form.Name;
                 string path = Request.Form.Path;
                 string comment = Request.Form.Comment;
-                _sambaResourceRepository.Create(name, path, comment);
+                var model = new SambaConfigurationResourceModel {
+                    Name = name,
+                    Comment = comment,
+                    Path = path
+                };
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.AddResource(model);
                 return Response.AsRedirect("/");
             };
 
             Post["/services/samba/resource/del"] = x => {
-                string id = Request.Form.Guid;
-                _sambaResourceRepository.Delete(id);
+                string guid = Request.Form.Guid;
+                var sambaConfiguration = new SambaConfiguration();
+                sambaConfiguration.RemoveResource(guid);
                 return HttpStatusCode.OK;
             };
             #endregion 

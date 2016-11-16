@@ -27,18 +27,19 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
 using System.Dynamic;
 using System.Linq;
 using antd.commands;
-using antdlib.common;
 using antdlib.common.Tool;
-using antdlib.views;
+using Antd.Bind;
 using Antd.Database;
+using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Info;
 using Antd.Network;
+using Antd.Samba;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Nancy.Security;
@@ -105,22 +106,19 @@ namespace Antd.Modules {
 
             Get["/part/host"] = x => {
                 dynamic viewModel = new ExpandoObject();
-
-                var hostnamectl = _launcher.Launch("hostnamectl");
-                ConsoleLogger.Log(hostnamectl);
-                ConsoleLogger.Log(hostnamectl.Count);
-
-                viewModel.StaticHostname = _launcher.Launch("hostnamectl-get-hostname");
-                viewModel.IconName = _launcher.Launch("hostnamectl-get-iconname");
-                viewModel.Chassis = _launcher.Launch("hostnamectl-get-chassis");
-                viewModel.Deployment = _launcher.Launch("hostnamectl-get-deployment");
-                viewModel.Location = _launcher.Launch("hostnamectl-get-location");
-                viewModel.MachineID = _launcher.Launch("hostnamectl-get-machineid");
-                viewModel.BootID = _launcher.Launch("hostnamectl-get-bootid");
-                viewModel.Virtualization = _launcher.Launch("hostnamectl-get-virtualization");
-                viewModel.OS = _launcher.Launch("hostnamectl-get-os");
-                viewModel.Kernel = _launcher.Launch("hostnamectl-get-kernel");
-                viewModel.Architecture = _launcher.Launch("hostnamectl-get-arch");
+                var hostnamectl = _launcher.Launch("hostnamectl").ToList();
+                var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                viewModel.StaticHostname = hostnamectl.First(_=>_.Contains("Transient hostname:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.IconName = hostnamectl.First(_=>_.Contains("Icon name:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Chassis = hostnamectl.First(_=>_.Contains("Chassis:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Deployment = hostnamectl.First(_=>_.Contains("Deployment:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Location = hostnamectl.First(_=>_.Contains("Location:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.MachineID = hostnamectl.First(_=>_.Contains("Machine ID:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.BootID = hostnamectl.First(_=>_.Contains("Boot ID:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Virtualization = hostnamectl.First(_=>_.Contains("Virtualization:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.OS = hostnamectl.First(_=>_.Contains("Operating System:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Kernel = hostnamectl.First(_=>_.Contains("Kernel:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Architecture = hostnamectl.First(_=>_.Contains("Architecture:")).Split(new []{":"}, 2, ssoree)[1];
                 return View["antd/part/page-antd-host", viewModel];
             };
 
@@ -128,17 +126,15 @@ namespace Antd.Modules {
                 dynamic viewModel = new ExpandoObject();
                 var timezones = _bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
                 viewModel.Timezones = timezones;
-
-                var timedatectl = _launcher.Launch("timedatectl");
-                ConsoleLogger.Log(timedatectl);
-
-                viewModel.LocalTime = _launcher.Launch("timedatectl-get-localtime");
-                viewModel.UnivTime = _launcher.Launch("timedatectl-get-univtime");
-                viewModel.RTCTime = _launcher.Launch("timedatectl-get-rtctime");
-                viewModel.Timezone = _launcher.Launch("timedatectl-get-timezone");
-                viewModel.Nettimeon = _launcher.Launch("timedatectl-get-nettimeon");
-                viewModel.Ntpsync = _launcher.Launch("timedatectl-get-ntpsync");
-                viewModel.Rtcintz = _launcher.Launch("timedatectl-get-rtcintz");
+                var timedatectl = _launcher.Launch("timedatectl").ToList();
+                var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                viewModel.LocalTime = timedatectl.First(_ => _.Contains("Local time:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.UnivTime = timedatectl.First(_ => _.Contains("Universal time:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.RTCTime = timedatectl.First(_ => _.Contains("RTC time:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Timezone = timedatectl.First(_ => _.Contains("Time zone:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Nettimeon = timedatectl.First(_ => _.Contains("Network time on:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Ntpsync = timedatectl.First(_ => _.Contains("NTP synchronized:")).Split(new []{":"}, 2, ssoree)[1];
+                viewModel.Rtcintz = timedatectl.First(_ => _.Contains("RTC in local TZ:")).Split(new []{":"}, 2, ssoree)[1];
                 return View["antd/part/page-antd-time", viewModel];
             };
 
@@ -153,55 +149,42 @@ namespace Antd.Modules {
 
             Get["/part/named"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var bindServerOptionsRepository = new BindServerOptionsRepository();
-                var bindServerZoneRepository = new BindServerZoneRepository();
-                var bindIsActive = bindServerOptionsRepository.Get() != null;
+                var bindConfiguration = new BindConfiguration();
+                var bindIsActive = bindConfiguration.IsActive();
                 viewModel.BindIsActive = bindIsActive;
-                viewModel.BindOptions = bindIsActive ? bindServerOptionsRepository.Get() : bindServerOptionsRepository.Default;
-                viewModel.BindZones = bindServerZoneRepository.GetAll();
+                viewModel.BindOptions = bindConfiguration.Get();
+                viewModel.BindZones = bindConfiguration.Get()?.Zones;
                 return View["antd/part/page-antd-bind", viewModel];
             };
 
             Get["/part/dhcp"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
-                var dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
-                var dhcpServerClassRepository = new DhcpServerClassRepository();
-                var dhcpServerPoolRepository = new DhcpServerPoolRepository();
-                var dhcpServerReservationRepository = new DhcpServerReservationRepository();
-                var dhcpdIsActive = dhcpServerOptionsRepository.Get() != null && dhcpServerSubnetRepository.Get() != null;
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                var dhcpdIsActive = dhcpdConfiguration.IsActive();
                 viewModel.DhcpdIsActive = dhcpdIsActive;
-                viewModel.DhcpdOptions = dhcpdIsActive ? dhcpServerOptionsRepository.Get() : new DhcpServerOptionsSchema();
-                viewModel.DhcpdSubnet = dhcpdIsActive ? dhcpServerSubnetRepository.Get() : new DhcpServerSubnetSchema();
-                viewModel.DhcpdClass = dhcpServerClassRepository.GetAll();
-                viewModel.DhcpdPools = dhcpServerPoolRepository.GetAll();
-                viewModel.DhcpdReservation = dhcpServerReservationRepository.GetAll();
+                viewModel.DhcpdOptions = dhcpdConfiguration.Get();
+                viewModel.DhcpdSubnet = dhcpdConfiguration.Get();
+                viewModel.DhcpdClass = dhcpdConfiguration.Get()?.Classes;
+                viewModel.DhcpdPools = dhcpdConfiguration.Get()?.Pools;
+                viewModel.DhcpdReservation = dhcpdConfiguration.Get()?.Reservations;
                 return View["antd/part/page-antd-dhcp", viewModel];
             };
 
             Get["/part/dhcp/leases"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                if(System.IO.File.Exists("")) {
-                    //regex 
-                    //lease ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}) {([\s\w\d/:;\"\\*\-~=.+^<>\(\)'`!?,&]+)}
-                    viewModel.DhcpdLeases = new List<string>();
-                    viewModel.EmptyList = false;
-                }
-                else {
-                    viewModel.DhcpdLeases = new List<string>();
-                    viewModel.EmptyList = true;
-                }
-                return View["antd/part/page-antd-dhcp", viewModel];
+                var list = DhcpdLeases.GetAll();
+                viewModel.DhcpdLeases = list;
+                viewModel.EmptyList = !list.Any();
+                return View["antd/part/page-antd-dhcp-leases", viewModel];
             };
 
             Get["/part/samba"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var sambaGlobalRepository = new SambaGlobalRepository();
-                var sambaResourceRepository = new SambaResourceRepository();
-                var sambaIsActive = sambaGlobalRepository.Get() != null;
+                var sambaConfiguration = new SambaConfiguration();
+                var sambaIsActive = sambaConfiguration.IsActive();
                 viewModel.SambaIsActive = sambaIsActive;
-                viewModel.SambaOptions = sambaGlobalRepository.Get();
-                viewModel.SambaResources = sambaResourceRepository.GetAll();
+                viewModel.SambaOptions = sambaConfiguration.Get();
+                viewModel.SambaResources = sambaConfiguration.Get()?.Resources;
                 return View["antd/part/page-antd-samba", viewModel];
             };
 

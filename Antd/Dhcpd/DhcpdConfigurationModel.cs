@@ -2,6 +2,8 @@
 
 namespace Antd.Dhcpd {
     public class DhcpdConfigurationModel {
+        public bool IsActive { get; set; }
+
         public List<string> Allow { get; set; }
         public string UpdateStaticLeases { get; set; } //on off
         public string UpdateConflictDetection { get; set; }
@@ -36,15 +38,18 @@ namespace Antd.Dhcpd {
     }
 
     public class DhcpConfigurationClassModel {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string MacVendor { get; set; }
     }
 
     public class DhcpConfigurationPoolModel {
-        public string Options { get; set; }
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+        public IEnumerable<string> Options { get; set; }
     }
 
     public class DhcpConfigurationReservationModel {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string HostName { get; set; }
         public string MacAddress { get; set; }
         public string IpAddress { get; set; }
