@@ -1,3 +1,25 @@
+$('[data-input="selectize"]').each(function () {
+    var value = $(this).val();
+    $(this).selectize({
+        create: true,
+        render: { option: SelectizerOptions.render },
+        load: SelectizerOptions.load,
+        onInitialize: function () {
+            var s = this;
+            var actualValue = value;
+            if (actualValue) {
+                var arr = actualValue.split(",");
+                $.each(arr, function (k, v) {
+                    s.addOption(v);
+                    s.setValue(actualValue);
+                    s.blur();
+                });
+            }
+        }
+    });
+    $(this).hide();
+});
+
 //selectize
 $(document).ready(function () {
     $.when(

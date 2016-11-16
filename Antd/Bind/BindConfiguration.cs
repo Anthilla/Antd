@@ -6,10 +6,12 @@ using antdlib.common.Tool;
 using antdlib.Systemd;
 using antdlib.views;
 using Antd.Database;
+using IoDir = System.IO.Directory;
 
 namespace Antd.Bind {
     public class BindConfiguration {
 
+        private const string Directory = "/etc/bind";
         private const string ServiceName = "named.service";
         private const string MainFilePath = "/etc/bind/named.conf";
         private const string MainFilePathBackup = "/etc/bind/.named.conf";
@@ -19,6 +21,13 @@ namespace Antd.Bind {
         private readonly Bash _bash = new Bash();
 
         public void Set() {
+            if(!IoDir.Exists(Directory)) {
+                IoDir.CreateDirectory(Directory);
+            }
+            Enable();
+            Stop();
+
+            #region [    named.conf generation    ]
             var o = _bindServerOptionsRepository.Get();
             if(o == null) {
                 return;
@@ -141,6 +150,10 @@ namespace Antd.Bind {
 
             lines.Add("include \"/etc/bind/master/blackhole.zones\";");
             File.WriteAllLines(MainFilePath, lines);
+            #endregion
+
+            Restart();
+            RndcReconfig();
         }
 
         public void Enable() {

@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,7 +41,17 @@ namespace antdlib.common.Tool {
             if(string.IsNullOrEmpty(input)) {
                 return Empty;
             }
+            elementIndex = elementIndex == 0 ? 0 : elementIndex - 1;
             var inputArr = input.Split(divider);
+            return elementIndex > inputArr.Length ? Empty : inputArr[elementIndex];
+        }
+
+        public static string Print(this string input, int elementIndex, string divider = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) {
+            if(string.IsNullOrEmpty(input)) {
+                return Empty;
+            }
+            elementIndex = elementIndex == 0 ? 0 : elementIndex - 1;
+            var inputArr = input.Split(new[] { divider }, option);
             return elementIndex > inputArr.Length ? Empty : inputArr[elementIndex];
         }
 
@@ -49,9 +60,26 @@ namespace antdlib.common.Tool {
             if(!inputList.Any()) {
                 return EmptyList;
             }
+            elementIndex = elementIndex == 0 ? 0 : elementIndex - 1;
             var list = new List<string>();
             foreach(var input in inputList) {
                 var inputArr = input.Split(divider);
+                if(inputArr.Length < elementIndex) {
+                    list.Add(inputArr[elementIndex]);
+                }
+            }
+            return list;
+        }
+
+        public static IEnumerable<string> Print(this IEnumerable<string> inputLines, int elementIndex, string divider = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) {
+            var inputList = inputLines as IList<string> ?? inputLines.ToList();
+            if(!inputList.Any()) {
+                return EmptyList;
+            }
+            elementIndex = elementIndex == 0 ? 0 : elementIndex - 1;
+            var list = new List<string>();
+            foreach(var input in inputList) {
+                var inputArr = input.Split(new[] { divider }, option);
                 if(inputArr.Length < elementIndex) {
                     list.Add(inputArr[elementIndex]);
                 }

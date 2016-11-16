@@ -1,13 +1,20 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Avahi">
-        Service Discovery
+    <legend>Service Discovery
     </legend>
     <table class="table" style="table-layout: fixed;">
         <thead>
-            <tr><td colspan="3"><label>Antd Services - Discovered in local network</label></td></tr>
+            <tr>
+                <td colspan="3">
+                    <label>Antd Services - Discovered in local network</label></td>
+            </tr>
         </thead>
         <tbody>
             <tr>
+                <td>
+                    <label>
+                        Host
+                    </label>
+                </td>
                 <td>
                     <label>
                         IP
@@ -24,12 +31,17 @@
             <tr>
                 <td>
                     <p>
-                        @Current.Key
+                        @Current.Item1
                     </p>
                 </td>
                 <td>
                     <p>
-                        @Current.Value
+                        @Current.Item2
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        @Current.Item3
                     </p>
                 </td>
                 <td>

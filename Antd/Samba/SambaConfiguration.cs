@@ -4,10 +4,12 @@ using System.Linq;
 using antdlib.Systemd;
 using antdlib.views;
 using Antd.Database;
+using IoDir = System.IO.Directory;
 
 namespace Antd.Samba {
     public class SambaConfiguration {
 
+        private const string Directory = "/etc/samba";
         private const string ServiceName1 = "smbd.service";
         private const string ServiceName2 = "nmbd.service";
         private const string ServiceName3 = "winbindd.service";
@@ -17,6 +19,13 @@ namespace Antd.Samba {
         private readonly SambaResourceRepository _sambaResourceRepository = new SambaResourceRepository();
 
         public void Set() {
+            if(!IoDir.Exists(Directory)) {
+                IoDir.CreateDirectory(Directory);
+            }
+            Enable();
+            Stop();
+
+            #region [    smb.conf generation    ]
             var g = _sambaGlobalRepository.Get();
             if(g == null) {
                 return;
@@ -96,6 +105,9 @@ namespace Antd.Samba {
                 lines.Add("");
             }
             File.WriteAllLines(MainFilePath, lines);
+            #endregion
+
+            Restart();
         }
 
         public void Enable() {

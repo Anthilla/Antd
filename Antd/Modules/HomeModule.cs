@@ -92,16 +92,6 @@ namespace Antd.Modules {
                 return View["antd/page-vnc", vmod];
             };
 
-            Get["/network/list/if"] = x => {
-                var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
-                return Response.AsJson(networkInterfaces);
-            };
-
-            Post["/network/import"] = x => {
-                new NetworkInterfaceRepository().Import();
-                return HttpStatusCode.OK;
-            };
-
             Post["/gluster/set"] = x => {
                 string name = Request.Form.Name;
                 string path = Request.Form.Path;

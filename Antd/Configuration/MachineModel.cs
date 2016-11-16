@@ -1,32 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using antd.commands;
+using Newtonsoft.Json;
 
 namespace Antd.Configuration {
-
-    //public class Production {
-    //    //The other members, properties etc...
-    //    private Meter m;
-
-    //    private Production(Meter m) {
-    //        this.m = m;
-    //    }
-    //}
-
-    //public class Meter {
-    //    private int _powerRating = 0;
-    //    private Production _production;
-
-    //    public Meter() {
-    //        _production = new Production(this);
-    //    }
-    //}
-
     /// <summary>
     /// Object that indexes the parameters that are needed to the machine configuration
     /// This model will be Json-serialized and stored in a .conf file on the machine
     /// </summary>
     public class MachineModel {
+
+        [JsonIgnore]
+        public DateTime DateTime => DateTime.Now;
+
+        [JsonIgnore]
+        public string Path => $"{antdlib.common.Parameter.AntdCfg}/machine.conf";
 
         /// <summary>
         /// First configuration steps
@@ -160,6 +149,13 @@ namespace Antd.Configuration {
             new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mkdir -p /Data/Data01" } } },
             new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mount LABEL=Data01 /Data/Data01" } } },
         };
+
+
+        public MachineParameter ServiceBindServer { get; set; }
+
+        public MachineParameter ServiceDhcpServer { get; set; }
+
+        public MachineParameter ServiceSambaServer { get; set; }
     }
 
     /// <summary>
@@ -239,6 +235,7 @@ namespace Antd.Configuration {
         /// Get the result of the GetCmd and check if it contains the StoredValues
         /// todo what if StoredValues has more than one value?
         /// </summary>
+        [JsonIgnore]
         public bool IsApplied {
             get {
                 if(string.IsNullOrEmpty(GetCmd)) {

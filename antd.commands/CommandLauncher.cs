@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using antdlib.common;
 
 namespace antd.commands {
@@ -17,13 +18,14 @@ namespace antd.commands {
                 if(cmd == null) {
                     return string.Empty;
                 }
-                var result = cmd.Launch();
+                var type = cmd.GetType();
+                var methodInfo = type.GetMethods().First(m => m.Name == "Launch");
+                var result = methodInfo.Invoke(cmd, null);
                 return result;
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 ConsoleLogger.Log($"Failed to Launch {name} command");
-                ConsoleLogger.Error(ex);
-                return string.Empty;
+                return null;
             }
         }
 
@@ -39,13 +41,14 @@ namespace antd.commands {
                 if(cmd == null) {
                     return string.Empty;
                 }
-                var result = cmd.Launch(dict);
+                var type = cmd.GetType();
+                var methodInfo = type.GetMethods().First(m => m.Name == "LaunchD");
+                var result = methodInfo.Invoke(cmd, new object[] { dict });
                 return result;
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 ConsoleLogger.Log($"Failed to Launch {name} command");
-                ConsoleLogger.Error(ex);
-                return string.Empty;
+                return null;
             }
         }
     }

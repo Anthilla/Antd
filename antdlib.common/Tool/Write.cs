@@ -35,65 +35,65 @@ namespace antdlib.common.Tool {
 
     public class Write {
 
-        public string WriteFile(string path, string text, bool overwrite = true) {
+        public IEnumerable<string> WriteFile(string path, string text, bool overwrite = true) {
             try {
                 if(SysFile.Exists(path) && overwrite) {
                     SysFile.Delete(path);
                     SysFile.WriteAllText(path, text);
-                    return string.Empty;
+                    return new List<string>();
                 }
                 if(SysFile.Exists(path) && !overwrite) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 SysFile.WriteAllText(path, text);
-                return string.Empty;
+                return new List<string>();
             }
             catch(Exception) {
-                return string.Empty;
+                return new List<string>();
             }
         }
 
-        public string WriteFile(string path, IEnumerable<string> text, bool overwrite = true) {
+        public IEnumerable<string> WriteFileLines(string path, IEnumerable<string> text, bool overwrite = true) {
             try {
                 if(SysFile.Exists(path) && overwrite) {
                     SysFile.Delete(path);
                     SysFile.WriteAllLines(path, text);
-                    return string.Empty;
+                    return new List<string>();
                 }
                 if(SysFile.Exists(path) && !overwrite) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 SysFile.WriteAllLines(path, text);
-                return string.Empty;
+                return new List<string>();
             }
             catch(Exception) {
-                return string.Empty;
+                return new List<string>();
             }
         }
 
-        public string AppendFile(string path, string text) {
+        public IEnumerable<string> AppendFile(string path, string text) {
             try {
                 if(!SysFile.Exists(path)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 SysFile.AppendAllText(path, text);
-                return string.Empty;
+                return new List<string>();
             }
             catch(Exception) {
-                return string.Empty;
+                return new List<string>();
             }
         }
 
-        public string AppendFile(string path, IEnumerable<string> text) {
+        public IEnumerable<string> AppendFileLines(string path, IEnumerable<string> text) {
             try {
                 if(!SysFile.Exists(path)) {
-                    return string.Empty;
+                    return new List<string>();
                 }
                 SysFile.AppendAllLines(path, text);
-                return string.Empty;
+                return new List<string>();
             }
             catch(Exception) {
-                return string.Empty;
+                return new List<string>();
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Antd.Avahi {
             var result = bash.Execute("avahi-browse -d local _http._tcp --resolve -tp");
             var list = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Where(_ => _.ToLower().Contains(serviceName));
             foreach(var el in list) {
-                var regex = new Regex(@"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\;[0-9]{1,5}");
+                var regex = new Regex(@"[0-9a-zA-Z\.]*\;[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\;[0-9]{1,5}");
                 var match = regex.Match(el);
                 if(match.Success) {
                     var address = match.Value.Replace(";", ":");

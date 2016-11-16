@@ -4,10 +4,12 @@ using System.Linq;
 using antdlib.Systemd;
 using antdlib.views;
 using Antd.Database;
+using IoDir = System.IO.Directory;
 
-namespace Antd.DhcpServer {
+namespace Antd.Dhcpd {
     public class DhcpdConfiguration {
 
+        private const string Directory = "/etc/dhcp";
         private const string ServiceName = "dhcpd4.service";
         private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
         private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
@@ -18,6 +20,13 @@ namespace Antd.DhcpServer {
         private readonly DhcpServerReservationRepository _dhcpServerReservationRepository = new DhcpServerReservationRepository();
 
         public void Set() {
+            if(!IoDir.Exists(Directory)) {
+                IoDir.CreateDirectory(Directory);
+            }
+            Enable();
+            Stop();
+
+            #region [    dhcpd.conf generation    ]
             var o = _dhcpServerOptionsRepository.Get();
             var s = _dhcpServerSubnetRepository.Get();
             if(o == null || s == null) {
@@ -91,6 +100,9 @@ namespace Antd.DhcpServer {
                 lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
             }
             File.WriteAllLines(MainFilePath, lines);
+            #endregion
+
+            Restart();
         }
 
         public void Enable() {

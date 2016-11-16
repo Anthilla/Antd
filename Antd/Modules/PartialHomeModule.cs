@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antd.commands;
@@ -37,6 +38,7 @@ using Antd.Database;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Info;
+using Antd.Network;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Nancy.Security;
@@ -155,7 +157,7 @@ namespace Antd.Modules {
                 var bindServerZoneRepository = new BindServerZoneRepository();
                 var bindIsActive = bindServerOptionsRepository.Get() != null;
                 viewModel.BindIsActive = bindIsActive;
-                viewModel.BindOptions = bindIsActive ? new BindServerOptionsModel(bindServerOptionsRepository.Get()) : bindServerOptionsRepository.Default;
+                viewModel.BindOptions = bindIsActive ? bindServerOptionsRepository.Get() : bindServerOptionsRepository.Default;
                 viewModel.BindZones = bindServerZoneRepository.GetAll();
                 return View["antd/part/page-antd-bind", viewModel];
             };
@@ -169,11 +171,26 @@ namespace Antd.Modules {
                 var dhcpServerReservationRepository = new DhcpServerReservationRepository();
                 var dhcpdIsActive = dhcpServerOptionsRepository.Get() != null && dhcpServerSubnetRepository.Get() != null;
                 viewModel.DhcpdIsActive = dhcpdIsActive;
-                viewModel.DhcpdOptions = dhcpServerOptionsRepository.Get();
-                viewModel.DhcpdSubnet = dhcpServerSubnetRepository.Get();
+                viewModel.DhcpdOptions = dhcpdIsActive ? dhcpServerOptionsRepository.Get() : new DhcpServerOptionsSchema();
+                viewModel.DhcpdSubnet = dhcpdIsActive ? dhcpServerSubnetRepository.Get() : new DhcpServerSubnetSchema();
                 viewModel.DhcpdClass = dhcpServerClassRepository.GetAll();
                 viewModel.DhcpdPools = dhcpServerPoolRepository.GetAll();
                 viewModel.DhcpdReservation = dhcpServerReservationRepository.GetAll();
+                return View["antd/part/page-antd-dhcp", viewModel];
+            };
+
+            Get["/part/dhcp/leases"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                if(System.IO.File.Exists("")) {
+                    //regex 
+                    //lease ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}) {([\s\w\d/:;\"\\*\-~=.+^<>\(\)'`!?,&]+)}
+                    viewModel.DhcpdLeases = new List<string>();
+                    viewModel.EmptyList = false;
+                }
+                else {
+                    viewModel.DhcpdLeases = new List<string>();
+                    viewModel.EmptyList = true;
+                }
                 return View["antd/part/page-antd-dhcp", viewModel];
             };
 
@@ -190,14 +207,15 @@ namespace Antd.Modules {
 
             Get["/part/net"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var networkInterfaces = new NetworkInterfaceRepository().GetAll().ToList();
-                var phyIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Physical.ToString()).OrderBy(_ => _.Name);
+                var nif = new NetworkInterfaceManagement();
+                var networkInterfaces = nif.GetAll().ToList();
+                var phyIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaceManagement.NetworkInterfaceType.Physical).OrderBy(_ => _.Key);
                 viewModel.NetworkPhysicalIf = phyIf;
-                var brgIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bridge.ToString()).OrderBy(_ => _.Name);
+                var brgIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaceManagement.NetworkInterfaceType.Bridge).OrderBy(_ => _.Key);
                 viewModel.NetworkBridgeIf = brgIf;
-                var bndIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Bond.ToString()).OrderBy(_ => _.Name);
+                var bndIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaceManagement.NetworkInterfaceType.Bond).OrderBy(_ => _.Key);
                 viewModel.NetworkBondIf = bndIf;
-                var vrtIf = networkInterfaces.Where(_ => _.Type == NetworkInterfaceType.Virtual.ToString()).OrderBy(_ => _.Name).ToList();
+                var vrtIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaceManagement.NetworkInterfaceType.Virtual).OrderBy(_ => _.Key).ToList();
                 foreach(var v in vrtIf) {
                     if(phyIf.Contains(v) || brgIf.Contains(v) || bndIf.Contains(v)) {
                         vrtIf.Remove(v);

@@ -69,7 +69,6 @@
     <Compile Include="GlusterModel.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MountModel.cs" />
-    <Compile Include="NetworkInterfaceModel.cs" />
     <Compile Include="MacAddressModel.cs" />
     <Compile Include="RsyncModel.cs" />
     <Compile Include="FirewallListModel.cs" />

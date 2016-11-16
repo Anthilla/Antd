@@ -41,6 +41,10 @@
     <Reference Include="library.u2f">
       <HintPath>..\libraries\library.u2f.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Posix.4.0.0.0\lib\net40\Mono.Posix.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
@@ -89,6 +93,7 @@
     <Compile Include="Avahi\AvahiBrowse.cs" />
     <Compile Include="Avahi\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
+    <Compile Include="Bind\BindConfigurationModel.cs" />
     <Compile Include="Configuration\MachineModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
@@ -117,13 +122,14 @@
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MountRepository.cs" />
-    <Compile Include="Database\NetworkInterfaceRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
     <Compile Include="Database\FirewallListRepository.cs" />
     <Compile Include="Database\UserClaimRepository.cs" />
     <Compile Include="Database\UserRepository.cs" />
-    <Compile Include="DhcpServer\DhcpdConfiguration.cs" />
+    <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
+    <Compile Include="Dhcpd\DhcpdConfigurationModel.cs" />
+    <Compile Include="Dhcpd\DhcpdLeases.cs" />
     <Compile Include="DirectoryWatcher.cs" />
     <Compile Include="Firewall\FirewallLists.cs" />
     <Compile Include="Firewall\NFTables.cs" />
@@ -169,9 +175,11 @@
     <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="MountPoint\MountLocal.cs" />
+    <Compile Include="Network\NetworkInterfaceManagement.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Samba\SambaConfiguration.cs" />
+    <Compile Include="Samba\SambaConfigurationModel.cs" />
     <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
@@ -236,6 +244,9 @@
     <Content Include="ShellScript\apilist.txt" />
     <Content Include="ShellScript\scriptslist.txt" />
     <Content Include="Views\antd\part\page-antd-bind.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-samba.html">

@@ -1,25 +1,8 @@
-$(".search-field").keyup(function () {
-    var tableReference = $(this).attr("data-table");
-    var searchIn = $('table[data-search="' + tableReference + '"]').find("tbody");
-    var queryString = $(this).val();
-    var row = searchIn.children("tr");
-    row.each(function () {
-        var thisRow = $(this);
-        var queriedText = $(this).text();
-        if (queriedText.indexOf(queryString) !== -1) {
-            thisRow.show();
-        }
-        if (queriedText.indexOf(queryString) < 0) {
-            thisRow.hide();
-        }
-    });
-});
-
 //START SAMBA
-$("#ActivateSamba").on("click", function () {
+$("#StopSamba").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/samba/set",
+        url: "/services/samba/stop",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -39,13 +22,41 @@ $("#ReloadSamba").on("click", function () {
     });
     _requests.push(aj);
 });
+
+$("#ApplyConfigSamba").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/samba/set",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="RemoveSambaResource"]').click(function () {
+    var guid = $(this).attr("data-id");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/samba/resource/del",
+        type: "POST",
+        data: {
+            Guid : guid
+        },
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
 //END SAMBA
 
 //START BIND
-$("#EnableBind").on("click", function () {
+$("#StopBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/enable",
+        url: "/services/bind/stop",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -57,31 +68,7 @@ $("#EnableBind").on("click", function () {
 $("#ReloadBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/reload",
-        type: "POST",
-        success: function () {
-            location.reload(true);
-        }
-    });
-    _requests.push(aj);
-});
-
-$("#ReconfigBind").on("click", function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/services/activate/reconfig",
-        type: "POST",
-        success: function () {
-            location.reload(true);
-        }
-    });
-    _requests.push(aj);
-});
-
-$("#StopBind").on("click", function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/services/activate/stop",
+        url: "/services/bind/restart",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -93,8 +80,24 @@ $("#StopBind").on("click", function () {
 $("#ApplyConfigBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/set",
+        url: "/services/bind/set",
         type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="RemoveBindZone"]').click(function () {
+    var guid = $(this).attr("data-id");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/bind/zone/del",
+        type: "POST",
+        data: {
+            Guid: guid
+        },
         success: function () {
             location.reload(true);
         }
@@ -104,10 +107,10 @@ $("#ApplyConfigBind").on("click", function () {
 //END BIND
 
 //START DHCP
-$("#ActivateDhcp").on("click", function () {
+$("#StopDhcpd").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/activate/dhcp",
+        url: "/services/dhcpd/stop",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -116,10 +119,10 @@ $("#ActivateDhcp").on("click", function () {
     _requests.push(aj);
 });
 
-$("#RefreshDhcp").on("click", function () {
+$("#ReloadDhcpd").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/refresh/dhcp",
+        url: "/services/dhcpd/restart",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -128,10 +131,10 @@ $("#RefreshDhcp").on("click", function () {
     _requests.push(aj);
 });
 
-$("#ReloadDhcp").on("click", function () {
+$("#ApplyConfigDhcpd").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/services/reloadconfig/dhcp",
+        url: "/services/dhcpd/set",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -140,60 +143,52 @@ $("#ReloadDhcp").on("click", function () {
     _requests.push(aj);
 });
 
-$("#ShowDhcpStructure").mousedown(function () {
-    $("#DhcpStructure").show();
-}).mouseup(function () {
-    $("#DhcpStructure").hide();
-});;
-
-$(document).on("ready", function () {
-    $("#DhcpForm").find('tr[data-object="dhcp-parameter"]').each(function (index) {
-        var dataKey = $(this).find('[name="DataKey"]');
-        dataKey.attr("name", dataKey.attr("name") + "_" + index);
-        var dataValue = $(this).find('[name="DataValue"]');
-        dataValue.attr("name", dataValue.attr("name") + "_" + index);
-        var dataFile = $(this).find('[name="DataFilePath"]');
-        dataFile.attr("name", dataFile.attr("name") + "_" + index);
+$('[data-role="DeleteDhcpdPool"]').click(function () {
+    var guid = $(this).attr("data-id");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/dhcpd/pool/del",
+        type: "POST",
+        data: {
+            Guid: guid
+        },
+        success: function () {
+            location.reload(true);
+        }
     });
+    _requests.push(aj);
 });
 
-$(document).on("ready", function () {
-    $("[data-share-form]").each(function () {
-        $(this).find('[data-object="share-parameter"]').each(function (index) {
-            var dataKey = $(this).find('[name="DataKey"]');
-            dataKey.attr("name", dataKey.attr("name") + "_" + index);
-            var dataValue = $(this).find('[name="DataValue"]');
-            dataValue.attr("name", dataValue.attr("name") + "_" + index);
-            var dataFile = $(this).find('[name="DataFilePath"]');
-            dataFile.attr("name", dataFile.attr("name") + "_" + index);
-        });
+$('[data-role="DeleteDhcpdClass"]').click(function () {
+    var guid = $(this).attr("data-id");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/dhcpd/class/del",
+        type: "POST",
+        data: {
+            Guid: guid
+        },
+        success: function () {
+            location.reload(true);
+        }
     });
+    _requests.push(aj);
 });
 
-$("#AddNewParameterDhcp").on("click", function () {
-    $("#NewParameterDhcpDashboard").toggle();
-});
-
-$("#AddNewShare").on("click", function () {
-    $("#NewDhcpShare").toggle();
-});
-
-$(document).on("ready", function () {
-    $.when(
-        $('input[data-array="dhcp"]').selectize({
-            delimiter: ";",
-            persist: false,
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input
-                }
-            }
-        })
-    ).done(function () {
-        $(".selectize-input.items").find('div.item[data-Value=""]').remove();
-        $('input[data-array="dhcp"]').hide();
+$('[data-role="DeleteDhcpdReservation"]').click(function () {
+    var guid = $(this).attr("data-id");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/dhcpd/reservation/del",
+        type: "POST",
+        data: {
+            Guid: guid
+        },
+        success: function () {
+            location.reload(true);
+        }
     });
+    _requests.push(aj);
 });
 //END DHCP
 

@@ -10,15 +10,19 @@ using antdlib.Systemd;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Avahi;
+using Antd.Bind;
 using Antd.Configuration;
 using Antd.Database;
+using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.MountPoint;
+using Antd.Samba;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Users;
+using Newtonsoft.Json;
 using RaptorDB;
 
 namespace Antd {
@@ -78,7 +82,6 @@ namespace Antd {
             database.RegisterView(new NftView());
             database.RegisterView(new TimerView());
             database.RegisterView(new MountView());
-            database.RegisterView(new NetworkInterfaceView());
             database.RegisterView(new RsyncView());
             database.RegisterView(new UserClaimView());
             database.RegisterView(new UserView());
@@ -104,6 +107,18 @@ namespace Antd {
 
         public void PrepareConfiguration() {
             _machineConfiguration.Set();
+
+            try {
+                var conf = $"{Parameter.AntdCfg}/machine.conf";
+                if(!File.Exists(conf)) {
+                    var machineDefault = new MachineModel();
+                    File.WriteAllText(conf, JsonConvert.SerializeObject(machineDefault, Formatting.Indented));
+                }
+            }
+            catch(Exception ex) {
+                ConsoleLogger.Log(ex);
+            }
+
             ConsoleLogger.Log("configuration prepared");
         }
 
@@ -195,15 +210,6 @@ namespace Antd {
             ConsoleLogger.Log("machine configured");
         }
 
-        public void ImportNetworkConfiguration() {
-            if(!Parameter.IsUnix)
-                return;
-            if(!new NetworkInterfaceRepository().GetAll().Any()) {
-                new NetworkInterfaceRepository().Import();
-            }
-            ConsoleLogger.Log("network interfaces imported");
-        }
-
         public void Ssh() {
             if(!Parameter.IsUnix) {
                 return;
@@ -248,6 +254,49 @@ namespace Antd {
                 }
             }
             ConsoleLogger.Log("services ready");
+        }
+
+        public void StartDhcpd() {
+            if(!Parameter.IsUnix)
+                return;
+            var dhcpServerOptionsRepository = new DhcpServerOptionsRepository();
+            var dhcpServerSubnetRepository = new DhcpServerSubnetRepository();
+            var dhcpdConfiguration = new DhcpdConfiguration();
+            var dhcpdIsActive = dhcpServerOptionsRepository.Get() != null && dhcpServerSubnetRepository.Get() != null;
+            if(dhcpdIsActive) {
+                dhcpdConfiguration.Set();
+                dhcpdConfiguration.Enable();
+                dhcpdConfiguration.Restart();
+                ConsoleLogger.Log("dhcp server start");
+            }
+        }
+
+        public void StartBind() {
+            if(!Parameter.IsUnix)
+                return;
+            var bindServerOptionsRepository = new BindServerOptionsRepository();
+            var bindConfiguration = new BindConfiguration();
+            var bindIsActive = bindServerOptionsRepository.Get() != null;
+            if(bindIsActive) {
+                bindConfiguration.Set();
+                bindConfiguration.Enable();
+                bindConfiguration.Restart();
+                ConsoleLogger.Log("bind server start");
+            }
+        }
+
+        public void StartSamba() {
+            if(!Parameter.IsUnix)
+                return;
+            var sambaGlobalRepository = new SambaGlobalRepository();
+            var sambaConfiguration = new SambaConfiguration();
+            var sambaIsActive = sambaGlobalRepository.Get() != null;
+            if(sambaIsActive) {
+                sambaConfiguration.Set();
+                sambaConfiguration.Enable();
+                sambaConfiguration.Restart();
+                ConsoleLogger.Log("samba server start");
+            }
         }
 
         private readonly SyslogConfiguration _syslogConfiguration = new SyslogConfiguration();

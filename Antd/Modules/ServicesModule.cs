@@ -31,7 +31,7 @@ using antdlib.common;
 using antdlib.views;
 using Antd.Bind;
 using Antd.Database;
-using Antd.DhcpServer;
+using Antd.Dhcpd;
 using Antd.Samba;
 using Nancy;
 using Nancy.Security;
@@ -58,23 +58,12 @@ namespace Antd.Modules {
             this.RequiresAuthentication();
 
             #region [    DHCPD    ]
-            Post["/services/dhcpd/enable"] = x => {
-                _dhcpdConfiguration.Enable();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/dhcpd/disable"] = x => {
-                _dhcpdConfiguration.Disable();
-                return HttpStatusCode.OK;
-            };
-
             Post["/services/dhcpd/set"] = x => {
                 _dhcpdConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/dhcpd/restart"] = x => {
-                _dhcpdConfiguration.Enable();
                 _dhcpdConfiguration.Restart();
                 return HttpStatusCode.OK;
             };
@@ -154,7 +143,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            Post["/services/dhcpd/class/add"] = x => {
+            Post["/services/dhcpd/class"] = x => {
                 string name = Request.Form.Name;
                 string macVendor = Request.Form.MacVendor;
                 _dhcpServerClassRepository.Create(name, macVendor);
@@ -167,7 +156,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/dhcpd/pool/add"] = x => {
+            Post["/services/dhcpd/pool"] = x => {
                 string option = Request.Form.Option;
                 _dhcpServerPoolRepository.Create(option.SplitToList());
                 return Response.AsRedirect("/");
@@ -179,7 +168,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/dhcpd/reservation/add"] = x => {
+            Post["/services/dhcpd/reservation"] = x => {
                 string hostName = Request.Form.HostName;
                 string macAddress = Request.Form.MacAddress;
                 string ipAddress = Request.Form.IpAddress;
@@ -196,39 +185,20 @@ namespace Antd.Modules {
             #endregion
 
             #region [    BIND    ]
-            Post["/services/bind/enable"] = x => {
-                _bindConfiguration.Enable();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/bind/disable"] = x => {
-                _bindConfiguration.Disable();
-                return HttpStatusCode.OK;
-            };
-
             Post["/services/bind/set"] = x => {
                 _bindConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/bind/restart"] = x => {
-                _bindConfiguration.Enable();
                 _bindConfiguration.Restart();
+                _bindConfiguration.RndcReconfig();
+                _bindConfiguration.RndcReload();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/bind/stop"] = x => {
                 _bindConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/bind/reload"] = x => {
-                _bindConfiguration.RndcReload();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/bind/reconfig"] = x => {
-                _bindConfiguration.RndcReconfig();
                 return HttpStatusCode.OK;
             };
 
@@ -319,7 +289,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/");
             };
 
-            Post["/services/bind/zone/add"] = x => {
+            Post["/services/bind/zone"] = x => {
                 string name = Request.Form.Name;
                 string type = Request.Form.Type;
                 string file = Request.Form.File;
@@ -339,23 +309,12 @@ namespace Antd.Modules {
             #endregion
 
             #region [    SAMBA    ]
-            Post["/services/samba/enable"] = x => {
-                _sambaConfiguration.Enable();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/services/samba/disable"] = x => {
-                _sambaConfiguration.Disable();
-                return HttpStatusCode.OK;
-            };
-
             Post["/services/samba/set"] = x => {
                 _sambaConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/samba/restart"] = x => {
-                _sambaConfiguration.Enable();
                 _sambaConfiguration.Restart();
                 return HttpStatusCode.OK;
             };
