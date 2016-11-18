@@ -34,21 +34,14 @@ using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.common.Tool;
-using antdlib.Systemd;
-using antdlib.views;
 
 namespace Antd.MountPoint {
     public class Mount {
-
-        private static readonly Database.MountRepository MountRepository = new Database.MountRepository();
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
         private static readonly Bash Bash = new Bash();
 
-        //"mount -o remount,nodev,nosuid,mode=1777 /dev/shm"
-        //"mount -o mode=1770,gid=78 -t hugetlbfs hugetlbfs /hugepages"
-        //"mount -o default -t ocfs2_dlmfs dlm /sys/kernel/dlm"
         private static readonly Dictionary<string, string> DefaultWorkingDirectoriesWithOptions = new Dictionary<string, string> {
             {"/dev/shm", "-o remount,nodev,nosuid,mode=1777"},
             {"/hugepages", "-o mode=1770,gid=78 -t hugetlbfs hugetlbfs"},
@@ -57,60 +50,86 @@ namespace Antd.MountPoint {
 
         public void WorkingDirectories() {
             foreach(var dir in DefaultWorkingDirectories) {
-                var mntDir = Mounts.SetDirsPath(dir);
+                var mntDir = MountHelper.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
                 Directory.CreateDirectory(mntDir);
-                if(Mounts.IsAlreadyMounted(dir))
+                if(MountHelper.IsAlreadyMounted(dir))
                     continue;
                 ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                 SetBind(mntDir, dir);
             }
             foreach(var kvp in DefaultWorkingDirectoriesWithOptions) {
-                if(Mounts.IsAlreadyMounted(kvp.Key) == false) {
+                if(MountHelper.IsAlreadyMounted(kvp.Key) == false) {
                     Bash.Execute($"mount {kvp.Value} {kvp.Key}", false);
                 }
             }
         }
 
-        public void AllDirectories() {
-            MountRepository.DeleteAll();
-
-            var all = MountRepository.GetAll().ToList();
-
-            if(!all.Any()) {
-                foreach(var path in DefaultWorkingDirectories.Where(path => MountRepository.GetByPath(path) == null)) {
-                    MountRepository.Create(new Dictionary<string, string> {
-                        {"Path", path},
-                        {"MountContext", MountContext.Core.ToString()},
-                        {"MountEntity", MountEntity.Directory.ToString()}
-                    });
-                }
+        public List<MountModel> GetAll() {
+            var list = new List<MountModel>();
+            var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+            foreach(var directory in directories) {
+                var realPath = MountHelper.GetDirsPath(directory);
+                var mo = new MountModel {
+                    SystemPath = MountHelper.GetDirsPath(Path.GetFileName(directory)),
+                    RepoDirsPath = realPath,
+                    Context = MountContext.External,
+                    Entity = MountEntity.Directory
+                };
+                list.Add(mo);
             }
-            ConsoleLogger.Log("stored mount info checked");
+            var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            foreach(var file in files) {
+                var realPath = MountHelper.GetFilesPath(file);
+                var mo = new MountModel {
+                    SystemPath = MountHelper.GetFilesPath(Path.GetFileName(file)),
+                    RepoDirsPath = realPath,
+                    Context = MountContext.External,
+                    Entity = MountEntity.File
+                };
+                list.Add(mo);
 
-            CheckCurrentStatus();
-            RemoveDuplicates();
-            ConsoleLogger.Log("current mount status checked");
+            }
+            return list;
+        }
 
-            all = MountRepository.GetAll().ToList();
+        public void AllDirectories() {
+            var list = new List<MountModel>();
+            var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+            foreach(var directory in directories) {
+                var realPath = MountHelper.GetDirsPath(directory);
+                var mo = new MountModel {
+                    SystemPath = MountHelper.GetDirsPath(Path.GetFileName(directory)),
+                    RepoDirsPath = realPath,
+                    Context = MountContext.External,
+                    Entity = MountEntity.Directory
+                };
+                list.Add(mo);
+            }
+            var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            foreach(var file in files) {
+                var realPath = MountHelper.GetFilesPath(file);
+                var mo = new MountModel {
+                    SystemPath = MountHelper.GetFilesPath(Path.GetFileName(file)),
+                    RepoDirsPath = realPath,
+                    Context = MountContext.External,
+                    Entity = MountEntity.File
+                };
+                list.Add(mo);
 
-            var directoryMounts = all.Where(m => m.MountEntity == MountEntity.Directory.ToString()).ToArray();
-            foreach(var t in directoryMounts) {
+            }
+            ConsoleLogger.Log("directories and files enumerated");
+
+            var directoryMounts = list.Where(m => m.Entity == MountEntity.Directory).ToList();
+            foreach(var directoryMount in directoryMounts) {
                 try {
-                    var dir = t.Path.Replace("\\", "");
-                    var mntDir = Mounts.SetDirsPath(dir);
-                    if(Mounts.IsAlreadyMounted(dir) == false) {
+                    var dir = directoryMount.SystemPath.Replace("\\", "");
+                    var mntDir = directoryMount.RepoDirsPath;
+                    if(MountHelper.IsAlreadyMounted(dir) == false) {
                         Directory.CreateDirectory(dir);
                         Directory.CreateDirectory(mntDir);
-                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                         SetBind(mntDir, dir);
-
-                        var associatedUnits = t.AssociatedUnits.SplitToList();
-                        foreach(var unit in associatedUnits) {
-                            if(Systemctl.IsActive(unit) == false) {
-                                Systemctl.Restart(unit);
-                            }
-                        }
+                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                     }
                 }
                 catch(Exception ex) {
@@ -119,180 +138,90 @@ namespace Antd.MountPoint {
             }
             ConsoleLogger.Log("directories mounted");
 
-            var fileMounts = all.Where(m => m.MountEntity == MountEntity.File.ToString()).ToArray();
-            foreach(var t in fileMounts) {
-                var file = t.Path.Replace("\\", "");
-                var mntFile = Mounts.SetFilesPath(file);
+            var fileMounts = list.Where(m => m.Entity == MountEntity.File).ToList();
+            foreach(var fileMount in fileMounts) {
+                var file = fileMount.SystemPath.Replace("\\", "");
+                var mntFile = fileMount.RepoDirsPath;
                 if(System.IO.File.Exists(mntFile)) {
                     var path = Path.GetDirectoryName(file);
                     var mntPath = Path.GetDirectoryName(mntFile);
-                    if(Mounts.IsAlreadyMounted(file) == false) {
+                    if(MountHelper.IsAlreadyMounted(file) == false) {
                         Bash.Execute($"mkdir -p {path}", false);
                         Bash.Execute($"mkdir -p {mntPath}", false);
                         if(!System.IO.File.Exists(file)) {
                             Bash.Execute($"cp {mntFile} {file}", false);
                         }
-                        ConsoleLogger.Log($"mount {mntFile} -> {file}");
                         SetBind(mntFile, file);
-
-                        var associatedUnits = t.AssociatedUnits.SplitToList();
-                        foreach(var unit in associatedUnits) {
-                            if(Systemctl.IsActive(unit) == false) {
-                                Systemctl.Restart(unit);
-                            }
-                        }
+                        ConsoleLogger.Log($"mount {mntFile} -> {file}");
                     }
                 }
             }
             ConsoleLogger.Log("files mounted");
-
-            foreach(var t in directoryMounts) {
-                CheckMount(t.Path);
-            }
-            ConsoleLogger.Log("detected directories status checked");
-
         }
 
-        private static void RemoveDuplicates() {
-            var all = MountRepository.GetAll().ToList();
-            var sorted = all.GroupBy(a => a.Path);
-            foreach(var group in sorted) {
-                if(group.Count() > 1) {
-                    var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
-                    foreach(var g in old) {
-                        MountRepository.Delete(g.Id);
-                    }
-                }
-            }
-        }
-
-        public void CheckCurrentStatus() {
-            var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
-            foreach(var t in directories) {
-                var realPath = Mounts.GetDirsPath(t);
-                var mount = MountRepository.GetByPath(realPath);
-                if(mount == null) {
-                    MountRepository.Create(new Dictionary<string, string> {
-                        {"Path", realPath},
-                        {"MountContext", MountContext.External.ToString()},
-                        {"MountEntity", MountEntity.Directory.ToString()}
-                    });
-                }
-                try {
-                    Bash.Execute($"mkdir -p {t}", false);
-                    Bash.Execute($"mkdir -p {realPath}", false);
-                    Bash.Execute($"cp {t} {realPath}", false);
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Warn(ex.Message);
-                }
-            }
-            ConsoleLogger.Log("current directories status checked");
-
-            var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
-            foreach(var t in files) {
-                var realPath = Mounts.GetFilesPath(t);
-                var mount = MountRepository.GetByPath(realPath);
-                if(mount == null) {
-                    MountRepository.Create(new Dictionary<string, string> {
-                        {"Path", realPath},
-                        {"MountContext", MountContext.External.ToString()},
-                        {"MountEntity", MountEntity.File.ToString()}
-                    });
-                }
-                try {
-                    var path = t.GetAllStringsButLast('/');
-                    var mntPath = realPath.GetAllStringsButLast('/');
-                    Bash.Execute($"mkdir -p {path}", false);
-                    Bash.Execute($"mkdir -p {mntPath}", false);
-                    Bash.Execute($"cp {t} {realPath}", false);
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Warn(ex.Message);
-                }
-            }
-            ConsoleLogger.Log("current files status checked");
-        }
-
-        public void Check() {
-            var mounts = MountRepository.GetAll().ToList();
-            if(!mounts.Any())
-                return;
-            foreach(var t in mounts) {
-                ConsoleLogger.Log($"{t.Path}:");
-                CheckMount(t.Path);
-            }
-        }
+        //public void Check() {
+        //    var mounts = MountRepository.GetAll().ToList();
+        //    if(!mounts.Any())
+        //        return;
+        //    foreach(var t in mounts) {
+        //        ConsoleLogger.Log($"{t.Path}:");
+        //        CheckMount(t.Path);
+        //    }
+        //}
 
         public void Dir(string directory) {
-            var tryget = MountRepository.GetByPath(directory);
-            if(tryget == null) {
-                MountRepository.Create(new Dictionary<string, string> {
-                        {"Path", directory},
-                        {"MountContext", MountContext.External.ToString()},
-                        {"MountEntity", MountEntity.Directory.ToString()}
-                    });
-                var mntDir = Mounts.SetDirsPath(directory);
-                Directory.CreateDirectory(directory);
-                Directory.CreateDirectory(mntDir);
-                SetBind(mntDir, directory);
-            }
+            var mntDir = MountHelper.SetDirsPath(directory);
+            Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(mntDir);
+            SetBind(mntDir, directory);
         }
 
         public void File(string file) {
-            var tryget = MountRepository.GetByPath(file);
-            if(tryget == null) {
-                MountRepository.Create(new Dictionary<string, string> {
-                        {"Path", file},
-                        {"MountContext", MountContext.External.ToString()},
-                        {"MountEntity", MountEntity.File.ToString()}
-                    });
-                var mntFile = Mounts.SetFilesPath(file);
-                SetBind(mntFile, file);
-            }
+            var mntFile = MountHelper.SetFilesPath(file);
+            SetBind(mntFile, file);
         }
 
-        private readonly Dfp _dfp = new Dfp();
+        //private readonly Dfp _dfp = new Dfp();
 
-        private void CheckMount(string directory) {
-            var isMntd = Mounts.IsAlreadyMounted(directory);
-            var mntDirectory = Mounts.SetDirsPath(directory);
-            var timestampNow = Timestamp.Now;
-            _dfp.Set(mntDirectory, timestampNow);
-            _dfp.Set(directory, timestampNow);
-            var dirsTimestamp = _dfp.GetTimestamp(mntDirectory);
-            var dirsDfp = dirsTimestamp != null;
-            var directoryTimestamp = _dfp.GetTimestamp(directory);
-            var directoryDfp = directoryTimestamp != null;
-            if(isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
-                MountRepository.SetAsMountedReadOnly(directory);
-            }
-            else if(isMntd && dirsDfp && directoryDfp) {
-                if(dirsTimestamp == directoryTimestamp) {
-                    MountRepository.SetAsMounted(directory, mntDirectory);
-                }
-                else {
-                    MountRepository.SetAsDifferentMounted(directory);
-                }
-            }
-            else if(isMntd == false && dirsDfp && directoryDfp == false) {
-                MountRepository.SetAsNotMounted(directory);
-            }
-            else if(isMntd && dirsDfp == false && directoryDfp) {
-                MountRepository.SetAsTmpMounted(directory);
-            }
-            else if(isMntd == false && dirsDfp == false && directoryDfp == false) {
-                MountRepository.SetAsError(directory);
-            }
-            else {
-                MountRepository.SetAsError(directory);
-            }
-            _dfp.Delete(mntDirectory);
-            _dfp.Delete(directory);
-        }
+        //private void CheckMount(string directory) {
+        //    var isMntd = MountHelper.IsAlreadyMounted(directory);
+        //    var mntDirectory = MountHelper.SetDirsPath(directory);
+        //    var timestampNow = Timestamp.Now;
+        //    _dfp.Set(mntDirectory, timestampNow);
+        //    _dfp.Set(directory, timestampNow);
+        //    var dirsTimestamp = _dfp.GetTimestamp(mntDirectory);
+        //    var dirsDfp = dirsTimestamp != null;
+        //    var directoryTimestamp = _dfp.GetTimestamp(directory);
+        //    var directoryDfp = directoryTimestamp != null;
+        //    if(isMntd && directoryTimestamp == "unauthorizedaccessexception" && dirsTimestamp == "unauthorizedaccessexception") {
+        //        MountRepository.SetAsMountedReadOnly(directory);
+        //    }
+        //    else if(isMntd && dirsDfp && directoryDfp) {
+        //        if(dirsTimestamp == directoryTimestamp) {
+        //            MountRepository.SetAsMounted(directory, mntDirectory);
+        //        }
+        //        else {
+        //            MountRepository.SetAsDifferentMounted(directory);
+        //        }
+        //    }
+        //    else if(isMntd == false && dirsDfp && directoryDfp == false) {
+        //        MountRepository.SetAsNotMounted(directory);
+        //    }
+        //    else if(isMntd && dirsDfp == false && directoryDfp) {
+        //        MountRepository.SetAsTmpMounted(directory);
+        //    }
+        //    else if(isMntd == false && dirsDfp == false && directoryDfp == false) {
+        //        MountRepository.SetAsError(directory);
+        //    }
+        //    else {
+        //        MountRepository.SetAsError(directory);
+        //    }
+        //    _dfp.Delete(mntDirectory);
+        //    _dfp.Delete(directory);
+        //}
 
         private static void SetBind(string source, string destination) {
-            if(Mounts.IsAlreadyMounted(source, destination))
+            if(MountHelper.IsAlreadyMounted(source, destination))
                 return;
             Bash.Execute($"mount -o bind {source} {destination}", false);
         }

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using antdlib.common.Tool;
 
 namespace antdlib.common.Helpers {
-    public class Mounts {
+    public class MountHelper {
 
         private static readonly Bash Bash = new Bash();
 

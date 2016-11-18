@@ -123,7 +123,7 @@ namespace Antd.Gluster {
         }
 
         public void VolumeMount(string node, string volumeName, string mountPoint) {
-            if(Mounts.IsAlreadyMounted(mountPoint) == false) {
+            if(MountHelper.IsAlreadyMounted(mountPoint) == false) {
                 Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
             }
         }

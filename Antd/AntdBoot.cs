@@ -17,6 +17,7 @@ using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.MountPoint;
+using Antd.Overlay;
 using Antd.Samba;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -81,7 +82,6 @@ namespace Antd {
             database.RegisterView(new FirewallListView());
             database.RegisterView(new NftView());
             database.RegisterView(new TimerView());
-            database.RegisterView(new MountView());
             database.RegisterView(new RsyncView());
             database.RegisterView(new UserClaimView());
             database.RegisterView(new UserView());
@@ -114,13 +114,13 @@ namespace Antd {
         public void SetOsMount() {
             if(!Parameter.IsUnix)
                 return;
-            if(Mounts.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                 _bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
             }
             const string module = "/mnt/cdrom/Kernel/active-modules";
             var kernelRelease = _bash.Execute("uname -r").Trim();
             var linkedRelease = _bash.Execute($"file {module}").Trim();
-            if(Mounts.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
+            if(MountHelper.IsAlreadyMounted(module) == false && linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
                 Directory.CreateDirectory(moduleDir);
                 _bash.Execute($"mount {module} {moduleDir}", false);
@@ -409,8 +409,8 @@ namespace Antd {
                 return;
             }
             File.Copy($"{Parameter.Resources}/FILE_etc_systemd_journald.conf", file);
-            var realFileName = Mounts.GetFilesPath("FILE_etc_systemd_journald.conf");
-            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = MountHelper.GetFilesPath("FILE_etc_systemd_journald.conf");
+            if(MountHelper.IsAlreadyMounted(file, realFileName) == false) {
                 _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart systemd-journald.service", false);
@@ -420,8 +420,8 @@ namespace Antd {
         public void LoadCollectd() {
             var file = $"{Parameter.RepoDirs}/FILE_etc_collectd.conf";
             File.Copy($"{Parameter.Resources}/FILE_etc_collectd.conf", file);
-            var realFileName = Mounts.GetFilesPath("FILE_etc_collectd.conf");
-            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = MountHelper.GetFilesPath("FILE_etc_collectd.conf");
+            if(MountHelper.IsAlreadyMounted(file, realFileName) == false) {
                 _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart collectd.service", false);
@@ -430,8 +430,8 @@ namespace Antd {
         public void LoadWpaSupplicant() {
             var file = $"{Parameter.RepoDirs}/FILE_etc_wpa_supplicant_wpa_suplicant.conf";
             File.Copy($"{Parameter.Resources}/FILE_etc_wpa_supplicant_wpa_suplicant.conf", file);
-            var realFileName = Mounts.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
-            if(Mounts.IsAlreadyMounted(file, realFileName) == false) {
+            var realFileName = MountHelper.GetFilesPath("FILE_etc_wpa_supplicant_wpa__suplicant.conf");
+            if(MountHelper.IsAlreadyMounted(file, realFileName) == false) {
                 _mount.File(realFileName);
             }
             _bash.Execute("systemctl restart wpa_supplicant.service", false);

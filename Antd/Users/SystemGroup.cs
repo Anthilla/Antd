@@ -33,7 +33,6 @@ using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.common.Tool;
-using Antd.Database;
 using Antd.MountPoint;
 
 namespace Antd.Users {
@@ -41,7 +40,7 @@ namespace Antd.Users {
     public class SystemGroup {
         private const string File = "/etc/group";
 
-        private static readonly string MntFile = Mounts.SetFilesPath(File);
+        private static readonly string MntFile = MountHelper.SetFilesPath(File);
         private readonly Mount _mount = new Mount();
 
         public void SetReady() {
@@ -56,7 +55,7 @@ namespace Antd.Users {
         }
 
         private static bool CheckIsActive() {
-            return new MountRepository().GetByPath(File) != null;
+            return new Mount().GetAll().First(_ => _.SystemPath == File) != null;
         }
 
         public bool IsActive => CheckIsActive();

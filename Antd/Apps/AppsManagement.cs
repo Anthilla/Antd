@@ -94,7 +94,7 @@ namespace Antd.Apps {
                 Directory.CreateDirectory("/framework");
                 Directory.CreateDirectory(frameworkDir);
                 ConsoleLogger.Log("framework directories created");
-                if(Mounts.IsAlreadyMounted(frameworkDir) == false) {
+                if(MountHelper.IsAlreadyMounted(frameworkDir) == false) {
                     ConsoleLogger.Log($">> mount {activeVersionPath} {frameworkDir}");
                     _bash.Execute($"mount {activeVersionPath} {frameworkDir}", false);
                     ConsoleLogger.Log("application fs mounted");

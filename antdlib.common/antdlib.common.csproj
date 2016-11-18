@@ -56,7 +56,7 @@
     <Compile Include="Encryption.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem.cs" />
-    <Compile Include="Helpers\Mounts.cs" />
+    <Compile Include="Helpers\MountHelper.cs" />
     <Compile Include="MapToModel.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

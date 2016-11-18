@@ -38,7 +38,9 @@ using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Info;
+using Antd.MountPoint;
 using Antd.Network;
+using Antd.Overlay;
 using Antd.Samba;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -172,7 +174,8 @@ namespace Antd.Modules {
 
             Get["/part/dhcp/leases"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                var list = DhcpdLeases.GetAll();
+                var dhcpdLeases = new DhcpdLeases();
+                var list = dhcpdLeases.List();
                 viewModel.DhcpdLeases = list;
                 viewModel.EmptyList = !list.Any();
                 return View["antd/part/page-antd-dhcp-leases", viewModel];
@@ -224,7 +227,7 @@ namespace Antd.Modules {
 
             Get["/part/storage"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                viewModel.Mounts = new MountRepository().GetAll();
+                viewModel.Mounts = new Mount().GetAll();
                 viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                 viewModel.DisksList = Disks.List();
                 viewModel.ZpoolList = _zpool.List();

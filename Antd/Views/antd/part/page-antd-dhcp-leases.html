@@ -8,10 +8,58 @@
     @Each.DhcpdLeases
     <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
         <div class="panel-header bg-anthilla-gray fg-white">
-            @Current.Item1
+            @Current.Name
+            
+            @If.Current.IsExpired
+            <p class="fg-orange" style="float: right;">expired</p>
+            @EndIf
         </div>
         <div class="panel-content" style="display: none;">
-            @Current.Item2
+            <table class="table" style="table-layout: fixed;">
+                <tr>
+                    <td>
+                        <label>
+                            Start
+                        </label>
+                    </td>
+                    <td>@Current.StartTimeStr
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>
+                            End
+                        </label>
+                    </td>
+                    <td>@Current.EndTimeStr
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>
+                            Hardware
+                        </label>
+                    </td>
+                    <td>@Current.Hardware
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>
+                            Hostname
+                        </label>
+                    </td>
+                    <td>@Current.ClientHostname
+                    </td>
+                </tr>
+                @If.Current.IsExpired
+                 <tr>
+                     <td colspan="2">
+                         <input data-role="RemoveDhcpLease" value="Remove" class="bg-anthilla-orange fg-anthilla-gray" style="width: 90%; height: 28px;" />
+                     </td>
+                 </tr>
+                @EndIf
+            </table>
         </div>
     </div>
     @EndEach

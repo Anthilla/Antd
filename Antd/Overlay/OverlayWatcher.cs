@@ -36,7 +36,7 @@ using antdlib.common.Helpers;
 using antdlib.common.Tool;
 using Antd.MountPoint;
 
-namespace Antd {
+namespace Antd.Overlay {
     public class OverlayWatcher {
         public void StartWatching() {
             try {
@@ -102,7 +102,7 @@ namespace Antd {
             var overlayDir = Parameter.Overlay;
             var path = overlayPath.Replace(Parameter.Overlay, "");
             //creo cartella in mntDIRS
-            var dirsPath = Mounts.SetDirsPath(path);
+            var dirsPath = MountHelper.SetDirsPath(path);
             Bash.Execute($"mkdir -p {dirsPath}", false);
             //copio rsync overlayPath in mntDIRS
             Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/", false);

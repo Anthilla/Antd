@@ -111,7 +111,6 @@
     <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
-    <Compile Include="Database\MountRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
     <Compile Include="Database\FirewallListRepository.cs" />
@@ -164,8 +163,8 @@
     <Compile Include="Helpers\SelectizerMapModel.cs" />
     <Compile Include="Helpers\StatusSysctl.cs" />
     <Compile Include="MountPoint\Dfp.cs" />
+    <Compile Include="MountPoint\MountModel.cs" />
     <Compile Include="MountPoint\Mount.cs" />
-    <Compile Include="MountPoint\MountLocal.cs" />
     <Compile Include="Network\NetworkInterfaceManagement.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
