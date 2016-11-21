@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using antdlib.common;
+using Newtonsoft.Json;
 
 namespace Antd.Bind {
     public class BindConfigurationModel {
@@ -25,8 +27,8 @@ namespace Antd.Bind {
         public string DnssecValidation { get; set; } = "yes";
         public string DnssecLookaside { get; set; } = "auto";
         public string AuthNxdomain { get; set; } = "yes";
-        public string KeyName { get; set; }
-        public string KeySecret { get; set; }
+        public string KeyName { get; set; } = "";
+        public string KeySecret { get; set; } = "";
         public string ControlAcl { get; set; } = "inet";
         public string ControlIp { get; set; } = "10.1.19.1";
         public string ControlPort { get; set; } = "953";
@@ -37,7 +39,7 @@ namespace Antd.Bind {
         public string LoggingPrintCategory { get; set; } = "yes";
         public string LoggingPrintSeverity { get; set; } = "yes";
         public string LoggingPrintTime { get; set; } = "yes";
-        public string TrustedKeys { get; set; }
+        public string TrustedKeys { get; set; } = "";
         public List<string> AclLocalInterfaces { get; set; } = new List<string> { "127.0.0.1" };
         public List<string> AclInternalInterfaces { get; set; } = new List<string> { "10.1.19.1", "10.99.19.1" };
         public List<string> AclExternalInterfaces { get; set; } = new List<string> { "192.168.111.2", "192.168.222.2" };
@@ -45,6 +47,34 @@ namespace Antd.Bind {
         public List<string> AclInternalNetworks { get; set; } = new List<string> { "10.1.0.0/16", "10.99.0.0/16" };
         public List<string> AclExternalNetworks { get; set; } = new List<string> { "192.168.111.2/32", "192.168.222.2/32" };
 
+        [JsonIgnore]
+        public string ForwardersString => Forwarders.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowNotifyString => AllowNotify.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowTransferString => AllowTransfer.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowQueryString => AllowQuery.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowRecursionString => AllowRecursion.JoinToString(", ");
+        [JsonIgnore]
+        public string ListenOnV6String => ListenOnV6.JoinToString(", ");
+        [JsonIgnore]
+        public string ListenOnPort53String => ListenOnPort53.JoinToString(", ");
+        [JsonIgnore]
+        public string ControlAllowString => ControlAllow.JoinToString(", ");
+        [JsonIgnore]
+        public string AclLocalInterfacesString => AclLocalInterfaces.JoinToString(", ");
+        [JsonIgnore]
+        public string AclInternalInterfacesString => AclInternalInterfaces.JoinToString(", ");
+        [JsonIgnore]
+        public string AclExternalInterfacesString => AclExternalInterfaces.JoinToString(", ");
+        [JsonIgnore]
+        public string AclLocalNetworksString => AclLocalNetworks.JoinToString(", ");
+        [JsonIgnore]
+        public string AclInternalNetworksString => AclInternalNetworks.JoinToString(", ");
+        [JsonIgnore]
+        public string AclExternalNetworksString => AclExternalNetworks.JoinToString(", ");
 
         public List<BindConfigurationZoneModel> Zones { get; set; } = new List<BindConfigurationZoneModel>();
         public List<BindConfigurationZoneFileModel> ZoneFiles { get; set; } = new List<BindConfigurationZoneFileModel>();
@@ -59,6 +89,13 @@ namespace Antd.Bind {
         public List<string> AllowUpdate { get; set; } = new List<string> { "loif", "iif", "lonet", "inet", "onet", "key updbindkey" };
         public List<string> AllowQuery { get; set; } = new List<string> { "any" };
         public List<string> AllowTransfer { get; set; } = new List<string> { "loif", "iif", "lonet", "inet", "onet" };
+
+        [JsonIgnore]
+        public string AllowUpdateString => AllowUpdate.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowQueryString => AllowQuery.JoinToString(", ");
+        [JsonIgnore]
+        public string AllowTransferString => AllowTransfer.JoinToString(", ");
     }
 
     public class BindConfigurationZoneFileModel {

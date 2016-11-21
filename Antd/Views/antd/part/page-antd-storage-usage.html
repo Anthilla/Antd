@@ -1,0 +1,18 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Disks Usage</legend>
+    <table class="table">
+        <tbody>
+            @Each.DisksUsage
+            <tr>
+                <td>@Current.Filesystem</td>
+                <td>@Current.Type</td>
+                <td>@Current.Size</td>
+                <td>@Current.Used</td>
+                <td>@Current.Avail</td>
+                <td>@Current.UsePercentage</td>
+                <td>@Current.MountedOn</td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

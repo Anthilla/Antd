@@ -147,21 +147,19 @@ namespace Antd.Samba {
         }
 
         public void Enable() {
-            if(Systemctl.IsEnabled(ServiceName1) == false) {
-                Systemctl.Enable(ServiceName1);
+            if(_serviceModel == null) {
+                return;
             }
-            if(Systemctl.IsEnabled(ServiceName2) == false) {
-                Systemctl.Enable(ServiceName2);
-            }
-            if(Systemctl.IsEnabled(ServiceName3) == false) {
-                Systemctl.Enable(ServiceName3);
-            }
+            _serviceModel.IsActive = true;
+            Save(_serviceModel);
         }
 
         public void Disable() {
-            Systemctl.Disable(ServiceName1);
-            Systemctl.Disable(ServiceName2);
-            Systemctl.Disable(ServiceName3);
+            if(_serviceModel == null) {
+                return;
+            }
+            _serviceModel.IsActive = false;
+            Save(_serviceModel);
         }
 
         public void Stop() {

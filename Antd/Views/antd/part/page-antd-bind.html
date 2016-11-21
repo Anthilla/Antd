@@ -1,8 +1,13 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend>Bind
+    <legend>
+        Bind
+        @IfNot.BindIsActive
+        <i id="EnableBind" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
         @If.BindIsActive
         <i id="StopBind" class="icon-cancel-2 fg-anthilla-green" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         <i id="ReloadBind" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="DisableBind" class="icon-cycle fg-anthilla-green" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
         <i id="ApplyConfigBind" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         @EndIf
     </legend>
@@ -60,7 +65,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input data-input="selectize" name="Forwarders" style="width: 90%;" type="text" value="@Model.BindOptions.Forwarders" />
+                                    <input data-input="selectize" name="Forwarders" style="width: 90%;" type="text" value="@Model.BindOptions.ForwardersString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -70,7 +75,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AllowNotify" style="width: 90%;" type="text" value="@Model.BindOptions.AllowNotify" />
+                                    <input name="AllowNotify" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AllowNotifyString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -80,7 +85,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AllowTransfer" style="width: 90%;" type="text" value="@Model.BindOptions.AllowTransfer" />
+                                    <input name="AllowTransfer" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AllowTransferString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -135,7 +140,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AllowQuery" style="width: 90%;" type="text" value="@Model.BindOptions.AllowQuery" />
+                                    <input name="AllowQuery" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AllowQueryString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -145,7 +150,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AllowRecursion" style="width: 90%;" type="text" value="@Model.BindOptions.AllowRecursion" />
+                                    <input name="AllowRecursion" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AllowRecursionString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -164,7 +169,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="ListenOnV6" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnV6" />
+                                    <input name="ListenOnV6" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnV6String" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -174,7 +179,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="ListenOnPort53" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnPort53" />
+                                    <input name="ListenOnPort53" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.ListenOnPort53String" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -265,7 +270,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="ControlAllow" style="width: 90%;" type="text" value="@Model.BindOptions.ControlAllow" />
+                                    <input name="ControlAllow" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.ControlAllowString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -338,7 +343,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclLocalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalInterfaces" />
+                                    <input name="AclLocalInterfaces" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalInterfacesString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -348,7 +353,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclInternalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalInterfaces" />
+                                    <input name="AclInternalInterfaces" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalInterfacesString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -358,7 +363,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclExternalInterfaces" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalInterfaces" />
+                                    <input name="AclExternalInterfaces" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalInterfacesString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -368,7 +373,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclLocalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalNetworks" />
+                                    <input name="AclLocalNetworks" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclLocalNetworksString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -378,7 +383,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclInternalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalNetworks" />
+                                    <input name="AclInternalNetworks" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclInternalNetworksString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -388,7 +393,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="AclExternalNetworks" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalNetworks" />
+                                    <input name="AclExternalNetworks" data-input="selectize" style="width: 90%;" type="text" value="@Model.BindOptions.AclExternalNetworksString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -517,19 +522,19 @@
                                         <td>
                                             <label>AllowUpdate</label></td>
                                         <td>
-                                            <label>@Current.AllowUpdate</label></td>
+                                            <label>@Current.AllowUpdateString</label></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <label>AllowQuery</label></td>
                                         <td>
-                                            <label>@Current.AllowQuery</label></td>
+                                            <label>@Current.AllowQueryString</label></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <label>AllowTransfer</label></td>
                                         <td>
-                                            <label>@Current.AllowTransfer</label>
+                                            <label>@Current.AllowTransferString</label>
                                         </td>
                                     </tr>
                                     <tr>

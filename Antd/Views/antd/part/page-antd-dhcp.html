@@ -1,16 +1,20 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="DHCP">DHCPD
+    <legend>
+        DHCPD
+        @IfNot.DhcpdIsActive
+        <i id="EnableDhcpd" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
         @If.DhcpdIsActive
         <i id="StopDhcpd" class="icon-cancel-2 fg-anthilla-green" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         <i id="ReloadDhcpd" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="DisableDhcpd" class="icon-cycle fg-anthilla-green" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
         <i id="ApplyConfigDhcpd" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         @EndIf
     </legend>
 
     <div data-role="tab-control" class="tab-control">
-        <ul class="tabs">
+        <ul class="tabs">   
             <li class="active"><a href="#dhcp_global">Global Options</a></li>
-            <li><a href="#dhcp_subnet">Subnet</a></li>
             <li><a href="#dhcp_pools">Pools</a></li>
             <li><a href="#dhcp_class">Class</a></li>
             <li><a href="#dhcp_host">Host Reservation</a></li>
@@ -27,7 +31,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="Allow" style="width: 90%;" type="text" value="@Model.DhcpdOptions.Allow" />
+                                    <input name="Allow" data-input="selectize" style="width: 90%;" type="text" value="@Model.DhcpdOptions.AllowString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -91,7 +95,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="Option" style="width: 90%;" type="text" value="@Model.DhcpdOptions.Option" />
+                                    <input name="Option" data-input="selectize" style="width: 90%;" type="text" value="@Model.DhcpdOptions.OptionString" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -186,80 +190,65 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="2">
-                                    <input style="width: 90%; height: 28px;" type="submit" value="Save Settings" class="bg-anthilla-green fg-anthilla-gray" />
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-
-            <div id="dhcp_subnet" class="frame" style="display: none;">
-                <form action="/services/dhcpd/subnet" method="POST" enctype="multipart/form-data">
-                    <table class="table" style="table-layout: fixed;">
-                        <tbody>
-                            <tr>
                                 <td>
-                                    <label>IpFamily</label>
+                                    <label>SubnetIpFamily</label>
                                 </td>
                                 <td>
-                                    <input name="IpFamily" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.IpFamily" />
+                                    <input name="SubnetIpFamily" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetIpFamily" />
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label>IpMask</label>
+                                    <label>SubnetIpMask</label>
                                 </td>
                                 <td>
-                                    <input name="IpMask" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.IpMask" />
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>OptionRouters</label>
-                                </td>
-                                <td>
-                                    <input name="OptionRouters" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.OptionRouters" />
+                                    <input name="SubnetIpMask" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetIpMask" />
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label>NtpServers</label>
+                                    <label>SubnetOptionRouters</label>
                                 </td>
                                 <td>
-                                    <input name="NtpServers" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.NtpServers" />
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>TimeServers</label>
-                                </td>
-                                <td>
-                                    <input name="TimeServers" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.TimeServers" />
+                                    <input name="SubnetOptionRouters" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetOptionRouters" />
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label>DomainNameServers</label>
+                                    <label>SubnetNtpServers</label>
                                 </td>
                                 <td>
-                                    <input name="DomainNameServers" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.DomainNameServers" />
+                                    <input name="SubnetNtpServers" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetNtpServers" />
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <label>BroadcastAddress</label>
+                                    <label>SubnetTimeServers</label>
                                 </td>
                                 <td>
-                                    <input name="BroadcastAddress" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.BroadcastAddress" />
+                                    <input name="SubnetTimeServers" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetTimeServers" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>SubnetDomainNameServers</label>
+                                </td>
+                                <td>
+                                    <input name="SubnetDomainNameServers" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetDomainNameServers" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>SubnetBroadcastAddress</label>
+                                </td>
+                                <td>
+                                    <input name="SubnetBroadcastAddress" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetBroadcastAddress" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -268,26 +257,7 @@
                                     <label>SubnetMask</label>
                                 </td>
                                 <td>
-                                    <!--each-->
-                                    <input name="SubnetMask" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.SubnetMask" />
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>ZoneName</label>
-                                </td>
-                                <td>
-                                    <input name="ZoneName" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.ZoneName" />
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>ZonePrimaryAddress</label>
-                                </td>
-                                <td>
-                                    <input name="ZonePrimaryAddress" style="width: 90%;" type="text" value="@Model.DhcpdSubnet.ZonePrimaryAddress" />
+                                    <input name="SubnetMask" style="width: 90%;" type="text" value="@Model.DhcpdOptions.SubnetMask" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -336,7 +306,7 @@
                         @Each.DhcpdPools
                     <tr data-id="@Current.Guid">
                         <td>Pool</td>
-                        <td>@Current.Options</td>
+                        <td>@Current.OptionsString</td>
                         <td>
                             <input class="bg-anthilla-orange" type="button" value="X" style="width: 20%;" data-role="DeleteDhcpdPool" data-id="@Current.Guid" />
                         </td>

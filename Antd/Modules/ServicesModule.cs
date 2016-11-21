@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Linq;
 using antdlib.common;
 using Antd.Bind;
 using Antd.Dhcpd;
@@ -55,6 +56,20 @@ namespace Antd.Modules {
 
             Post["/services/dhcpd/stop"] = x => {
                 var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/enable"] = x => {
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Enable();
+                dhcpdConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/dhcpd/enable"] = x => {
+                var dhcpdConfiguration = new DhcpdConfiguration();
+                dhcpdConfiguration.Disable();
                 dhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
@@ -88,14 +103,14 @@ namespace Antd.Modules {
                 string subnetMask = Request.Form.SubnetMask;
 
                 var model = new DhcpdConfigurationModel {
-                    Allow = allow.SplitToList(),
+                    Allow = allow.SplitToList().Select(_=>_.Trim()).ToList(),
                     UpdateStaticLeases = updateStaticLeases,
                     UpdateConflictDetection = updateConflictDetection,
                     UseHostDeclNames = useHostDeclNames,
                     DoForwardUpdates = doForwardUpdates,
                     DoReverseUpdates = doReverseUpdates,
                     LogFacility = logFacility,
-                    Option = option.SplitToList(),
+                    Option = option.SplitToList().Select(_ => _.Trim()).ToList(),
                     ZoneName = zoneName,
                     ZonePrimaryAddress = zonePrimaryAddress,
                     DdnsUpdateStyle = ddnsUpdateStyle,
@@ -142,7 +157,7 @@ namespace Antd.Modules {
             Post["/services/dhcpd/pool"] = x => {
                 string option = Request.Form.Option;
                 var model = new DhcpConfigurationPoolModel {
-                    Options = option.SplitToList(),
+                    Options = option.SplitToList().Select(_ => _.Trim()).ToList()
                 };
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.AddPool(model);
@@ -200,6 +215,20 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
+            Post["/services/bind/enable"] = x => {
+                var dhcpdConfiguration = new BindConfiguration();
+                dhcpdConfiguration.Enable();
+                dhcpdConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/bind/enable"] = x => {
+                var dhcpdConfiguration = new BindConfiguration();
+                dhcpdConfiguration.Disable();
+                dhcpdConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
+
             Post["/services/bind/options"] = x => {
                 string notify = Request.Form.Notify;
                 string maxCacheSize = Request.Form.MaxCacheSize;
@@ -246,19 +275,19 @@ namespace Antd.Modules {
                     MaxCacheSize = maxCacheSize,
                     MaxCacheTtl = maxCacheTtl,
                     MaxNcacheTtl = maxNcacheTtl,
-                    Forwarders = forwarders.SplitToList(),
-                    AllowNotify = allowNotify.SplitToList(),
-                    AllowTransfer = allowTransfer.SplitToList(),
+                    Forwarders = forwarders.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AllowNotify = allowNotify.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AllowTransfer = allowTransfer.SplitToList().Select(_ => _.Trim()).ToList(),
                     Recursion = recursion,
                     TransferFormat = transferFormat,
                     QuerySourceAddress = querySourceAddress,
                     QuerySourcePort = querySourcePort,
                     Version = version,
-                    AllowQuery = allowQuery.SplitToList(),
-                    AllowRecursion = allowRecursion.SplitToList(),
+                    AllowQuery = allowQuery.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AllowRecursion = allowRecursion.SplitToList().Select(_ => _.Trim()).ToList(),
                     IxfrFromDifferences = ixfrFromDifferences,
-                    ListenOnV6 = listenOnV6.SplitToList(),
-                    ListenOnPort53 = listenOnPort53.SplitToList(),
+                    ListenOnV6 = listenOnV6.SplitToList().Select(_ => _.Trim()).ToList(),
+                    ListenOnPort53 = listenOnPort53.SplitToList().Select(_ => _.Trim()).ToList(),
                     DnssecEnabled = dnssecEnabled,
                     DnssecValidation = dnssecValidation,
                     DnssecLookaside = dnssecLookaside,
@@ -268,7 +297,7 @@ namespace Antd.Modules {
                     ControlAcl = controlAcl,
                     ControlIp = controlIp,
                     ControlPort = controlPort,
-                    ControlAllow = controlAllow.SplitToList(),
+                    ControlAllow = controlAllow.SplitToList().Select(_ => _.Trim()).ToList(),
                     LoggingChannel = loggingChannel,
                     LoggingDaemon = loggingDaemon,
                     LoggingSeverity = loggingSeverity,
@@ -276,12 +305,12 @@ namespace Antd.Modules {
                     LoggingPrintSeverity = loggingPrintSeverity,
                     LoggingPrintTime = loggingPrintTime,
                     TrustedKeys = trustedKeys,
-                    AclLocalInterfaces = aclLocalInterfaces.SplitToList(),
-                    AclInternalInterfaces = aclInternalInterfaces.SplitToList(),
-                    AclExternalInterfaces = aclExternalInterfaces.SplitToList(),
-                    AclLocalNetworks = aclLocalNetworks.SplitToList(),
-                    AclInternalNetworks = aclInternalNetworks.SplitToList(),
-                    AclExternalNetworks = aclExternalNetworks.SplitToList()
+                    AclLocalInterfaces = aclLocalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AclInternalInterfaces = aclInternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AclExternalInterfaces = aclExternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AclLocalNetworks = aclLocalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AclInternalNetworks = aclInternalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AclExternalNetworks = aclExternalNetworks.SplitToList().Select(_ => _.Trim()).ToList()
                 };
                 var bindConfiguration = new BindConfiguration();
                 bindConfiguration.Save(model);
@@ -301,9 +330,9 @@ namespace Antd.Modules {
                     Type = type,
                     File = file,
                     SerialUpdateMethod = serialUpdateMethod,
-                    AllowQuery = allowQuery.SplitToList(),
-                    AllowUpdate = allowUpdate.SplitToList(),
-                    AllowTransfer = allowTransfer.SplitToList()
+                    AllowQuery = allowQuery.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AllowUpdate = allowUpdate.SplitToList().Select(_ => _.Trim()).ToList(),
+                    AllowTransfer = allowTransfer.SplitToList().Select(_ => _.Trim()).ToList()
                 };
                 var bindConfiguration = new BindConfiguration();
                 bindConfiguration.AddZone(model);
@@ -334,6 +363,20 @@ namespace Antd.Modules {
             Post["/services/samba/stop"] = x => {
                 var sambaConfiguration = new SambaConfiguration();
                 sambaConfiguration.Stop();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/enable"] = x => {
+                var dhcpdConfiguration = new SambaConfiguration();
+                dhcpdConfiguration.Enable();
+                dhcpdConfiguration.Restart();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/services/samba/enable"] = x => {
+                var dhcpdConfiguration = new SambaConfiguration();
+                dhcpdConfiguration.Disable();
+                dhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 

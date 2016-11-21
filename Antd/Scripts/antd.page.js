@@ -1,7 +1,28 @@
-$('[data-role="load-page"]').on("click", function () {
+var tid = setInterval(reloadPage, 10000);
+function reloadPage() {
+    var container = $("#ResourcesMonitor");
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/part/info/resources",
+        type: "GET",
+        success: function (data) {
+            container.html(data);
+        }
+    });
+    _requests.push(aj);
+}
+function abortTimer() {
+    clearInterval(tid);
+}
+
+$("#ToggleResourceMonitor").on("click", function () {
+    $("#ResourcesMonitor").toggle();
+});
+
+$('[data-role="load-page"]').not("i").on("click", function () {
     AbortAllAjaxRequests();
     var page = $(this).attr("data-page");
-    var ico = $(this).find("i");
+    var ico = $(this).find('[data-icon="load"]');
     $('[data-icon="load"]').each(function () {
         $(this).hide();
     });
@@ -16,6 +37,9 @@ $('[data-role="load-page"]').on("click", function () {
             $('[data-role="page-container"]').html(data);
             ico.hide();
             ReloadJS();
+        },
+        error: function () {
+            ico.hide();
         }
     });
     _requests.push(aj);

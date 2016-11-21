@@ -191,13 +191,19 @@ namespace Antd.Bind {
         }
 
         public void Enable() {
-            if(Systemctl.IsEnabled(ServiceName) == false) {
-                Systemctl.Enable(ServiceName);
+            if(_serviceModel == null) {
+                return;
             }
+            _serviceModel.IsActive = true;
+            Save(_serviceModel);
         }
 
         public void Disable() {
-            Systemctl.Disable(ServiceName);
+            if(_serviceModel == null) {
+                return;
+            }
+            _serviceModel.IsActive = false;
+            Save(_serviceModel);
         }
 
         public void Stop() {

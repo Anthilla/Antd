@@ -1,8 +1,13 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend>Samba
-    @If.SambaIsActive
+    <legend>
+        Samba
+        @IfNot.SambaIsActive
+        <i id="EnableSamba" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.SambaIsActive
         <i id="StopSamba" class="icon-cancel-2 fg-anthilla-green" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         <i id="ReloadSamba" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="DisableSamba" class="icon-cycle fg-anthilla-green" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
         <i id="ApplyConfigSamba" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
         @EndIf
     </legend>
@@ -24,7 +29,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="Allow" style="width: 90%;" type="text" value="@Model.SambaOptions.DosCharset" />
+                                    <input name="Allow" data-input="selectize" style="width: 90%;" type="text" value="@Model.SambaOptions.DosCharset" />
                                 </td>
                                 <td></td>
                             </tr>
@@ -88,7 +93,7 @@
                                 </td>
                                 <td>
                                     <!--each-->
-                                    <input name="PasswdProgram" style="width: 90%;" type="text" value="@Model.SambaOptions.PasswdProgram" />
+                                    <input name="PasswdProgram" data-input="selectize" style="width: 90%;" type="text" value="@Model.SambaOptions.PasswdProgram" />
                                 </td>
                                 <td></td>
                             </tr>

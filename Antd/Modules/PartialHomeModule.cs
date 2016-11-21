@@ -83,6 +83,28 @@ namespace Antd.Modules {
                 }
             };
 
+            Get["/part/info/resources"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var uptime = _machineInfo.GetUptime();
+                    viewModel.Uptime = uptime.Uptime.SplitToList("up").Last().Trim();
+                    viewModel.LoadAverage = uptime.LoadAverage.Replace(" load average:", "").Trim();
+                    var diskUsage = new DiskUsage();
+                    var du = diskUsage.GetInfo().Where(_ => _.MountedOn == "/mnt/cdrom" || _.MountedOn == "/mnt/overlay").OrderBy(_ => _.MountedOn);
+                    viewModel.DisksUsage = du;
+                    var memory = _machineInfo.GetFree().First();
+                    viewModel.MemoryTotal = memory.Total;
+                    viewModel.MemoryUsed = memory.Used;
+                    viewModel.MemoryFree = memory.Free;
+                    return View["antd/part/page-antd-info-resources", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
             Get["/part/info/memory"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
@@ -219,7 +241,7 @@ namespace Antd.Modules {
                     var bindConfiguration = new BindConfiguration();
                     var bindIsActive = bindConfiguration.IsActive();
                     viewModel.BindIsActive = bindIsActive;
-                    viewModel.BindOptions = bindConfiguration.Get();
+                    viewModel.BindOptions = bindConfiguration.Get() ?? new BindConfigurationModel();
                     viewModel.BindZones = bindConfiguration.Get()?.Zones;
                     return View["antd/part/page-antd-bind", viewModel];
                 }
@@ -236,8 +258,7 @@ namespace Antd.Modules {
                     var dhcpdConfiguration = new DhcpdConfiguration();
                     var dhcpdIsActive = dhcpdConfiguration.IsActive();
                     viewModel.DhcpdIsActive = dhcpdIsActive;
-                    viewModel.DhcpdOptions = dhcpdConfiguration.Get();
-                    viewModel.DhcpdSubnet = dhcpdConfiguration.Get();
+                    viewModel.DhcpdOptions = dhcpdConfiguration.Get() ?? new DhcpdConfigurationModel();
                     viewModel.DhcpdClass = dhcpdConfiguration.Get()?.Classes;
                     viewModel.DhcpdPools = dhcpdConfiguration.Get()?.Pools;
                     viewModel.DhcpdReservation = dhcpdConfiguration.Get()?.Reservations;
@@ -272,7 +293,7 @@ namespace Antd.Modules {
                     var sambaConfiguration = new SambaConfiguration();
                     var sambaIsActive = sambaConfiguration.IsActive();
                     viewModel.SambaIsActive = sambaIsActive;
-                    viewModel.SambaOptions = sambaConfiguration.Get();
+                    viewModel.SambaOptions = sambaConfiguration.Get() ?? new SambaConfigurationModel();
                     viewModel.SambaResources = sambaConfiguration.Get()?.Resources;
                     return View["antd/part/page-antd-samba", viewModel];
                 }
@@ -348,9 +369,6 @@ namespace Antd.Modules {
 
             Get["/part/cron"] = x => {
                 try {
-
-
-
                     dynamic viewModel = new ExpandoObject();
                     var scheduledJobs = _timers.GetAll();
                     viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
@@ -366,14 +384,53 @@ namespace Antd.Modules {
             Get["/part/storage"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Mounts = new Mount().GetAll();
-                    viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                     viewModel.DisksList = Disks.List();
                     viewModel.ZpoolList = _zpool.List();
                     viewModel.ZfsList = _zfs.List();
                     viewModel.ZfsSnap = _zfsSnap.List();
                     viewModel.ZpoolHistory = _zpool.History();
                     return View["antd/part/page-antd-storage", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+
+            Get["/part/storage/usage"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var diskUsage = new DiskUsage();
+                    viewModel.DisksUsage = diskUsage.GetInfo();
+                    return View["antd/part/page-antd-storage-usage", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/storage/mounts"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.Mounts = new Mount().GetAll();
+                    return View["antd/part/page-antd-storage-mounts", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/storage/overlay"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.Overlay = OverlayWatcher.ChangedDirectories;
+                    return View["antd/part/page-antd-storage-overlay", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

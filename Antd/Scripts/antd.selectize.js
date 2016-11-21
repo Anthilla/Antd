@@ -1,31 +1,35 @@
-$('[data-input="selectize"]').each(function () {
-    var value = $(this).val();
-    $(this).selectize({
-        create: true,
-        render: { option: SelectizerOptions.render },
-        load: SelectizerOptions.load,
-        onInitialize: function () {
-            var s = this;
-            var actualValue = value;
-            if (actualValue) {
-                var arr = actualValue.split(",");
-                $.each(arr, function (k, v) {
-                    s.addOption(v);
-                    s.setValue(actualValue);
-                    s.blur();
-                });
-            }
-        }
-    });
-    $(this).hide();
-});
-
-//selectize
-$(document).ready(function () {
+$(document).on("ready", function () {
     $.when(
         LoadNetworkIf()
     ).then();
 });
+
+//$(document).on("ready", function () {
+//    $('[data-input="selectize"]').each(function () {
+//        $(this).hide();
+//        $(this).selectize({
+//            delimiter: ",",
+//            create: function (input) {
+//                return {
+//                    value: input,
+//                    text: input
+//                }
+//            },
+//            onInitialize: function () {
+//                var s = this;
+//                var actualValue = value;
+//                if (actualValue) {
+//                    var arr = actualValue.split(",");
+//                    $.each(arr, function (k, v) {
+//                        s.addOption(v);
+//                        s.setValue(actualValue);
+//                        s.blur();
+//                    });
+//                }
+//            }
+//        });
+//    });
+//});
 
 function Callback(callback, url) {
     var aj = $.ajax({

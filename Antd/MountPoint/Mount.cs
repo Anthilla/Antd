@@ -69,10 +69,9 @@ namespace Antd.MountPoint {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
-                var realPath = MountHelper.GetDirsPath(directory);
                 var mo = new MountModel {
                     SystemPath = MountHelper.GetDirsPath(Path.GetFileName(directory)),
-                    RepoDirsPath = realPath,
+                    RepoDirsPath = directory,
                     Context = MountContext.External,
                     Entity = MountEntity.Directory
                 };
@@ -80,10 +79,9 @@ namespace Antd.MountPoint {
             }
             var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var file in files) {
-                var realPath = MountHelper.GetFilesPath(file);
                 var mo = new MountModel {
                     SystemPath = MountHelper.GetFilesPath(Path.GetFileName(file)),
-                    RepoDirsPath = realPath,
+                    RepoDirsPath = file,
                     Context = MountContext.External,
                     Entity = MountEntity.File
                 };
@@ -97,10 +95,9 @@ namespace Antd.MountPoint {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
-                var realPath = MountHelper.GetDirsPath(directory);
                 var mo = new MountModel {
                     SystemPath = MountHelper.GetDirsPath(Path.GetFileName(directory)),
-                    RepoDirsPath = realPath,
+                    RepoDirsPath = directory,
                     Context = MountContext.External,
                     Entity = MountEntity.Directory
                 };
@@ -108,10 +105,9 @@ namespace Antd.MountPoint {
             }
             var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var file in files) {
-                var realPath = MountHelper.GetFilesPath(file);
                 var mo = new MountModel {
                     SystemPath = MountHelper.GetFilesPath(Path.GetFileName(file)),
-                    RepoDirsPath = realPath,
+                    RepoDirsPath = file,
                     Context = MountContext.External,
                     Entity = MountEntity.File
                 };

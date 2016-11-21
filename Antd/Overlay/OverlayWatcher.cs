@@ -47,7 +47,7 @@ namespace Antd.Overlay {
                         NotifyFilters.LastWrite |
                         NotifyFilters.FileName |
                         NotifyFilters.DirectoryName,
-                    IncludeSubdirectories = true,
+                    IncludeSubdirectories = true
                 };
                 watcher.Changed += OnChanged;
                 watcher.Created += OnChanged;
@@ -60,36 +60,21 @@ namespace Antd.Overlay {
             }
         }
 
-        //public static void CleanUp() {
-        //    var all = TimerRepository.GetAll().ToList();
-        //    var sorted = all.GroupBy(a => a.Alias);
-        //    foreach (var group in sorted) {
-        //        if (group.Count() > 1) {
-        //            var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
-        //            foreach (var g in old) {
-        //                TimerRepository.Delete(g.Id);
-        //            }
-        //        }
-        //    }
-        //}
-
         public static IDictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();
 
         private static readonly Bash Bash = new Bash();
 
         private static void OnChanged(object source, FileSystemEventArgs e) {
-            //ConsoleLogger.Log($"Overlay Watcher: {e.FullPath} {e.ChangeType}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
         }
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
-            //ConsoleLogger.Log($"Overlay Watcher: {e.OldName} renamed to {e.Name}");
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(!ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -98,17 +83,12 @@ namespace Antd.Overlay {
         private readonly Mount _mount = new Mount();
 
         public void SetOverlayDirectory(string overlayPath) {
-            //check overlayPath con du -ms
             var overlayDir = Parameter.Overlay;
             var path = overlayPath.Replace(Parameter.Overlay, "");
-            //creo cartella in mntDIRS
             var dirsPath = MountHelper.SetDirsPath(path);
             Bash.Execute($"mkdir -p {dirsPath}", false);
-            //copio rsync overlayPath in mntDIRS
             Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/", false);
-            //cancello/pulisco dir equivalente
             Bash.Execute($"rm -fR {path}", false);
-            //monto mntDIRS - dir
             _mount.Dir(path);
         }
     }

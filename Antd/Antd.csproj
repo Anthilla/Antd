@@ -173,6 +173,7 @@
     <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
+    <Compile Include="Storage\DiskUsage.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
     <Compile Include="Storage\Zpool.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />
+    <Compile Include="Wifi\AccessPoint.cs" />
     <Content Include="Content\Style\img\disk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -239,6 +241,9 @@
     <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-antd-info-resources.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-samba.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -246,6 +251,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-info-memory.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-storage-usage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-storage-overlay.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-storage-mounts.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-system-losetup.html">

@@ -54,7 +54,10 @@ namespace Antd.Modules {
                 }
             };
 
-            Get["/"] = x => View["antd/page-antd"];
+            Get["/"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-antd", vmod];
+            };
 
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();

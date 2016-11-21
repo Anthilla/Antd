@@ -23,6 +23,30 @@ $("#ReloadSamba").on("click", function () {
     _requests.push(aj);
 });
 
+$("#EnableSamba").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/samba/enable",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#DisableSamba").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/samba/disable",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
 $("#ApplyConfigSamba").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -77,6 +101,30 @@ $("#ReloadBind").on("click", function () {
     _requests.push(aj);
 });
 
+$("#EnableBind").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/bind/enable",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#DisableBind").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/bind/disable",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
 $("#ApplyConfigBind").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
@@ -123,6 +171,30 @@ $("#ReloadDhcpd").on("click", function () {
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/services/dhcpd/restart",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#EnableDhcpd").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/dhcpd/enable",
+        type: "POST",
+        success: function () {
+            location.reload(true);
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#DisableDhcpd").on("click", function () {
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/services/dhcpd/disable",
         type: "POST",
         success: function () {
             location.reload(true);
