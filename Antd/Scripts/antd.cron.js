@@ -1,16 +1,18 @@
-$("#ShowCronInfo").on("click", function () {
-    $("#CronDashboard").show();
+var $cron = jQuery.noConflict();
+
+$cron("#ShowCronInfo").on("click", function () {
+    $cron("#CronDashboard").show();
 });
 
-$("#HideCronInfo").on("click", function () {
-    $("#CronDashboard").hide();
+$cron("#HideCronInfo").on("click", function () {
+    $cron("#CronDashboard").hide();
 });
 
-$('[data-role="EditCronJob"]').on("click", function () {
-    var guid = $(this).attr("data-guid");
-    var command = $(this).parents("td").find("textarea").val();
+$cron('[data-role="EditCronJob"]').on("click", function () {
+    var guid = $cron(this).attr("data-guid");
+    var command = $cron(this).parents("td").find("textarea").val();
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cron.ajax({
         url: "/scheduler/edit",
         type: "POST",
         data: {
@@ -24,10 +26,10 @@ $('[data-role="EditCronJob"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="DeleteCronJob"]').on("click", function () {
-    var guid = $(this).attr("data-guid");
+$cron('[data-role="DeleteCronJob"]').on("click", function () {
+    var guid = $cron(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cron.ajax({
         url: "/scheduler/delete",
         type: "POST",
         data: {
@@ -40,10 +42,10 @@ $('[data-role="DeleteCronJob"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="DisableCronJob"]').on("click", function () {
-    var guid = $(this).attr("data-guid");
+$cron('[data-role="DisableCronJob"]').on("click", function () {
+    var guid = $cron(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cron.ajax({
         url: "/scheduler/disable",
         type: "POST",
         data: {
@@ -56,10 +58,10 @@ $('[data-role="DisableCronJob"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="EnableCronJob"]').on("click", function () {
-    var guid = $(this).attr("data-guid");
+$cron('[data-role="EnableCronJob"]').on("click", function () {
+    var guid = $cron(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cron.ajax({
         url: "/scheduler/enable",
         type: "POST",
         data: {
@@ -72,10 +74,10 @@ $('[data-role="EnableCronJob"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="LaunchCronJob"]').on("click", function () {
-    var guid = $(this).attr("data-guid");
+$cron('[data-role="LaunchCronJob"]').on("click", function () {
+    var guid = $cron(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cron.ajax({
         url: "/scheduler/launch",
         type: "POST",
         data: {

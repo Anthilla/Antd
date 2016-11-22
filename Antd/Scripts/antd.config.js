@@ -1,5 +1,7 @@
-$('input[data-role="command-place"]').keyup(function () {
-    var thisValue = $(this).val();
+var $config = jQuery.noConflict();
+
+$config('input[data-role="command-place"]').keyup(function () {
+    var thisValue = $config(this).val();
     if (thisValue.indexOf("[") > 0) {
         //todo: in questo caso prendere la stringa che si sta per scrivere dopo la [
         //      fare una query, tipo selectize, nei ValueBundle e mostrare tutt i valori appartenenti a quel tag
@@ -11,12 +13,12 @@ $('input[data-role="command-place"]').keyup(function () {
     }
     if (thisValue.length > 0) {
         jQuery.support.cors = true;
-        var aj = $.ajax({
+        var aj = $config.ajax({
             url: "/cfg/layouts",
             type: "GET",
             success: function (layoutJson) {
                 var results = [];
-                $.each(layoutJson, function (i, item) {
+                $config.each(layoutJson, function (i, item) {
                     if (item.name.indexOf(thisValue) === 0) {
                         results.push(item.name);
                     }
@@ -39,56 +41,56 @@ $('input[data-role="command-place"]').keyup(function () {
 });
 
 function ShowDisplayer() {
-    $("#ResultsContainer").show();
+    $config("#ResultsContainer").show();
 }
 
 function HideDisplayer() {
-    $("#ResultsContainer").hide();
+    $config("#ResultsContainer").hide();
 }
 
 function DisplayResults(objectsToDisplay) {
     ShowDisplayer();
     CleanResults();
-    $.each(objectsToDisplay, function (i, item) {
-        $("#ResultsContainer").append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + "</li>");
+    $config.each(objectsToDisplay, function (i, item) {
+        $config("#ResultsContainer").append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + "</li>");
         SelectLayoutToEdit();
     });
 }
 
 function CleanResults() {
-    var container = $("#ResultsContainer");
+    var container = $config("#ResultsContainer");
     container.html("");
 }
 
 function SelectLayoutToEdit() {
-    $('[data-role="query-result"]').dblclick(function () {
-        $('input[data-role="command-place"]').val($(this).text());
+    $config('[data-role="query-result"]').dblclick(function () {
+        $config('input[data-role="command-place"]').val($config(this).text());
     });
 }
 
-$('i[data-role="show-all-command"]').mousedown(function () {
-    $('[data-role="command-saved"]').each(function () { $(this).hide(); });
-    $('[data-role="command-exd"]').each(function () { $(this).show(); });
+$config('i[data-role="show-all-command"]').mousedown(function () {
+    $config('[data-role="command-saved"]').each(function () { $config(this).hide(); });
+    $config('[data-role="command-exd"]').each(function () { $config(this).show(); });
 });
 
-$('i[data-role="show-all-command"]').mouseup(function () {
-    $('[data-role="command-saved"]').each(function () { $(this).show(); });
-    $('[data-role="command-exd"]').each(function () { $(this).hide(); });
+$config('i[data-role="show-all-command"]').mouseup(function () {
+    $config('[data-role="command-saved"]').each(function () { $config(this).show(); });
+    $config('[data-role="command-exd"]').each(function () { $config(this).hide(); });
 });
 
-$('i[data-role="show-command"]').mousedown(function () {
-    var container = $(this).parents("li");
+$config('i[data-role="show-command"]').mousedown(function () {
+    var container = $config(this).parents("li");
     container.find('[data-role="command-saved"]').hide();
     container.find('[data-role="command-exd"]').show();
 });
 
-$('i[data-role="show-command"]').mouseup(function () {
-    var container = $(this).parents("li");
+$config('i[data-role="show-command"]').mouseup(function () {
+    var container = $config(this).parents("li");
     container.find('[data-role="command-saved"]').show();
     container.find('[data-role="command-exd"]').hide();
 });
 
-$("#sortable").sortable({
+$config("#sortable").sortable({
     //sort: function () {
     //    RefreshCommandIndexes();
     //    ReindexCheck();
@@ -99,38 +101,38 @@ $("#sortable").sortable({
     },
 }).disableSelection();
 
-$(document).on("click", "body", function () {
+$config(document).on("click", "body", function () {
     RefreshCommandIndexes();
     ReindexCheck();
 });
 
-$(document).ready(function () {
-    $("#valueBundleTag").hide();
+$config(document).ready(function () {
+    $config("#valueBundleTag").hide();
 });
 
 function ReindexCheck() {
-    $('[data-role="control"]').each(function (index) {
+    $config('[data-role="control"]').each(function (index) {
         var i = index;
-        $(this).find('[data-role="DisplayIndex"]').val(i);
-        $(this).find("input").each(function () {
-            var name = $(this).attr("data-name");
+        $config(this).find('[data-role="DisplayIndex"]').val(i);
+        $config(this).find("input").each(function () {
+            var name = $config(this).attr("data-name");
             var nn = name + "_" + i;
-            $(this).attr("name", nn);
+            $config(this).attr("name", nn);
         });
     });
 }
 
 function RefreshCommandIndexes() {
-    $("input[name=Index]").each(function (index) {
-        $(this).val("");
-        $(this).val(index);
+    $config("input[name=Index]").each(function (index) {
+        $config(this).val("");
+        $config(this).val(index);
     });
 }
 
-$('i[data-role="remove-command"]').on("click", function () {
-    var g = $(this).attr("data-guid");
+$config('i[data-role="remove-command"]').on("click", function () {
+    var g = $config(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $config.ajax({
         url: "/cfg/delcommand",
         type: "POST",
         data: {
@@ -143,10 +145,10 @@ $('i[data-role="remove-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('i[data-role="disable-command"]').on("click", function () {
-    var g = $(this).attr("data-guid");
+$config('i[data-role="disable-command"]').on("click", function () {
+    var g = $config(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $config.ajax({
         url: "/cfg/disablecommand",
         type: "POST",
         data: {
@@ -159,10 +161,10 @@ $('i[data-role="disable-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('i[data-role="enable-command"]').on("click", function () {
-    var g = $(this).attr("data-guid");
+$config('i[data-role="enable-command"]').on("click", function () {
+    var g = $config(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $config.ajax({
         url: "/cfg/enablecommand",
         type: "POST",
         data: {
@@ -175,10 +177,10 @@ $('i[data-role="enable-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('i[data-role="play-command"]').on("click", function () {
-    var g = $(this).attr("data-guid");
+$config('i[data-role="play-command"]').on("click", function () {
+    var g = $config(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $config.ajax({
         url: "/cfg/launchcommand",
         type: "POST",
         data: {
@@ -191,10 +193,10 @@ $('i[data-role="play-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('input[data-role="command-place"]').focusin(function () {
-    $("#Tip").show();
+$config('input[data-role="command-place"]').focusin(function () {
+    $config("#Tip").show();
 });
 
-$('input[data-role="command-place"]').focusout(function () {
-    $("#Tip").hide();
+$config('input[data-role="command-place"]').focusout(function () {
+    $config("#Tip").hide();
 });

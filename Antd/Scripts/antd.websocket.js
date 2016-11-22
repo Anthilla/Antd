@@ -1,30 +1,32 @@
-(function ($) {
-    $.fn.CommandTemplate = function () {
-        var options = $(this).attr("data-options");
+var $ws = jQuery.noConflict();
+
+(function ($ws) {
+    $ws.fn.CommandTemplate = function () {
+        var options = $ws(this).attr("data-options");
         if (str.toLowerCase().indexOf("button-only") >= 0) {
             var myRegexp = /button-only:([a-zAA-Z 0-9]*);/g;
             var match = myRegexp.exec(options);
             var buttonValue = match[1];
-            $(this).html('<input type="submit" value="' + buttonValue + '" />');
+            $ws(this).html('<input type="submit" value="' + buttonValue + '" />');
         }
         else {
-            $(this).html('<input type="text" /><input type="submit" value="submit" />');
-            $(this).after('<br /><textarea id="CommandResult" style="width: 45%;"></textarea>');
+            $ws(this).html('<input type="text" /><input type="submit" value="submit" />');
+            $ws(this).after('<br /><textarea id="CommandResult" style="width: 45%;"></textarea>');
         }
         return this;
     };
 }(jQuery));
 
-$('[data-role="command-set"]').CommandTemplate();
+$ws('[data-role="command-set"]').CommandTemplate();
 
-$('[data-role="command-set"]').find('input[type="submit"]').on("click", function () {
-    //$('[data-role="command-set"]').find('input[type="submit"]').click(function () {
+$ws('[data-role="command-set"]').find('input[type="submit"]').on("click", function () {
+    //$ws('[data-role="command-set"]').find('input[type="submit"]').click(function () {
     var wsport;
     var wsconnection;
-    var parent = $(this).parents('[data-role="command-set"]');
+    var parent = $ws(this).parents('[data-role="command-set"]');
     var command = parent.attr("data-command") + " " + parent.find('input[type="text"]').val();
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $ws.ajax({
         url: "/ws/post",
         type: "POST",
         success: function (port) {
@@ -40,7 +42,7 @@ $('[data-role="command-set"]').find('input[type="submit"]').on("click", function
                 console.log("websocket connection @ " + wsport + " failed due to an error");
             };
             wsconnection.onmessage = function (response) {
-                $("#CommandResult").text(response.data);
+                $ws("#CommandResult").text(response.data);
             };
         }
     });

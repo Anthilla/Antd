@@ -67,7 +67,7 @@ namespace Antd.Overlay {
         private static void OnChanged(object source, FileSystemEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
             if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
-                var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
+                var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }
         }
@@ -75,7 +75,7 @@ namespace Antd.Overlay {
         private static void OnRenamed(object source, RenamedEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
             if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
-                var du = Bash.Execute($"du -msh {directory}/").SplitToList().First();
+                var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }
         }

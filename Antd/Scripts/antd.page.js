@@ -1,8 +1,10 @@
+var $page = jQuery.noConflict();
+
 var tid = setInterval(reloadPage, 10000);
 function reloadPage() {
-    var container = $("#ResourcesMonitor");
+    var container = $page("#ResourcesMonitor");
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $page.ajax({
         url: "/part/info/resources",
         type: "GET",
         success: function (data) {
@@ -15,26 +17,26 @@ function abortTimer() {
     clearInterval(tid);
 }
 
-$("#ToggleResourceMonitor").on("click", function () {
-    $("#ResourcesMonitor").toggle();
+$page("#ToggleResourceMonitor").on("click", function () {
+    $page("#ResourcesMonitor").toggle();
 });
 
-$('[data-role="load-page"]').not("i").on("click", function () {
+$page('[data-role="load-page"]').not("i").on("click", function () {
     AbortAllAjaxRequests();
-    var page = $(this).attr("data-page");
-    var ico = $(this).find('[data-icon="load"]');
-    $('[data-icon="load"]').each(function () {
-        $(this).hide();
+    var page = $page(this).attr("data-page");
+    var ico = $page(this).find('[data-icon="load"]');
+    $page('[data-icon="load"]').each(function () {
+        $page(this).hide();
     });
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $page.ajax({
         url: "/part/" + page,
         type: "GET",
         beforeSend: function () {
             ico.show();
         },
         success: function (data) {
-            $('[data-role="page-container"]').html(data);
+            $page('[data-role="page-container"]').html(data);
             ico.hide();
             ReloadJS();
         },

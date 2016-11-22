@@ -1,13 +1,15 @@
-$(document).on("ready", function () {
-    $.when(
+var $sl = jQuery.noConflict();
+
+$sl(document).on("ready", function () {
+    $sl.when(
         LoadNetworkIf()
     ).then();
 });
 
-//$(document).on("ready", function () {
-//    $('[data-input="selectize"]').each(function () {
-//        $(this).hide();
-//        $(this).selectize({
+//$sl(document).on("ready", function () {
+//    $sl('[data-input="selectize"]').each(function () {
+//        $sl(this).hide();
+//        $sl(this).selectize({
 //            delimiter: ",",
 //            create: function (input) {
 //                return {
@@ -20,7 +22,7 @@ $(document).on("ready", function () {
 //                var actualValue = value;
 //                if (actualValue) {
 //                    var arr = actualValue.split(",");
-//                    $.each(arr, function (k, v) {
+//                    $sl.each(arr, function (k, v) {
 //                        s.addOption(v);
 //                        s.setValue(actualValue);
 //                        s.blur();
@@ -32,7 +34,7 @@ $(document).on("ready", function () {
 //});
 
 function Callback(callback, url) {
-    var aj = $.ajax({
+    var aj = $sl.ajax({
         url: url,
         type: "GET",
         dataType: "json",
@@ -54,7 +56,7 @@ var SelectizerOptions = function () {
     return {
         load: function (query, callback) {
             if (!query.length) return callback();
-            var aj = $.ajax({
+            var aj = $sl.ajax({
                 url: this.settings.remoteUrl,
                 type: "GET",
                 dataType: "json",
@@ -93,15 +95,15 @@ function InitNetworkIf(input) {
 }
 
 function LoadNetworkIf() {
-    if ($('[data-role="show-net-if"]').length > 0) {
-        $('[data-role="show-net-if"]').each(function () {
-            var init = InitNetworkIf($(this));
+    if ($sl('[data-role="show-net-if"]').length > 0) {
+        $sl('[data-role="show-net-if"]').each(function () {
+            var init = InitNetworkIf($sl(this));
             if (init != undefined) {
                 init.load(function (callback) {
                     Callback(callback, this.settings.remoteUrl);
                 });
             }
-            $(this).hide();
+            $sl(this).hide();
         });
     }
 }

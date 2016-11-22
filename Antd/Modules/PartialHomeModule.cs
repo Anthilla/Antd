@@ -222,10 +222,11 @@ namespace Antd.Modules {
             Get["/part/ns"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Resolv = _launcher.Launch("cat-etc-resolv");
                     viewModel.Hostname = _launcher.Launch("cat-etc-hostname");
                     viewModel.Hosts = _launcher.Launch("cat-etc-hosts");
                     viewModel.Networks = _launcher.Launch("cat-etc-networks");
+                    viewModel.Resolv = _launcher.Launch("cat-etc-resolv");
+                    viewModel.Nsswitch = _launcher.Launch("cat-etc-nsswitch");
                     return View["antd/part/page-antd-ns", viewModel];
                 }
                 catch(Exception ex) {

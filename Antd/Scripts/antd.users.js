@@ -1,7 +1,7 @@
+var $usr = jQuery.noConflict();
 
-
-$(document).on("ready", function () {
-    $.when(
+$usr(document).on("ready", function () {
+    $usr.when(
         LoadUserEntitiesUnits()
     ).then();
 });
@@ -10,7 +10,7 @@ var UserSelectizerOptions = function () {
     return {
         load: function (query, callback) {
             if (!query.length) return callback();
-            var aj = $.ajax({
+            var aj = $usr.ajax({
                 url: this.settings.remoteUrl,
                 type: "GET",
                 dataType: "json",
@@ -33,7 +33,7 @@ var UserSelectizerOptions = function () {
     };
 }();
 
-var $userEntitiesSelectizer = $("#userEntities").selectize({
+var $usruserEntitiesSelectizer = $usr("#userEntities").selectize({
     delimiter: ",",
     persist: false,
     valueField: "guid",
@@ -46,21 +46,21 @@ var $userEntitiesSelectizer = $("#userEntities").selectize({
 });
 
 function LoadUserEntitiesUnits() {
-    if ($("#userEntities").size() > 0) {
-        var userEntitiesSelectizer = $userEntitiesSelectizer[0].selectize;
+    if ($usr("#userEntities").size() > 0) {
+        var userEntitiesSelectizer = $usruserEntitiesSelectizer[0].selectize;
         userEntitiesSelectizer.load(function (callback) {
             Callback(callback, this.settings.remoteUrl);
-            $("#userEntities").hide();
+            $usr("#userEntities").hide();
         });
     }
 }
 
-$('[data-role="UpdateUserPassword"]').on("click", function () {
-    var user = $(this).attr("data-user");
-    var container = $(this).parents('[data-role="UpdatePasswordPanel"]');
+$usr('[data-role="UpdateUserPassword"]').on("click", function () {
+    var user = $usr(this).attr("data-user");
+    var container = $usr(this).parents('[data-role="UpdatePasswordPanel"]');
     var pass = container.find('[data-role="Password01"]').val();
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $usr.ajax({
         url: "/users/change/password",
         type: "POST",
         data: {

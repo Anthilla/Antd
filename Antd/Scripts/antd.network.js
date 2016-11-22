@@ -1,11 +1,13 @@
-$("#ShowNetworkVirtualIf").on("click", function () {
-    $('[data-show="NetworkVirtualIf"]').toggle();
+var $net = jQuery.noConflict();
+
+$net("#ShowNetworkVirtualIf").on("click", function () {
+    $net('[data-show="NetworkVirtualIf"]').toggle();
 });
 
-$("#ReloadNetworkInterfacesInformation").on("click", function () {
-    $(this).addClass();
+$net("#ReloadNetworkInterfacesInformation").on("click", function () {
+    $net(this).addClass();
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $net.ajax({
         url: "/network/import",
         type: "POST",
         success: function () {

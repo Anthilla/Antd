@@ -257,6 +257,12 @@ namespace antd.commands {
                 Arguments = "/etc/resolv.conf",
                 Function = (x, y) => ReadTool.FileLines(x)
             };
+            dict["cat-etc-nsswitch"] = new Command<string> {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = "/etc/nsswitch.conf",
+                Function = (x, y) => ReadTool.FileLines(x).GrepIgnore("#")
+            };
             #endregion
 
             #region [    Command - Dhclient    ]

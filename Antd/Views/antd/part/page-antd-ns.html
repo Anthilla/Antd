@@ -4,13 +4,6 @@
         <tbody>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td>
-                    <label>resolv.conf</label>
-                </td>
-                <td>@Model.Resolv</td>
-                <td>Get /etc/resolv.conf content</td>
-            </tr>
-            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td>
                     <label>hostname</label>
                 </td>
                 <td>@Model.Hostname</td>
@@ -29,6 +22,20 @@
                 </td>
                 <td>@Model.Networks</td>
                 <td>Get /etc/networks content</td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td>
+                    <label>resolv.conf</label>
+                </td>
+                <td>@Model.Resolv</td>
+                <td>Get /etc/resolv.conf content</td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td>
+                    <label>ns switch</label>
+                </td>
+                <td>@Model.Nsswitch</td>
+                <td>Get /etc/nsswitch.conf content</td>
             </tr>
         </tbody>
     </table>

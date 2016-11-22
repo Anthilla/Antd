@@ -1,13 +1,15 @@
-$(document).on("ready", function() {
-    $('[data="CmdGet"]').each(function () {
-        var self = $(this);
+var $cmd = jQuery.noConflict();
+
+$cmd(document).on("ready", function () {
+    $cmd('[data="CmdGet"]').each(function () {
+        var self = $cmd(this);
         var command = self.attr("data-name");
         var values = "";
         var par = self.attr("data-par");
         if (par != undefined) {
             var res = par.split(",");
             var container = self.parents('[data-role="CmdContainer"]');
-            $.each(res, function (i, v) {
+            $cmd.each(res, function (i, v) {
                 var app = v + ":";
                 var val = container.find('[data="' + v + '"]').val();
                 app += val;
@@ -18,7 +20,7 @@ $(document).on("ready", function() {
             });
         }
         jQuery.support.cors = true;
-        var aj = $.ajax({
+        var aj = $cmd.ajax({
             url: "/cmd/launch",
             type: "POST",
             data: {
@@ -33,14 +35,14 @@ $(document).on("ready", function() {
     });
 });
 
-$('[data-role="CmdLaunch"]').on("click", function () {
-    var container = $(this).parents('[data-role="CmdContainer"]');
+$cmd('[data-role="CmdLaunch"]').on("click", function () {
+    var container = $cmd(this).parents('[data-role="CmdContainer"]');
     var button = container.find('[data-role="CmdLaunch"]');
     var command = button.attr("data-name");
     var values = "";
     var par = button.attr("data-par");
     var res = par.split(",");
-    $.each(res, function (i, v) {
+    $cmd.each(res, function (i, v) {
         var app = v + ":";
         var val = container.find('[data="' + v + '"]').val();
         app += val;
@@ -50,7 +52,7 @@ $('[data-role="CmdLaunch"]').on("click", function () {
         }
     });
     jQuery.support.cors = true;
-    var aj = $.ajax({
+    var aj = $cmd.ajax({
         url: "/cmd/launch",
         type: "POST",
         data: {
@@ -64,11 +66,11 @@ $('[data-role="CmdLaunch"]').on("click", function () {
     _requests.push(aj);
 });
 
-$(document).on("ready", function () {
-    $('[data-role="ContextSelection"]').each(function () {
-        $(this).windowed({
+$cmd(document).on("ready", function () {
+    $cmd('[data-role="ContextSelection"]').each(function () {
+        $cmd(this).windowed({
             change: function (event, selected) {
-                selected = $(selected);
+                selected = $cmd(selected);
                 var val = selected.val();
                 var container = selected.parents("table.context");
                 container.find("[data-select]").hide();
@@ -78,8 +80,8 @@ $(document).on("ready", function () {
     });
 });
 
-$(document).on("ready", function () {
-    $("textarea").each(function () {
+$cmd(document).on("ready", function () {
+    $cmd("textarea").each(function () {
         this.style.height = (this.scrollHeight + 10) + "px";
     });
 });
@@ -87,9 +89,9 @@ $(document).on("ready", function () {
 
 data = "ReplaceNewLine";
 
-$(document).on("ready", function () {
-    $('[data="ReplaceNewLine"]').each(function () {
-        var txt = $(this).text();
-        $(this).html(txt.replace(/\n/g, "<br/>"));
+$cmd(document).on("ready", function () {
+    $cmd('[data="ReplaceNewLine"]').each(function () {
+        var txt = $cmd(this).text();
+        $cmd(this).html(txt.replace(/\n/g, "<br/>"));
     });
 });
