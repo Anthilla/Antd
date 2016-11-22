@@ -1,0 +1,56 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Asset Management</legend>
+    <div class="bg-anthilla-gray" style="width: 100%; height: 45px; margin-bottom: 5px; padding: 10px;">
+        <label>Local Network - Antd Managed</label>
+    </div>
+
+    @Each.AntdAvahiServices
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            <i class="icon-monitor on-left fg-mauve"></i>
+            @Current.HostName
+        </div>
+        <div class="panel-content">
+            <table class="table" style="table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Host Name</label></td>
+                        <td colspan="2">
+                            <p>@Current.HostName</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Host Address</label></td>
+                        <td colspan="2">
+                            <p>@Current.Ip</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Host Antd</label></td>
+                        <td colspan="2">
+                            <a href="http://@Current.Ip:@Current.Port/" target="_blank" class="button bg-mauve" style="width: 90%; height: 28px;">Open</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Host Public Services</label></td>
+                        <td colspan="2">
+                            <a href="#" data-role="ShowNmap" data-ip="@Current.Ip" class="button bg-mauve" style="width: 90%; height: 28px;">Scan</a>
+                            <div data-role="nmapResult">
+                                <ul>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @EndEach
+</div>
+
+
+

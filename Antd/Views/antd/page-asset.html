@@ -29,12 +29,13 @@
 //------------------------------------------------------------------------------------->
 @Section['PageBar']
 <style type="text/css">
-    #Discovery-TB {
+    #Asset-TB {
         background-color: #A7BD39 !important;
+        border-color: #A7BD39 !important;
         color: #3a3a3a !important;
     }
 
-    #Discovery-TB *{
+    #Asset-TB *{
         color: #3a3a3a !important;
     }
 
@@ -51,11 +52,25 @@
 @EndSection
 
 @Section['MainContent']
-@Partial['antd/page-discovery-avahi', Model];
+@Partial['antd/page-asset-discovery', Model];
 @EndSection
 
 @Section['Scripts']
-<script data-context="discovery" type="text/javascript">
-    
+<script data-context="asset" type="text/javascript">
+    $('[data-role="ShowNmap"]').click(function() {
+        var ip = $(this).attr('data-ip');
+        var cont = $(this).parents('div').find('ul');
+        jQuery.support.cors = true;
+        var aj = $bind.ajax({
+            url: "/asset/nmap/" + ip,
+            type: "GET",
+            success: function (data) {
+                $.each(data,function(k, v) {
+                    cont.append("<li>" + v + "</li>");
+                });
+            }
+        });
+        _requests.push(aj);
+    });
 </script>
 @EndSection

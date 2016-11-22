@@ -5,7 +5,7 @@ function reloadPage() {
     var container = $page("#ResourcesMonitor");
     jQuery.support.cors = true;
     var aj = $page.ajax({
-        url: "/part/info/resources",
+        url: "/monitor/resources/html",
         type: "GET",
         success: function (data) {
             container.html(data);
@@ -16,10 +16,6 @@ function reloadPage() {
 function abortTimer() {
     clearInterval(tid);
 }
-
-$page("#ToggleResourceMonitor").on("click", function () {
-    $page("#ResourcesMonitor").toggle();
-});
 
 $page('[data-role="load-page"]').not("i").on("click", function () {
     AbortAllAjaxRequests();

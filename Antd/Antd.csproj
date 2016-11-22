@@ -134,7 +134,8 @@
     <Compile Include="Log\SyslogNg.cs" />
     <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
-    <Compile Include="Modules\DiscoveryModule.cs" />
+    <Compile Include="Modules\AssetModule.cs" />
+    <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Modules\renew\DomainControllerModule.cs" />
     <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\OverlayModule.cs" />
@@ -244,6 +245,9 @@
     </Content>
     <Content Include="ShellScript\apilist.txt" />
     <Content Include="ShellScript\scriptslist.txt" />
+    <Content Include="Views\antd\page-asset-discoveryOLD.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -295,10 +299,10 @@
     <Content Include="Views\antd\page-api.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-discovery-avahi.html">
+    <Content Include="Views\antd\page-asset-discovery.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-discovery.html">
+    <Content Include="Views\antd\page-asset.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-dhcp.html">

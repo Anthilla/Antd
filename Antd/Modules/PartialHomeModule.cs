@@ -50,53 +50,22 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
 
-        private readonly UserRepository _userRepository = new UserRepository();
-        private readonly Bash _bash = new Bash();
-        private readonly CommandLauncher _launcher = new CommandLauncher();
-        private readonly Virsh.Virsh _virsh = new Virsh.Virsh();
-        private readonly NfTables _nfTables = new NfTables();
-        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
-        private readonly MachineInfo _machineInfo = new MachineInfo();
-        private readonly ZfsSnap _zfsSnap = new ZfsSnap();
-        private readonly Zfs _zfs = new Zfs();
-        private readonly Timers _timers = new Timers();
-        private readonly Zpool _zpool = new Zpool();
-
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
             Get["/part/info"] = x => {
                 try {
+                    var bash = new Bash();
+                    var launcher = new CommandLauncher();
+                    var machineInfo = new MachineInfo();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.VersionOS = _bash.Execute("uname -a");
-                    viewModel.AosInfo = _machineInfo.GetAosrelease();
-                    viewModel.Uptime = _machineInfo.GetUptime();
-                    viewModel.GentooRelease = _launcher.Launch("cat-etc-gentoorel").JoinToString("<br />");
-                    viewModel.LsbRelease = _launcher.Launch("cat-etc-lsbrel").JoinToString("<br />");
-                    viewModel.OsRelease = _launcher.Launch("cat-etc-osrel").JoinToString("<br />");
+                    viewModel.VersionOS = bash.Execute("uname -a");
+                    viewModel.AosInfo = machineInfo.GetAosrelease();
+                    viewModel.Uptime = machineInfo.GetUptime();
+                    viewModel.GentooRelease = launcher.Launch("cat-etc-gentoorel").JoinToString("<br />");
+                    viewModel.LsbRelease = launcher.Launch("cat-etc-lsbrel").JoinToString("<br />");
+                    viewModel.OsRelease = launcher.Launch("cat-etc-osrel").JoinToString("<br />");
                     return View["antd/part/page-antd-info", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/info/resources"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var uptime = _machineInfo.GetUptime();
-                    viewModel.Uptime = uptime.Uptime.SplitToList("up").Last().Trim();
-                    viewModel.LoadAverage = uptime.LoadAverage.Replace(" load average:", "").Trim();
-                    var diskUsage = new DiskUsage();
-                    var du = diskUsage.GetInfo().Where(_ => _.MountedOn == "/mnt/cdrom" || _.MountedOn == "/mnt/overlay").OrderBy(_ => _.MountedOn);
-                    viewModel.DisksUsage = du;
-                    var memory = _machineInfo.GetFree().First();
-                    viewModel.MemoryTotal = memory.Total;
-                    viewModel.MemoryUsed = memory.Used;
-                    viewModel.MemoryFree = memory.Free;
-                    return View["antd/part/page-antd-info-resources", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
@@ -108,8 +77,9 @@ namespace Antd.Modules {
             Get["/part/info/memory"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Meminfo = _machineInfo.GetMeminfo();
-                    viewModel.Free = _machineInfo.GetFree();
+                    var machineInfo = new MachineInfo();
+                    viewModel.Meminfo = machineInfo.GetMeminfo();
+                    viewModel.Free = machineInfo.GetFree();
                     return View["antd/part/page-antd-info-memory", viewModel];
                 }
                 catch(Exception ex) {
@@ -121,8 +91,9 @@ namespace Antd.Modules {
 
             Get["/part/info/cpu"] = x => {
                 try {
+                    var machineInfo = new MachineInfo();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Cpuinfo = _machineInfo.GetCpuinfo();
+                    viewModel.Cpuinfo = machineInfo.GetCpuinfo();
                     return View["antd/part/page-antd-info-cpu", viewModel];
                 }
                 catch(Exception ex) {
@@ -134,8 +105,9 @@ namespace Antd.Modules {
 
             Get["/part/system"] = x => {
                 try {
+                    var machineInfo = new MachineInfo();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.SystemComponents = _machineInfo.GetSystemComponentModels();
+                    viewModel.SystemComponents = machineInfo.GetSystemComponentModels();
                     return View["antd/part/page-antd-system", viewModel];
                 }
                 catch(Exception ex) {
@@ -147,8 +119,9 @@ namespace Antd.Modules {
 
             Get["/part/system/losetup"] = x => {
                 try {
+                    var machineInfo = new MachineInfo();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.LosetupInfo = _machineInfo.GetLosetup();
+                    viewModel.LosetupInfo = machineInfo.GetLosetup();
                     return View["antd/part/page-antd-system-losetup", viewModel];
                 }
                 catch(Exception ex) {
@@ -160,8 +133,9 @@ namespace Antd.Modules {
 
             Get["/part/system/update"] = x => {
                 try {
+                    var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.AntdUpdateCheck = _launcher.Launch("mono-antdsh-update-check");
+                    viewModel.AntdUpdateCheck = launcher.Launch("mono-antdsh-update-check");
                     return View["antd/part/page-antd-system-update", viewModel];
                 }
                 catch(Exception ex) {
@@ -173,8 +147,9 @@ namespace Antd.Modules {
 
             Get["/part/host"] = x => {
                 try {
+                    var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    var hostnamectl = _launcher.Launch("hostnamectl").ToList();
+                    var hostnamectl = launcher.Launch("hostnamectl").ToList();
                     var ssoree = StringSplitOptions.RemoveEmptyEntries;
                     viewModel.StaticHostname = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.IconName = hostnamectl.First(_ => _.Contains("Icon name:")).Split(new[] { ":" }, 2, ssoree)[1];
@@ -198,10 +173,12 @@ namespace Antd.Modules {
 
             Get["/part/time"] = x => {
                 try {
+                    var bash = new Bash();
+                    var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    var timezones = _bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
+                    var timezones = bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
                     viewModel.Timezones = timezones;
-                    var timedatectl = _launcher.Launch("timedatectl").ToList();
+                    var timedatectl = launcher.Launch("timedatectl").ToList();
                     var ssoree = StringSplitOptions.RemoveEmptyEntries;
                     viewModel.LocalTime = timedatectl.First(_ => _.Contains("Local time:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.UnivTime = timedatectl.First(_ => _.Contains("Universal time:")).Split(new[] { ":" }, 2, ssoree)[1];
@@ -221,12 +198,13 @@ namespace Antd.Modules {
 
             Get["/part/ns"] = x => {
                 try {
+                    var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Hostname = _launcher.Launch("cat-etc-hostname");
-                    viewModel.Hosts = _launcher.Launch("cat-etc-hosts");
-                    viewModel.Networks = _launcher.Launch("cat-etc-networks");
-                    viewModel.Resolv = _launcher.Launch("cat-etc-resolv");
-                    viewModel.Nsswitch = _launcher.Launch("cat-etc-nsswitch");
+                    viewModel.Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />");
+                    viewModel.Hosts = launcher.Launch("cat-etc-hosts").JoinToString("<br />");
+                    viewModel.Networks = launcher.Launch("cat-etc-networks").JoinToString("<br />");
+                    viewModel.Resolv = launcher.Launch("cat-etc-resolv").JoinToString("<br />");
+                    viewModel.Nsswitch = launcher.Launch("cat-etc-nsswitch").JoinToString("<br />");
                     return View["antd/part/page-antd-ns", viewModel];
                 }
                 catch(Exception ex) {
@@ -355,8 +333,9 @@ namespace Antd.Modules {
 
             Get["/part/fw"] = x => {
                 try {
+                    var nfTables = new NfTables();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.NftTables = _nfTables.Tables();
+                    viewModel.NftTables = nfTables.Tables();
                     viewModel.MacAddressList = new MacAddressRepository().GetAll();
                     return View["antd/part/page-antd-firewall", viewModel];
                 }
@@ -370,8 +349,9 @@ namespace Antd.Modules {
 
             Get["/part/cron"] = x => {
                 try {
+                    var timers = new Timers();
                     dynamic viewModel = new ExpandoObject();
-                    var scheduledJobs = _timers.GetAll();
+                    var scheduledJobs = timers.GetAll();
                     viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
                     return View["antd/part/page-antd-scheduler", viewModel];
                 }
@@ -384,12 +364,15 @@ namespace Antd.Modules {
 
             Get["/part/storage"] = x => {
                 try {
+                    var zpool = new Zpool();
+                    var zfsSnap = new ZfsSnap();
+                    var zfs = new Zfs();
                     dynamic viewModel = new ExpandoObject();
                     viewModel.DisksList = Disks.List();
-                    viewModel.ZpoolList = _zpool.List();
-                    viewModel.ZfsList = _zfs.List();
-                    viewModel.ZfsSnap = _zfsSnap.List();
-                    viewModel.ZpoolHistory = _zpool.History();
+                    viewModel.ZpoolList = zpool.List();
+                    viewModel.ZfsList = zfs.List();
+                    viewModel.ZfsSnap = zfsSnap.List();
+                    viewModel.ZpoolHistory = zpool.History();
                     return View["antd/part/page-antd-storage", viewModel];
                 }
                 catch(Exception ex) {
@@ -442,8 +425,9 @@ namespace Antd.Modules {
 
             Get["/part/sync"] = x => {
                 try {
+                    var glusterConfiguration = new GlusterConfiguration();
                     dynamic viewModel = new ExpandoObject();
-                    var glusterConfig = _glusterConfiguration.Get();
+                    var glusterConfig = glusterConfiguration.Get();
                     viewModel.GlusterName = glusterConfig.Name;
                     viewModel.GlusterPath = glusterConfig.Path;
                     viewModel.GlusterNodes = glusterConfig.Nodes;
@@ -459,8 +443,9 @@ namespace Antd.Modules {
 
             Get["/part/vm"] = x => {
                 try {
+                    var virsh = new Virsh.Virsh();
                     dynamic viewModel = new ExpandoObject();
-                    var vmList = _virsh.GetVmList();
+                    var vmList = virsh.GetVmList();
                     viewModel.VMListAny = vmList.Any();
                     viewModel.VMList = vmList;
                     return View["antd/part/page-antd-vm", viewModel];
@@ -474,8 +459,9 @@ namespace Antd.Modules {
 
             Get["/part/users"] = x => {
                 try {
+                    var userRepository = new UserRepository();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Users = _userRepository.GetAll().OrderBy(_ => _.Alias);
+                    viewModel.Users = userRepository.GetAll().OrderBy(_ => _.Alias);
                     return View["antd/part/page-antd-users", viewModel];
                 }
                 catch(Exception ex) {

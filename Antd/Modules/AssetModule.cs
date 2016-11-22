@@ -33,6 +33,7 @@ using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using antd.commands;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
@@ -42,7 +43,7 @@ using Nancy.Security;
 using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {
-    public class DiscoveryModule : CoreModule {
+    public class AssetModule : CoreModule {
 
         public class AvahiServiceViewModel {
             public string HostName { get; set; }
@@ -52,9 +53,9 @@ namespace Antd.Modules {
 
         private readonly Bash _bash = new Bash();
 
-        public DiscoveryModule() {
+        public AssetModule() {
 
-            Get["/discovery"] = x => {
+            Get["/asset"] = x => {
                 this.RequiresAuthentication();
                 dynamic viewModel = new ExpandoObject();
 
@@ -64,17 +65,27 @@ namespace Antd.Modules {
 
                 var list = new List<AvahiServiceViewModel>();
                 foreach(var ls in localServices) {
-                    var arr = ls.Split(new[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                    var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                     var mo = new AvahiServiceViewModel {
-                        HostName = arr[0],
-                        Ip = arr[1],
-                        Port = arr[2],
+                        HostName = arr[0].Trim(),
+                        Ip = arr[1].Trim(),
+                        Port = arr[2].Trim()
                     };
                     list.Add(mo);
                 }
                 viewModel.AntdAvahiServices = list;
 
-                return View["antd/page-discovery", viewModel];
+                return View["antd/page-asset", viewModel];
+            };
+
+            Get["/asset/nmap/{ip}"] = x => {
+                string ip = x.ip;
+                if(string.IsNullOrEmpty(ip)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("nmap-ip", new Dictionary<string, string> { { "$ip", ip } });
+                return Response.AsJson(result);
             };
 
             Get["/disc/hello"] = x => {

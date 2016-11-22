@@ -17,6 +17,22 @@ namespace antd.commands {
         private static Dictionary<string, object> GetDict() {
             var dict = new Dictionary<string, object>();
 
+            #region [    Command - Test    ]
+            dict["test-sub-string"] = new Command<string> {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = "$obj",
+                Function = (x, y) => {
+                    var list = new List<string> {
+                        $"element 1: {x}",
+                        $"element 2: {x}",
+                        $"element 3: {x}",
+                    };
+                    return list;
+                }
+            };
+            #endregion
+
             #region [    Command - Misc    ]
             dict["anthilla"] = new Command<string> {
                 InputType = typeof(string),
@@ -428,6 +444,15 @@ namespace antd.commands {
                 InputType = typeof(string),
                 OutputType = typeof(string),
                 Arguments = "hostnamectl set-location \"$host_location\"",
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            #endregion
+
+            #region [    Command - Network    ]
+            dict["nmap-ip"] = new Command<string> {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = "nmap $ip",
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
