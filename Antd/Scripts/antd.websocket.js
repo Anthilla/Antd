@@ -20,7 +20,6 @@ var $ws = jQuery.noConflict();
 $ws('[data-role="command-set"]').CommandTemplate();
 
 $ws('[data-role="command-set"]').find('input[type="submit"]').on("click", function () {
-    //$ws('[data-role="command-set"]').find('input[type="submit"]').click(function () {
     var wsport;
     var wsconnection;
     var parent = $ws(this).parents('[data-role="command-set"]');

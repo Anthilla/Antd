@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using antdlib.common;
 using antdlib.common.Tool;
 
 namespace antd.commands {
@@ -18,15 +19,30 @@ namespace antd.commands {
             var dict = new Dictionary<string, object>();
 
             #region [    Command - Test    ]
-            dict["test-sub-string"] = new Command<string> {
+            dict["test-sub-string"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "$obj",
+                Arguments = new[] { "$obj" },
                 Function = (x, y) => {
                     var list = new List<string> {
-                        $"element 1: {x}",
-                        $"element 2: {x}",
-                        $"element 3: {x}",
+                        $"element 1: {x.First()}",
+                        $"element 2: {x.First()}",
+                        $"element 3: {x.First()}",
+                    };
+                    return list;
+                }
+            };
+
+            dict["test-sub-list"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "$obj", "prova $obj", "$value is another value" },
+                Function = (x, y) => {
+                    var list = new List<string> {
+                        $"element 1: {x.First()}",
+                        $"element 2: {x.ToArray()[1]}",
+                        $"element 3: {x.Last()}",
+                        $"element combo: {x.JoinToString(", ")}"
                     };
                     return list;
                 }
@@ -34,37 +50,37 @@ namespace antd.commands {
             #endregion
 
             #region [    Command - Misc    ]
-            dict["anthilla"] = new Command<string> {
+            dict["anthilla"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "$custom",
+                Arguments = new[] { "$custom" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["modprobe"] = new Command<string> {
+            dict["modprobe"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "modprobe $package",
+                Arguments = new[] { "modprobe $package" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["mono-antdsh-update"] = new Command<string> {
+            dict["mono-antdsh-update"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "mono /framework/antdsh/antdsh.exe update $context",
+                Arguments = new[] { "mono /framework/antdsh/antdsh.exe update $context" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["mono-antdsh-update-check"] = new Command<string> {
+            dict["mono-antdsh-update-check"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "mono /framework/antdsh/antdsh.exe update check",
+                Arguments = new[] { "mono /framework/antdsh/antdsh.exe update check" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["rmmod"] = new Command<string> {
+            dict["rmmod"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "rmmod $modules",
+                Arguments = new[] { "rmmod $modules" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-vlan"] = new Command<IEnumerable<string>> {
+            dict["set-vlan"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -76,34 +92,34 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["sysctl-p"] = new Command<string> {
+            dict["sysctl-p"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "sysctl -p",
+                Arguments = new[] { "sysctl -p" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["systemd-machine-id-setup"] = new Command<string> {
+            dict["systemd-machine-id-setup"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "systemd-machine-id-setup",
+                Arguments = new[] { "systemd-machine-id-setup" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Bond    ]
-            dict["bond-add-if"] = new Command<string> {
+            dict["bond-add-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ifenslave $bond $net_if",
+                Arguments = new[] { "ifenslave $bond $net_if" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["bond-del-if"] = new Command<string> {
+            dict["bond-del-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ifenslave -d $bond $net_if",
+                Arguments = new[] { "ifenslave -d $bond $net_if" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["bond-set"] = new Command<IEnumerable<string>> {
+            dict["bond-set"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -120,7 +136,7 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["set-bond"] = new Command<IEnumerable<string>> {
+            dict["set-bond"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -140,193 +156,193 @@ namespace antd.commands {
             #endregion
 
             #region [    Command - Brctl    ]
-            dict["brctl-add"] = new Command<string> {
+            dict["brctl-add"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl addbr $bridge",
+                Arguments = new[] { "brctl addbr $bridge" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-add-if"] = new Command<string> {
+            dict["brctl-add-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl addif $bridge $net_if",
+                Arguments = new[] { "brctl addif $bridge $net_if" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-del"] = new Command<string> {
+            dict["brctl-del"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl delbr $bridge",
+                Arguments = new[] { "brctl delbr $bridge" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-del-if"] = new Command<string> {
+            dict["brctl-del-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl delif $bridge $net_if",
+                Arguments = new[] { "brctl delif $bridge $net_if" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-set-pathcost"] = new Command<string> {
+            dict["brctl-set-pathcost"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl setpathcost $bridge $path $cost set path cost",
+                Arguments = new[] { "brctl setpathcost $bridge $path $cost set path cost" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-set-portprio"] = new Command<string> {
+            dict["brctl-set-portprio"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "brctl setportprio $bridge $port $priority set port priority",
+                Arguments = new[] { "brctl setportprio $bridge $port $priority set port priority" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
-            dict["brctl-show-br"] = new Command<string> {
+            dict["brctl-show-br"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl show $bridge",
+                Arguments = new[] { "brctl show $bridge" },
                 Grep = "$bridge",
                 Function = (x, y) => BashTool.Execute(x).Grep(y)
             };
-            dict["brctl-show-brid"] = new Command<string> {
+            dict["brctl-show-brid"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl show $bridge",
+                Arguments = new[] { "brctl show $bridge" },
                 Grep = "$bridge",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).Print(2, " ")
             };
-            dict["brctl-show-brif"] = new Command<string> {
+            dict["brctl-show-brif"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl show $bridge",
+                Arguments = new[] { "brctl show $bridge" },
                 Grep = "$bridge",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).Print(4, " ")
             };
-            dict["brctl-show-brstpstatus"] = new Command<string> {
+            dict["brctl-show-brstpstatus"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl show $bridge",
+                Arguments = new[] { "brctl show $bridge" },
                 Grep = "$bridge",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).Print(3, " ")
             };
-            dict["brctl-show-macs"] = new Command<string> {
+            dict["brctl-show-macs"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl showmacs $bridge",
+                Arguments = new[] { "brctl showmacs $bridge" },
                 Function = (x, y) => BashTool.Execute(x).Grep(y)
             };
-            dict["brctl-show-stp"] = new Command<string> {
+            dict["brctl-show-stp"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl showstp $bridge",
+                Arguments = new[] { "brctl showstp $bridge" },
                 Function = (x, y) => BashTool.Execute(x).Grep(y)
             };
-            dict["brctl-stp-off"] = new Command<string> {
+            dict["brctl-stp-off"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl stp $bridge off",
+                Arguments = new[] { "brctl stp $bridge off" },
                 Function = (x, y) => BashTool.Execute(x).Grep(y)
             };
-            dict["brctl-stp-on"] = new Command<string> {
+            dict["brctl-stp-on"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "brctl stp $bridge on",
+                Arguments = new[] { "brctl stp $bridge on" },
                 Function = (x, y) => BashTool.Execute(x).Grep(y)
             };
             #endregion
 
             #region [    Command - Cat    ]
-            dict["cat"] = new Command<string> {
+            dict["cat"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "$file",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "$file" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-gentoorel"] = new Command<string> {
+            dict["cat-etc-gentoorel"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/gentoo-release",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/gentoo-release" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-hostname"] = new Command<string> {
+            dict["cat-etc-hostname"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/hostname",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/hostname" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-hosts"] = new Command<string> {
+            dict["cat-etc-hosts"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/hosts",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/hosts" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-lsbrel"] = new Command<string> {
+            dict["cat-etc-lsbrel"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/lsb-release",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/lsb-release" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-osrel"] = new Command<string> {
+            dict["cat-etc-osrel"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/os-release",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/os-release" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-resolv"] = new Command<string> {
+            dict["cat-etc-resolv"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/resolv.conf",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/etc/resolv.conf" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["cat-etc-nsswitch"] = new Command<string> {
+            dict["cat-etc-nsswitch"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/etc/nsswitch.conf",
-                Function = (x, y) => ReadTool.FileLines(x).GrepIgnore("#")
+                Arguments = new[] { "/etc/nsswitch.conf" },
+                Function = (x, y) => ReadTool.FileLines(x.First()).GrepIgnore("#")
             };
             #endregion
 
             #region [    Command - Dhclient    ]
-            dict["dhclient-killall"] = new Command<string> {
+            dict["dhclient-killall"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "killall dhclient",
+                Arguments = new[] { "killall dhclient" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["dhclient4"] = new Command<string> {
+            dict["dhclient4"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "dhclient $net_if",
+                Arguments = new[] { "dhclient $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["dhclient6"] = new Command<string> {
+            dict["dhclient6"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "dhclient -6 $net_if",
+                Arguments = new[] { "dhclient -6 $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Echo (write/append)    ]
-            dict["echo-write"] = new Command<string> {
+            dict["echo-write"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "$file",
+                Arguments = new[] { "$file" },
                 Grep = "$value",
-                Function = (x, y) => WriteTool.WriteFile(x, y)
+                Function = (x, y) => WriteTool.WriteFile(x.First(), y)
             };
-            dict["echo-append"] = new Command<string> {
+            dict["echo-append"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "$file",
+                Arguments = new[] { "$file" },
                 Grep = "$value",
-                Function = (x, y) => WriteTool.AppendFile(x, y)
+                Function = (x, y) => WriteTool.AppendFile(x.First(), y)
             };
             #endregion
 
             #region [    Command - Fdisk    ]
-            dict["fdisk-print"] = new Command<string> {
+            dict["fdisk-print"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "echo -e \"p\" | fdisk $disk_device",
+                Arguments = new[] { "echo -e \"p\" | fdisk $disk_device" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["fdisk-set-partition"] = new Command<IEnumerable<string>> {
+            dict["fdisk-set-partition"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -339,126 +355,132 @@ namespace antd.commands {
             #endregion
 
             #region [    Command - Hostnamectl    ]
-            dict["hostnamectl"] = new Command<string> {
+            dict["hostnamectl"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["hostnamectl-get-arch"] = new Command<string> {
+            dict["hostnamectl-get-arch"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Architecture: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-bootid"] = new Command<string> {
+            dict["hostnamectl-get-bootid"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Boot ID: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-chassis"] = new Command<string> {
+            dict["hostnamectl-get-chassis"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Chassis: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-deployment"] = new Command<string> {
+            dict["hostnamectl-get-deployment"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Deployment: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-hostname"] = new Command<string> {
+            dict["hostnamectl-get-hostname"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Transient hostname: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-iconname"] = new Command<string> {
+            dict["hostnamectl-get-iconname"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Icon name: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-kernel"] = new Command<string> {
+            dict["hostnamectl-get-kernel"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Kernel: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-location"] = new Command<string> {
+            dict["hostnamectl-get-location"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Location: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-machineid"] = new Command<string> {
+            dict["hostnamectl-get-machineid"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Machine ID: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-os"] = new Command<string> {
+            dict["hostnamectl-get-os"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Operating System: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["hostnamectl-get-virtualization"] = new Command<string> {
+            dict["hostnamectl-get-virtualization"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl",
+                Arguments = new[] { "hostnamectl" },
                 Grep = "Virtualization: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["set-chassis"] = new Command<string> {
+            dict["set-chassis"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl set-chassis $host_chassis",
+                Arguments = new[] { "hostnamectl set-chassis $host_chassis" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-deployment"] = new Command<string> {
+            dict["set-deployment"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl set-deployment $host_deployment",
+                Arguments = new[] { "hostnamectl set-deployment $host_deployment" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-hostname"] = new Command<string> {
+            dict["set-hostname"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl set-hostname $host_name",
+                Arguments = new[] { "hostnamectl set-hostname $host_name" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-location"] = new Command<string> {
+            dict["set-location"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "hostnamectl set-location \"$host_location\"",
+                Arguments = new[] { "hostnamectl set-location \"$host_location\"" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Network    ]
-            dict["nmap-ip"] = new Command<string> {
+            dict["nmap-ip"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "nmap $ip",
+                Arguments = new[] { "nmap $ip" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["nmap-snmp-interfaces"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "nmap -sU -p 161 -T4 -d -v -n -Pn --script snmp-interfaces $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Ipv4    ]
-            dict["set-network-interface"] = new Command<IEnumerable<string>> {
+            dict["set-network-interface"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -469,121 +491,121 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-addr"] = new Command<string> {
+            dict["ip4-add-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr add $address/$range dev $net_if",
+                Arguments = new[] { "ip addr add $address/$range dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-addr-broadcast"] = new Command<string> {
+            dict["ip4-add-addr-broadcast"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr add $address/$range broadcast $broadcast dev $net_if",
+                Arguments = new[] { "ip addr add $address/$range broadcast $broadcast dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-multipath-route"] = new Command<string> {
+            dict["ip4-add-multipath-route"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip route add default scope global nexthop dev $net1 nexthop dev $net2",
+                Arguments = new[] { "ip route add default scope global nexthop dev $net1 nexthop dev $net2" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-nat"] = new Command<string> {
+            dict["ip4-add-nat"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip route add nat $ip_address via $ip_via_address",
+                Arguments = new[] { "ip route add nat $ip_address via $ip_via_address" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-route"] = new Command<string> {
+            dict["ip4-add-route"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip route add $ip_address via $gateway dev $net_if",
+                Arguments = new[] { "ip route add $ip_address via $gateway dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-add-tunnel-point-to-point"] = new Command<string> {
+            dict["ip4-add-tunnel-point-to-point"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip tunnel add $net_if mode sit ttl $ttl remote $tunnel local $local_address",
+                Arguments = new[] { "ip tunnel add $net_if mode sit ttl $ttl remote $tunnel local $local_address" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-del-addr"] = new Command<string> {
+            dict["ip4-del-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr del $address/$range dev $net_if",
+                Arguments = new[] { "ip addr del $address/$range dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-del-addr-broadcast"] = new Command<string> {
+            dict["ip4-del-addr-broadcast"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr del $address/$range broadcast $broadcast dev $net_if",
+                Arguments = new[] { "ip addr del $address/$range broadcast $broadcast dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-del-route"] = new Command<string> {
+            dict["ip4-del-route"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip route del $ip_address via $gateway dev $net_if",
+                Arguments = new[] { "ip route del $ip_address via $gateway dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-del-tunnel-point-to-point"] = new Command<string> {
+            dict["ip4-del-tunnel-point-to-point"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip tunnel del $net_if",
+                Arguments = new[] { "ip tunnel del $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-disable-if"] = new Command<string> {
+            dict["ip4-disable-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip link set $net_if down",
+                Arguments = new[] { "ip link set $net_if down" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-enable-if"] = new Command<string> {
+            dict["ip4-enable-if"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip link set $net_if up",
+                Arguments = new[] { "ip link set $net_if up" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-flush-configuration"] = new Command<string> {
+            dict["ip4-flush-configuration"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr flush dev $net_if",
+                Arguments = new[] { "ip addr flush dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-get-if-addr"] = new Command<string> {
+            dict["ip4-get-if-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr show $net_if",
+                Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).Grep("inet .").First().Print(2, " ").SplitBash()
             };
-            dict["ip4-get-if-brd"] = new Command<string> {
+            dict["ip4-get-if-brd"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr show $net_if",
+                Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).Grep("inet .").First().Print(4, " ").SplitBash()
             };
-            dict["ip4-get-if-macaddress"] = new Command<string> {
+            dict["ip4-get-if-macaddress"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/sys/class/net/$net_if/address",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/sys/class/net/$net_if/address" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["ip4-get-if-mtu"] = new Command<string> {
+            dict["ip4-get-if-mtu"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "/sys/class/net/$net_if/mtu",
-                Function = (x, y) => ReadTool.FileLines(x)
+                Arguments = new[] { "/sys/class/net/$net_if/mtu" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
-            dict["ip4-if-isdown"] = new Command<string> {
+            dict["ip4-if-isdown"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr show $net_if",
+                Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).Grep("state DOWN").First().SplitBash()
             };
-            dict["ip4-if-isup"] = new Command<string> {
+            dict["ip4-if-isup"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr show $net_if",
+                Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).Grep("state UP").First().SplitBash()
             };
-            dict["ip4-set-macaddress"] = new Command<IEnumerable<string>> {
+            dict["ip4-set-macaddress"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -593,152 +615,152 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-set-mtu"] = new Command<string> {
+            dict["ip4-set-mtu"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip link set dev $net_if mtu $mtu",
+                Arguments = new[] { "ip link set dev $net_if mtu $mtu" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-show-if-addr"] = new Command<string> {
+            dict["ip4-show-if-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip addr show $net_if",
+                Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-show-if-link"] = new Command<string> {
+            dict["ip4-show-if-link"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -s link ls $net_if",
+                Arguments = new[] { "ip -s link ls $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-show-routes"] = new Command<string> {
+            dict["ip4-show-routes"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip route show $net_if",
+                Arguments = new[] { "ip route show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-show-tunnels"] = new Command<string> {
+            dict["ip4-show-tunnels"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip tunnel show $net_if",
+                Arguments = new[] { "ip tunnel show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip4-show-updown"] = new Command<string> {
+            dict["ip4-show-updown"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip link show $net_if",
+                Arguments = new[] { "ip link show $net_if" },
                 //todo fare multigrep  | grep -ho \' UP \\| DOWN \'
                 Function = (x, y) => BashTool.Execute(x).Grep("UP").First().SplitBash()
             };
             #endregion
 
             #region [    Command - Ipv6    ]
-            dict["ip6-add-addr"] = new Command<string> {
+            dict["ip6-add-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr add $address/$range dev $net_if",
+                Arguments = new[] { "ip -6 addr add $address/$range dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-add-neigh"] = new Command<string> {
+            dict["ip6-add-neigh"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 neigh add $ip_address lladdr $ip_lay_address dev $net_if",
+                Arguments = new[] { "ip -6 neigh add $ip_address lladdr $ip_lay_address dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-add-new-address"] = new Command<string> {
+            dict["ip6-add-new-address"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr add $ip_address dev $net_if",
+                Arguments = new[] { "ip -6 addr add $ip_address dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-add-route"] = new Command<string> {
+            dict["ip6-add-route"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 route add $ip_address via $gateway",
+                Arguments = new[] { "ip -6 route add $ip_address via $gateway" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-add-route-dev"] = new Command<string> {
+            dict["ip6-add-route-dev"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr del $address/$range dev $net_if",
+                Arguments = new[] { "ip -6 addr del $address/$range dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-del-addr"] = new Command<string> {
+            dict["ip6-del-addr"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr del $address/$range dev $net_if",
+                Arguments = new[] { "ip -6 addr del $address/$range dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-del-address"] = new Command<string> {
+            dict["ip6-del-address"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr del $ip_address dev $net_if",
+                Arguments = new[] { "ip -6 addr del $ip_address dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-del-neigh"] = new Command<string> {
+            dict["ip6-del-neigh"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 neigh del $ip_address lladdr $ip_lay_address dev $net_if",
+                Arguments = new[] { "ip -6 neigh del $ip_address lladdr $ip_lay_address dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-del-route"] = new Command<string> {
+            dict["ip6-del-route"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 route del $ip_address via $gateway",
+                Arguments = new[] { "ip -6 route del $ip_address via $gateway" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-del-route-dev"] = new Command<string> {
+            dict["ip6-del-route-dev"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 route del $gateway dev $net_if",
+                Arguments = new[] { "ip -6 route del $gateway dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-flush-configuration"] = new Command<string> {
+            dict["ip6-flush-configuration"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 addr flush dynamic",
+                Arguments = new[] { "ip -6 addr flush dynamic" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-show-if-link"] = new Command<string> {
+            dict["ip6-show-if-link"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 link show $net_if",
+                Arguments = new[] { "ip -6 link show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-show-if-stats"] = new Command<string> {
+            dict["ip6-show-if-stats"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 -s link ls $net_if",
+                Arguments = new[] { "ip -6 -s link ls $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-show-neigh"] = new Command<string> {
+            dict["ip6-show-neigh"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 neigh show dev $net_if",
+                Arguments = new[] { "ip -6 neigh show dev $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-show-routes"] = new Command<string> {
+            dict["ip6-show-routes"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 route show $net_if",
+                Arguments = new[] { "ip -6 route show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["ip6-show-tunnels"] = new Command<string> {
+            dict["ip6-show-tunnels"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ip -6 tunnel show $net_if",
+                Arguments = new[] { "ip -6 tunnel show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Time & Date    ]
-            dict["ntpdate"] = new Command<string> {
+            dict["ntpdate"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "ntpdate $server",
+                Arguments = new[] { "ntpdate $server" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-ntpdate"] = new Command<IEnumerable<string>> {
+            dict["set-ntpdate"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -747,13 +769,13 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["set-timezone"] = new Command<string> {
+            dict["set-timezone"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl --no-pager --no-ask-password --adjust-system-clock set-timezone $host_timezone",
+                Arguments = new[] { "timedatectl --no-pager --no-ask-password --adjust-system-clock set-timezone $host_timezone" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["sync-clock"] = new Command<IEnumerable<string>> {
+            dict["sync-clock"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -762,182 +784,182 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["timedatectl"] = new Command<string> {
+            dict["timedatectl"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["timedatectl-get-localtime"] = new Command<string> {
+            dict["timedatectl-get-localtime"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "Local time: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-nettimeon"] = new Command<string> {
+            dict["timedatectl-get-nettimeon"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "Network time on: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-ntpsync"] = new Command<string> {
+            dict["timedatectl-get-ntpsync"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "NTP synchronized: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-rtcintz"] = new Command<string> {
+            dict["timedatectl-get-rtcintz"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "RTC in local TZ: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-rtctime"] = new Command<string> {
+            dict["timedatectl-get-rtctime"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "RTC time: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-timezone"] = new Command<string> {
+            dict["timedatectl-get-timezone"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "Time zone: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
-            dict["timedatectl-get-univtime"] = new Command<string> {
+            dict["timedatectl-get-univtime"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "timedatectl",
+                Arguments = new[] { "timedatectl" },
                 Grep = "Universal time: ",
                 Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
             };
             #endregion
 
             #region [    Command - Rsync    ]
-            dict["rsync"] = new Command<string> {
+            dict["rsync"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "rsync -aHA $source/ $destination/",
+                Arguments = new[] { "rsync -aHA $source/ $destination/" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["rsync-delete-after"] = new Command<string> {
+            dict["rsync-delete-after"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "rsync -aHA --delete-after $source/ $destination/",
+                Arguments = new[] { "rsync -aHA --delete-after $source/ $destination/" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["rsync-delete-during"] = new Command<string> {
+            dict["rsync-delete-during"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "rsync -aHA --delete-during $source/ $destination/",
+                Arguments = new[] { "rsync -aHA --delete-during $source/ $destination/" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Systemctl    ]
-            dict["systemctl-start"] = new Command<string> {
+            dict["systemctl-start"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "systemctl start $service",
+                Arguments = new[] { "systemctl start $service" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["systemctl-stop"] = new Command<string> {
+            dict["systemctl-stop"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "systemctl stop $service",
+                Arguments = new[] { "systemctl stop $service" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Virsh    ]
-            dict["virsh-destroy"] = new Command<string> {
+            dict["virsh-destroy"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh destroy $domain",
+                Arguments = new[] { "virsh destroy $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-reboot"] = new Command<string> {
+            dict["virsh-reboot"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh reboot $domain",
+                Arguments = new[] { "virsh reboot $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-reset"] = new Command<string> {
+            dict["virsh-reset"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh reset $domain",
+                Arguments = new[] { "virsh reset $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-restore"] = new Command<string> {
+            dict["virsh-restore"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh restore $domain",
+                Arguments = new[] { "virsh restore $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-resume"] = new Command<string> {
+            dict["virsh-resume"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh resume $domain",
+                Arguments = new[] { "virsh resume $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-shutdown"] = new Command<string> {
+            dict["virsh-shutdown"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh shutdown $domain",
+                Arguments = new[] { "virsh shutdown $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-start"] = new Command<string> {
+            dict["virsh-start"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh start $domain",
+                Arguments = new[] { "virsh start $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-suspend"] = new Command<string> {
+            dict["virsh-suspend"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh suspend $domain",
+                Arguments = new[] { "virsh suspend $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-dompmsuspend"] = new Command<string> {
+            dict["virsh-dompmsuspend"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh dompmsuspend $domain",
+                Arguments = new[] { "virsh dompmsuspend $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["virsh-dompmwakeup"] = new Command<string> {
+            dict["virsh-dompmwakeup"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "virsh dompmwakeup $domain",
+                Arguments = new[] { "virsh dompmwakeup $domain" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion
 
             #region [    Command - Storage    ]
-            dict["zpool-mklabel"] = new Command<string> {
+            dict["zpool-mklabel"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "parted /dev/$disk_device mklabel $zpool_label Yes",
+                Arguments = new[] { "parted /dev/$disk_device mklabel $zpool_label Yes" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["zpool-create"] = new Command<string> {
+            dict["zpool-create"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "zpool create -f -o altroot=$pool_altroot -o ashift=12 -O casesensitivity=insensitive -O normalization=formD $pool_name $pool_type $disk_byid",
+                Arguments = new[] { "zpool create -f -o altroot=$pool_altroot -o ashift=12 -O casesensitivity=insensitive -O normalization=formD $pool_name $pool_type $disk_byid" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["zpool-create-simple"] = new Command<string> {
+            dict["zpool-create-simple"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = "zpool create -f -o altroot=$pool_altroot $pool_name Storage01 $disk",
+                Arguments = new[] { "zpool create -f -o altroot=$pool_altroot $pool_name Storage01 $disk" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
-            dict["zfs-create"] = new Command<IEnumerable<string>> {
+            dict["zfs-create"] = new Command {
                 InputType = typeof(IEnumerable<string>),
                 OutputType = typeof(string),
                 Arguments = new[] {
@@ -955,21 +977,14 @@ namespace antd.commands {
             };
             #endregion
 
-            //#region [    Command - B.A.T.M.A.N.    ]
-            //dict["bond-add-if"] = new Command<string> {
-            //    InputType = typeof(string),
-            //    OutputType = typeof(string),
-            //    Arguments = "ifenslave $bond $net_if",
-            //    Function = (x, y) => BashTool.Execute(x, false)
-            //};
-            //#endregion
-
-            //dict["bond-add-if"] = new Command<string> {
-            //    InputType = typeof(IEnumerable<string>),
-            //    OutputType = typeof(string),
-            //    Arguments = "ifenslave $bond $net_if",
-            //    Function = (x, y) => BashTool.Execute(x)
-            //};
+            #region [    Command - Assets    ]
+            dict["wol"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "wol $mac" },
+                Function = (x, y) => BashTool.Execute(x, false).SplitBash()
+            };
+            #endregion
 
             return dict;
         }

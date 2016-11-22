@@ -6,33 +6,6 @@ $sl(document).on("ready", function () {
     ).then();
 });
 
-//$sl(document).on("ready", function () {
-//    $sl('[data-input="selectize"]').each(function () {
-//        $sl(this).hide();
-//        $sl(this).selectize({
-//            delimiter: ",",
-//            create: function (input) {
-//                return {
-//                    value: input,
-//                    text: input
-//                }
-//            },
-//            onInitialize: function () {
-//                var s = this;
-//                var actualValue = value;
-//                if (actualValue) {
-//                    var arr = actualValue.split(",");
-//                    $sl.each(arr, function (k, v) {
-//                        s.addOption(v);
-//                        s.setValue(actualValue);
-//                        s.blur();
-//                    });
-//                }
-//            }
-//        });
-//    });
-//});
-
 function Callback(callback, url) {
     var aj = $sl.ajax({
         url: url,

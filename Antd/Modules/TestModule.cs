@@ -27,6 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antd.commands;
 using Antd.Storage;
 using Nancy;
 
@@ -50,6 +52,26 @@ namespace Antd.Modules {
             Get["/test/clearnsnapshots"] = x => {
                 new BackupClean().Launch();
                 return HttpStatusCode.ImATeapot;
+            };
+
+            Get["/test/command1/{val}"] = x => {
+                string val = x.val;
+                if(string.IsNullOrEmpty(val)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("test-sub-string", new Dictionary<string, string> { { "$obj", val } });
+                return Response.AsJson(result);
+            };
+
+            Get["/test/command2/{val}"] = x => {
+                string val = x.val;
+                if(string.IsNullOrEmpty(val)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("test-sub-list", new Dictionary<string, string> { { "$obj", val }, { "$value", val + "2" } });
+                return Response.AsJson(result);
             };
         }
     }

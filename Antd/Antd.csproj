@@ -245,9 +245,6 @@
     </Content>
     <Content Include="ShellScript\apilist.txt" />
     <Content Include="ShellScript\scriptslist.txt" />
-    <Content Include="Views\antd\page-asset-discoveryOLD.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\antd\part\page-antd-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

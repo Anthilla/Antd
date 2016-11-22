@@ -4,17 +4,17 @@ using antdlib.common;
 using antdlib.common.Tool;
 
 namespace antd.commands {
-    public class Command<TInput> : ICommand {
+    public class Command : ICommand {
 
-        public TInput Arguments { get; set; }
+        public IEnumerable<string> Arguments { get; set; }
 
-        public Func<TInput, string, IEnumerable<string>> Function { get; set; }
+        public Func<IEnumerable<string>, string, IEnumerable<string>> Function { get; set; }
 
         public string Grep { get; set; }
 
         public Type InputType { get; set; }
         public Type OutputType { get; set; }
-        public Type CommandType { get; set; } = typeof(Command<TInput>);
+        public Type CommandType { get; set; } = typeof(Command);
 
         public IEnumerable<string> Launch() {
             var arguments = Arguments;
@@ -34,8 +34,8 @@ namespace antd.commands {
             var arguments = Arguments;
             var grep = Grep;
             foreach(var sub in substitutions) {
-                arguments = arguments.ReplaceX(sub.Key, sub.Value);
-                grep = grep.ReplaceX(sub.Key, sub.Value);
+                arguments = arguments.ReplaceInList(sub.Key, sub.Value);
+                grep = grep.ReplaceInString(sub.Key, sub.Value);
             }
             try {
                 return Function(arguments, Grep);

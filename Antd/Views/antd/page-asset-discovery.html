@@ -16,33 +16,62 @@
                     <tr>
                         <td>
                             <label>Host Name</label></td>
-                        <td colspan="2">
+                        <td colspan="3">
                             <p>@Current.HostName</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label>Host Address</label></td>
-                        <td colspan="2">
+                        <td colspan="3">
                             <p>@Current.Ip</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
+                            <label>Host MAC Address</label></td>
+                        <td colspan="3">
+                            <i data-role="Wol" data-mac="@Current.MacAddress" class="icon-lightning fg-yellow" style="float: right; cursor: pointer; border: 2px solid #E3C800; padding: 3px;"></i>
+                            <p>@Current.MacAddress</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <label>Host Antd</label></td>
-                        <td colspan="2">
+                        <td colspan="3">
                             <a href="http://@Current.Ip:@Current.Port/" target="_blank" class="button bg-mauve" style="width: 90%; height: 28px;">Open</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label>Host Public Services</label></td>
-                        <td colspan="2">
-                            <a href="#" data-role="ShowNmap" data-ip="@Current.Ip" class="button bg-mauve" style="width: 90%; height: 28px;">Scan</a>
-                            <div data-role="nmapResult">
-                                <ul>
-                                </ul>
-                            </div>
+                        <td colspan="3">
+                            <input data-role="ShowNmap" data-ip="@Current.Ip" type="button" class="button bg-mauve" style="width: 90%; height: 28px;" value="Scan" />
+                            <ul class="fg-white" style="list-style: none !important;">
+                            </ul>
+                            <table class="table" style="display: none; margin-top: -18px;">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            <label>Port/Protocol</label></td>
+                                        <td>
+                                            <label>Status</label></td>
+                                        <td>
+                                            <label>Type</label></td>
+                                    </tr>
+                                </thead>
+                                <tbody data-role="NmapResult">
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Host VNC</label></td>
+                        <td colspan="3">
+                            <input id="NoVncHost" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Ip"/>
+                            <input id="NoVncPort" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Port"/>
+                            <a id="NoVncConnect" href="#" target="_blank" class="button bg-mauve" style="width: 33%; height: 28px;">Connect</a>
                         </td>
                     </tr>
                 </tbody>

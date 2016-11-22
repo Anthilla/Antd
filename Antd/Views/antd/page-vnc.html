@@ -51,6 +51,7 @@
         border-top-width: 4px;
     }
 </style>
+<link rel="stylesheet" href="/novnc/base.css" title="plain">
 <nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar">
     <nav class="navigation-bar-content">
         <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
@@ -64,11 +65,11 @@
         <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay">
             <input id="NoVncPort" type="text" data-role="novnc-setup" style="float: left; margin-top: -12px; margin-left: -27px !important; height: 25px; display: block;" placeholder="PORT" autocomplete="off">
         </div>
-        <a id="NoVncConnect" href="#" class="element button bg-anthilla-green" style="color: #3A3A3A !important; line-height: 0;  height: 25px !important; margin-left: -10px; margin-top: 5px; padding: 10px 15px !important;">Connect</a>
+        <a id="NoVncConnect" href="#" class="element button bg-anthilla-green" style="color: #3A3A3A !important; line-height: 0; height: 25px !important; margin-left: -10px; margin-top: 5px; padding: 10px 15px !important;">Connect</a>
         <div class="element-divider"></div>
         <div class="element-divider"></div>
         @Each.Connections
-        <a data-role="DefaultConnectionButton" href="@Current.Value" class="element button bg-anthilla-green" style="color: #3A3A3A !important; line-height: 0;  height: 25px !important; margin-left: 10px; margin-top: 5px; padding: 10px 15px !important;">Connect To '@Current.Key'</a>
+        <a data-role="DefaultConnectionButton" href="@Current.Value" class="element button bg-anthilla-green" style="color: #3A3A3A !important; line-height: 0; height: 25px !important; margin-left: 10px; margin-top: 5px; padding: 10px 15px !important;">Connect To '@Current.Key'</a>
         @EndEach
     </nav>
 </nav>
@@ -76,8 +77,8 @@
 
 @Section['MainContent']
 <div id="noVNC_screen" style="min-height: 818px !important;">
-    <div id="noVNC_status_bar" class="noVNC_status_bar" style="margin-top: 0px;">
-        <table border=0 width="100%">
+    <div id="noVNC_status_bar" class="noVNC_status_bar" style="margin-top: 0;">
+        <table border="0" width="100%">
             <tr>
                 <td>
                     <div id="noVNC_status" style="position: relative; height: auto;">
@@ -86,52 +87,51 @@
                 </td>
                 <td>
                     <div id="noVNC_clipboard" class="triangle-right top" style="display: none !important;">
-                        <textarea id="noVNC_clipboard_text" rows=5></textarea>
+                        <textarea id="noVNC_clipboard_text" rows="5"></textarea>
                         <br />
                         <input id="noVNC_clipboard_clear_button" type="button" value="Clear">
                     </div>
                 </td>
                 <td width="1%">
                     <div id="noVNC_buttons">
-                        <input type=button value="Send CtrlAltDel" id="sendCtrlAltDelButton">
-                        <!--<input type=button value="Fullscreen" id="fullscreen">-->
+                        <input type="button" value="Send CtrlAltDel" id="sendCtrlAltDelButton">
                         <span id="noVNC_xvp_buttons">
-                            <input type=button value="Shutdown" id="xvpShutdownButton">
-                            <input type=button value="Reboot" id="xvpRebootButton">
-                            <input type=button value="Reset" id="xvpResetButton">
+                            <input type="button" value="Shutdown" id="xvpShutdownButton">
+                            <input type="button" value="Reboot" id="xvpRebootButton">
+                            <input type="button" value="Reset" id="xvpResetButton">
                         </span>
                     </div>
                 </td>
             </tr>
         </table>
     </div>
-    <canvas id="noVNC_canvas" width="640px" height="20px">
-        Canvas not supported.
+    <canvas id="noVNC_canvas" width="640px" height="20px">Canvas not supported.
     </canvas>
 </div>
 @EndSection
 
 @Section['Scripts']
 <script id="DashboardScripts">
+    var $u = jQuery.noConflict();
+
     function SetConnectionLink() {
         //?host=HOST&port=PORT&encrypt=1&true_color=1
-        var host = $('input#NoVncHost').val();
-        var port = $('input#NoVncPort').val();
-        $("a#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
+        var host = $u('input#NoVncHost').val();
+        var port = $u('input#NoVncPort').val();
+        $u("a#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
     }
 
-    $('input[data-role="novnc-setup"]').keyup(function () {
+    $u('input[data-role="novnc-setup"]').keyup(function () {
         SetConnectionLink();
     });
 </script>
-<link rel="stylesheet" href="/novnc/base.css" title="plain">
 <script src="/novnc/util.js"></script>
 <script>
     "use strict";
 
     Util.load_scripts(["webutil.js", "base64.js", "websock.js", "des.js",
-                       "keysymdef.js", "keyboard.js", "input.js", "display.js",
-                       "inflator.js", "rfb.js", "keysym.js"]);
+        "keysymdef.js", "keyboard.js", "input.js", "display.js",
+        "inflator.js", "rfb.js", "keysym.js"]);
 
     var rfb;
     var resizeTimeout;
@@ -146,11 +146,11 @@
                 rfb.setDesktopSize(innerW, innerH - controlbarH - padding);
         }
     }
-    function FBUComplete(rfb, fbu) {
+    function FBUComplete(rfb) {
         UIresize();
         rfb.set_onFBUComplete(function () { });
     }
-    function passwordRequired(rfb) {
+    function passwordRequired() {
         var msg;
         msg = '<form onsubmit="return setPassword();"';
         msg += '  style="margin-bottom: 0px">';
@@ -181,10 +181,10 @@
         return false;
     }
     function updateState(rfb, state, oldstate, msg) {
-        var s, sb, cad, level;
-        s = $D('noVNC_status');
-        sb = $D('noVNC_status_bar');
-        cad = $D('sendCtrlAltDelButton');
+        var level;
+        var s = $D('noVNC_status');
+        var sb = $D('noVNC_status_bar');
+        var cad = $D('sendCtrlAltDelButton');
         switch (state) {
             case 'failed': level = "error"; break;
             case 'fatal': level = "error"; break;
@@ -215,8 +215,7 @@
     };
 
     function xvpInit(ver) {
-        var xvpbuttons;
-        xvpbuttons = $D('noVNC_xvp_buttons');
+        var xvpbuttons = $D('noVNC_xvp_buttons');
         if (ver >= 1) {
             xvpbuttons.style.display = 'inline';
         } else {
@@ -225,7 +224,7 @@
     }
 
     window.onscriptsload = function () {
-        var host, port, password, path, token;
+        var port, path;
 
         $D('sendCtrlAltDelButton').style.display = "inline";
         $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
@@ -236,25 +235,25 @@
 
         WebUtil.init_logging(WebUtil.getConfigVar('logging', 'warn'));
         document.title = unescape(WebUtil.getConfigVar('title', 'noVNC'));
-        host = WebUtil.getConfigVar('host', window.location.hostname);
+        var host = WebUtil.getConfigVar('host', window.location.hostname);
         port = WebUtil.getConfigVar('port', window.location.port);
 
         if (!port) {
-            if (window.location.protocol.substring(0, 5) == 'https') {
+            if (window.location.protocol.substring(0, 5) === 'https') {
                 port = 443;
             }
-            else if (window.location.protocol.substring(0, 4) == 'http') {
+            else if (window.location.protocol.substring(0, 4) === 'http') {
                 port = 80;
             }
         }
 
-        password = WebUtil.getConfigVar('password', '');
+        var password = WebUtil.getConfigVar('password', '');
         path = WebUtil.getConfigVar('path', 'websockify');
 
         $('input#NoVncHost').val(host);
         $('input#NoVncPort').val(port);
 
-        token = WebUtil.getConfigVar('token', null);
+        var token = WebUtil.getConfigVar('token', null);
         if (token) {
             path = WebUtil.injectParamIfMissing(path, "token", token);
             WebUtil.createCookie('token', token, 1)
@@ -269,7 +268,7 @@
             rfb = new RFB({
                 'target': $D('noVNC_canvas'),
                 'encrypt': WebUtil.getConfigVar('encrypt',
-                         (window.location.protocol === "https:")),
+                    (window.location.protocol === "https:")),
                 'repeaterID': WebUtil.getConfigVar('repeaterID', ''),
                 'true_color': WebUtil.getConfigVar('true_color', true),
                 'local_cursor': WebUtil.getConfigVar('cursor', true),

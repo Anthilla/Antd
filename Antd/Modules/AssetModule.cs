@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using antd.commands;
@@ -49,6 +50,13 @@ namespace Antd.Modules {
             public string HostName { get; set; }
             public string Ip { get; set; }
             public string Port { get; set; }
+            public string MacAddress { get; set; }
+        }
+
+        public class NmapScanStatus {
+            public string Protocol { get; set; }
+            public string Status { get; set; }
+            public string Type { get; set; }
         }
 
         private readonly Bash _bash = new Bash();
@@ -63,6 +71,8 @@ namespace Antd.Modules {
                 avahiBrowse.DiscoverService("antd");
                 var localServices = avahiBrowse.Locals;
 
+                var launcher = new CommandLauncher();
+
                 var list = new List<AvahiServiceViewModel>();
                 foreach(var ls in localServices) {
                     var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
@@ -71,6 +81,12 @@ namespace Antd.Modules {
                         Ip = arr[1].Trim(),
                         Port = arr[2].Trim()
                     };
+                    var result = launcher.Launch("nmap-snmp-interfaces", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
+                    var mac = result.FirstOrDefault(_ => _.Contains("MAC Address"));
+                    if(!string.IsNullOrEmpty(mac)) {
+                        mo.MacAddress = mac.SplitToList(":").Last();
+                    }
+                    mo.MacAddress = mac;
                     list.Add(mo);
                 }
                 viewModel.AntdAvahiServices = list;
@@ -84,8 +100,30 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var launcher = new CommandLauncher();
-                var result = launcher.Launch("nmap-ip", new Dictionary<string, string> { { "$ip", ip } });
-                return Response.AsJson(result);
+                var result = launcher.Launch("nmap-ip", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
+
+                var list = new List<NmapScanStatus>();
+                foreach(var r in result) {
+                    var a = r.SplitToList(" ").ToArray();
+                    var mo = new NmapScanStatus {
+                        Protocol = a[0],
+                        Status = a[1],
+                        Type = a[2]
+                    };
+                    list.Add(mo);
+                }
+
+                return Response.AsJson(list.OrderBy(_ => _.Protocol));
+            };
+
+            Get["/asset/wol/{mac}"] = x => {
+                string mac = x.mac;
+                if(string.IsNullOrEmpty(mac)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var launcher = new CommandLauncher();
+                launcher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
+                return Response.AsJson(true);
             };
 
             Get["/disc/hello"] = x => {
