@@ -173,6 +173,7 @@
     <Compile Include="Samba\SambaConfiguration.cs" />
     <Compile Include="Samba\SambaConfigurationModel.cs" />
     <Compile Include="Ssh\RootKeys.cs" />
+    <Compile Include="Ssh\SshKnownHosts.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
     <Compile Include="Storage\DiskUsage.cs" />

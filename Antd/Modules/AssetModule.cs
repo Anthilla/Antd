@@ -38,6 +38,7 @@ using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Avahi;
 using Antd.Database;
+using Antd.Ssh;
 using Nancy;
 using Nancy.Security;
 using HttpStatusCode = Nancy.HttpStatusCode;
@@ -50,6 +51,7 @@ namespace Antd.Modules {
             public string Ip { get; set; }
             public string Port { get; set; }
             public string MacAddress { get; set; }
+            public bool IsKnown { get; set; }
         }
 
         public class NmapScanStatus {
@@ -68,6 +70,7 @@ namespace Antd.Modules {
                 var localServices = avahiBrowse.Locals;
                 var launcher = new CommandLauncher();
                 var list = new List<AvahiServiceViewModel>();
+                var kh = new SshKnownHosts();
                 foreach(var ls in localServices) {
                     var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                     var mo = new AvahiServiceViewModel {
@@ -81,6 +84,7 @@ namespace Antd.Modules {
                         mo.MacAddress = mac.SplitToList(":").Last();
                     }
                     mo.MacAddress = mac;
+                    mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
                     list.Add(mo);
                 }
                 var hostnamectl = launcher.Launch("hostnamectl").ToList();
@@ -139,10 +143,10 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(key)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                var dict = new Dictionary<string, string> {
-                            {"ApplePie", key}
-                        };
+                var dict = new Dictionary<string, string> { { "ApplePie", key } };
                 var r = new ApiConsumer().Post($"http://{hostIp}:{hostPort}/asset/handshake", dict);
+                var kh = new SshKnownHosts();
+                kh.Add(hostIp);
                 return r;
             };
 
@@ -164,7 +168,10 @@ namespace Antd.Modules {
                     Directory.CreateDirectory("/root/.ssh");
                     const string authorizedKeysPath = "/root/.ssh/authorized_keys";
                     if(File.Exists(authorizedKeysPath)) {
-                        File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                        var f = File.ReadAllText(authorizedKeysPath);
+                        if(!f.Contains(apple)) {
+                            File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                        }
                     }
                     else {
                         File.WriteAllLines(authorizedKeysPath, new List<string> { apple });

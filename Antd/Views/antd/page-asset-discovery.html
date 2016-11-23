@@ -77,8 +77,12 @@
                     <tr>
                         <td>
                             <label>Share SSh key</label></td>
-                        <td colspan="3">
+                        <td colspan="3">@IfNot.Current.IsKnown
                             <input data-role="ShareSshKeys" data-ip="@Current.Ip" data-port="@Current.Port" type="button" class="button bg-mauve" style="width: 90%; height: 28px;" value="Share" />
+                            @EndIf
+                            @If.Current.IsKnown
+                                <p>Key already shared.</p>
+                            @EndIf
                         </td>
                     </tr>
                 </tbody>
