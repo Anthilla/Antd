@@ -60,7 +60,7 @@ namespace Antd.Modules {
 
                 var modules = _bootModuleLoadRepo.Retrieve();
                 vmod.Modules = modules == null ? "" : string.Join("\r\n", modules);
-                var services = _bootModuleLoadRepo.Retrieve();
+                var services = _bootServiceLoadRepo.Retrieve();
                 vmod.Services = services == null ? "" : string.Join("\r\n", services);
                 var ospar = _bootOsParametersLoadRepo.Retrieve();
                 var osparList = ospar?.Select(_ => $"{_.Key} {_.Value}").ToList();

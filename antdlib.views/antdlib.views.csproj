@@ -32,11 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RaptorDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.13\lib\net40\RaptorDB.dll</HintPath>
+      <HintPath>..\packages\RaptorDB_doc.3.3.14\lib\net40\RaptorDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RaptorDB.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.13\lib\net40\RaptorDB.Common.dll</HintPath>
+      <HintPath>..\packages\RaptorDB_doc.3.3.14\lib\net40\RaptorDB.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
