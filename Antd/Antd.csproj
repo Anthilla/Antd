@@ -94,7 +94,8 @@
     <Compile Include="Avahi\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
     <Compile Include="Bind\BindConfigurationModel.cs" />
-    <Compile Include="Configuration\MachineModel.cs" />
+    <Compile Include="Configuration\HostConfiguration.cs" />
+    <Compile Include="Configuration\HostModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />

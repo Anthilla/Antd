@@ -9,28 +9,28 @@ namespace Antd.Configuration {
     /// Object that indexes the parameters that are needed to the machine configuration
     /// This model will be Json-serialized and stored in a .conf file on the machine
     /// </summary>
-    public class MachineModel {
+    public class HostModel {
 
         [JsonIgnore]
         public DateTime DateTime => DateTime.Now;
 
         [JsonIgnore]
-        public string Path => $"{antdlib.common.Parameter.AntdCfg}/machine.conf";
+        public string Path => $"{antdlib.common.Parameter.AntdCfg}/host.conf";
 
         /// <summary>
         /// First configuration steps
-        /// For each configurable aspect add one MachineParameter to Preparation[]
+        /// For each configurable aspect add one HostParameter to Preparation[]
         /// </summary>
-        public MachineParameter[] Preparation { get; set; } = {
-            new MachineParameter { SetCmd = "sysctl-p" },
-            new MachineParameter { SetCmd = "systemd-machine-id-setup" },
-            new MachineParameter { SetCmd = "dhclient-killall" },
-            new MachineParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-resolvd.service" } } },
-            new MachineParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.service" } } },
-            new MachineParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.socket" } } },
+        public HostParameter[] Preparation { get; set; } = {
+            new HostParameter { SetCmd = "sysctl-p" },
+            new HostParameter { SetCmd = "systemd-machine-id-setup" },
+            new HostParameter { SetCmd = "dhclient-killall" },
+            new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-resolvd.service" } } },
+            new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.service" } } },
+            new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.socket" } } },
         };
 
-        public MachineParameter HostName { get; set; } = new MachineParameter {
+        public HostParameter HostName { get; set; } = new HostParameter {
             SetCmd = "set-hostname",
             GetCmd = "hostnamectl-get-hostname",
             StoredValues = new Dictionary<string, string> {
@@ -38,7 +38,7 @@ namespace Antd.Configuration {
             }
         };
 
-        public MachineParameter HostChassis { get; set; } = new MachineParameter {
+        public HostParameter HostChassis { get; set; } = new HostParameter {
             SetCmd = "set-chassis",
             GetCmd = "hostnamectl-get-chassis",
             StoredValues = new Dictionary<string, string> {
@@ -46,7 +46,7 @@ namespace Antd.Configuration {
             }
         };
 
-        public MachineParameter HostDeployment { get; set; } = new MachineParameter {
+        public HostParameter HostDeployment { get; set; } = new HostParameter {
             SetCmd = "set-deployment",
             GetCmd = "hostnamectl-get-deployment",
             StoredValues = new Dictionary<string, string> {
@@ -54,7 +54,7 @@ namespace Antd.Configuration {
             }
         };
 
-        public MachineParameter HostLocation { get; set; } = new MachineParameter {
+        public HostParameter HostLocation { get; set; } = new HostParameter {
             SetCmd = "set-location",
             GetCmd = "hostnamectl-get-location",
             StoredValues = new Dictionary<string, string> {
@@ -62,7 +62,7 @@ namespace Antd.Configuration {
             }
         };
 
-        public MachineParameter Timezone { get; set; } = new MachineParameter {
+        public HostParameter Timezone { get; set; } = new HostParameter {
             SetCmd = "set-timezone",
             GetCmd = "timedatectl-get-timezone",
             StoredValues = new Dictionary<string, string> {
@@ -70,14 +70,14 @@ namespace Antd.Configuration {
             }
         };
 
-        public MachineParameter[] TimeConfiguration { get; set; } = {
-            new MachineParameter { SetCmd = "ntpdate", StoredValues = new Dictionary<string, string> { { "$server", "ntp1.ien.it" } } },
-            new MachineParameter { SetCmd = "set-ntpdate" },
-            new MachineParameter { SetCmd = "sync-clock" },
+        public HostParameter[] TimeConfiguration { get; set; } = {
+            new HostParameter { SetCmd = "ntpdate", StoredValues = new Dictionary<string, string> { { "$server", "ntp1.ien.it" } } },
+            new HostParameter { SetCmd = "set-ntpdate" },
+            new HostParameter { SetCmd = "sync-clock" },
         };
 
-        public MachineParameter[] DnsResolv { get; set; } = {
-            new MachineParameter {
+        public HostParameter[] DnsResolv { get; set; } = {
+            new HostParameter {
                 SetCmd = "echo-write",
                 GetCmd = "cat-etc-resolv",
                 StoredValues = new Dictionary<string, string> {
@@ -85,7 +85,7 @@ namespace Antd.Configuration {
                     { "$file", "/etc/resolv.conf" }
                 }
             },
-            new MachineParameter {
+            new HostParameter {
                 SetCmd = "echo-append",
                 GetCmd = "cat-etc-resolv",
                 StoredValues = new Dictionary<string, string> {
@@ -93,7 +93,7 @@ namespace Antd.Configuration {
                     { "$file", "/etc/resolv.conf" }
                 }
             },
-            new MachineParameter {
+            new HostParameter {
                 SetCmd = "echo-append",
                 GetCmd = "cat-etc-resolv",
                 StoredValues = new Dictionary<string, string> {
@@ -106,14 +106,14 @@ namespace Antd.Configuration {
         /// <summary>
         /// Each object in Modprobes triggers the "modprobe" command
         /// </summary>
-        public MachineParameter[] Modprobes { get; set; } = {
-            new MachineParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", "br_netfilter" } } },
+        public HostParameter[] Modprobes { get; set; } = {
+            new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", "br_netfilter" } } },
         };
 
         /// <summary>
         /// RemoveModules.StoredValues[$modules] is a spaced list of modules
         /// </summary>
-        public MachineParameter RemoveModules { get; set; } = new MachineParameter {
+        public HostParameter RemoveModules { get; set; } = new HostParameter {
             SetCmd = "rmmod",
             StoredValues = new Dictionary<string, string> {
                 { "$modules", "iptable_filter ebtable_filter ip_tables ebtables ip6table_filter eb_tables" }
@@ -123,67 +123,56 @@ namespace Antd.Configuration {
         /// <summary>
         /// Network and network interfaces configuration
         /// MachineNamedParameter[] Network is an array of each interface
-        /// Each interface has a MachineParameter[] Configuration that gathers all commands to configure THAT interface
-        /// todo pass Network.Name to its Configuration.MachineParameter
+        /// Each interface has a HostParameter[] Configuration that gathers all commands to configure THAT interface
+        /// todo pass Network.Name to its Configuration.HostParameter
         /// </summary>
-        public MachineNamedParameter[] Network { get; set; } = {
-            new MachineNamedParameter {
+        public HostNamedParameter[] Network { get; set; } = {
+            new HostNamedParameter {
                 Name = "eth0",
                 StoredValues = new Dictionary<string, string> { { "$net_if", "eth0" } },
                 Configuration = new [] {
-                    new MachineParameter(new Dictionary<string, string> { { "$net_if", "eth0" } }) { SetCmd = "anthilla" },
+                    new HostParameter(new Dictionary<string, string> { { "$net_if", "eth0" } }) { SetCmd = "anthilla" },
                 }
             }
         };
 
-        public MachineParameter[] Firewall { get; set; } = {
-            //new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "nft -f /mnt/cdrom/DIRS/FILE_etc_nftables.conf" } } },
-        };
-
         /// <summary>
         /// Final configuration steps
-        /// For each configurable aspect add one MachineParameter to Adjustments[]
+        /// For each configurable aspect add one HostParameter to Adjustments[]
         /// </summary>
-        public MachineParameter[] Adjustments { get; set; } = {
-            new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "rmdir /Data/*" } } },
-            new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mkdir -p /Data/Data01" } } },
-            new MachineParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mount LABEL=Data01 /Data/Data01" } } },
+        public HostParameter[] Adjustments { get; set; } = {
+            new HostParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "rmdir /Data/*" } } },
+            new HostParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mkdir -p /Data/Data01" } } },
+            new HostParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mount LABEL=Data01 /Data/Data01" } } },
         };
-
-
-        public MachineParameter ServiceBindServer { get; set; }
-
-        public MachineParameter ServiceDhcpServer { get; set; }
-
-        public MachineParameter ServiceSambaServer { get; set; }
     }
 
     /// <summary>
-    /// This object kinda wraps the MachineParameter class, having a "common" Name and StoredValues both passed to the MachineParameter[] Configuration
+    /// This object kinda wraps the HostParameter class, having a "common" Name and StoredValues both passed to the HostParameter[] Configuration
     /// </summary>
-    public class MachineNamedParameter {
+    public class HostNamedParameter {
         public string Name { get; set; } = string.Empty;
 
         public IDictionary<string, string> StoredValues { get; set; } = new Dictionary<string, string>();
 
-        public MachineParameter[] Configuration { get; set; } = { };
+        public HostParameter[] Configuration { get; set; } = { };
     }
 
     /// <summary>
     /// Object that both stores a single element of machine configuration and applies it
     /// </summary>
-    public class MachineParameter {
+    public class HostParameter {
 
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
-        public MachineParameter() {
+        public HostParameter() {
         }
 
         /// <summary>
-        /// Initialize the class MachineParameter with known StoredValues
+        /// Initialize the class HostParameter with known StoredValues
         /// </summary>
         /// <param name="storedValues"></param>
-        public MachineParameter(Dictionary<string, string> storedValues) {
+        public HostParameter(Dictionary<string, string> storedValues) {
             StoredValues = storedValues;
         }
 

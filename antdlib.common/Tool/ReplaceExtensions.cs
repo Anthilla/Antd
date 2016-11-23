@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace antdlib.common.Tool {
 
@@ -35,30 +34,5 @@ namespace antdlib.common.Tool {
                 return EmptyList;
             }
         }
-
-        //public static T ReplacesX<T>(this T input, string strToReplace, string newStr) {
-        //    try {
-        //        if(typeof(T) == typeof(string)) {
-        //            var input2 = input.ToString();
-        //            if(string.IsNullOrEmpty(input2)) {
-        //                return default(T);
-        //            }
-        //            var output = input2.ReplaceInString(strToReplace, newStr);
-        //            return output;
-        //        }
-        //        if(typeof(T) == typeof(IEnumerable<string>)) {
-        //            var input2 = (IEnumerable<string>)input;
-        //            if(!input2.Any()) {
-        //                return default(T);
-        //            }
-        //            var output = input2.ReplaceInList(strToReplace, newStr);
-        //            return output;
-        //        }
-        //        return default(T);
-        //    }
-        //    catch(Exception) {
-        //        return default(T);
-        //    }
-        //}
     }
 }

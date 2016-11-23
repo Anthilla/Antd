@@ -98,18 +98,16 @@ namespace Antd {
 
         public void PrepareConfiguration() {
             _machineConfiguration.Set();
-
             try {
                 var conf = $"{Parameter.AntdCfg}/machine.conf";
                 if(!File.Exists(conf)) {
-                    var machineDefault = new MachineModel();
+                    var machineDefault = new HostModel();
                     File.WriteAllText(conf, JsonConvert.SerializeObject(machineDefault, Formatting.Indented));
                 }
             }
             catch(Exception ex) {
                 ConsoleLogger.Log(ex);
             }
-
             ConsoleLogger.Log("configuration prepared");
         }
 
