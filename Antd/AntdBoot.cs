@@ -19,6 +19,7 @@ using Antd.Gluster;
 using Antd.MountPoint;
 using Antd.Overlay;
 using Antd.Samba;
+using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
@@ -74,6 +75,7 @@ namespace Antd {
             var database = RaptorDB.RaptorDB.Open(path);
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
+            Global.SaveIndexToDiskTimerSeconds = 30;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new BootModuleLoadView());
@@ -203,6 +205,24 @@ namespace Antd {
             if(!Parameter.IsUnix) {
                 return;
             }
+            var mounted = MountHelper.IsAlreadyMounted(Parameter.RootSsh);
+            var realDirExists = Directory.Exists(Parameter.RootSsh);
+            var dirExists = Directory.Exists(Parameter.RootSshMntCdrom);
+            if(!realDirExists) {
+                Directory.CreateDirectory(Parameter.RootSsh);
+            }
+            if(!dirExists) {
+                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
+            }
+            if(!mounted) {
+                var mnt = new Mount();
+                mnt.Dir(Parameter.RootSsh);
+            }
+            var rk = new RootKeys();
+            if(rk.Exists == false) {
+                rk.Create();
+            }
+            ConsoleLogger.Log("ssh keys restored");
             var storedKeyRepo = new AuthorizedKeysRepository();
             var storedKeys = storedKeyRepo.GetAll();
             foreach(var storedKey in storedKeys) {
@@ -216,6 +236,7 @@ namespace Antd {
                 _bash.Execute($"chmod 600 {authorizedKeysPath}");
                 _bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
+            ConsoleLogger.Log("ssh authorized keys restored");
         }
 
         private readonly NfTables _nfTables = new NfTables();

@@ -364,15 +364,9 @@ namespace Antd.Modules {
 
             Get["/part/storage"] = x => {
                 try {
-                    var zpool = new Zpool();
-                    var zfsSnap = new ZfsSnap();
-                    var zfs = new Zfs();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.DisksList = Disks.List();
-                    viewModel.ZpoolList = zpool.List();
-                    viewModel.ZfsList = zfs.List();
-                    viewModel.ZfsSnap = zfsSnap.List();
-                    viewModel.ZpoolHistory = zpool.History();
+                    var disks = new Disks();
+                    viewModel.DisksList = disks.GetList();
                     return View["antd/part/page-antd-storage", viewModel];
                 }
                 catch(Exception ex) {
@@ -382,6 +376,24 @@ namespace Antd.Modules {
                 }
             };
 
+            Get["/part/storage/zfs"] = x => {
+                try {
+                    var zpool = new Zpool();
+                    var zfsSnap = new ZfsSnap();
+                    var zfs = new Zfs();
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.ZpoolList = zpool.List();
+                    viewModel.ZfsList = zfs.List();
+                    viewModel.ZfsSnap = zfsSnap.List();
+                    viewModel.ZpoolHistory = zpool.History();
+                    return View["antd/part/page-antd-storage-zfs", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
 
             Get["/part/storage/usage"] = x => {
                 try {

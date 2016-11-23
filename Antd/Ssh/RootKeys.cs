@@ -5,17 +5,13 @@ namespace Antd.Ssh {
     public class RootKeys {
         public string PathToPublic { get; }
         public string PathToPrivate { get; }
-        public bool Exist { get; private set; }
+        public bool Exists => File.Exists(PathToPublic) && File.Exists(PathToPrivate);
 
         private readonly Bash _bash = new Bash();
 
         public RootKeys() {
-            PathToPublic = "/root/.ssh/antd-root-key.pub";
-            PathToPrivate = "/root/.ssh/antd-root-key";
-        }
-
-        public void CheckKeys() {
-            Exist = File.Exists(PathToPublic) && File.Exists(PathToPrivate);
+            PathToPublic = "/root/.ssh/id_rsa.pub";
+            PathToPrivate = "/root/.ssh/id_rsa";
         }
 
         public void Create() {

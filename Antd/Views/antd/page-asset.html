@@ -59,6 +59,20 @@
 <script data-context="asset" type="text/javascript">
     var $asset = jQuery.noConflict();
 
+    $asset('[data-role="ShareSshKeys"]').click(function () {
+        var ip = $asset(this).attr('data-ip');
+        var port = $asset(this).attr('data-port');
+        jQuery.support.cors = true;
+        var aj = $asset.ajax({
+            url: "/asset/handshake?host=" + ip + "&port=" + port,
+            type: "GET",
+            success: function () {
+                alert("Key shared successfully!");
+            }
+        });
+        _requests.push(aj);
+    });
+
     $asset('[data-role="ShowNmap"]').click(function () {
         var btn = $asset(this);
         var ip = $asset(this).attr('data-ip');

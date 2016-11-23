@@ -54,6 +54,8 @@ namespace antdlib.common {
         public static string RootSystem => "/System";
         public static string RootPorts => "/ports";
         public static string RootCfg => "/cfg";
+        public static string RootSsh => "/root/.ssh";
+        public static string RootSshMntCdrom => $"{RepoDirs}/DIR_root_.ssh";
 
         public static string AntdCfg => $"{RootCfg}/antd";
         public static string AntdCfgServices => $"{AntdCfg}/services";

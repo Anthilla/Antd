@@ -32,13 +32,12 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using antd.commands;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Avahi;
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
 using HttpStatusCode = Nancy.HttpStatusCode;
@@ -59,20 +58,15 @@ namespace Antd.Modules {
             public string Type { get; set; }
         }
 
-        private readonly Bash _bash = new Bash();
-
         public AssetModule() {
 
             Get["/asset"] = x => {
                 this.RequiresAuthentication();
                 dynamic viewModel = new ExpandoObject();
-
                 var avahiBrowse = new AvahiBrowse();
                 avahiBrowse.DiscoverService("antd");
                 var localServices = avahiBrowse.Locals;
-
                 var launcher = new CommandLauncher();
-
                 var list = new List<AvahiServiceViewModel>();
                 foreach(var ls in localServices) {
                     var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
@@ -89,8 +83,10 @@ namespace Antd.Modules {
                     mo.MacAddress = mac;
                     list.Add(mo);
                 }
-                viewModel.AntdAvahiServices = list;
-
+                var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                var myHostName = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
+                viewModel.AntdAvahiServices = list.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName);
                 return View["antd/page-asset", viewModel];
             };
 
@@ -126,78 +122,62 @@ namespace Antd.Modules {
                 return Response.AsJson(true);
             };
 
-            Get["/disc/hello"] = x => {
-                var myIp = "";
-                var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach(var ip in host.AddressList) {
-                    if(ip.AddressFamily == AddressFamily.InterNetwork) {
-                        myIp = ip.ToString();
-                    }
+            Get["/asset/handshake"] = x => {
+                var hostIp = Request.Query.Host;
+                var hostPort = Request.Query.Port;
+                if(string.IsNullOrEmpty(hostPort) || string.IsNullOrEmpty(hostIp)) {
+                    return HttpStatusCode.NotAcceptable;
                 }
-                var kvp = new KeyValuePair<string, string>(myIp, "1337");
-                return Response.AsJson(kvp);
-            };
-
-            Get["/disc/lookaround"] = x => {
-                ConsoleLogger.Log("hs > 1139");
-                var ava = new AvahiBrowse();
-                ava.DiscoverService("antd");
-                var a = ava.Locals;
-                return Response.AsJson(a);
-            };
-
-            Get["/disc/handshake"] = x => {
-                ConsoleLogger.Log("hs > 1139");
-                const string pathToPrivateKey = "/root/.ssh/antd-root-key";
-                const string pathToPublicKey = "/root/.ssh/antd-root-key.pub";
+                const string pathToPrivateKey = "/root/.ssh/id_rsa";
+                const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
                 if(!File.Exists(pathToPublicKey)) {
-                    ConsoleLogger.Log("hs > create keys");
-                    var k = _bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                    var bash = new Bash();
+                    var k = bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
                     ConsoleLogger.Log(k);
                 }
-                var ava = new AvahiBrowse();
-                ava.DiscoverService("antd");
-                var hosts = ava.Locals;
-
-                string key;
-
-                try {
-                    key = _bash.Execute($"cat {pathToPublicKey}");
-                    ConsoleLogger.Log($"hs > {key}");
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Log($"hs exc1 > {ex}");
-                    return HttpStatusCode.ImATeapot;
-                }
-
-                try {
-                    var key2 = File.ReadAllText(pathToPublicKey);
-                    ConsoleLogger.Log($"hs > {key2}");
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Log($"hs exc2 > {ex}");
-                    return HttpStatusCode.ImATeapot;
-                }
-                //var key = Bash.Execute($"cat {pathToPublicKey}");
-                //ConsoleLogger.Log($"hs > {key}");
-
-                //var key2 = File.ReadAllText(pathToPublicKey);
-                //ConsoleLogger.Log($"hs > {key2}");
-
+                var key = File.ReadAllText(pathToPublicKey);
                 if(string.IsNullOrEmpty(key)) {
-                    ConsoleLogger.Log("hs > no key to share");
-                    return HttpStatusCode.ImATeapot;
+                    return HttpStatusCode.InternalServerError;
                 }
-
-                foreach(var host in hosts) {
-                    ConsoleLogger.Log($"hs > send request to http://{host}/ak/handshake");
-                    var dict = new Dictionary<string, string> {
+                var dict = new Dictionary<string, string> {
                             {"ApplePie", key}
                         };
-                    var r = new ApiConsumer().Post($"http://{host}/ak/handshake", dict);
-                    ConsoleLogger.Log($"hs > request result {r}");
+                var r = new ApiConsumer().Post($"http://{hostIp}:{hostPort}/asset/handshake", dict);
+                return r;
+            };
+
+            Post["/asset/handshake"] = x => {
+                string apple = Request.Form.ApplePie;
+                if(string.IsNullOrEmpty(apple)) {
+                    return HttpStatusCode.InternalServerError;
                 }
-                return HttpStatusCode.OK;
+                var info = apple.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if(info.Length < 2) {
+                    return HttpStatusCode.InternalServerError;
+                }
+                var key = info[0];
+                var remoteUser = info[1];
+                const string user = "root";
+                var authorizedKeysRepository = new AuthorizedKeysRepository();
+                var r = authorizedKeysRepository.Create2(remoteUser, user, key);
+                try {
+                    Directory.CreateDirectory("/root/.ssh");
+                    const string authorizedKeysPath = "/root/.ssh/authorized_keys";
+                    if(File.Exists(authorizedKeysPath)) {
+                        File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                    }
+                    else {
+                        File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
+                    }
+                    var bash = new Bash();
+                    bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                    bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
+                    return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Log(ex);
+                    return HttpStatusCode.InternalServerError;
+                }
             };
         }
     }

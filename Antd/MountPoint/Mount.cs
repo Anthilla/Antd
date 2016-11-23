@@ -155,16 +155,6 @@ namespace Antd.MountPoint {
             ConsoleLogger.Log("files mounted");
         }
 
-        //public void Check() {
-        //    var mounts = MountRepository.GetAll().ToList();
-        //    if(!mounts.Any())
-        //        return;
-        //    foreach(var t in mounts) {
-        //        ConsoleLogger.Log($"{t.Path}:");
-        //        CheckMount(t.Path);
-        //    }
-        //}
-
         public void Dir(string directory) {
             var mntDir = MountHelper.SetDirsPath(directory);
             Directory.CreateDirectory(directory);

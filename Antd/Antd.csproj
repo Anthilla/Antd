@@ -263,6 +263,9 @@
     <Content Include="Views\antd\part\page-antd-info-memory.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-antd-storage-zfs.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-storage-usage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

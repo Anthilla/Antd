@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Antd.Storage {
     public class Disks {
-        public static List<Disk> List() {
+        public List<Disk> GetList() {
             var bash = new Bash();
             var str = bash.Execute("lsblk -JO");
             var clean = str?.Replace("-", "_").Replace("maj:min", "maj_min");
@@ -64,15 +64,15 @@ namespace Antd.Storage {
             Vendor = source.vendor;
 
             var list = new List<Partition>();
-            if (source.children != null) {
-                foreach (var c in source.children) {
+            if(source.children != null) {
+                foreach(var c in source.children) {
                     var p = new Partition(c);
                     list.Add(p);
                 }
             }
             Partitions = list;
 
-            if (Partitions.Any()) {
+            if(Partitions.Any()) {
                 HasPartition = true;
             }
             var bash = new Bash();

@@ -69,9 +69,16 @@
                         <td>
                             <label>Host VNC</label></td>
                         <td colspan="3">
-                            <input id="NoVncHost" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Ip"/>
-                            <input id="NoVncPort" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Port"/>
+                            <input id="NoVncHost" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Ip" />
+                            <input id="NoVncPort" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Port" />
                             <a id="NoVncConnect" href="#" target="_blank" class="button bg-mauve" style="width: 33%; height: 28px;">Connect</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Share SSh key</label></td>
+                        <td colspan="3">
+                            <input data-role="ShareSshKeys" data-ip="@Current.Ip" data-port="@Current.Port" type="button" class="button bg-mauve" style="width: 90%; height: 28px;" value="Share" />
                         </td>
                     </tr>
                 </tbody>
