@@ -85,6 +85,11 @@ namespace Antd.Modules {
                 return View["antd/page-boot", vmod];
             };
 
+            Get["/asset"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-asset", vmod];
+            };
+
             Post["/gluster/set"] = x => {
                 string name = Request.Form.Name;
                 string path = Request.Form.Path;

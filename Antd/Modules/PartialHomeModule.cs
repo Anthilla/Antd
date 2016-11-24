@@ -28,12 +28,13 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
-using antdlib.Systemd;
+using Antd.Avahi;
 using Antd.Bind;
 using Antd.Configuration;
 using Antd.Database;
@@ -46,6 +47,7 @@ using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
 using Antd.Samba;
+using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Nancy.Security;
@@ -643,6 +645,46 @@ namespace Antd.Modules {
                     var hostcfg = new HostConfiguration();
                     viewModel.OsParam = string.Join("\r\n", hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
                     return View["antd/part/page-boot-osp", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Page - Asset    ]
+            Get["/part/asset/discovery"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var avahiBrowse = new AvahiBrowse();
+                    avahiBrowse.DiscoverService("antd");
+                    var localServices = avahiBrowse.Locals;
+                    var launcher = new CommandLauncher();
+                    var list = new List<AssetModule.AvahiServiceViewModel>();
+                    var kh = new SshKnownHosts();
+                    foreach(var ls in localServices) {
+                        var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                        var mo = new AssetModule.AvahiServiceViewModel {
+                            HostName = arr[0].Trim(),
+                            Ip = arr[1].Trim(),
+                            Port = arr[2].Trim()
+                        };
+                        var result = launcher.Launch("nmap-snmp-interfaces", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
+                        var mac = result?.FirstOrDefault(_ => _.Contains("MAC Address"));
+                        if(!string.IsNullOrEmpty(mac)) {
+                            mo.MacAddress = mac.SplitToList(":").Last();
+                        }
+                        mo.MacAddress = mac;
+                        mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
+                        list.Add(mo);
+                    }
+                    //var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                    //var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                    //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
+                    viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
+                    return View["antd/part/page-asset-discovery", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

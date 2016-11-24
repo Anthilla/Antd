@@ -31,8 +31,8 @@
 <style type="text/css">
     #Asset-TB {
         background-color: #A7BD39 !important;
-        border-color: #A7BD39 !important;
         color: #3a3a3a !important;
+        border-color: #A7BD39 !important;
     }
 
     #Asset-TB *{
@@ -52,68 +52,15 @@
 @EndSection
 
 @Section['MainContent']
-@Partial['antd/page-asset-discovery', Model];
-@EndSection
-
-@Section['Scripts']
-<script data-context="asset" type="text/javascript">
-    var $asset = jQuery.noConflict();
-
-    $asset('[data-role="ShareSshKeys"]').click(function () {
-        var ip = $asset(this).attr('data-ip');
-        var port = $asset(this).attr('data-port');
-        jQuery.support.cors = true;
-        var aj = $asset.ajax({
-            url: "/asset/handshake?host=" + ip + "&port=" + port,
-            type: "GET",
-            success: function () {
-                alert("Key shared successfully!");
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $asset('[data-role="ShowNmap"]').click(function () {
-        var btn = $asset(this);
-        var ip = $asset(this).attr('data-ip');
-        var cont = $asset(this).parents('.panel-content').find('[data-role="NmapResult"]');
-        jQuery.support.cors = true;
-        var aj = $asset.ajax({
-            url: "/asset/nmap/" + ip,
-            type: "GET",
-            success: function (data) {
-                $asset.each(data, function (k, v) {
-                    cont.append("<tr>" + "<td class=\"bg-gray\">" + v.protocol + "</td>" +
-                        "<td class=\"bg-gray\">" + v.status + "</td>" +
-                        "<td class=\"bg-gray\">" + v.type + "</td>" + "</tr>");
-                });
-                cont.parents('table').show();
-                btn.hide();
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $asset('[data-role="Wol"]').click(function () {
-        var mac = $asset(this).attr('data-mac');
-        jQuery.support.cors = true;
-        var aj = $asset.ajax({
-            url: "/asset/wol/" + mac,
-            type: "GET",
-            success: function () {
-            }
-        });
-        _requests.push(aj);
-    });
-
-    function SetConnectionLink() {
-        var host = $asset('#NoVncHost').val();
-        var port = $asset('#NoVncPort').val();
-        $asset("#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
-    }
-
-    $asset('input[data-role="novnc-setup"]').keyup(function () {
-        SetConnectionLink();
-    });
-</script>
+<nav class="vertical-menu">
+    <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
+        <li>
+            <a href="#" data-role="load-page" data-page="asset/discovery" class="fg-hover-white upcase">Discovery
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">
+</div>
 @EndSection
