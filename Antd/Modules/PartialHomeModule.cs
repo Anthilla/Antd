@@ -598,6 +598,7 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     var hostcfg = new HostConfiguration();
                     viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
+                    viewModel.RmModules = string.Join("\r\n", hostcfg.GetHostRemoveModules());
                     return View["antd/part/page-boot-mod", viewModel];
                 }
                 catch(Exception ex) {
