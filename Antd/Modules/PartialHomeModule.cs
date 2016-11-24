@@ -35,11 +35,11 @@ using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
 using antdlib.views;
-using Antd.Avahi;
 using Antd.Bind;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Dhcpd;
+using Antd.Discovery;
 using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Host;
@@ -687,6 +687,18 @@ namespace Antd.Modules {
                     //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
                     return View["antd/part/page-asset-discovery", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/asset/setting"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-asset-setting", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

@@ -92,17 +92,18 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
-    <Compile Include="Avahi\AvahiBrowse.cs" />
-    <Compile Include="Avahi\AvahiServiceXml.cs" />
+    <Compile Include="Discovery\AvahiBrowse.cs" />
+    <Compile Include="Discovery\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
     <Compile Include="Bind\BindConfigurationModel.cs" />
+    <Compile Include="Discovery\NetscanSetting.cs" />
+    <Compile Include="Discovery\NetscanSettingModel.cs" />
     <Compile Include="Host\HostConfiguration.cs" />
     <Compile Include="Host\HostModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
-    <Compile Include="Configuration\MachineConfiguration.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />
     <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
@@ -306,6 +307,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-api.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-asset-setting.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-asset-discovery.html">

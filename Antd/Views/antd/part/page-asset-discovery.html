@@ -5,86 +5,35 @@
     </div>
 
     @Each.AntdAvahiServices
-    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white">
-            <i class="icon-monitor on-left fg-mauve"></i>
-            @Current.HostName
+    <div class="container">
+        <div class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">
+            <i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>
+            <p style="display: inline-block !important; width: 200px;">@Current.HostName</p>
+            <p style="display: inline-block !important; width: 200px;">@Current.Ip</p>
+            <p style="display: inline-block !important; width: 500px;">@Current.MacAddress</p>
+            <i data-role="ToggleAssetContent" class="icon-arrow-right-5 fg-white" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid white; padding: 5px; margin-top: 5px;"></i>
+            <i data-role="ShowNmap" data-ip="@Current.Ip" class="icon-search fg-anthilla-blu" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid #60A1E4; padding: 5px; margin-top: 5px;"></i>
+            <i data-role="Wol" data-mac="@Current.MacAddress" class="icon-lightning fg-yellow" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid #E3C800; padding: 5px; margin-top: 5px;"></i>
+            <i data-role="ShareSshKeys" data-ip="@Current.Ip" data-port="@Current.Port" class="icon-key-2 fg-anthilla-green" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid #A7BD39; padding: 5px; margin-top: 5px;"></i>
+            <a href="http://@Current.Ip:@Current.Port/" target="_blank" class="button bg-anthilla-gray border-2-anthilla-violet" style="width: 27px; height: 27px; padding: 4px 6px; float: right; margin-top: 5px; margin-left: 5px;"><i class="icon-exit fg-anthilla-violet"></i></a>
         </div>
-        <div class="panel-content">
-            <table class="table" style="table-layout: fixed;">
-                <tbody>
+        <div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">
+            <input id="NoVncHost" type="text" data-role="novnc-setup" style="width: 20%; height: 28px;" value="@Current.Ip" />
+            <input id="NoVncPort" type="text" data-role="novnc-setup" style="width: 20%; height: 28px;" value="@Current.Port" />
+            <a id="NoVncConnect" href="#" target="_blank" class="button bg-mauve" style="width: 20%; height: 28px;">Connect</a>
+            <hr class="border-anthilla-gray">
+            <table class="table" style="margin-top: -18px;">
+                <thead>
                     <tr>
                         <td>
-                            <label>Host Name</label></td>
-                        <td colspan="3">
-                            <p>@Current.HostName</p>
-                        </td>
-                    </tr>
-                    <tr>
+                            <label>Port/Protocol</label></td>
                         <td>
-                            <label>Host Address</label></td>
-                        <td colspan="3">
-                            <p>@Current.Ip</p>
-                        </td>
-                    </tr>
-                    <tr>
+                            <label>Status</label></td>
                         <td>
-                            <label>Host MAC Address</label></td>
-                        <td colspan="3">
-                            <i data-role="Wol" data-mac="@Current.MacAddress" class="icon-lightning fg-yellow" style="float: right; cursor: pointer; border: 2px solid #E3C800; padding: 3px;"></i>
-                            <p>@Current.MacAddress</p>
-                        </td>
+                            <label>Type</label></td>
                     </tr>
-                    <tr>
-                        <td>
-                            <label>Host Antd</label></td>
-                        <td colspan="3">
-                            <a href="http://@Current.Ip:@Current.Port/" target="_blank" class="button bg-mauve" style="width: 90%; height: 28px;">Open</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Host Public Services</label></td>
-                        <td colspan="3">
-                            <input data-role="ShowNmap" data-ip="@Current.Ip" type="button" class="button bg-mauve" style="width: 90%; height: 28px;" value="Scan" />
-                            <ul class="fg-white" style="list-style: none !important;">
-                            </ul>
-                            <table class="table" style="display: none; margin-top: -18px;">
-                                <thead>
-                                    <tr>
-                                        <td>
-                                            <label>Port/Protocol</label></td>
-                                        <td>
-                                            <label>Status</label></td>
-                                        <td>
-                                            <label>Type</label></td>
-                                    </tr>
-                                </thead>
-                                <tbody data-role="NmapResult">
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Host VNC</label></td>
-                        <td colspan="3">
-                            <input id="NoVncHost" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Ip" />
-                            <input id="NoVncPort" type="text" data-role="novnc-setup" style="height: 28px;" value="@Current.Port" />
-                            <a id="NoVncConnect" href="#" target="_blank" class="button bg-mauve" style="width: 33%; height: 28px;">Connect</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Share SSh key</label></td>
-                        <td colspan="3">@IfNot.Current.IsKnown
-                            <input data-role="ShareSshKeys" data-ip="@Current.Ip" data-port="@Current.Port" type="button" class="button bg-mauve" style="width: 90%; height: 28px;" value="Share" />
-                            @EndIf
-                            @If.Current.IsKnown
-                                <p>Key already shared.</p>
-                            @EndIf
-                        </td>
-                    </tr>
+                </thead>
+                <tbody data-role="NmapResult">
                 </tbody>
             </table>
         </div>

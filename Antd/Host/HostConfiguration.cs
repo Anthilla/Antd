@@ -32,7 +32,6 @@ namespace Antd.Host {
         }
 
         public void Setup() {
-            Directory.CreateDirectory(Parameter.RepoConfig);
             if(!File.Exists(FilePath)) {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(new HostModel(), Formatting.Indented));
             }

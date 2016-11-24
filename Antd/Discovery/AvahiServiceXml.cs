@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Antd.Avahi {
+namespace Antd.Discovery {
     [XmlRoot(ElementName = "name")]
     public class Name {
         [XmlAttribute(AttributeName = "replace-wildcards")]

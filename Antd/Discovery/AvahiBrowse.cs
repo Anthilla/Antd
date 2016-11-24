@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common.Tool;
 
-namespace Antd.Avahi {
+namespace Antd.Discovery {
     public class AvahiBrowse {
         public List<string> Locals { get; } = new List<string>();
 
