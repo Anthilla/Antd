@@ -156,7 +156,6 @@
     <Compile Include="Modules\ServicesModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
-    <Compile Include="Modules\UnitsModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\WebsocketModule.cs" />
     <Compile Include="AntdApplication.cs" />
@@ -250,6 +249,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-info-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-info-resources.html">
@@ -475,9 +477,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\page-tknmgmt.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\page-units.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\system\page-system-authentication.html">

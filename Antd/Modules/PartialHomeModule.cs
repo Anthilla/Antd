@@ -33,6 +33,7 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
+using antdlib.Systemd;
 using Antd.Bind;
 using Antd.Configuration;
 using Antd.Database;
@@ -98,6 +99,20 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     viewModel.Cpuinfo = machineInfo.GetCpuinfo();
                     return View["antd/part/page-antd-info-cpu", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/info/services"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var machineInfo = new MachineInfo();
+                    viewModel.Services = machineInfo.GetServices();
+                    return View["antd/part/page-antd-info-services", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

@@ -1,0 +1,19 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Services </legend>
+    <table class="table" style="table-layout: fixed; font-size: 10px !important;">
+        <tbody>
+            @Each.Services
+            <tr>
+                <td>@Current.Name
+                </td>
+                <td>@Current.Status
+                </td>
+                <td data-role="CmdContainer">
+                    <input type="hidden" data="$service" value="@Current.Name" />
+                    <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>

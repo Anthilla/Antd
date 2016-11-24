@@ -111,7 +111,6 @@
     <Compile Include="Security\RSAKeys.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
-    <Compile Include="Systemd\Units.cs" />
     <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />

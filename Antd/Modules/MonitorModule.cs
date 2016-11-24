@@ -37,44 +37,27 @@ using Nancy;
 namespace Antd.Modules {
     public class MonitorModule : CoreModule {
 
-        private string GetResourcesHtmlDiv(string value, string iconName = "") {
+        private static string GetResourcesHtmlDiv(string value, string iconName = "") {
             var ico = string.IsNullOrEmpty(iconName) ? "" : $"<i class=\"icon-{iconName} fg-anthilla-blu on-left-more\" style=\"line-height: 5px;\"></i>";
             return $"<a class=\"element nav-button no-overlay bg-darker\" href=\"#\">{ico}<span>{value}</span></a>";
         }
 
-        private int GetPercentage(int tot, int part) {
-            return (part * 100) / tot;
+        private static int GetPercentage(int tot, int part) {
+            if(tot == 0 || part == 0) {
+                return 0;
+            }
+            var p = part * 100 / tot;
+            return p <= 100 ? p : 0;
         }
 
         public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                try {
-                    var launcher = new CommandLauncher();
-                    var hostnamectl = launcher.Launch("hostnamectl").ToList();
-                    var hostname = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
-                    var machineInfo = new MachineInfo();
-                    var uptime = machineInfo.GetUptime();
-                    var up = uptime.Uptime.SplitToList("up").Last().Trim();
-                    var la = uptime.LoadAverage.Replace(" load average:", "").Trim();
-                    //var diskUsage = new DiskUsage();
-                    //var du = diskUsage.GetInfo().Where(_ => _.MountedOn == "/mnt/cdrom" || _.MountedOn == "/mnt/overlay").OrderBy(_ => _.MountedOn);
-                    var memory = machineInfo.GetFree().First();
-                    var response = $"{hostname}: {up} {la} | Memory: {memory.Used}/{memory.Total}";
-                    return Response.AsText(response);
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return Response.AsText("Unable to obtain data");
-                }
-            };
 
             Get["/monitor/resources/html"] = x => {
                 try {
                     const string divider = "<div class=\"element-divider\"></div>";
                     var launcher = new CommandLauncher();
                     var hostnamectl = launcher.Launch("hostnamectl").ToList();
-                    var hostname = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+                    var hostname = hostnamectl.FirstOrDefault(_ => _.Contains("Transient hostname:"))?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
                     var hostnameHtml = GetResourcesHtmlDiv(hostname);
                     var machineInfo = new MachineInfo();
                     var uptime = machineInfo.GetUptime();
@@ -84,15 +67,15 @@ namespace Antd.Modules {
                     var laHtml = GetResourcesHtmlDiv(la);
                     //var diskUsage = new DiskUsage();
                     //var du = diskUsage.GetInfo().Where(_ => _.MountedOn == "/mnt/cdrom" || _.MountedOn == "/mnt/overlay").OrderBy(_ => _.MountedOn);
-                    var memory = machineInfo.GetFree().First();
-                    var tot = memory.Total;
-                    var used = memory.Used;
+                    var memory = machineInfo.GetFree().FirstOrDefault();
+                    var tot = memory?.Total;
+                    var used = memory?.Used;
                     int resultTot;
-                    int.TryParse(new string(tot.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultTot);
+                    int.TryParse(new string(tot?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultTot);
                     int resultPart;
-                    int.TryParse(new string(used.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
+                    int.TryParse(new string(used?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
                     var perc = GetPercentage(resultTot, resultPart);
-                    var memHtml = GetResourcesHtmlDiv($"Memory Used: {perc}%");
+                    var memHtml = GetResourcesHtmlDiv($"Memory Used: {perc}% | {resultPart}/{resultTot}");
                     var response = $"{hostnameHtml}{divider}{upHtml}{divider}{laHtml}{divider}{memHtml}";
                     return Response.AsText(response);
                 }
