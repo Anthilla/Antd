@@ -29,14 +29,9 @@
 
 using System;
 using System.IO;
-using System.Net.Mime;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using antdlib;
 using antdlib.common;
-using Mono.Unix;
-using Mono.Unix.Native;
 using Nancy;
 using Nancy.Hosting.Self;
 

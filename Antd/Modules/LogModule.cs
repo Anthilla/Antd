@@ -44,7 +44,6 @@ namespace Antd.Modules {
         private readonly SyslogConfiguration _syslogConfiguration = new SyslogConfiguration();
         private readonly Journalctl _journalctl = new Journalctl();
         private readonly Journalctl.Report _journalctlReport = new Journalctl.Report();
-        private readonly SyslogNg _syslogNg = new SyslogNg();
 
         public LogModule() {
             this.RequiresAuthentication();
@@ -53,22 +52,6 @@ namespace Antd.Modules {
                 if(ctx.Response.ContentType == "text/html") {
                     ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
-            };
-
-            Get["/log"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                viewModel.AntdContext = new[] {
-                    "AntdLog",
-                    "SystemLog",
-                    "LogReport",
-                    "SyslogNG"
-                };
-                var syslogConfig = _syslogRepository.Get();
-                viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
-                viewModel.Logs = ConsoleLogger.GetAll();
-                viewModel.LogReports = _journalctlReport.Get();
-                viewModel.SyslogNgContent = _syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
-                return View["antd/page-log", viewModel];
             };
 
             Post["/log/syslog/set"] = x => {

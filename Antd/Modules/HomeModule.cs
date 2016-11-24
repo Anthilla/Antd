@@ -31,13 +31,11 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using antdlib;
-using antdlib.common;
 using antdlib.views;
 using Antd.Apps;
-using Antd.Configuration;
 using Antd.Database;
 using Antd.Gluster;
+using Antd.Log;
 using Nancy;
 using Nancy.Security;
 
@@ -88,6 +86,11 @@ namespace Antd.Modules {
             Get["/asset"] = x => {
                 dynamic vmod = new ExpandoObject();
                 return View["antd/page-asset", vmod];
+            };
+
+            Get["/log"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                return View["antd/page-log", viewModel];
             };
 
             Post["/gluster/set"] = x => {

@@ -29,18 +29,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using antd.commands;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
-using Antd.Avahi;
 using Antd.Database;
 using Antd.Ssh;
 using Nancy;
-using Nancy.Security;
 using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {

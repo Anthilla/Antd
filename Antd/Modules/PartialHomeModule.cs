@@ -34,6 +34,7 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
+using antdlib.views;
 using Antd.Avahi;
 using Antd.Bind;
 using Antd.Configuration;
@@ -43,6 +44,7 @@ using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Host;
 using Antd.Info;
+using Antd.Log;
 using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
@@ -685,6 +687,61 @@ namespace Antd.Modules {
                     //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
                     return View["antd/part/page-asset-discovery", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Page - Log    ]
+            Get["/part/log"] = x => {
+                try {
+                    return View["antd/part/page-log"];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/system"] = x => {
+                try {
+                    return View["antd/part/page-log-system"];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/report"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var journalctlReport = new Journalctl.Report();
+                    viewModel.LogReports = journalctlReport.Get();
+                    return View["antd/part/page-log-report", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/syslog"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var syslogRepository = new SyslogRepository();
+                    var syslogConfig = syslogRepository.Get();
+                    viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
+                    var syslogNg = new SyslogNg();
+                    viewModel.SyslogNgContent = syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
+                    return View["antd/part/page-log-system", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

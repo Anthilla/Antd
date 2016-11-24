@@ -32,9 +32,9 @@
     #Log-TB {
         background-color: #A7BD39 !important;
         color: #3a3a3a !important;
-        height: 80px !important;
+        border-color: #A7BD39 !important;
     }
-    
+
     #Log-TB *{
         color: #3a3a3a !important;
     }
@@ -49,125 +49,33 @@
         border-top-width: 4px;
     }
 </style>
-<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
-    <nav class="navigation-bar-content">
-        @Each.AntdContext
-        <a class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay anchor" data-scrollto="#@Current" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">@Current
-        </a>
-        @EndEach
-
-        <p class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px; cursor: pointer;">
-            <i class="icon-arrow-up"></i>
-        </p>
-    </nav>
-</nav>
 @EndSection
 
 @Section['MainContent']
-@Partial['antd/page-log-antd', Model];
-@Partial['antd/page-log-system', Model];
-@Partial['antd/page-log-report', Model];
-@Partial['antd/page-log-syslogng', Model];
-@EndSection
-
-@Section['Scripts']
-<script data-context="log" type="text/javascript">
-    $('[data-role="SyslogNgUpdate"]').on("click", function () {
-        jQuery.support.cors = true;
-        var container = $(this).parents('[data-role="SyslogNgConfiguration"]');
-        var aj = $.ajax({
-            url: '/log/syslog/set',
-            type: 'POST',
-            data: {
-                Root: container.find('[data-type="SyslogNgRootPath"]').val(),
-                Path1: container.find('[data-type="SyslogNgPortNet1"]').val(),
-                Path2: container.find('[data-type="SyslogNgPortNet2"]').val(),
-                Path3: container.find('[data-type="SyslogNgPortNet3"]').val()
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $('[data-row="report"]').dblclick(function () {
-        var thisRow = $(this);
-        var path = thisRow.attr('data-path');
-        jQuery.support.cors = true;
-        var aj = $.ajax({
-            url: '/log/journalctl/report/' + path,
-            type: 'GET',
-            success: function (file) {
-                if (thisRow.next('tr[data-row="report-content"]').length === 0) {
-                    var newRow = '<tr data-row="report-content"><td><textarea class="bg-anthilla-gray-m border-anthilla-gray fg-white" readonly="readonly" style="width: 90%; max-width: 90%; min-width: 90%; min-height: 200px;">' + file + '</textarea></td></tr>';
-                    thisRow.after(newRow);
-                }
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $('#GenerateNewReport').on("click", function () {
-        jQuery.support.cors = true;
-        var aj = $.ajax({
-            url: '/log/journalctl/report/',
-            type: 'POST',
-            success: function () {
-                location.reload(true);
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $('#ShowLogsVerb').on("click", function () {
-        var filter = $('[name="LogVerb"]').val();
-        jQuery.support.cors = true;
-        var aj = $.ajax({
-            url: '/log/journalctl/all/' + filter,
-            type: 'GET',
-            success: function (logs) {
-                var container = $('#LogTable').find('tbody');
-                container.html('');
-                jQuery.each(logs, function (i, log) {
-                    container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + '</td></tr>');
-                });
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $('#ShowLogsLastHours').on("click", function () {
-        var h = $('[name="LogLastHours"]').val();
-        jQuery.support.cors = true;
-        var aj = $.ajax({
-            url: '/log/journalctl/last/' + h,
-            type: 'GET',
-            success: function (logs) {
-                var container = $('#SystemLogTable').find('tbody');
-                container.html('');
-                jQuery.each(logs, function (i, log) {
-                    container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + '</td></tr>');
-                });
-            }
-        });
-        _requests.push(aj);
-    });
-
-    $(document).on("ready", function () {
-        jQuery.support.cors = true;
-        var aj = $.ajax({
-            url: '/log/journalctl/antd/',
-            type: 'GET',
-            success: function (logs) {
-                var container = $('#AntdLogTable').find('tbody');
-                container.html('');
-                jQuery.each(logs, function (i, log) {
-                    container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + '</td></tr>');
-                });
-            }
-        });
-        _requests.push(aj);
-    });
-</script>
+<nav class="vertical-menu">
+    <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
+        <li>
+            <a href="#" data-role="load-page" data-page="log" class="fg-hover-white upcase">log
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-role="load-page" data-page="log/system" class="fg-hover-white upcase">System log
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-role="load-page" data-page="log/report" class="fg-hover-white upcase">report
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-role="load-page" data-page="log/syslog" class="fg-hover-white upcase">syslog ng
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">
+</div>
 @EndSection
