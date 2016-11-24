@@ -29,8 +29,14 @@
 
 using System;
 using System.IO;
+using System.Net.Mime;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using antdlib;
 using antdlib.common;
+using Mono.Unix;
+using Mono.Unix.Native;
 using Nancy;
 using Nancy.Hosting.Self;
 
@@ -99,10 +105,27 @@ namespace Antd {
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("antd is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-            KeepAlive();
-            ConsoleLogger.Log("antd is closing");
-            host.Stop();
-            Database.Shutdown();
+
+
+            if(Environment.OSVersion.Platform == PlatformID.Unix) {
+                KeepAlive();
+                ConsoleLogger.Log("antd is closing");
+                host.Stop();
+                Console.WriteLine("host shutdown");
+                Database.Shutdown();
+                Console.WriteLine("database shutdown");
+            }
+            else {
+                HandlerRoutine hr = ConsoleCtrlCheck;
+                GC.KeepAlive(hr);
+                SetConsoleCtrlHandler(hr, true);
+                while(!_isclosing) { }
+                Console.WriteLine("antd is stopping");
+                host.Stop();
+                Console.WriteLine("host shutdown");
+                Database.Shutdown();
+                Console.WriteLine("database shutdown");
+            }
         }
 
         private static void KeepAlive() {
@@ -111,5 +134,46 @@ namespace Antd {
                 r = Console.ReadLine();
             }
         }
+
+        #region [    Shutdown Management    ]
+        private static bool _isclosing;
+
+        private static bool ConsoleCtrlCheck(CtrlTypes ctrlType) {
+            Database.Shutdown();
+            switch(ctrlType) {
+                case CtrlTypes.CtrlCEvent:
+                    _isclosing = true;
+                    Console.WriteLine("CTRL+C received!");
+                    break;
+                case CtrlTypes.CtrlBreakEvent:
+                    _isclosing = true;
+                    Console.WriteLine("CTRL+BREAK received!");
+                    break;
+                case CtrlTypes.CtrlCloseEvent:
+                    _isclosing = true;
+                    Console.WriteLine("Program being closed!");
+                    break;
+                case CtrlTypes.CtrlLogoffEvent:
+                case CtrlTypes.CtrlShutdownEvent:
+                    _isclosing = true;
+                    Console.WriteLine("User is logging off!");
+                    break;
+            }
+            return true;
+        }
+
+        [DllImport("Kernel32")]
+        public static extern bool SetConsoleCtrlHandler(HandlerRoutine handler, bool add);
+
+        public delegate bool HandlerRoutine(CtrlTypes ctrlType);
+
+        public enum CtrlTypes {
+            CtrlCEvent = 0,
+            CtrlBreakEvent,
+            CtrlCloseEvent,
+            CtrlLogoffEvent = 5,
+            CtrlShutdownEvent
+        }
+        #endregion
     }
 }

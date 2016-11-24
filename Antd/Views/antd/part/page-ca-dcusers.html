@@ -1,0 +1,27 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend>Domain Controller Users</legend>
+    <form action="/dc/adduser" method="POST" enctype="multipart/form-data" class=" border-2-anthilla-violet" style="padding: 10px;">
+        <div class="row">
+            <p>
+                samba-tool user create visor --password=UserPassword123 --username=visor --mail-address=visor@hwk.net --given-name=visor
+            </p>
+        </div>
+        <div class="row">
+            <p>Domain</p>
+            <input name="DomainName" type="text" readonly="readonly" value="hwk.net" />
+        </div>
+        <div class="row">
+            <p>Username</p>
+            <input name="Username" type="text" />
+            <p>ex: visor</p>
+        </div>
+        <div class="row">
+            <p>Hostname</p>
+            <input name="UserPassword" type="text"/>
+            <p>ex: UserPassword123</p>
+        </div>
+        <div class="row">
+            <input value="submit" type="submit" />
+        </div>
+    </form>
+</div>

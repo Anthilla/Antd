@@ -1,5 +1,39 @@
 var $config = jQuery.noConflict();
 
+$config('[data-role="AddLine"]').on("click", function () {
+    var cont = $config("#sortable");
+    var line =
+        '<li data-role="control" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: auto; margin-bottom: 5px;">' +
+            '<input data-role="DisplayIndex" type="text" value="" name="Index_@Current.Index" data-name="Index" style="border-width: 0 !important; width: 20px;" readonly="readonly"> ' +
+            '<input name="FirstCommand" data-name="FirstCommand" type="text" value="" style="width: 90%; padding: 3px;"/><br />' +
+            '<input data-role="Remove" type="button" value="X" class="" style="width: 15px; color: orange !important;">' +
+            '<input name="ControlCommand" data-name="ControlCommand" type="text" value="" style="width: 90%; margin-left: 24px; padding: 3px;"/><br />' +
+            '<input name="Check" type="text" data-name="Check" value="" style="width: 90%; margin-left: 24px; padding: 3px;"/>' +
+            '</li>';
+    cont.append(line);
+    SelectInput();
+    RemoveLine();
+});
+
+$config(document).on("ready", function () {
+    SelectInput();
+    RemoveLine();
+});
+
+function SelectInput() {
+    $config('input[type="text"]').on("click", function () {
+        $config(this).focus();
+        $config(this).select();
+    });
+}
+
+function RemoveLine() {
+    $config('[data-role="Remove"]').on("click", function () {
+        $config(this).parents('li').remove();
+        ReindexCheck();
+    });
+}
+
 $config('input[data-role="command-place"]').keyup(function () {
     var thisValue = $config(this).val();
     if (thisValue.indexOf("[") > 0) {

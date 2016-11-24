@@ -1,0 +1,75 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend>Certificate</legend>
+    <form action="/ca/cert" method="POST" enctype="multipart/form-data" class=" border-2-anthilla-violet" style="padding: 10px;">
+        <div class="row">
+            <p>Assignment</p>
+            <select name="CertAssignment">
+                <option value="user">Assign to User</option>
+                <option value="service">Assign to Service</option>
+            </select>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="CertCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="CertProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="CertLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="CertOrganization" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="CertOrganizationalUnit" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Common Name</p>
+            <input name="CertCommonName" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Email Address</p>
+            <input name="CertEmailAddress" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="CertPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Key Length</p>
+            <input name="CertKeyLength" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>User Assigned: guid</p>
+            <input name="CertUserAssignedGuid" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Service Assigned: guid</p>
+            <input name="CertServiceAssignedGuid" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Service Assigned: name</p>
+            <input name="CertServiceAssignedName" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <input value="submit" type="submit" />
+        </div>
+    </form>
+</div>

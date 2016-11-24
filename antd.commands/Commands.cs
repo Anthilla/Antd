@@ -869,6 +869,12 @@ namespace antd.commands {
                 Arguments = new[] { "systemctl start $service" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["systemctl-restart"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "systemctl restart $service" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["systemctl-stop"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),

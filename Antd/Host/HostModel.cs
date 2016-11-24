@@ -4,7 +4,7 @@ using System.Linq;
 using antd.commands;
 using Newtonsoft.Json;
 
-namespace Antd.Configuration {
+namespace Antd.Host {
     /// <summary>
     /// Object that indexes the parameters that are needed to the machine configuration
     /// This model will be Json-serialized and stored in a .conf file on the machine
@@ -108,6 +108,7 @@ namespace Antd.Configuration {
         /// </summary>
         public HostParameter[] Modprobes { get; set; } = {
             new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", "br_netfilter" } } },
+            new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", "tun" } } }
         };
 
         /// <summary>
@@ -116,8 +117,60 @@ namespace Antd.Configuration {
         public HostParameter RemoveModules { get; set; } = new HostParameter {
             SetCmd = "rmmod",
             StoredValues = new Dictionary<string, string> {
-                { "$modules", "iptable_filter ebtable_filter ip_tables ebtables ip6table_filter eb_tables" }
+                { "$modules", "iptable_filter ip6table_filter ebtable_filter ebtables iptable_nat ip_tables iptable_mangle" }
             }
+        };
+
+        /// <summary>
+        /// Each object in Services triggers the "systemctl-restart" command
+        /// At Antd boot these services will be restarted
+        /// </summary>
+        public HostParameter[] Services { get; set; } = {
+            new HostParameter { SetCmd = "systemctl-restart", StoredValues = new Dictionary<string, string> { { "$service", "" } } },
+        };
+
+        /// <summary>
+        /// Write os parameters
+        /// Save a $value in a $file
+        /// </summary>
+        public HostParameter[] OsParameters { get; set; } = {
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/fs/file-max" }, { "$value", "1024000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/bridge/bridge-nf-call-arptables" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/bridge/bridge-nf-call-ip6tables" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/bridge/bridge-nf-call-iptables" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/core/netdev_max_backlog" }, { "$value", "300000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/core/optmem_max" }, { "$value", "40960" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/core/rmem_max" }, { "$value", "268435456" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/core/somaxconn" }, { "$value", "65536" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/core/wmem_max" }, { "$value", "268435456" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/accept_local" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/accept_redirects" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/accept_source_route" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/rp_filter" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/default/rp_filter" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_forward" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_local_port_range" }, { "$value", "1024 65000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_local_port_range" }, { "$value", "1024 65000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_no_pmtu_disc" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_congestion_control" }, { "$value", "htcp" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_fin_timeout" }, { "$value", "40" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_max_syn_backlog" }, { "$value", "3240000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_max_tw_buckets" }, { "$value", "1440000" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_moderate_rcvbuf" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_mtu_probing" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_rmem" }, { "$value", "4096 87380 134217728" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_slow_start_after_idle" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_slow_start_after_idle" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_tw_recycle" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_tw_reuse" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_window_scaling" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_wmem" }, { "$value", "4096 65536 134217728" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv6/conf/br0/disable_ipv6" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv6/conf/eth0/disable_ipv6" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6" }, { "$value", "1" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "0" } } },
         };
 
         /// <summary>

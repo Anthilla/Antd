@@ -79,7 +79,7 @@ namespace Antd.Modules {
                         Port = arr[2].Trim()
                     };
                     var result = launcher.Launch("nmap-snmp-interfaces", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
-                    var mac = result.FirstOrDefault(_ => _.Contains("MAC Address"));
+                    var mac = result?.FirstOrDefault(_ => _.Contains("MAC Address"));
                     if(!string.IsNullOrEmpty(mac)) {
                         mo.MacAddress = mac.SplitToList(":").Last();
                     }
@@ -87,10 +87,10 @@ namespace Antd.Modules {
                     mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
                     list.Add(mo);
                 }
-                var hostnamectl = launcher.Launch("hostnamectl").ToList();
-                var ssoree = StringSplitOptions.RemoveEmptyEntries;
-                var myHostName = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
-                viewModel.AntdAvahiServices = list.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName);
+                //var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                //var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
+                viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
                 return View["antd/page-asset", viewModel];
             };
 

@@ -32,6 +32,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
@@ -94,8 +96,8 @@
     <Compile Include="Avahi\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
     <Compile Include="Bind\BindConfigurationModel.cs" />
-    <Compile Include="Configuration\HostConfiguration.cs" />
-    <Compile Include="Configuration\HostModel.cs" />
+    <Compile Include="Host\HostConfiguration.cs" />
+    <Compile Include="Host\HostModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
     <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
@@ -104,9 +106,6 @@
     <Compile Include="Configuration\SetupConfiguration.cs" />
     <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
-    <Compile Include="Database\BootOsParametersLoadRepository.cs" />
-    <Compile Include="Database\BootServiceLoadRepository.cs" />
-    <Compile Include="Database\BootModuleLoadRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
     <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\SyslogRepository.cs" />
@@ -316,6 +315,33 @@
     <Content Include="Views\antd\page-log-syslogng.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-boot-svc.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-boot-mod.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-boot-osp.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-boot-cmd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-dcusers.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-setup.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-cert.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-certdc.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-certsc.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-error.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -388,7 +414,7 @@
     <Content Include="Views\antd\part\page-antd-users.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-ca-manage.html">
+    <Content Include="Views\antd\part\page-ca-dc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-ca.html">
@@ -397,7 +423,7 @@
     <Content Include="Views\antd\page-cmd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\page-cfg.html">
+    <Content Include="Views\antd\page-boot.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\page-log-antd.html">

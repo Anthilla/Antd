@@ -1,0 +1,48 @@
+﻿<div class="cctable-container border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;" data-guid="@Model.Guid">
+    <legend>Certificate for SmartCard</legend>
+    <form action="/sc/cert" method="POST" enctype="multipart/form-data" class=" border-2-anthilla-violet" style="padding: 10px;">
+        <div class="row">
+            <p>User Principal Name</p>
+            <input name="UserPrincipalName" type="text" />
+            <p>ex: user@domain.com, check in AD user's properties</p>
+        </div>
+        <div class="row">
+            <p>CRL Distribution Point</p>
+            <input name="DomainCrlDistributionPoint" type="text" />
+            <p>must be a valid url and must be the same as the DC cert</p>
+        </div>
+        <div class="row">
+            <p>Country</p>
+            <input name="SmartCardCaCountry" type="text" />
+            <p>ex: IT</p>
+        </div>
+        <div class="row">
+            <p>Province</p>
+            <input name="SmartCardCaProvince" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Locality</p>
+            <input name="SmartCardCaLocality" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organization</p>
+            <input name="SmartCardCaOrganization" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Organizational Unit</p>
+            <input name="SmartCardCaOrganizationalUnit" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <p>Passphrase</p>
+            <input name="SmartCardCaPassphrase" type="text" />
+            <p>ex:</p>
+        </div>
+        <div class="row">
+            <input value="submit" type="submit" />
+        </div>
+    </form>
+</div>

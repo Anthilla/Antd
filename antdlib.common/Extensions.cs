@@ -46,12 +46,14 @@ namespace antdlib.common {
         }
 
         public static bool ToNnBoolean(this string str) {
-            if (string.IsNullOrEmpty(str)) return false;
+            if(string.IsNullOrEmpty(str))
+                return false;
             return Convert.ToBoolean(str.ToLower());
         }
 
         public static bool? ToBoolean(this string str) {
-            if (string.IsNullOrEmpty(str)) return null;
+            if(string.IsNullOrEmpty(str))
+                return null;
             return Convert.ToBoolean(str.ToLower());
         }
 
@@ -62,7 +64,7 @@ namespace antdlib.common {
         }
 
         public static string JoinToString(this IEnumerable<string> stringList, string separator = ",") {
-            if (stringList == null) {
+            if(stringList == null) {
                 return string.Empty;
             }
             stringList = stringList.ToList();
@@ -74,7 +76,8 @@ namespace antdlib.common {
         }
 
         public static T ToEnum<T>(this string str) {
-            if (str == null) return default(T);
+            if(str == null)
+                return default(T);
             return (T)Enum.Parse(typeof(T), str);
         }
 
@@ -83,7 +86,8 @@ namespace antdlib.common {
         }
 
         public static string ToJson<T>(this T obj) {
-            if (obj == null) return string.Empty;
+            if(obj == null)
+                return string.Empty;
             return JsonConvert.SerializeObject(obj);
         }
 
@@ -132,7 +136,7 @@ namespace antdlib.common {
         }
 
         public static string UppercaseFirstLetter(this string str) {
-            if (string.IsNullOrEmpty(str)) {
+            if(string.IsNullOrEmpty(str)) {
                 return string.Empty;
             }
             return char.ToUpper(str[0]) + str.Substring(1);
@@ -149,7 +153,7 @@ namespace antdlib.common {
         public static string ToHex(this string value) {
             var chars = value.ToCharArray();
             var stringBuilder = new StringBuilder();
-            foreach (var c in chars) {
+            foreach(var c in chars) {
                 stringBuilder.Append(((short)c).ToString(""));
             }
             return stringBuilder.ToString();
@@ -159,7 +163,7 @@ namespace antdlib.common {
             var value = GetString(bytes);
             var chars = value.ToCharArray();
             var stringBuilder = new StringBuilder();
-            foreach (var c in chars) {
+            foreach(var c in chars) {
                 stringBuilder.Append(((short)c).ToString(""));
             }
             return stringBuilder.ToString();
@@ -206,11 +210,11 @@ namespace antdlib.common {
             var matches = r.Matches(input);
             var list = (from Match match in matches where match.Groups[1].Value.Length > 0 select match.Groups[1].Value).ToList();
             var output = input;
-            if (list.Count <= 0)
+            if(list.Count <= 0)
                 return output;
             var removeThis = list.ToArray()[list.Count - 1];
             var t = input;
-            if (removeThis.Length > 0) {
+            if(removeThis.Length > 0) {
                 t = input.Replace(removeThis, "");
             }
             output = t.RemoveTextBetween(start, end);
@@ -221,9 +225,9 @@ namespace antdlib.common {
             var memReplace = input;
             var regex = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
             var matches = regex.Matches(input);
-            if (matches.Count <= 0)
+            if(matches.Count <= 0)
                 return memReplace;
-            for (var i = 0; i < matches.Count; i++) {
+            for(var i = 0; i < matches.Count; i++) {
                 memReplace = memReplace.Replace(matches[i].Value, replacement);
             }
             return memReplace;
@@ -231,7 +235,7 @@ namespace antdlib.common {
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> input) {
             var list = new HashSet<T>();
-            foreach (var i in input) {
+            foreach(var i in input) {
                 list.Add(i);
             }
             return list;
@@ -261,7 +265,7 @@ namespace antdlib.common {
 
         public static string RemoveWhiteSpaceFromStart(this string input) {
             var s = input;
-            if (char.IsWhiteSpace(s[0])) {
+            if(char.IsWhiteSpace(s[0])) {
                 s = string.Join("", s.ToCharArray().Skip(1));
                 RemoveWhiteSpaceFromStart(s);
             }
@@ -270,7 +274,7 @@ namespace antdlib.common {
 
         public static string RemoveDoubleSpace(this string input) {
             var line = input.Replace("\t", " ");
-            while (line.IndexOf("  ", StringComparison.InvariantCulture) > 0) {
+            while(line.IndexOf("  ", StringComparison.InvariantCulture) > 0) {
                 line = line.Replace("  ", " ");
             }
             return line;
@@ -278,10 +282,15 @@ namespace antdlib.common {
 
         public static string Replace(this string input, string[] values, string rep) {
             var i = input;
-            foreach (var val in values) {
+            foreach(var val in values) {
                 i = i.Replace(val, rep);
             }
             return i;
+        }
+
+        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> dictA, Dictionary<TKey, TValue> dictB)
+    where TValue : class {
+            return dictA.Keys.Union(dictB.Keys).ToDictionary(k => k, k => dictA.ContainsKey(k) ? dictA[k] : dictB[k]);
         }
     }
 }

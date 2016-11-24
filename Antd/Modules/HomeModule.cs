@@ -31,8 +31,11 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using antdlib;
+using antdlib.common;
 using antdlib.views;
 using Antd.Apps;
+using Antd.Configuration;
 using Antd.Database;
 using Antd.Gluster;
 using Nancy;
@@ -68,24 +71,6 @@ namespace Antd.Modules {
 
             Get["/ca"] = x => {
                 dynamic viewModel = new ExpandoObject();
-                viewModel.AntdContext = new[] {
-                    "Manage"
-                };
-
-                //viewModel.SslStatus = "Enabled";
-                //viewModel.SslStatusAction = "Disable";
-                //if (ApplicationSetting.Ssl() == "no") {
-                //    viewModel.SslStatus = "Disabled";
-                //    viewModel.SslStatusAction = "Enable";
-                //}
-                //viewModel.CertificatePath = ApplicationSetting.CertificatePath();
-                //viewModel.CaStatus = "Enabled";
-                //if (ApplicationSetting.CertificateAuthority() == "no") {
-                //    viewModel.CaStatus = "Disabled";
-                //}
-                //viewModel.CaIsActive = CertificateAuthority.IsActive;
-                //viewModel.Certificates = CertificateRepository.GetAll();
-
                 return View["antd/page-ca", viewModel];
             };
 
@@ -93,6 +78,11 @@ namespace Antd.Modules {
                 dynamic vmod = new ExpandoObject();
                 vmod.Connections = new Dictionary<string, string>();
                 return View["antd/page-vnc", vmod];
+            };
+
+            Get["/boot"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-boot", vmod];
             };
 
             Post["/gluster/set"] = x => {

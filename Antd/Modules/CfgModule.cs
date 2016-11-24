@@ -34,6 +34,7 @@ using System.Linq;
 using antdlib.common;
 using Antd.Configuration;
 using Antd.Database;
+using Antd.Host;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
@@ -41,33 +42,10 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class CfgModule : CoreModule {
 
-        private readonly BootModuleLoadRepository _bootModuleLoadRepo = new BootModuleLoadRepository();
-        private readonly BootServiceLoadRepository _bootServiceLoadRepo = new BootServiceLoadRepository();
-        private readonly BootOsParametersLoadRepository _bootOsParametersLoadRepo = new BootOsParametersLoadRepository();
-
         private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
 
         public CfgModule() {
             this.RequiresAuthentication();
-
-            Get["/cfg"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.HasConfiguration = true;
-                vmod.Controls = _setupConfiguration.Get();
-                if(_setupConfiguration.Get().Count < 1) {
-                    vmod.HasConfiguration = false;
-                }
-
-                var modules = _bootModuleLoadRepo.Retrieve();
-                vmod.Modules = modules == null ? "" : string.Join("\r\n", modules);
-                var services = _bootServiceLoadRepo.Retrieve();
-                vmod.Services = services == null ? "" : string.Join("\r\n", services);
-                var ospar = _bootOsParametersLoadRepo.Retrieve();
-                var osparList = ospar?.Select(_ => $"{_.Key} {_.Value}").ToList();
-                vmod.OsParam = osparList == null ? "" : string.Join("\r\n", osparList);
-
-                return View["antd/page-cfg", vmod];
-            };
 
             Post["/cfg/export"] = x => {
                 var control = this.Bind<List<Control>>();
@@ -89,14 +67,27 @@ namespace Antd.Modules {
             Post["/cfg/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine);
-                _bootModuleLoadRepo.Dump(modules);
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostModprobes(modules);
+                hostcfg.DoHostModprobes();
+                return Response.AsRedirect("/cfg");
+            };
+
+            Post["/cfg/rmmodules"] = x => {
+                var modulesText = (string)Request.Form.Config;
+                var modules = modulesText.SplitToList(Environment.NewLine);
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostRemoveModules(modules);
+                hostcfg.DoHostRemoveModules();
                 return Response.AsRedirect("/cfg");
             };
 
             Post["/cfg/services"] = x => {
                 var servicesText = (string)Request.Form.Config;
                 var services = servicesText.SplitToList(Environment.NewLine);
-                _bootServiceLoadRepo.Dump(services);
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostServices(services);
+                hostcfg.DoHostServices();
                 return Response.AsRedirect("/cfg");
             };
 
@@ -105,15 +96,15 @@ namespace Antd.Modules {
                 var services = osparamText.SplitToList(Environment.NewLine);
                 var dict = new Dictionary<string, string>();
                 foreach(var serv in services) {
-                    try {
-                        var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
+                    var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
+                    if(!dict.ContainsKey(kvp[0])) {
                         dict.Add(kvp[0], kvp[1]);
-                    }
-                    catch(Exception) {
-                        continue;
+
                     }
                 }
-                _bootOsParametersLoadRepo.Dump(dict);
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostOsParameters(dict);
+                hostcfg.DoHostOsParameters();
                 return Response.AsRedirect("/cfg");
             };
         }

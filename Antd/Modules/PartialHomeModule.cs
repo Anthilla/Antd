@@ -34,10 +34,12 @@ using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Bind;
+using Antd.Configuration;
 using Antd.Database;
 using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
+using Antd.Host;
 using Antd.Info;
 using Antd.MountPoint;
 using Antd.Network;
@@ -53,6 +55,7 @@ namespace Antd.Modules {
         public PartialHomeModule() {
             this.RequiresAuthentication();
 
+            #region [    Page - Config    ]
             Get["/part/info"] = x => {
                 try {
                     var bash = new Bash();
@@ -495,6 +498,143 @@ namespace Antd.Modules {
                     return View["antd/part/page-error"];
                 }
             };
+            #endregion
+
+            #region [    Page - C A    ]
+            Get["/part/ca/dc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-dc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/dcusers"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-dcusers", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/setup"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-setup", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/cert"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-cert", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/certdc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-certdc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/certsc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-certsc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Page - Boot    ]
+            Get["/part/boot/cmd"] = x => {
+                try {
+                    var setupConfiguration = new SetupConfiguration();
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.HasConfiguration = true;
+                    viewModel.Controls = setupConfiguration.Get();
+                    if(setupConfiguration.Get().Count < 1) {
+                        viewModel.HasConfiguration = false;
+                    }
+                    return View["antd/part/page-boot-cmd", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/mod"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
+                    return View["antd/part/page-boot-mod", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/svc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.Services = string.Join("\r\n", hostcfg.GetHostServices());
+                    return View["antd/part/page-boot-svc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/osp"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.OsParam = string.Join("\r\n", hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
+                    return View["antd/part/page-boot-osp", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
         }
     }
 }

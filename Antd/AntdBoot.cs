@@ -16,6 +16,7 @@ using Antd.Database;
 using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
+using Antd.Host;
 using Antd.MountPoint;
 using Antd.Overlay;
 using Antd.Samba;
@@ -24,7 +25,6 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Users;
-using Newtonsoft.Json;
 using RaptorDB;
 
 namespace Antd {
@@ -78,9 +78,6 @@ namespace Antd {
             Global.SaveIndexToDiskTimerSeconds = 30;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
-            database.RegisterView(new BootModuleLoadView());
-            database.RegisterView(new BootServiceLoadView());
-            database.RegisterView(new BootOsParametersLoadView());
             database.RegisterView(new FirewallListView());
             database.RegisterView(new NftView());
             database.RegisterView(new TimerView());
@@ -94,20 +91,10 @@ namespace Antd {
             return database;
         }
 
-        private readonly MachineConfiguration _machineConfiguration = new MachineConfiguration();
+        private readonly HostConfiguration _hostConfiguration = new HostConfiguration();
 
         public void PrepareConfiguration() {
-            _machineConfiguration.Set();
-            try {
-                var conf = $"{Parameter.AntdCfg}/machine.conf";
-                if(!File.Exists(conf)) {
-                    var machineDefault = new HostModel();
-                    File.WriteAllText(conf, JsonConvert.SerializeObject(machineDefault, Formatting.Indented));
-                }
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex);
-            }
+            _hostConfiguration.Setup();
             ConsoleLogger.Log("configuration prepared");
         }
 
@@ -132,28 +119,15 @@ namespace Antd {
         public void SetOsParametersLocal() {
             if(!Parameter.IsUnix)
                 return;
-            var kvps = new BootOsParametersLoadRepository().Retrieve();
-            if(kvps != null) {
-                foreach(var kvp in kvps) {
-                    var file = kvp.Key;
-                    var value = kvp.Value;
-                    if(!string.IsNullOrEmpty(file) && !string.IsNullOrEmpty(value)) {
-                        File.WriteAllText(file, value);
-                    }
-                }
-            }
+            _hostConfiguration.DoHostOsParameters();
             ConsoleLogger.Log("os local parameters ready");
         }
 
         public void LoadModules() {
             if(!Parameter.IsUnix)
                 return;
-            var modules = new BootModuleLoadRepository().Retrieve();
-            if(modules != null) {
-                foreach(var module in modules) {
-                    _bash.Execute($"modprobe {module}", false);
-                }
-            }
+            _hostConfiguration.DoHostModprobes();
+            _hostConfiguration.DoHostRemoveModules();
             ConsoleLogger.Log("modules ready");
         }
 
@@ -253,14 +227,7 @@ namespace Antd {
         public void LoadServices() {
             if(!Parameter.IsUnix)
                 return;
-            var services = new BootServiceLoadRepository().Retrieve();
-            if(services != null) {
-                foreach(var service in services) {
-                    if(Systemctl.IsActive(service) == false) {
-                        Systemctl.Restart(service);
-                    }
-                }
-            }
+            _hostConfiguration.DoHostServices();
             ConsoleLogger.Log("services ready");
         }
 
