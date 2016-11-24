@@ -1,7 +1,49 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend>Scan Setting</legend>
-  
+    <table class="table" style="table-layout: fixed;">
+        <thead>
+            <tr>
+                <td>
+                    <label>Name</label></td>
+                <td>
+                    <label>Range - Start</label></td>
+                <td>
+                    <label>Range - End</label></td>
+                <td>
+                    <label>Label</label></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="2">
+                    <input data-role="AddNetscanSettingObject" value="Add New" type="button" />
+                </td>
+            </tr>
+        </thead>
+        <tbody data-role="NetscanSettingTable">
+            @Each.Settings
+        <tr data-role="NetscanSettingObject">
+            <td>
+                <input type="text" value="@Current.Id" data-name="id" /></td>
+            <td>
+                <input type="text" value="@Current.Range.Start" data-name="start" /></td>
+            <td>
+                <input type="text" value="@Current.Range.End" data-name="end" /></td>
+            <td>
+                <input type="text" value="@Current.Label" data-name="label" /></td>
+            <td>
+                <input data-role="RemoveNetscanSettingObject" data-id="@Current.Id" value="X" type="button" />
+            </td>
+        </tr>
+            @EndEach
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <input data-role="SaveNetscanSetting" data-id="@Current.Id" value="Save Settings" type="button" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
-
-
-
+<script data-script="reload" src="/Scripts/antd.asset.js" type="text/javascript"></script>

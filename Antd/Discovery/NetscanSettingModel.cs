@@ -15,4 +15,13 @@ namespace Antd.Discovery {
         public string Start { get; set; }
         public string End { get; set; } = string.Empty;
     }
+
+    public class NewNetscanSettingModel {
+        public IEnumerable<NewNetscanSettingObject> Objects { get; set; } = new List<NewNetscanSettingObject>();
+    }
+
+    public class NewNetscanSettingObject {
+        public string Subnet { get; set; } = "10.1.";
+        public string Label { get; set; } = string.Empty;
+    }   
 }

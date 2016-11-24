@@ -698,6 +698,8 @@ namespace Antd.Modules {
             Get["/part/asset/setting"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
+                    var settings = new NetscanSetting();
+                    viewModel.Settings = settings.Settings.Objects;
                     return View["antd/part/page-asset-setting", viewModel];
                 }
                 catch(Exception ex) {

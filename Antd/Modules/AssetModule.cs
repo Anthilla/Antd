@@ -36,8 +36,11 @@ using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Database;
+using Antd.Discovery;
 using Antd.Ssh;
 using Nancy;
+using Nancy.Security;
+using RestSharp;
 using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Antd.Modules {
@@ -58,6 +61,36 @@ namespace Antd.Modules {
         }
 
         public AssetModule() {
+            Post["/netscan/add"] = x => {
+                string id = Request.Form.Id;
+                string rangeStart = Request.Form.Start;
+                string rangeEnd = Request.Form.End;
+                string label = Request.Form.Label;
+                if(string.IsNullOrEmpty(id) || string.IsNullOrEmpty(rangeStart)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var settings = new NetscanSetting();
+                var obj = new NetscanSettingObject {
+                    Id = id.ToUpper(),
+                    Range = {
+                        Start = rangeStart,
+                        End = string.IsNullOrEmpty(rangeEnd) ? "" : rangeEnd
+                    },
+                    Label = string.IsNullOrEmpty(label) ? "" : label
+                };
+                settings.Add(obj);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/netscan/remove"] = x => {
+                string id = Request.Form.Id;
+                if(string.IsNullOrEmpty(id)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var settings = new NetscanSetting();
+                settings.Remove(id);
+                return HttpStatusCode.OK;
+            };
 
             Get["/asset/nmap/{ip}"] = x => {
                 string ip = x.ip;
