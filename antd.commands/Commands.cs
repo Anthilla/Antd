@@ -295,6 +295,12 @@ namespace antd.commands {
                 Arguments = new[] { "/etc/nsswitch.conf" },
                 Function = (x, y) => ReadTool.FileLines(x.First()).GrepIgnore("#")
             };
+            dict["cat-etc-networks"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "/etc/networks" },
+                Function = (x, y) => ReadTool.FileLines(x.First()).GrepIgnore("#")
+            };
             #endregion
 
             #region [    Command - Dhclient    ]
@@ -332,6 +338,18 @@ namespace antd.commands {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
                 Function = (x, y) => WriteTool.AppendFile(x.First(), y)
+            };
+            dict["echo-append-rm"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "$file" },
+                Grep = "$value",
+                Function = (x, y) => {
+                    if(!System.IO.File.ReadAllText(y).Contains(x.First())) {
+                        WriteTool.AppendFile(x.First(), y);
+                    }
+                    return new List<string>();
+                }
             };
             #endregion
 
@@ -488,6 +506,24 @@ namespace antd.commands {
                 OutputType = typeof(IEnumerable<string>),
                 Arguments = new[] { "arp $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["ifconfig"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "ifconfig" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["ifconfig-if"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "ifconfig $if" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["net-carrier"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "/sys/class/net/$if/carrier" },
+                Function = (x, y) => ReadTool.FileLines(x.First())
             };
             #endregion
 

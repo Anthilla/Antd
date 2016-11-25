@@ -174,6 +174,16 @@ namespace Antd.Host {
         };
 
         /// <summary>
+        /// These objects will write /etc/networks file
+        /// </summary>
+        public HostParameter[] EtcNetworks { get; set; } = {
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "# /etc/networks" } } },
+            new HostParameter { SetCmd = "echo-append", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "" } } },
+            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "loopback 127.0.0.0" } } },
+            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "link-local 169.254.0.0" } } }
+        };
+
+        /// <summary>
         /// Network and network interfaces configuration
         /// MachineNamedParameter[] Network is an array of each interface
         /// Each interface has a HostParameter[] Configuration that gathers all commands to configure THAT interface

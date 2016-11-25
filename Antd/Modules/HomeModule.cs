@@ -35,7 +35,6 @@ using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
 using Antd.Gluster;
-using Antd.Log;
 using Nancy;
 using Nancy.Security;
 

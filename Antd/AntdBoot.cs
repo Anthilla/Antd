@@ -18,6 +18,7 @@ using Antd.Firewall;
 using Antd.Gluster;
 using Antd.Host;
 using Antd.MountPoint;
+using Antd.Network;
 using Antd.Overlay;
 using Antd.Samba;
 using Antd.Ssh;
@@ -29,7 +30,6 @@ using RaptorDB;
 
 namespace Antd {
     public class AntdBoot {
-
         private readonly Bash _bash = new Bash();
 
         public void RemoveLimits() {
@@ -162,6 +162,19 @@ namespace Antd {
                 }
             }
             ConsoleLogger.Log("users config ready");
+        }
+
+        public void SetLanConfiguration() {
+            if(!Parameter.IsUnix)
+                return;
+            var lanConfiguration = new LanConfiguration();
+            if(lanConfiguration.NothingIsConfigured()) {
+                ConsoleLogger.Log("lan set configuration");
+                var netIf = lanConfiguration.ConfigureInterface();
+                if(!string.IsNullOrEmpty(netIf)) {
+                    ConsoleLogger.Log($"lan configured on {netIf}");
+                }
+            }
         }
 
         private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();

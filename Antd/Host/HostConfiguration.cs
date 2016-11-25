@@ -57,7 +57,7 @@ namespace Antd.Host {
         public void SetHostModprobes(IEnumerable<string> modules) {
             Host = LoadHostModel();
             Host.Modprobes = modules.Select(_ => new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", _ } } }).ToArray();
-            Setup();
+            Export(Host);
         }
 
         public void DoHostModprobes() {
@@ -76,7 +76,7 @@ namespace Antd.Host {
         public void SetHostRemoveModules(IEnumerable<string> modules) {
             Host = LoadHostModel();
             Host.RemoveModules = new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", string.Join(" ", modules) } } };
-            Setup();
+            Export(Host);
         }
 
         public void DoHostRemoveModules() {
@@ -99,7 +99,7 @@ namespace Antd.Host {
         public void SetHostServices(IEnumerable<string> services) {
             Host = LoadHostModel();
             Host.Services = services.Select(_ => new HostParameter { SetCmd = "systemctl-restart", StoredValues = new Dictionary<string, string> { { "$service", _ } } }).ToArray();
-            Setup();
+            Export(Host);
         }
 
         public void DoHostServices() {
@@ -132,6 +132,42 @@ namespace Antd.Host {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             foreach(var modprobe in Host.OsParameters) {
+                launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
+            }
+        }
+        #endregion
+
+        #region [    repo - Compile /etc/networks    ]
+        public Dictionary<string, string> GetHostEtcNetworks() {
+            Host = LoadHostModel();
+            var dicts = Host.EtcNetworks.Select(_ => _.StoredValues);
+            var dict = new Dictionary<string, string>();
+            foreach(var d in dicts) {
+                dict = dict.Merge(d);
+            }
+            return dict;
+        }
+
+        public void SetHostEtcNetworks(string value) {
+            Host = LoadHostModel();
+            var etcNetworks = Host.EtcNetworks;
+            var dicts = etcNetworks.Select(_ => _.StoredValues);
+            var dict = new Dictionary<string, string>();
+            foreach(var d in dicts) {
+                dict = dict.Merge(d);
+            }
+            if(dict.ContainsValue(value)) {
+                return;
+            }
+            etcNetworks.ToList().Add(new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", value } } });
+            Host.EtcNetworks = etcNetworks.ToArray();
+            Export(Host);
+        }
+
+        public void DoHostEtcNetworks() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            foreach(var modprobe in Host.EtcNetworks) {
                 launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
             }
         }

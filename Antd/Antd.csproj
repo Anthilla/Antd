@@ -147,7 +147,6 @@
     <Compile Include="Modules\renew\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\CfgModule.cs" />
-    <Compile Include="Modules\DirectoryModule.cs" />
     <Compile Include="Modules\FirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
@@ -166,7 +165,8 @@
     <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="MountPoint\MountModel.cs" />
     <Compile Include="MountPoint\Mount.cs" />
-    <Compile Include="Network\NetworkInterfaceManagement.cs" />
+    <Compile Include="Network\LanConfiguration.cs" />
+    <Compile Include="Network\NetworkInterfaces.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Samba\SambaConfiguration.cs" />

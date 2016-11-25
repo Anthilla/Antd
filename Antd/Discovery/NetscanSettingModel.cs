@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Antd.Discovery {
@@ -6,19 +7,15 @@ namespace Antd.Discovery {
         [JsonIgnore]
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public NetscanSettingModel() {
-            var dict = new Dictionary<NetscanLabel, string>();
+            var lisst = new List<Tuple<string, string, string>>();
             for(var i = 0; i < Alphabet.Length; i++) {
-                var mo = new NetscanLabel { Letter = Alphabet[i].ToString(), Number = (i + 1).ToString() };
-                dict[mo] = "";
+                var mo = new Tuple<string, string, string>((i + 1).ToString(), Alphabet[i].ToString(), "");
+                lisst.Add(mo);
             }
-            Values = dict;
+            Values = lisst;
         }
         public string Subnet { get; set; } = "10.1.";
-        public Dictionary<NetscanLabel, string> Values { get; set; }
-    }
-
-    public class NetscanLabel {
-        public string Letter { get; set; }
-        public string Number { get; set; }
+        public string SubnetLabel { get; set; } = "primary";
+        public List<Tuple<string, string, string>> Values { get; set; }
     }
 }

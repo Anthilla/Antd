@@ -4,33 +4,40 @@
         <thead>
             <tr>
                 <td>
-                    <label>Subnet</label></td>
-                <td>
+                    <label>Subnet</label>
+                </td>
+                <td colspan="2">
                     <input type="text" style="height: 28px; width: 90%;" data-role="NetscanSettingSubnet" value="@Model.SettingsSubnet" />
                 </td>
+                <td colspan="2">
+                    <input type="text" style="height: 28px; width: 90%;" data-role="NetscanSettingSubnetLabel" value="@Model.SettingsSubnetLabel" />
+                </td>
                 <td>
-                    <input type="button" style="height: 28px; width: 90%;" data-role="ApplyNetscanSettingSubnet" value="Save" class="bg-anthilla-blu" />
+                    <input type="button" style="height: 28px; width: 90%; color: #3a3a3a !important;" data-role="ApplyNetscanSettingSubnet" value="Save Subnet" class="bg-anthilla-blu" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label>Letter</label></td>
+                    <label>Number</label>
+                </td>
                 <td>
-                    <label>Number</label></td>
-                <td>
-                    <label>Label</label></td>
+                    <label>Letter</label>
+                </td>
+                <td colspan="4">
+                    <label>Label</label>
+                </td>
             </tr>
         </thead>
         <tbody data-role="NetscanSettingTable">
             @Each.Settings
             <tr data-role="NetscanSettingObject">
                 <td>
-                    <h6>@Current.Key.Letter</h6>
+                    <p>@Current.Key.Number</p>
                 </td>
                 <td>
-                    <h6>@Current.Key.Number</h6>
+                    <p>@Current.Key.Letter</p>
                 </td>
-                <td>
+                <td colspan="4">
                     <input type="text" value="@Current.Value" data-l="@Current.Key.Letter" data-n="@Current.Key.Number" data-name="NetscanLabel" style="height: 28px; width: 90%;" />
                 </td>
             </tr>
@@ -38,8 +45,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3">
-                    <input data-role="SaveNetscanSetting" data-id="@Current.Id" value="Save Settings" type="button" />
+                <td colspan="6">
+                    <input style="height: 28px; width: 90%; color: #3a3a3a !important;" class="bg-anthilla-blu" data-role="SaveNetscanSetting" data-id="@Current.Id" value="Save Settings" type="button" />
                 </td>
             </tr>
         </tfoot>

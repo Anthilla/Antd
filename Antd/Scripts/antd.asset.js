@@ -1,16 +1,18 @@
 var $asset = jQuery.noConflict();
 
 $asset('[data-role="ApplyNetscanSettingSubnet"]').on("click", function () {
-    var Subnet = $asset('[data-role="NetscanSettingSubnet"]').val();
+    var subnet = $asset('[data-role="NetscanSettingSubnet"]').val();
+    var label = $asset('[data-role="NetscanSettingSubnetLabel"]').val();
     jQuery.support.cors = true;
     var aj = $asset.ajax({
         url: "/netscan/setsubnet",
         type: "POST",
         data: {
-            Subnet: Subnet
+            Subnet: subnet,
+            Label: label
         },
         success: function () {
-            alert('Subnet Saved');
+            alert("Subnet Saved");
         }
     });
     _requests.push(aj);
@@ -21,7 +23,7 @@ $asset('[data-role="SaveNetscanSetting"]').on("click", function () {
         var self = $asset(this);
         var label = self.val();
         var letter = self.attr("data-l");
-        var number = self.attr("data-nl");
+        var number = self.attr("data-n");
         jQuery.support.cors = true;
         var aj = $asset.ajax({
             url: "/netscan/setlabel",
@@ -32,7 +34,7 @@ $asset('[data-role="SaveNetscanSetting"]').on("click", function () {
                 Label: label
             },
             success: function () {
-                alert('Settings Saved');
+                alert("Settings Saved");
             }
         });
         _requests.push(aj);

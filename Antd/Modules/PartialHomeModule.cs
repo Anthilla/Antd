@@ -308,34 +308,34 @@ namespace Antd.Modules {
             Get["/part/net"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    var nif = new NetworkInterfaceManagement();
+                    var nif = new NetworkInterfaces();
                     var networkInterfaces = nif.GetAll().ToList();
                     var phyIf =
                         networkInterfaces.Where(
                                 _ =>
                                     _.Value ==
-                                    NetworkInterfaceManagement.NetworkInterfaceType.Physical)
+                                    NetworkInterfaces.NetworkInterfaceType.Physical)
                             .OrderBy(_ => _.Key);
                     viewModel.NetworkPhysicalIf = phyIf;
                     var brgIf =
                         networkInterfaces.Where(
                                 _ =>
                                     _.Value ==
-                                    NetworkInterfaceManagement.NetworkInterfaceType.Bridge)
+                                    NetworkInterfaces.NetworkInterfaceType.Bridge)
                             .OrderBy(_ => _.Key);
                     viewModel.NetworkBridgeIf = brgIf;
                     var bndIf =
                         networkInterfaces.Where(
                                 _ =>
                                     _.Value ==
-                                    NetworkInterfaceManagement.NetworkInterfaceType.Bond)
+                                    NetworkInterfaces.NetworkInterfaceType.Bond)
                             .OrderBy(_ => _.Key);
                     viewModel.NetworkBondIf = bndIf;
                     var vrtIf =
                         networkInterfaces.Where(
                                 _ =>
                                     _.Value ==
-                                    NetworkInterfaceManagement.NetworkInterfaceType.Virtual)
+                                    NetworkInterfaces.NetworkInterfaceType.Virtual)
                             .OrderBy(_ => _.Key)
                             .ToList();
                     foreach(var v in vrtIf) {
@@ -701,6 +701,7 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     var settings = new NetscanSetting();
                     viewModel.SettingsSubnet = settings.Settings.Subnet;
+                    viewModel.SettingsSubnetLabel = settings.Settings.SubnetLabel;
                     viewModel.Settings = settings.Settings.Values;
                     return View["antd/part/page-asset-setting", viewModel];
                 }

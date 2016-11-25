@@ -4,7 +4,7 @@ using antdlib.common;
 using antdlib.common.Tool;
 
 namespace Antd.Network {
-    public class NetworkInterfaceManagement {
+    public class NetworkInterfaces {
         public enum NetworkInterfaceType {
             Physical = 1,
             Virtual = 2,
@@ -14,6 +14,14 @@ namespace Antd.Network {
         }
 
         private readonly Bash _bash = new Bash();
+
+        public IEnumerable<string> GetAllNames() {
+            if(!Parameter.IsUnix) {
+                return new List<string>();
+            }
+            var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            return list.Select(f => f.Print(9, " ")).ToList();
+        }
 
         public Dictionary<string, NetworkInterfaceType> GetAll() {
             if(!Parameter.IsUnix) {
@@ -44,6 +52,5 @@ namespace Antd.Network {
             }
             return ifList;
         }
-
     }
 }

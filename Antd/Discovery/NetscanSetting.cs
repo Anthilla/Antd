@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using antdlib.common;
 using Antd.Host;
 using Newtonsoft.Json;
@@ -31,11 +32,11 @@ namespace Antd.Discovery {
 
         public void Setup() {
             if(!File.Exists(FilePath)) {
-                File.WriteAllText(FilePath, JsonConvert.SerializeObject(new HostModel(), Formatting.Indented));
+                File.WriteAllText(FilePath, JsonConvert.SerializeObject(new NetscanSettingModel(), Formatting.Indented));
             }
         }
 
-        public void Export(HostModel model) {
+        public void Export(NetscanSettingModel model) {
             if(File.Exists(FilePath)) {
                 File.Copy(FilePath, FilePathBackup, true);
             }
@@ -43,21 +44,35 @@ namespace Antd.Discovery {
         }
 
         #region [    repo    ] 
-        public void SetSubnet(string subnet) {
+        public void SetSubnet(string subnet, string label) {
             if(string.IsNullOrEmpty(subnet)) { return; }
             Settings = LoadSettingsModel();
             Settings.Subnet = subnet;
-            Setup();
+            Export(Settings);
         }
 
         public void SetLabel(string letter, string number, string label) {
             Settings = LoadSettingsModel();
             var objects = Settings.Values;
-            var mo = new NetscanLabel { Letter = letter, Number = number };
-            objects[mo] = label;
+            var mo = objects.FirstOrDefault(_ => _.Item1 == number && _.Item2 == letter);
+            if(mo == null) { return; }
+            objects.Remove(mo);
+            var nmo = new Tuple<string, string, string>(number, letter, label);
+            objects.Add(nmo);
             Settings.Values = objects;
-            Setup();
+            Export(Settings);
         }
         #endregion
+
+        public void SaveEtcNetworks() {
+            Settings = LoadSettingsModel();
+            var settings = Settings.Values.Where(_ => !string.IsNullOrEmpty(_.Item3)).Select(
+                _ => $"{Settings.SubnetLabel}-{_.Item3} {Settings.Subnet}{_.Item1}.0"
+            );
+            var hostConfiguration = new HostConfiguration();
+            foreach(var set in settings) {
+                hostConfiguration.SetHostEtcNetworks(set);
+            }
+        }
     }
 }

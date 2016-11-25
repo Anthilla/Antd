@@ -61,11 +61,13 @@ namespace Antd.Modules {
         public AssetModule() {
             Post["/netscan/setsubnet"] = x => {
                 string subnet = Request.Form.Subnet;
-                if(string.IsNullOrEmpty(subnet)) {
+                string label = Request.Form.Label;
+                if(string.IsNullOrEmpty(subnet) || string.IsNullOrEmpty(label)) {
                     return HttpStatusCode.BadRequest;
                 }
                 var settings = new NetscanSetting();
-                settings.SetSubnet(subnet);
+                settings.SetSubnet(subnet, label);
+                settings.SaveEtcNetworks();
                 return HttpStatusCode.OK;
             };
 
