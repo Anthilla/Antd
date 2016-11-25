@@ -1,53 +1,42 @@
 var $asset = jQuery.noConflict();
 
-function RemoveNetscanSettingObject() {
-    $asset('[data-role="RemoveNetscanSettingObject"]').on("click", function () {
-        var cont = $asset('[data-role="NetscanSettingTable"]');
-        var id = cont.find('[data-name="id"]').val();
-        jQuery.support.cors = true;
-        var aj = $asset.ajax({
-            url: "/netscan/remove",
-            type: "POST",
-            data: {
-                Id: id
-            },
-            success: function () {
-                cont.remove();
-            }
-        });
-        _requests.push(aj);
+$asset('[data-role="ApplyNetscanSettingSubnet"]').on("click", function () {
+    var Subnet = $asset('[data-role="NetscanSettingSubnet"]').val();
+    jQuery.support.cors = true;
+    var aj = $asset.ajax({
+        url: "/netscan/setsubnet",
+        type: "POST",
+        data: {
+            Subnet: Subnet
+        },
+        success: function () {
+            alert('Subnet Saved');
+        }
     });
-}
-
-$asset('[data-role="SaveNetscanSetting"]').on("click", function () {
-    $asset('[data-role="NetscanSettingTable"]').find('[data-role="NetscanSettingObject"]').each(function () {
-        var self = $asset(this);
-        var id = self.find('[data-name="id"]').val();
-        var start = self.find('[data-name="start"]').val();
-        var end = self.find('[data-name="end"]').val();
-        var lbl = self.find('[data-name="label"]').val();
-        jQuery.support.cors = true;
-        var aj = $asset.ajax({
-            url: "/netscan/add",
-            type: "POST",
-            data: {
-                Id: id,
-                Start: start,
-                End: end,
-                Label: lbl
-            },
-            success: function () {
-            }
-        });
-        _requests.push(aj);
-    });
+    _requests.push(aj);
 });
 
-$asset('[data-role="AddNetscanSettingObject"]').on("click", function () {
-    var cont = $asset('[data-role="NetscanSettingTable"]');
-    var html = "<tr data-role=\"NetscanSettingObject\"> <td> <input type=\"text\" value=\"\" data-name=\"id\" /></td> <td> <input type=\"text\" value=\"\" data-name=\"start\" /></td> <td> <input type=\"text\" value=\"\" data-name=\"end\" /></td> <td> <input type=\"text\" value=\"\" data-name=\"label\" /></td> <td> <input data-role=\"RemoveNetscanSettingObject\" value=\"X\" type=\"button\" /> </td></tr>";
-    cont.append(html);
-    RemoveNetscanSettingObject();
+$asset('[data-role="SaveNetscanSetting"]').on("click", function () {
+    $asset('[data-role="NetscanSettingTable"]').find('[data-name="NetscanLabel"]').each(function () {
+        var self = $asset(this);
+        var label = self.val();
+        var letter = self.attr("data-l");
+        var number = self.attr("data-nl");
+        jQuery.support.cors = true;
+        var aj = $asset.ajax({
+            url: "/netscan/setlabel",
+            type: "POST",
+            data: {
+                Letter: letter,
+                Number: number,
+                Label: label
+            },
+            success: function () {
+                alert('Settings Saved');
+            }
+        });
+        _requests.push(aj);
+    });
 });
 
 $asset('[data-role="ToggleAssetContent"]').on("click", function () {

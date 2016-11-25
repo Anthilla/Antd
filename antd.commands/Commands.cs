@@ -477,6 +477,18 @@ namespace antd.commands {
                 Arguments = new[] { "nmap -sU -p 161 -T4 -d -v -n -Pn --script snmp-interfaces $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["ping-c"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "ping -c3 -w10 $ip" },
+                Function = (x, y) => BashTool.Execute(x, false).SplitBash()
+            };
+            dict["arp"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "arp $ip" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Ipv4    ]
@@ -991,7 +1003,6 @@ namespace antd.commands {
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
             #endregion
-
             return dict;
         }
     }

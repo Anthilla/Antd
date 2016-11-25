@@ -1,27 +1,24 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Antd.Discovery {
     public class NetscanSettingModel {
-        public IEnumerable<NetscanSettingObject> Objects { get; set; } = new List<NetscanSettingObject>();
-    }
-
-    public class NetscanSettingObject {
-        public string Id { get; set; }
-        public Range Range { get; set; }
-        public string Label { get; set; } = string.Empty;
-    }
-
-    public class Range {
-        public string Start { get; set; }
-        public string End { get; set; } = string.Empty;
-    }
-
-    public class NewNetscanSettingModel {
-        public IEnumerable<NewNetscanSettingObject> Objects { get; set; } = new List<NewNetscanSettingObject>();
-    }
-
-    public class NewNetscanSettingObject {
+        [JsonIgnore]
+        private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public NetscanSettingModel() {
+            var dict = new Dictionary<NetscanLabel, string>();
+            for(var i = 0; i < Alphabet.Length; i++) {
+                var mo = new NetscanLabel { Letter = Alphabet[i].ToString(), Number = (i + 1).ToString() };
+                dict[mo] = "";
+            }
+            Values = dict;
+        }
         public string Subnet { get; set; } = "10.1.";
-        public string Label { get; set; } = string.Empty;
-    }   
+        public Dictionary<NetscanLabel, string> Values { get; set; }
+    }
+
+    public class NetscanLabel {
+        public string Letter { get; set; }
+        public string Number { get; set; }
+    }
 }

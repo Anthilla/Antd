@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using antdlib.common;
 using Antd.Host;
 using Newtonsoft.Json;
@@ -43,21 +42,20 @@ namespace Antd.Discovery {
             File.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented));
         }
 
-        #region [    repo    ]
-        public void Add(NetscanSettingObject obj) {
+        #region [    repo    ] 
+        public void SetSubnet(string subnet) {
+            if(string.IsNullOrEmpty(subnet)) { return; }
             Settings = LoadSettingsModel();
-            var objects = Settings.Objects.ToList();
-            if(!objects.Select(_ => _.Id).Contains(obj.Id)) {
-                objects.Add(obj);
-            }
-            Settings.Objects = objects;
+            Settings.Subnet = subnet;
             Setup();
         }
 
-        public void Remove(string id) {
+        public void SetLabel(string letter, string number, string label) {
             Settings = LoadSettingsModel();
-            var objects = Settings.Objects.Where(_=> _.Id != id).ToList();
-            Settings.Objects = objects;
+            var objects = Settings.Values;
+            var mo = new NetscanLabel { Letter = letter, Number = number };
+            objects[mo] = label;
+            Settings.Values = objects;
             Setup();
         }
         #endregion

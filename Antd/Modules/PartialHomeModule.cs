@@ -671,14 +671,15 @@ namespace Antd.Modules {
                         var mo = new AssetModule.AvahiServiceViewModel {
                             HostName = arr[0].Trim(),
                             Ip = arr[1].Trim(),
-                            Port = arr[2].Trim()
+                            Port = arr[2].Trim(),
+                            MacAddress = ""
                         };
-                        var result = launcher.Launch("nmap-snmp-interfaces", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
-                        var mac = result?.FirstOrDefault(_ => _.Contains("MAC Address"));
-                        if(!string.IsNullOrEmpty(mac)) {
-                            mo.MacAddress = mac.SplitToList(":").Last();
+                        launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
+                        var result = launcher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
+                        if(result.Any()) {
+                            var mac = result.LastOrDefault().Print(3, " ");
+                            mo.MacAddress = mac;
                         }
-                        mo.MacAddress = mac;
                         mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
                         list.Add(mo);
                     }
@@ -699,7 +700,8 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var settings = new NetscanSetting();
-                    viewModel.Settings = settings.Settings.Objects;
+                    viewModel.SettingsSubnet = settings.Settings.Subnet;
+                    viewModel.Settings = settings.Settings.Values;
                     return View["antd/part/page-asset-setting", viewModel];
                 }
                 catch(Exception ex) {
