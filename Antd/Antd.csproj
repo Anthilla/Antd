@@ -182,6 +182,7 @@
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Users\GroupModel.cs" />
+    <Compile Include="Users\ManageMaster.cs" />
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserModel.cs" />
@@ -324,7 +325,7 @@
     <Content Include="Views\antd\page-apps.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-log-syslogng.html">
+    <Content Include="Views\antd\part\page-log-syslog.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-boot-svc.html">

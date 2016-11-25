@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
 using antdlib.views;
+using Antd.Users;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
@@ -45,13 +46,13 @@ namespace Antd.Auth {
     }
 
     public class UserDatabase : IUserMapper {
-
         private static IEnumerable<UserIdentity> Users() {
+            var manageMaster = new ManageMaster();
             var userList = new List<UserIdentity> {
                 new UserIdentity {
                     UserGuid = Guid.Parse("00000000-0000-0000-0000-000000000500"),
-                    UserName = "master",
-                    Claims = new List<string> { Encryption.XHash("master"), "00000000-0000-0000-0000-000000000500" }
+                    UserName = manageMaster.Name,
+                    Claims = new List<string> { manageMaster.Password, "00000000-0000-0000-0000-000000000500" }
                 }
             };
             var appUsers = new Database.UserRepository().GetAll().Select(MapUser);
@@ -71,11 +72,8 @@ namespace Antd.Auth {
         }
 
         public static Guid? ValidateUser(string userIdentity, string password) {
-            //if (userIdentity == "master" && password == "master") {
-            //    return Guid.Parse("00000000-0000-0000-0000-000000000500");
-            //}
             var hash = Encryption.XHash(password);
-            var user = Users().FirstOrDefault(_=>_.UserName == userIdentity && _.Claims.Contains(hash));
+            var user = Users().FirstOrDefault(_ => _.UserName == userIdentity && _.Claims.Contains(hash));
             return user?.UserGuid;
         }
     }

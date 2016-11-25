@@ -1,5 +1,20 @@
 var $usr = jQuery.noConflict();
 
+$usr("#UpdateMasterPassword").on("click", function () {
+    var query = $usr("#NewMasterPassword").val();
+    var aj = $usr.ajax({
+        url: "/master/change/password",
+        type: "POST",
+        data: {
+            Password: query
+        },
+        success: function (data) {
+            callback(data);
+        }
+    });
+    _requests.push(aj);
+});
+
 $usr(document).on("ready", function () {
     $usr.when(
         LoadUserEntitiesUnits()

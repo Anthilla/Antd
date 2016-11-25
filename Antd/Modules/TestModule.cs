@@ -29,6 +29,7 @@
 
 using System.Collections.Generic;
 using antd.commands;
+using antdlib.common;
 using Antd.Storage;
 using Nancy;
 
@@ -49,9 +50,9 @@ namespace Antd.Modules {
 
             Get["/test/vnc"] = x => View["page-vnc"];
 
-            Get["/test/clearnsnapshots"] = x => {
-                new BackupClean().Launch();
-                return HttpStatusCode.ImATeapot;
+            Get["/test/hash/{str}"] = x => {
+                string s = x.str;
+                return Response.AsText(Encryption.XHash(s));
             };
 
             Get["/test/command1/{val}"] = x => {

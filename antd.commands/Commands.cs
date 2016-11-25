@@ -1029,6 +1029,18 @@ namespace antd.commands {
                 },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["df"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "df $directory" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["df-h"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "df -h $directory" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Assets    ]

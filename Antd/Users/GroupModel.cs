@@ -31,7 +31,7 @@ using System.Collections.Generic;
 
 namespace Antd.Users {
     public class GroupModel {
-        public string _Id { get; set; }
+        public string Id { get; set; }
         public string Guid { get; set; }
         public string Alias { get; set; }
         public string Password { get; set; }

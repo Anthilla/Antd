@@ -150,6 +150,8 @@ namespace Antd {
         private readonly SystemUser _systemUser = new SystemUser();
 
         public void ReloadUsers() {
+            var manageMaster = new ManageMaster();
+            manageMaster.Setup();
             if(!Parameter.IsUnix)
                 return;
             var sysUser = _userRepository.Import();

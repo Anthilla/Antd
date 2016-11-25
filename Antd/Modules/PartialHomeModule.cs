@@ -52,6 +52,7 @@ using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
+using Antd.Users;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -157,7 +158,7 @@ namespace Antd.Modules {
                 try {
                     var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.AntdUpdateCheck = launcher.Launch("mono-antdsh-update-check");
+                    viewModel.AntdUpdateCheck = launcher.Launch("mono-antdsh-update-check").JoinToString("<br />");
                     return View["antd/part/page-antd-system-update", viewModel];
                 }
                 catch(Exception ex) {
@@ -495,6 +496,7 @@ namespace Antd.Modules {
                 try {
                     var userRepository = new UserRepository();
                     dynamic viewModel = new ExpandoObject();
+                    viewModel.Master = new ManageMaster().Name;
                     viewModel.Users = userRepository.GetAll().OrderBy(_ => _.Alias);
                     return View["antd/part/page-antd-users", viewModel];
                 }
@@ -758,7 +760,7 @@ namespace Antd.Modules {
                     viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
                     var syslogNg = new SyslogNg();
                     viewModel.SyslogNgContent = syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
-                    return View["antd/part/page-log-system", viewModel];
+                    return View["antd/part/page-log-syslog", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

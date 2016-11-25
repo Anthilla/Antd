@@ -64,7 +64,6 @@ $asset('[data-role="ShareSshKeys"]').on("click", function () {
 });
 
 $asset('[data-role="ShowNmap"]').on("click", function () {
-    var btn = $asset(this);
     var ip = $asset(this).attr("data-ip");
     var ttt = $asset(this).parents("div.container");
     var cont = ttt.find('[data-role="NmapResult"]');
@@ -77,13 +76,13 @@ $asset('[data-role="ShowNmap"]').on("click", function () {
         url: "/asset/nmap/" + ip,
         type: "GET",
         success: function (data) {
+            cont.html("");
             $asset.each(data, function (k, v) {
                 cont.append("<tr>" + "<td class=\"bg-gray\">" + v.protocol + "</td>" +
                     "<td class=\"bg-gray\">" + v.status + "</td>" +
                     "<td class=\"bg-gray\">" + v.type + "</td>" + "</tr>");
             });
             cont.parents("table").show();
-            btn.hide();
         }
     });
     _requests.push(aj);

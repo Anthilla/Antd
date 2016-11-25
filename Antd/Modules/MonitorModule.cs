@@ -3,6 +3,7 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using Antd.Info;
+using Antd.Storage;
 using Nancy;
 
 //-------------------------------------------------------------------------------------
@@ -65,8 +66,6 @@ namespace Antd.Modules {
                     var upHtml = GetResourcesHtmlDiv($"Up: {up}");
                     var la = uptime.LoadAverage.Replace(" load average:", "").Trim();
                     var laHtml = GetResourcesHtmlDiv(la);
-                    //var diskUsage = new DiskUsage();
-                    //var du = diskUsage.GetInfo().Where(_ => _.MountedOn == "/mnt/cdrom" || _.MountedOn == "/mnt/overlay").OrderBy(_ => _.MountedOn);
                     var memory = machineInfo.GetFree().FirstOrDefault();
                     var tot = memory?.Total;
                     var used = memory?.Used;
@@ -75,8 +74,11 @@ namespace Antd.Modules {
                     int resultPart;
                     int.TryParse(new string(used?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
                     var perc = GetPercentage(resultTot, resultPart);
-                    var memHtml = GetResourcesHtmlDiv($"Memory Used: {perc}% | {resultPart}/{resultTot}");
-                    var response = $"{hostnameHtml}{divider}{upHtml}{divider}{laHtml}{divider}{memHtml}";
+                    var memHtml = GetResourcesHtmlDiv($"Memory Used: {perc}%");
+                    var diskUsage = new DiskUsage();
+                    var du = diskUsage.GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
+                    var duHtml = GetResourcesHtmlDiv($"Disk Used: {du?.UsePercentage}");
+                    var response = $"{hostnameHtml}{divider}{upHtml}{divider}{laHtml}{divider}{memHtml}{divider}{duHtml}";
                     return Response.AsText(response);
                 }
                 catch(Exception ex) {

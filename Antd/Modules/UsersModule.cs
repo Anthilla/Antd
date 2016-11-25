@@ -36,6 +36,7 @@ using Antd.Database;
 using Antd.Helpers;
 using Antd.Users;
 using Nancy;
+using Nancy.Routing.Trie.Nodes;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -50,11 +51,21 @@ namespace Antd.Modules {
 
             this.RequiresAuthentication();
 
+            Post["/master/change/password"] = x => {
+                var password = (string)Request.Form.Password;
+                if(string.IsNullOrEmpty(password)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var masterManager = new ManageMaster();
+                masterManager.ChangePassword(password);
+                return HttpStatusCode.OK;
+            };
+
             Post["/users/change/password"] = x => {
                 var user = (string)Request.Form.User;
                 var password = (string)Request.Form.Password;
                 var tryGet = _userRepositoryRepo.GetByAlias(user);
-                if (tryGet != null) {
+                if(tryGet != null) {
                     var bash = new Bash();
                     var hp = bash.Execute($"mkpasswd -m sha-512 '{password}'", false);
                     _systemUser.SetPassword(user, hp);
