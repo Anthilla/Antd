@@ -1,12 +1,16 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="LogReport">Log Report</legend>
-    <input id="GenerateNewReport" type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Generate new report" />
-    <br />
-    <table class="table" id="LogReportTable">
-        <tbody>
-            @Each.LogReports
-            <tr data-row="report" data-path="@Current"><td>@Current</td></tr>
-            @EndEach
-        </tbody>
-    </table>
+	<legend id="LogReport">Log Report</legend>
+	<input id="GenerateNewReport" type="button" class="bg-anthilla-green" style="color: #3a3a3a !important;" value="Generate new report" />
+	<br />
+	<table class="table" id="LogReportTable">
+		<tbody>
+		@Each.LogReports
+		<tr data-row="report" data-path="@Current"><td>@Current</td></tr>
+		@EndEach
+		</tbody>
+	</table>
 </div>
+<script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
+<script src="/Scripts/metro.min.js" type="text/javascript"></script>
+<script src="/Scripts/antd.js" type="text/javascript"></script>
+<script src="/Scripts/antd.log.js" type="text/javascript"></script>

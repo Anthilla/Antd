@@ -1,5 +1,9 @@
 var $usr = jQuery.noConflict();
 
+$usr(document).ready(function ($usr) {
+    $usr("#UpdateMasterPassword").strength();
+});
+
 $usr("#UpdateMasterPassword").on("click", function () {
     var query = $usr("#NewMasterPassword").val();
     var aj = $usr.ajax({

@@ -1,60 +1,65 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="FW">
-        <i class="icon-fire on-left"></i>
-        Firewall
-        <i id="ExportNftConfiguration" class="icon-upload fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-    </legend>
-    @Each.NftTables
-    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white">
-            @Current.Type @Current.Name
-        </div>
-        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="@Current.Type" data-nft-name="@Current.Name">
-            <label>Table sets</label>
-            <table class="table" data-nft="Sets">
-                <tbody>
-                    @Partial['_partial/part-nft-sets', @Current.Sets];
-                </tbody>
-            </table>
-            <hr class="bg-anthilla-gray" />
-            <label>Table chains</label>
-            <table class="table" data-nft="Chains">
-                <tbody>
-                    @Partial['_partial/part-nft-chains', @Current.Chains];
-                </tbody>
-            </table>
-            <hr class="bg-anthilla-gray" />
-            <input type="button" style="width: 100%;" value="Save Nft Configuration" data-role="SaveNftConfiguration" class="bg-yellow bg-active-orange" />
-        </div>
-    </div>
-    @EndEach
-    <hr class="bg-anthilla-gray" />
-    <legend>
-        <i class="icon-fire on-left"></i>
-        MAC Address Filtering
-        <i id="ReloadMacAddressList" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-    </legend>
-    <table class="table">
-        <tbody>
-            @Each.MacAddressList
-            <tr>
-                <td>
-                    <p>@Current.Value</p>
-                </td>
-                <td>
-                    <p>@Current.Description</p>
-                </td>
-                <td>
-                    <p>@Current.Type</p>
-                </td>
-                <td>
-                    <p>@Current.IsEnabled</p>
-                </td>
-                <td>
-                    <p>@Current.IsNew</p>
-                </td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
+	<legend id="FW">
+		<i class="icon-fire on-left"></i>
+		Firewall
+		<i id="ExportNftConfiguration" class="icon-upload fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+	</legend>
+	@Each.NftTables
+	<div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+		<div class="panel-header bg-anthilla-gray fg-white">
+			@Current.Type @Current.Name
+		</div>
+		<div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="@Current.Type" data-nft-name="@Current.Name">
+			<label>Table sets</label>
+			<table class="table" data-nft="Sets">
+				<tbody>
+				@Partial['_partial/part-nft-sets', @Current.Sets];
+				</tbody>
+			</table>
+			<hr class="bg-anthilla-gray" />
+			<label>Table chains</label>
+			<table class="table" data-nft="Chains">
+				<tbody>
+				@Partial['_partial/part-nft-chains', @Current.Chains];
+				</tbody>
+			</table>
+			<hr class="bg-anthilla-gray" />
+			<input type="button" style="width: 100%;" value="Save Nft Configuration" data-role="SaveNftConfiguration" class="bg-yellow bg-active-orange" />
+		</div>
+	</div>
+	@EndEach
+	<hr class="bg-anthilla-gray" />
+	<legend>
+		<i class="icon-fire on-left"></i>
+		MAC Address Filtering
+		<i id="ReloadMacAddressList" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+	</legend>
+	<table class="table">
+		<tbody>
+		@Each.MacAddressList
+		<tr>
+			<td>
+				<p>@Current.Value</p>
+			</td>
+			<td>
+				<p>@Current.Description</p>
+			</td>
+			<td>
+				<p>@Current.Type</p>
+			</td>
+			<td>
+				<p>@Current.IsEnabled</p>
+			</td>
+			<td>
+				<p>@Current.IsNew</p>
+			</td>
+		</tr>
+		@EndEach
+		</tbody>
+	</table>
 </div>
+<script src="/Scripts/js.cookie.js" type="text/javascript"></script>
+<script src="/Scripts/metro.min.js" type="text/javascript"></script>
+<script src="/Scripts/antd.js" type="text/javascript"></script>
+<script src="/Scripts/antd.firewall.js" type="text/javascript"></script>
+<script src="/Scripts/antd.cmd.js" type="text/javascript"></script>

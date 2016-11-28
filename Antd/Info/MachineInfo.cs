@@ -99,10 +99,10 @@ namespace Antd.Info {
             var components = new List<SystemComponentModel>();
             var losetup = GetLosetup().ToList();
             foreach(var file in actives) {
-                var alias = file.SplitToList("-").Last();
-                var dir = file.SplitToList("active-").Last();
-                var active = Bash.Execute($"file {file}").SplitToList("symbolic link to ").Last();
-                var recovery = Bash.Execute($"file {file.Replace("active", "recovery")}").SplitToList(":").Last();
+                var alias = file.SplitToList("-").LastOrDefault();
+                var dir = file.SplitToList("active-").LastOrDefault();
+                var active = Bash.Execute($"file {file}").SplitToList("symbolic link to ").LastOrDefault();
+                var recovery = Bash.Execute($"file {file.Replace("active", "recovery")}").SplitToList(":").LastOrDefault()?.Replace("symbolic link to", "");
                 var hash = File.Exists(dir + "/" + active) ? GetFileHash(dir + "/" + active) : "";
                 var running = losetup.Any(_ => _.Hash == hash && _.Backfile == dir + "/" + active) ? "1" : "0";
                 var comp = new SystemComponentModel {

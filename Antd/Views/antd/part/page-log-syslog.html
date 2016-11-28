@@ -1,63 +1,67 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="SyslogNG">Syslog-NG - Server Configuration</legend>
-    <table class="table" style="table-layout: fixed !important;">
-        <tbody data-role="SyslogNgConfiguration">
-            <tr>
-                <td>
-                    <label>Root Path</label>
-                </td>
-                <td>
-                    <input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgRootPath" value="@Model.SyslogConfig.RootPath" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Port #1 - Application Log</label>
-                </td>
-                <td>
-                    <input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet1" value="@Model.SyslogConfig.PortNet1" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Port #2 - Security Log</label>
-                </td>
-                <td>
-                    <input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet2" value="@Model.SyslogConfig.PortNet2" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Port #3 - System Log</label>
-                </td>
-                <td>
-                    <input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet3" value="@Model.SyslogConfig.PortNet3" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="button" style="width: 90%; height: 28px;" class="bg-anthilla-violet" data-role="SyslogNgUpdate" value="Update" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <legend>Syslog-NG - Log </legend>
-    <input type="text" class="span5 search-field" style="position: relative; margin-bottom: -15px; height: 30px; padding-left: 25px;" placeholder="Search">
-    <p style="position: relative; top: -10px; left: 5px; width: 10px;">
-        <i class="icon-search fg-anthilla-green"></i>
-    </p>
-    <table class="table searchable" style="table-layout: fixed !important;">
-        <tbody data-role="SyslogNgConfiguration">
-            <tr><td>Content</td></tr>
-            @Each.SyslogNgContent
-            <tr data-id="@Current.Host@Current.Date" data-role="ToggleNextRow">
-                <td>@Current.Host</td>
-                <td>@Current.Date</td>
-            </tr>
-            <tr data-hidden="@Current.Host@Current.Date">
-                <td colspan="2">@Current.LogText</td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
+	<legend id="SyslogNG">Syslog-NG - Server Configuration</legend>
+	<table class="table" style="table-layout: fixed !important;">
+		<tbody data-role="SyslogNgConfiguration">
+		<tr>
+			<td>
+				<label>Root Path</label>
+			</td>
+			<td>
+				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgRootPath" value="@Model.SyslogConfig.RootPath" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Port #1 - Application Log</label>
+			</td>
+			<td>
+				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet1" value="@Model.SyslogConfig.PortNet1" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Port #2 - Security Log</label>
+			</td>
+			<td>
+				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet2" value="@Model.SyslogConfig.PortNet2" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Port #3 - System Log</label>
+			</td>
+			<td>
+				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet3" value="@Model.SyslogConfig.PortNet3" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" style="width: 90%; height: 28px;" class="bg-anthilla-violet" data-role="SyslogNgUpdate" value="Update" />
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<legend>Syslog-NG - Log </legend>
+	<input type="text" class="span5 search-field" style="position: relative; margin-bottom: -15px; height: 30px; padding-left: 25px;" placeholder="Search">
+	<p style="position: relative; top: -10px; left: 5px; width: 10px;">
+		<i class="icon-search fg-anthilla-green"></i>
+	</p>
+	<table class="table searchable" style="table-layout: fixed !important;">
+		<tbody data-role="SyslogNgConfiguration">
+		<tr><td>Content</td></tr>
+		@Each.SyslogNgContent
+		<tr data-id="@Current.Host@Current.Date" data-role="ToggleNextRow">
+			<td>@Current.Host</td>
+			<td>@Current.Date</td>
+		</tr>
+		<tr data-hidden="@Current.Host@Current.Date">
+			<td colspan="2">@Current.LogText</td>
+		</tr>
+		@EndEach
+		</tbody>
+	</table>
 </div>
+<script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
+<script src="/Scripts/metro.min.js" type="text/javascript"></script>
+<script src="/Scripts/antd.js" type="text/javascript"></script>
+<script src="/Scripts/antd.log.js" type="text/javascript"></script>
