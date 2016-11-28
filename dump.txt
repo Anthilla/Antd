@@ -1,0 +1,4 @@
+"FirstCommand": "ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf",
+"FirstCommand": "cp /mnt/cdrom/Config/network/resolved.conf /etc/systemd/resolved.conf",
+"FirstCommand": "systemctl restart systemd-resolved",
+"FirstCommand": "systemctl daemon-reload",

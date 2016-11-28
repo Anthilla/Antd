@@ -56,6 +56,12 @@ namespace antd.commands {
                 Arguments = new[] { "$custom" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["link-s"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "ln -s $link $file" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["modprobe"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
@@ -911,6 +917,12 @@ namespace antd.commands {
             #endregion
 
             #region [    Command - Systemctl    ]
+            dict["systemctl-daemonreload"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "systemctl daemon-reload" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["systemctl-start"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
