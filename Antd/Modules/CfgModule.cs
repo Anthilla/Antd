@@ -62,7 +62,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/cfg/modules"] = x => {
+            Post["/boot/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
@@ -71,7 +71,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/cfg/rmmodules"] = x => {
+            Post["/boot/rmmodules"] = x => {
                 var modulesText = (string)Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
@@ -80,7 +80,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/cfg/services"] = x => {
+            Post["/boot/services"] = x => {
                 var servicesText = (string)Request.Form.Config;
                 var services = servicesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
@@ -89,7 +89,7 @@ namespace Antd.Modules {
                 return Response.AsRedirect("/cfg");
             };
 
-            Post["/cfg/osparam"] = x => {
+            Post["/boot/osparam"] = x => {
                 var osparamText = (string)Request.Form.Config;
                 var services = osparamText.SplitToList(Environment.NewLine);
                 var dict = new Dictionary<string, string>();
