@@ -29,17 +29,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Dynamic;
 using System.Linq;
 using antd.commands;
-using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
-using Antd.Database;
 using Antd.Discovery;
 using Antd.Ssh;
 using Nancy;
-using HttpStatusCode = Nancy.HttpStatusCode;
+using Nancy.Security;
 
 namespace Antd.Modules {
     public class AssetModule : CoreModule {
@@ -59,6 +57,73 @@ namespace Antd.Modules {
         }
 
         public AssetModule() {
+            this.RequiresAuthentication();
+
+            #region [    Home    ]
+            Get["/asset"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-asset", vmod];
+            };
+            #endregion
+
+            #region [    Partials    ]
+            Get["/part/asset/discovery"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var avahiBrowse = new AvahiBrowse();
+                    avahiBrowse.DiscoverService("antd");
+                    var localServices = avahiBrowse.Locals;
+                    var launcher = new CommandLauncher();
+                    var list = new List<AvahiServiceViewModel>();
+                    var kh = new SshKnownHosts();
+                    foreach(var ls in localServices) {
+                        var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                        var mo = new AssetModule.AvahiServiceViewModel {
+                            HostName = arr[0].Trim(),
+                            Ip = arr[1].Trim(),
+                            Port = arr[2].Trim(),
+                            MacAddress = ""
+                        };
+                        launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
+                        var result = launcher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
+                        if(result.Any()) {
+                            var mac = result.LastOrDefault().Print(3, " ");
+                            mo.MacAddress = mac;
+                        }
+                        mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
+                        list.Add(mo);
+                    }
+                    //var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                    //var ssoree = StringSplitOptions.RemoveEmptyEntries;
+                    //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
+                    viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
+                    return View["antd/part/page-asset-discovery", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/asset/setting"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var settings = new NetscanSetting();
+                    viewModel.SettingsSubnet = settings.Settings.Subnet;
+                    viewModel.SettingsSubnetLabel = settings.Settings.SubnetLabel;
+                    viewModel.Settings = settings.Settings.Values;
+                    return View["antd/part/page-asset-setting", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Actions    ]
             Post["/netscan/setsubnet"] = x => {
                 string subnet = Request.Form.Subnet;
                 string label = Request.Form.Label;
@@ -114,67 +179,15 @@ namespace Antd.Modules {
                 launcher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
                 return Response.AsJson(true);
             };
+            #endregion
 
-            Get["/asset/handshake"] = x => {
-                var hostIp = Request.Query.Host;
-                var hostPort = Request.Query.Port;
-                if(string.IsNullOrEmpty(hostPort) || string.IsNullOrEmpty(hostIp)) {
-                    return HttpStatusCode.NotAcceptable;
-                }
-                const string pathToPrivateKey = "/root/.ssh/id_rsa";
-                const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
-                if(!File.Exists(pathToPublicKey)) {
-                    var bash = new Bash();
-                    var k = bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
-                    ConsoleLogger.Log(k);
-                }
-                var key = File.ReadAllText(pathToPublicKey);
-                if(string.IsNullOrEmpty(key)) {
-                    return HttpStatusCode.InternalServerError;
-                }
-                var dict = new Dictionary<string, string> { { "ApplePie", key } };
-                var r = new ApiConsumer().Post($"http://{hostIp}:{hostPort}/asset/handshake", dict);
-                var kh = new SshKnownHosts();
-                kh.Add(hostIp);
-                return r;
-            };
-
-            Post["/asset/handshake"] = x => {
-                string apple = Request.Form.ApplePie;
-                if(string.IsNullOrEmpty(apple)) {
-                    return HttpStatusCode.InternalServerError;
-                }
-                var info = apple.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                if(info.Length < 2) {
-                    return HttpStatusCode.InternalServerError;
-                }
-                var key = info[0];
-                var remoteUser = info[1];
-                const string user = "root";
-                var authorizedKeysRepository = new AuthorizedKeysRepository();
-                var r = authorizedKeysRepository.Create2(remoteUser, user, key);
-                try {
-                    Directory.CreateDirectory("/root/.ssh");
-                    const string authorizedKeysPath = "/root/.ssh/authorized_keys";
-                    if(File.Exists(authorizedKeysPath)) {
-                        var f = File.ReadAllText(authorizedKeysPath);
-                        if(!f.Contains(apple)) {
-                            File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
-                        }
-                    }
-                    else {
-                        File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
-                    }
-                    var bash = new Bash();
-                    bash.Execute($"chmod 600 {authorizedKeysPath}", false);
-                    bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
-                    return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Log(ex);
-                    return HttpStatusCode.InternalServerError;
+            #region [    Hooks    ]
+            After += ctx => {
+                if(ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
             };
+            #endregion
         }
     }
 }

@@ -27,7 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using System.Dynamic;
 using System.Linq;
+using antdlib.common;
+using antdlib.views;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Log;
@@ -36,17 +40,74 @@ using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
-
     public class LogModule : CoreModule {
+
         public LogModule() {
             this.RequiresAuthentication();
 
-            After += ctx => {
-                if(ctx.Response.ContentType == "text/html") {
-                    ctx.Response.ContentType = "text/html; charset=utf-8";
+            #region [    Home    ]
+            Get["/log"] = x => {
+                dynamic viewModel = new ExpandoObject();
+                return View["antd/page-log", viewModel];
+            };
+            #endregion
+
+            #region [    Partials    ]
+            Get["/part/log"] = x => {
+                try {
+                    return View["antd/part/page-log"];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
                 }
             };
 
+            Get["/part/log/system"] = x => {
+                try {
+                    return View["antd/part/page-log-system"];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/report"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var journalctlReport = new Journalctl.Report();
+                    viewModel.LogReports = journalctlReport.Get();
+                    return View["antd/part/page-log-report", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/syslog"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var syslogRepository = new SyslogRepository();
+                    var syslogConfig = syslogRepository.Get();
+                    viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
+                    var syslogNg = new SyslogNg();
+                    viewModel.SyslogNgContent = syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
+                    return View["antd/part/page-log-syslog", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Actions    ]
             Post["/log/syslog/set"] = x => {
                 var root = Request.Form.Root;
                 var p1 = Request.Form.Path1;
@@ -112,6 +173,15 @@ namespace Antd.Modules {
                 journalctlReport.GenerateReport();
                 return HttpStatusCode.OK;
             };
+            #endregion
+
+            #region [    Hooks    ]
+            After += ctx => {
+                if(ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                }
+            };
+            #endregion
         }
     }
 }

@@ -29,17 +29,91 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using antdlib.common;
+using Antd.Configuration;
 using Antd.Host;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class CfgModule : CoreModule {
+    public class BootModule : CoreModule {
 
-        public CfgModule() {
+        public BootModule() {
             this.RequiresAuthentication();
 
+            #region [    Home    ]
+            Get["/boot"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-boot", vmod];
+            };
+            #endregion
+
+            #region [    Partials    ]
+            Get["/part/boot/cmd"] = x => {
+                try {
+                    var setupConfiguration = new SetupConfiguration();
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.HasConfiguration = true;
+                    viewModel.Controls = setupConfiguration.Get();
+                    if(setupConfiguration.Get().Count < 1) {
+                        viewModel.HasConfiguration = false;
+                    }
+                    return View["antd/part/page-boot-cmd", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/mod"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
+                    viewModel.RmModules = string.Join("\r\n", hostcfg.GetHostRemoveModules());
+                    return View["antd/part/page-boot-mod", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/svc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.Services = string.Join("\r\n", hostcfg.GetHostServices());
+                    return View["antd/part/page-boot-svc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/boot/osp"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var hostcfg = new HostConfiguration();
+                    viewModel.OsParam = string.Join("\r\n", hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
+                    return View["antd/part/page-boot-osp", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+            #endregion
+
+            #region [    Actions    ]
             Post["/boot/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine);
@@ -83,6 +157,15 @@ namespace Antd.Modules {
                 hostcfg.DoHostOsParameters();
                 return Response.AsRedirect("/cfg");
             };
+            #endregion
+
+            #region [    Hooks    ]
+            After += ctx => {
+                if(ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                }
+            };
+            #endregion
         }
     }
 }

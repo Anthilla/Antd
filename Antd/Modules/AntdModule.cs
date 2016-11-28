@@ -28,36 +28,29 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
-using antdlib.views;
 using Antd.Bind;
-using Antd.Configuration;
 using Antd.Database;
 using Antd.Dhcpd;
-using Antd.Discovery;
 using Antd.Firewall;
 using Antd.Gluster;
-using Antd.Host;
 using Antd.Info;
-using Antd.Log;
 using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
 using Antd.Samba;
-using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Users;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class PartialHomeModule : CoreModule {
+    public class AntdModule : CoreModule {
 
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
@@ -66,10 +59,17 @@ namespace Antd.Modules {
             return vers;
         }
 
-        public PartialHomeModule() {
+        public AntdModule() {
             this.RequiresAuthentication();
 
-            #region [    Page - Config    ]
+            #region [    Home    ]
+            Get["/"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-antd", vmod];
+            };
+            #endregion
+
+            #region [    Partials    ]
             Get["/part/info"] = x => {
                 try {
                     var bash = new Bash();
@@ -552,251 +552,10 @@ namespace Antd.Modules {
             };
             #endregion
 
-            #region [    Page - C A    ]
-            Get["/part/ca/dc"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-dc", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/dcusers"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-dcusers", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/setup"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-setup", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/cert"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-cert", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/certdc"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-certdc", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/certsc"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-certsc", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-            #endregion
-
-            #region [    Page - Boot    ]
-            Get["/part/boot/cmd"] = x => {
-                try {
-                    var setupConfiguration = new SetupConfiguration();
-                    dynamic viewModel = new ExpandoObject();
-                    viewModel.HasConfiguration = true;
-                    viewModel.Controls = setupConfiguration.Get();
-                    if(setupConfiguration.Get().Count < 1) {
-                        viewModel.HasConfiguration = false;
-                    }
-                    return View["antd/part/page-boot-cmd", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/boot/mod"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var hostcfg = new HostConfiguration();
-                    viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
-                    viewModel.RmModules = string.Join("\r\n", hostcfg.GetHostRemoveModules());
-                    return View["antd/part/page-boot-mod", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/boot/svc"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var hostcfg = new HostConfiguration();
-                    viewModel.Services = string.Join("\r\n", hostcfg.GetHostServices());
-                    return View["antd/part/page-boot-svc", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/boot/osp"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var hostcfg = new HostConfiguration();
-                    viewModel.OsParam = string.Join("\r\n", hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
-                    return View["antd/part/page-boot-osp", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-            #endregion
-
-            #region [    Page - Asset    ]
-            Get["/part/asset/discovery"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var avahiBrowse = new AvahiBrowse();
-                    avahiBrowse.DiscoverService("antd");
-                    var localServices = avahiBrowse.Locals;
-                    var launcher = new CommandLauncher();
-                    var list = new List<AssetModule.AvahiServiceViewModel>();
-                    var kh = new SshKnownHosts();
-                    foreach(var ls in localServices) {
-                        var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                        var mo = new AssetModule.AvahiServiceViewModel {
-                            HostName = arr[0].Trim(),
-                            Ip = arr[1].Trim(),
-                            Port = arr[2].Trim(),
-                            MacAddress = ""
-                        };
-                        launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
-                        var result = launcher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
-                        if(result.Any()) {
-                            var mac = result.LastOrDefault().Print(3, " ");
-                            mo.MacAddress = mac;
-                        }
-                        mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
-                        list.Add(mo);
-                    }
-                    //var hostnamectl = launcher.Launch("hostnamectl").ToList();
-                    //var ssoree = StringSplitOptions.RemoveEmptyEntries;
-                    //var myHostName = hostnamectl?.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
-                    viewModel.AntdAvahiServices = list/*.Where(_ => !_.HostName.ToLower().Contains(myHostName.ToLower())).OrderBy(_ => _.HostName)*/;
-                    return View["antd/part/page-asset-discovery", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/asset/setting"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var settings = new NetscanSetting();
-                    viewModel.SettingsSubnet = settings.Settings.Subnet;
-                    viewModel.SettingsSubnetLabel = settings.Settings.SubnetLabel;
-                    viewModel.Settings = settings.Settings.Values;
-                    return View["antd/part/page-asset-setting", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-            #endregion
-
-            #region [    Page - Log    ]
-            Get["/part/log"] = x => {
-                try {
-                    return View["antd/part/page-log"];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/log/system"] = x => {
-                try {
-                    return View["antd/part/page-log-system"];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/log/report"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var journalctlReport = new Journalctl.Report();
-                    viewModel.LogReports = journalctlReport.Get();
-                    return View["antd/part/page-log-report", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/log/syslog"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    var syslogRepository = new SyslogRepository();
-                    var syslogConfig = syslogRepository.Get();
-                    viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
-                    var syslogNg = new SyslogNg();
-                    viewModel.SyslogNgContent = syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
-                    return View["antd/part/page-log-syslog", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
+            #region [    Hooks    ]
+            After += ctx => {
+                if(ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
             };
             #endregion

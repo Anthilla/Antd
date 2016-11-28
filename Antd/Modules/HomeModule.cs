@@ -54,11 +54,6 @@ namespace Antd.Modules {
                 }
             };
 
-            Get["/"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["antd/page-antd", vmod];
-            };
-
             Get["/apps"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Detected = _appsManagement.Detect();
@@ -66,30 +61,10 @@ namespace Antd.Modules {
                 return View["antd/page-apps", vmod];
             };
 
-            Get["/ca"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                return View["antd/page-ca", viewModel];
-            };
-
             Get["/vnc"] = x => {
                 dynamic vmod = new ExpandoObject();
                 vmod.Connections = new Dictionary<string, string>();
                 return View["antd/page-vnc", vmod];
-            };
-
-            Get["/boot"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["antd/page-boot", vmod];
-            };
-
-            Get["/asset"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["antd/page-asset", vmod];
-            };
-
-            Get["/log"] = x => {
-                dynamic viewModel = new ExpandoObject();
-                return View["antd/page-log", viewModel];
             };
 
             Post["/gluster/set"] = x => {

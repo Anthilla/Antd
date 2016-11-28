@@ -8,7 +8,6 @@ using antdlib.common.Tool;
 namespace Antd.Network {
     public class NetworkConfiguration {
 
-
         private readonly IEnumerable<string> _networkInterfaces;
         private readonly IEnumerable<string> _physicalNetworkInterfaces;
         private readonly CommandLauncher _launcher = new CommandLauncher();
