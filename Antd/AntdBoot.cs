@@ -24,6 +24,7 @@ using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
+using Antd.Time;
 using Antd.Timer;
 using Antd.Users;
 using RaptorDB;
@@ -185,6 +186,14 @@ namespace Antd {
             var networkConfiguration = new NetworkConfiguration();
             networkConfiguration.Start();
             ConsoleLogger.Log("network configured");
+        }
+
+        public void SyncDateAndTime() {
+            if(!Parameter.IsUnix)
+                return;
+            var timeConfiguration = new TimeConfiguration();
+            timeConfiguration.SyncClock();
+            ConsoleLogger.Log("time and date configured");
         }
 
         private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
