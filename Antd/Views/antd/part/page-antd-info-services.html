@@ -11,143 +11,115 @@
 
         <div class="frames">
             <div id="001" class="frame">
-                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Unit</th>
-                            <th>Status</th>
-                            <th colspan="2">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @Each.Services
-                        <tr>
-                            <td colspan="2">
-                                <p>@Current.Name</p>
-                            </td>
-                            <td>
-                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
-                            </td>
-                            <td>
-                                <p>@Current.Description</p>
-                            </td>
-                            <td data-role="CmdContainer">
-                                <input type="hidden" data="$service" value="@Current.Name" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
-                            </td>
-                        </tr>
-                        @EndEach
-                    </tbody>
-                </table>
+                @Each.Services
+                <div class="container">
+                    <div data-role="CmdContainer" class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">
+                        <i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>
+                        <input type="hidden" data="$service" value="@Current.Name" />
+                        <p style="display: inline-block !important; width: 400px; overflow: hidden !important;">@Current.Name</p>
+                        <p style="display: inline-block !important; width: 200px; overflow: hidden !important;">@Current.Load - @Current.Active - @Current.Sub</p>
+                        <p style="display: inline-block !important; width: 300px; overflow: hidden !important;">@Current.Description</p>
+
+                        <i data-role="ToggleUnitContent" class="icon-arrow-right-5 fg-white" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid white; padding: 5px; margin-top: 5px;"></i>
+                    </div>
+                    <div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">
+                        <div data-role="CmdContainer">
+                            <span data-role="ServiceLog" class="border-2-anthilla-gray" style="width: 100%; min-height: 25px;"></span>
+                            <input type="hidden" data="$service" value="@Current.Name" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                        </div>
+                    </div>
+                </div>
+                @EndEach
             </div>
 
             <div id="002" class="frame" style="display: none;">
                 <table class="table" style="table-layout: fixed; font-size: 10px !important;">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Unit</th>
-                            <th>Status</th>
-                            <th colspan="2">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @Each.Mounts
-                        <tr>
-                            <td colspan="2">
-                                <p>@Current.Name</p>
-                            </td>
-                            <td>
-                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
-                            </td>
-                            <td>
-                                <p>@Current.Description</p>
-                            </td>
-                            <td data-role="CmdContainer">
+                    @Each.Mounts
+                    <div class="container">
+                        <div data-role="CmdContainer" class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">
+                            <i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>
+                            <input type="hidden" data="$service" value="@Current.Name" />
+                            <p style="display: inline-block !important; width: 400px; overflow: hidden !important;">@Current.Name</p>
+                            <p style="display: inline-block !important; width: 200px; overflow: hidden !important;">@Current.Load - @Current.Active - @Current.Sub</p>
+                            <p style="display: inline-block !important; width: 300px; overflow: hidden !important;">@Current.Description</p>
+
+                            <i data-role="ToggleUnitContent" class="icon-arrow-right-5 fg-white" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid white; padding: 5px; margin-top: 5px;"></i>
+                        </div>
+                        <div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">
+                            <div data-role="CmdContainer">
+                                <span data-role="ServiceLog" class="border-2-anthilla-gray" style="width: 100%; min-height: 25px;"></span>
                                 <input type="hidden" data="$service" value="@Current.Name" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
-                            </td>
-                        </tr>
-                        @EndEach
-                    </tbody>
+                            </div>
+                        </div>
+                    </div>
+                    @EndEach
                 </table>
             </div>
 
             <div id="003" class="frame" style="display: none;">
-                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Unit</th>
-                            <th>Status</th>
-                            <th colspan="2">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @Each.Targets
-                        <tr>
-                            <td colspan="2">
-                                <p>@Current.Name</p>
-                            </td>
-                            <td>
-                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
-                            </td>
-                            <td>
-                                <p>@Current.Description</p>
-                            </td>
-                            <td data-role="CmdContainer">
-                                <input type="hidden" data="$service" value="@Current.Name" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
-                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
-                            </td>
-                        </tr>
-                        @EndEach
-                    </tbody>
-                </table>
+                @Each.Targets
+                <div class="container">
+                    <div data-role="CmdContainer" class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">
+                        <i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>
+                        <input type="hidden" data="$service" value="@Current.Name" />
+                        <p style="display: inline-block !important; width: 400px; overflow: hidden !important;">@Current.Name</p>
+                        <p style="display: inline-block !important; width: 200px; overflow: hidden !important;">@Current.Load - @Current.Active - @Current.Sub</p>
+                        <p style="display: inline-block !important; width: 300px; overflow: hidden !important;">@Current.Description</p>
+
+                        <i data-role="ToggleUnitContent" class="icon-arrow-right-5 fg-white" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid white; padding: 5px; margin-top: 5px;"></i>
+                        <i data-hint="|Show Logs" data-hint-position="bottom" data-role="ShowLogs" data-name="@Current.Name" class="icon-search fg-anthilla-blu" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid #60A1E4; padding: 5px; margin-top: 5px;"></i>
+                    </div>
+                    <div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">
+                        <div data-role="CmdContainer">
+                            <span data-role="ServiceLog" class="border-2-anthilla-gray" style="width: 100%; min-height: 25px;"></span>
+                            <input type="hidden" data="$service" value="@Current.Name" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                            <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                        </div>
+                        <span data-role="ShowServiceLog"></span>
+                    </div>
+                </div>
+                @EndEach
             </div>
 
             <div id="004" class="frame" style="display: none;">
-                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Unit</th>
-                            <th>Status</th>
-                            <th colspan="2">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @Each.Timers
-                        <tr>
-                            <td colspan="2">
-                                <p>@Current.Name</p>
-                            </td>
-                            <td>
-                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
-                            </td>
-                            <td>
-                                <p>@Current.Description</p>
-                            </td>
-                            <td data-role="CmdContainer">
+                @Each.Timers
+                    <div class="container">
+                        <div data-role="CmdContainer" class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">
+                            <i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>
+                            <input type="hidden" data="$service" value="@Current.Name" />
+                            <p style="display: inline-block !important; width: 400px; overflow: hidden !important;">@Current.Name</p>
+                            <p style="display: inline-block !important; width: 200px; overflow: hidden !important;">@Current.Load - @Current.Active - @Current.Sub</p>
+                            <p style="display: inline-block !important; width: 300px; overflow: hidden !important;">@Current.Description</p>
+
+                            <i data-role="ToggleUnitContent" class="icon-arrow-right-5 fg-white" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid white; padding: 5px; margin-top: 5px;"></i>
+                        </div>
+                        <div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">
+                            <div data-role="CmdContainer">
+                                <span data-role="ServiceLog" class="border-2-anthilla-gray" style="width: 100%; min-height: 25px;"></span>
                                 <input type="hidden" data="$service" value="@Current.Name" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
                                 <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
-                            </td>
-                        </tr>
-                        @EndEach
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                @EndEach
             </div>
         </div>
     </div>

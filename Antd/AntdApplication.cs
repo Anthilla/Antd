@@ -68,6 +68,7 @@ namespace Antd {
             Boot.ImportCommands();
             Boot.ReloadUsers();
             Boot.SetLanConfiguration();
+            Boot.SetNetworkConfiguration();
             Boot.CommandExecuteLocal();
             Boot.Ssh();
             Boot.LoadServices();

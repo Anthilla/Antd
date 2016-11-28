@@ -80,6 +80,12 @@ namespace antd.commands {
                 Arguments = new[] { "mono /framework/antdsh/antdsh.exe update check" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["journactl-service"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "journalctl --no-pager -u $service" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["rmmod"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),

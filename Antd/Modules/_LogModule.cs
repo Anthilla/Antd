@@ -28,8 +28,10 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using antd.commands;
 using antdlib.common;
 using antdlib.views;
 using Antd.Configuration;
@@ -172,6 +174,12 @@ namespace Antd.Modules {
                 var journalctlReport = new Journalctl.Report();
                 journalctlReport.GenerateReport();
                 return HttpStatusCode.OK;
+            };
+
+            Get["/log/journalctl/service/{service}"] = x => {
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("journactl-service", new Dictionary<string, string> { { "$service", (string)x.service } });
+                return JsonConvert.SerializeObject(result.JoinToString("<br />"));
             };
             #endregion
 

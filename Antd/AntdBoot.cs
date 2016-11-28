@@ -179,6 +179,13 @@ namespace Antd {
             }
         }
 
+        public void SetNetworkConfiguration() {
+            if(!Parameter.IsUnix)
+                return;
+         
+            ConsoleLogger.Log($"network configured");
+        }
+
         private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
 
         public void CommandExecuteLocal() {
