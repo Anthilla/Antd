@@ -198,12 +198,36 @@ namespace Antd.Host {
             return host;
         }
 
+        public void SetHostInfoName(string name) {
+            Host = LoadHostModel();
+            Host.HostName.StoredValues["$host_name"] = name;
+            Export(Host);
+        }
+
+        public void SetHostInfoChassis(string chassis) {
+            Host = LoadHostModel();
+            Host.HostName.StoredValues["$host_chassis"] = chassis;
+            Export(Host);
+        }
+
+        public void SetHostInfoDeployment(string deployment) {
+            Host = LoadHostModel();
+            Host.HostName.StoredValues["$host_deployment"] = deployment;
+            Export(Host);
+        }
+
+        public void SetHostInfoLocation(string location) {
+            Host = LoadHostModel();
+            Host.HostName.StoredValues["$host_location"] = location;
+            Export(Host);
+        }
+
         public void SetHostInfo(string name, string chassis, string deployment, string location) {
             Host = LoadHostModel();
             Host.HostName.StoredValues["$host_name"] = name;
-            Host.HostName.StoredValues["$host_chassis"] = name;
-            Host.HostName.StoredValues["$host_deployment"] = name;
-            Host.HostName.StoredValues["$host_location"] = name;
+            Host.HostName.StoredValues["$host_chassis"] = chassis;
+            Host.HostName.StoredValues["$host_deployment"] = deployment;
+            Host.HostName.StoredValues["$host_location"] = location;
             Export(Host);
         }
 

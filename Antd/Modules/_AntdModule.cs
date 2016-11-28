@@ -205,7 +205,7 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     var hostnamectl = launcher.Launch("hostnamectl").ToList();
                     var ssoree = StringSplitOptions.RemoveEmptyEntries;
-                    viewModel.StaticHostname = hostnamectl.First(_ => _.Contains("Transient hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
+                    viewModel.StaticHostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.IconName = hostnamectl.First(_ => _.Contains("Icon name:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.Chassis = hostnamectl.First(_ => _.Contains("Chassis:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.Deployment = hostnamectl.First(_ => _.Contains("Deployment:")).Split(new[] { ":" }, 2, ssoree)[1];

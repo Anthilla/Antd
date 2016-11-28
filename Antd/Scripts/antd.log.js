@@ -80,23 +80,3 @@ $("#ShowLogsLastHours").on("click", function () {
     });
     _requests.push(aj);
 });
-
-$('[data-role="ShowAntdLogTable"]').on("click", function () {
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/log/journalctl/antd",
-        type: "GET",
-        contentType: "application/json;charset=utf-8",
-        success: function (logs) {
-            var container = $("#AntdLogTable");
-            container.html("");
-            var html = "";
-            $.each(logs, function (i, log) {
-                html += '<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>";
-                //container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>");
-            });
-            container.html(html);
-        }
-    });
-    _requests.push(aj);
-});

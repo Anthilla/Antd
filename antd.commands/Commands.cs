@@ -483,7 +483,7 @@ namespace antd.commands {
             dict["set-hostname"] = new Command {
                 InputType = typeof(string),
                 OutputType = typeof(string),
-                Arguments = new[] { "hostnamectl set-hostname $host_name" },
+                Arguments = new[] { "hostnamectl set-hostname \"$host_name\" --pretty --static --transient" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["set-location"] = new Command {

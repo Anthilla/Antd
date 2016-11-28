@@ -57,8 +57,8 @@ namespace Antd.Modules {
                 try {
                     const string divider = "<div class=\"element-divider\"></div>";
                     var launcher = new CommandLauncher();
-                    var hostnamectl = launcher.Launch("hostnamectl").ToList();
-                    var hostname = hostnamectl.FirstOrDefault(_ => _.Contains("Transient hostname:"))?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+                    var hostnamectl = launcher.Launch("hostname").ToList();
+                    var hostname = hostnamectl.FirstOrDefault()?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
                     var hostnameHtml = GetResourcesHtmlDiv(hostname);
                     var machineInfo = new MachineInfo();
                     var uptime = machineInfo.GetUptime();

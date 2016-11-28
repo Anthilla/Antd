@@ -35,13 +35,57 @@ using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
-    public class HostsModule : CoreModule {
-        public HostsModule() {
+    public class HostModule : CoreModule {
+        public HostModule() {
             this.RequiresAuthentication();
 
             Get["/host"] = x => {
                 var hostconfiguration = new HostConfiguration();
                 return JsonConvert.SerializeObject(hostconfiguration.Host);
+            };
+
+            Post["/host/info/name"] = x => {
+                string name = Request.Form.Name;
+                if(string.IsNullOrEmpty(name)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SetHostInfoName(name);
+                hostconfiguration.ApplyHostInfo();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/info/chassis"] = x => {
+                string chassis = Request.Form.Chassis;
+                if(string.IsNullOrEmpty(chassis)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SetHostInfoChassis(chassis);
+                hostconfiguration.ApplyHostInfo();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/info/deployment"] = x => {
+                string deployment = Request.Form.Deployment;
+                if(string.IsNullOrEmpty(deployment)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SetHostInfoDeployment(deployment);
+                hostconfiguration.ApplyHostInfo();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/info/location"] = x => {
+                string location = Request.Form.Location;
+                if(string.IsNullOrEmpty(location)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SetHostInfoLocation(location);
+                hostconfiguration.ApplyHostInfo();
+                return HttpStatusCode.OK;
             };
 
             Post["/host/info"] = x => {

@@ -1,11 +1,16 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend>Antd Log</legend>
-    <input data-role="ShowAntdLogTable" type="button" value="show" class="fg-anthilla-gray upcase bg-anthilla-green" style="display: inline-block; float: left; height: 30px; width: 300px; margin-right: 15px;" />
     <div style="display: inline-block; float: left; margin-top: -4px;">
         <input class="span5 search-field" data-searchable="log-antd" placeholder="Search" style="position: relative; margin-bottom: -15px; height: 30px; padding-left: 25px;" type="text">
         <p style="position: relative; top: -10px; left: 5px; width: 10px;"><i class="icon-search fg-anthilla-green"></i></p>
     </div>
     <table class="table searchable" data-searchable="log-antd">
-        <tbody id="AntdLogTable"></tbody>
+        <tbody>
+            @Each.Logs
+            <tr>
+                <td style="font-weight: normal; font-size: 90%;">@Current</td>
+            </tr>
+            @EndEach
+        </tbody>
     </table>
 </div>

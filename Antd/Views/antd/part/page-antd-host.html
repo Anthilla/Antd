@@ -6,6 +6,7 @@
                 <td>
                     <label>Hostname</label>
                     <input type="text" id="HostName" style="width: 60%;" />
+                    <input type="button" id="SetHostName" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
                 </td>
                 <td>@Model.StaticHostname
                 </td>
@@ -33,6 +34,7 @@
                         <option value="vm">Vm</option>
                         <option value="container">Container</option>
                     </select>
+                    <input type="button" id="SetHostChassis" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
                 </td>
                 <td>@Model.Chassis
                 </td>
@@ -42,6 +44,7 @@
                 <td>
                     <label>Deployment</label>
                     <input type="text" id="HostDeployment" style="width: 60%;" />
+                    <input type="button" id="SetHostDeployment" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
                 </td>
                 <td>@Model.Deployment
                 </td>
@@ -51,6 +54,7 @@
                 <td>
                     <label>Location</label>
                     <input type="text" id="HostLocation" style="width: 60%;" />
+                    <input type="button" id="SetHostLocation" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
                 </td>
                 <td>@Model.Location
                 </td>
@@ -106,7 +110,7 @@
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td colspan="3">
-                    <input id="SaveHostInfo" type="button" value="Save Configuration" class="bg-anthilla-green fg-anthilla-gray" />
+                    <input id="SaveHostInfo" type="button" value="Save Configuration" class="bg-anthilla-green fg-anthilla-gray" style="width: 100%;" />
                 </td>
             </tr>
         </tbody>

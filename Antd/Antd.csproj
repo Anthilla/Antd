@@ -133,7 +133,7 @@
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Log\SyslogNg.cs" />
-    <Compile Include="Modules\HostsModule.cs" />
+    <Compile Include="Modules\HostModule.cs" />
     <Compile Include="Modules\_CaModule.cs" />
     <Compile Include="Modules\_LogModule.cs" />
     <Compile Include="Modules\HandshakeModule.cs" />

@@ -1,3 +1,67 @@
+$("#SetHostLocation").on("click", function () {
+    var n = $("#HostLocation").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/info/location",
+        type: "POST",
+        data: {
+            Location: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetHostDeployment").on("click", function () {
+    var n = $("#HostDeployment").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/info/deployment",
+        type: "POST",
+        data: {
+            Deployment: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetHostChassis").on("click", function () {
+    var n = $("#HostChassis").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/info/chassis",
+        type: "POST",
+        data: {
+            Chassis: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetHostName").on("click", function () {
+    var n = $("#HostName").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/info/name",
+        type: "POST",
+        data: {
+            Name: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
 $("#SaveHostInfo").on("click", function () {
     var n = $("#HostName").val();
     var c = $("#HostChassis").find("option:selected").val();

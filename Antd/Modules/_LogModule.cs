@@ -57,7 +57,10 @@ namespace Antd.Modules {
             #region [    Partials    ]
             Get["/part/log"] = x => {
                 try {
-                    return View["antd/part/page-log"];
+                    dynamic viewModel = new ExpandoObject();
+                    var journalctl = new Journalctl();
+                    viewModel.Logs = journalctl.GetAntdLog().ToList();
+                    return View["antd/part/page-log", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
