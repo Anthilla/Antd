@@ -29,38 +29,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using antdlib.common;
-using Antd.Configuration;
 using Antd.Host;
 using Nancy;
-using Nancy.ModelBinding;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class CfgModule : CoreModule {
 
-        private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
-
         public CfgModule() {
             this.RequiresAuthentication();
-
-            Post["/cfg/export"] = x => {
-                var control = this.Bind<List<Control>>();
-                var checkedControl = new List<Control>();
-                foreach(var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
-                    var s = new Control {
-                        Index = cr.Index,
-                        FirstCommand = cr.FirstCommand,
-                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "" : cr.ControlCommand,
-                        Check = string.IsNullOrEmpty(cr.Check) ? "" : cr.Check,
-                    };
-
-                    checkedControl.Add(s);
-                }
-                _setupConfiguration.Export(checkedControl);
-                return Response.AsRedirect("/cfg");
-            };
 
             Post["/boot/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;

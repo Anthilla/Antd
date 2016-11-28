@@ -113,6 +113,8 @@ namespace Antd.Host {
 
         #region [    repo - OS Parameters    ]
         public Dictionary<string, string> GetHostOsParameters() {
+            //todo non è il modo corretto per recuperare quello che mi serve:
+            //es: return: Key = nome del file: Value = valore da scriverci dentro
             Host = LoadHostModel();
             var dicts = Host.OsParameters.Select(_ => _.StoredValues);
             var dict = new Dictionary<string, string>();

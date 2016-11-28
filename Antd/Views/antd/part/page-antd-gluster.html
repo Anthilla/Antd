@@ -33,7 +33,6 @@
                 </div>
                 @EndEach
                 <div data-role="GlusterConfigNewNodes">
-
                 </div>
             </div>
         </div>
@@ -44,14 +43,13 @@
             <div class="span12">
                 <input type="button" data-role="AddGlusterConfigNewVolume" value="Add new Volume" class="bg-anthilla-blu" style="width: 90%;" />
                 @Each.GlusterVolumes
-                <div class="input-control text border-anthilla-gray" data-role="input-control"> 
+                <div class="input-control text border-anthilla-gray" data-role="input-control">
                     <input name="GlusterVolumeName" type="text" value="@Current.Name" style="width: 90%;">
                     <input name="GlusterVolumeBrick" type="text" value="@Current.Brick" style="width: 90%;">
                     <input name="GlusterVolumeMountPoint" type="text" value="@Current.MountPoint" style="width: 90%;">
                 </div>
                 @EndEach
                 <div data-role="GlusterConfigNewVolumes">
-
                 </div>
             </div>
         </div>
@@ -65,4 +63,4 @@
 <script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
 <script src="/Scripts/metro.min.js" type="text/javascript"></script>
 <script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
-x
+<script src="/Scripts/antd.sync.js" type="text/javascript"></script>
