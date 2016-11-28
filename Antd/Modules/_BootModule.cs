@@ -35,6 +35,7 @@ using antdlib.common;
 using Antd.Configuration;
 using Antd.Host;
 using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -114,6 +115,25 @@ namespace Antd.Modules {
             #endregion
 
             #region [    Actions    ]
+
+            Post["/boot/export"] = x => {
+                var control = this.Bind<List<Control>>();
+                var checkedControl = new List<Control>();
+                foreach(var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
+                    var s = new Control {
+                        Index = cr.Index,
+                        FirstCommand = cr.FirstCommand,
+                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "" : cr.ControlCommand,
+                        Check = string.IsNullOrEmpty(cr.Check) ? "" : cr.Check,
+                    };
+
+                    checkedControl.Add(s);
+                }
+                var setupConfiguration = new SetupConfiguration();
+                setupConfiguration.Export(checkedControl);
+                return Response.AsRedirect("/cfg");
+            };
+
             Post["/boot/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine);
