@@ -113,20 +113,31 @@ namespace Antd.Host {
 
         #region [    repo - OS Parameters    ]
         public Dictionary<string, string> GetHostOsParameters() {
-            //todo non è il modo corretto per recuperare quello che mi serve:
-            //es: return: Key = nome del file: Value = valore da scriverci dentro
             Host = LoadHostModel();
-            var dicts = Host.OsParameters.Select(_ => _.StoredValues);
+            var ks = Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$file").Select(__ => __.Value)).SelectMany(x => x).ToArray();
+            var vs = Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$value").Select(__ => __.Value)).SelectMany(x => x).ToArray();
             var dict = new Dictionary<string, string>();
-            foreach(var d in dicts) {
-                dict = dict.Merge(d);
+            if(ks.Length != vs.Length)
+                return dict;
+            for(var i = 0; i < ks.Length; i++) {
+                if(!dict.ContainsKey(ks[i])) {
+                    dict.Add(ks[i], vs[i]);
+                }
             }
             return dict;
         }
 
         public void SetHostOsParameters(Dictionary<string, string> parameters) {
             Host = LoadHostModel();
-            Host.OsParameters = parameters.Select(_ => new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", _.Key }, { "$value", _.Value } } }).ToArray();
+            Host.OsParameters = parameters.Select(_ => new HostParameter {
+                SetCmd = "echo-append",
+                StoredValues = new Dictionary<string, string> {
+                    { "$file", _.Key }, { "$value", _.Value }
+                }
+            }).ToArray();
+            if(Host.OsParameters.Any()) {
+                Host.OsParameters.FirstOrDefault().SetCmd = "echo-write";
+            }
             Setup();
         }
 

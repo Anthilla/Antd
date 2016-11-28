@@ -113,6 +113,8 @@
         <script data-script="reload" src="/Scripts/jquery.windowed.min.js" type="text/javascript"></script>
         <script data-script="reload" src="/Scripts/jquery-ui-1.11.4.min.js" type="text/javascript"></script>
         <script data-script="reload" src="/Scripts/metro.min.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metrojs/metro-panel.js" type="text/javascript"></script>
+        <script data-script="reload" src="/Scripts/metrojs/metro-tab-control.js" type="text/javascript"></script>
         <script data-script="reload" src="/Scripts/strength.min.js" type="text/javascript"></script>
         <script data-script="reload" src="/Scripts/selectize.min.js" type="text/javascript"></script>
         <script data-script="reload" src="/Scripts/jqClock.min.js" type="text/javascript"></script>
@@ -124,15 +126,14 @@
         <script data-script="reload" src="/Scripts/antd.config.js" type="text/javascript"></script>
     </div>
     <script type="text/javascript">
-        var $main = jQuery.noConflict;
         function ReloadJS() {
-            var container = $main('[data-script="container"]');
-            $main('[data-script="reload"]').each(function () {
-                var src = $main(this).attr('src');
-                var type = $main(this).attr('type');
-                var data = $main(this).attr('data-script');
-                $main(this).remove();
-                $main('<script>').attr('src', src).attr('type', type).attr('data-script', data).appendTo(container);
+            var container = $('[data-script="container"]');
+            $('[data-script="reload"]').each(function () {
+                var src = $(this).attr('src');
+                var type = $(this).attr('type');
+                var data = $(this).attr('data-script');
+                $(this).remove();
+                $('<script>').attr('src', src).attr('type', type).attr('data-script', data).appendTo(container);
             });
         }
     </script>

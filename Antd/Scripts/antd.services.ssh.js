@@ -1,8 +1,6 @@
-var $sh = jQuery.noConflict();
-
-$sh("#ActivateSsh").on("click", function () {
+$("#ActivateSsh").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $sh.ajax({
+    var aj = $.ajax({
         url: "/services/activate/ssh",
         type: "POST",
         success: function () {
@@ -12,9 +10,9 @@ $sh("#ActivateSsh").on("click", function () {
     _requests.push(aj);
 });
 
-$sh("#RefreshSsh").on("click", function () {
+$("#RefreshSsh").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $sh.ajax({
+    var aj = $.ajax({
         url: "/services/refresh/ssh",
         type: "POST",
         success: function () {
@@ -24,9 +22,9 @@ $sh("#RefreshSsh").on("click", function () {
     _requests.push(aj);
 });
 
-$sh("#ReloadSsh").on("click", function () {
+$("#ReloadSsh").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $sh.ajax({
+    var aj = $.ajax({
         url: "/services/reloadconfig/ssh",
         type: "POST",
         success: function () {
@@ -36,40 +34,40 @@ $sh("#ReloadSsh").on("click", function () {
     _requests.push(aj);
 });
 
-$sh("#ShowSshStructure").mousedown(function () {
-    $sh("#SshStructure").show();
+$("#ShowSshStructure").mousedown(function () {
+    $("#SshStructure").show();
 }).mouseup(function () {
-    $sh("#SshStructure").hide();
+    $("#SshStructure").hide();
 });;
 
-$sh(document).on("ready", function () {
-    $sh("#SshForm").find('tr[data-object="ssh-parameter"]').each(function (index) {
-        var dataKey = $sh(this).find('[name="DataKey"]');
+$(document).on("ready", function () {
+    $("#SshForm").find('tr[data-object="ssh-parameter"]').each(function (index) {
+        var dataKey = $(this).find('[name="DataKey"]');
         dataKey.attr("name", dataKey.attr("name") + "_" + index);
-        var dataValue = $sh(this).find('[name="DataValue"]');
+        var dataValue = $(this).find('[name="DataValue"]');
         dataValue.attr("name", dataValue.attr("name") + "_" + index);
-        var dataFile = $sh(this).find('[name="DataFilePath"]');
+        var dataFile = $(this).find('[name="DataFilePath"]');
         dataFile.attr("name", dataFile.attr("name") + "_" + index);
     });
 });
 
-$sh(document).on("ready", function () {
-    $sh("[data-key-form]").each(function () {
-        $sh(this).find('[data-object="key-parameter"]').each(function (index) {
-            var dataKey = $sh(this).find('[name="DataKey"]');
+$(document).on("ready", function () {
+    $("[data-key-form]").each(function () {
+        $(this).find('[data-object="key-parameter"]').each(function (index) {
+            var dataKey = $(this).find('[name="DataKey"]');
             dataKey.attr("name", dataKey.attr("name") + "_" + index);
-            var dataValue = $sh(this).find('[name="DataValue"]');
+            var dataValue = $(this).find('[name="DataValue"]');
             dataValue.attr("name", dataValue.attr("name") + "_" + index);
-            var dataFile = $sh(this).find('[name="DataFilePath"]');
+            var dataFile = $(this).find('[name="DataFilePath"]');
             dataFile.attr("name", dataFile.attr("name") + "_" + index);
         });
     });
 });
 
-$sh("#AddNewParameterSsh").on("click", function () {
-    $sh("#NewParameterSshDashboard").toggle();
+$("#AddNewParameterSsh").on("click", function () {
+    $("#NewParameterSshDashboard").toggle();
 });
 
-$sh("#AddNewKey").on("click", function () {
-    $sh("#NewSshKey").toggle();
+$("#AddNewKey").on("click", function () {
+    $("#NewSshKey").toggle();
 });

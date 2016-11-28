@@ -1,21 +1,156 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
     <legend>Services </legend>
-    <table class="table" style="table-layout: fixed; font-size: 10px !important;">
-        <tbody>
-            @Each.Services
-            <tr>
-                <td>@Current.Name
-                </td>
-                <td>@Current.Status
-                </td>
-                <td data-role="CmdContainer">
-                    <input type="hidden" data="$service" value="@Current.Name" />
-                    <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
-                </td>
-            </tr>
-            @EndEach
-        </tbody>
-    </table>
+
+    <div data-role="tab-control" class="tab-control">
+        <ul class="tabs">
+            <li class="active"><a href="#001">Services</a></li>
+            <li><a href="#002">Mounts</a></li>
+            <li><a href="#003">Targets</a></li>
+            <li><a href="#004">Timers</a></li>
+        </ul>
+
+        <div class="frames">
+            <div id="001" class="frame">
+                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Unit</th>
+                            <th>Status</th>
+                            <th colspan="2">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.Services
+                        <tr>
+                            <td colspan="2">
+                                <p>@Current.Name</p>
+                            </td>
+                            <td>
+                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
+                            </td>
+                            <td>
+                                <p>@Current.Description</p>
+                            </td>
+                            <td data-role="CmdContainer">
+                                <input type="hidden" data="$service" value="@Current.Name" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                            </td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="002" class="frame" style="display: none;">
+                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Unit</th>
+                            <th>Status</th>
+                            <th colspan="2">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.Mounts
+                        <tr>
+                            <td colspan="2">
+                                <p>@Current.Name</p>
+                            </td>
+                            <td>
+                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
+                            </td>
+                            <td>
+                                <p>@Current.Description</p>
+                            </td>
+                            <td data-role="CmdContainer">
+                                <input type="hidden" data="$service" value="@Current.Name" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                            </td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="003" class="frame" style="display: none;">
+                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Unit</th>
+                            <th>Status</th>
+                            <th colspan="2">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.Targets
+                        <tr>
+                            <td colspan="2">
+                                <p>@Current.Name</p>
+                            </td>
+                            <td>
+                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
+                            </td>
+                            <td>
+                                <p>@Current.Description</p>
+                            </td>
+                            <td data-role="CmdContainer">
+                                <input type="hidden" data="$service" value="@Current.Name" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                            </td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="004" class="frame" style="display: none;">
+                <table class="table" style="table-layout: fixed; font-size: 10px !important;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Unit</th>
+                            <th>Status</th>
+                            <th colspan="2">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Each.Timers
+                        <tr>
+                            <td colspan="2">
+                                <p>@Current.Name</p>
+                            </td>
+                            <td>
+                                <p>@Current.Load - @Current.Active - @Current.Sub</p>
+                            </td>
+                            <td>
+                                <p>@Current.Description</p>
+                            </td>
+                            <td data-role="CmdContainer">
+                                <input type="hidden" data="$service" value="@Current.Name" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-start" data-par="$service" value="Start" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-restart" data-par="$service" value="Restart" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-stop" data-par="$service" value="Stop" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-enable" data-par="$service" value="Enable" />
+                                <input type="button" data-role="CmdLaunch" data-name="systemctl-disable" data-par="$service" value="Disable" />
+                            </td>
+                        </tr>
+                        @EndEach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="/Scripts/jquery-2.2.0.min.js" type="text/javascript"></script>
-<script src="/Scripts/antd.cmd.js" type="text/javascript"></script>
+<script src="/Scripts/metro.min.js" type="text/javascript"></script>
+<script src="/Scripts/metrojs/metro-tab-control.js" type="text/javascript"></script>

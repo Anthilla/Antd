@@ -36,7 +36,6 @@ using Antd.Database;
 using Antd.Helpers;
 using Antd.Users;
 using Nancy;
-using Nancy.Routing.Trie.Nodes;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -89,6 +88,7 @@ namespace Antd.Modules {
 
             Post["/users/create"] = x => {
                 string name = Request.Form.Name;
+                string password = Request.Form.Password;
                 UserRepository.Shadow.Create(name);
                 return Response.AsRedirect("/");
             };

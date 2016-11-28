@@ -1,9 +1,7 @@
-var $log = jQuery.noConflict();
-
-$log('[data-role="SyslogNgUpdate"]').on("click", function () {
+$('[data-role="SyslogNgUpdate"]').on("click", function () {
     jQuery.support.cors = true;
-    var container = $log(this).parents('[data-role="SyslogNgConfiguration"]');
-    var aj = $log.ajax({
+    var container = $(this).parents('[data-role="SyslogNgConfiguration"]');
+    var aj = $.ajax({
         url: "/log/syslog/set",
         type: "POST",
         data: {
@@ -19,11 +17,11 @@ $log('[data-role="SyslogNgUpdate"]').on("click", function () {
     _requests.push(aj);
 });
 
-$log('[data-row="report"]').dblclick(function () {
-    var thisRow = $log(this);
+$('[data-row="report"]').dblclick(function () {
+    var thisRow = $(this);
     var path = thisRow.attr("data-path");
     jQuery.support.cors = true;
-    var aj = $log.ajax({
+    var aj = $.ajax({
         url: "/log/journalctl/report/" + path,
         type: "GET",
         success: function (file) {
@@ -36,10 +34,10 @@ $log('[data-row="report"]').dblclick(function () {
     _requests.push(aj);
 });
 
-$log("#GenerateNewReport").on("click", function () {
+$("#GenerateNewReport").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $log.ajax({
-        url: "/log/journalctl/report/",
+    var aj = $.ajax({
+        url: "/log/journalctl/report",
         type: "POST",
         success: function () {
             location.reload(true);
@@ -48,16 +46,16 @@ $log("#GenerateNewReport").on("click", function () {
     _requests.push(aj);
 });
 
-$log("#ShowLogsVerb").on("click", function () {
-    var filter = $log('[name="LogVerb"]').val();
+$("#ShowLogsVerb").on("click", function () {
+    var filter = $('[name="LogVerb"]').val();
     jQuery.support.cors = true;
-    var aj = $log.ajax({
+    var aj = $.ajax({
         url: "/log/journalctl/all/" + filter,
         type: "GET",
         success: function (logs) {
-            var container = $log("#LogTable").find("tbody");
+            var container = $("#LogTable").find("tbody");
             container.html("");
-            jQuery.each(logs, function (i, log) {
+            $.each(logs, function (i, log) {
                 container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>");
             });
         }
@@ -65,16 +63,17 @@ $log("#ShowLogsVerb").on("click", function () {
     _requests.push(aj);
 });
 
-$log("#ShowLogsLastHours").on("click", function () {
-    var h = $log('[name="LogLastHours"]').val();
+$("#ShowLogsLastHours").on("click", function () {
+    var h = $('[name="LogLastHours"]').val();
     jQuery.support.cors = true;
-    var aj = $log.ajax({
+    var aj = $.ajax({
         url: "/log/journalctl/last/" + h,
         type: "GET",
+        contentType: "application/json;charset=utf-8",
         success: function (logs) {
-            var container = $log("#SystemLogTable").find("tbody");
+            var container = $("#SystemLogTable").find("tbody");
             container.html("");
-            jQuery.each(logs, function (i, log) {
+            $.each(logs, function (i, log) {
                 container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>");
             });
         }
@@ -82,17 +81,21 @@ $log("#ShowLogsLastHours").on("click", function () {
     _requests.push(aj);
 });
 
-$log(document).on("ready", function () {
+$('[data-role="ShowAntdLogTable"]').on("click", function () {
     jQuery.support.cors = true;
-    var aj = $log.ajax({
-        url: "/log/journalctl/antd/",
+    var aj = $.ajax({
+        url: "/log/journalctl/antd",
         type: "GET",
+        contentType: "application/json;charset=utf-8",
         success: function (logs) {
-            var container = $log("#AntdLogTable").find("tbody");
+            var container = $("#AntdLogTable");
             container.html("");
-            jQuery.each(logs, function (i, log) {
-                container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>");
+            var html = "";
+            $.each(logs, function (i, log) {
+                html += '<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>";
+                //container.append('<tr><td style="font-weight: normal; font-size: 90%;">' + log + "</td></tr>");
             });
+            container.html(html);
         }
     });
     _requests.push(aj);

@@ -1,12 +1,36 @@
-var $usr = jQuery.noConflict();
-
-$usr(document).ready(function ($usr) {
-    $usr("#UpdateMasterPassword").strength();
+$("#ShowUserPanel").on("click", function () {
+    $("#UserCreateDashboard").toggle();
 });
 
-$usr("#UpdateMasterPassword").on("click", function () {
-    var query = $usr("#NewMasterPassword").val();
-    var aj = $usr.ajax({
+$(document).ready(function ($) {
+    $("#UpdateMasterPassword").strength();
+});
+
+$("input:password").keyup(function () {
+    CheckPassword();
+    return false;
+});
+
+function CheckPassword() {
+    var a = $("#Password");
+    var b = $("#Password2");
+    var aVal = a.val();
+    var bVal = b.val();
+    if (aVal !== bVal) {
+        a.css("color", "#F06305");
+        b.css("color", "#F06305");
+        $("input:submit").addClass("disabled");
+    }
+    else {
+        a.css("color", "#A7BD39");
+        b.css("color", "#A7BD39");
+        $("input:submit").removeClass("disabled");
+    }
+}
+
+$("#UpdateMasterPassword").on("click", function () {
+    var query = $("#NewMasterPassword").val();
+    var aj = $.ajax({
         url: "/master/change/password",
         type: "POST",
         data: {
@@ -19,8 +43,8 @@ $usr("#UpdateMasterPassword").on("click", function () {
     _requests.push(aj);
 });
 
-$usr(document).on("ready", function () {
-    $usr.when(
+$(document).on("ready", function () {
+    $.when(
         LoadUserEntitiesUnits()
     ).then();
 });
@@ -29,7 +53,7 @@ var UserSelectizerOptions = function () {
     return {
         load: function (query, callback) {
             if (!query.length) return callback();
-            var aj = $usr.ajax({
+            var aj = $.ajax({
                 url: this.settings.remoteUrl,
                 type: "GET",
                 dataType: "json",
@@ -52,7 +76,7 @@ var UserSelectizerOptions = function () {
     };
 }();
 
-var $usruserEntitiesSelectizer = $usr("#userEntities").selectize({
+var $userEntitiesSelectizer = $("#userEntities").selectize({
     delimiter: ",",
     persist: false,
     valueField: "guid",
@@ -65,21 +89,21 @@ var $usruserEntitiesSelectizer = $usr("#userEntities").selectize({
 });
 
 function LoadUserEntitiesUnits() {
-    if ($usr("#userEntities").size() > 0) {
-        var userEntitiesSelectizer = $usruserEntitiesSelectizer[0].selectize;
+    if ($("#userEntities").size() > 0) {
+        var userEntitiesSelectizer = $userEntitiesSelectizer[0].selectize;
         userEntitiesSelectizer.load(function (callback) {
             Callback(callback, this.settings.remoteUrl);
-            $usr("#userEntities").hide();
+            $("#userEntities").hide();
         });
     }
 }
 
-$usr('[data-role="UpdateUserPassword"]').on("click", function () {
-    var user = $usr(this).attr("data-user");
-    var container = $usr(this).parents('[data-role="UpdatePasswordPanel"]');
+$('[data-role="UpdateUserPassword"]').on("click", function () {
+    var user = $(this).attr("data-user");
+    var container = $(this).parents('[data-role="UpdatePasswordPanel"]');
     var pass = container.find('[data-role="Password01"]').val();
     jQuery.support.cors = true;
-    var aj = $usr.ajax({
+    var aj = $.ajax({
         url: "/users/change/password",
         type: "POST",
         data: {

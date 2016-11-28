@@ -1,22 +1,20 @@
-var $storage = jQuery.noConflict();
-
-$storage("i.show-units-mgmt").on("click", function () {
-    var g = $storage(this).attr("data-guid");
-    $storage('tr.Mount-units[data-guid="' + g + '"]').toggle();
+$("i.show-units-mgmt").on("click", function () {
+    var g = $(this).attr("data-guid");
+    $('tr.Mount-units[data-guid="' + g + '"]').toggle();
 });
 
-$storage('input[data-role="show-dashboard"]').on("click", function () {
-    var g = $storage(this).attr("data-guid");
-    $storage("#AntdMountdDashboard").toggle();
-    $storage("#AntdMountdDashboard").find('input[name="Guid"]').val(g);
-    $storage("#AntdMountdDashboard").find('input[name="Mount"]').val($storage(this).attr("data-mntpth"));
+$('input[data-role="show-dashboard"]').on("click", function () {
+    var g = $(this).attr("data-guid");
+    $("#AntdMountdDashboard").toggle();
+    $("#AntdMountdDashboard").find('input[name="Guid"]').val(g);
+    $("#AntdMountdDashboard").find('input[name="Mount"]').val($(this).attr("data-mntpth"));
 });
 
-$storage('i[data-role="remove-this-unit"]').on("click", function () {
-    var g = $storage(this).attr("data-guid");
-    var u = $storage(this).attr("data-unit");
+$('i[data-role="remove-this-unit"]').on("click", function () {
+    var g = $(this).attr("data-guid");
+    var u = $(this).attr("data-unit");
     jQuery.support.cors = true;
-    var aj = $storage.ajax({
+    var aj = $.ajax({
         url: "/system/Mount/unit",
         type: "DELETE",
         data: {
@@ -30,10 +28,10 @@ $storage('i[data-role="remove-this-unit"]').on("click", function () {
     _requests.push(aj);
 });
 
-$storage('[data-role="CreatePartitionTable"]').on("click", function () {
-    var d = $storage(this).attr("data-name");
-    var t = $storage(this).parents("td").find("select > option:selected").val();
-    var aj = $storage.ajax({
+$('[data-role="CreatePartitionTable"]').on("click", function () {
+    var d = $(this).attr("data-name");
+    var t = $(this).parents("td").find("select > option:selected").val();
+    var aj = $.ajax({
         url: "/parted/mklabel",
         type: "POST",
         data: {
@@ -42,14 +40,14 @@ $storage('[data-role="CreatePartitionTable"]').on("click", function () {
             Confirm: "Yes"
         },
         success: function () {
-            var aj = $storage.ajax({
+            var aj = $.ajax({
                 url: "/parted/print",
                 type: "POST",
                 data: {
                     Disk: d
                 },
                 success: function (data) {
-                    $storage('[data-partitiontable="' + g + '"]').text(data);
+                    $('[data-partitiontable="' + g + '"]').text(data);
                 }
             });
             _requests.push(aj);
@@ -58,35 +56,35 @@ $storage('[data-role="CreatePartitionTable"]').on("click", function () {
     _requests.push(aj);
 });
 
-$storage('[data-role="show-disk-details-0"]').on("click", function () {
-    var g = $storage(this).attr("data-guid");
-    $storage('[data-row="' + g + '"]').toggle();
-    var d = $storage(this).attr("data-name");
-    var aj = $storage.ajax({
+$('[data-role="show-disk-details-0"]').on("click", function () {
+    var g = $(this).attr("data-guid");
+    $('[data-row="' + g + '"]').toggle();
+    var d = $(this).attr("data-name");
+    var aj = $.ajax({
         url: "/parted/print",
         type: "POST",
         data: {
             Disk: d
         },
         success: function (data) {
-            $storage('[data-partitiontable="' + g + '"]').text("Partition Table: " + data);
+            $('[data-partitiontable="' + g + '"]').text("Partition Table: " + data);
             if (data !== "unknown") {
-                $storage('[data-button="' + g + '"]').addClass("disabled").attr("disabled", "disabled");
+                $('[data-button="' + g + '"]').addClass("disabled").attr("disabled", "disabled");
             }
         }
     });
     _requests.push(aj);
 });
 
-$storage('[data-role="show-details"]').on("click", function () {
-    var g = $storage(this).attr("data-guid");
-    $storage('[data-row="' + g + '"]').toggle();
+$('[data-role="show-details"]').on("click", function () {
+    var g = $(this).attr("data-guid");
+    $('[data-row="' + g + '"]').toggle();
 });
 
-$storage('[data-role="EnablePoolSnap"]').on("click", function () {
-    var pool = $storage(this).attr("data-pool");
-    var interval = $storage(this).parents("td").find("select > option:selected").val();
-    var aj = $storage.ajax({
+$('[data-role="EnablePoolSnap"]').on("click", function () {
+    var pool = $(this).attr("data-pool");
+    var interval = $(this).parents("td").find("select > option:selected").val();
+    var aj = $.ajax({
         url: "/zfs/snap",
         type: "POST",
         data: {
@@ -100,9 +98,9 @@ $storage('[data-role="EnablePoolSnap"]').on("click", function () {
     _requests.push(aj);
 });
 
-$storage('[data-role="DisablePoolSnap"]').on("click", function () {
-    var id = $storage(this).attr("data-id");
-    var aj = $storage.ajax({
+$('[data-role="DisablePoolSnap"]').on("click", function () {
+    var id = $(this).attr("data-id");
+    var aj = $.ajax({
         url: "/zfs/snap/disable",
         type: "POST",
         data: {

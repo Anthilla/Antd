@@ -929,6 +929,18 @@ namespace antd.commands {
                 Arguments = new[] { "systemctl stop $service" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["systemctl-enable"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "systemctl enable $service" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["systemctl-disable"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(string),
+                Arguments = new[] { "systemctl disable $service" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Virsh    ]
@@ -1039,6 +1051,12 @@ namespace antd.commands {
                 InputType = typeof(string),
                 OutputType = typeof(IEnumerable<string>),
                 Arguments = new[] { "df -h $directory" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["smartctl"] = new Command {
+                InputType = typeof(string),
+                OutputType = typeof(IEnumerable<string>),
+                Arguments = new[] { "smartctl -a $dev" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion

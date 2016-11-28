@@ -30,6 +30,9 @@
 namespace antdlib.Models {
     public class UnitModel {
         public string Name { get; set; }
-        public string Status { get; set; }
+        public string Load { get; set; }
+        public string Active { get; set; }
+        public string Sub { get; set; }
+        public string Description { get; set; }
     }
 }

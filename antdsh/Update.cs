@@ -47,6 +47,7 @@ namespace antdsh {
         }
 
         #region Private Parameters
+
         private const string UpdateVerbForAntd = "update.antd";
         private const string UpdateVerbForAntdsh = "update.antdsh";
         private const string UpdateVerbForSystem = "update.system";
@@ -54,7 +55,8 @@ namespace antdsh {
         private const string UpdateVerbForUnits = "update.units";
         private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
-        private static string _publicRepositoryUrl = "http://srv.anthilla.com/";
+        private static string _publicRepositoryUrlHttps = "http://srv.anthilla.com/";
+        //private static string _publicRepositoryUrlHttp = "http://srv.anthilla.com/";
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string TmpDirectory => $"{Parameter.RepoTemp}/update";
@@ -71,24 +73,25 @@ namespace antdsh {
         private static string KernelActive => $"{KernelDirectory}/active-kernel";
         private static string ModulesActive => $"{KernelDirectory}/active-modules";
         private static string XenActive => $"{KernelDirectory}/active-xen";
+
         #endregion Parameters
 
         #region Public Medhod
 
         public void Check() {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
             Console.WriteLine("");
-            foreach (var i in info) {
+            foreach(var i in info) {
                 Console.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
             }
             Console.WriteLine("");
         }
 
         public void All(bool forced) {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
@@ -105,8 +108,8 @@ namespace antdsh {
         }
 
         public void Antd(bool forced) {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
@@ -117,8 +120,8 @@ namespace antdsh {
         }
 
         public void Antdsh(bool forced) {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
@@ -129,8 +132,8 @@ namespace antdsh {
         }
 
         public void System(bool forced) {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
@@ -141,8 +144,8 @@ namespace antdsh {
         private static readonly Bash Bash = new Bash();
 
         public void Kernel(bool forced) {
-            _publicRepositoryUrl = GetRandomServer("http");
-            Console.WriteLine($"repo = {_publicRepositoryUrl}");
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
             UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
@@ -150,14 +153,18 @@ namespace antdsh {
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
+
         #endregion
 
         #region Private Methods
+
         private static int _updateCounter;
-        public void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
-            while (true) {
+
+        public void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory,
+            bool force = false) {
+            while(true) {
                 _updateCounter++;
-                if (_updateCounter > 5) {
+                if(_updateCounter > 5) {
                     Console.WriteLine($"{currentContext} update failed, too many retries");
                     _updateCounter = 0;
                     return;
@@ -167,21 +174,22 @@ namespace antdsh {
                 var linkedFile = Bash.Execute($"file {activeVersionPath}");
                 var currentVersionDate = GetVersionDateFromFile(linkedFile);
                 var repositoryInfo = GetRepositoryInfo().ToList();
-                var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+                var currentContextRepositoryInfo =
+                    repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
                 Console.WriteLine($"found for: {currentContext}");
-                foreach (var cri in currentContextRepositoryInfo) {
+                foreach(var cri in currentContextRepositoryInfo) {
                     Console.WriteLine($"   -> {cri.FileName} > {cri.FileDate}");
                 }
                 Console.WriteLine("");
                 var latestFileInfo = currentContextRepositoryInfo.FirstOrDefault();
-                if (latestFileInfo == null) {
+                if(latestFileInfo == null) {
                     Console.WriteLine($"cannot retrieve a more recent version of {currentContext}.");
                     _updateCounter = 0;
                     return;
                 }
-                if (force == false) {
+                if(force == false) {
                     var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo.FileDate);
-                    if (!isUpdateNeeded) {
+                    if(!isUpdateNeeded) {
                         Console.WriteLine($"current version of {currentContext} is already up to date.");
                         _updateCounter = 0;
                         return;
@@ -189,9 +197,9 @@ namespace antdsh {
                 }
                 Console.WriteLine($"updating {currentContext}");
 
-                if (force == false) {
+                if(force == false) {
                     var isDownloadValid = DownloadLatestFile(latestFileInfo);
-                    if (isDownloadValid) {
+                    if(isDownloadValid) {
                         Console.WriteLine($"{latestFileInfo.FileName} download complete");
                         var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
                         var newVersionPath = $"{contextDestinationDirectory}/{latestFileInfo.FileName}";
@@ -215,11 +223,13 @@ namespace antdsh {
         }
 
         private static bool _updateRetry;
-        public void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+
+        public void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory,
+            bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
-            if (_updateCounter > 5) {
+            if(_updateCounter > 5) {
                 Console.WriteLine($"{currentContext} update failed, too many retries");
                 _updateCounter = 0;
                 _updateRetry = false;
@@ -227,11 +237,12 @@ namespace antdsh {
             }
             var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
             var repositoryInfo = GetRepositoryInfo();
-            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+            var currentContextRepositoryInfo =
+                repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
             var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
             var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
-            if (force == false) {
-                if (!isUpdateNeeded) {
+            if(force == false) {
+                if(!isUpdateNeeded) {
                     Console.WriteLine($"current version of {currentContext} is already up to date.");
                     _updateCounter = 0;
                     _updateRetry = false;
@@ -240,60 +251,72 @@ namespace antdsh {
             }
             Console.WriteLine($"updating {currentContext}");
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive,
+                    contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
 
             _updateRetry = false;
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive,
+                    contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
 
             _updateRetry = false;
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "initramfs", InitrdActive,
+                    contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
 
             _updateRetry = false;
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive,
+                    contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
 
             _updateRetry = false;
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_modules", ModulesActive,
+                    contextDestinationDirectory) == false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
 
             _updateRetry = false;
 
-            if (force) {
+            if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
-            else if (DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) == false && _updateRetry == false) {
+            else if(
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "xen", XenActive, contextDestinationDirectory) ==
+                false && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
@@ -312,15 +335,17 @@ namespace antdsh {
             Directory.CreateDirectory(tmpMountDirectory);
             Bash.Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
-            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
-            if (latestFileInfo == null) return;
+            var latestFileInfo =
+                repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
+            if(latestFileInfo == null)
+                return;
             DownloadLatestFile(latestFileInfo);
 
             Console.WriteLine($"{latestFileInfo.FileName} download complete");
             var latestTmpFilePath = $"{TmpDirectory}/{latestFileInfo.FileName}";
             Bash.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
-            foreach (var downloadedUnit in downloadedUnits) {
+            foreach(var downloadedUnit in downloadedUnits) {
                 var fullPath = Path.GetFullPath(downloadedUnit);
                 Console.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
@@ -338,16 +363,18 @@ namespace antdsh {
         }
 
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
-            new ApiConsumer().GetFile($"{_publicRepositoryUrl}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
-            if (!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
+            new ApiConsumer().GetFile($"{_publicRepositoryUrlHttps}/{RepositoryFileNameZip}",
+                $"{TmpDirectory}/{RepositoryFileNameZip}");
+            if(!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
                 return new List<FileInfoModel>();
             }
             var tmpRepoListText = Bash.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
             var list = tmpRepoListText.SplitToList(Environment.NewLine);
             var files = new List<FileInfoModel>();
-            foreach (var f in list) {
+            foreach(var f in list) {
                 var fileInfo = f.Split(new[] { ' ' }, 4);
-                if (fileInfo.Length <= 3) continue;
+                if(fileInfo.Length <= 3)
+                    continue;
                 var fi = new FileInfoModel {
                     FileHash = fileInfo[0],
                     FileContext = fileInfo[1],
@@ -355,7 +382,7 @@ namespace antdsh {
                     FileName = fileInfo[3]
                 };
                 var date = GetVersionDateFromFile(fi.FileName);
-                if (date != "00000000") {
+                if(date != "00000000") {
                     fi.FileDate = date;
                 }
                 files.Add(fi);
@@ -370,10 +397,10 @@ namespace antdsh {
         }
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
-            var latestFileDownloadUrl = $"{_publicRepositoryUrl}/{latestFileInfo.FileName}";
+            var latestFileDownloadUrl = $"{_publicRepositoryUrlHttps}/{latestFileInfo.FileName}";
             Console.WriteLine($"downloading file from {latestFileDownloadUrl}");
             var latestFile = $"{TmpDirectory}/{latestFileInfo.FileName}";
-            if (File.Exists(latestFile)) {
+            if(File.Exists(latestFile)) {
                 File.Delete(latestFile);
             }
             new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
@@ -383,12 +410,13 @@ namespace antdsh {
         }
 
         private static string GetFileHash(string filePath) {
-            using (var fileStreamToRead = File.OpenRead(filePath)) {
+            using(var fileStreamToRead = File.OpenRead(filePath)) {
                 return BitConverter.ToString(new SHA1Managed().ComputeHash(fileStreamToRead)).Replace("-", string.Empty);
             }
         }
 
-        private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
+        private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath,
+            string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
             Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
@@ -396,10 +424,11 @@ namespace antdsh {
             Bash.Execute($"chmod 775 {newVersionPath}");
         }
 
-        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
+        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query,
+            string activePath, string contextDestinationDirectory) {
             var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
             var isDownloadValid = DownloadLatestFile(latestFileInfo);
-            if (isDownloadValid == false) {
+            if(isDownloadValid == false) {
                 Console.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
                 _updateRetry = true;
                 return false;
@@ -414,17 +443,28 @@ namespace antdsh {
         private static IEnumerable<string> GetServerList(string filter = "") {
             var text = new ApiConsumer().GetString("http://srv.anthilla.com/server.txt");
             var list = text.SplitToList("\n");
-            if (!string.IsNullOrEmpty(filter)) {
+            if(!string.IsNullOrEmpty(filter)) {
                 list = list.Where(_ => _.StartsWith(filter)).ToList();
             }
             return list;
         }
 
+        private static int _getServerRetry;
+
         private static string GetRandomServer(string filter = "") {
-            return _publicRepositoryUrl;
-            var arr = GetServerList(filter).ToArray();
-            var rnd = new Random().Next(0, arr.Length);
-            return arr[rnd];
+            try {
+                var server = _publicRepositoryUrlHttps;
+                while(_getServerRetry < 5) {
+                    var arr = GetServerList(filter).ToArray();
+                    var rnd = new Random().Next(0, arr.Length);
+                    server = arr[rnd];
+                    _getServerRetry++;
+                }
+                return server;
+            }
+            catch(Exception) {
+                return _publicRepositoryUrlHttps;
+            }
         }
         #endregion
 

@@ -1,7 +1,5 @@
-var $config = jQuery.noConflict();
-
-$config('[data-role="AddLine"]').on("click", function () {
-    var cont = $config("#sortable");
+$('[data-role="AddLine"]').on("click", function () {
+    var cont = $("#sortable");
     var line =
         '<li data-role="control" class="border-2-anthilla-green bg-anthilla-gray" style="padding: 10px; height: auto; margin-bottom: 5px;">' +
             '<input data-role="DisplayIndex" type="text" value="" name="Index_@Current.Index" data-name="Index" style="border-width: 0 !important; width: 20px;" readonly="readonly"> ' +
@@ -15,27 +13,27 @@ $config('[data-role="AddLine"]').on("click", function () {
     RemoveLine();
 });
 
-$config(document).on("ready", function () {
+$(document).on("ready", function () {
     SelectInput();
     RemoveLine();
 });
 
 function SelectInput() {
-    $config('input[type="text"]').on("click", function () {
-        $config(this).focus();
-        $config(this).select();
+    $('input[type="text"]').on("click", function () {
+        $(this).focus();
+        $(this).select();
     });
 }
 
 function RemoveLine() {
-    $config('[data-role="Remove"]').on("click", function () {
-        $config(this).parents('li').remove();
+    $('[data-role="Remove"]').on("click", function () {
+        $(this).parents('li').remove();
         ReindexCheck();
     });
 }
 
-$config('input[data-role="command-place"]').keyup(function () {
-    var thisValue = $config(this).val();
+$('input[data-role="command-place"]').keyup(function () {
+    var thisValue = $(this).val();
     if (thisValue.indexOf("[") > 0) {
         //todo: in questo caso prendere la stringa che si sta per scrivere dopo la [
         //      fare una query, tipo selectize, nei ValueBundle e mostrare tutt i valori appartenenti a quel tag
@@ -47,12 +45,12 @@ $config('input[data-role="command-place"]').keyup(function () {
     }
     if (thisValue.length > 0) {
         jQuery.support.cors = true;
-        var aj = $config.ajax({
+        var aj = $.ajax({
             url: "/cfg/layouts",
             type: "GET",
             success: function (layoutJson) {
                 var results = [];
-                $config.each(layoutJson, function (i, item) {
+                $.each(layoutJson, function (i, item) {
                     if (item.name.indexOf(thisValue) === 0) {
                         results.push(item.name);
                     }
@@ -75,56 +73,56 @@ $config('input[data-role="command-place"]').keyup(function () {
 });
 
 function ShowDisplayer() {
-    $config("#ResultsContainer").show();
+    $("#ResultsContainer").show();
 }
 
 function HideDisplayer() {
-    $config("#ResultsContainer").hide();
+    $("#ResultsContainer").hide();
 }
 
 function DisplayResults(objectsToDisplay) {
     ShowDisplayer();
     CleanResults();
-    $config.each(objectsToDisplay, function (i, item) {
-        $config("#ResultsContainer").append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + "</li>");
+    $.each(objectsToDisplay, function (i, item) {
+        $("#ResultsContainer").append('<li data-role="query-result" class="bg-anthilla-violet" style="display: inline-block; padding: 3px 15px; margin: 5px;">' + item + "</li>");
         SelectLayoutToEdit();
     });
 }
 
 function CleanResults() {
-    var container = $config("#ResultsContainer");
+    var container = $("#ResultsContainer");
     container.html("");
 }
 
 function SelectLayoutToEdit() {
-    $config('[data-role="query-result"]').dblclick(function () {
-        $config('input[data-role="command-place"]').val($config(this).text());
+    $('[data-role="query-result"]').dblclick(function () {
+        $('input[data-role="command-place"]').val($(this).text());
     });
 }
 
-$config('i[data-role="show-all-command"]').mousedown(function () {
-    $config('[data-role="command-saved"]').each(function () { $config(this).hide(); });
-    $config('[data-role="command-exd"]').each(function () { $config(this).show(); });
+$('i[data-role="show-all-command"]').mousedown(function () {
+    $('[data-role="command-saved"]').each(function () { $(this).hide(); });
+    $('[data-role="command-exd"]').each(function () { $(this).show(); });
 });
 
-$config('i[data-role="show-all-command"]').mouseup(function () {
-    $config('[data-role="command-saved"]').each(function () { $config(this).show(); });
-    $config('[data-role="command-exd"]').each(function () { $config(this).hide(); });
+$('i[data-role="show-all-command"]').mouseup(function () {
+    $('[data-role="command-saved"]').each(function () { $(this).show(); });
+    $('[data-role="command-exd"]').each(function () { $(this).hide(); });
 });
 
-$config('i[data-role="show-command"]').mousedown(function () {
-    var container = $config(this).parents("li");
+$('i[data-role="show-command"]').mousedown(function () {
+    var container = $(this).parents("li");
     container.find('[data-role="command-saved"]').hide();
     container.find('[data-role="command-exd"]').show();
 });
 
-$config('i[data-role="show-command"]').mouseup(function () {
-    var container = $config(this).parents("li");
+$('i[data-role="show-command"]').mouseup(function () {
+    var container = $(this).parents("li");
     container.find('[data-role="command-saved"]').show();
     container.find('[data-role="command-exd"]').hide();
 });
 
-$config("#sortable").sortable({
+$("#sortable").sortable({
     //sort: function () {
     //    RefreshCommandIndexes();
     //    ReindexCheck();
@@ -135,38 +133,38 @@ $config("#sortable").sortable({
     },
 }).disableSelection();
 
-$config(document).on("click", "body", function () {
+$(document).on("click", "body", function () {
     RefreshCommandIndexes();
     ReindexCheck();
 });
 
-$config(document).ready(function () {
-    $config("#valueBundleTag").hide();
+$(document).ready(function () {
+    $("#valueBundleTag").hide();
 });
 
 function ReindexCheck() {
-    $config('[data-role="control"]').each(function (index) {
+    $('[data-role="control"]').each(function (index) {
         var i = index;
-        $config(this).find('[data-role="DisplayIndex"]').val(i);
-        $config(this).find("input").each(function () {
-            var name = $config(this).attr("data-name");
+        $(this).find('[data-role="DisplayIndex"]').val(i);
+        $(this).find("input").each(function () {
+            var name = $(this).attr("data-name");
             var nn = name + "_" + i;
-            $config(this).attr("name", nn);
+            $(this).attr("name", nn);
         });
     });
 }
 
 function RefreshCommandIndexes() {
-    $config("input[name=Index]").each(function (index) {
-        $config(this).val("");
-        $config(this).val(index);
+    $("input[name=Index]").each(function (index) {
+        $(this).val("");
+        $(this).val(index);
     });
 }
 
-$config('i[data-role="remove-command"]').on("click", function () {
-    var g = $config(this).attr("data-guid");
+$('i[data-role="remove-command"]').on("click", function () {
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $config.ajax({
+    var aj = $.ajax({
         url: "/cfg/delcommand",
         type: "POST",
         data: {
@@ -179,10 +177,10 @@ $config('i[data-role="remove-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$config('i[data-role="disable-command"]').on("click", function () {
-    var g = $config(this).attr("data-guid");
+$('i[data-role="disable-command"]').on("click", function () {
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $config.ajax({
+    var aj = $.ajax({
         url: "/cfg/disablecommand",
         type: "POST",
         data: {
@@ -195,10 +193,10 @@ $config('i[data-role="disable-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$config('i[data-role="enable-command"]').on("click", function () {
-    var g = $config(this).attr("data-guid");
+$('i[data-role="enable-command"]').on("click", function () {
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $config.ajax({
+    var aj = $.ajax({
         url: "/cfg/enablecommand",
         type: "POST",
         data: {
@@ -211,10 +209,10 @@ $config('i[data-role="enable-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$config('i[data-role="play-command"]').on("click", function () {
-    var g = $config(this).attr("data-guid");
+$('i[data-role="play-command"]').on("click", function () {
+    var g = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $config.ajax({
+    var aj = $.ajax({
         url: "/cfg/launchcommand",
         type: "POST",
         data: {
@@ -227,10 +225,10 @@ $config('i[data-role="play-command"]').on("click", function () {
     _requests.push(aj);
 });
 
-$config('input[data-role="command-place"]').focusin(function () {
-    $config("#Tip").show();
+$('input[data-role="command-place"]').focusin(function () {
+    $("#Tip").show();
 });
 
-$config('input[data-role="command-place"]').focusout(function () {
-    $config("#Tip").hide();
+$('input[data-role="command-place"]').focusout(function () {
+    $("#Tip").hide();
 });

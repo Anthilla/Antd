@@ -1,10 +1,8 @@
-var $page = jQuery.noConflict();
-
 var tid = setInterval(reloadPage, 10000);
 function reloadPage() {
-    var container = $page("#ResourcesMonitor");
+    var container = $("#ResourcesMonitor");
     jQuery.support.cors = true;
-    var aj = $page.ajax({
+    var aj = $.ajax({
         url: "/monitor/resources/html",
         type: "GET",
         success: function (data) {
@@ -16,25 +14,32 @@ function reloadPage() {
 function abortTimer() {
     clearInterval(tid);
 }
-
-$page('[data-role="load-page"]').not("i").on("click", function () {
+$('[data-role="load-page"]').on("click", function () {
     AbortAllAjaxRequests();
-    var page = $page(this).attr("data-page");
-    var ico = $page(this).find('[data-icon="load"]');
-    $page('[data-icon="load"]').each(function () {
-        $page(this).hide();
+    var page = $(this).attr("data-page");
+    var ico = $(this).find('[data-icon="load"]');
+    $('[data-icon="load"]').each(function () {
+        $(this).hide();
     });
     jQuery.support.cors = true;
-    var aj = $page.ajax({
+    var aj = $.ajax({
         url: "/part/" + page,
         type: "GET",
         beforeSend: function () {
             ico.show();
         },
         success: function (data) {
-            $page('[data-role="page-container"]').html(data);
+            $('[data-role="page-container"]').html(data);
             ico.hide();
             ReloadJS();
+            //var container = $('[data-script="container"]');
+            //$('[data-script="reload"]').each(function () {
+            //    var src = $(this).attr("src");
+            //    var type = $(this).attr("type");
+            //    var dataScript = $(this).attr("data-script");
+            //    $(this).remove();
+            //    $("<script>").attr("src", src).attr("type", type).attr("data-script", dataScript).appendTo(container);
+            //});
         },
         error: function () {
             ico.hide();

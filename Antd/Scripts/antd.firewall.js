@@ -1,15 +1,13 @@
-var $fw = jQuery.noConflict();
-
-$fw('[data-role="SaveNftConfiguration"]').on("click", function () {
+$('[data-role="SaveNftConfiguration"]').on("click", function () {
     var tables = [];
-    $fw('[data-nft="Table"]').each(function () {
-        var self = $fw(this);
+    $('[data-nft="Table"]').each(function () {
+        var self = $(this);
         var tableType = self.attr("data-nft-type");
         var tableName = self.attr("data-nft-name");
 
         var tableSets = [];
         self.find('[data-nft="Set"]').each(function () {
-            var selfSet = $fw(this);
+            var selfSet = $(this);
             var setName = selfSet.attr("data-nft-name");
             var elements = self.find('[data-nft="SetElements"]').text();
             var set = {
@@ -21,7 +19,7 @@ $fw('[data-role="SaveNftConfiguration"]').on("click", function () {
 
         var tableChains = [];
         self.find('[data-nft="Set"]').each(function () {
-            var selfChain = $fw(this);
+            var selfChain = $(this);
             var chainName = selfChain.attr("data-nft-name");
             var rules = self.find('[data-nft="ChainRules"]').text();
             var chain = {
@@ -41,7 +39,7 @@ $fw('[data-role="SaveNftConfiguration"]').on("click", function () {
         tables.push(table);
     });
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/nft/save",
         type: "POST",
         dataType: "json",
@@ -55,11 +53,11 @@ $fw('[data-role="SaveNftConfiguration"]').on("click", function () {
     _requests.push(aj);
 });
 
-$fw(document).on("ready", function () {
-    $fw(".autoheight").each(function () {
+$(document).on("ready", function () {
+    $(".autoheight").each(function () {
         this.style.height = "1px";
 
-        var text = $fw(this).val();
+        var text = $(this).val();
         var lines = text.split(/\r|\r\n|\n/);
         var count = lines.length;
         console.log(count);
@@ -68,10 +66,10 @@ $fw(document).on("ready", function () {
     });
 });
 
-$fw('input[data-role="enable-mac-address"]').on("click", function () {
-    var guid = $fw(this).attr("data-object-guid");
+$('input[data-role="enable-mac-address"]').on("click", function () {
+    var guid = $(this).attr("data-object-guid");
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/enable/macadd",
         type: "POST",
         data: {
@@ -84,10 +82,10 @@ $fw('input[data-role="enable-mac-address"]').on("click", function () {
     _requests.push(aj);
 });
 
-$fw('input[data-role="disable-mac-address"]').on("click", function () {
-    var guid = $fw(this).attr("data-object-guid");
+$('input[data-role="disable-mac-address"]').on("click", function () {
+    var guid = $(this).attr("data-object-guid");
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/disable/macadd",
         type: "POST",
         data: {
@@ -100,9 +98,9 @@ $fw('input[data-role="disable-mac-address"]').on("click", function () {
     _requests.push(aj);
 });
 
-$fw("#ReloadMacAddressList").on("click", function () {
+$("#ReloadMacAddressList").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/discover/macadd",
         type: "POST",
         success: function () {
@@ -112,26 +110,26 @@ $fw("#ReloadMacAddressList").on("click", function () {
     _requests.push(aj);
 });
 
-$fw('div[data-object="ruleset"]').dblclick(function () {
-    var table = $fw(this).attr("data-table");
-    var type = $fw(this).attr("data-type");
-    var hook = $fw(this).attr("data-hook");
-    var db = $fw("#NewListDashboard");
+$('div[data-object="ruleset"]').dblclick(function () {
+    var table = $(this).attr("data-table");
+    var type = $(this).attr("data-type");
+    var hook = $(this).attr("data-hook");
+    var db = $("#NewListDashboard");
     db.find('[name="Table"]').val(table);
     db.find('[name="Type"]').val(type);
     db.find('[name="Hook"]').val(hook);
-    $fw('[data-role="display-table-context"]').text(table + " " + type + " " + hook);
-    $fw(window).scrollTop($fw("#ValueBundleDashboard").offset().top - 50);
+    $('[data-role="display-table-context"]').text(table + " " + type + " " + hook);
+    $(window).scrollTop($("#ValueBundleDashboard").offset().top - 50);
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/getrule/" + table + "/" + type + "/" + hook,
         type: "GET",
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function (data) {
-            var container = $fw("#FirewallConfigurationLists");
+            var container = $("#FirewallConfigurationLists");
             container.html("");
-            $fw.each(data, function (i, list) {
+            $.each(data, function (i, list) {
                 var row = '<tr data-index="' + i + '"><td style="width:200px;"><p style="display:inline-block;" class="fg-white">'
                     + list.Label +
                     '</p></td><td><input type="text" data-guid="' + list.Guid + '" style="height: 25px; width: 90%;" class="bg-anthilla-gray fg-white" value="'
@@ -146,16 +144,16 @@ $fw('div[data-object="ruleset"]').dblclick(function () {
                 SaveListValues();
             });
 
-            var aj2 = $fw.ajax({
+            var aj2 = $.ajax({
                 url: "/firewall/getruleset/" + table + "/" + type + "/" + hook,
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json;charset=utf-8",
                 success: function (rules) {
-                    $fw("#RuleList").html("");
-                    $fw.each(rules, function (i, rule) {
+                    $("#RuleList").html("");
+                    $.each(rules, function (i, rule) {
                         var row = '<tr data-index="' + i + '"><td style="width:200px;"></td><td>' + rule + "</td></tr>";
-                        $fw("#RuleList").append(row);
+                        $("#RuleList").append(row);
                     });
                     return false;
                 }
@@ -169,20 +167,20 @@ $fw('div[data-object="ruleset"]').dblclick(function () {
 });
 
 function ReloadListValues() {
-    $fw('[data-role="firewall-reload-values"]').on("click", function () {
-        var guid = $fw(this).attr("data-guid");
-        var bkup = $fw(this).attr("data-backup");
-        $fw('input[data-guid="' + guid + '"]').val(bkup);
+    $('[data-role="firewall-reload-values"]').on("click", function () {
+        var guid = $(this).attr("data-guid");
+        var bkup = $(this).attr("data-backup");
+        $('input[data-guid="' + guid + '"]').val(bkup);
         return false;
     });
 }
 
 function SaveListValues() {
-    $fw('[data-role="firewall-update-values"]').on("click", function () {
-        var guid = $fw(this).attr("data-guid");
-        var el = $fw('input[data-guid="' + guid + '"]').val();
+    $('[data-role="firewall-update-values"]').on("click", function () {
+        var guid = $(this).attr("data-guid");
+        var el = $('input[data-guid="' + guid + '"]').val();
         jQuery.support.cors = true;
-        var aj = $fw.ajax({
+        var aj = $.ajax({
             url: networkUrl + "/ipv4/disable/if",
             type: "POST",
             data: {
@@ -197,10 +195,10 @@ function SaveListValues() {
     });
 }
 
-$fw('i[data-role="stop-rule"]').on("click", function () {
-    var guid = $fw(this).attr("data-guid");
+$('i[data-role="stop-rule"]').on("click", function () {
+    var guid = $(this).attr("data-guid");
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/stoprule",
         type: "POST",
         data: {
@@ -213,9 +211,9 @@ $fw('i[data-role="stop-rule"]').on("click", function () {
     _requests.push(aj);
 });
 
-$fw("#ApplyFirewallConfiguration").on("click", function () {
+$("#ApplyFirewallConfiguration").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/conf/export",
         type: "POST",
         success: function () {
@@ -225,9 +223,9 @@ $fw("#ApplyFirewallConfiguration").on("click", function () {
     _requests.push(aj);
 });
 
-$fw("#ExportFirewallConfiguration").on("click", function () {
+$("#ExportFirewallConfiguration").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $fw.ajax({
+    var aj = $.ajax({
         url: "/firewall/conf/export",
         type: "POST",
         success: function () {

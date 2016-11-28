@@ -1,8 +1,6 @@
-var $mb = jQuery.noConflict();
-
-$mb("#StopSamba").on("click", function () {
+$("#StopSamba").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/stop",
         type: "POST",
         success: function () {
@@ -12,9 +10,9 @@ $mb("#StopSamba").on("click", function () {
     _requests.push(aj);
 });
 
-$mb("#ReloadSamba").on("click", function () {
+$("#ReloadSamba").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/restart",
         type: "POST",
         success: function () {
@@ -24,9 +22,9 @@ $mb("#ReloadSamba").on("click", function () {
     _requests.push(aj);
 });
 
-$mb("#EnableSamba").on("click", function () {
+$("#EnableSamba").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/enable",
         type: "POST",
         success: function () {
@@ -36,9 +34,9 @@ $mb("#EnableSamba").on("click", function () {
     _requests.push(aj);
 });
 
-$mb("#DisableSamba").on("click", function () {
+$("#DisableSamba").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/disable",
         type: "POST",
         success: function () {
@@ -48,9 +46,9 @@ $mb("#DisableSamba").on("click", function () {
     _requests.push(aj);
 });
 
-$mb("#ApplyConfigSamba").on("click", function () {
+$("#ApplyConfigSamba").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/set",
         type: "POST",
         success: function () {
@@ -60,10 +58,10 @@ $mb("#ApplyConfigSamba").on("click", function () {
     _requests.push(aj);
 });
 
-$mb('[data-role="RemoveSambaResource"]').click(function () {
-    var guid = $mb(this).attr("data-id");
+$('[data-role="RemoveSambaResource"]').click(function () {
+    var guid = $(this).attr("data-id");
     jQuery.support.cors = true;
-    var aj = $mb.ajax({
+    var aj = $.ajax({
         url: "/services/samba/resource/del",
         type: "POST",
         data: {

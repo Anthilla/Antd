@@ -1,15 +1,13 @@
-var $cmd = jQuery.noConflict();
-
-$cmd(document).on("ready", function () {
-    $cmd('[data="CmdGet"]').each(function () {
-        var self = $cmd(this);
+$(document).on("ready", function () {
+    $('[data="CmdGet"]').each(function () {
+        var self = $(this);
         var command = self.attr("data-name");
         var values = "";
         var par = self.attr("data-par");
         if (par != undefined) {
             var res = par.split(",");
             var container = self.parents('[data-role="CmdContainer"]');
-            $cmd.each(res, function (i, v) {
+            $.each(res, function (i, v) {
                 var app = v + ":";
                 var val = container.find('[data="' + v + '"]').val();
                 app += val;
@@ -20,7 +18,7 @@ $cmd(document).on("ready", function () {
             });
         }
         jQuery.support.cors = true;
-        var aj = $cmd.ajax({
+        var aj = $.ajax({
             url: "/cmd/launch",
             type: "POST",
             data: {
@@ -35,14 +33,14 @@ $cmd(document).on("ready", function () {
     });
 });
 
-$cmd('[data-role="CmdLaunch"]').on("click", function () {
-    var container = $cmd(this).parents('[data-role="CmdContainer"]');
+$('[data-role="CmdLaunch"]').on("click", function () {
+    var container = $(this).parents('[data-role="CmdContainer"]');
     var button = container.find('[data-role="CmdLaunch"]');
     var command = button.attr("data-name");
     var values = "";
     var par = button.attr("data-par");
     var res = par.split(",");
-    $cmd.each(res, function (i, v) {
+    $.each(res, function (i, v) {
         var app = v + ":";
         var val = container.find('[data="' + v + '"]').val();
         app += val;
@@ -52,7 +50,7 @@ $cmd('[data-role="CmdLaunch"]').on("click", function () {
         }
     });
     jQuery.support.cors = true;
-    var aj = $cmd.ajax({
+    var aj = $.ajax({
         url: "/cmd/launch",
         type: "POST",
         data: {
@@ -66,11 +64,11 @@ $cmd('[data-role="CmdLaunch"]').on("click", function () {
     _requests.push(aj);
 });
 
-$cmd(document).on("ready", function () {
-    $cmd('[data-role="ContextSelection"]').each(function () {
-        $cmd(this).windowed({
+$(document).on("ready", function () {
+    $('[data-role="ContextSelection"]').each(function () {
+        $(this).windowed({
             change: function (event, selected) {
-                selected = $cmd(selected);
+                selected = $(selected);
                 var val = selected.val();
                 var container = selected.parents("table.context");
                 container.find("[data-select]").hide();
@@ -80,8 +78,8 @@ $cmd(document).on("ready", function () {
     });
 });
 
-$cmd(document).on("ready", function () {
-    $cmd("textarea").each(function () {
+$(document).on("ready", function () {
+    $("textarea").each(function () {
         this.style.height = (this.scrollHeight + 10) + "px";
     });
 });
@@ -89,9 +87,9 @@ $cmd(document).on("ready", function () {
 
 data = "ReplaceNewLine";
 
-$cmd(document).on("ready", function () {
-    $cmd('[data="ReplaceNewLine"]').each(function () {
-        var txt = $cmd(this).text();
-        $cmd(this).html(txt.replace(/\n/g, "<br/>"));
+$(document).on("ready", function () {
+    $('[data="ReplaceNewLine"]').each(function () {
+        var txt = $(this).text();
+        $(this).html(txt.replace(/\n/g, "<br/>"));
     });
 });

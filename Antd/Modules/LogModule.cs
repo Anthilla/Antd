@@ -27,21 +27,17 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Dynamic;
+using System.Linq;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Log;
 using Nancy;
 using Nancy.Security;
+using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
     public class LogModule : CoreModule {
-        private readonly SyslogRepository _syslogRepository = new SyslogRepository();
-        private readonly SyslogConfiguration _syslogConfiguration = new SyslogConfiguration();
-        private readonly Journalctl _journalctl = new Journalctl();
-        private readonly Journalctl.Report _journalctlReport = new Journalctl.Report();
-
         public LogModule() {
             this.RequiresAuthentication();
 
@@ -56,67 +52,66 @@ namespace Antd.Modules {
                 var p1 = Request.Form.Path1;
                 var p2 = Request.Form.Path2;
                 var p3 = Request.Form.Path3;
-                _syslogRepository.Set(root, p1, p2, p3);
-                _syslogConfiguration.Set();
+                var syslogRepository = new SyslogRepository();
+                syslogRepository.Set(root, p1, p2, p3);
+                var syslogConfiguration = new SyslogConfiguration();
+                syslogConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/log/syslog/enable"] = x => {
-                _syslogRepository.Enable();
+                var syslogRepository = new SyslogRepository();
+                syslogRepository.Enable();
                 return HttpStatusCode.OK;
             };
 
             Post["/log/syslog/disable"] = x => {
-                _syslogRepository.Disable();
+                var syslogRepository = new SyslogRepository();
+                syslogRepository.Disable();
                 return HttpStatusCode.OK;
             };
 
-            Get["/log/journalctl/all"] = x => Response.AsJson(_journalctl.GetAllLog());
+            Get["/log/journalctl/all"] = x => {
+                var journalctl = new Journalctl();
+                var result = journalctl.GetAllLog().ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
-            Get["/log/journalctl/all/{filter}"] = x => Response.AsJson(_journalctl.GetAllLog((string)x.filter));
+            Get["/log/journalctl/all/{filter}"] = x => {
+                var journalctl = new Journalctl();
+                var result = journalctl.GetAllLog((string)x.filter).ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
-            Get["/log/journalctl/last/{hours}"] = x => Response.AsXml(_journalctl.GetAllLogSinceHour((string)x.hours));
+            Get["/log/journalctl/last/{hours}"] = x => {
+                var journalctl = new Journalctl();
+                var result = journalctl.GetAllLogSinceHour((string)x.filter).ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
-            Get["/log/journalctl/antd"] = x => Response.AsJson(_journalctl.GetAntdLog());
+            Get["/log/journalctl/antd"] = x => {
+                var journalctl = new Journalctl();
+                var result = journalctl.GetAntdLog().ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
-            Get["/log/journalctl/context"] = x => Response.AsJson(_journalctl.GetLogContexts());
+            Get["/log/journalctl/context"] = x => {
+                var journalctl = new Journalctl();
+                var result = journalctl.GetLogContexts().ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
-            Get["/log/journalctl/report/{path*}"] = x => Response.AsJson(_journalctlReport.ReadReport((string)x.path));
+            Get["/log/journalctl/report/{path*}"] = x => {
+                var journalctlReport = new Journalctl.Report();
+                var result = journalctlReport.ReadReport((string)x.path).ToList();
+                return JsonConvert.SerializeObject(result);
+            };
 
             Post["/log/journalctl/report"] = x => {
-                _journalctlReport.GenerateReport();
+                var journalctlReport = new Journalctl.Report();
+                journalctlReport.GenerateReport();
                 return HttpStatusCode.OK;
             };
-
-            Get["/log/collectd"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["_page-log-collectd", vmod];
-            };
-
-            Get["/log/websocket"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["_page-log-websocket", vmod];
-            };
-
-            //Post["/log/websocket/listen", true] = async (x, ct) => {
-            //    var port = Websocketd.GetFirstPort();
-            //    //Websocketd.SetCMD(port, "/usr/bin/vmstat -n 1");
-            //    //System.Threading.Thread.Sleep(20);
-            //    await Websocketd.SetWebsocket(port);
-            //    return Response.AsJson(port);
-            //};
-
-            Get["/log/journalctl"] = x => {
-                dynamic vmod = new ExpandoObject();
-                return View["_page-log-journalctl", vmod];
-            };
-
-            //Post["/log/journalctl/listen", true] = async (x, ct) => {
-            //    var port = Websocketd.GetFirstPort();
-            //    Websocketd.SetUnit(port, "todo");
-            //    await Websocketd.LaunchCommandToJournalctl(port);
-            //    return Response.AsJson(port);
-            //};
         }
     }
 }

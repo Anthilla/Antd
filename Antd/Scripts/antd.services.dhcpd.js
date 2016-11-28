@@ -1,8 +1,6 @@
-var $dhcp = jQuery.noConflict();
-
-$dhcp("#StopDhcpd").on("click", function () {
+$("#StopDhcpd").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/stop",
         type: "POST",
         success: function () {
@@ -12,9 +10,9 @@ $dhcp("#StopDhcpd").on("click", function () {
     _requests.push(aj);
 });
 
-$dhcp("#ReloadDhcpd").on("click", function () {
+$("#ReloadDhcpd").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/restart",
         type: "POST",
         success: function () {
@@ -24,9 +22,9 @@ $dhcp("#ReloadDhcpd").on("click", function () {
     _requests.push(aj);
 });
 
-$dhcp("#EnableDhcpd").on("click", function () {
+$("#EnableDhcpd").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/enable",
         type: "POST",
         success: function () {
@@ -36,9 +34,9 @@ $dhcp("#EnableDhcpd").on("click", function () {
     _requests.push(aj);
 });
 
-$dhcp("#DisableDhcpd").on("click", function () {
+$("#DisableDhcpd").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/disable",
         type: "POST",
         success: function () {
@@ -48,9 +46,9 @@ $dhcp("#DisableDhcpd").on("click", function () {
     _requests.push(aj);
 });
 
-$dhcp("#ApplyConfigDhcpd").on("click", function () {
+$("#ApplyConfigDhcpd").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/set",
         type: "POST",
         success: function () {
@@ -60,10 +58,10 @@ $dhcp("#ApplyConfigDhcpd").on("click", function () {
     _requests.push(aj);
 });
 
-$dhcp('[data-role="DeleteDhcpdPool"]').click(function () {
-    var guid = $dhcp(this).attr("data-id");
+$('[data-role="DeleteDhcpdPool"]').click(function () {
+    var guid = $(this).attr("data-id");
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/pool/del",
         type: "POST",
         data: {
@@ -76,10 +74,10 @@ $dhcp('[data-role="DeleteDhcpdPool"]').click(function () {
     _requests.push(aj);
 });
 
-$dhcp('[data-role="DeleteDhcpdClass"]').click(function () {
-    var guid = $dhcp(this).attr("data-id");
+$('[data-role="DeleteDhcpdClass"]').click(function () {
+    var guid = $(this).attr("data-id");
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/class/del",
         type: "POST",
         data: {
@@ -92,10 +90,10 @@ $dhcp('[data-role="DeleteDhcpdClass"]').click(function () {
     _requests.push(aj);
 });
 
-$dhcp('[data-role="DeleteDhcpdReservation"]').click(function () {
-    var guid = $dhcp(this).attr("data-id");
+$('[data-role="DeleteDhcpdReservation"]').click(function () {
+    var guid = $(this).attr("data-id");
     jQuery.support.cors = true;
-    var aj = $dhcp.ajax({
+    var aj = $.ajax({
         url: "/services/dhcpd/reservation/del",
         type: "POST",
         data: {

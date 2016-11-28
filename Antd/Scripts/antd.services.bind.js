@@ -1,8 +1,6 @@
-var $bind = jQuery.noConflict();
-
-$bind("#StopBind").on("click", function () {
+$("#StopBind").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/stop",
         type: "POST",
         success: function () {
@@ -12,9 +10,9 @@ $bind("#StopBind").on("click", function () {
     _requests.push(aj);
 });
 
-$bind("#ReloadBind").on("click", function () {
+$("#ReloadBind").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/restart",
         type: "POST",
         success: function () {
@@ -24,9 +22,9 @@ $bind("#ReloadBind").on("click", function () {
     _requests.push(aj);
 });
 
-$bind("#EnableBind").on("click", function () {
+$("#EnableBind").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/enable",
         type: "POST",
         success: function () {
@@ -36,9 +34,9 @@ $bind("#EnableBind").on("click", function () {
     _requests.push(aj);
 });
 
-$bind("#DisableBind").on("click", function () {
+$("#DisableBind").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/disable",
         type: "POST",
         success: function () {
@@ -48,9 +46,9 @@ $bind("#DisableBind").on("click", function () {
     _requests.push(aj);
 });
 
-$bind("#ApplyConfigBind").on("click", function () {
+$("#ApplyConfigBind").on("click", function () {
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/set",
         type: "POST",
         success: function () {
@@ -60,10 +58,10 @@ $bind("#ApplyConfigBind").on("click", function () {
     _requests.push(aj);
 });
 
-$bind('[data-role="RemoveBindZone"]').click(function () {
-    var guid = $bind(this).attr("data-id");
+$('[data-role="RemoveBindZone"]').click(function () {
+    var guid = $(this).attr("data-id");
     jQuery.support.cors = true;
-    var aj = $bind.ajax({
+    var aj = $.ajax({
         url: "/services/bind/zone/del",
         type: "POST",
         data: {

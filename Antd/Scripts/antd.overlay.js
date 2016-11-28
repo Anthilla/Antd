@@ -1,9 +1,7 @@
-var $ol = jQuery.noConflict();
-
-$ol('[data-role="SetOverlayDirectory"]').on("click", function () {
-    var dir = $ol(this).attr("data-dir");
+$('[data-role="SetOverlayDirectory"]').on("click", function () {
+    var dir = $(this).attr("data-dir");
     jQuery.support.cors = true;
-    var aj = $ol.ajax({
+    var aj = $.ajax({
         url: "/overlay/directory",
         type: "POST",
         data: {

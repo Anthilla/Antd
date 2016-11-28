@@ -1,13 +1,11 @@
-var $sl = jQuery.noConflict();
-
-$sl(document).on("ready", function () {
-    $sl.when(
+$(document).on("ready", function () {
+    $.when(
         LoadNetworkIf()
     ).then();
 });
 
 function Callback(callback, url) {
-    var aj = $sl.ajax({
+    var aj = $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
@@ -29,7 +27,7 @@ var SelectizerOptions = function () {
     return {
         load: function (query, callback) {
             if (!query.length) return callback();
-            var aj = $sl.ajax({
+            var aj = $.ajax({
                 url: this.settings.remoteUrl,
                 type: "GET",
                 dataType: "json",
@@ -68,15 +66,15 @@ function InitNetworkIf(input) {
 }
 
 function LoadNetworkIf() {
-    if ($sl('[data-role="show-net-if"]').length > 0) {
-        $sl('[data-role="show-net-if"]').each(function () {
-            var init = InitNetworkIf($sl(this));
+    if ($('[data-role="show-net-if"]').length > 0) {
+        $('[data-role="show-net-if"]').each(function () {
+            var init = InitNetworkIf($(this));
             if (init != undefined) {
                 init.load(function (callback) {
                     Callback(callback, this.settings.remoteUrl);
                 });
             }
-            $sl(this).hide();
+            $(this).hide();
         });
     }
 }

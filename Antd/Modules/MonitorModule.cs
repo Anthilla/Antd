@@ -84,7 +84,7 @@ namespace Antd.Modules {
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
                     ConsoleLogger.Error(ex);
-                    return Response.AsText("Unable to obtain data");
+                    return Response.AsText(GetResourcesHtmlDiv("Unable to obtain data"));
                 }
             };
         }

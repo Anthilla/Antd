@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
@@ -57,6 +58,13 @@ using Nancy.Security;
 
 namespace Antd.Modules {
     public class PartialHomeModule : CoreModule {
+
+        private static string GetVersionDateFromFile(string path) {
+            var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
+            var m = r.Match(path);
+            var vers = m.Success ? m.Groups[0].Value.Replace("-", "") : "00000000";
+            return vers;
+        }
 
         public PartialHomeModule() {
             this.RequiresAuthentication();
@@ -116,7 +124,10 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var machineInfo = new MachineInfo();
-                    viewModel.Services = machineInfo.GetServices();
+                    viewModel.Services = machineInfo.GetUnits("service");
+                    viewModel.Mounts = machineInfo.GetUnits("mount");
+                    viewModel.Targets = machineInfo.GetUnits("target");
+                    viewModel.Timers = machineInfo.GetUnits("timer");
                     return View["antd/part/page-antd-info-services", viewModel];
                 }
                 catch(Exception ex) {
@@ -158,7 +169,27 @@ namespace Antd.Modules {
                 try {
                     var launcher = new CommandLauncher();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.AntdUpdateCheck = launcher.Launch("mono-antdsh-update-check").JoinToString("<br />");
+                    var bash = new Bash();
+
+                    var updatecheck = launcher.Launch("mono-antdsh-update-check").ToList();
+                    ConsoleLogger.Log(updatecheck.JoinToString("; "));
+                    var latestAntd = updatecheck.LastOrDefault(_ => _.Contains("update.antd"));
+                    var latestAntdsh = updatecheck.LastOrDefault(_ => _.Contains("update.antdsh"));
+                    var latestSystem = updatecheck.LastOrDefault(_ => _.Contains("update.system"));
+                    var latestKernel = updatecheck.LastOrDefault(_ => _.Contains("update.kernel"));
+                    viewModel.AntdLatestVersion = latestAntd;
+                    viewModel.AntdshLatestVersion = latestAntdsh;
+                    viewModel.SystemLatestVersion = latestSystem;
+                    viewModel.KernelLatestVersion = latestKernel;
+
+                    const string antdActive = "/mnt/cdrom/Apps/Anthilla_Antd/active-version";
+                    const string antdshActive = "/mnt/cdrom/Apps/Anthilla_antdsh/active-version";
+                    const string systemActive = "/mnt/cdrom/System/active-system";
+                    const string kernelActive = "/mnt/cdrom/Kernel/active-kernel";
+                    viewModel.AntdVersion = GetVersionDateFromFile(bash.Execute($"file {antdActive}"));
+                    viewModel.AntdshVersion = GetVersionDateFromFile(bash.Execute($"file {antdshActive}"));
+                    viewModel.SystemVersion = GetVersionDateFromFile(bash.Execute($"file {systemActive}"));
+                    viewModel.KernelVersion = GetVersionDateFromFile(bash.Execute($"file {kernelActive}"));
                     return View["antd/part/page-antd-system-update", viewModel];
                 }
                 catch(Exception ex) {
