@@ -99,6 +99,13 @@ namespace Antd {
             ConsoleLogger.Log("configuration prepared");
         }
 
+        public void SetHost() {
+            if(!Parameter.IsUnix)
+                return;
+            _hostConfiguration.ApplyHostInfo();
+            ConsoleLogger.Log("host configured");
+        }
+
         public void SetOsMount() {
             if(!Parameter.IsUnix)
                 return;
@@ -120,15 +127,15 @@ namespace Antd {
         public void SetOsParametersLocal() {
             if(!Parameter.IsUnix)
                 return;
-            _hostConfiguration.DoHostOsParameters();
+            _hostConfiguration.ApplyHostOsParameters();
             ConsoleLogger.Log("os local parameters ready");
         }
 
         public void LoadModules() {
             if(!Parameter.IsUnix)
                 return;
-            _hostConfiguration.DoHostModprobes();
-            _hostConfiguration.DoHostRemoveModules();
+            _hostConfiguration.ApplyHostModprobes();
+            _hostConfiguration.ApplyHostRemoveModules();
             ConsoleLogger.Log("modules ready");
         }
 
@@ -193,6 +200,7 @@ namespace Antd {
                 return;
             var timeConfiguration = new TimeConfiguration();
             timeConfiguration.SyncClock();
+            timeConfiguration.SetNtpConfiguration();
             ConsoleLogger.Log("time and date configured");
         }
 
@@ -259,7 +267,7 @@ namespace Antd {
         public void LoadServices() {
             if(!Parameter.IsUnix)
                 return;
-            _hostConfiguration.DoHostServices();
+            _hostConfiguration.ApplyHostServices();
             ConsoleLogger.Log("services ready");
         }
 

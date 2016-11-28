@@ -119,7 +119,7 @@ namespace Antd.Modules {
                 var modules = modulesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostModprobes(modules);
-                hostcfg.DoHostModprobes();
+                hostcfg.ApplyHostModprobes();
                 return Response.AsRedirect("/cfg");
             };
 
@@ -128,7 +128,7 @@ namespace Antd.Modules {
                 var modules = modulesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
-                hostcfg.DoHostRemoveModules();
+                hostcfg.ApplyHostRemoveModules();
                 return Response.AsRedirect("/cfg");
             };
 
@@ -137,7 +137,7 @@ namespace Antd.Modules {
                 var services = servicesText.SplitToList(Environment.NewLine);
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostServices(services);
-                hostcfg.DoHostServices();
+                hostcfg.ApplyHostServices();
                 return Response.AsRedirect("/cfg");
             };
 
@@ -154,7 +154,7 @@ namespace Antd.Modules {
                 }
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostOsParameters(dict);
-                hostcfg.DoHostOsParameters();
+                hostcfg.ApplyHostOsParameters();
                 return Response.AsRedirect("/cfg");
             };
             #endregion

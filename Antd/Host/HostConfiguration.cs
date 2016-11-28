@@ -60,7 +60,7 @@ namespace Antd.Host {
             Export(Host);
         }
 
-        public void DoHostModprobes() {
+        public void ApplyHostModprobes() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             foreach(var modprobe in Host.Modprobes) {
@@ -79,7 +79,7 @@ namespace Antd.Host {
             Export(Host);
         }
 
-        public void DoHostRemoveModules() {
+        public void ApplyHostRemoveModules() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             launcher.Launch(Host.RemoveModules.SetCmd, Host.RemoveModules.StoredValues);
@@ -102,7 +102,7 @@ namespace Antd.Host {
             Export(Host);
         }
 
-        public void DoHostServices() {
+        public void ApplyHostServices() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             foreach(var modprobe in Host.Services) {
@@ -141,7 +141,7 @@ namespace Antd.Host {
             Setup();
         }
 
-        public void DoHostOsParameters() {
+        public void ApplyHostOsParameters() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             foreach(var modprobe in Host.OsParameters) {
@@ -177,12 +177,63 @@ namespace Antd.Host {
             Export(Host);
         }
 
-        public void DoHostEtcNetworks() {
+        public void ApplyHostEtcNetworks() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             foreach(var modprobe in Host.EtcNetworks) {
                 launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
             }
+        }
+        #endregion
+
+        #region [    repo - Host Info    ]
+        public HostInfoModel GetHostInfo() {
+            Host = LoadHostModel();
+            var host = new HostInfoModel {
+                Name = Host.HostName.StoredValues["$host_name"],
+                Chassis = Host.HostName.StoredValues["$host_chassis"],
+                Deployment = Host.HostName.StoredValues["$host_deployment"],
+                Location = Host.HostName.StoredValues["$host_location"]
+            };
+            return host;
+        }
+
+        public void SetHostInfo(string name, string chassis, string deployment, string location) {
+            Host = LoadHostModel();
+            Host.HostName.StoredValues["$host_name"] = name;
+            Host.HostName.StoredValues["$host_chassis"] = name;
+            Host.HostName.StoredValues["$host_deployment"] = name;
+            Host.HostName.StoredValues["$host_location"] = name;
+            Export(Host);
+        }
+
+        public void ApplyHostInfo() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            launcher.Launch(Host.HostName.SetCmd, Host.HostName.StoredValues);
+            launcher.Launch(Host.HostChassis.SetCmd, Host.HostChassis.StoredValues);
+            launcher.Launch(Host.HostDeployment.SetCmd, Host.HostDeployment.StoredValues);
+            launcher.Launch(Host.HostLocation.SetCmd, Host.HostLocation.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Timezone    ]
+        public string GetTimezone() {
+            Host = LoadHostModel();
+            var timezone = Host.Timezone.StoredValues["$host_timezone"];
+            return timezone;
+        }
+
+        public void SetTimezone(string timezone) {
+            Host = LoadHostModel();
+            Host.Timezone.StoredValues["$host_timezone"] = timezone;
+            Export(Host);
+        }
+
+        public void ApplyTimezone() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            launcher.Launch(Host.Timezone.SetCmd, Host.Timezone.StoredValues);
         }
         #endregion
     }

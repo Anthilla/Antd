@@ -30,6 +30,7 @@ namespace Antd.Host {
             new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.socket" } } },
         };
 
+        #region [    Host Info    ]
         public HostParameter HostName { get; set; } = new HostParameter {
             SetCmd = "set-hostname",
             GetCmd = "hostnamectl-get-hostname",
@@ -61,6 +62,7 @@ namespace Antd.Host {
                 { "$host_location", "My Location" }
             }
         };
+        #endregion
 
         public HostParameter Timezone { get; set; } = new HostParameter {
             SetCmd = "set-timezone",
@@ -68,12 +70,6 @@ namespace Antd.Host {
             StoredValues = new Dictionary<string, string> {
                 { "$host_timezone", "Europe/Rome" }
             }
-        };
-
-        public HostParameter[] TimeConfiguration { get; set; } = {
-            new HostParameter { SetCmd = "ntpdate", StoredValues = new Dictionary<string, string> { { "$server", "ntp1.ien.it" } } },
-            new HostParameter { SetCmd = "set-ntpdate" },
-            new HostParameter { SetCmd = "sync-clock" },
         };
 
         public HostParameter[] DnsResolv { get; set; } = {
@@ -208,6 +204,13 @@ namespace Antd.Host {
             new HostParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mkdir -p /Data/Data01" } } },
             new HostParameter { SetCmd = "anthilla", StoredValues = new Dictionary<string, string> { { "$custom", "mount LABEL=Data01 /Data/Data01" } } },
         };
+    }
+
+    public class HostInfoModel {
+        public string Name { get; set; }
+        public string Chassis { get; set; } 
+        public string Deployment { get; set; } 
+        public string Location { get; set; } 
     }
 
     /// <summary>

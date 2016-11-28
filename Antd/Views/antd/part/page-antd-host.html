@@ -3,17 +3,16 @@
     <table class="table" style="table-layout: fixed;">
         <tbody>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Hostname</label>
-                    <input type="text" data="$host_name" style="width: 60%;" />
-                    <input type="button" data-role="CmdLaunch" data-name="set-hostname" data-par="$host_name" value="Update" class="float-right" />
+                    <input type="text" id="HostName" style="width: 60%;" />
                 </td>
                 <td>@Model.StaticHostname
                 </td>
                 <td>Set host name</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Icon Name</label>
                 </td>
                 <td>@Model.IconName
@@ -21,9 +20,9 @@
                 <td>Set icon name</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Chassis</label>
-                    <select data="$host_chassis" style="width: 60%; height: 25px;" class="border-anthilla-green">
+                    <select id="HostChassis" style="width: 60%; height: 25px;" class="border-anthilla-green">
                         <option value="desktop">Desktop</option>
                         <option value="laptop">Laptop</option>
                         <option value="server">Server</option>
@@ -34,35 +33,31 @@
                         <option value="vm">Vm</option>
                         <option value="container">Container</option>
                     </select>
-                    <input type="button" data-role="CmdLaunch" data-name="set-chassis" data-par="$host_chassis" value="Update" class="float-right" />
                 </td>
                 <td>@Model.Chassis
                 </td>
                 <td>Set host chassis</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Deployment</label>
-                    <input type="text" data="$host_deployment" style="width: 60%;" />
-                    <input type="button" data-role="CmdLaunch" data-name="set-deployment" data-par="$host_deployment" value="Update" class="float-right" />
+                    <input type="text" id="HostDeployment" style="width: 60%;" />
                 </td>
                 <td>@Model.Deployment
                 </td>
                 <td>Set host deployment</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Location</label>
-                    <input type="text" data="$host_location" style="width: 60%;" />
-                    <input type="button" data-role="CmdLaunch" data-name="set-location" data-par="$host_location" value="Update" class="float-right" />
+                    <input type="text" id="HostLocation" style="width: 60%;" />
                 </td>
                 <td>@Model.Location
                 </td>
                 <td>Set host location</td>
             </tr>
-
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Machine ID</label>
                 </td>
                 <td>@Model.MachineID
@@ -70,7 +65,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Boot ID</label>
                 </td>
                 <td>@Model.BootID
@@ -78,7 +73,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Virtualization</label>
                 </td>
                 <td>@Model.Virtualization
@@ -86,7 +81,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Operating System</label>
                 </td>
                 <td>@Model.OS
@@ -94,7 +89,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Kernel</label>
                 </td>
                 <td>@Model.Kernel
@@ -102,12 +97,17 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Architecture</label>
                 </td>
                 <td>@Model.Architecture
                 </td>
                 <td></td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td colspan="3">
+                    <input id="SaveHostInfo" type="button" value="Save Configuration" class="bg-anthilla-green fg-anthilla-gray" />
+                </td>
             </tr>
         </tbody>
     </table>

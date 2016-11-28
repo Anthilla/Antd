@@ -1,3 +1,57 @@
+$("#SaveHostInfo").on("click", function () {
+    var n = $("#HostName").val();
+    var c = $("#HostChassis").find("option:selected").val();
+    var d = $("#HostDeployment").val();
+    var l = $("#HostLocation").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/info",
+        type: "POST",
+        data: {
+            Name: n,
+            Chassis: c,
+            Deployment: d,
+            Location: l
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetHostTimezone").on("click", function () {
+    var tz = $("#HostTimezone").find("option:selected").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/timezone",
+        type: "POST",
+        data: {
+            Timezone: tz
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SyncClock").on("click", function () {
+    var btn = $(this);
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/synctime",
+        type: "POST",
+        beforeSend: function () {
+            btn.addClass("rotating");
+        },
+        success: function () {
+            btn.removeClass("rotating");
+        }
+    });
+    _requests.push(aj);
+});
+
 $("#LockInput").on("click", function () {
     var value = cookie.get("_input");
     if (value === "disabled") {

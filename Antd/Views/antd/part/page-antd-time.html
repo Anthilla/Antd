@@ -1,9 +1,11 @@
 ﻿<div class="border-2-anthilla-gray" style="min-width: 100%; max-width: 100%; width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="Time">Date and Time</legend>
+    <legend>Date and Time
+        <i id="SyncClock" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
+    </legend>
     <table class="table" style="table-layout: fixed;">
         <tbody>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Local time</label>
                 </td>
                 <td>@Model.LocalTime
@@ -11,7 +13,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Universal time</label>
                 </td>
                 <td>@Model.UnivTime
@@ -19,7 +21,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>RTC time</label>
                 </td>
                 <td>@Model.RTCTime
@@ -27,21 +29,21 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Timezone</label>
-                    <select data="$host_timezone" style="width: 60%; height: 25px;" class="border-anthilla-green">
+                    <select id="HostTimezone" style="width: 60%; height: 25px;" class="border-anthilla-green">
                         @Each.Timezones
                         <option value="@Current">@Current</option>
                         @EndEach
                     </select>
-                    <input type="button" data-role="CmdLaunch" data-name="set-timezone" data-par="$host_timezone" value="Update" class="float-right" />
+                    <input id="SetHostTimezone" type="button" value="Update" class="float-right" />
                 </td>
                 <td>@Model.Timezone
                 </td>
                 <td>Set host timezone</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>Network time on</label>
                 </td>
                 <td>@Model.Nettimeon
@@ -49,7 +51,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>NTP synchronized</label>
                 </td>
                 <td>@Model.Ntpsync
@@ -57,7 +59,7 @@
                 <td></td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
-                <td data-role="CmdContainer">
+                <td>
                     <label>RTC in local TZ</label>
                 </td>
                 <td>@Model.Rtcintz

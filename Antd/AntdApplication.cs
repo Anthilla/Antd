@@ -61,6 +61,7 @@ namespace Antd {
             Boot.SetCoreParameters();
             Database = Boot.StartDatabase();
             Boot.PrepareConfiguration();
+            Boot.SetHost();
             Boot.SetOsMount();
             Boot.SetOsParametersLocal();
             Boot.LoadModules();
