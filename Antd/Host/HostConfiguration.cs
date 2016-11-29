@@ -150,42 +150,6 @@ namespace Antd.Host {
         }
         #endregion
 
-        #region [    repo - Compile /etc/networks    ]
-        public Dictionary<string, string> GetHostEtcNetworks() {
-            Host = LoadHostModel();
-            var dicts = Host.EtcNetworks.Select(_ => _.StoredValues);
-            var dict = new Dictionary<string, string>();
-            foreach(var d in dicts) {
-                dict = dict.Merge(d);
-            }
-            return dict;
-        }
-
-        public void SetHostEtcNetworks(string value) {
-            Host = LoadHostModel();
-            var etcNetworks = Host.EtcNetworks;
-            var dicts = etcNetworks.Select(_ => _.StoredValues);
-            var dict = new Dictionary<string, string>();
-            foreach(var d in dicts) {
-                dict = dict.Merge(d);
-            }
-            if(dict.ContainsValue(value)) {
-                return;
-            }
-            etcNetworks.ToList().Add(new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", value } } });
-            Host.EtcNetworks = etcNetworks.ToArray();
-            Export(Host);
-        }
-
-        public void ApplyHostEtcNetworks() {
-            Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            foreach(var modprobe in Host.EtcNetworks) {
-                launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
-            }
-        }
-        #endregion
-
         #region [    repo - Host Info    ]
         public HostInfoModel GetHostInfo() {
             Host = LoadHostModel();

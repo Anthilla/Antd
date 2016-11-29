@@ -205,35 +205,35 @@ namespace antd.commands {
             };
             dict["cat-etc-gentoorel"] = new Command {
                 Arguments = new[] { "/etc/gentoo-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-hostname"] = new Command {
                 Arguments = new[] { "/etc/hostname" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-hosts"] = new Command {
                 Arguments = new[] { "/etc/hosts" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-lsbrel"] = new Command {
                 Arguments = new[] { "/etc/lsb-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-osrel"] = new Command {
                 Arguments = new[] { "/etc/os-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-resolv"] = new Command {
                 Arguments = new[] { "/etc/resolv.conf" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             dict["cat-etc-nsswitch"] = new Command {
                 Arguments = new[] { "/etc/nsswitch.conf" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             dict["cat-etc-networks"] = new Command {
                 Arguments = new[] { "/etc/networks" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             #endregion
 

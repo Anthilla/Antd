@@ -39,6 +39,7 @@ using Antd.Database;
 using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
+using Antd.Host;
 using Antd.Info;
 using Antd.MountPoint;
 using Antd.Network;
@@ -256,9 +257,16 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     viewModel.Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />");
                     viewModel.Hosts = launcher.Launch("cat-etc-hosts").JoinToString("<br />");
+                    var hostConfiguration = new HostConfiguration();
+                    viewModel.DomainInt = hostConfiguration.Host.InternalDomain;
+                    viewModel.DomainExt = hostConfiguration.Host.ExternalDomain;
+                    viewModel.HostsEdit = launcher.Launch("cat-etc-hosts").JoinToString(Environment.NewLine);
                     viewModel.Networks = launcher.Launch("cat-etc-networks").JoinToString("<br />");
+                    viewModel.NetworksEdit = launcher.Launch("cat-etc-networks").JoinToString(Environment.NewLine);
                     viewModel.Resolv = launcher.Launch("cat-etc-resolv").JoinToString("<br />");
+                    viewModel.ResolvEdit = launcher.Launch("cat-etc-resolv").JoinToString(Environment.NewLine);
                     viewModel.Nsswitch = launcher.Launch("cat-etc-nsswitch").JoinToString("<br />");
+                    viewModel.NsswitchEdit = launcher.Launch("cat-etc-nsswitch").JoinToString(Environment.NewLine);
                     return View["antd/part/page-antd-ns", viewModel];
                 }
                 catch(Exception ex) {

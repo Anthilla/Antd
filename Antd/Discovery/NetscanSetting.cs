@@ -70,9 +70,7 @@ namespace Antd.Discovery {
                 _ => $"{Settings.SubnetLabel}-{_.Item3} {Settings.Subnet}{_.Item1}.0"
             );
             var hostConfiguration = new HostConfiguration();
-            foreach(var set in settings) {
-                hostConfiguration.SetHostEtcNetworks(set);
-            }
+            hostConfiguration.SetNsNetworks(settings.ToArray());
         }
     }
 }

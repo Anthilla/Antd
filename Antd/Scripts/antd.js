@@ -1,3 +1,105 @@
+$("#SetDomainExt").on("click", function () {
+    var n = $("#DomainExt").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ext/domain",
+        type: "POST",
+        data: {
+            Domain: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetDomainInt").on("click", function () {
+    var n = $("#DomainInt").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/int/domain",
+        type: "POST",
+        data: {
+            Domain: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="SetNsswitch"]').on("click", function () {
+    var n = $(this).parents("tr").find('[data-role="NewNsswitchValue"]').text();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ns/switch",
+        type: "POST",
+        data: {
+            Switch: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="SetResolv"]').on("click", function () {
+    var n = $(this).parents("tr").find('[data-role="NewResolvValue"]').text();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ns/resolv",
+        type: "POST",
+        data: {
+            Resolv: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="SetNetworks"]').on("click", function () {
+    var n = $(this).parents("tr").find('[data-role="NewNetworksValue"]').text();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ns/networks",
+        type: "POST",
+        data: {
+            Networks: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="SetHosts"]').on("click", function () {
+    var n = $(this).parents("tr").find('[data-role="NewHostsValue"]').text();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ns/hosts",
+        type: "POST",
+        data: {
+            Hosts: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$('[data-role="NsShowEditArea"]').on("click", function () {
+    var row = $(this).parents("tr");
+    row.find('[data-role="static"]').toggle();
+    row.find('[data-role="edit"]').toggle();
+});
+
 $("#SetHostLocation").on("click", function () {
     var n = $("#HostLocation").val();
     jQuery.support.cors = true;

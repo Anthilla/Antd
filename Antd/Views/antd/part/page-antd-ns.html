@@ -11,30 +11,71 @@
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td>
-                    <label>hosts</label>
+                    <label>internal domain</label>
+                    <input type="text" id="DomainInt" style="width: 60%;" />
+                    <input type="button" id="SetDomainInt" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
                 </td>
-                <td>@Model.Hosts</td>
+                <td>@Model.DomainInt
+                </td>
+                <td>Get internal domain</td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td>
+                    <label>external domain</label>
+                    <input type="text" id="DomainExt" style="width: 60%;" />
+                    <input type="button" id="SetDomainExt" value="Update" class="float-right fg-anthilla-gray bg-anthilla-green" />
+                </td>
+                <td>@Model.DomainExt
+                </td>
+                <td>Get external domain</td>
+            </tr>
+            <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
+                <td>
+                    <label>hosts</label>
+                    <input data-role="NsShowEditArea" type="button" value="Edit" class="bg-anthilla-gray fg-anthilla-green" style="width: 20%; float: right; position: relative; top: -28px;">
+                </td>
+                <td data-role="static">@Model.Hosts
+                </td>
+                <td data-role="edit" style="display: none;">
+                    <textarea data-role="NewHostsValue" class="bg-anthilla-gray border-2-anthilla-gray fg-white" style="max-width: 100%; min-width: 100%; min-height: 125px;">@Model.HostsEdit</textarea>
+                    <input data-role="SetHosts" type="button" value="Save" class="bg-anthilla-green fg-anthilla-gray" style="width: 100%;">
+                </td>
                 <td>Get /etc/hosts content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td>
                     <label>networks</label>
+                    <input data-role="NsShowEditArea" type="button" value="Edit" class="bg-anthilla-gray fg-anthilla-green" style="width: 20%; float: right; position: relative; top: -28px;">
                 </td>
-                <td>@Model.Networks</td>
+                <td data-role="static">@Model.Networks</td>
+                <td data-role="edit" style="display: none;">
+                    <textarea data-role="NewNetworksValue" class="bg-anthilla-gray border-2-anthilla-gray fg-white" style="max-width: 100%; min-width: 100%; min-height: 125px;">@Model.NetworksEdit</textarea>
+                    <input data-role="SetNetworks" type="button" value="Save" class="bg-anthilla-green fg-anthilla-gray" style="width: 100%;">
+                </td>
                 <td>Get /etc/networks content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td>
                     <label>resolv.conf</label>
+                    <input data-role="NsShowEditArea" type="button" value="Edit" class="bg-anthilla-gray fg-anthilla-green" style="width: 20%; float: right; position: relative; top: -28px;">
                 </td>
-                <td>@Model.Resolv</td>
+                <td data-role="static">@Model.Resolv</td>
+                <td data-role="edit" style="display: none;">
+                    <textarea data-role="NewResolvValue" class="bg-anthilla-gray border-2-anthilla-gray fg-white" style="max-width: 100%; min-width: 100%; min-height: 125px;">@Model.ResolvEdit</textarea>
+                    <input data-role="SetResolv" type="button" value="Save" class="bg-anthilla-green fg-anthilla-gray" style="width: 100%;">
+                </td>
                 <td>Get /etc/resolv.conf content</td>
             </tr>
             <tr style="border-bottom: 7px solid #535353; border-top: 7px solid #535353;">
                 <td>
                     <label>ns switch</label>
+                    <input data-role="NsShowEditArea" type="button" value="Edit" class="bg-anthilla-gray fg-anthilla-green" style="width: 20%; float: right; position: relative; top: -28px;">
                 </td>
-                <td>@Model.Nsswitch</td>
+                <td data-role="static">@Model.Nsswitch</td>
+                <td data-role="edit" style="display: none;">
+                    <textarea data-role="NewNsswitchValue" class="bg-anthilla-gray border-2-anthilla-gray fg-white" style="max-width: 100%; min-width: 100%; min-height: 125px;">@Model.NsswitchEdit</textarea>
+                    <input data-role="SetNsswitch" type="button" value="Save" class="bg-anthilla-green fg-anthilla-gray" style="width: 100%;">
+                </td>
                 <td>Get /etc/nsswitch.conf content</td>
             </tr>
         </tbody>

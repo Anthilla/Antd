@@ -27,6 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
+using antdlib.common;
 using Antd.Host;
 using Antd.Time;
 using Nancy;
@@ -116,6 +118,66 @@ namespace Antd.Modules {
             Post["/host/synctime"] = x => {
                 var timeconfiguration = new TimeConfiguration();
                 timeconfiguration.SyncClock();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ns/hosts"] = x => {
+                string hosts = Request.Form.Hosts;
+                if(string.IsNullOrEmpty(hosts)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetNsHosts(hosts.SplitToList(Environment.NewLine).ToArray());
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ns/networks"] = x => {
+                string networks = Request.Form.Networks;
+                if(string.IsNullOrEmpty(networks)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetNsNetworks(networks.SplitToList(Environment.NewLine).ToArray());
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ns/resolv"] = x => {
+                string resolv = Request.Form.Resolv;
+                if(string.IsNullOrEmpty(resolv)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetNsResolv(resolv.SplitToList(Environment.NewLine).ToArray());
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ns/switch"] = x => {
+                string @switch = Request.Form.Switch;
+                if(string.IsNullOrEmpty(@switch)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetNsSwitch(@switch.SplitToList(Environment.NewLine).ToArray());
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/int/domain"] = x => {
+                string domain = Request.Form.Domain;
+                if(string.IsNullOrEmpty(domain)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetInternalDomain(domain);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ext/domain"] = x => {
+                string domain = Request.Form.Domain;
+                if(string.IsNullOrEmpty(domain)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetExtenalDomain(domain);
                 return HttpStatusCode.OK;
             };
         }
