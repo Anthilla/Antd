@@ -238,6 +238,8 @@ namespace Antd.Host {
             launcher.Launch(Host.HostChassis.SetCmd, Host.HostChassis.StoredValues);
             launcher.Launch(Host.HostDeployment.SetCmd, Host.HostDeployment.StoredValues);
             launcher.Launch(Host.HostLocation.SetCmd, Host.HostLocation.StoredValues);
+            var name = Host.HostName.StoredValues["$host_name"];
+            launcher.Launch("echo-write", new Dictionary<string, string> { { "$file", "/etc/hostname" }, { "$value", name } });
         }
         #endregion
 
@@ -258,6 +260,130 @@ namespace Antd.Host {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             launcher.Launch(Host.Timezone.SetCmd, Host.Timezone.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Name Service - Hosts    ]
+        public string[] GetNsHosts() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            var hosts = launcher.Launch(Host.NsHosts.GetCmd).ToArray();
+            return hosts;
+        }
+
+        public void SetNsHosts(string[] hosts) {
+            Host = LoadHostModel();
+            Host.NsHostsContent = hosts;
+            Export(Host);
+        }
+
+        public void ApplyNsHosts() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            Host.NsHosts.StoredValues["$value"] = Host.NsHostsContent.JoinToString("\n");
+            launcher.Launch(Host.NsHosts.SetCmd, Host.NsHosts.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Name Service - Networks    ]
+        public string[] GetNsNetworks() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            var networks = launcher.Launch(Host.NsNetworks.GetCmd).ToArray();
+            return networks;
+        }
+
+        public void SetNsNetworks(string[] networks) {
+            Host = LoadHostModel();
+            Host.NsNetworksContent = networks;
+            Export(Host);
+        }
+
+        public void ApplyNsNetworks() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            Host.NsNetworks.StoredValues["$value"] = Host.NsNetworksContent.JoinToString("\n");
+            launcher.Launch(Host.NsNetworks.SetCmd, Host.NsNetworks.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Name Service - Resolv    ]
+        public string[] GetNsResolv() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            var resolv = launcher.Launch(Host.NsResolv.GetCmd).ToArray();
+            return resolv;
+        }
+
+        public void SetNsResolv(string[] resolv) {
+            Host = LoadHostModel();
+            Host.NsResolvContent = resolv;
+            Export(Host);
+        }
+
+        public void ApplyNsResolv() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            Host.NsResolv.StoredValues["$value"] = Host.NsResolvContent.JoinToString("\n");
+            launcher.Launch(Host.NsResolv.SetCmd, Host.NsResolv.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Name Service - Switch    ]
+        public string[] GetNsSwitch() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            var @switch = launcher.Launch(Host.NsSwitch.GetCmd).ToArray();
+            return @switch;
+        }
+
+        public void SetNsSwitch(string[] @switch) {
+            Host = LoadHostModel();
+            Host.NsSwitchContent = @switch;
+            Export(Host);
+        }
+
+        public void ApplyNsSwitch() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            Host.NsSwitch.StoredValues["$value"] = Host.NsSwitchContent.JoinToString("\n");
+            launcher.Launch(Host.NsSwitch.SetCmd, Host.NsSwitch.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Domain - Internal    ]
+        public string GetInternalDomain() {
+            Host = LoadHostModel();
+            var domain = Host.InternalDomain;
+            return domain;
+        }
+
+        public void SetInternalDomain(string domain) {
+            Host = LoadHostModel();
+            Host.InternalDomain = domain;
+            Export(Host);
+        }
+
+        public void ApplyInternalDomain() {
+            throw new NotImplementedException("Edit etc files changing the internal domain value.");
+        }
+        #endregion
+
+        #region [    repo - Domain - Extenal    ]
+        public string GetExtenalDomain() {
+            Host = LoadHostModel();
+            var domain = Host.ExternalDomain;
+            return domain;
+        }
+
+        public void SetExtenalDomain(string domain) {
+            Host = LoadHostModel();
+            Host.ExternalDomain = domain;
+            Export(Host);
+        }
+
+        public void ApplyExtenalDomain() {
+            throw new NotImplementedException("Edit etc files changing the external domain value.");
         }
         #endregion
     }

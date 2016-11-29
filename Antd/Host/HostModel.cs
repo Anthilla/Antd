@@ -31,6 +31,10 @@ namespace Antd.Host {
         };
 
         #region [    Host Info    ]
+        public string InternalDomain { get; set; } = "intd01.local";
+
+        public string ExternalDomain { get; set; } = "dom01.local";
+
         public HostParameter HostName { get; set; } = new HostParameter {
             SetCmd = "set-hostname",
             GetCmd = "hostnamectl-get-hostname",
@@ -81,32 +85,54 @@ namespace Antd.Host {
         };
         #endregion
 
-        public HostParameter[] DnsResolv { get; set; } = {
-            new HostParameter {
-                SetCmd = "echo-write",
-                GetCmd = "cat-etc-resolv",
-                StoredValues = new Dictionary<string, string> {
-                    { "$value", "nameserver 8.8.8.8" },
-                    { "$file", "/etc/resolv.conf" }
-                }
-            },
-            new HostParameter {
-                SetCmd = "echo-append",
-                GetCmd = "cat-etc-resolv",
-                StoredValues = new Dictionary<string, string> {
-                    { "$value", "search mylan.local" },
-                    { "$file", "/etc/resolv.conf" }
-                }
-            },
-            new HostParameter {
-                SetCmd = "echo-append",
-                GetCmd = "cat-etc-resolv",
-                StoredValues = new Dictionary<string, string> {
-                    { "$value", "domain mylan.local" },
-                    { "$file", "/etc/resolv.conf" }
-                }
-            },
+        #region [    Name Service    ]
+
+
+
+        public string[] NsHostsContent { get; set; }
+        public HostParameter NsHosts { get; set; } = new HostParameter {
+            SetCmd = "echo-write-all",
+            GetCmd = "cat-etc-hosts",
+            StoredValues = new Dictionary<string, string> {
+                {"$file", "/etc/hosts"},
+                {"$value", ""}
+            }
         };
+
+        public string[] NsNetworksContent { get; set; }
+        public HostParameter NsNetworks { get; set; } = new HostParameter {
+            SetCmd = "echo-write-all",
+            GetCmd = "cat-etc-networks",
+            StoredValues = new Dictionary<string, string> {
+                {"$file", "/etc/networks"},
+                {"$value", ""}
+            }
+        };
+
+        public string[] NsResolvContent { get; set; } = {
+            "nameserver 8.8.8.8",
+            "search mylan.local",
+            "domain mylan.local"
+        };
+        public HostParameter NsResolv { get; set; } = new HostParameter {
+            SetCmd = "echo-write-all",
+            GetCmd = "cat-etc-resolv",
+            StoredValues = new Dictionary<string, string> {
+                {"$file", "/etc/resolv.conf"},
+                {"$value", ""}
+            }
+        };
+
+        public string[] NsSwitchContent { get; set; }
+        public HostParameter NsSwitch { get; set; } = new HostParameter {
+            SetCmd = "echo-write-all",
+            GetCmd = "cat-etc-nsswitch",
+            StoredValues = new Dictionary<string, string> {
+                {"$file", "/etc/nsswitch.conf"},
+                {"$value", ""}
+            }
+        };
+        #endregion
 
         /// <summary>
         /// Each object in Modprobes triggers the "modprobe" command
@@ -217,9 +243,9 @@ namespace Antd.Host {
 
     public class HostInfoModel {
         public string Name { get; set; }
-        public string Chassis { get; set; } 
-        public string Deployment { get; set; } 
-        public string Location { get; set; } 
+        public string Chassis { get; set; }
+        public string Deployment { get; set; }
+        public string Location { get; set; }
     }
 
     /// <summary>

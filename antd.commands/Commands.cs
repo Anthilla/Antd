@@ -258,6 +258,16 @@ namespace antd.commands {
                 Grep = "$value",
                 Function = (x, y) => WriteTool.WriteFile(x.First(), y)
             };
+            dict["echo-write-all"] = new Command {
+                Arguments = new[] { "$file" },
+                Grep = "$value",
+                Function = (x, y) => {
+                    if(!System.IO.File.ReadAllText(y).Contains(x.First())) {
+                        WriteTool.WriteFileLines(x.First(), y.SplitToList("\n"));
+                    }
+                    return new List<string>();
+                }
+            };
             dict["echo-append"] = new Command {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
