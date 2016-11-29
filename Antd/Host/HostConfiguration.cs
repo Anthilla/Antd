@@ -35,7 +35,17 @@ namespace Antd.Host {
             if(!File.Exists(FilePath)) {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(new HostModel(), Formatting.Indented));
             }
+            else {
+                //todo update null values in model
+            }
         }
+
+        //private static void FastMember(string propertyName, string value) {
+        //    var obj = new HostModel();
+        //    var type = obj.GetType();
+        //    var accessors = TypeAccessor.Create(type);
+        //    accessors[obj, "PropertyA"] = "PropertyValue";
+        //}
 
         public void Export(HostModel model) {
             if(File.Exists(FilePath)) {

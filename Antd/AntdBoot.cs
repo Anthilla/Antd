@@ -124,6 +124,16 @@ namespace Antd {
             ConsoleLogger.Log("os mounts ready");
         }
 
+        public void SetNameService() {
+            if(!Parameter.IsUnix)
+                return;
+            _hostConfiguration.ApplyNsHosts();
+            _hostConfiguration.ApplyNsNetworks();
+            _hostConfiguration.ApplyNsResolv();
+            _hostConfiguration.ApplyNsSwitch();
+            ConsoleLogger.Log("name service ready");
+        }
+
         public void SetOsParametersLocal() {
             if(!Parameter.IsUnix)
                 return;

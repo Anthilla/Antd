@@ -2,10 +2,6 @@ $("#ShowUserPanel").on("click", function () {
     $("#UserCreateDashboard").toggle();
 });
 
-$(document).ready(function ($) {
-    $("#UpdateMasterPassword").strength();
-});
-
 $("input:password").keyup(function () {
     CheckPassword();
     return false;
