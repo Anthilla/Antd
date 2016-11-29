@@ -5,6 +5,7 @@ using antdlib.common;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using antd.commands;
+using FastMember;
 
 namespace Antd.Host {
     public class HostConfiguration {
@@ -36,16 +37,27 @@ namespace Antd.Host {
                 File.WriteAllText(FilePath, JsonConvert.SerializeObject(new HostModel(), Formatting.Indented));
             }
             else {
-                //todo update null values in model
+                File.WriteAllText(FilePath, JsonConvert.SerializeObject(CompareStoredHostModel(), Formatting.Indented));
             }
         }
 
-        //private static void FastMember(string propertyName, string value) {
-        //    var obj = new HostModel();
-        //    var type = obj.GetType();
-        //    var accessors = TypeAccessor.Create(type);
-        //    accessors[obj, "PropertyA"] = "PropertyValue";
-        //}
+        private HostModel CompareStoredHostModel() {
+            var storedHost = Host;
+            var storedHostProperties = storedHost.GetType().GetProperties();
+            var defaultHost = new HostModel();
+            foreach(var prop in defaultHost.GetType().GetProperties()) {
+                if(!storedHostProperties.Contains(prop)) {
+                    storedHost = FastMember<HostModel>(prop.Name, prop.GetValue(defaultHost, null));
+                }
+            }
+            return storedHost;
+        }
+
+        private static T FastMember<T>(string propertyName, object value) where T : class, new() {
+            var obj = new T();
+            TypeAccessor.Create(obj.GetType())[obj, propertyName] = value;
+            return obj;
+        }
 
         public void Export(HostModel model) {
             if(File.Exists(FilePath)) {
