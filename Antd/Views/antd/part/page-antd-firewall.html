@@ -1,60 +1,177 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-	<legend id="FW">
-		<i class="icon-fire on-left"></i>
-		Firewall
-		<i id="ExportNftConfiguration" class="icon-upload fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-	</legend>
-	@Each.NftTables
-	<div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
-		<div class="panel-header bg-anthilla-gray fg-white">
-			@Current.Type @Current.Name
-		</div>
-		<div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="@Current.Type" data-nft-name="@Current.Name">
-			<label>Table sets</label>
-			<table class="table" data-nft="Sets">
-				<tbody>
-				@Partial['_partial/part-nft-sets', @Current.Sets];
-				</tbody>
-			</table>
-			<hr class="bg-anthilla-gray" />
-			<label>Table chains</label>
-			<table class="table" data-nft="Chains">
-				<tbody>
-				@Partial['_partial/part-nft-chains', @Current.Chains];
-				</tbody>
-			</table>
-			<hr class="bg-anthilla-gray" />
-			<input type="button" style="width: 100%;" value="Save Nft Configuration" data-role="SaveNftConfiguration" class="bg-yellow bg-active-orange" />
-		</div>
-	</div>
-	@EndEach
-	<hr class="bg-anthilla-gray" />
-	<legend>
-		<i class="icon-fire on-left"></i>
-		MAC Address Filtering
-		<i id="ReloadMacAddressList" class="icon-cycle fg-anthilla-green" style="float: right; cursor: pointer !important;"></i>
-	</legend>
-	<table class="table">
-		<tbody>
-		@Each.MacAddressList
-		<tr>
-			<td>
-				<p>@Current.Value</p>
-			</td>
-			<td>
-				<p>@Current.Description</p>
-			</td>
-			<td>
-				<p>@Current.Type</p>
-			</td>
-			<td>
-				<p>@Current.IsEnabled</p>
-			</td>
-			<td>
-				<p>@Current.IsNew</p>
-			</td>
-		</tr>
-		@EndEach
-		</tbody>
-	</table>
+    <legend>Firewall
+        @IfNot.FirewallIsActive
+        <i id="EnableFirewall" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.FirewallIsActive
+        <i id="StopFirewall" class="icon-cancel-2 fg-anthilla-green" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="ReloadFirewall" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="DisableFirewall" class="icon-cycle fg-anthilla-green" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ApplyConfigFirewall" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        @EndIf
+    </legend>
+
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            Table - IPV4 Filter 
+        </div>
+        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="ip" data-nft-name="filter">
+            <label>Table sets</label>
+            <table class="table" data-nft="Sets">
+                <tbody>
+                    @Each.FwIp4Filter.Sets
+                <tr data-nft="Set" data-nft-name="@Current.Name" data-nft-type="@Current.Type">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="SetElements" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.ElementsString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <label>Table chains</label>
+            <table class="table" data-nft="Chains">
+                <tbody>
+                    @Each.FwIp4Filter.Chains
+                <tr data-nft="Chain" data-nft-name="@Current.Name">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="ChainRules" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.RulesString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" style="width: 100%;" value="Save Table Configuration" data-role="SaveIpv4FilterTable" class="bg-yellow bg-active-orange fg-anthilla-gray" />
+        </div>
+    </div>
+
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            Table - IPV4 Nat
+        </div>
+        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="ip" data-nft-name="nat">
+            <label>Table sets</label>
+            <table class="table" data-nft="Sets">
+                <tbody>
+                    @Each.FwIp4Nat.Sets
+                <tr data-nft="Set" data-nft-name="@Current.Name" data-nft-type="@Current.Type">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="SetElements" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.ElementsString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <label>Table chains</label>
+            <table class="table" data-nft="Chains">
+                <tbody>
+                    @Each.FwIp4Nat.Chains
+                <tr data-nft="Chain" data-nft-name="@Current.Name">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="ChainRules" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.RulesString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" style="width: 100%;" value="Save Table Configuration" data-role="SaveIpv4NatTable" class="bg-yellow bg-active-orange fg-anthilla-gray" />
+        </div>
+    </div>
+
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            Table - IPV6 Filter
+        </div>
+        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="ip6" data-nft-name="filter">
+            <label>Table sets</label>
+            <table class="table" data-nft="Sets">
+                <tbody>
+                    @Each.FwIp6Filter.Sets
+                <tr data-nft="Set" data-nft-name="@Current.Name" data-nft-type="@Current.Type">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="SetElements" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.ElementsString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <label>Table chains</label>
+            <table class="table" data-nft="Chains">
+                <tbody>
+                    @Each.FwIp6Filter.Chains
+                <tr data-nft="Chain" data-nft-name="@Current.Name">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="ChainRules" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.RulesString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" style="width: 100%;" value="Save Table Configuration" data-role="SaveIpv6FilterTable" class="bg-yellow bg-active-orange fg-anthilla-gray" />
+        </div>
+    </div>
+
+    <div data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+        <div class="panel-header bg-anthilla-gray fg-white">
+            Table - IPV6 Nat
+        </div>
+        <div class="panel-content" style="display: none;" data-nft="Table" data-nft-type="ip6" data-nft-name="nat">
+            <label>Table sets</label>
+            <table class="table" data-nft="Sets">
+                <tbody>
+                    @Each.FwIp6Nat.Sets
+                <tr data-nft="Set" data-nft-name="@Current.Name" data-nft-type="@Current.Type">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="SetElements" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.ElementsString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <label>Table chains</label>
+            <table class="table" data-nft="Chains">
+                <tbody>
+                    @Each.FwIp6Nat.Chains
+                <tr data-nft="Chain" data-nft-name="@Current.Name">
+                    <td style="width: 28%;">
+                        <p>@Current.Name</p>
+                    </td>
+                    <td>
+                        <textarea data-nft="ChainRules" class="fg-white bg-anthilla-gray border-anthilla-green autoheight" style="min-width: 90%; max-width: 90%; min-height: 30px; height: auto;">@Current.RulesString</textarea>
+                    </td>
+                </tr>
+                    @EndEach
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray" />
+            <input type="button" style="width: 100%;" value="Save Table Configuration" data-role="SaveIpv6NatTable" class="bg-yellow bg-active-orange fg-anthilla-gray" />
+        </div>
+    </div>
 </div>

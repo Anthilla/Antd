@@ -79,8 +79,6 @@ namespace Antd {
             Global.SaveIndexToDiskTimerSeconds = 30;
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
-            database.RegisterView(new FirewallListView());
-            database.RegisterView(new NftView());
             database.RegisterView(new TimerView());
             database.RegisterView(new RsyncView());
             database.RegisterView(new UserClaimView());
@@ -264,24 +262,23 @@ namespace Antd {
             ConsoleLogger.Log("ssh authorized keys restored");
         }
 
-        private readonly NfTables _nfTables = new NfTables();
-
-        public void SetFirewall() {
-            if(!Parameter.IsUnix)
-                return;
-            _nfTables.Setup();
-            _nfTables.ReloadConfiguration();
-            _nfTables.Import();
-            _nfTables.Export();
-            _nfTables.ReloadConfiguration();
-            ConsoleLogger.Log("firewall ready");
-        }
-
         public void LoadServices() {
             if(!Parameter.IsUnix)
                 return;
             _hostConfiguration.ApplyHostServices();
             ConsoleLogger.Log("services ready");
+        }
+
+        public void StartFirewall() {
+            if(!Parameter.IsUnix)
+                return;
+            var firewallConfiguration = new FirewallConfiguration();
+            if(firewallConfiguration.IsActive()) {
+                firewallConfiguration.Set();
+                firewallConfiguration.Enable();
+                firewallConfiguration.Restart();
+                ConsoleLogger.Log("firewall start");
+            }
         }
 
         public void StartDhcpd() {

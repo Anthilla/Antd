@@ -73,6 +73,7 @@ namespace Antd {
             Boot.CommandExecuteLocal();
             Boot.Ssh();
             Boot.LoadServices();
+            Boot.StartFirewall();
             Boot.StartDhcpd();
             Boot.StartBind();
             Boot.StartSamba();

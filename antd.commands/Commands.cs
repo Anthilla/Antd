@@ -256,6 +256,29 @@ namespace antd.commands {
             };
             #endregion
 
+            #region [    Command - Nftables    ]
+            dict["nft-f"] = new Command {
+                Arguments = new[] { "nft-f $file" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["nft-tables"] = new Command {
+                Arguments = new[] { "nft list tables" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["nft-table"] = new Command {
+                Arguments = new[] { "nft list table $type $table" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["nft-set"] = new Command {
+                Arguments = new[] { "nft list set $type $table $set" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["nft-chain"] = new Command {
+                Arguments = new[] { "nft list chain $type $table $chain" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            #endregion
+
             #region [    Command - Echo (write/append)    ]
             dict["echo-write"] = new Command {
                 Arguments = new[] { "$file" },

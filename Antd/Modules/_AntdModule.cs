@@ -405,11 +405,30 @@ namespace Antd.Modules {
 
             Get["/part/fw"] = x => {
                 try {
-                    var nfTables = new NfTables();
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.NftTables = nfTables.Tables();
-                    viewModel.MacAddressList = new MacAddressRepository().GetAll();
+                    var firewallConfiguration = new FirewallConfiguration();
+                    var firewallIsActive = firewallConfiguration.IsActive();
+                    viewModel.FirewallIsActive = firewallIsActive;
+                    var firewall = firewallConfiguration.Get() ?? new FirewallConfigurationModel();
+                    viewModel.FwIp4Filter = firewall.Ipv4FilterTable;
+                    viewModel.FwIp4Nat = firewall.Ipv4NatTable;
+                    viewModel.FwIp6Filter = firewall.Ipv6FilterTable;
+                    viewModel.FwIp6Nat = firewall.Ipv6NatTable;
                     return View["antd/part/page-antd-firewall", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(
+                        $"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/fw/mac"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    viewModel.MacAddressList = new MacAddressRepository().GetAll();
+                    return View["antd/part/page-antd-firewall-mac", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error(

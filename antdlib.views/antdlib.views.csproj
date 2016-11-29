@@ -51,13 +51,11 @@
   <ItemGroup>
     <Compile Include="AuthorizedKeysModel.cs" />
     <Compile Include="ApplicationModel.cs" />
-    <Compile Include="NftModel.cs" />
     <Compile Include="SyslogModel.cs" />
     <Compile Include="GlusterModel.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MacAddressModel.cs" />
     <Compile Include="RsyncModel.cs" />
-    <Compile Include="FirewallListModel.cs" />
     <Compile Include="_DatabaseHelper.cs" />
     <Compile Include="_Extensions.cs" />
     <Compile Include="UserClaimModel.cs" />

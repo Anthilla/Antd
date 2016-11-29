@@ -102,6 +102,8 @@
     <Compile Include="Bind\BindConfigurationModel.cs" />
     <Compile Include="Discovery\NetscanSetting.cs" />
     <Compile Include="Discovery\NetscanSettingModel.cs" />
+    <Compile Include="Firewall\FirewallConfiguration.cs" />
+    <Compile Include="Firewall\FirewallConfigurationModel.cs" />
     <Compile Include="Host\HostConfiguration.cs" />
     <Compile Include="Host\HostModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
@@ -112,13 +114,11 @@
     <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
-    <Compile Include="Database\NftRepository.cs" />
     <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
-    <Compile Include="Database\FirewallListRepository.cs" />
     <Compile Include="Database\UserClaimRepository.cs" />
     <Compile Include="Database\UserRepository.cs" />
     <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
@@ -126,9 +126,6 @@
     <Compile Include="Dhcpd\DhcpdLeaseModel.cs" />
     <Compile Include="Dhcpd\DhcpdLeases.cs" />
     <Compile Include="DirectoryWatcher.cs" />
-    <Compile Include="Firewall\FirewallLists.cs" />
-    <Compile Include="Firewall\NFTables.cs" />
-    <Compile Include="Firewall\NftModels.cs" />
     <Compile Include="Gluster\GlusterSetup.cs" />
     <Compile Include="Gluster\GlusterConfiguration.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
@@ -138,6 +135,8 @@
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Log\SyslogNg.cs" />
     <Compile Include="Modules\HostModule.cs" />
+    <Compile Include="Modules\ServiceBindModule.cs" />
+    <Compile Include="Modules\ServiceSambaModule.cs" />
     <Compile Include="Modules\_CaModule.cs" />
     <Compile Include="Modules\_LogModule.cs" />
     <Compile Include="Modules\HandshakeModule.cs" />
@@ -155,12 +154,12 @@
     <Compile Include="Modules\AuthenticationModule.cs" />
     <Compile Include="Modules\renew\CertificateAuthorityModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
-    <Compile Include="Modules\FirewallModule.cs" />
+    <Compile Include="Modules\ServiceFirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
-    <Compile Include="Modules\ServicesModule.cs" />
+    <Compile Include="Modules\ServiceDhcpdModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\UsersModule.cs" />
@@ -218,16 +217,16 @@
     <Content Include="Scripts\antd.log.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.services.ssh.js">
+    <Content Include="Scripts\antd.service.ssh.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.services.bind.js">
+    <Content Include="Scripts\antd.service.bind.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.services.dhcpd.js">
+    <Content Include="Scripts\antd.service.dhcpd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.services.smb.js">
+    <Content Include="Scripts\antd.service.smb.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.asset.js">
@@ -239,7 +238,7 @@
     <Content Include="Scripts\antd.overlay.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.firewall.js">
+    <Content Include="Scripts\antd.service.firewall.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.sync.js">
@@ -275,6 +274,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-firewall-mac.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-info-services.html">
@@ -380,21 +382,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-storage.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-nft-chains.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-nft-sets.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-srvc-dhcp-data.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-srvc-bind-data.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_partial\part-srvc-samba-data.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-apps-unitinfo.html">
@@ -586,37 +573,13 @@
     <Content Include="novnc\images\tab.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\.gluster.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\.machine.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\.setup.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\dhcpd.leases">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\FILE_etc_collectd.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FILE_etc_nftables.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FILE_etc_systemd_journald.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FILE_etc_wpa_supplicant_wpa__suplicant.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\hosts.template">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\krb5.conf.template">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\nginx.conf.template">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\openssl-intermediate.cnf">
@@ -629,15 +592,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\openssl-sc-template.cnf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\smb.conf.template">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\sshd_config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ssh_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\websocketd">
@@ -697,19 +651,6 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Resources\commands.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\values.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\.syslog-ng.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\.nxlog.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Resources\dhcpd.conf" />
     <None Include="ShellScript\api\BOND_STATUS">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
