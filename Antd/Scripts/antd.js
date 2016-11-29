@@ -111,7 +111,7 @@ $('[data-role="SetNetworks"]').on("click", function () {
 });
 
 $('[data-role="SetHosts"]').on("click", function () {
-    var n = $(this).parents("tr").find('[data-role="NewHostsValue"]').text();
+    var n = $(this).parents("tr").find('[data-role="NewHostsValue"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/host/ns/hosts",

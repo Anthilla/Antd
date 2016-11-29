@@ -27,15 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Database;
-using Antd.Gluster;
-using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -43,8 +40,6 @@ namespace Antd.Modules {
 
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
         private readonly AppsManagement _appsManagement = new AppsManagement();
-        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
-
         public HomeModule() {
             this.RequiresAuthentication();
 
@@ -65,39 +60,6 @@ namespace Antd.Modules {
                 dynamic vmod = new ExpandoObject();
                 vmod.Connections = new Dictionary<string, string>();
                 return View["antd/page-vnc", vmod];
-            };
-
-            Post["/gluster/set"] = x => {
-                string name = Request.Form.Name;
-                string path = Request.Form.Path;
-                string nodes = Request.Form.Node;
-                var nodelist = nodes.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
-                string volumeNames = Request.Form.GlusterVolumeName;
-                string volumeBrick = Request.Form.GlusterVolumeBrick;
-                string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
-                var volumeNamesList = volumeNames.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var volumeBrickList = volumeBrick.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var volumeMountPointList = volumeMountPoint.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var volumelist = new List<GfsVolume>();
-                for(var i = 0; i < 20; i++) {
-                    if(volumeNamesList.Length < i || volumeBrickList.Length < i || volumeMountPointList.Length < i) { continue; }
-                    var vol = new GfsVolume {
-                        Name = volumeNamesList[i],
-                        Brick = volumeBrickList[i],
-                        MountPoint = volumeMountPointList[i],
-                    };
-                    volumelist.Add(vol);
-                }
-                var setup = new GlusterSetup {
-                    Name = name,
-                    Path = path,
-                    IsConfigured = true,
-                    Nodes = nodelist,
-                    Volumes = volumelist
-                };
-                _glusterConfiguration.Set(setup);
-                _glusterConfiguration.Launch();
-                return Response.AsRedirect("/");
             };
         }
     }

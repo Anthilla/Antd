@@ -138,7 +138,9 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNtpd(ntpd.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.SetNtpd(ntpd.Contains("\n")
+                  ? ntpd.SplitToList("\n").ToArray()
+                  : ntpd.SplitToList(Environment.NewLine).ToArray());
                 hostConfiguration.ApplyNtpd();
                 return HttpStatusCode.OK;
             };
@@ -149,7 +151,9 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsHosts(hosts.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.SetNsHosts(hosts.Contains("\n")
+                    ? hosts.SplitToList("\n").ToArray()
+                    : hosts.SplitToList(Environment.NewLine).ToArray());
                 hostConfiguration.ApplyNsHosts();
                 return HttpStatusCode.OK;
             };
@@ -160,7 +164,9 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsNetworks(networks.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.SetNsNetworks(networks.Contains("\n")
+                  ? networks.SplitToList("\n").ToArray()
+                  : networks.SplitToList(Environment.NewLine).ToArray());
                 hostConfiguration.ApplyNsNetworks();
                 return HttpStatusCode.OK;
             };
@@ -171,7 +177,9 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsResolv(resolv.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.SetNsResolv(resolv.Contains("\n")
+                  ? resolv.SplitToList("\n").ToArray()
+                  : resolv.SplitToList(Environment.NewLine).ToArray());
                 hostConfiguration.ApplyNsResolv();
                 return HttpStatusCode.OK;
             };
@@ -182,7 +190,9 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsSwitch(@switch.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.SetNsSwitch(@switch.Contains("\n")
+                  ? @switch.SplitToList("\n").ToArray()
+                  : @switch.SplitToList(Environment.NewLine).ToArray());
                 hostConfiguration.ApplyNsSwitch();
                 return HttpStatusCode.OK;
             };

@@ -81,7 +81,7 @@ namespace Antd {
             Boot.InitAvahi();
             Boot.ImportPools();
             Boot.StartScheduler();
-            Boot.InitGlusterfs();
+            Boot.StartGlusterfs();
             Boot.StartDirectoryWatcher();
             Boot.LaunchInternalTimers();
             Boot.LaunchApps();

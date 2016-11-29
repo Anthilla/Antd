@@ -1,23 +1,19 @@
-﻿using System.Collections.Generic;
-
-namespace Antd.Gluster {
-    public class GlusterSetup {
-        public string Name { get; set; }
-        public string Path { get; set; }
-        public bool IsConfigured { get; set; }
+﻿namespace Antd.Gluster {
+    public class GlusterConfigurationModel {
+        public bool IsActive { get; set; }
         /// <summary>
         /// Lista dei server/nodi
         /// es: srv01, srv02, srv03...
         /// </summary>
-        public List<string> Nodes { get; set; }
-
+        public string[] Nodes { get; set; }
         /// <summary>
         /// Lista delle informazioni dei volumi da avviare/configurare sulla macchina
         /// </summary>
-        public List<GfsVolume> Volumes { get; set; }
+        public GlusterVolume[] Volumes { get; set; }
     }
 
-    public class GfsVolume {
+    public class GlusterVolume {
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         /// <summary>
         /// Nome del volume di gluster
         /// es: gv01

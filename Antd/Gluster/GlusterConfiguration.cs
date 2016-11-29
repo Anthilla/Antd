@@ -1,141 +1,193 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.common.Tool;
+using antdlib.Systemd;
 using Newtonsoft.Json;
+using IoDir = System.IO.Directory;
+
 
 namespace Antd.Gluster {
     public class GlusterConfiguration {
 
-        private static readonly string FilePath = $"{Parameter.RepoConfig}/gluster.conf";
+        private readonly GlusterConfigurationModel _serviceModel;
+
+        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/gluster.conf";
+        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/gluster.conf.bck";
         private const string ServiceName = "glusterd.service";
 
-        public void Set() {
-            Directory.CreateDirectory(Parameter.RepoConfig);
-            if(!File.Exists(FilePath)) {
-                var tempFlow = new GlusterSetup {
-                    Name = ".gluster.conf",
-                    Path = $"{Parameter.RepoConfig}/.gluster.conf",
-                    IsConfigured = false,
-                    Nodes = new List<string> { "server01", "server02" },
-                    Volumes = new List<GfsVolume> {
-                        new GfsVolume {
-                            Name = "glusterVolume01",
-                            Brick = "/Path/To/Brick00/",
-                            MountPoint = "/Local/Mount/Point01"
-                        },
-                        new GfsVolume {
-                            Name = "glusterVolume02",
-                            Brick = "/Path/To/Brick00/",
-                            MountPoint = "/Local/Mount/Point02"
-                        }
-                    }
-                };
-                if(!File.Exists(tempFlow.Path)) {
-                    File.WriteAllText(tempFlow.Path, JsonConvert.SerializeObject(tempFlow, Formatting.Indented));
+        public GlusterConfiguration() {
+            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+            if(!File.Exists(_cfgFile)) {
+                _serviceModel = null;
+            }
+            else {
+                try {
+                    var text = File.ReadAllText(_cfgFile);
+                    var obj = JsonConvert.DeserializeObject<GlusterConfigurationModel>(text);
+                    _serviceModel = obj;
                 }
+                catch(Exception) {
+                    _serviceModel = null;
+                }
+
             }
         }
 
-        public void Set(GlusterSetup setup) {
-            Directory.CreateDirectory(Parameter.RepoConfig);
-            if(!File.Exists(FilePath)) {
+        public void Save(GlusterConfigurationModel model) {
+            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            if(File.Exists(_cfgFile)) {
+                File.Copy(_cfgFile, _cfgFileBackup, true);
+            }
+            File.WriteAllText(_cfgFile, text);
+        }
+
+
+        public void Set() {
+            if(_serviceModel == null) {
                 return;
             }
-            var text = JsonConvert.SerializeObject(setup, Formatting.Indented);
-            File.WriteAllText(FilePath, text);
+            Enable();
+            Stop();
+            Restart();
+            Launch();
         }
 
-        public bool IsConfigured => CheckIfIsConfigured();
-
-        private static bool CheckIfIsConfigured() {
-            if(!File.Exists(FilePath)) {
+        public bool IsActive() {
+            if(!File.Exists(_cfgFile)) {
                 return false;
             }
-            try {
-                var t = File.ReadAllText(FilePath);
-                var m = JsonConvert.DeserializeObject<GlusterSetup>(t);
-                if(m == null) {
-                    return false;
-                }
-                return m.IsConfigured;
+            return _serviceModel != null && _serviceModel.IsActive;
+        }
+
+        public GlusterConfigurationModel Get() {
+            return _serviceModel;
+        }
+
+        public void Enable() {
+            if(_serviceModel == null) {
+                return;
             }
-            catch(Exception) {
-                return false;
+            _serviceModel.IsActive = true;
+            Save(_serviceModel);
+        }
+
+        public void Disable() {
+            if(_serviceModel == null) {
+                return;
+            }
+            _serviceModel.IsActive = false;
+            Save(_serviceModel);
+        }
+
+        public void Stop() {
+            Systemctl.Stop(ServiceName);
+        }
+
+        public void Restart() {
+            if(Systemctl.IsEnabled(ServiceName) == false) {
+                Systemctl.Enable(ServiceName);
+            }
+            if(Systemctl.IsActive(ServiceName) == false) {
+                Systemctl.Restart(ServiceName);
             }
         }
 
-        private static readonly Bash Bash = new Bash();
-
-        public void Start() {
-            Console.WriteLine($"systemctl start {ServiceName}");
-            Bash.Execute($"systemctl start {ServiceName}", false);
-        }
+        private readonly Bash _bash = new Bash();
 
         public void Launch() {
-            if(!File.Exists(FilePath)) {
-                return;
-            }
-            var text = File.ReadAllText(FilePath);
-            var config = JsonConvert.DeserializeObject<GlusterSetup>(text);
-
+            var config = _serviceModel;
             foreach(var node in config.Nodes) {
                 Console.WriteLine($"glusterfs: setup {node} node");
-                Console.WriteLine(Bash.Execute($"gluster peer probe {node}"));
+                Console.WriteLine(_bash.Execute($"gluster peer probe {node}"));
             }
-
-            var numberOfNodes = config.Nodes.Count.ToString();
-
+            var numberOfNodes = _serviceModel.Nodes.Length;
             foreach(var volume in config.Volumes) {
                 Console.WriteLine($"glusterfs: setup {volume.Name} volume");
                 var volumePath = $"{volume.Brick}{volume.Name}";
-                Directory.CreateDirectory(volumePath);
-
+                IoDir.CreateDirectory(volumePath);
                 //Terminal.Execute($"setfattr -x trusted.gfid {volumePath}");
                 //Terminal.Execute($"setfattr -x trusted.glusterfs.volume-id {volumePath}");
                 //Terminal.Execute($"rm -fR {volumePath}/.glusterfs");
-
-                var volumesList = new List<string>();
-                foreach(var node in config.Nodes) {
-                    volumesList.Add($"{node}:{volumePath}");
-                }
-
-                VolumeCreate(volume.Name, numberOfNodes, volumesList.ToArray());
+                VolumeCreate(volume.Name, numberOfNodes.ToString(), config.Nodes.Select(node => $"{node}:{volumePath}").ToArray());
                 VolumeStart(volume.Name);
-
-                Directory.CreateDirectory(volume.MountPoint);
+                IoDir.CreateDirectory(volume.MountPoint);
                 foreach(var node in config.Nodes) {
                     VolumeMount(node, volume.Name, volume.MountPoint);
                 }
             }
         }
 
-        public void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
+        private void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
             var volString = string.Join(" ", volumesList);
             Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
-            Bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force", false);
+            _bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force", false);
         }
 
-        public void VolumeStart(string volumeName) {
-            Bash.Execute($"gluster volume start {volumeName}", false);
+        private void VolumeStart(string volumeName) {
+            _bash.Execute($"gluster volume start {volumeName}", false);
         }
 
-        public void VolumeMount(string node, string volumeName, string mountPoint) {
+        private void VolumeMount(string node, string volumeName, string mountPoint) {
             if(MountHelper.IsAlreadyMounted(mountPoint) == false) {
-                Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
+                _bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
             }
         }
 
-        public GlusterSetup Get() {
-            Directory.CreateDirectory(Parameter.RepoConfig);
-            if(!File.Exists(FilePath)) {
-                return new GlusterSetup();
+        public void AddNode(string model) {
+            if(_serviceModel == null) {
+                return;
             }
-            var text = File.ReadAllText(FilePath);
-            var setup = JsonConvert.DeserializeObject<GlusterSetup>(text);
-            return setup;
+            var node = _serviceModel.Nodes;
+            if(node.Any(_ => _ == model)) {
+                return;
+            }
+            node.ToList().Add(model);
+            _serviceModel.Nodes = node;
+            Save(_serviceModel);
+        }
+
+        public void RemoveNode(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var volume = _serviceModel.Volumes;
+            var model = volume.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            volume.ToList().Remove(model);
+            _serviceModel.Volumes = volume;
+            Save(_serviceModel);
+        }
+
+        public void AddVolume(GlusterVolume model) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var volume = _serviceModel.Volumes;
+            if(volume.Any(_ => _.Name == model.Name)) {
+                return;
+            }
+            volume.ToList().Add(model);
+            _serviceModel.Volumes = volume;
+            Save(_serviceModel);
+        }
+
+        public void RemoveVolume(string guid) {
+            if(_serviceModel == null) {
+                return;
+            }
+            var volume = _serviceModel.Volumes;
+            var model = volume.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            volume.ToList().Remove(model);
+            _serviceModel.Volumes = volume;
+            Save(_serviceModel);
         }
     }
 }

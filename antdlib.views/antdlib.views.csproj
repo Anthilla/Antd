@@ -52,7 +52,6 @@
     <Compile Include="AuthorizedKeysModel.cs" />
     <Compile Include="ApplicationModel.cs" />
     <Compile Include="SyslogModel.cs" />
-    <Compile Include="GlusterModel.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MacAddressModel.cs" />
     <Compile Include="RsyncModel.cs" />

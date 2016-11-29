@@ -126,7 +126,7 @@
     <Compile Include="Dhcpd\DhcpdLeaseModel.cs" />
     <Compile Include="Dhcpd\DhcpdLeases.cs" />
     <Compile Include="DirectoryWatcher.cs" />
-    <Compile Include="Gluster\GlusterSetup.cs" />
+    <Compile Include="Gluster\GlusterConfigurationModel.cs" />
     <Compile Include="Gluster\GlusterConfiguration.cs" />
     <Compile Include="Hubs\CollectdHub.cs" />
     <Compile Include="Hubs\DataHub.cs" />
@@ -134,6 +134,7 @@
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Log\SyslogNg.cs" />
+    <Compile Include="Modules\ServiceGlusterModule.cs" />
     <Compile Include="Modules\HostModule.cs" />
     <Compile Include="Modules\ServiceBindModule.cs" />
     <Compile Include="Modules\ServiceSambaModule.cs" />
@@ -241,7 +242,7 @@
     <Content Include="Scripts\antd.service.firewall.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.sync.js">
+    <Content Include="Scripts\antd.service.gluster.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.xhr.js">

@@ -381,16 +381,17 @@ namespace Antd {
             ConsoleLogger.Log("scheduler ready");
         }
 
-        private readonly GlusterConfiguration _glusterConfiguration = new GlusterConfiguration();
-
-        public void InitGlusterfs() {
+        public void StartGlusterfs() {
             if(!Parameter.IsUnix)
                 return;
-            _glusterConfiguration.Set();
-            if(_glusterConfiguration.IsConfigured) {
-                _glusterConfiguration.Start();
-                _glusterConfiguration.Launch();
-                ConsoleLogger.Log("glusterfs ready");
+            if(!Parameter.IsUnix)
+                return;
+            var glusterConfiguration = new GlusterConfiguration();
+            if(glusterConfiguration.IsActive()) {
+                glusterConfiguration.Set();
+                glusterConfiguration.Enable();
+                glusterConfiguration.Restart();
+                ConsoleLogger.Log("gluster sync start");
             }
         }
 

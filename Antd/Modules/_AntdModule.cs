@@ -531,8 +531,8 @@ namespace Antd.Modules {
                     var glusterConfiguration = new GlusterConfiguration();
                     dynamic viewModel = new ExpandoObject();
                     var glusterConfig = glusterConfiguration.Get();
-                    viewModel.GlusterName = glusterConfig.Name;
-                    viewModel.GlusterPath = glusterConfig.Path;
+                    var glusterIsActive = glusterConfig.IsActive;
+                    viewModel.GlusterIsActive = glusterIsActive;
                     viewModel.GlusterNodes = glusterConfig.Nodes;
                     viewModel.GlusterVolumes = glusterConfig.Volumes;
                     return View["antd/part/page-antd-gluster", viewModel];

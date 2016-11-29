@@ -1,6 +1,17 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend>Sync</legend>
-    <form id="DepotForm" action="/gluster/set" method="POST" enctype="multipart/form-data" class="grid">
+    <legend>Sync
+        @IfNot.GlusterIsActive
+        <i id="EnableGluster" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.GlusterIsActive
+        <i id="StopGluster" class="icon-cancel-2 fg-anthilla-green" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="ReloadGluster" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="DisableGluster" class="icon-cycle fg-anthilla-green" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ApplyConfigGluster" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        @EndIf
+    </legend>
+
+    <form id="DepotForm" action="/services/gluster/options" method="POST" enctype="multipart/form-data" class="grid">
         <div class="row">
             <div class="span3">
                 <label>Name</label>
