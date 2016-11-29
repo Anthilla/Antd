@@ -1,5 +1,5 @@
 $('[data-role="SetNtpd"]').on("click", function () {
-    var n = $(this).parents("tr").find('[data-role="NewNtpdValue"]').text();
+    var n = $(this).parents("tr").find('[data-role="NewNtpdValue"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/host/ntpd",
@@ -63,7 +63,7 @@ $("#SetDomainInt").on("click", function () {
 });
 
 $('[data-role="SetNsswitch"]').on("click", function () {
-    var n = $(this).parents("tr").find('[data-role="NewNsswitchValue"]').text();
+    var n = $(this).parents("tr").find('[data-role="NewNsswitchValue"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/host/ns/switch",
@@ -79,7 +79,7 @@ $('[data-role="SetNsswitch"]').on("click", function () {
 });
 
 $('[data-role="SetResolv"]').on("click", function () {
-    var n = $(this).parents("tr").find('[data-role="NewResolvValue"]').text();
+    var n = $(this).parents("tr").find('[data-role="NewResolvValue"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/host/ns/resolv",
@@ -95,7 +95,7 @@ $('[data-role="SetResolv"]').on("click", function () {
 });
 
 $('[data-role="SetNetworks"]').on("click", function () {
-    var n = $(this).parents("tr").find('[data-role="NewNetworksValue"]').text();
+    var n = $(this).parents("tr").find('[data-role="NewNetworksValue"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/host/ns/networks",

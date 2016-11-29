@@ -113,7 +113,7 @@ namespace Antd.Host {
         #endregion
 
         #region [    Name Service    ]
-        public string[] NsHostsContent { get; set; }
+        public string[] NsHostsContent { get; set; } = { "" };
         public HostParameter NsHosts { get; set; } = new HostParameter {
             SetCmd = "echo-write-all",
             GetCmd = "cat-etc-hosts",
@@ -123,7 +123,7 @@ namespace Antd.Host {
             }
         };
 
-        public string[] NsNetworksContent { get; set; }
+        public string[] NsNetworksContent { get; set; } = { "" };
         public HostParameter NsNetworks { get; set; } = new HostParameter {
             SetCmd = "echo-write-all",
             GetCmd = "cat-etc-networks",
@@ -147,7 +147,7 @@ namespace Antd.Host {
             }
         };
 
-        public string[] NsSwitchContent { get; set; }
+        public string[] NsSwitchContent { get; set; } = { "" };
         public HostParameter NsSwitch { get; set; } = new HostParameter {
             SetCmd = "echo-write-all",
             GetCmd = "cat-etc-nsswitch",

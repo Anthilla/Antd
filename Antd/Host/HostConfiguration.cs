@@ -278,14 +278,15 @@ namespace Antd.Host {
         public void SetNtpd(string[] ntpd) {
             Host = LoadHostModel();
             Host.NtpdContent = ntpd;
+            Host.Ntpd.StoredValues["$value"] = ntpd.JoinToString("\n");
             Export(Host);
         }
 
         public void ApplyNtpd() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            Host.Ntpd.StoredValues["$value"] = Host.NtpdContent.JoinToString("\n");
-            launcher.Launch(Host.Ntpd.SetCmd, Host.Ntpd.StoredValues);
+            if(Host.NtpdContent != null) {
+                File.WriteAllLines("/etc/ntp.conf", Host.NtpdContent);
+            }
         }
         #endregion
 
@@ -305,9 +306,9 @@ namespace Antd.Host {
 
         public void ApplyNsHosts() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            Host.NsHosts.StoredValues["$value"] = Host.NsHostsContent.JoinToString("\n");
-            launcher.Launch(Host.NsHosts.SetCmd, Host.NsHosts.StoredValues);
+            if(Host.NsHostsContent != null) {
+                File.WriteAllLines("/etc/hosts", Host.NsHostsContent);
+            }
         }
         #endregion
 
@@ -321,15 +322,16 @@ namespace Antd.Host {
 
         public void SetNsNetworks(string[] networks) {
             Host = LoadHostModel();
+            Host.NsNetworks.StoredValues["$value"] = networks.JoinToString("\n");
             Host.NsNetworksContent = networks;
             Export(Host);
         }
 
         public void ApplyNsNetworks() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            Host.NsNetworks.StoredValues["$value"] = Host.NsNetworksContent.JoinToString("\n");
-            launcher.Launch(Host.NsNetworks.SetCmd, Host.NsNetworks.StoredValues);
+            if(Host.NsNetworksContent != null) {
+                File.WriteAllLines("/etc/networks", Host.NsNetworksContent);
+            }
         }
         #endregion
 
@@ -344,14 +346,15 @@ namespace Antd.Host {
         public void SetNsResolv(string[] resolv) {
             Host = LoadHostModel();
             Host.NsResolvContent = resolv;
+            Host.NsResolv.StoredValues["$value"] = resolv.JoinToString("\n");
             Export(Host);
         }
 
         public void ApplyNsResolv() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            Host.NsResolv.StoredValues["$value"] = Host.NsResolvContent.JoinToString("\n");
-            launcher.Launch(Host.NsResolv.SetCmd, Host.NsResolv.StoredValues);
+            if(Host.NsResolvContent != null) {
+                File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
+            }
         }
         #endregion
 
@@ -366,14 +369,15 @@ namespace Antd.Host {
         public void SetNsSwitch(string[] @switch) {
             Host = LoadHostModel();
             Host.NsSwitchContent = @switch;
+            Host.NsSwitch.StoredValues["$value"] = @switch.JoinToString("\n");
             Export(Host);
         }
 
         public void ApplyNsSwitch() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            Host.NsSwitch.StoredValues["$value"] = Host.NsSwitchContent.JoinToString("\n");
-            launcher.Launch(Host.NsSwitch.SetCmd, Host.NsSwitch.StoredValues);
+            if(Host.NsSwitchContent != null) {
+                File.WriteAllLines("/etc/nsswitch.conf", Host.NsSwitchContent);
+            }
         }
         #endregion
 

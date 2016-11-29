@@ -63,6 +63,7 @@ namespace Antd {
             Boot.PrepareConfiguration();
             Boot.SetHost();
             Boot.SetOsMount();
+            Boot.SetNameService();
             Boot.SetOsParametersLocal();
             Boot.LoadModules();
             Boot.SetMounts();

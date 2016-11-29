@@ -123,12 +123,13 @@ namespace Antd {
         }
 
         public void SetNameService() {
-            if(!Parameter.IsUnix)
-                return;
-            _hostConfiguration.ApplyNsHosts();
-            _hostConfiguration.ApplyNsNetworks();
-            _hostConfiguration.ApplyNsResolv();
-            _hostConfiguration.ApplyNsSwitch();
+            //if(!Parameter.IsUnix)
+            //    return;
+            var hostConfiguration = new HostConfiguration();
+            hostConfiguration.ApplyNsHosts();
+            hostConfiguration.ApplyNsNetworks();
+            hostConfiguration.ApplyNsResolv();
+            hostConfiguration.ApplyNsSwitch();
             ConsoleLogger.Log("name service ready");
         }
 
