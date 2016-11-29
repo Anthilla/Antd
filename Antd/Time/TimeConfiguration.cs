@@ -3,7 +3,6 @@ using System.IO;
 using antd.commands;
 using antdlib.common;
 using antdlib.Systemd;
-using Antd.Host;
 
 namespace Antd.Time {
     public class TimeConfiguration {
