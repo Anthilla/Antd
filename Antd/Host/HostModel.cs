@@ -64,6 +64,7 @@ namespace Antd.Host {
         };
         #endregion
 
+        #region [    Time Info    ]
         public HostParameter Timezone { get; set; } = new HostParameter {
             SetCmd = "set-timezone",
             GetCmd = "timedatectl-get-timezone",
@@ -71,6 +72,14 @@ namespace Antd.Host {
                 { "$host_timezone", "Europe/Rome" }
             }
         };
+
+        public HostParameter NtpdateServer { get; set; } = new HostParameter {
+            SetCmd = "ntpdate",
+            StoredValues = new Dictionary<string, string> {
+                { "$server", "ntp1.ien.it" }
+            }
+        };
+        #endregion
 
         public HostParameter[] DnsResolv { get; set; } = {
             new HostParameter {

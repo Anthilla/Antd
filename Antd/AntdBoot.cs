@@ -198,6 +198,8 @@ namespace Antd {
         public void SyncDateAndTime() {
             if(!Parameter.IsUnix)
                 return;
+            var hostConfiguration = new HostConfiguration();
+            hostConfiguration.ApplyTimezone();
             var timeConfiguration = new TimeConfiguration();
             timeConfiguration.SyncClock();
             timeConfiguration.SetNtpConfiguration();

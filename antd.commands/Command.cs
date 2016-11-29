@@ -10,10 +10,8 @@ namespace antd.commands {
 
         public Func<IEnumerable<string>, string, IEnumerable<string>> Function { get; set; }
 
-        public string Grep { get; set; }
+        public string Grep { get; set; } = "";
 
-        public Type InputType { get; set; }
-        public Type OutputType { get; set; }
         public Type CommandType { get; set; } = typeof(Command);
 
         public IEnumerable<string> Launch() {

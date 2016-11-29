@@ -28,10 +28,14 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using antd.commands;
 using antdlib.common;
 using Nancy;
+using Nancy.Responses;
 using Nancy.Security;
 using Newtonsoft.Json;
 
@@ -94,6 +98,20 @@ namespace Antd.Modules {
                 catch(Exception ex) {
                     return JsonConvert.SerializeObject(ex, Formatting.Indented);
                 }
+            };
+
+            Get["/cmd/download"] = x => {
+                var header = "NAME,ARGS,GREP,FUNCTION\n";
+                foreach(var cmd in Commands.List) {
+                    var val = cmd.Value as Command;
+                    header += $"{cmd.Key},{val?.Arguments.JoinToString(" ")},{val?.Grep},{val?.Function.ToString()}\n";
+                }
+                header = header.TrimEnd('\n');
+                var byteArray = Encoding.UTF8.GetBytes(header);
+                var file = new MemoryStream(byteArray);
+                const string fileName = "antd.cmd.csv";
+                var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
+                return response.AsAttachment(fileName);
             };
         }
     }

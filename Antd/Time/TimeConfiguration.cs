@@ -9,11 +9,6 @@ namespace Antd.Time {
     public class TimeConfiguration {
 
         private readonly CommandLauncher _launcher = new CommandLauncher();
-        private readonly HostModel _host;
-
-        public TimeConfiguration() {
-            _host = new HostConfiguration().Host;
-        }
 
         public void Start() {
 
@@ -21,8 +16,6 @@ namespace Antd.Time {
 
         public void SyncClock(string ntpServer = "") {
             _launcher.Launch("sync-clock");
-            var tz = _host.Timezone;
-            _launcher.Launch(tz.SetCmd, tz.StoredValues);
             if(IsNtpdActive() == false) {
                 _launcher.Launch("ntpdate",
                     string.IsNullOrEmpty(ntpServer)
