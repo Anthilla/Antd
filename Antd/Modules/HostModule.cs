@@ -121,6 +121,28 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
+            Post["/host/ntpdate"] = x => {
+                string ntpdate = Request.Form.Ntpdate;
+                if(string.IsNullOrEmpty(ntpdate)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SetNtpdate(ntpdate);
+                hostconfiguration.ApplyNtpdate();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/host/ntpd"] = x => {
+                string ntpd = Request.Form.Ntpd;
+                if(string.IsNullOrEmpty(ntpd)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var hostConfiguration = new HostConfiguration();
+                hostConfiguration.SetNtpd(ntpd.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.ApplyNtpd();
+                return HttpStatusCode.OK;
+            };
+
             Post["/host/ns/hosts"] = x => {
                 string hosts = Request.Form.Hosts;
                 if(string.IsNullOrEmpty(hosts)) {
@@ -128,6 +150,7 @@ namespace Antd.Modules {
                 }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsHosts(hosts.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.ApplyNsHosts();
                 return HttpStatusCode.OK;
             };
 
@@ -138,6 +161,7 @@ namespace Antd.Modules {
                 }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsNetworks(networks.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.ApplyNsNetworks();
                 return HttpStatusCode.OK;
             };
 
@@ -148,6 +172,7 @@ namespace Antd.Modules {
                 }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsResolv(resolv.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.ApplyNsResolv();
                 return HttpStatusCode.OK;
             };
 
@@ -158,6 +183,7 @@ namespace Antd.Modules {
                 }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsSwitch(@switch.SplitToList(Environment.NewLine).ToArray());
+                hostConfiguration.ApplyNsSwitch();
                 return HttpStatusCode.OK;
             };
 

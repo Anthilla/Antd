@@ -235,6 +235,10 @@ namespace antd.commands {
                 Arguments = new[] { "/etc/networks" },
                 Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
+            dict["cat-etc-ntp"] = new Command {
+                Arguments = new[] { "/etc/ntp.conf" },
+                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
+            };
             #endregion
 
             #region [    Command - Dhclient    ]

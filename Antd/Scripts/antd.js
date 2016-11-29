@@ -1,3 +1,35 @@
+$('[data-role="SetNtpd"]').on("click", function () {
+    var n = $(this).parents("tr").find('[data-role="NewNtpdValue"]').text();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ntpd",
+        type: "POST",
+        data: {
+            Ntpd: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
+$("#SetNtpServer").on("click", function () {
+    var n = $("#NtpServer").val();
+    jQuery.support.cors = true;
+    var aj = $.ajax({
+        url: "/host/ntpdate",
+        type: "POST",
+        data: {
+            Ntpdate: n
+        },
+        success: function () {
+            location.reload();
+        }
+    });
+    _requests.push(aj);
+});
+
 $("#SetDomainExt").on("click", function () {
     var n = $("#DomainExt").val();
     jQuery.support.cors = true;

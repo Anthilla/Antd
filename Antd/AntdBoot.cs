@@ -209,10 +209,11 @@ namespace Antd {
             if(!Parameter.IsUnix)
                 return;
             var hostConfiguration = new HostConfiguration();
+            hostConfiguration.ApplyNtpdate();
             hostConfiguration.ApplyTimezone();
             var timeConfiguration = new TimeConfiguration();
             timeConfiguration.SyncClock();
-            timeConfiguration.SetNtpConfiguration();
+            hostConfiguration.ApplyNtpd();
             ConsoleLogger.Log("time and date configured");
         }
 

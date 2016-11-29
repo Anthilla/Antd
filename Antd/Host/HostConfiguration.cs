@@ -33,12 +33,10 @@ namespace Antd.Host {
         }
 
         public void Setup() {
-            if(!File.Exists(FilePath)) {
-                File.WriteAllText(FilePath, JsonConvert.SerializeObject(new HostModel(), Formatting.Indented));
-            }
-            else {
-                File.WriteAllText(FilePath, JsonConvert.SerializeObject(CompareStoredHostModel(), Formatting.Indented));
-            }
+            File.WriteAllText(FilePath,
+                !File.Exists(FilePath)
+                    ? JsonConvert.SerializeObject(new HostModel(), Formatting.Indented)
+                    : JsonConvert.SerializeObject(CompareStoredHostModel(), Formatting.Indented));
         }
 
         private HostModel CompareStoredHostModel() {
@@ -246,6 +244,48 @@ namespace Antd.Host {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
             launcher.Launch(Host.Timezone.SetCmd, Host.Timezone.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - Ntpdate    ]
+        public string GetNtpdate() {
+            Host = LoadHostModel();
+            var ntpdate = Host.NtpdateServer.StoredValues["$server"];
+            return ntpdate;
+        }
+
+        public void SetNtpdate(string ntpdate) {
+            Host = LoadHostModel();
+            Host.NtpdateServer.StoredValues["$server"] = ntpdate;
+            Export(Host);
+        }
+
+        public void ApplyNtpdate() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            launcher.Launch(Host.NtpdateServer.SetCmd, Host.NtpdateServer.StoredValues);
+        }
+        #endregion
+
+        #region [    repo - NtpD    ]
+        public string[] GetNtpd() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            var ntpd = launcher.Launch(Host.Ntpd.GetCmd).ToArray();
+            return ntpd;
+        }
+
+        public void SetNtpd(string[] ntpd) {
+            Host = LoadHostModel();
+            Host.NtpdContent = ntpd;
+            Export(Host);
+        }
+
+        public void ApplyNtpd() {
+            Host = LoadHostModel();
+            var launcher = new CommandLauncher();
+            Host.Ntpd.StoredValues["$value"] = Host.NtpdContent.JoinToString("\n");
+            launcher.Launch(Host.Ntpd.SetCmd, Host.Ntpd.StoredValues);
         }
         #endregion
 

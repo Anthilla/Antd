@@ -83,12 +83,36 @@ namespace Antd.Host {
                 { "$server", "ntp1.ien.it" }
             }
         };
+
+        public string[] NtpdContent { get; set; } = {
+            "restrict 10.11.0.0 mask 255.255.0.0 nomodify",
+            "restrict 192.168.0.0 mask 255.255.255.0 nomodify",
+            "server 0.it.pool.ntp.org",
+            "server 1.it.pool.ntp.org",
+            "server 2.it.pool.ntp.org",
+            "server 3.it.pool.ntp.org",
+            "server ntp1.ien.it",
+            "server ntp2.ien.it",
+            "interface ignore wildcard",
+            "interface listen 10.11.19.111",
+            "driftfile /var/lib/ntp/ntp.drift",
+            "logfile /var/log/ntp/ntpd.log",
+            "statistics loopstats",
+            "statsdir /var/log/ntp/",
+            "filegen peerstats file peers type day link enable",
+            "filegen loopstats file loops type day link enable"
+        };
+        public HostParameter Ntpd { get; set; } = new HostParameter {
+            SetCmd = "echo-write-all",
+            GetCmd = "cat-etc-ntp",
+            StoredValues = new Dictionary<string, string> {
+                {"$file", "/etc/ntp.conf"},
+                {"$value", ""}
+            }
+        };
         #endregion
 
         #region [    Name Service    ]
-
-
-
         public string[] NsHostsContent { get; set; }
         public HostParameter NsHosts { get; set; } = new HostParameter {
             SetCmd = "echo-write-all",

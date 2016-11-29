@@ -242,6 +242,11 @@ namespace Antd.Modules {
                     viewModel.Nettimeon = timedatectl.First(_ => _.Contains("Network time on:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.Ntpsync = timedatectl.First(_ => _.Contains("NTP synchronized:")).Split(new[] { ":" }, 2, ssoree)[1];
                     viewModel.Rtcintz = timedatectl.First(_ => _.Contains("RTC in local TZ:")).Split(new[] { ":" }, 2, ssoree)[1];
+                    var hostConfiguration = new HostConfiguration();
+                    viewModel.NtpServer = hostConfiguration.Host.NtpdateServer.StoredValues["$server"];
+                    var ntpd = launcher.Launch("cat-etc-ntp").ToArray();
+                    viewModel.Ntpd = ntpd.JoinToString("<br />");
+                    viewModel.NtpdEdit = ntpd.JoinToString(Environment.NewLine);
                     return View["antd/part/page-antd-time", viewModel];
                 }
                 catch(Exception ex) {
@@ -260,13 +265,18 @@ namespace Antd.Modules {
                     var hostConfiguration = new HostConfiguration();
                     viewModel.DomainInt = hostConfiguration.Host.InternalDomain;
                     viewModel.DomainExt = hostConfiguration.Host.ExternalDomain;
-                    viewModel.HostsEdit = launcher.Launch("cat-etc-hosts").JoinToString(Environment.NewLine);
-                    viewModel.Networks = launcher.Launch("cat-etc-networks").JoinToString("<br />");
-                    viewModel.NetworksEdit = launcher.Launch("cat-etc-networks").JoinToString(Environment.NewLine);
-                    viewModel.Resolv = launcher.Launch("cat-etc-resolv").JoinToString("<br />");
-                    viewModel.ResolvEdit = launcher.Launch("cat-etc-resolv").JoinToString(Environment.NewLine);
-                    viewModel.Nsswitch = launcher.Launch("cat-etc-nsswitch").JoinToString("<br />");
-                    viewModel.NsswitchEdit = launcher.Launch("cat-etc-nsswitch").JoinToString(Environment.NewLine);
+                    var hosts = launcher.Launch("cat-etc-hosts").ToArray();
+                    viewModel.Hosts = hosts.JoinToString("<br />");
+                    viewModel.HostsEdit = hosts.JoinToString(Environment.NewLine);
+                    var networks = launcher.Launch("cat-etc-networks").ToArray();
+                    viewModel.Networks = networks.JoinToString("<br />");
+                    viewModel.NetworksEdit = networks.JoinToString(Environment.NewLine);
+                    var resolv = launcher.Launch("cat-etc-resolv").ToArray();
+                    viewModel.Resolv = resolv.JoinToString("<br />");
+                    viewModel.ResolvEdit = resolv.JoinToString(Environment.NewLine);
+                    var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
+                    viewModel.Nsswitch = nsswitch.JoinToString("<br />");
+                    viewModel.NsswitchEdit = nsswitch.JoinToString(Environment.NewLine);
                     return View["antd/part/page-antd-ns", viewModel];
                 }
                 catch(Exception ex) {
