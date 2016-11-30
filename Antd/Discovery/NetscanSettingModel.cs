@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Antd.Discovery {
@@ -7,12 +8,8 @@ namespace Antd.Discovery {
         [JsonIgnore]
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public NetscanSettingModel() {
-            var lisst = new List<Tuple<string, string, string>>();
-            for(var i = 0; i < Alphabet.Length; i++) {
-                var mo = new Tuple<string, string, string>((i + 1).ToString(), Alphabet[i].ToString(), "");
-                lisst.Add(mo);
-            }
-            Values = lisst;
+            var list = Alphabet.Select((t, i) => new Tuple<string, string, string>((i + 1).ToString(), t.ToString(), "")).ToList();
+            Values = list;
         }
         public string Subnet { get; set; } = "10.1.";
         public string SubnetLabel { get; set; } = "primary";

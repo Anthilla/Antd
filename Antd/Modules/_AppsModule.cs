@@ -1,5 +1,5 @@
 ﻿//-------------------------------------------------------------------------------------
-//     Copyright (c) 2014, Anthilla S.r.l. (http://www..com)
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
 //     Redistribution and use in source and binary forms, with or without
@@ -27,26 +27,50 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Dynamic;
+using System.Linq;
 using antdlib.Systemd;
+using antdlib.views;
 using Antd.Apps;
+using Antd.Database;
 using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-
     public class AppsModule : CoreModule {
-
-        private readonly AppsManagement _appsManagement = new AppsManagement();
 
         public AppsModule() {
             this.RequiresAuthentication();
 
+            #region [    Home    ]
+            Get["/apps"] = x => {
+                dynamic vmod = new ExpandoObject();
+                return View["antd/page-apps", vmod];
+            };
+            #endregion
+
+            #region [    Partials    ]
+            Get["/part/apps/management"] = x => {
+                dynamic vmod = new ExpandoObject();
+                var applicationRepository = new ApplicationRepository();
+                vmod.AppList = applicationRepository.GetAll().Select(_ => new ApplicationModel(_));
+                return View["antd/page-apps-manage", vmod];
+            };
+            Get["/part/apps/detection"] = x => {
+                dynamic vmod = new ExpandoObject();
+                var appsManagement = new AppsManagement();
+                vmod.Detected = appsManagement.Detect();
+                return View["antd/page-apps-detect", vmod];
+            };
+            #endregion
+
             Post["/apps/setup"] = x => {
                 string app = Request.Form.AppName;
-                if (string.IsNullOrEmpty(app)) {
+                if(string.IsNullOrEmpty(app)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                _appsManagement.Setup(app);
+                var appsManagement = new AppsManagement();
+                appsManagement.Setup(app);
                 return HttpStatusCode.OK;
             };
 
@@ -59,7 +83,7 @@ namespace Antd.Modules {
             Get["/apps/active/{unit}"] = x => {
                 var unitName = (string)x.unit;
                 var status = Systemctl.IsActive(unitName);
-                return Response.AsJson(status == true ? "active" : "inactive");
+                return Response.AsJson(status ? "active" : "inactive");
             };
 
             Post["/apps/restart"] = x => {
@@ -73,6 +97,14 @@ namespace Antd.Modules {
                 Systemctl.Stop(unitName);
                 return HttpStatusCode.OK;
             };
+
+            #region [    Hooks    ]
+            After += ctx => {
+                if(ctx.Response.ContentType == "text/html") {
+                    ctx.Response.ContentType = "text/html; charset=utf-8";
+                }
+            };
+            #endregion
         }
     }
 }

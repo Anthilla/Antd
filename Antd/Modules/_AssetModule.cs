@@ -154,7 +154,7 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 var launcher = new CommandLauncher();
-                var result = launcher.Launch("nmap-ip", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
+                var result = launcher.Launch("nmap-ip-fast", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
 
                 var list = new List<NmapScanStatus>();
                 foreach(var r in result) {

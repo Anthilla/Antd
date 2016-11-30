@@ -1,40 +1,38 @@
 ﻿@Master['layout.html']
-<!--
-    //-------------------------------------------------------------------------------------
-    //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
-    //     All rights reserved.
-    //
-    //     Redistribution and use in source and binary forms, with or without
-    //     modification, are permitted provided that the following conditions are met:
-    //         * Redistributions of source code must retain the above copyright
-    //           notice, this list of conditions and the following disclaimer.
-    //         * Redistributions in binary form must reproduce the above copyright
-    //           notice, this list of conditions and the following disclaimer in the
-    //           documentation and/or other materials provided with the distribution.
-    //         * Neither the name of the Anthilla S.r.l. nor the
-    //           names of its contributors may be used to endorse or promote products
-    //           derived from this software without specific prior written permission.
-    //
-    //     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-    //     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    //     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    //     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
-    //     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    //     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    //     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-    //     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    //     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    //     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    //
-    //     20141110
-    //------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------
+//     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
+//     All rights reserved.
+//
+//     Redistribution and use in source and binary forms, with or without
+//     modification, are permitted provided that the following conditions are met:
+//         * Redistributions of source code must retain the above copyright
+//           notice, this list of conditions and the following disclaimer.
+//         * Redistributions in binary form must reproduce the above copyright
+//           notice, this list of conditions and the following disclaimer in the
+//           documentation and/or other materials provided with the distribution.
+//         * Neither the name of the Anthilla S.r.l. nor the
+//           names of its contributors may be used to endorse or promote products
+//           derived from this software without specific prior written permission.
+//
+//     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//     DISCLAIMED. IN NO EVENT SHALL ANTHILLA S.R.L. BE LIABLE FOR ANY
+//     DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//     ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//     20141110
+//------------------------------------------------------------------------------------->
 @Section['PageBar']
 <style type="text/css">
     #Apps-TB {
         background-color: #A7BD39 !important;
         color: #3a3a3a !important;
-        border-bottom: 10px solid #A7BD39;
-        height: 80px !important;
+        border-color: #A7BD39 !important;
     }
 
     #Apps-TB *{
@@ -51,141 +49,23 @@
         border-top-width: 4px;
     }
 </style>
-<nav class="navigation-bar bg-anthilla-gray-m page-bar menu-bar" style="height: 50px !important;">
-    <nav class="navigation-bar-content">
-        <div class="element upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay" style="padding-top: 11px;">
-            <i class="icon-wrench on-left" style="line-height: 5px;"></i>
-            Apps
-        </div>
-        <div class="element-divider"></div>
-        <a id="DiscoverInstalledApplications" class="element upcase fg-anthilla-green border-2-anthilla-green no-overlay" href="#" style="padding-top: 11px; font-weight: bold; margin-right: 5px;">Discover
-        </a>
-
-        <a class="element place-right upcase fg-anthilla-green border-2-anthilla-gray-m no-overlay anchor" data-scrollto="top" style="padding-top: 8px;">
-            <i class="icon-arrow-up"></i>
-        </a>
-    </nav>
-</nav>
 @EndSection
 
 @Section['MainContent']
-<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend id="DetectedApps">Detected Apps</legend>
-    @Each.Detected
-    <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@Current.Name">
-            <i class="icon-eye on-left"></i>@Current.Name
-        </div>
-        <div class="panel-content nif-content" style="display: none;" data-app-content="@Current.Name">
-            <input type="button" class="bg-anthilla-blu" style="width: 100%;" value="Install @Current.Name" data-role="ApplicationSetup" data-app-name="@Current.Name" />
-            <br />
-            <br />
-            <table class="table" style="table-layout: fixed;">
-                <tbody>
-                    @Partial['_partial/part-apps-info', @Current.Values];
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @EndEach
-
-    <legend id="InstalledApps">Installed Apps</legend>
-    @Each.AppList
-    <div class="panel border-2-anthilla-gray" data-role="panel" style="margin-bottom: 5px;">
-        <div class="panel-header bg-anthilla-gray fg-white nif-header" data-app-name="@Current.Name">
-            <i class="icon-eye on-left"></i>@Current.Name
-        </div>
-        <div class="panel-content nif-content" style="display: none;" data-app-content="@Current.Name">
-            @Partial['_partial/part-apps-unitinfo', @Current.UnitLauncher];
-        </div>
-    </div>
-    @EndEach
+<nav class="vertical-menu">
+    <ul class="bg-anthilla-gray fg-anthilla-green" style="width: 15%; padding: 5px 15px; margin-left: 0 !important; margin-top: 0 !important; float: left;">
+        <li>
+            <a href="#" data-role="load-page" data-page="apps/management" class="fg-hover-white upcase">management
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+        <li style="padding-left: 15px;">
+            <a href="#" data-role="load-page" data-page="apps/detection" class="fg-hover-white capitalize">detect
+                <i data-icon="load" class="icon-loading-2 on-right fg-white rotating" style="display: none !important"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div data-role="page-container" style="min-height: 250px; float: right; width: 85%;">
 </div>
-@EndSection
-
-@Section['Scripts']
-<script type="text/javascript">
-    $('[data-role="ApplicationSetup"]').on("click", function () {
-        var app = $(this).attr('data-app-name');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/apps/setup',
-            type: 'POST',
-            data: {
-                AppName: app
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="ApplicationRestart"]').on("click", function () {
-        var app = $(this).attr('data-app-name');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/apps/restart',
-            type: 'POST',
-            data: {
-                Name: app
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $('[data-role="ApplicationStop"]').on("click", function () {
-        var app = $(this).attr('data-app-name');
-        jQuery.support.cors = true;
-        $.ajax({
-            url: '/apps/stop',
-            type: 'POST',
-            data: {
-                Name: app
-            },
-            success: function () {
-                location.reload(true);
-            }
-        });
-    });
-
-    $(document).on("ready", function () {
-        $('[data-role="ApplicationStatus"]').each(function () {
-            var container = $(this);
-            var app = container.attr('data-app-name');
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/apps/status/' + app,
-                type: 'GET',
-                success: function (data) {
-                    container.text(data);
-                }
-            });
-        });
-    });
-
-    $(document).on("ready", function () {
-        $('[data-role="ApplicationActivity"]').each(function () {
-            var container = $(this);
-            var app = container.attr('data-app-name');
-            jQuery.support.cors = true;
-            $.ajax({
-                url: '/apps/active/' + app,
-                type: 'GET',
-                success: function (data) {
-                    if (data === "active") {
-                        container.html('<i class="icon-checkmark fg-anthilla-green"></i>');
-                        return;
-                    }
-                    if (data === "inactive") {
-                        container.html('<i class="icon-cancel-2 fg-red"></i>');
-                        return;
-                    }
-                    container.text(data);
-                }
-            });
-        });
-    });
-</script>
 @EndSection

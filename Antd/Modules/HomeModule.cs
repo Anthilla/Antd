@@ -29,17 +29,11 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using antdlib.views;
-using Antd.Apps;
-using Antd.Database;
 using Nancy.Security;
 
 namespace Antd.Modules {
     public class HomeModule : CoreModule {
-
-        private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
-        private readonly AppsManagement _appsManagement = new AppsManagement();
+        
         public HomeModule() {
             this.RequiresAuthentication();
 
@@ -47,13 +41,6 @@ namespace Antd.Modules {
                 if(ctx.Response.ContentType == "text/html") {
                     ctx.Response.ContentType = "text/html; charset=utf-8";
                 }
-            };
-
-            Get["/apps"] = x => {
-                dynamic vmod = new ExpandoObject();
-                vmod.Detected = _appsManagement.Detect();
-                vmod.AppList = ApplicationRepository.GetAll().Select(_ => new ApplicationModel(_));
-                return View["antd/page-apps", vmod];
             };
 
             Get["/vnc"] = x => {

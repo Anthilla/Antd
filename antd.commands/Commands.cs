@@ -410,6 +410,10 @@ namespace antd.commands {
                 Arguments = new[] { "nmap $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["nmap-ip-fast"] = new Command {
+                Arguments = new[] { "nmap -F $ip" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["nmap-snmp-interfaces"] = new Command {
                 Arguments = new[] { "nmap -sU -p 161 -T4 -d -v -n -Pn --script snmp-interfaces $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
