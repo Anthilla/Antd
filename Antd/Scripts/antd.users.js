@@ -100,7 +100,7 @@ $('[data-role="UpdateUserPassword"]').on("click", function () {
     var pass = container.find('[data-role="Password01"]').val();
     jQuery.support.cors = true;
     var aj = $.ajax({
-        url: "/users/change/password",
+        url: "/users/system",
         type: "POST",
         data: {
             User: user,

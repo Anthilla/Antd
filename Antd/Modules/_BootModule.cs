@@ -131,7 +131,7 @@ namespace Antd.Modules {
                 }
                 var setupConfiguration = new SetupConfiguration();
                 setupConfiguration.Export(checkedControl);
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/boot");
             };
 
             Post["/boot/modules"] = x => {
@@ -140,7 +140,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostModprobes(modules);
                 hostcfg.ApplyHostModprobes();
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/boot");
             };
 
             Post["/boot/rmmodules"] = x => {
@@ -149,7 +149,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
                 hostcfg.ApplyHostRemoveModules();
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/boot");
             };
 
             Post["/boot/services"] = x => {
@@ -158,7 +158,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostServices(services);
                 hostcfg.ApplyHostServices();
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/boot");
             };
 
             Post["/boot/osparam"] = x => {
@@ -175,7 +175,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostOsParameters(dict);
                 hostcfg.ApplyHostOsParameters();
-                return Response.AsRedirect("/cfg");
+                return Response.AsRedirect("/boot");
             };
             #endregion
 

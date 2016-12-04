@@ -55,13 +55,7 @@ namespace Antd.Auth {
                     Claims = new List<string> { manageMaster.Password, "00000000-0000-0000-0000-000000000500" }
                 }
             };
-            var appUsers = new Database.UserRepository().GetAll().Select(MapUser);
-            var userEntityModels = userList.Concat(appUsers);
-            return userEntityModels;
-        }
-
-        private static UserIdentity MapUser(UserSchema user) {
-            return new UserIdentity { UserGuid = user.Guid.ToGuid(), UserName = user.Alias, Claims = new List<string> { user.Password, user.Guid } };
+            return userList;
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {

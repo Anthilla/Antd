@@ -119,8 +119,6 @@
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Database\RsyncRepository.cs" />
-    <Compile Include="Database\UserClaimRepository.cs" />
-    <Compile Include="Database\UserRepository.cs" />
     <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
     <Compile Include="Dhcpd\DhcpdConfigurationModel.cs" />
     <Compile Include="Dhcpd\DhcpdLeaseModel.cs" />
@@ -192,9 +190,10 @@
     <Compile Include="Time\TimeConfiguration.cs" />
     <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\ManageMaster.cs" />
+    <Compile Include="Users\UserConfiguration.cs" />
     <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
-    <Compile Include="Users\UserModel.cs" />
+    <Compile Include="Users\UserConfigurationModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
     <Content Include="Content\Style\img\disk.png">

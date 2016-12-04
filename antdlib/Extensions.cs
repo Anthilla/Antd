@@ -40,5 +40,9 @@ namespace antdlib {
             var rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
             return rowList.Where(row => !string.IsNullOrEmpty(row)).ToList();
         }
+
+        public static bool ContainsAny(this string text, IEnumerable<string> values) {
+            return values.Any(text.Contains);
+        }
     }
 }

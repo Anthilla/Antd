@@ -50,9 +50,6 @@ namespace Antd {
             Boot.StartOverlayWatcher();
 
             if(Parameter.IsUnix == false) {
-                Directory.CreateDirectory("/cfg/antd");
-                Directory.CreateDirectory("/cfg/antd/database");
-                Directory.CreateDirectory("/mnt/cdrom/DIRS");
                 ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
             }
 

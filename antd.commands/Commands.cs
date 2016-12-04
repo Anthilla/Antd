@@ -92,6 +92,10 @@ namespace antd.commands {
                 Arguments = new[] { "systemd-machine-id-setup" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["mkpasswd"] = new Command {
+                Arguments = new[] { "mkpasswd -m sha-512 $password" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Bond    ]

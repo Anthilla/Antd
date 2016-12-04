@@ -58,8 +58,8 @@ $("#ApplyConfigFirewall").on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="SaveIpv4FilterTable"]').click(function () {
-    var panel = $().parents('[data-role="panel"]');
+$("#SaveIpv4FilterTable").on("click", function () {
+    var panel = $(this).parents('[data-role="panel"]');
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
@@ -96,8 +96,8 @@ $('[data-role="SaveIpv4FilterTable"]').click(function () {
     });
 });
 
-$('[data-role="SaveIpv4NatTable"]').click(function () {
-    var panel = $().parents('[data-role="panel"]');
+$("#SaveIpv4NatTable").on("click", function () {
+    var panel = $(this).parents('[data-role="panel"]');
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
@@ -134,8 +134,8 @@ $('[data-role="SaveIpv4NatTable"]').click(function () {
     });
 });
 
-$('[data-role="SaveIpv6FilterTable"]').click(function () {
-    var panel = $().parents('[data-role="panel"]');
+$("#SaveIpv6FilterTable").on("click", function () {
+    var panel = $(this).parents('[data-role="panel"]');
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
@@ -172,8 +172,8 @@ $('[data-role="SaveIpv6FilterTable"]').click(function () {
     });
 });
 
-$('[data-role="SaveIpv6NatTable"]').click(function () {
-    var panel = $().parents('[data-role="panel"]');
+$("#SaveIpv6NatTable").on("click", function () {
+    var panel = $(this).parents('[data-role="panel"]');
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");

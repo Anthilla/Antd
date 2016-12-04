@@ -44,12 +44,6 @@ namespace Antd.Helpers {
             list.AddRange(commands.Select(c => new RawCommandBundleLayout { name = c }));
             return list;
         }
-
-        public static IEnumerable<RawUserEntity> MapRawUserEntity(IEnumerable<UserSchema> users) {
-            var list = new List<RawUserEntity>();
-            list.AddRange(users.Select(c => new RawUserEntity { alias = c.Alias, guid = c.Guid }));
-            return list;
-        }
     }
 
     public class RawTagOfValueBundle {

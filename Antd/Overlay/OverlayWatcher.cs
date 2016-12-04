@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.common.Tool;
@@ -64,9 +65,16 @@ namespace Antd.Overlay {
 
         private static readonly Bash Bash = new Bash();
 
+        private static readonly string[] Filter = {
+            "cfg",
+            "systemd",
+            "etc",
+            "journal"
+        };
+
         private static void OnChanged(object source, FileSystemEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.ContainsAny(Filter)) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -74,7 +82,7 @@ namespace Antd.Overlay {
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.Contains("/cfg/")) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.ContainsAny(Filter)) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }

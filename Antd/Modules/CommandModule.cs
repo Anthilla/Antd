@@ -54,7 +54,7 @@ namespace Antd.Modules {
                 }
             };
 
-            Get["/cmd/launch/{name}/{values}"] = x => {
+            Get["/cmd/launch/{name}/{values*}"] = x => {
                 string name = x.name;
                 string strValues = x.values;
                 if(!string.IsNullOrEmpty(strValues)) {

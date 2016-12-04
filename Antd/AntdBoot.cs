@@ -58,6 +58,10 @@ namespace Antd {
         private readonly Mount _mount = new Mount();
 
         public void SetWorkingDirectories() {
+            Directory.CreateDirectory("/cfg/antd");
+            Directory.CreateDirectory("/cfg/antd/database");
+            Directory.CreateDirectory("/cfg/antd/services");
+            Directory.CreateDirectory("/mnt/cdrom/DIRS");
             if(!Parameter.IsUnix)
                 return;
             _mount.WorkingDirectories();
@@ -81,8 +85,6 @@ namespace Antd {
             database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new TimerView());
             database.RegisterView(new RsyncView());
-            database.RegisterView(new UserClaimView());
-            database.RegisterView(new UserView());
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SyslogView());
 
@@ -123,8 +125,6 @@ namespace Antd {
         }
 
         public void SetNameService() {
-            //if(!Parameter.IsUnix)
-            //    return;
             var hostConfiguration = new HostConfiguration();
             hostConfiguration.ApplyNsHosts();
             hostConfiguration.ApplyNsNetworks();
@@ -163,23 +163,14 @@ namespace Antd {
             ConsoleLogger.Log("commands and scripts configuration imported");
         }
 
-        private readonly UserRepository _userRepository = new UserRepository();
-        private readonly SystemUser _systemUser = new SystemUser();
-
         public void ReloadUsers() {
             var manageMaster = new ManageMaster();
             manageMaster.Setup();
             if(!Parameter.IsUnix)
                 return;
-            var sysUser = _userRepository.Import();
-            foreach(var user in _userRepository.GetAll()) {
-                if(!sysUser.ContainsKey(user.Alias)) {
-                    _systemUser.Create(user.Alias);
-                }
-                if(!string.IsNullOrEmpty(user.Password)) {
-                    _systemUser.SetPassword(user.Alias, user.Password);
-                }
-            }
+            var userConfiguration = new UserConfiguration();
+            userConfiguration.Import();
+            userConfiguration.Set();
             ConsoleLogger.Log("users config ready");
         }
 

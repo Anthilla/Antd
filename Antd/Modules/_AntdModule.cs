@@ -530,7 +530,7 @@ namespace Antd.Modules {
                 try {
                     var glusterConfiguration = new GlusterConfiguration();
                     dynamic viewModel = new ExpandoObject();
-                    var glusterConfig = glusterConfiguration.Get();
+                    var glusterConfig = glusterConfiguration.Get() ?? new GlusterConfigurationModel();
                     var glusterIsActive = glusterConfig.IsActive;
                     viewModel.GlusterIsActive = glusterIsActive;
                     viewModel.GlusterNodes = glusterConfig.Nodes;
@@ -562,10 +562,10 @@ namespace Antd.Modules {
 
             Get["/part/users"] = x => {
                 try {
-                    var userRepository = new UserRepository();
                     dynamic viewModel = new ExpandoObject();
                     viewModel.Master = new ManageMaster().Name;
-                    viewModel.Users = userRepository.GetAll().OrderBy(_ => _.Alias);
+                    var userConfiguration = new UserConfiguration();
+                    viewModel.Users = userConfiguration.Get().OrderBy(_ => _.Name);
                     return View["antd/part/page-antd-users", viewModel];
                 }
                 catch(Exception ex) {
