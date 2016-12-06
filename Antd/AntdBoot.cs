@@ -24,7 +24,6 @@ using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
-using Antd.Time;
 using Antd.Timer;
 using Antd.Users;
 using RaptorDB;
@@ -159,8 +158,7 @@ namespace Antd {
         public void ImportCommands() {
             if(!Parameter.IsUnix)
                 return;
-            var storedconf = $"{Parameter.RootFrameworkAntdShellScript}/var/kerbynet.conf";
-            File.Copy(storedconf, "/etc/kerbynet.conf", true);
+            File.Copy($"{Parameter.RootFrameworkAntdShellScript}/var/kerbynet.conf", "/etc/kerbynet.conf", true);
             ConsoleLogger.Log("commands and scripts configuration imported");
         }
 
@@ -202,18 +200,15 @@ namespace Antd {
             var hostConfiguration = new HostConfiguration();
             hostConfiguration.ApplyNtpdate();
             hostConfiguration.ApplyTimezone();
-            var timeConfiguration = new TimeConfiguration();
-            timeConfiguration.SyncClock();
             hostConfiguration.ApplyNtpd();
             ConsoleLogger.Log("time and date configured");
         }
 
-        private readonly SetupConfiguration _setupConfiguration = new SetupConfiguration();
-
         public void CommandExecuteLocal() {
             if(!Parameter.IsUnix)
                 return;
-            _setupConfiguration.Set();
+            var setupConfiguration = new SetupConfiguration();
+            setupConfiguration.Set();
             ConsoleLogger.Log("machine configured");
         }
 

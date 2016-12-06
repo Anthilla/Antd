@@ -5,6 +5,7 @@ using antdlib.common;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using antd.commands;
+using antdlib.Systemd;
 using FastMember;
 
 namespace Antd.Host {
@@ -300,9 +301,18 @@ namespace Antd.Host {
 
         public void ApplyNtpd() {
             Host = LoadHostModel();
-            if(Host.NtpdContent != null) {
-                File.WriteAllLines("/etc/ntp.conf", Host.NtpdContent);
+            File.WriteAllLines("/etc/ntp.conf", Host.NtpdContent);
+        }
+        #endregion
+
+        #region [    sync time    ]
+        public void SyncClock(string ntpServer = "") {
+            var launcher = new CommandLauncher();
+            ApplyNtpdate();
+            if(Systemctl.IsActive("ntpd")) {
+                ApplyNtpd();
             }
+            launcher.Launch("sync-clock");
         }
         #endregion
 

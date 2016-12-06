@@ -187,7 +187,6 @@
     <Compile Include="Storage\Zpool.cs" />
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
-    <Compile Include="Time\TimeConfiguration.cs" />
     <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\ManageMaster.cs" />
     <Compile Include="Users\UserConfiguration.cs" />

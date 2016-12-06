@@ -30,7 +30,6 @@
 using System;
 using antdlib.common;
 using Antd.Host;
-using Antd.Time;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -116,8 +115,8 @@ namespace Antd.Modules {
             };
 
             Post["/host/synctime"] = x => {
-                var timeconfiguration = new TimeConfiguration();
-                timeconfiguration.SyncClock();
+                var hostconfiguration = new HostConfiguration();
+                hostconfiguration.SyncClock();
                 return HttpStatusCode.OK;
             };
 

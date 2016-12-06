@@ -80,7 +80,7 @@ namespace Antd.Host {
         public HostParameter NtpdateServer { get; set; } = new HostParameter {
             SetCmd = "ntpdate",
             StoredValues = new Dictionary<string, string> {
-                { "$server", "ntp1.ien.it" }
+                { "$server", "0.it.pool.ntp.org" }
             }
         };
 
