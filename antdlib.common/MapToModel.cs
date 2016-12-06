@@ -38,22 +38,22 @@ namespace antdlib.common {
         private readonly Bash _bash = new Bash();
 
         public IEnumerable<T> FromFile<T>(string filePath, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
-            if (!File.Exists(filePath)) {
+            if(!File.Exists(filePath)) {
                 return new List<T>();
             }
             var objects = new List<T>();
             var lines = File.ReadAllLines(filePath);
-            foreach (var line in lines) {
+            foreach(var line in lines) {
                 var arr = line.Split(new[] { separator }, 2, option);
                 var obj = new T();
                 var objProp = obj.GetType().GetProperties();
-                foreach (var op in objProp) {
+                foreach(var op in objProp) {
                     var propertyInfo = obj.GetType().GetProperty(op.Name);
                     var i = Array.IndexOf(objProp, op);
                     try {
                         propertyInfo.SetValue(obj, Convert.ChangeType(arr[i], propertyInfo.PropertyType), null);
                     }
-                    catch (Exception) {
+                    catch(Exception) {
                         propertyInfo.SetValue(obj, Convert.ChangeType("", propertyInfo.PropertyType), null);
                     }
                 }
@@ -64,22 +64,48 @@ namespace antdlib.common {
 
         public IEnumerable<T> FromCommand<T>(string command, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
             var commandResult = _bash.Execute(command);
-            if (commandResult.Length < 1) {
+            if(commandResult.Length < 1) {
                 return new List<T>();
             }
             var objects = new List<T>();
             var lines = commandResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in lines) {
+            foreach(var line in lines) {
                 var arr = line.Split(new[] { separator }, option);
                 var obj = new T();
                 var objProp = obj.GetType().GetProperties();
-                foreach (var op in objProp) {
+                foreach(var op in objProp) {
                     var propertyInfo = obj.GetType().GetProperty(op.Name);
                     var i = Array.IndexOf(objProp, op);
                     try {
                         propertyInfo.SetValue(obj, Convert.ChangeType(arr[i], propertyInfo.PropertyType), null);
                     }
-                    catch (Exception) {
+                    catch(Exception) {
+                        propertyInfo.SetValue(obj, Convert.ChangeType("", propertyInfo.PropertyType), null);
+                    }
+                }
+                objects.Add(obj);
+            }
+            return objects;
+        }
+
+        public IEnumerable<T> FromCommand<T>(string command, int length, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
+            var commandResult = _bash.Execute(command);
+            if(commandResult.Length < 1) {
+                return new List<T>();
+            }
+            var objects = new List<T>();
+            var lines = commandResult.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            foreach(var line in lines) {
+                var arr = line.Split(new[] { separator }, length, option);
+                var obj = new T();
+                var objProp = obj.GetType().GetProperties();
+                foreach(var op in objProp) {
+                    var propertyInfo = obj.GetType().GetProperty(op.Name);
+                    var i = Array.IndexOf(objProp, op);
+                    try {
+                        propertyInfo.SetValue(obj, Convert.ChangeType(arr[i], propertyInfo.PropertyType), null);
+                    }
+                    catch(Exception) {
                         propertyInfo.SetValue(obj, Convert.ChangeType("", propertyInfo.PropertyType), null);
                     }
                 }
@@ -89,22 +115,22 @@ namespace antdlib.common {
         }
 
         public IEnumerable<T> FromText<T>(string text, string separator = " ", StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries) where T : new() {
-            if (text.Length < 1) {
+            if(text.Length < 1) {
                 return new List<T>();
             }
             var objects = new List<T>();
             var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in lines) {
+            foreach(var line in lines) {
                 var arr = line.Split(new[] { separator }, option);
                 var obj = new T();
                 var objProp = obj.GetType().GetProperties();
-                foreach (var op in objProp) {
+                foreach(var op in objProp) {
                     var propertyInfo = obj.GetType().GetProperty(op.Name);
                     var i = Array.IndexOf(objProp, op);
                     try {
                         propertyInfo.SetValue(obj, Convert.ChangeType(arr[i], propertyInfo.PropertyType), null);
                     }
-                    catch (Exception) {
+                    catch(Exception) {
                         propertyInfo.SetValue(obj, Convert.ChangeType("", propertyInfo.PropertyType), null);
                     }
                 }

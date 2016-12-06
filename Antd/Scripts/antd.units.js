@@ -9,7 +9,7 @@ $('[data-role="ToggleUnitContent"]').on("click", function () {
 $('[data-role="ShowLogs"]').on("click", function () {
     var srv = $(this).attr("data-name");
     var ttt = $(this).parents("div.container");
-    var cont = ttt.find('[data-role="ShowServiceLog"]');
+    var cont = ttt.find('[data-role="ServiceLog"]');
     ttt.find("div.content").show();
     var arr = ttt.find('[data-role="ToggleUnitContent"]');
     arr.removeClass("icon-arrow-right-5");
