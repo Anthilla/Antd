@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Antd.Storage;
+using Antd.Host;
 
 namespace Antd.Timer {
-    public class SnapshotCleanup {
+    public class SyncTime {
 
         public System.Threading.Timer Timer { get; private set; }
 
@@ -23,7 +23,7 @@ namespace Antd.Timer {
         }
 
         private static void Action() {
-            new BackupClean().Launch();
+            new HostConfiguration().SyncClock();
         }
     }
 }
