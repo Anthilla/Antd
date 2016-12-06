@@ -28,18 +28,31 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using antd.commands;
 using antdlib.common;
-using Antd.Database;
+using Antd.Rsync;
 
 namespace Antd {
-    public class DirectoryWatcher {
+    public class DirectoryWatcher
+    {
+        private readonly RsyncDirectoriesModel[] _directoriesModel;
+        private readonly string[] _paths;
+        private FileSystemWatcher _fsw;
+        public DirectoryWatcher(RsyncDirectoriesModel[] paths)
+        {
+            _directoriesModel = paths;
+            _paths = paths.Select(_=>_.Source).ToArray();
+        }
+
         public void StartWatching() {
             try {
-                var paths = new RsyncRepository().GetDirectoriesToWatch();
-                foreach (var path in paths) {
-                    if (!Directory.Exists(path) && !File.Exists(path)) continue;
-                    var watcher = new FileSystemWatcher(path) {
+                foreach(var path in _paths) {
+                    if(!Directory.Exists(path) && !File.Exists(path))
+                        continue;
+                    _fsw = new FileSystemWatcher(path) {
                         NotifyFilter =
                             NotifyFilters.LastAccess |
                             NotifyFilters.LastWrite |
@@ -47,26 +60,40 @@ namespace Antd {
                             NotifyFilters.DirectoryName,
                         IncludeSubdirectories = true,
                     };
-                    watcher.Changed += OnChanged;
-                    watcher.Created += OnChanged;
-                    watcher.Deleted += OnChanged;
-                    watcher.Renamed += OnRenamed;
-                    watcher.EnableRaisingEvents = true;
+                    _fsw.Changed += OnChanged;
+                    _fsw.Created += OnChanged;
+                    _fsw.Deleted += OnChanged;
+                    _fsw.Renamed += OnRenamed;
+                    _fsw.EnableRaisingEvents = true;
                 }
             }
-            catch (Exception ex) {
+            catch(Exception ex) {
                 ConsoleLogger.Log(ex.Message);
             }
         }
 
-        private static void OnChanged(object source, FileSystemEventArgs e) {
-            new RsyncRepository().SyncDirectories(e.FullPath);
-            ConsoleLogger.Log($"directory Watcher: {e.FullPath} {e.ChangeType}");
+        public void Stop()
+        {
+            _fsw.Dispose();
         }
 
-        private static void OnRenamed(object source, RenamedEventArgs e) {
-            new RsyncRepository().SyncDirectories(e.FullPath);
-            ConsoleLogger.Log($"directory Watcher: {e.OldName} renamed to {e.Name}");
+        private  void OnChanged(object source, FileSystemEventArgs e) {
+            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
+            if(dir != null) {
+                var launcher = new CommandLauncher();
+                launcher.Launch("rsync-delete-after", new Dictionary<string, string> { { "$source", e.FullPath }, { "$destination", dir.Destination } });
+                ConsoleLogger.Log($"directory Watcher: {e.FullPath} {e.ChangeType}");
+            }
+        }
+
+        private  void OnRenamed(object source, RenamedEventArgs e)
+        {
+            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
+            if (dir != null) {
+                var launcher = new CommandLauncher();
+                launcher.Launch("rsync-delete-after", new Dictionary<string, string> {{"$source", e.FullPath}, {"$destination", dir.Destination}});
+                ConsoleLogger.Log($"directory Watcher: {e.OldName} renamed to {e.Name}");
+            }
         }
     }
 }

@@ -96,9 +96,11 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Modules\ServiceRsyncModule.cs" />
+    <Compile Include="Rsync\RsyncConfiguration.cs" />
+    <Compile Include="Rsync\BindConfigurationModel.cs" />
     <Compile Include="Certificates\CaConfigurationFiles.cs" />
     <Compile Include="Certificates\CaConfigurationModel.cs" />
-    <Compile Include="Certificates\CertificateAuthority.cs" />
     <Compile Include="Certificates\CertificateModel.cs" />
     <Compile Include="Certificates\CaConfiguration.cs" />
     <Compile Include="Discovery\AvahiBrowse.cs" />
@@ -123,7 +125,6 @@
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Database\MacAddressRepository.cs" />
-    <Compile Include="Database\RsyncRepository.cs" />
     <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
     <Compile Include="Dhcpd\DhcpdConfigurationModel.cs" />
     <Compile Include="Dhcpd\DhcpdLeaseModel.cs" />
@@ -211,6 +212,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.apps.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.service.rsync.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.service.ca.js">
@@ -603,15 +607,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FILE_etc_wpa_supplicant_wpa__suplicant.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\openssl-intermediate.cnf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\openssl.cnf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\openssl-dc-tmplate.cnf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\openssl-sc-template.cnf">

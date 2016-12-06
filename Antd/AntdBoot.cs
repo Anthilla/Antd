@@ -21,6 +21,7 @@ using Antd.Host;
 using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
+using Antd.Rsync;
 using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
@@ -84,7 +85,6 @@ namespace Antd {
             database.RegisterView(new ApplicationView());
             database.RegisterView(new AuthorizedKeysView());
             database.RegisterView(new TimerView());
-            database.RegisterView(new RsyncView());
             database.RegisterView(new MacAddressView());
             database.RegisterView(new SyslogView());
 
@@ -383,8 +383,6 @@ namespace Antd {
         public void StartGlusterfs() {
             if(!Parameter.IsUnix)
                 return;
-            if(!Parameter.IsUnix)
-                return;
             var glusterConfiguration = new GlusterConfiguration();
             if(glusterConfiguration.IsActive()) {
                 glusterConfiguration.Set();
@@ -394,9 +392,16 @@ namespace Antd {
             }
         }
 
-        public void StartDirectoryWatcher() {
-            new DirectoryWatcher().StartWatching();
-            ConsoleLogger.Log("directory watcher ready");
+        public void StartRsync() {
+            if(!Parameter.IsUnix)
+                return;
+            var rsyncConfiguration = new RsyncConfiguration();
+            if(rsyncConfiguration.IsActive()) {
+                rsyncConfiguration.Set();
+                rsyncConfiguration.Enable();
+                rsyncConfiguration.Restart();
+                ConsoleLogger.Log("rsync watcher start");
+            }
         }
 
         public void LaunchInternalTimers() {

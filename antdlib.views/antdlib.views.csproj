@@ -54,7 +54,6 @@
     <Compile Include="SyslogModel.cs" />
     <Compile Include="TimerModel.cs" />
     <Compile Include="MacAddressModel.cs" />
-    <Compile Include="RsyncModel.cs" />
     <Compile Include="_DatabaseHelper.cs" />
     <Compile Include="_EntityStatus.cs" />
     <Compile Include="_EntityModel.cs" />

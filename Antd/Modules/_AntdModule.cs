@@ -44,6 +44,7 @@ using Antd.Info;
 using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
+using Antd.Rsync;
 using Antd.Samba;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -550,6 +551,23 @@ namespace Antd.Modules {
                     viewModel.GlusterNodes = glusterConfig.Nodes;
                     viewModel.GlusterVolumes = glusterConfig.Volumes;
                     return View["antd/part/page-antd-gluster", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/rsync"] = x => {
+                try {
+                    var rsyncConfiguration = new RsyncConfiguration();
+                    dynamic viewModel = new ExpandoObject();
+                    var rsyncConfig = rsyncConfiguration.Get() ?? new RsyncConfigurationModel();
+                    var rsyncIsActive = rsyncConfig.IsActive;
+                    viewModel.RsyncIsActive = rsyncIsActive;
+                    viewModel.RsyncDirectories = rsyncConfig.Directories;
+                    return View["antd/part/page-antd-rsync", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

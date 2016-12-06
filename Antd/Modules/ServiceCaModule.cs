@@ -27,8 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.IO;
+using antdlib.common;
 using Antd.Certificates;
 using Nancy;
+using Nancy.Responses;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -76,6 +79,17 @@ namespace Antd.Modules {
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.Save(model);
                 return Response.AsRedirect("/ca");
+            };
+
+            Get["/services/ca/crl"] = x => {
+                var crl = $"{Parameter.AntdCfg}/ca/intermediate/crl/intermediate.crl.pem";
+                if(!File.Exists(crl)) {
+                    return HttpStatusCode.ExpectationFailed;
+                }
+                var file = new FileStream(crl, FileMode.Open);
+                const string fileName = "intermediate.crl.pem";
+                var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
+                return response.AsAttachment(fileName);
             };
         }
     }

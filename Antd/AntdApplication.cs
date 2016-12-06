@@ -80,7 +80,7 @@ namespace Antd {
             Boot.ImportPools();
             Boot.StartScheduler();
             Boot.StartGlusterfs();
-            Boot.StartDirectoryWatcher();
+            Boot.StartRsync();
             Boot.LaunchInternalTimers();
             Boot.LaunchApps();
 
