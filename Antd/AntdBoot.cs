@@ -391,7 +391,7 @@ namespace Antd {
             if(!Parameter.IsUnix)
                 return;
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
-            new SyncTime().Start(new TimeSpan(1, 30, 00));
+            new SyncTime().Start(new TimeSpan(0, 42, 00));
             ConsoleLogger.Log("internal timers ready");
         }
 
