@@ -62,7 +62,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/samba/enable"] = x => {
+            Post["/services/samba/disable"] = x => {
                 var dhcpdConfiguration = new SambaConfiguration();
                 dhcpdConfiguration.Disable();
                 dhcpdConfiguration.Stop();

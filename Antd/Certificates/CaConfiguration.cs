@@ -40,6 +40,44 @@ namespace Antd.Certificates {
             File.WriteAllText(_cfgFile, text);
         }
 
+        public void Set() {
+            PrepareDirectory();
+            PrepareConfigurationFile();
+            PrepareRootKey();
+            PrepareRootCertificate();
+            VerifyRootCertificate();
+
+            PrepareIntermediateDirectory();
+            PrepareIntermediateConfigurationFile();
+            PrepareIntermediateKey();
+            PrepareIntermediateCertificate();
+            VerifyIntermediateCertificate();
+            CreateCertificateChain();
+
+            Enable();
+        }
+
+        public bool IsActive() {
+            if(!File.Exists(_cfgFile)) {
+                return false;
+            }
+            return _serviceModel != null && _serviceModel.IsActive;
+        }
+
+        public CaConfigurationModel Get() {
+            return _serviceModel;
+        }
+
+        public void Enable() {
+            _serviceModel.IsActive = true;
+            Save(_serviceModel);
+        }
+
+        public void Disable() {
+            _serviceModel.IsActive = false;
+            Save(_serviceModel);
+        }
+
         private readonly string _caMainDirectory = $"{Parameter.AntdCfg}/ca";
         private readonly string[] _caMainSubdirectories = {
             "certs",
@@ -172,19 +210,18 @@ namespace Antd.Certificates {
         }
 
         public void PrepareIntermediateCertificate() {
-            //cd /data/ca
-            //openssl req -config openssl.cnf -key private/ca.key.pem -new -x509 -days 7300 -sha256 -extensions v3_ca -out certs/ca.cert.pem -passin pass:Anthilla -subj "/C=IT/ST=Milano/L=casamia/O=anthilla/OU=anthilla/CN=root/emailAddress=damiano.zanardi@anthilla.com"
-            //chmod 444 certs/ca.cert.pem
             var key = $"{_caIntermediateDirectory}/private/intermediate.key.pem";
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var file = $"{_caIntermediateDirectory}/csr/intermediate.csr.pem";
             var bash = new Bash();
             if(!File.Exists(file)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -x509 -days 7300 -sha256 -extensions v3_ca -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
+                //ConsoleLogger.Log($"openssl req -config {config} -new -sha256 -key {key} -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
+                bash.Execute($"openssl req -config {config} -new -sha256 -key {key} -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
             }
             config = $"{_caMainDirectory}/openssl.cnf";
             var fileOut = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
-            if(!File.Exists(file)) {
+            if(!File.Exists(fileOut)) {
+                //ConsoleLogger.Log($"openssl ca -batch -config {config} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{_serviceModel.KeyPassout} -in {file} -out {fileOut}");
                 bash.Execute($"openssl ca -batch -config {config} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{_serviceModel.KeyPassout} -in {file} -out {fileOut}");
                 bash.Execute($"chmod 444 ${file}");
             }
@@ -200,8 +237,6 @@ namespace Antd.Certificates {
         }
 
         public void CreateCertificateChain() {
-            //cat intermediate/certs/intermediate.cert.pem certs/ca.cert.pem > intermediate/certs/ca-chain.cert.pem
-            //chmod 444 intermediate/certs/ca-chain.cert.pem
             var file1 = $"{_caMainDirectory}/certs/ca.cert.pem";
             var line1 = File.ReadAllLines(file1);
             var file2 = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
@@ -214,42 +249,10 @@ namespace Antd.Certificates {
         }
         #endregion
 
-        public void Set() {
-            PrepareDirectory();
-            PrepareConfigurationFile();
-            PrepareRootKey();
-            PrepareRootCertificate();
-            VerifyRootCertificate();
+        #region [    ca - Certificate    ]
 
-            PrepareIntermediateDirectory();
-            PrepareIntermediateConfigurationFile();
-            PrepareIntermediateKey();
-            PrepareIntermediateCertificate();
-            VerifyIntermediateCertificate();
-            CreateCertificateChain();
+        
 
-            Enable();
-        }
-
-        public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
-                return false;
-            }
-            return _serviceModel != null && _serviceModel.IsActive;
-        }
-
-        public CaConfigurationModel Get() {
-            return _serviceModel;
-        }
-
-        public void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
-        }
-
-        public void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
-        }
+        #endregion
     }
 }

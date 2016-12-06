@@ -48,7 +48,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/ca/enable"] = x => {
+            Post["/services/ca/disable"] = x => {
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.Disable();
                 return HttpStatusCode.OK;

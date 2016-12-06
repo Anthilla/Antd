@@ -63,7 +63,7 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/dhcpd/enable"] = x => {
+            Post["/services/dhcpd/disable"] = x => {
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.Disable();
                 dhcpdConfiguration.Stop();

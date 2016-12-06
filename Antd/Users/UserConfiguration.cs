@@ -56,6 +56,9 @@ namespace Antd.Users {
             var lines = File.ReadAllLines(MainFilePath);
             var sysUser = new SystemUser();
             foreach(var user in _serviceModel.Users) {
+                if(user.Password.Length < 2) {
+                    continue;
+                }
                 var line = lines.FirstOrDefault(_ => _.StartsWith(user.Name));
                 if(line == null) {
                     sysUser.Create(user.Name);
