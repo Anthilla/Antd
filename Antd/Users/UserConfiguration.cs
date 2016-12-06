@@ -44,8 +44,6 @@ namespace Antd.Users {
             var lines = File.ReadAllLines(MainFilePath);
             var users = new List<User>();
             foreach(var line in lines) {
-                if(line.StartsWith("root"))
-                    continue;
                 var arr = line.Split(':');
                 var name = arr[0];
                 if(_serviceModel.Users.Any(_ => _.Name == name))
@@ -60,25 +58,12 @@ namespace Antd.Users {
 
         public void Set() {
             var lines = File.ReadAllLines(MainFilePath);
-            var newLines = new List<string>();
-            var missingUsers = new List<User>();
-            foreach(var user in _serviceModel.Users) {
-                var name = user.Name;
-                var line = lines.FirstOrDefault(_ => _.Contains(name));
-                if(line == null) {
-                    //utente mancante dal sistema quindi lo gestisco dopo
-                    missingUsers.Add(user);
-                    continue;
-                }
-                var oldPassw = line.Split(':')[1];
-                var pwd = user.Password;
-                var replaced = line.Replace(oldPassw, pwd);
-                newLines.Add(replaced);
-            }
-            File.WriteAllLines(MainFilePath, newLines);
             var sysUser = new SystemUser();
-            foreach(var user in missingUsers) {
-                sysUser.Create(user.Name);
+            foreach(var user in _serviceModel.Users) {
+                var line = lines.FirstOrDefault(_ => _.StartsWith(user.Name));
+                if(line == null) {
+                    sysUser.Create(user.Name);
+                }
                 sysUser.SetPassword(user.Name, user.Password);
             }
         }
@@ -87,27 +72,33 @@ namespace Antd.Users {
             return _serviceModel == null ? new List<User>() : _serviceModel.Users;
         }
 
-        public void AddUser(User model) {
-            var resources = _serviceModel.Users;
-            if(resources.Any(_ => _.Name == model.Name)) {
-                RemoveUser(model.Name);
+        public void AddUser(User user) {
+            var users = _serviceModel.Users;
+            if(users.Any(_ => _.Name == user.Name)) {
+                RemoveUser(user.Name);
             }
-            resources.Add(model);
-            _serviceModel.Users = resources;
+            users.Add(user);
+            _serviceModel.Users = users;
             Save(_serviceModel);
-            Set();
+            var lines = File.ReadAllLines(MainFilePath);
+            var sysUser = new SystemUser();
+            var line = lines.FirstOrDefault(_ => _.StartsWith(user.Name));
+            if(line == null) {
+                sysUser.Create(user.Name);
+            }
+            sysUser.SetPassword(user.Name, user.Password);
         }
 
         public void RemoveUser(string name) {
-            var resources = _serviceModel.Users;
-            var model = resources.First(_ => _.Name == name);
+            var users = _serviceModel.Users;
+            var model = users.First(_ => _.Name == name);
             if(model == null) {
                 return;
             }
-            resources.Remove(model);
-            _serviceModel.Users = resources;
+            users.Remove(model);
+            _serviceModel.Users = users;
             Save(_serviceModel);
-            Set();
+            //Set();
         }
     }
 }

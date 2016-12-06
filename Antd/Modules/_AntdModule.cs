@@ -565,7 +565,7 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     viewModel.Master = new ManageMaster().Name;
                     var userConfiguration = new UserConfiguration();
-                    viewModel.Users = userConfiguration.Get().OrderBy(_ => _.Name);
+                    viewModel.Users = userConfiguration.Get().Where(_ => _.Name.ToLower() != "root").OrderBy(_ => _.Name);
                     return View["antd/part/page-antd-users", viewModel];
                 }
                 catch(Exception ex) {

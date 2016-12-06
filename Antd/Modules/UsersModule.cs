@@ -57,8 +57,7 @@ namespace Antd.Modules {
                 };
                 var userConfiguration = new UserConfiguration();
                 userConfiguration.AddUser(mo);
-                userConfiguration.Set();
-                return HttpStatusCode.OK;
+                return Response.AsRedirect("/");
             };
 
             Post["/master/change/password"] = x => {
