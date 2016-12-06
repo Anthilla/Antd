@@ -285,6 +285,9 @@
     <Content Include="Views\antd\part\page-antd-firewall-mac.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-antd-info-modules.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-antd-info-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

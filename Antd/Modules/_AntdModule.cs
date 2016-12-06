@@ -138,6 +138,20 @@ namespace Antd.Modules {
                 }
             };
 
+            Get["/part/info/modules"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var machineInfo = new MachineInfo();
+                    viewModel.Modules = machineInfo.GetModules();
+                    return View["antd/part/page-antd-info-modules", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
             Get["/part/system"] = x => {
                 try {
                     var machineInfo = new MachineInfo();

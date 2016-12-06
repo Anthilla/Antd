@@ -101,6 +101,7 @@
     <Compile Include="Models\NetworkInfoModel.cs" />
     <Compile Include="Models\SysctlModel.cs" />
     <Compile Include="Models\UnitFileModel.cs" />
+    <Compile Include="Models\ModuleModel.cs" />
     <Compile Include="Models\UnitModel.cs" />
     <Compile Include="Models\DiskUsageModel.cs" />
     <Compile Include="Models\UptimeModel.cs" />

@@ -82,6 +82,11 @@ namespace Antd.Info {
             return result;
         }
 
+        public IEnumerable<ModuleModel> GetModules() {
+            var result = Mapper.FromCommand<ModuleModel>("lsmod").ToList().Skip(1);
+            return result;
+        }
+
         private static readonly Bash Bash = new Bash();
 
         public UptimeModel GetUptime() {
