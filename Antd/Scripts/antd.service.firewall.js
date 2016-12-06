@@ -63,7 +63,7 @@ $("#SaveIpv4FilterTable").on("click", function () {
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
-        var el = $(this).find('[data-nft="SetElements"]').text();
+        var el = $(this).find('[data-nft="SetElements"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv4/filter/set",
@@ -80,7 +80,7 @@ $("#SaveIpv4FilterTable").on("click", function () {
     });
     panel.find('[data-nft="Chain"]').each(function () {
         var name = $(this).attr("data-nft-name");
-        var el = $(this).find('[data-nft="ChainRules"]').text();
+        var el = $(this).find('[data-nft="ChainRules"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv4/filter/chain",
@@ -101,7 +101,7 @@ $("#SaveIpv4NatTable").on("click", function () {
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
-        var el = $(this).find('[data-nft="SetElements"]').text();
+        var el = $(this).find('[data-nft="SetElements"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv4/filter/set",
@@ -118,7 +118,7 @@ $("#SaveIpv4NatTable").on("click", function () {
     });
     panel.find('[data-nft="Chain"]').each(function () {
         var name = $(this).attr("data-nft-name");
-        var el = $(this).find('[data-nft="ChainRules"]').text();
+        var el = $(this).find('[data-nft="ChainRules"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv4/filter/chain",
@@ -139,7 +139,7 @@ $("#SaveIpv6FilterTable").on("click", function () {
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
-        var el = $(this).find('[data-nft="SetElements"]').text();
+        var el = $(this).find('[data-nft="SetElements"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv6/filter/set",
@@ -156,7 +156,7 @@ $("#SaveIpv6FilterTable").on("click", function () {
     });
     panel.find('[data-nft="Chain"]').each(function () {
         var name = $(this).attr("data-nft-name");
-        var el = $(this).find('[data-nft="ChainRules"]').text();
+        var el = $(this).find('[data-nft="ChainRules"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv6/filter/chain",
@@ -177,7 +177,7 @@ $("#SaveIpv6NatTable").on("click", function () {
     panel.find('[data-nft="Set"]').each(function () {
         var name = $(this).attr("data-nft-name");
         var type = $(this).attr("data-nft-type");
-        var el = $(this).find('[data-nft="SetElements"]').text();
+        var el = $(this).find('[data-nft="SetElements"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv6/filter/set",
@@ -194,7 +194,7 @@ $("#SaveIpv6NatTable").on("click", function () {
     });
     panel.find('[data-nft="Chain"]').each(function () {
         var name = $(this).attr("data-nft-name");
-        var el = $(this).find('[data-nft="ChainRules"]').text();
+        var el = $(this).find('[data-nft="ChainRules"]').val();
         jQuery.support.cors = true;
         var aj = $.ajax({
             url: "/services/firewall/ipv6/filter/chain",

@@ -104,6 +104,22 @@ namespace Antd.Host {
             var launcher = new CommandLauncher();
             launcher.Launch(Host.RemoveModules.SetCmd, Host.RemoveModules.StoredValues);
         }
+
+        public string[] GetHostBlacklistModules() {
+            Host = LoadHostModel();
+            return Host.ModulesBlacklist.ToArray();
+        }
+
+        public void SetHostBlacklistModules(IEnumerable<string> modules) {
+            Host = LoadHostModel();
+            Host.ModulesBlacklist = modules.ToArray();
+            Export(Host);
+        }
+
+        public void ApplyHostBlacklistModules() {
+            Host = LoadHostModel();
+            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", Host.ModulesBlacklist.Select(_ => $"blacklist {_}"));
+        }
         #endregion
 
         #region [    repo - Services    ]

@@ -76,6 +76,7 @@ namespace Antd.Modules {
                     var hostcfg = new HostConfiguration();
                     viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
                     viewModel.RmModules = string.Join("\r\n", hostcfg.GetHostRemoveModules());
+                    viewModel.Blacklist = string.Join("\r\n", hostcfg.GetHostBlacklistModules());
                     return View["antd/part/page-boot-mod", viewModel];
                 }
                 catch(Exception ex) {
@@ -149,6 +150,15 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
                 hostcfg.ApplyHostRemoveModules();
+                return Response.AsRedirect("/boot");
+            };
+
+            Post["/boot/modblacklist"] = x => {
+                var modulesText = (string)Request.Form.Config;
+                var modules = modulesText.SplitToList(Environment.NewLine);
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostBlacklistModules(modules);
+                hostcfg.ApplyHostBlacklistModules();
                 return Response.AsRedirect("/boot");
             };
 

@@ -44,12 +44,8 @@ namespace Antd.Users {
             var lines = File.ReadAllLines(MainFilePath);
             var users = new List<User>();
             foreach(var line in lines) {
-                var arr = line.Split(':');
-                var name = arr[0];
-                if(_serviceModel.Users.Any(_ => _.Name == name))
-                    continue;
-                var pwd = arr[1];
-                var mo = new User { Name = name, Password = pwd };
+                var info = line.Split(':');
+                var mo = new User { Name = info[0], Password = info[1] };
                 users.Add(mo);
                 _serviceModel.Users = users;
             }
@@ -98,7 +94,6 @@ namespace Antd.Users {
             users.Remove(model);
             _serviceModel.Users = users;
             Save(_serviceModel);
-            //Set();
         }
     }
 }

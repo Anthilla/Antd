@@ -158,6 +158,12 @@ namespace Antd.Host {
         };
         #endregion
 
+        #region [    Modules    ]
+        public string[] ModulesBlacklist { get; set; } = {
+            "iptable_filter",
+            "ip6table_filter"
+        };
+
         /// <summary>
         /// Each object in Modprobes triggers the "modprobe" command
         /// </summary>
@@ -175,6 +181,7 @@ namespace Antd.Host {
                 { "$modules", "iptable_filter ip6table_filter ebtable_filter ebtables iptable_nat ip_tables iptable_mangle" }
             }
         };
+        #endregion
 
         /// <summary>
         /// Each object in Services triggers the "systemctl-restart" command

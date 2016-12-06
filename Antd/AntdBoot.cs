@@ -143,6 +143,7 @@ namespace Antd {
         public void LoadModules() {
             if(!Parameter.IsUnix)
                 return;
+            _hostConfiguration.ApplyHostBlacklistModules();
             _hostConfiguration.ApplyHostModprobes();
             _hostConfiguration.ApplyHostRemoveModules();
             ConsoleLogger.Log("modules ready");
