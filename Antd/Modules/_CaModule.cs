@@ -30,6 +30,7 @@
 using System;
 using System.Dynamic;
 using antdlib.common;
+using Antd.Certificates;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -46,33 +47,13 @@ namespace Antd.Modules {
             #endregion
 
             #region [    Partials    ]
-            Get["/part/ca/dc"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-dc", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
-            Get["/part/ca/dcusers"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    return View["antd/part/page-ca-dcusers", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
-
             Get["/part/ca/setup"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
+                    var caConfiguration = new CaConfiguration();
+                    var caIsActive = caConfiguration.IsActive();
+                    viewModel.CaIsActive = caIsActive;
+                    viewModel.CaOptions = caConfiguration.Get() ?? new CaConfigurationModel();
                     return View["antd/part/page-ca-setup", viewModel];
                 }
                 catch(Exception ex) {
@@ -110,6 +91,30 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     return View["antd/part/page-ca-certsc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/dc"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-dc", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/ca/dcusers"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    return View["antd/part/page-ca-dcusers", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

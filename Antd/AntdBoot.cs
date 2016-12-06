@@ -10,6 +10,7 @@ using antdlib.Systemd;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Bind;
+using Antd.Certificates;
 using Antd.Configuration;
 using Antd.Database;
 using Antd.Dhcpd;
@@ -302,6 +303,17 @@ namespace Antd {
                 sambaConfiguration.Enable();
                 sambaConfiguration.Restart();
                 ConsoleLogger.Log("samba server start");
+            }
+        }
+
+        public void StartCa() {
+            if(!Parameter.IsUnix)
+                return;
+            var caConfiguration = new CaConfiguration();
+            if(caConfiguration.IsActive()) {
+                caConfiguration.Set();
+                caConfiguration.Enable();
+                ConsoleLogger.Log("ca start");
             }
         }
 

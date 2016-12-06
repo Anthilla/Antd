@@ -59,8 +59,12 @@ namespace Antd.Users {
                 var line = lines.FirstOrDefault(_ => _.StartsWith(user.Name));
                 if(line == null) {
                     sysUser.Create(user.Name);
+                    sysUser.SetPassword(user.Name, user.Password);
+                    continue;
                 }
-                sysUser.SetPassword(user.Name, user.Password);
+                if(!line.Contains(user.Password)) {
+                    sysUser.SetPassword(user.Name, user.Password);
+                }
             }
         }
 

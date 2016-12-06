@@ -96,6 +96,11 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Certificates\CaConfigurationFiles.cs" />
+    <Compile Include="Certificates\CaConfigurationModel.cs" />
+    <Compile Include="Certificates\CertificateAuthority.cs" />
+    <Compile Include="Certificates\CertificateModel.cs" />
+    <Compile Include="Certificates\CaConfiguration.cs" />
     <Compile Include="Discovery\AvahiBrowse.cs" />
     <Compile Include="Discovery\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
@@ -151,7 +156,7 @@
     <Compile Include="Modules\OverlayModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />
-    <Compile Include="Modules\renew\CertificateAuthorityModule.cs" />
+    <Compile Include="Modules\ServiceCaModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\ServiceFirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
@@ -206,6 +211,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.apps.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.service.ca.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.units.js">
@@ -277,6 +285,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-bind.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-ca-setup.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
@@ -375,7 +386,7 @@
     <Content Include="Views\antd\part\page-ca-dcusers.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-ca-setup.html">
+    <Content Include="Views\antd\part\page-ca-setupOLD.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-ca-cert.html">
