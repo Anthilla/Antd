@@ -38,12 +38,12 @@ namespace Antd.Rsync {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[rsync] configuration saved");
         }
-
 
         public void Set() {
             Enable();
-            Restart();
+            Start();
         }
 
         public bool IsActive() {
@@ -63,6 +63,7 @@ namespace Antd.Rsync {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[rsync] enabled");
         }
 
         public void Disable() {
@@ -71,18 +72,21 @@ namespace Antd.Rsync {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[rsync] disabled");
         }
 
         public void Stop() {
             _directoryWatcher?.Stop();
+            ConsoleLogger.Log("[rsync] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(_directoryWatcher != null) {
                 Stop();
             }
             _directoryWatcher = new DirectoryWatcher(_serviceModel.Directories.ToArray());
             _directoryWatcher.StartWatching();
+            ConsoleLogger.Log("[rsync] start");
         }
 
         public void AddDirectory(RsyncDirectoriesModel model) {

@@ -386,21 +386,14 @@ namespace Antd {
             var glusterConfiguration = new GlusterConfiguration();
             if(glusterConfiguration.IsActive()) {
                 glusterConfiguration.Set();
-                glusterConfiguration.Enable();
-                glusterConfiguration.Restart();
                 ConsoleLogger.Log("gluster sync start");
             }
         }
 
         public void StartRsync() {
-            //if(!Parameter.IsUnix)
-            //    return;
             var rsyncConfiguration = new RsyncConfiguration();
             if(rsyncConfiguration.IsActive()) {
                 rsyncConfiguration.Set();
-                rsyncConfiguration.Enable();
-                rsyncConfiguration.Restart();
-                ConsoleLogger.Log("rsync watcher start");
             }
         }
 

@@ -45,7 +45,7 @@ namespace Antd.Modules {
 
             Post["/services/rsync/restart"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Restart();
+                rsyncConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -58,7 +58,7 @@ namespace Antd.Modules {
             Post["/services/rsync/enable"] = x => {
                 var dhcpdConfiguration = new RsyncConfiguration();
                 dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 

@@ -698,15 +698,15 @@ namespace antd.commands {
 
             #region [    Command - Rsync    ]
             dict["rsync"] = new Command {
-                Arguments = new[] { "rsync -aHA $source/ $destination/" },
+                Arguments = new[] { "rsync -aHA $source $destination" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["rsync-delete-after"] = new Command {
-                Arguments = new[] { "rsync -aHA --delete-after $source/ $destination/" },
+                Arguments = new[] { "rsync -aHA --delete-after $source $destination" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["rsync-delete-during"] = new Command {
-                Arguments = new[] { "rsync -aHA --delete-during $source/ $destination/" },
+                Arguments = new[] { "rsync -aHA --delete-during $source $destination" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             #endregion

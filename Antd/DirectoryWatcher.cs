@@ -46,10 +46,12 @@ namespace Antd {
         }
 
         public void StartWatching() {
+            ConsoleLogger.Log("[watcher] start");
             try {
                 foreach(var path in _paths) {
-                    if(!Directory.Exists(path) && !File.Exists(path))
+                    if(!Directory.Exists(path) && !File.Exists(path)) {
                         continue;
+                    }
                     _fsw = new FileSystemWatcher(path) {
                         NotifyFilter =
                             NotifyFilters.LastAccess |
@@ -71,25 +73,32 @@ namespace Antd {
         }
 
         public void Stop() {
+            ConsoleLogger.Log("[watcher] stop");
             _fsw?.Dispose();
         }
 
         private void OnChanged(object source, FileSystemEventArgs e) {
-            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
-            if(dir != null) {
-                var launcher = new CommandLauncher();
-                launcher.Launch("rsync-delete-after", new Dictionary<string, string> { { "$source", e.FullPath }, { "$destination", dir.Destination } });
-                ConsoleLogger.Log($"directory Watcher: {e.FullPath} {e.ChangeType}");
-            }
+            ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
+            var parent = Path.GetDirectoryName(e.FullPath);
+            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == parent);
+            if(dir == null)
+                return;
+            var src = dir.Source.EndsWith("/") ? dir.Source : dir.Source + "/";
+            var dst = dir.Destination.EndsWith("/") ? dir.Destination : dir.Destination + "/";
+            var launcher = new CommandLauncher();
+            launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
         }
 
         private void OnRenamed(object source, RenamedEventArgs e) {
-            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
-            if(dir != null) {
-                var launcher = new CommandLauncher();
-                launcher.Launch("rsync-delete-after", new Dictionary<string, string> { { "$source", e.FullPath }, { "$destination", dir.Destination } });
-                ConsoleLogger.Log($"directory Watcher: {e.OldName} renamed to {e.Name}");
-            }
+            ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
+            var parent = Path.GetDirectoryName(e.FullPath);
+            var dir = _directoriesModel.FirstOrDefault(_ => _.Source == parent);
+            if(dir == null)
+                return;
+            var src = dir.Source.EndsWith("/") ? dir.Source : dir.Source + "/";
+            var dst = dir.Destination.EndsWith("/") ? dir.Destination : dir.Destination + "/";
+            var launcher = new CommandLauncher();
+            launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
         }
     }
 }
