@@ -91,6 +91,65 @@ namespace Antd.Modules {
                 var response = new StreamResponse(() => file, MimeTypes.GetMimeType(fileName));
                 return response.AsAttachment(fileName);
             };
+
+            Post["/services/ca/certificate/user"] = x => {
+                string name = Request.Form.Name;
+                string passphrase = Request.Form.Passphrase;
+                string email = Request.Form.Email;
+                string c = Request.Form.CountryName;
+                string st = Request.Form.StateOrProvinceName;
+                string l = Request.Form.LocalityName;
+                string o = Request.Form.OrganizationName;
+                string ou = Request.Form.OrganizationalUnitName;
+                var caConfiguration = new CaConfiguration();
+                caConfiguration.CreateUserCertificate(name, passphrase, email, c, st, l, o, ou);
+                return Response.AsRedirect("/ca");
+            };
+
+            Post["/services/ca/certificate/server"] = x => {
+                string name = Request.Form.Name;
+                string passphrase = Request.Form.Passphrase;
+                string email = Request.Form.Email;
+                string c = Request.Form.CountryName;
+                string st = Request.Form.StateOrProvinceName;
+                string l = Request.Form.LocalityName;
+                string o = Request.Form.OrganizationName;
+                string ou = Request.Form.OrganizationalUnitName;
+                var caConfiguration = new CaConfiguration();
+                caConfiguration.CreateServerCertificate(name, passphrase, email, c, st, l, o, ou);
+                return Response.AsRedirect("/ca");
+            };
+
+            Post["/services/ca/certificate/dc"] = x => {
+                string name = Request.Form.Name;
+                string passphrase = Request.Form.Passphrase;
+                string dcGuid = Request.Form.Guid;
+                string dcDns = Request.Form.Dns;
+                string email = Request.Form.Email;
+                string c = Request.Form.CountryName;
+                string st = Request.Form.StateOrProvinceName;
+                string l = Request.Form.LocalityName;
+                string o = Request.Form.OrganizationName;
+                string ou = Request.Form.OrganizationalUnitName;
+                var caConfiguration = new CaConfiguration();
+                caConfiguration.CreateDomainControllerCertificate(name, passphrase, dcGuid, dcDns, email, c, st, l, o, ou);
+                return Response.AsRedirect("/ca");
+            };
+
+            Post["/services/ca/certificate/sc"] = x => {
+                string name = Request.Form.Name;
+                string passphrase = Request.Form.Passphrase;
+                string upn = Request.Form.Upn;
+                string email = Request.Form.Email;
+                string c = Request.Form.CountryName;
+                string st = Request.Form.StateOrProvinceName;
+                string l = Request.Form.LocalityName;
+                string o = Request.Form.OrganizationName;
+                string ou = Request.Form.OrganizationalUnitName;
+                var caConfiguration = new CaConfiguration();
+                caConfiguration.CreateSmartCardCertificate(name, passphrase, upn, email, c, st, l, o, ou);
+                return Response.AsRedirect("/ca");
+            };
         }
     }
 }
