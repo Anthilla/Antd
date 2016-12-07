@@ -45,10 +45,13 @@ namespace Antd.Users {
             var users = new List<User>();
             foreach(var line in lines) {
                 var info = line.Split(':');
+                if(_serviceModel.Users.Any(_ => _.Name == info[0])) {
+                    continue;
+                }
                 var mo = new User { Name = info[0], Password = info[1] };
                 users.Add(mo);
-                _serviceModel.Users = users;
             }
+            _serviceModel.Users = users;
             Save(_serviceModel);
         }
 

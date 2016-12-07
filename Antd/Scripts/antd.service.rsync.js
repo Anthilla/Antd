@@ -60,6 +60,7 @@ $("#ApplyConfigRsync").on("click", function () {
 
 $('[data-role="RemoveRsyncDirectory"]').click(function () {
     var guid = $(this).attr("data-id");
+    var par = $(this).parents("tr");
     jQuery.support.cors = true;
     var aj = $.ajax({
         url: "/services/rsync/directory/del",
@@ -68,7 +69,7 @@ $('[data-role="RemoveRsyncDirectory"]').click(function () {
             Guid: guid
         },
         success: function () {
-            location.reload(true);
+            par.hide();
         }
     });
     _requests.push(aj);

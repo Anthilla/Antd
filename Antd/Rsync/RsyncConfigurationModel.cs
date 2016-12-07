@@ -3,7 +3,6 @@
 namespace Antd.Rsync {
     public class RsyncConfigurationModel {
         public bool IsActive { get; set; }
-
         public List<RsyncDirectoriesModel> Directories { get; set; } = new List<RsyncDirectoriesModel>();
     }
 

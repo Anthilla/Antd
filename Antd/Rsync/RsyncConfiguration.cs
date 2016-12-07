@@ -12,7 +12,7 @@ namespace Antd.Rsync {
 
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
         private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/rsync.conf.bck";
-        private  DirectoryWatcher _directoryWatcher;
+        private DirectoryWatcher _directoryWatcher;
 
         public RsyncConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
@@ -74,11 +74,13 @@ namespace Antd.Rsync {
         }
 
         public void Stop() {
-            _directoryWatcher.Stop();
+            _directoryWatcher?.Stop();
         }
 
         public void Restart() {
-            Stop();
+            if(_directoryWatcher != null) {
+                Stop();
+            }
             _directoryWatcher = new DirectoryWatcher(_serviceModel.Directories.ToArray());
             _directoryWatcher.StartWatching();
         }

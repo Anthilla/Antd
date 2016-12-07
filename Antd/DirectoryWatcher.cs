@@ -36,15 +36,13 @@ using antdlib.common;
 using Antd.Rsync;
 
 namespace Antd {
-    public class DirectoryWatcher
-    {
+    public class DirectoryWatcher {
         private readonly RsyncDirectoriesModel[] _directoriesModel;
         private readonly string[] _paths;
         private FileSystemWatcher _fsw;
-        public DirectoryWatcher(RsyncDirectoriesModel[] paths)
-        {
+        public DirectoryWatcher(RsyncDirectoriesModel[] paths) {
             _directoriesModel = paths;
-            _paths = paths.Select(_=>_.Source).ToArray();
+            _paths = paths.Select(_ => _.Source).ToArray();
         }
 
         public void StartWatching() {
@@ -72,12 +70,11 @@ namespace Antd {
             }
         }
 
-        public void Stop()
-        {
-            _fsw.Dispose();
+        public void Stop() {
+            _fsw?.Dispose();
         }
 
-        private  void OnChanged(object source, FileSystemEventArgs e) {
+        private void OnChanged(object source, FileSystemEventArgs e) {
             var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
             if(dir != null) {
                 var launcher = new CommandLauncher();
@@ -86,12 +83,11 @@ namespace Antd {
             }
         }
 
-        private  void OnRenamed(object source, RenamedEventArgs e)
-        {
+        private void OnRenamed(object source, RenamedEventArgs e) {
             var dir = _directoriesModel.FirstOrDefault(_ => _.Source == e.FullPath);
-            if (dir != null) {
+            if(dir != null) {
                 var launcher = new CommandLauncher();
-                launcher.Launch("rsync-delete-after", new Dictionary<string, string> {{"$source", e.FullPath}, {"$destination", dir.Destination}});
+                launcher.Launch("rsync-delete-after", new Dictionary<string, string> { { "$source", e.FullPath }, { "$destination", dir.Destination } });
                 ConsoleLogger.Log($"directory Watcher: {e.OldName} renamed to {e.Name}");
             }
         }

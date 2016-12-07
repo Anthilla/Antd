@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using antdlib;
 using antdlib.common;
@@ -46,44 +45,7 @@ namespace Antd {
             ConsoleLogger.Log("");
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
-            Boot.RemoveLimits();
-            Boot.StartOverlayWatcher();
-
-            if(Parameter.IsUnix == false) {
-                ConsoleLogger.Warn("This application is not running on an Anthilla OS Linux, some functions may be disabled");
-            }
-
-            Boot.CheckOsIsRw();
-            Boot.SetWorkingDirectories();
-            Boot.SetCoreParameters();
-            Database = Boot.StartDatabase();
-            Boot.PrepareConfiguration();
-            Boot.SetHost();
-            Boot.SetOsMount();
-            Boot.SetNameService();
-            Boot.SetOsParametersLocal();
-            Boot.LoadModules();
-            Boot.SetMounts();
-            Boot.ImportCommands();
-            Boot.ReloadUsers();
-            Boot.SetLanConfiguration();
-            Boot.SetNetworkConfiguration();
-            Boot.CommandExecuteLocal();
-            Boot.Ssh();
-            Boot.LoadServices();
-            Boot.StartFirewall();
-            Boot.StartDhcpd();
-            Boot.StartBind();
-            Boot.StartSamba();
-            Boot.SetSyslogNg();
-            Boot.InitAvahi();
-            Boot.ImportPools();
-            Boot.StartScheduler();
-            Boot.StartGlusterfs();
-            Boot.StartRsync();
-            Boot.LaunchInternalTimers();
-            Boot.LaunchApps();
-
+            Procedure();
             var port = ApplicationSetting.HttpPort();
             var uri = $"http://localhost:{port}/";
             var host = new NancyHost(new Uri(uri));
@@ -93,8 +55,6 @@ namespace Antd {
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("antd is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-
-
             if(Environment.OSVersion.Platform == PlatformID.Unix) {
                 KeepAlive();
                 ConsoleLogger.Log("antd is closing");
@@ -116,6 +76,42 @@ namespace Antd {
             }
         }
 
+        private static void Procedure() {
+            Boot.RemoveLimits();
+            Boot.StartOverlayWatcher();
+            Boot.CheckOsIsRw();
+            Boot.SetWorkingDirectories();
+            Boot.SetCoreParameters();
+            Database = Boot.StartDatabase();
+            Boot.PrepareConfiguration();
+            Boot.SetOsMount();
+            Boot.SetMounts();
+            Boot.SetHost();
+            Boot.SetNameService();
+            Boot.SetOsParametersLocal();
+            Boot.LoadModules();
+            Boot.ImportCommands();
+            Boot.ReloadUsers();
+            Boot.SetLanConfiguration();
+            Boot.SetNetworkConfiguration();
+            Boot.CommandExecuteLocal();
+            Boot.Ssh();
+            Boot.LoadServices();
+            Boot.StartFirewall();
+            Boot.StartDhcpd();
+            Boot.StartBind();
+            Boot.StartSamba();
+            Boot.SetSyslogNg();
+            Boot.InitAvahi();
+            Boot.ImportPools();
+            Boot.StartScheduler();
+            Boot.StartGlusterfs();
+            Boot.StartRsync();
+            Boot.LaunchInternalTimers();
+            Boot.LaunchApps();
+        }
+
+        #region [    Shutdown Management    ]
         private static void KeepAlive() {
             var r = Console.ReadLine();
             while(r != "quit") {
@@ -123,7 +119,6 @@ namespace Antd {
             }
         }
 
-        #region [    Shutdown Management    ]
         private static bool _isclosing;
 
         private static bool ConsoleCtrlCheck(CtrlTypes ctrlType) {

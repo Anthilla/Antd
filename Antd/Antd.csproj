@@ -98,7 +98,7 @@
     <Compile Include="Apps\AppTarget.cs" />
     <Compile Include="Modules\ServiceRsyncModule.cs" />
     <Compile Include="Rsync\RsyncConfiguration.cs" />
-    <Compile Include="Rsync\BindConfigurationModel.cs" />
+    <Compile Include="Rsync\RsyncConfigurationModel.cs" />
     <Compile Include="Certificates\CaConfigurationFiles.cs" />
     <Compile Include="Certificates\CaConfigurationModel.cs" />
     <Compile Include="Certificates\CertificateModel.cs" />
@@ -291,6 +291,9 @@
     <Content Include="Views\antd\part\page-antd-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\antd\part\page-antd-rsync.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\antd\part\page-ca-setup.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -388,9 +391,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-ca-dcusers.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-ca-setupOLD.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-ca-cert.html">

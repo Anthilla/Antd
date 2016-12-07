@@ -393,8 +393,8 @@ namespace Antd {
         }
 
         public void StartRsync() {
-            if(!Parameter.IsUnix)
-                return;
+            //if(!Parameter.IsUnix)
+            //    return;
             var rsyncConfiguration = new RsyncConfiguration();
             if(rsyncConfiguration.IsActive()) {
                 rsyncConfiguration.Set();

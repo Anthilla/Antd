@@ -1,0 +1,61 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Rsync
+        @IfNot.RsyncIsActive
+        <i id="EnableRsync" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.RsyncIsActive
+        <i id="StopRsync" class="icon-cancel-2 fg-yellow" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="DisableRsync" class="icon-blocked fg-orange" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReloadRsync" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ApplyConfigRsync" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ShowUserPanel" class="icon-plus-2 fg-anthilla-green" style="float: right; cursor: pointer !important; margin: auto 10px;"></i>
+        @EndIf
+    </legend>
+
+    <form id="UserCreateDashboard" action="/services/rsync/directory" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; display: none; width: 100%; min-height: 120px; margin-bottom: 5px;">
+        <div class="row">
+            <div class="span2">
+                <label>Source</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Source" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Destination</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Destination" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+            </div>
+            <div class="span8">
+                <input type="submit" value="Create" class="bg-anthilla-green fg-anthilla-gray" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+    </form>
+
+    <table class="table" style="table-layout: fixed;">
+        <thead>
+            <tr>
+                <th colspan="2">Source</th>
+                <th colspan="2">Destination</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @Each.RsyncDirectories
+            <tr>
+                <td colspan="2">@Current.Source</td>
+                <td colspan="2">@Current.Destination</td>
+                <td>
+                    <input data-role="RemoveRsyncDirectory" data-id="@Current.Guid" type="button" value="x" class="bg-anthilla-orange fg-anthilla-gray" />
+                </td>
+            </tr>
+            @EndEach
+        </tbody>
+    </table>
+</div>
