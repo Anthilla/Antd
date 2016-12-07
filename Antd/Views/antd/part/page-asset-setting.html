@@ -32,13 +32,13 @@
             @Each.Settings
             <tr data-role="NetscanSettingObject">
                 <td>
-                    <p>@Current.Item1</p>
+                    <p>@Current.Number</p>
                 </td>
                 <td>
-                    <p>@Current.Item2</p>
+                    <p>@Current.Letter</p>
                 </td>
                 <td colspan="4">
-                    <input type="text" value="@Current.Item3" data-l="@Current.Item2" data-n="@Current.Item1" data-name="NetscanLabel" style="height: 28px; width: 90%;" />
+                    <input type="text" value="@Current.Label" data-l="@Current.Letter" data-n="@Current.Number" data-name="NetscanLabel" style="height: 28px; width: 90%;" />
                 </td>
             </tr>
             @EndEach
@@ -46,7 +46,7 @@
         <tfoot>
             <tr>
                 <td colspan="6">
-                    <input style="height: 28px; width: 90%; color: #3a3a3a !important;" class="bg-anthilla-blu" data-role="SaveNetscanSetting" data-id="@Current.Id" value="Save Settings" type="button" />
+                    <input style="height: 28px; width: 90%; color: #3a3a3a !important;" class="bg-anthilla-blu" data-role="SaveNetscanSetting" value="Save Settings" type="button" />
                 </td>
             </tr>
         </tfoot>

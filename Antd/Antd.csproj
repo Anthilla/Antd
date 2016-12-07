@@ -102,12 +102,12 @@
     <Compile Include="Certificates\CaConfigurationModel.cs" />
     <Compile Include="Certificates\CertificateModel.cs" />
     <Compile Include="Certificates\CaConfiguration.cs" />
-    <Compile Include="Discovery\AvahiBrowse.cs" />
-    <Compile Include="Discovery\AvahiServiceXml.cs" />
+    <Compile Include="Asset\AvahiBrowse.cs" />
+    <Compile Include="Asset\AvahiServiceXml.cs" />
     <Compile Include="Bind\BindConfiguration.cs" />
     <Compile Include="Bind\BindConfigurationModel.cs" />
-    <Compile Include="Discovery\NetscanSetting.cs" />
-    <Compile Include="Discovery\NetscanSettingModel.cs" />
+    <Compile Include="Asset\NetscanSetting.cs" />
+    <Compile Include="Asset\NetscanSettingModel.cs" />
     <Compile Include="Firewall\FirewallConfiguration.cs" />
     <Compile Include="Firewall\FirewallConfigurationModel.cs" />
     <Compile Include="Host\HostConfiguration.cs" />
@@ -291,6 +291,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-rsync.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-asset-scan.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-ca-setup.html">

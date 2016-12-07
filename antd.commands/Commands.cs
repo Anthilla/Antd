@@ -422,6 +422,10 @@ namespace antd.commands {
                 Arguments = new[] { "nmap -sU -p 161 -T4 -d -v -n -Pn --script snmp-interfaces $ip" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["nmap-ip-sp"] = new Command {
+                Arguments = new[] { "nmap -sP $subnet -oG -" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["ping-c"] = new Command {
                 Arguments = new[] { "ping -c3 -w10 $ip" },
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()

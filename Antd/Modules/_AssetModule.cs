@@ -34,7 +34,7 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
-using Antd.Discovery;
+using Antd.Asset;
 using Antd.Ssh;
 using Nancy;
 using Nancy.Security;
@@ -51,9 +51,9 @@ namespace Antd.Modules {
         }
 
         public class NmapScanStatus {
-            public string Protocol { get; set; }
-            public string Status { get; set; }
-            public string Type { get; set; }
+            public string Protocol { get; set; } = "";
+            public string Status { get; set; } = "";
+            public string Type { get; set; } = "";
         }
 
         public AssetModule() {
@@ -106,13 +106,30 @@ namespace Antd.Modules {
                 }
             };
 
+            Get["/part/asset/scan"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var settings = new NetscanSetting();
+                    var set = settings.Get();
+                    var values = set.Values.Where(_ => !string.IsNullOrEmpty(_.Label));
+                    viewModel.Values = values.ToDictionary(k => k.Label, v => set.Subnet + v.Number + ".0");
+                    return View["antd/part/page-asset-scan", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
             Get["/part/asset/setting"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var settings = new NetscanSetting();
-                    viewModel.SettingsSubnet = settings.Settings.Subnet;
-                    viewModel.SettingsSubnetLabel = settings.Settings.SubnetLabel;
-                    viewModel.Settings = settings.Settings.Values;
+                    var set = settings.Get();
+                    viewModel.SettingsSubnet = set.Subnet;
+                    viewModel.SettingsSubnetLabel = set.SubnetLabel;
+                    viewModel.Settings = set.Values;
                     return View["antd/part/page-asset-setting", viewModel];
                 }
                 catch(Exception ex) {
@@ -155,7 +172,6 @@ namespace Antd.Modules {
                 }
                 var launcher = new CommandLauncher();
                 var result = launcher.Launch("nmap-ip-fast", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
-
                 var list = new List<NmapScanStatus>();
                 foreach(var r in result) {
                     var a = r.SplitToList(" ").ToArray();
@@ -166,7 +182,6 @@ namespace Antd.Modules {
                     };
                     list.Add(mo);
                 }
-
                 return Response.AsJson(list.OrderBy(_ => _.Protocol));
             };
 
@@ -178,6 +193,16 @@ namespace Antd.Modules {
                 var launcher = new CommandLauncher();
                 launcher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
                 return Response.AsJson(true);
+            };
+
+            Get["/asset/scan/{subnet}"] = x => {
+                string subnet = x.subnet;
+                if(string.IsNullOrEmpty(subnet)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("nmap-ip-sp", new Dictionary<string, string> { { "$subnet", subnet + "/24" } }).Skip(1).Reverse().Skip(1).Reverse();
+                return Response.AsJson(result.OrderBy(_ => _));
             };
             #endregion
 
