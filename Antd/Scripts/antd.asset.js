@@ -9,11 +9,14 @@ $('[data-role="AssetScanStart"]').on("click", function () {
         data: {
             Subnet: subnet
         },
+        beforeSend: function() {
+            $('[data-role="AssetScanIco"]').show();
+        },
         success: function (data) {
             container.html("");
             $.each(data, function (k, value) {
                 var html =
-'<script id="NetworkScanResultTemplate" style="display: none;"><div class="container"> ' +
+'<div class="container"> ' +
 '<div class="bg-anthilla-gray" style="width: 100%; height: 38px; margin-bottom: 5px; padding: 0 12px; font-weight: normal !important; line-height: 40px;">' +
 '<i class="icon-monitor on-left fg-anthilla-violet" style="margin-right: 8px;"></i>' +
 '<p style="display: inline-block !important; width: 200px;">' + value + "</p>" +
@@ -29,9 +32,10 @@ $('[data-role="AssetScanStart"]').on("click", function () {
 '<a data-hint="|Open Antd" data-hint-position="bottom"href="http://@Current.Ip:@Current.Port/" target="_blank" class="button bg-anthilla-gray border-2-anthilla-violet" style="width: 27px; height: 27px; padding: 4px 6px; float: right; margin-top: 5px; margin-left: 5px;"><i class="icon-exit fg-anthilla-violet"></i></a></div>' +
 '<div class="bg-anthilla-gray-m border-2-anthilla-gray content" style="display: none; width: 100%; height: auto; margin-bottom: 5px; margin-top: -5px; padding: 10px 12px; font-weight: normal !important;">' +
 '<table class="table" style="margin-top: -18px;"><thead><tr><td><label>Port/Protocol</label></td><td><label>Status</label></td>' +
-'<td><label>Type</label></td></tr></thead><tbody data-role="NmapResult"></tbody></table></div></div></script>';
+'<td><label>Type</label></td></tr></thead><tbody data-role="NmapResult"></tbody></table></div></div>';
                 container.append(html);
             });
+            $('[data-role="AssetScanIco"]').hide();
         }
     });
     _requests.push(aj);
