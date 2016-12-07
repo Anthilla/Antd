@@ -42,16 +42,15 @@ namespace Antd.Dhcpd {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[dhcpd] configuration saved");
         }
 
         public void Set() {
             if(_serviceModel == null) {
                 return;
             }
-
             Enable();
             Stop();
-
             #region [    dhcpd.conf generation    ]
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
@@ -121,8 +120,7 @@ namespace Antd.Dhcpd {
             }
             File.WriteAllLines(MainFilePath, lines);
             #endregion
-
-            Restart();
+            Start();
         }
 
         public bool IsActive() {
@@ -142,6 +140,7 @@ namespace Antd.Dhcpd {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[dhcpd] enabled");
         }
 
         public void Disable() {
@@ -150,19 +149,22 @@ namespace Antd.Dhcpd {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[dhcpd] disabled");
         }
 
         public void Stop() {
             Systemctl.Stop(ServiceName);
+            ConsoleLogger.Log("[dhcpd] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
             if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
+            ConsoleLogger.Log("[dhcpd] start");
         }
 
         public void AddClass(DhcpConfigurationClassModel model) {

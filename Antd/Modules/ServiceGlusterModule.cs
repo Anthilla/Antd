@@ -46,7 +46,7 @@ namespace Antd.Modules {
 
             Post["/services/gluster/restart"] = x => {
                 var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Restart();
+                glusterConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -59,7 +59,7 @@ namespace Antd.Modules {
             Post["/services/gluster/enable"] = x => {
                 var dhcpdConfiguration = new GlusterConfiguration();
                 dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 

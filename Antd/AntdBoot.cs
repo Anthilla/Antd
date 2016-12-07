@@ -264,9 +264,6 @@ namespace Antd {
             var firewallConfiguration = new FirewallConfiguration();
             if(firewallConfiguration.IsActive()) {
                 firewallConfiguration.Set();
-                firewallConfiguration.Enable();
-                firewallConfiguration.Restart();
-                ConsoleLogger.Log("firewall start");
             }
         }
 
@@ -276,9 +273,6 @@ namespace Antd {
             var dhcpdConfiguration = new DhcpdConfiguration();
             if(dhcpdConfiguration.IsActive()) {
                 dhcpdConfiguration.Set();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
-                ConsoleLogger.Log("dhcp server start");
             }
         }
 
@@ -288,9 +282,6 @@ namespace Antd {
             var bindConfiguration = new BindConfiguration();
             if(bindConfiguration.IsActive()) {
                 bindConfiguration.Set();
-                bindConfiguration.Enable();
-                bindConfiguration.Restart();
-                ConsoleLogger.Log("bind server start");
             }
         }
 
@@ -300,9 +291,6 @@ namespace Antd {
             var sambaConfiguration = new SambaConfiguration();
             if(sambaConfiguration.IsActive()) {
                 sambaConfiguration.Set();
-                sambaConfiguration.Enable();
-                sambaConfiguration.Restart();
-                ConsoleLogger.Log("samba server start");
             }
         }
 
@@ -312,8 +300,6 @@ namespace Antd {
             var caConfiguration = new CaConfiguration();
             if(caConfiguration.IsActive()) {
                 caConfiguration.Set();
-                caConfiguration.Enable();
-                ConsoleLogger.Log("ca start");
             }
         }
 

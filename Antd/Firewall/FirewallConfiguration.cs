@@ -39,6 +39,7 @@ namespace Antd.Firewall {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[firewall] configuration saved");
         }
 
         public void Set() {
@@ -46,7 +47,6 @@ namespace Antd.Firewall {
                 return;
             }
             Enable();
-
             #region [    nftables.conf generation    ]
             var lines = new List<string> {
                 "flush ruleset;",
@@ -125,8 +125,7 @@ namespace Antd.Firewall {
             lines.Add("}");
             File.WriteAllLines(MainFilePath, lines);
             #endregion
-
-            Restart();
+            Start();
         }
 
         public bool IsActive() {
@@ -146,6 +145,7 @@ namespace Antd.Firewall {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[firewall] enabled");
         }
 
         public void Disable() {
@@ -154,16 +154,19 @@ namespace Antd.Firewall {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[firewall] disabled");
         }
 
         public void Stop() {
+            ConsoleLogger.Log("[firewall] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(!IsActive())
                 return;
             var launcher = new CommandLauncher();
             launcher.Launch("nft-f", new Dictionary<string, string> { { "$file", MainFilePath } });
+            ConsoleLogger.Log("[firewall] start");
         }
     }
 }

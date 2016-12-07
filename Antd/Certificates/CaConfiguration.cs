@@ -40,6 +40,7 @@ namespace Antd.Certificates {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[ca] configuration saved");
         }
 
         public void Set() {
@@ -48,16 +49,13 @@ namespace Antd.Certificates {
             PrepareRootKey();
             PrepareRootCertificate();
             VerifyRootCertificate();
-
             PrepareIntermediateDirectory();
             PrepareIntermediateConfigurationFile();
             PrepareIntermediateKey();
             PrepareIntermediateCertificate();
             VerifyIntermediateCertificate();
             CreateCertificateChain();
-
             CreateCrl();
-
             Enable();
         }
 
@@ -75,11 +73,13 @@ namespace Antd.Certificates {
         public void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[ca] enabled");
         }
 
         public void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[ca] disabled");
         }
 
         private readonly string _caMainDirectory = $"{Parameter.AntdCfg}/ca";

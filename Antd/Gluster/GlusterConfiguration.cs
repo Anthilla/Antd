@@ -42,6 +42,7 @@ namespace Antd.Gluster {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[sync] configuration saved");
         }
 
 
@@ -51,7 +52,7 @@ namespace Antd.Gluster {
             }
             Enable();
             Stop();
-            Restart();
+            Start();
             Launch();
         }
 
@@ -72,6 +73,7 @@ namespace Antd.Gluster {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[sync] enabled");
         }
 
         public void Disable() {
@@ -80,19 +82,22 @@ namespace Antd.Gluster {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[sync] disabled");
         }
 
         public void Stop() {
             Systemctl.Stop(ServiceName);
+            ConsoleLogger.Log("[sync] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
             if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
+            ConsoleLogger.Log("[sync] start");
         }
 
         private readonly Bash _bash = new Bash();

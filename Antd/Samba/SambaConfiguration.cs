@@ -44,16 +44,15 @@ namespace Antd.Samba {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[samba] configuration saved");
         }
 
         public void Set() {
             if(_serviceModel == null) {
                 return;
             }
-
             Enable();
             Stop();
-
             #region [    smb.conf generation    ]
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
@@ -131,8 +130,7 @@ namespace Antd.Samba {
             }
             File.WriteAllLines(MainFilePath, lines);
             #endregion
-
-            Restart();
+            Start();
         }
 
         public bool IsActive() {
@@ -152,6 +150,7 @@ namespace Antd.Samba {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[samba] enabled");
         }
 
         public void Disable() {
@@ -160,15 +159,17 @@ namespace Antd.Samba {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[samba] disabled");
         }
 
         public void Stop() {
             Systemctl.Stop(ServiceName1);
             Systemctl.Stop(ServiceName2);
             Systemctl.Stop(ServiceName3);
+            ConsoleLogger.Log("[samba] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(Systemctl.IsEnabled(ServiceName1) == false) {
                 Systemctl.Enable(ServiceName1);
             }
@@ -187,6 +188,7 @@ namespace Antd.Samba {
             if(Systemctl.IsActive(ServiceName3) == false) {
                 Systemctl.Restart(ServiceName3);
             }
+            ConsoleLogger.Log("[samba] start");
         }
 
         public void AddResource(SambaConfigurationResourceModel model) {

@@ -47,7 +47,7 @@ namespace Antd.Modules {
 
             Post["/services/firewall/restart"] = x => {
                 var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -60,7 +60,7 @@ namespace Antd.Modules {
             Post["/services/firewall/enable"] = x => {
                 var firewallConfiguration = new FirewallConfiguration();
                 firewallConfiguration.Enable();
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -91,7 +91,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -113,7 +113,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -136,7 +136,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -158,7 +158,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
             #endregion
@@ -183,7 +183,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -205,7 +205,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -228,7 +228,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -250,7 +250,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Restart();
+                firewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
             #endregion

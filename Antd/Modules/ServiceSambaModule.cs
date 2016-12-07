@@ -45,7 +45,7 @@ namespace Antd.Modules {
 
             Post["/services/samba/restart"] = x => {
                 var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.Restart();
+                sambaConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -58,7 +58,7 @@ namespace Antd.Modules {
             Post["/services/samba/enable"] = x => {
                 var dhcpdConfiguration = new SambaConfiguration();
                 dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 

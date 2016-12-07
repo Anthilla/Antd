@@ -47,7 +47,7 @@ namespace Antd.Modules {
 
             Post["/services/bind/restart"] = x => {
                 var bindConfiguration = new BindConfiguration();
-                bindConfiguration.Restart();
+                bindConfiguration.Start();
                 bindConfiguration.RndcReconfig();
                 bindConfiguration.RndcReload();
                 return HttpStatusCode.OK;
@@ -62,7 +62,7 @@ namespace Antd.Modules {
             Post["/services/bind/enable"] = x => {
                 var dhcpdConfiguration = new BindConfiguration();
                 dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 

@@ -43,6 +43,7 @@ namespace Antd.Bind {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
             File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[bind] configuration saved");
         }
 
 
@@ -50,10 +51,8 @@ namespace Antd.Bind {
             if(_serviceModel == null) {
                 return;
             }
-
             Enable();
             Stop();
-
             #region [    named.conf generation    ]
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
@@ -174,8 +173,7 @@ namespace Antd.Bind {
             lines.Add("include \"/etc/bind/master/blackhole.zones\";");
             File.WriteAllLines(MainFilePath, lines);
             #endregion
-
-            Restart();
+            Start();
             RndcReconfig();
         }
 
@@ -196,6 +194,7 @@ namespace Antd.Bind {
             }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
+            ConsoleLogger.Log("[bind] enabled");
         }
 
         public void Disable() {
@@ -204,19 +203,22 @@ namespace Antd.Bind {
             }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
+            ConsoleLogger.Log("[bind] disabled");
         }
 
         public void Stop() {
             Systemctl.Stop(ServiceName);
+            ConsoleLogger.Log("[bind] stop");
         }
 
-        public void Restart() {
+        public void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
             if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
+            ConsoleLogger.Log("[bind] start");
         }
 
         private readonly Bash _bash = new Bash();

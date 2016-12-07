@@ -46,7 +46,7 @@ namespace Antd.Modules {
 
             Post["/services/dhcpd/restart"] = x => {
                 var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -59,7 +59,7 @@ namespace Antd.Modules {
             Post["/services/dhcpd/enable"] = x => {
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Restart();
+                dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
