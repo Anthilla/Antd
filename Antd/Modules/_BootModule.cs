@@ -74,9 +74,9 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var hostcfg = new HostConfiguration();
-                    viewModel.Modules = string.Join("\r\n", hostcfg.GetHostModprobes());
-                    viewModel.RmModules = string.Join("\r\n", hostcfg.GetHostRemoveModules());
-                    viewModel.Blacklist = string.Join("\r\n", hostcfg.GetHostBlacklistModules());
+                    viewModel.Modules = string.Join(Environment.NewLine, hostcfg.GetHostModprobes());
+                    viewModel.RmModules = string.Join(Environment.NewLine, hostcfg.GetHostRemoveModules());
+                    viewModel.Blacklist = string.Join(Environment.NewLine, hostcfg.GetHostBlacklistModules());
                     return View["antd/part/page-boot-mod", viewModel];
                 }
                 catch(Exception ex) {
@@ -90,7 +90,7 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var hostcfg = new HostConfiguration();
-                    viewModel.Services = string.Join("\r\n", hostcfg.GetHostServices());
+                    viewModel.Services = string.Join(Environment.NewLine, hostcfg.GetHostServices());
                     return View["antd/part/page-boot-svc", viewModel];
                 }
                 catch(Exception ex) {
@@ -104,7 +104,7 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var hostcfg = new HostConfiguration();
-                    viewModel.OsParam = string.Join("\r\n", hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
+                    viewModel.OsParam = string.Join(Environment.NewLine, hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList());
                     return View["antd/part/page-boot-osp", viewModel];
                 }
                 catch(Exception ex) {
@@ -137,7 +137,7 @@ namespace Antd.Modules {
 
             Post["/boot/modules"] = x => {
                 var modulesText = (string)Request.Form.Config;
-                var modules = modulesText.SplitToList(Environment.NewLine);
+                var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostModprobes(modules);
                 hostcfg.ApplyHostModprobes();
@@ -146,7 +146,7 @@ namespace Antd.Modules {
 
             Post["/boot/rmmodules"] = x => {
                 var modulesText = (string)Request.Form.Config;
-                var modules = modulesText.SplitToList(Environment.NewLine);
+                var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
                 hostcfg.ApplyHostRemoveModules();
@@ -155,7 +155,7 @@ namespace Antd.Modules {
 
             Post["/boot/modblacklist"] = x => {
                 var modulesText = (string)Request.Form.Config;
-                var modules = modulesText.SplitToList(Environment.NewLine);
+                var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostBlacklistModules(modules);
                 hostcfg.ApplyHostBlacklistModules();
@@ -164,7 +164,7 @@ namespace Antd.Modules {
 
             Post["/boot/services"] = x => {
                 var servicesText = (string)Request.Form.Config;
-                var services = servicesText.SplitToList(Environment.NewLine);
+                var services = servicesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostServices(services);
                 hostcfg.ApplyHostServices();
@@ -173,13 +173,12 @@ namespace Antd.Modules {
 
             Post["/boot/osparam"] = x => {
                 var osparamText = (string)Request.Form.Config;
-                var services = osparamText.SplitToList(Environment.NewLine);
+                var services = osparamText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var dict = new Dictionary<string, string>();
                 foreach(var serv in services) {
                     var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
                     if(!dict.ContainsKey(kvp[0])) {
                         dict.Add(kvp[0], kvp[1]);
-
                     }
                 }
                 var hostcfg = new HostConfiguration();

@@ -211,9 +211,9 @@ namespace Antd.Host {
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/accept_redirects" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/accept_source_route" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/rp_filter" }, { "$value", "0" } } },
+            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/all/forwarding" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/conf/default/rp_filter" }, { "$value", "0" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_forward" }, { "$value", "1" } } },
-            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_local_port_range" }, { "$value", "1024 65000" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_local_port_range" }, { "$value", "1024 65000" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/ip_no_pmtu_disc" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_congestion_control" }, { "$value", "htcp" } } },
@@ -223,7 +223,6 @@ namespace Antd.Host {
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_moderate_rcvbuf" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_mtu_probing" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_rmem" }, { "$value", "4096 87380 134217728" } } },
-            new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_slow_start_after_idle" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_slow_start_after_idle" }, { "$value", "1" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_tw_recycle" }, { "$value", "0" } } },
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/net/ipv4/tcp_tw_reuse" }, { "$value", "1" } } },
@@ -243,22 +242,6 @@ namespace Antd.Host {
             new HostParameter { SetCmd = "echo-append", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "" } } },
             new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "loopback 127.0.0.0" } } },
             new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "link-local 169.254.0.0" } } }
-        };
-
-        /// <summary>
-        /// Network and network interfaces configuration
-        /// MachineNamedParameter[] Network is an array of each interface
-        /// Each interface has a HostParameter[] Configuration that gathers all commands to configure THAT interface
-        /// todo pass Network.Name to its Configuration.HostParameter
-        /// </summary>
-        public HostNamedParameter[] Network { get; set; } = {
-            new HostNamedParameter {
-                Name = "eth0",
-                StoredValues = new Dictionary<string, string> { { "$net_if", "eth0" } },
-                Configuration = new [] {
-                    new HostParameter(new Dictionary<string, string> { { "$net_if", "eth0" } }) { SetCmd = "anthilla" },
-                }
-            }
         };
 
         /// <summary>

@@ -5,6 +5,7 @@ using antdlib.common;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using antd.commands;
+using antdlib.common.Tool;
 using antdlib.Systemd;
 using FastMember;
 
@@ -33,24 +34,18 @@ namespace Antd.Host {
             }
         }
 
-        public void Setup() {
-            File.WriteAllText(FilePath,
-                !File.Exists(FilePath)
-                    ? JsonConvert.SerializeObject(new HostModel(), Formatting.Indented)
-                    : JsonConvert.SerializeObject(CompareStoredHostModel(), Formatting.Indented));
-        }
-
-        private HostModel CompareStoredHostModel() {
-            var storedHost = Host;
-            var storedHostProperties = storedHost.GetType().GetProperties();
-            var defaultHost = new HostModel();
-            foreach(var prop in defaultHost.GetType().GetProperties()) {
-                if(!storedHostProperties.Contains(prop)) {
-                    storedHost = FastMember<HostModel>(prop.Name, prop.GetValue(defaultHost, null));
-                }
-            }
-            return storedHost;
-        }
+        ////todo check questo metodo si potrebbe torligere 
+        //private HostModel CompareStoredHostModel() {
+        //    var storedHost = Host;
+        //    var storedHostProperties = storedHost.GetType().GetProperties();
+        //    var defaultHost = new HostModel();
+        //    foreach(var prop in defaultHost.GetType().GetProperties()) {
+        //        if(!storedHostProperties.Contains(prop)) {
+        //            storedHost = FastMember<HostModel>(prop.Name, prop.GetValue(defaultHost, null));
+        //        }
+        //    }
+        //    return storedHost;
+        //}
 
         private static T FastMember<T>(string propertyName, object value) where T : class, new() {
             var obj = new T();
@@ -66,6 +61,7 @@ namespace Antd.Host {
         }
 
         #region [    repo - Modules    ]
+
         public string[] GetHostModprobes() {
             Host = LoadHostModel();
             var result = new List<string>();
@@ -77,7 +73,13 @@ namespace Antd.Host {
 
         public void SetHostModprobes(IEnumerable<string> modules) {
             Host = LoadHostModel();
-            Host.Modprobes = modules.Select(_ => new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", _ } } }).ToArray();
+            Host.Modprobes =
+                modules.Select(
+                    _ =>
+                        new HostParameter {
+                            SetCmd = "modprobe",
+                            StoredValues = new Dictionary<string, string> { { "$package", _ } }
+                        }).ToArray();
             Export(Host);
         }
 
@@ -96,7 +98,10 @@ namespace Antd.Host {
 
         public void SetHostRemoveModules(IEnumerable<string> modules) {
             Host = LoadHostModel();
-            Host.RemoveModules = new HostParameter { SetCmd = "modprobe", StoredValues = new Dictionary<string, string> { { "$package", string.Join(" ", modules) } } };
+            Host.RemoveModules = new HostParameter {
+                SetCmd = "modprobe",
+                StoredValues = new Dictionary<string, string> { { "$package", string.Join(" ", modules) } }
+            };
             Export(Host);
         }
 
@@ -121,9 +126,11 @@ namespace Antd.Host {
             Host = LoadHostModel();
             File.WriteAllLines("/etc/modprobe.d/blacklist.conf", Host.ModulesBlacklist.Select(_ => $"blacklist {_}"));
         }
+
         #endregion
 
         #region [    repo - Services    ]
+
         public string[] GetHostServices() {
             Host = LoadHostModel();
             var result = new List<string>();
@@ -135,24 +142,38 @@ namespace Antd.Host {
 
         public void SetHostServices(IEnumerable<string> services) {
             Host = LoadHostModel();
-            Host.Services = services.Select(_ => new HostParameter { SetCmd = "systemctl-restart", StoredValues = new Dictionary<string, string> { { "$service", _ } } }).ToArray();
+            Host.Services =
+                services.Select(
+                    _ =>
+                        new HostParameter {
+                            SetCmd = "systemctl-restart",
+                            StoredValues = new Dictionary<string, string> { { "$service", _ } }
+                        }).ToArray();
             Export(Host);
         }
 
         public void ApplyHostServices() {
             Host = LoadHostModel();
             var launcher = new CommandLauncher();
-            foreach(var modprobe in Host.Services) {
-                launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
+            foreach(var srvc in Host.Services) {
+                launcher.Launch(srvc.SetCmd, srvc.StoredValues);
             }
         }
+
         #endregion
 
         #region [    repo - OS Parameters    ]
+
         public Dictionary<string, string> GetHostOsParameters() {
             Host = LoadHostModel();
-            var ks = Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$file").Select(__ => __.Value)).SelectMany(x => x).ToArray();
-            var vs = Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$value").Select(__ => __.Value)).SelectMany(x => x).ToArray();
+            var ks =
+                Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$file").Select(__ => __.Value))
+                    .SelectMany(x => x)
+                    .ToArray();
+            var vs =
+                Host.OsParameters.Select(_ => _.StoredValues.Where(__ => __.Key == "$value").Select(__ => __.Value))
+                    .SelectMany(x => x)
+                    .ToArray();
             var dict = new Dictionary<string, string>();
             if(ks.Length != vs.Length)
                 return dict;
@@ -167,22 +188,29 @@ namespace Antd.Host {
         public void SetHostOsParameters(Dictionary<string, string> parameters) {
             Host = LoadHostModel();
             Host.OsParameters = parameters.Select(_ => new HostParameter {
-                SetCmd = "echo-append",
+                SetCmd = "echo-write",
                 StoredValues = new Dictionary<string, string> {
-                    { "$file", _.Key }, { "$value", _.Value }
+                    {"$file", _.Key},
+                    {"$value", _.Value.Replace("\r", "")}
                 }
             }).ToArray();
-            if(Host.OsParameters.Any()) {
-                Host.OsParameters.FirstOrDefault().SetCmd = "echo-write";
-            }
-            Setup();
+            Export(Host);
         }
 
         public void ApplyHostOsParameters() {
             Host = LoadHostModel();
-            var launcher = new CommandLauncher();
+            var bash = new Bash();
             foreach(var modprobe in Host.OsParameters) {
-                launcher.Launch(modprobe.SetCmd, modprobe.StoredValues);
+                try {
+                    var file = modprobe.StoredValues["$file"];
+                    if(!File.Exists(file))
+                        continue;
+                    var value = modprobe.StoredValues["$value"];
+                    bash.Execute($"echo {value} > {file}");
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex);
+                }
             }
         }
         #endregion
@@ -240,7 +268,7 @@ namespace Antd.Host {
             launcher.Launch(Host.HostDeployment.SetCmd, Host.HostDeployment.StoredValues);
             launcher.Launch(Host.HostLocation.SetCmd, Host.HostLocation.StoredValues);
             var name = Host.HostName.StoredValues["$host_name"];
-            launcher.Launch("echo-write", new Dictionary<string, string> { { "$file", "/etc/hostname" }, { "$value", name } });
+            File.WriteAllText("/etc/hostname", name);
         }
         #endregion
 

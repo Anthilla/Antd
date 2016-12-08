@@ -127,7 +127,6 @@ namespace Antd {
 
         private static void Procedure() {
             #region [    Remove Limits    ]
-
             if(Parameter.IsUnix) {
                 const string limitsFile = "/etc/security/limits.conf";
                 if(File.Exists(limitsFile)) {
@@ -137,25 +136,19 @@ namespace Antd {
                 }
                 Bash.Execute("ulimit -n 1024000", false);
             }
-
             #endregion
 
             #region [    Overlay Watcher    ]
-
             new OverlayWatcher().StartWatching();
             ConsoleLogger.Log("overlay watcher ready");
-
             #endregion
 
             #region [    Check OS    ]
-
             Bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
             ConsoleLogger.Log("os checked");
-
             #endregion
 
             #region [    Working Directories    ]
-
             Directory.CreateDirectory("/cfg/antd");
             Directory.CreateDirectory("/cfg/antd/database");
             Directory.CreateDirectory("/cfg/antd/services");
@@ -164,18 +157,14 @@ namespace Antd {
                 Mount.WorkingDirectories();
             }
             ConsoleLogger.Log("working directories ready");
-
             #endregion
 
             #region [    Core Parameters    ]
-
             ApplicationSetting.WriteDefaults();
             ConsoleLogger.Log("antd core parameters ready");
-
             #endregion
 
             #region [    Database    ]
-
             Database = RaptorDB.RaptorDB.Open(ApplicationSetting.DatabasePath());
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
@@ -186,12 +175,10 @@ namespace Antd {
             Database.RegisterView(new MacAddressView());
             Database.RegisterView(new SyslogView());
             ConsoleLogger.Log("database ready");
-
             #endregion
 
-            #region [    Mounts    ]
-
             if(Parameter.IsUnix) {
+                #region [    Mounts    ]
                 if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                     Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
                 }
@@ -206,14 +193,9 @@ namespace Antd {
                 Bash.Execute("systemctl restart systemd-modules-load.service", false);
                 Mount.AllDirectories();
                 ConsoleLogger.Log("mounts ready");
-            }
+                #endregion
 
-            #endregion
-
-            if(Parameter.IsUnix) {
                 #region [    Host Configuration    ]
-                HostConfiguration.Setup();
-                ConsoleLogger.Log("host configuration prepared");
                 HostConfiguration.ApplyHostInfo();
                 ConsoleLogger.Log("host configured");
                 #endregion
@@ -254,17 +236,15 @@ namespace Antd {
             ConsoleLogger.Log("users config ready");
             #endregion
 
-            #region [    Time & Date    ]
             if(Parameter.IsUnix) {
+                #region [    Time & Date    ]
                 HostConfiguration.ApplyNtpdate();
                 HostConfiguration.ApplyTimezone();
                 HostConfiguration.ApplyNtpd();
                 ConsoleLogger.Log("time and date configured");
-            }
-            #endregion
+                #endregion
 
-            #region [    Network    ]
-            if(Parameter.IsUnix) {
+                #region [    Network    ]
                 if(LanConfiguration.NothingIsConfigured()) {
                     ConsoleLogger.Log("lan set configuration");
                     var netIf = LanConfiguration.ConfigureInterface();
@@ -274,20 +254,18 @@ namespace Antd {
                 }
                 NetworkConfiguration.Start();
                 ConsoleLogger.Log("network configured");
-            }
-            #endregion
+                #endregion
 
-            #region [    Apply Setup Configuration    ]
-            SetupConfiguration.Set();
-            ConsoleLogger.Log("machine configured");
-            #endregion
+                #region [    Apply Setup Configuration    ]
+                SetupConfiguration.Set();
+                ConsoleLogger.Log("machine configured");
+                #endregion
 
-            #region [    Services    ]
-            HostConfiguration.ApplyHostServices();
-            ConsoleLogger.Log("services ready");
-            #endregion
+                #region [    Services    ]
+                HostConfiguration.ApplyHostServices();
+                ConsoleLogger.Log("services ready");
+                #endregion
 
-            if(Parameter.IsUnix) {
                 #region [    Ssh    ]
                 if(!Directory.Exists(Parameter.RootSsh)) {
                     Directory.CreateDirectory(Parameter.RootSsh);

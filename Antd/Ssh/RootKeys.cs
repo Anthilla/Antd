@@ -15,7 +15,7 @@ namespace Antd.Ssh {
         }
 
         public void Create() {
-            _bash.Execute("ssh-keygen -t rsa -N '' -f /root/.ssh/antd-root-key", false);
+            _bash.Execute("ssh-keygen -t rsa -N '' -f /root/.ssh/id_rsa", false);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.common.Tool;
@@ -23,9 +24,9 @@ namespace antd.commands {
                 Arguments = new[] { "$obj" },
                 Function = (x, y) => {
                     var list = new List<string> {
-                        $"element 1: {x.First()}",
-                        $"element 2: {x.First()}",
-                        $"element 3: {x.First()}",
+                        $"element 1: {x.FirstOrDefault()}",
+                        $"element 2: {x.FirstOrDefault()}",
+                        $"element 3: {x.FirstOrDefault()}",
                     };
                     return list;
                 }
@@ -35,7 +36,7 @@ namespace antd.commands {
                 Arguments = new[] { "$obj", "prova $obj", "$value is another value" },
                 Function = (x, y) => {
                     var list = new List<string> {
-                        $"element 1: {x.First()}",
+                        $"element 1: {x.FirstOrDefault()}",
                         $"element 2: {x.ToArray()[1]}",
                         $"element 3: {x.Last()}",
                         $"element combo: {x.JoinToString(", ")}"
@@ -205,43 +206,43 @@ namespace antd.commands {
             #region [    Command - Cat    ]
             dict["cat"] = new Command {
                 Arguments = new[] { "$file" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault())
             };
             dict["cat-etc-gentoorel"] = new Command {
                 Arguments = new[] { "/etc/gentoo-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-hostname"] = new Command {
                 Arguments = new[] { "/etc/hostname" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-hosts"] = new Command {
                 Arguments = new[] { "/etc/hosts" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-lsbrel"] = new Command {
                 Arguments = new[] { "/etc/lsb-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-osrel"] = new Command {
                 Arguments = new[] { "/etc/os-release" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_))
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_))
             };
             dict["cat-etc-resolv"] = new Command {
                 Arguments = new[] { "/etc/resolv.conf" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             dict["cat-etc-nsswitch"] = new Command {
                 Arguments = new[] { "/etc/nsswitch.conf" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             dict["cat-etc-networks"] = new Command {
                 Arguments = new[] { "/etc/networks" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             dict["cat-etc-ntp"] = new Command {
                 Arguments = new[] { "/etc/ntp.conf" },
-                Function = (x, y) => ReadTool.FileLines(x.First()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault()).Where(_ => !string.IsNullOrEmpty(_)).GrepIgnore("#")
             };
             #endregion
 
@@ -287,14 +288,20 @@ namespace antd.commands {
             dict["echo-write"] = new Command {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
-                Function = (x, y) => WriteTool.WriteFile(x.First(), y)
+                Function = (x, y) => {
+                    if(File.Exists(x.FirstOrDefault())) {
+                        File.Delete(x.FirstOrDefault());
+                    }
+                    WriteTool.WriteFile(x.FirstOrDefault(), y);
+                    return new List<string>();
+                }
             };
             dict["echo-write-all"] = new Command {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
                 Function = (x, y) => {
-                    if(!System.IO.File.ReadAllText(y).Contains(x.First())) {
-                        WriteTool.WriteFileLines(x.First(), y.SplitToList("\n"));
+                    if(!System.IO.File.ReadAllText(y).Contains(x.FirstOrDefault())) {
+                        WriteTool.WriteFileLines(x.FirstOrDefault(), y.SplitToList("\n"));
                     }
                     return new List<string>();
                 }
@@ -302,14 +309,14 @@ namespace antd.commands {
             dict["echo-append"] = new Command {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
-                Function = (x, y) => WriteTool.AppendFile(x.First(), y)
+                Function = (x, y) => WriteTool.AppendFile(x.FirstOrDefault(), y)
             };
             dict["echo-append-rm"] = new Command {
                 Arguments = new[] { "$file" },
                 Grep = "$value",
                 Function = (x, y) => {
-                    if(!System.IO.File.ReadAllText(y).Contains(x.First())) {
-                        WriteTool.AppendFile(x.First(), y);
+                    if(!System.IO.File.ReadAllText(y).Contains(x.FirstOrDefault())) {
+                        WriteTool.AppendFile(x.FirstOrDefault(), y);
                     }
                     return new List<string>();
                 }
@@ -339,57 +346,57 @@ namespace antd.commands {
             dict["hostnamectl-get-arch"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Architecture: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-bootid"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Boot ID: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-chassis"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Chassis: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-deployment"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Deployment: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-hostname"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Transient hostname: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-iconname"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Icon name: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-kernel"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Kernel: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-location"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Location: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-machineid"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Machine ID: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-os"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Operating System: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["hostnamectl-get-virtualization"] = new Command {
                 Arguments = new[] { "hostnamectl" },
                 Grep = "Virtualization: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["set-chassis"] = new Command {
                 Arguments = new[] { "hostnamectl set-chassis $host_chassis" },
@@ -444,7 +451,7 @@ namespace antd.commands {
             };
             dict["net-carrier"] = new Command {
                 Arguments = new[] { "/sys/class/net/$if/carrier" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault())
             };
             #endregion
 
@@ -512,27 +519,27 @@ namespace antd.commands {
             };
             dict["ip4-get-if-addr"] = new Command {
                 Arguments = new[] { "ip addr show $net_if" },
-                Function = (x, y) => BashTool.Execute(x).Grep("inet .").First().Print(2, " ").SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep("inet .").FirstOrDefault().Print(2, " ").SplitBash()
             };
             dict["ip4-get-if-brd"] = new Command {
                 Arguments = new[] { "ip addr show $net_if" },
-                Function = (x, y) => BashTool.Execute(x).Grep("inet .").First().Print(4, " ").SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep("inet .").FirstOrDefault().Print(4, " ").SplitBash()
             };
             dict["ip4-get-if-macaddress"] = new Command {
                 Arguments = new[] { "/sys/class/net/$net_if/address" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault())
             };
             dict["ip4-get-if-mtu"] = new Command {
                 Arguments = new[] { "/sys/class/net/$net_if/mtu" },
-                Function = (x, y) => ReadTool.FileLines(x.First())
+                Function = (x, y) => ReadTool.FileLines(x.FirstOrDefault())
             };
             dict["ip4-if-isdown"] = new Command {
                 Arguments = new[] { "ip addr show $net_if" },
-                Function = (x, y) => BashTool.Execute(x).Grep("state DOWN").First().SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep("state DOWN").FirstOrDefault().SplitBash()
             };
             dict["ip4-if-isup"] = new Command {
                 Arguments = new[] { "ip addr show $net_if" },
-                Function = (x, y) => BashTool.Execute(x).Grep("state UP").First().SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep("state UP").FirstOrDefault().SplitBash()
             };
             dict["ip4-set-macaddress"] = new Command {
                 Arguments = new[] {
@@ -565,7 +572,7 @@ namespace antd.commands {
             dict["ip4-show-updown"] = new Command {
                 Arguments = new[] { "ip link show $net_if" },
                 //todo fare multigrep  | grep -ho \' UP \\| DOWN \'
-                Function = (x, y) => BashTool.Execute(x).Grep("UP").First().SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep("UP").FirstOrDefault().SplitBash()
             };
             #endregion
 
@@ -666,37 +673,37 @@ namespace antd.commands {
             dict["timedatectl-get-localtime"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "Local time: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-nettimeon"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "Network time on: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-ntpsync"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "NTP synchronized: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-rtcintz"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "RTC in local TZ: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-rtctime"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "RTC time: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-timezone"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "Time zone: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             dict["timedatectl-get-univtime"] = new Command {
                 Arguments = new[] { "timedatectl" },
                 Grep = "Universal time: ",
-                Function = (x, y) => BashTool.Execute(x).Grep(y).First().Print(2, ':').SplitBash()
+                Function = (x, y) => BashTool.Execute(x).Grep(y).FirstOrDefault().Print(2, ':').SplitBash()
             };
             #endregion
 
