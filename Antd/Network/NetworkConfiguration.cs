@@ -1,86 +1,134 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
+using Antd.Bind;
+using Newtonsoft.Json;
 
 namespace Antd.Network {
     public class NetworkConfiguration {
 
+        private NetworkConfigurationModel _serviceModel;
+        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
+        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
         private readonly IEnumerable<string> _networkInterfaces;
         private readonly IEnumerable<string> _physicalNetworkInterfaces;
+        private readonly IEnumerable<string> _bridgeNetworkInterfaces;
         private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public NetworkConfiguration() {
             _networkInterfaces = new NetworkInterfaces().GetAll().Select(_ => _.Key).OrderBy(_ => _);
             _physicalNetworkInterfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).Select(_ => _.Key).OrderBy(_ => _);
+            _bridgeNetworkInterfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bridge).Select(_ => _.Key).OrderBy(_ => _);
+            Directory.CreateDirectory(Parameter.AntdCfgServices);
+            if(!File.Exists(_cfgFile)) {
+                _serviceModel = new NetworkConfigurationModel();
+            }
+            else {
+                try {
+                    var text = File.ReadAllText(_cfgFile);
+                    var obj = JsonConvert.DeserializeObject<NetworkConfigurationModel>(text);
+                    _serviceModel = obj;
+                }
+                catch(Exception) {
+                    _serviceModel = new NetworkConfigurationModel();
+                }
+
+            }
+        }
+
+        private NetworkConfigurationModel LoadModel() {
+            if(!File.Exists(_cfgFile)) {
+                return new NetworkConfigurationModel();
+            }
+            try {
+                return JsonConvert.DeserializeObject<NetworkConfigurationModel>(File.ReadAllText(_cfgFile));
+            }
+            catch(Exception) {
+                return new NetworkConfigurationModel();
+            }
+        }
+
+        public void Save(NetworkConfigurationModel model) {
+            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            if(File.Exists(_cfgFile)) {
+                File.Copy(_cfgFile, _cfgFileBackup, true);
+            }
+            File.WriteAllText(_cfgFile, text);
+            ConsoleLogger.Log("[network] configuration saved");
+        }
+
+        public NetworkConfigurationModel Get() {
+            return _serviceModel;
         }
 
         public void Start() {
             if(!_physicalNetworkInterfaces.Any()) {
-                ConsoleLogger.Log("network config: no interface to set");
+                ConsoleLogger.Log("[network] no interface to set");
                 StartFallback();
                 return;
             }
             var netIf = _physicalNetworkInterfaces.FirstOrDefault();
             var tryStart = _launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryStart.Any()) {
-                ConsoleLogger.Log("network config: dhclient started");
-                ConsoleLogger.Log($"network config: {netIf} is configured");
+                ConsoleLogger.Log("[network] dhclient started");
+                ConsoleLogger.Log($"[network] {netIf} is configured");
                 return;
             }
             var tryGateway = _launcher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryGateway.Any()) {
-                ConsoleLogger.Log("network config: no gateway available");
+                ConsoleLogger.Log("[network] no gateway available");
                 StartFallback();
                 return;
             }
             var gateway = tryGateway.FirstOrDefault(_ => _.Contains("default"));
             if(string.IsNullOrEmpty(gateway)) {
-                ConsoleLogger.Log("network config: no gateway available");
+                ConsoleLogger.Log("[network] no gateway available");
                 StartFallback();
                 return;
             }
             var gatewayAddress = gateway.Replace("default", "").Trim();
-            ConsoleLogger.Log($"network config: available gateway at {gatewayAddress}");
+            ConsoleLogger.Log($"[network] available gateway at {gatewayAddress}");
 
             var tryDns = _launcher.Launch("cat-etc-resolv").ToList();
             if(!tryGateway.Any()) {
-                ConsoleLogger.Log("network config: no dns configured");
+                ConsoleLogger.Log("[network] no dns configured");
                 SetupResolv();
             }
             var dns = tryDns.FirstOrDefault(_ => _.Contains("nameserver"));
             if(string.IsNullOrEmpty(dns)) {
-                ConsoleLogger.Log("network config: no dns configured");
+                ConsoleLogger.Log("[network] no dns configured");
                 SetupResolv();
             }
             var dnsAddress = gateway.Replace("nameserver", "").Trim();
-            ConsoleLogger.Log($"network config: configured dns is {dnsAddress}");
+            ConsoleLogger.Log($"[network] configured dns is {dnsAddress}");
             var pingDns = _launcher.Launch("ping-c", new Dictionary<string, string> { { "$net_if", dnsAddress } }).ToList();
             if(pingDns.Any(_ => _.ToLower().Contains("unreachable"))) {
-                ConsoleLogger.Log("network config: dns is unreachable");
+                ConsoleLogger.Log("[network] dns is unreachable");
                 return;
             }
-            ConsoleLogger.Log($"network config: available dns at {dnsAddress}");
+            ConsoleLogger.Log($"[network] available dns at {dnsAddress}");
         }
 
         public void StartFallback() {
-            ConsoleLogger.Log("network config: setting up a default configuration");
+            ConsoleLogger.Log("[network] setting up a default configuration");
             const string bridge = "br0";
             if(_networkInterfaces.All(_ => _ != bridge)) {
                 _launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", bridge } });
-                ConsoleLogger.Log($"network config: {bridge} configured");
+                ConsoleLogger.Log($"[network] {bridge} configured");
             }
             foreach(var phy in _physicalNetworkInterfaces) {
                 _launcher.Launch("brctl-addif", new Dictionary<string, string> { { "$bridge", bridge }, { "$net_if", phy } });
-                ConsoleLogger.Log($"network config: {phy} add to {bridge}");
+                ConsoleLogger.Log($"[network] {phy} add to {bridge}");
             }
             foreach(var phy in _physicalNetworkInterfaces) {
                 _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", phy } });
             }
             _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", bridge } });
-            ConsoleLogger.Log("network config: interfaces up");
+            ConsoleLogger.Log("[network] interfaces up");
             const string address = "192.168.1.1";
             const string range = "24";
             _launcher.Launch("ip4-add-addr", new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
@@ -88,10 +136,22 @@ namespace Antd.Network {
             var tryBridgeAddress = _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
             if(tryBridgeAddress.FirstOrDefault(_ => _.Contains("inet")) != null) {
                 var bridgeAddress = tryBridgeAddress.Print(2, " ");
-                ConsoleLogger.Log($"network config: {bridge} is now reachable at {bridgeAddress}");
+                ConsoleLogger.Log($"[network] {bridge} is now reachable at {bridgeAddress}");
                 return;
             }
-            ConsoleLogger.Log($"network config: {bridge} is unreachable");
+            ConsoleLogger.Log($"[network] {bridge} is unreachable");
+        }
+
+        public void ApplyNetworkValues() {
+            _serviceModel = LoadModel();
+            var interfaces = new List<string>();
+            interfaces.AddRange(_physicalNetworkInterfaces);
+            interfaces.AddRange(_bridgeNetworkInterfaces);
+            var launcher = new CommandLauncher();
+            foreach(var netIf in interfaces) {
+                launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
+                launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netIf }, { "$txqueuelen", _serviceModel.DefaultTxqueuelen } });
+            }
         }
 
         public void SetupResolv() {

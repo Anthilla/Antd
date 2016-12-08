@@ -96,6 +96,7 @@
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
     <Compile Include="Modules\ServiceRsyncModule.cs" />
+    <Compile Include="Network\NetworkConfigurationModel.cs" />
     <Compile Include="Rsync\RsyncConfiguration.cs" />
     <Compile Include="Rsync\RsyncConfigurationModel.cs" />
     <Compile Include="Certificates\CaConfigurationFiles.cs" />

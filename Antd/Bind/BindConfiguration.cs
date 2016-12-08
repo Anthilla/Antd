@@ -46,7 +46,6 @@ namespace Antd.Bind {
             ConsoleLogger.Log("[bind] configuration saved");
         }
 
-
         public void Set() {
             Enable();
             Stop();

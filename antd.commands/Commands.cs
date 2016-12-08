@@ -553,6 +553,10 @@ namespace antd.commands {
                 Arguments = new[] { "ip link set dev $net_if mtu $mtu" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["ip4-set-txqueuelen"] = new Command {
+                Arguments = new[] { "ip link set $net_if txqueuelen $txqueuelen" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             dict["ip4-show-if-addr"] = new Command {
                 Arguments = new[] { "ip addr show $net_if" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()

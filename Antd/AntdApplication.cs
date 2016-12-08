@@ -253,6 +253,7 @@ namespace Antd {
                     }
                 }
                 NetworkConfiguration.Start();
+                NetworkConfiguration.ApplyNetworkValues();
                 ConsoleLogger.Log("network configured");
                 #endregion
 
