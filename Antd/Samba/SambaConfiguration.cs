@@ -23,7 +23,7 @@ namespace Antd.Samba {
         public SambaConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = null;
+                _serviceModel = new SambaConfigurationModel();
             }
             else {
                 try {
@@ -32,7 +32,7 @@ namespace Antd.Samba {
                     _serviceModel = obj;
                 }
                 catch(Exception) {
-                    _serviceModel = null;
+                    _serviceModel = new SambaConfigurationModel();
                 }
 
             }
@@ -48,9 +48,6 @@ namespace Antd.Samba {
         }
 
         public void Set() {
-            if(_serviceModel == null) {
-                return;
-            }
             Enable();
             Stop();
             #region [    smb.conf generation    ]
@@ -145,18 +142,12 @@ namespace Antd.Samba {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[samba] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[samba] disabled");
@@ -192,9 +183,6 @@ namespace Antd.Samba {
         }
 
         public void AddResource(SambaConfigurationResourceModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var resources = _serviceModel.Resources;
             if(resources.Any(_ => _.Name == model.Name)) {
                 return;
@@ -205,9 +193,6 @@ namespace Antd.Samba {
         }
 
         public void RemoveResource(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var resources = _serviceModel.Resources;
             var model = resources.First(_ => _.Guid == guid);
             if(model == null) {

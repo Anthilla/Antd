@@ -21,7 +21,7 @@ namespace Antd.Gluster {
         public GlusterConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = null;
+                _serviceModel = new GlusterConfigurationModel();
             }
             else {
                 try {
@@ -30,9 +30,8 @@ namespace Antd.Gluster {
                     _serviceModel = obj;
                 }
                 catch(Exception) {
-                    _serviceModel = null;
+                    _serviceModel = new GlusterConfigurationModel();
                 }
-
             }
         }
 
@@ -47,9 +46,6 @@ namespace Antd.Gluster {
 
 
         public void Set() {
-            if(_serviceModel == null) {
-                return;
-            }
             Enable();
             Stop();
             Start();
@@ -57,9 +53,6 @@ namespace Antd.Gluster {
         }
 
         public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
-                return false;
-            }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
@@ -68,18 +61,11 @@ namespace Antd.Gluster {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
-            _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[sync] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[sync] disabled");
@@ -142,9 +128,6 @@ namespace Antd.Gluster {
         }
 
         public void AddNode(string model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var node = _serviceModel.Nodes;
             if(node.Any(_ => _ == model)) {
                 return;
@@ -155,9 +138,6 @@ namespace Antd.Gluster {
         }
 
         public void RemoveNode(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var volume = _serviceModel.Volumes;
             var model = volume.First(_ => _.Guid == guid);
             if(model == null) {
@@ -169,9 +149,6 @@ namespace Antd.Gluster {
         }
 
         public void AddVolume(GlusterVolume model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var volume = _serviceModel.Volumes;
             if(volume.Any(_ => _.Name == model.Name)) {
                 return;
@@ -182,9 +159,6 @@ namespace Antd.Gluster {
         }
 
         public void RemoveVolume(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var volume = _serviceModel.Volumes;
             var model = volume.First(_ => _.Guid == guid);
             if(model == null) {

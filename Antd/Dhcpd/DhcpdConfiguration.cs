@@ -21,7 +21,7 @@ namespace Antd.Dhcpd {
         public DhcpdConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = null;
+                _serviceModel = new DhcpdConfigurationModel();
             }
             else {
                 try {
@@ -30,7 +30,7 @@ namespace Antd.Dhcpd {
                     _serviceModel = obj;
                 }
                 catch(Exception) {
-                    _serviceModel = null;
+                    _serviceModel = new DhcpdConfigurationModel();
                 }
 
             }
@@ -46,10 +46,6 @@ namespace Antd.Dhcpd {
         }
 
         public void Set() {
-            if(_serviceModel == null) {
-                return;
-            }
-            Enable();
             Stop();
             #region [    dhcpd.conf generation    ]
             if(File.Exists(MainFilePath)) {
@@ -135,18 +131,12 @@ namespace Antd.Dhcpd {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[dhcpd] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[dhcpd] disabled");
@@ -168,9 +158,6 @@ namespace Antd.Dhcpd {
         }
 
         public void AddClass(DhcpConfigurationClassModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var cls = _serviceModel.Classes;
             if(cls.Any(_ => _.Name == model.Name)) {
                 return;
@@ -181,9 +168,6 @@ namespace Antd.Dhcpd {
         }
 
         public void RemoveClass(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var cls = _serviceModel.Classes;
             var model = cls.First(_ => _.Guid == guid);
             if(model == null) {
@@ -195,9 +179,6 @@ namespace Antd.Dhcpd {
         }
 
         public void AddPool(DhcpConfigurationPoolModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var pool = _serviceModel.Pools;
             if(pool.Any(_ => _.Guid == model.Guid)) {
                 return;
@@ -208,9 +189,6 @@ namespace Antd.Dhcpd {
         }
 
         public void RemovePool(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var pool = _serviceModel.Pools;
             var model = pool.First(_ => _.Guid == guid);
             if(model == null) {
@@ -222,9 +200,6 @@ namespace Antd.Dhcpd {
         }
 
         public void AddReservation(DhcpConfigurationReservationModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var hostres = _serviceModel.Reservations;
             if(hostres.Any(_ => _.Guid == model.Guid)) {
                 return;
@@ -235,9 +210,6 @@ namespace Antd.Dhcpd {
         }
 
         public void RemoveReservation(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var hostres = _serviceModel.Reservations;
             var model = hostres.First(_ => _.Guid == guid);
             if(model == null) {

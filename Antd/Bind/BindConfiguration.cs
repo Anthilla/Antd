@@ -22,7 +22,7 @@ namespace Antd.Bind {
         public BindConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = null;
+                _serviceModel = new BindConfigurationModel();
             }
             else {
                 try {
@@ -31,7 +31,7 @@ namespace Antd.Bind {
                     _serviceModel = obj;
                 }
                 catch(Exception) {
-                    _serviceModel = null;
+                    _serviceModel = new BindConfigurationModel();
                 }
 
             }
@@ -48,9 +48,6 @@ namespace Antd.Bind {
 
 
         public void Set() {
-            if(_serviceModel == null) {
-                return;
-            }
             Enable();
             Stop();
             #region [    named.conf generation    ]
@@ -189,18 +186,12 @@ namespace Antd.Bind {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[bind] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[bind] disabled");
@@ -232,9 +223,6 @@ namespace Antd.Bind {
         }
 
         public void AddZone(BindConfigurationZoneModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
             var zones = _serviceModel.Zones;
             if(zones.Any(_ => _.Name == model.Name)) {
                 return;
@@ -245,9 +233,6 @@ namespace Antd.Bind {
         }
 
         public void RemoveZone(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var zones = _serviceModel.Zones;
             var model = zones.First(_ => _.Guid == guid);
             if(model == null) {

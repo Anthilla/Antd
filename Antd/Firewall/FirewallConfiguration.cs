@@ -43,9 +43,6 @@ namespace Antd.Firewall {
         }
 
         public void Set() {
-            if(_serviceModel == null) {
-                return;
-            }
             Enable();
             #region [    nftables.conf generation    ]
             var lines = new List<string> {
@@ -140,18 +137,12 @@ namespace Antd.Firewall {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[firewall] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[firewall] disabled");

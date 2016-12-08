@@ -57,37 +57,46 @@ namespace Antd.Modules {
             };
 
             Post["/services/gluster/enable"] = x => {
-                var dhcpdConfiguration = new GlusterConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                var glusterConfiguration = new GlusterConfiguration();
+                glusterConfiguration.Enable();
+                glusterConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/gluster/disable"] = x => {
-                var dhcpdConfiguration = new GlusterConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                var glusterConfiguration = new GlusterConfiguration();
+                glusterConfiguration.Disable();
+                glusterConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/services/gluster/options"] = x => {
-                string nodes = Request.Form.Node;
-                var nodelist = nodes.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+                string nodes = Request.Form.GlusterNode;
+                var nodelist = nodes.Split(new[] { "," }, StringSplitOptions.None).ToList();
                 string volumeNames = Request.Form.GlusterVolumeName;
                 string volumeBrick = Request.Form.GlusterVolumeBrick;
                 string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
-                var volumeNamesList = volumeNames.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var volumeBrickList = volumeBrick.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                var volumeMountPointList = volumeMountPoint.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var volumeNamesList = volumeNames.Split(new[] { "," }, StringSplitOptions.None);
+                var volumeBrickList = volumeBrick.Split(new[] { "," }, StringSplitOptions.None);
+                var volumeMountPointList = volumeMountPoint.Split(new[] { "," }, StringSplitOptions.None);
                 var volumelist = new List<GlusterVolume>();
                 for(var i = 0; i < 20; i++) {
-                    if(volumeNamesList.Length < i || volumeBrickList.Length < i || volumeMountPointList.Length < i) { continue; }
-                    var vol = new GlusterVolume {
-                        Name = volumeNamesList[i],
-                        Brick = volumeBrickList[i],
-                        MountPoint = volumeMountPointList[i],
-                    };
-                    volumelist.Add(vol);
+                    if(volumeNamesList.Length < i - 1 ||
+                        volumeBrickList.Length < i - 1 ||
+                        volumeMountPointList.Length < i - 1) {
+                        continue;
+                    }
+                    try {
+                        var vol = new GlusterVolume {
+                            Name = volumeNamesList[i],
+                            Brick = volumeBrickList[i],
+                            MountPoint = volumeMountPointList[i],
+                        };
+                        volumelist.Add(vol);
+                    }
+                    catch(Exception) {
+                        continue;
+                    }
                 }
                 var config = new GlusterConfigurationModel {
                     Nodes = nodelist.ToArray(),
