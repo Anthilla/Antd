@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
@@ -40,7 +41,7 @@ namespace Antd.Modules {
 
         private static string GetResourcesHtmlDiv(string value, string iconName = "") {
             var ico = string.IsNullOrEmpty(iconName) ? "" : $"<i class=\"icon-{iconName} fg-anthilla-blu on-left-more\" style=\"line-height: 5px;\"></i>";
-            return $"<a class=\"element nav-button no-overlay bg-darker\" href=\"#\">{ico}<span>{value}</span></a>";
+            return $"<a class=\"element nav-button no-overlay bg-darker\" href=\"#\">{ico}<span>{value}</span></a><div class=\"element-divider\"></div>";
         }
 
         private static int GetPercentage(int tot, int part) {
@@ -55,10 +56,7 @@ namespace Antd.Modules {
 
             Get["/monitor/resources/html"] = x => {
                 try {
-                    const string divider = "<div class=\"element-divider\"></div>";
-                    var launcher = new CommandLauncher();
-                    var hostnamectl = launcher.Launch("hostname").ToList();
-                    var hostname = hostnamectl.FirstOrDefault()?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+                    var hostname = File.ReadAllText("/etc/hostname");
                     var hostnameHtml = GetResourcesHtmlDiv(hostname);
                     var machineInfo = new MachineInfo();
                     var uptime = machineInfo.GetUptime();
@@ -78,7 +76,7 @@ namespace Antd.Modules {
                     var diskUsage = new DiskUsage();
                     var du = diskUsage.GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
                     var duHtml = GetResourcesHtmlDiv($"Disk Used: {du?.UsePercentage}");
-                    var response = $"{hostnameHtml}{divider}{upHtml}{divider}{laHtml}{divider}{memHtml}{divider}{duHtml}";
+                    var response = $"{hostnameHtml}{upHtml}{laHtml}{memHtml}{duHtml}";
                     return Response.AsText(response);
                 }
                 catch(Exception ex) {
