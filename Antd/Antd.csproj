@@ -92,13 +92,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Acl\AclConfiguration.cs" />
+    <Compile Include="Acl\AclConfigurationModel.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Modules\ServiceVpnModule.cs" />
+    <Compile Include="Vpn\VpnConfiguration.cs" />
+    <Compile Include="Vpn\VpnConfigurationModel.cs" />
     <Compile Include="Journald\JournaldConfiguration.cs" />
     <Compile Include="Journald\JournaldConfigurationModel.cs" />
     <Compile Include="Kerberos\KerberosConfiguration.cs" />
     <Compile Include="Kerberos\KerberosConfigurationModel.cs" />
+    <Compile Include="Modules\ServiceAclModule.cs" />
+    <Compile Include="Modules\ServiceSshdModule.cs" />
     <Compile Include="Modules\ServiceJournaldModule.cs" />
     <Compile Include="Modules\ServiceRsyncModule.cs" />
     <Compile Include="Network\NetworkConfigurationModel.cs" />
@@ -188,8 +195,8 @@
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Samba\SambaConfiguration.cs" />
     <Compile Include="Samba\SambaConfigurationModel.cs" />
-    <Compile Include="Ssh\SshConfiguration.cs" />
-    <Compile Include="Ssh\SshConfigurationModel.cs" />
+    <Compile Include="Ssh\SshdConfiguration.cs" />
+    <Compile Include="Ssh\SshdConfigurationModel.cs" />
     <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Ssh\SshKnownHosts.cs" />
     <Compile Include="Storage\BackupClean.cs" />
@@ -217,6 +224,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.apps.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.service.acl.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.service.vpn.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\antd.service.sshd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.service.journald.js">
@@ -294,6 +310,15 @@
     <Content Include="ShellScript\apilist.txt" />
     <Content Include="ShellScript\scriptslist.txt" />
     <Content Include="Views\antd\page-apps.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-acl.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-net-vpn.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-antd-sshd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-log-config.html">

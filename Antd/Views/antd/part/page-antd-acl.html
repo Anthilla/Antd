@@ -1,0 +1,65 @@
+﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
+    <legend>Acl
+        @IfNot.AclIsActive
+        <i id="EnableAcl" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.AclIsActive
+        <i id="StopAcl" class="icon-cancel-2 fg-yellow" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="DisableAcl" class="icon-blocked fg-orange" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReloadAcl" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ApplyConfigAcl" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="ShowUserPanel" class="icon-plus-2 fg-anthilla-green" style="float: right; cursor: pointer !important; margin: auto 10px;"></i>
+        @EndIf
+    </legend>
+
+    <form id="UserCreateDashboard" action="/services/acl/add" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; display: none; width: 100%; min-height: 120px; margin-bottom: 5px;">
+        <div class="row">
+            <div class="span2">
+                <label>Path</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Path" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+            </div>
+            <div class="span8">
+                <input type="submit" value="Create" class="bg-anthilla-green fg-anthilla-gray" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+    </form>
+
+    @Each.Acl
+        <div data-click="ShowAclRules" data-guid="@Current.Guid" data-role="panel" class="panel border-2-anthilla-gray collapsed" style="margin-bottom: 5px;">
+            <div class="panel-header bg-anthilla-gray fg-white">
+                @Current.Path 
+            </div>
+            <div class="panel-content" style="display: none;">
+                <form action="/services/acl/set" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; width: 100%; min-height: 120px; margin-bottom: 5px;">
+                    <table class="table" style="table-layout: fixed;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <textarea style="max-width: 90%; min-height: 250px; min-width: 90%;" name="Acl" data-role="AclRulesDescription" class="bg-anthilla-gray fg-white border-anthilla-green">@Current.AclText</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="hidden" value="@Current.Guid" name="Guid" />
+                                    <input type="submit" value="Update" class="bg-anthilla-green fg-anthilla-gray" style="width: 90%; height: 28px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" class="bg-anthilla-violet" value="Apply" data-role="ApplyAcl" data-id="@Current.Guid" style="height: 28px; width: 45%;" />
+                                    <input type="button" class="bg-anthilla-orange" value="X" data-role="RemoveAcl" data-id="@Current.Guid" style="float: right; height: 28px;" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    @EndEach
+</div>

@@ -38,6 +38,7 @@ using antdlib.common.Helpers;
 using antdlib.common.Tool;
 using antdlib.Systemd;
 using antdlib.views;
+using Antd.Acl;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Bind;
@@ -58,6 +59,7 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Users;
+using Antd.Vpn;
 using Nancy;
 using Nancy.Hosting.Self;
 using RaptorDB;
@@ -68,6 +70,7 @@ namespace Antd {
         public static RaptorDB.RaptorDB Database;
 
         #region [    private classes init    ]
+        private static readonly AclConfiguration AclConfiguration = new AclConfiguration();
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
         private static readonly ApplicationSetting ApplicationSetting = new ApplicationSetting();
         private static readonly AppTarget AppTarget = new AppTarget();
@@ -84,11 +87,13 @@ namespace Antd {
         private static readonly RsyncConfiguration RsyncConfiguration = new RsyncConfiguration();
         private static readonly SambaConfiguration SambaConfiguration = new SambaConfiguration();
         private static readonly SetupConfiguration SetupConfiguration = new SetupConfiguration();
+        private static readonly SshdConfiguration SshdConfiguration = new SshdConfiguration();
         private static readonly SyslogConfiguration SyslogConfiguration = new SyslogConfiguration();
         private static readonly Timers Timers = new Timers();
         private static readonly UserConfiguration UserConfiguration = new UserConfiguration();
         private static readonly Zpool Zpool = new Zpool();
         private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
+        private static readonly VpnConfiguration VpnConfiguration = new VpnConfiguration();
 
         #endregion
 
@@ -265,6 +270,12 @@ namespace Antd {
                 ConsoleLogger.Log("network configured");
                 #endregion
 
+                #region [    Vpn    ]
+                if(VpnConfiguration.IsActive()) {
+                    VpnConfiguration.Set();
+                }
+                #endregion
+
                 #region [    Apply Setup Configuration    ]
                 SetupConfiguration.Set();
                 ConsoleLogger.Log("machine configured");
@@ -276,6 +287,9 @@ namespace Antd {
                 #endregion
 
                 #region [    Ssh    ]
+                if(SshdConfiguration.IsActive()) {
+                    SshdConfiguration.Set();
+                }
                 if(!Directory.Exists(Parameter.RootSsh)) {
                     Directory.CreateDirectory(Parameter.RootSsh);
                 }
@@ -369,7 +383,13 @@ namespace Antd {
                 Timers.StartAll();
                 new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
                 new SyncTime().Start(new TimeSpan(0, 42, 00));
-                ConsoleLogger.Log("scheduler and timers ready");
+                ConsoleLogger.Log("scheduled events ready");
+                #endregion
+
+                #region [    Acl    ]
+                if(AclConfiguration.IsActive()) {
+                    AclConfiguration.Set();
+                }
                 #endregion
 
                 #region [    Sync    ]

@@ -80,7 +80,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Acl\AclManagement.cs" />
     <Compile Include="ApiConsumer.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ApplicationSetting.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Security\RSAKeys.cs" />
     <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Systemd\Systemctl.cs" />
-    <Compile Include="ViewBinds\ServiceSamba.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ConnectionFactory.cs" />

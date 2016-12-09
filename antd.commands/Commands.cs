@@ -434,7 +434,7 @@ namespace antd.commands {
             };
             dict["ping-c"] = new Command {
                 Arguments = new[] { "ping -c3 -w10 $ip" },
-                Function = (x, y) => BashTool.Execute(x, false).SplitBash()
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["arp"] = new Command {
                 Arguments = new[] { "arp $ip" },

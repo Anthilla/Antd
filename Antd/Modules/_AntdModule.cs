@@ -28,12 +28,14 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
+using Antd.Acl;
 using Antd.Bind;
 using Antd.Database;
 using Antd.Dhcpd;
@@ -46,9 +48,11 @@ using Antd.Network;
 using Antd.Overlay;
 using Antd.Rsync;
 using Antd.Samba;
+using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Users;
+using Antd.Vpn;
 using Nancy.Security;
 
 namespace Antd.Modules {
@@ -370,6 +374,22 @@ namespace Antd.Modules {
                 }
             };
 
+            Get["/part/sshd"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var sshdConfiguration = new SshdConfiguration();
+                    var sshdIsActive = sshdConfiguration.IsActive();
+                    viewModel.SshdIsActive = sshdIsActive;
+                    viewModel.SshdOptions = sshdConfiguration.Get() ?? new SshdConfigurationModel();
+                    return View["antd/part/page-antd-sshd", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
             Get["/part/net"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
@@ -410,6 +430,25 @@ namespace Antd.Modules {
                     }
                     viewModel.NetworkVirtualIf = vrtIf;
                     return View["antd/part/page-antd-network", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/net/vpn"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var vpnConfiguration = new VpnConfiguration();
+                    var vpnIsActive = vpnConfiguration.IsActive();
+                    viewModel.VpnIsActive = vpnIsActive;
+                    var conf = vpnConfiguration.Get();
+                    viewModel.VpnLocalPoint = conf.LocalPoint;
+                    viewModel.VpnRemoteHost = conf.RemoteHost;
+                    viewModel.VpnRemotePoint = conf.RemotePoint;
+                    return View["antd/part/page-antd-net-vpn", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
@@ -533,6 +572,28 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     viewModel.Overlay = OverlayWatcher.ChangedDirectories;
                     return View["antd/part/page-antd-storage-overlay", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/acl"] = x => {
+                try {
+                    var aclConfiguration = new AclConfiguration();
+                    dynamic viewModel = new ExpandoObject();
+                    var aclConfig = aclConfiguration.Get() ?? new AclConfigurationModel();
+                    var aclIsActive = aclConfig.IsActive;
+                    viewModel.AclIsActive = aclIsActive;
+                    var list = new List<AclPersistentSettingModel>();
+                    foreach(var aaa in aclConfig.Settings) {
+                        aaa.AclText = System.IO.File.ReadAllLines(aaa.Acl).JoinToString(Environment.NewLine);
+                        list.Add(aaa);
+                    }
+                    viewModel.Acl = list.OrderBy(_ => _.Path);
+                    return View["antd/part/page-antd-acl", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
