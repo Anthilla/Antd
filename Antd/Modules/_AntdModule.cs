@@ -566,7 +566,7 @@ namespace Antd.Modules {
                     var rsyncConfig = rsyncConfiguration.Get() ?? new RsyncConfigurationModel();
                     var rsyncIsActive = rsyncConfig.IsActive;
                     viewModel.RsyncIsActive = rsyncIsActive;
-                    viewModel.RsyncDirectories = rsyncConfig.Directories;
+                    viewModel.RsyncDirectories = rsyncConfig.Directories.OrderBy(_ => _.Type);
                     return View["antd/part/page-antd-rsync", viewModel];
                 }
                 catch(Exception ex) {

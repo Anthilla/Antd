@@ -3,11 +3,12 @@
 namespace Antd.Rsync {
     public class RsyncConfigurationModel {
         public bool IsActive { get; set; }
-        public List<RsyncDirectoriesModel> Directories { get; set; } = new List<RsyncDirectoriesModel>();
+        public List<RsyncObjectModel> Directories { get; set; } = new List<RsyncObjectModel>();
     }
 
-    public class RsyncDirectoriesModel {
+    public class RsyncObjectModel {
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+        public string Type { get; set; }
         public string Source { get; set; }
         public string Destination { get; set; }
     }

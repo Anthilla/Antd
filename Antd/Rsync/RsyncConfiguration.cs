@@ -58,18 +58,12 @@ namespace Antd.Rsync {
         }
 
         public void Enable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[rsync] enabled");
         }
 
         public void Disable() {
-            if(_serviceModel == null) {
-                return;
-            }
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[rsync] disabled");
@@ -81,18 +75,12 @@ namespace Antd.Rsync {
         }
 
         public void Start() {
-            if(_directoryWatcher != null) {
-                Stop();
-            }
             _directoryWatcher = new DirectoryWatcher(_serviceModel.Directories.ToArray());
             _directoryWatcher.StartWatching();
             ConsoleLogger.Log("[rsync] start");
         }
 
-        public void AddDirectory(RsyncDirectoriesModel model) {
-            if(_serviceModel == null) {
-                return;
-            }
+        public void AddDirectory(RsyncObjectModel model) {
             var dirs = _serviceModel.Directories;
             dirs.Add(model);
             _serviceModel.Directories = dirs;
@@ -100,9 +88,6 @@ namespace Antd.Rsync {
         }
 
         public void RemoveDirectory(string guid) {
-            if(_serviceModel == null) {
-                return;
-            }
             var dirs = _serviceModel.Directories;
             var model = dirs.First(_ => _.Guid == guid);
             if(model == null) {

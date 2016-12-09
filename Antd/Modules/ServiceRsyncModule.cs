@@ -78,9 +78,11 @@ namespace Antd.Modules {
             Post["/services/rsync/directory"] = x => {
                 string source = Request.Form.Source;
                 string destination = Request.Form.Destination;
-                var model = new RsyncDirectoriesModel {
+                string type = Request.Form.Type;
+                var model = new RsyncObjectModel {
                     Source = source,
-                    Destination = destination
+                    Destination = destination,
+                    Type = type
                 };
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.AddDirectory(model);

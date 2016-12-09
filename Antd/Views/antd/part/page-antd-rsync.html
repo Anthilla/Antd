@@ -15,6 +15,18 @@
     <form id="UserCreateDashboard" action="/services/rsync/directory" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; display: none; width: 100%; min-height: 120px; margin-bottom: 5px;">
         <div class="row">
             <div class="span2">
+                <label>Type</label>
+            </div>
+            <div class="span8">
+                <select name="Type" class="bg-anthilla-gray fg-white border-anthilla-green" style="width: 90%; height: 28px;">
+                    <option selected="selected" disabled="disabled" class="fg-steel">Select a type ...</option>
+                    <option value="directory">Directory</option>
+                    <option value="file">File</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
                 <label>Source</label>
             </div>
             <div class="span8">
@@ -53,6 +65,7 @@
                 <td colspan="2">@Current.Destination</td>
                 <td>
                     <input data-role="RemoveRsyncDirectory" data-id="@Current.Guid" type="button" value="x" class="bg-anthilla-orange fg-anthilla-gray" />
+                    <input data-role="ForceRsyncDirectory" onclick="alert('work in progress');" data-id="@Current.Guid" type="button" value=">" class="bg-pink fg-anthilla-gray" />
                 </td>
             </tr>
             @EndEach

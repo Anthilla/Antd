@@ -6,7 +6,6 @@ using antdlib.common.Tool;
 
 namespace antd.commands {
 
-
     public class Commands {
 
         public static string RootFrameworkAntdShellScripts => "/framework/antd/ShellScript";
