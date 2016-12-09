@@ -36,6 +36,7 @@ using antdlib.common;
 using antdlib.views;
 using Antd.Configuration;
 using Antd.Database;
+using Antd.Journald;
 using Antd.Log;
 using Nancy;
 using Nancy.Security;
@@ -61,6 +62,22 @@ namespace Antd.Modules {
                     var journalctl = new Journalctl();
                     viewModel.Logs = journalctl.GetAntdLog().ToList();
                     return View["antd/part/page-log", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/log/config"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var journaldConfiguration = new JournaldConfiguration();
+                    var journaldIsActive = journaldConfiguration.IsActive();
+                    viewModel.JournaldIsActive = journaldIsActive;
+                    viewModel.JournaldOptions = journaldConfiguration.Get() ?? new JournaldConfigurationModel();
+                    return View["antd/part/page-log-config", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

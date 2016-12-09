@@ -47,6 +47,7 @@ using Antd.Database;
 using Antd.Dhcpd;
 using Antd.Firewall;
 using Antd.Gluster;
+using Antd.Journald;
 using Antd.MountPoint;
 using Antd.Network;
 using Antd.Overlay;
@@ -87,6 +88,7 @@ namespace Antd {
         private static readonly Timers Timers = new Timers();
         private static readonly UserConfiguration UserConfiguration = new UserConfiguration();
         private static readonly Zpool Zpool = new Zpool();
+        private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
 
         #endregion
 
@@ -193,6 +195,12 @@ namespace Antd {
                 Bash.Execute("systemctl restart systemd-modules-load.service", false);
                 Mount.AllDirectories();
                 ConsoleLogger.Log("mounts ready");
+                #endregion
+
+                #region [    JournalD    ]
+                if(JournaldConfiguration.IsActive()) {
+                    JournaldConfiguration.Set();
+                }
                 #endregion
 
                 #region [    Host Configuration    ]

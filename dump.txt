@@ -1,20 +1,25 @@
-{                                            
-  "Name": ".gluster.conf",                   
-  "Path": "/mnt/cdrom/Config/.gluster.conf", 
-  "Nodes": [                                 
-    "server01",                              
-    "server02"                               
-  ],                                         
-  "Volumes": [                               
-    {                                        
-      "Name": "glusterVolume01",             
-      "Brick": "/Path/To/Brick00/",          
-      "MountPoint": "/Local/Mount/Point01"   
-    },                                       
-    {                                        
-      "Name": "glusterVolume02",             
-      "Brick": "/Path/To/Brick00/",          
-      "MountPoint": "/Local/Mount/Point02"   
-    }                                        
-  ]                                          
-}
+Storage = Storage,
+Compress = Compress,
+Seal = Seal,
+SplitMode = SplitMode,
+SyncIntervalSec = SyncIntervalSec,
+RateLimitInterval = RateLimitInterval,
+RateLimitBurst = RateLimitBurst,
+SystemMaxUse = SystemMaxUse,
+SystemKeepFree = SystemKeepFree,
+SystemMaxFileSize = SystemMaxFileSize,
+RuntimeMaxUse = RuntimeMaxUse,
+RuntimeKeepFree = RuntimeKeepFree,
+RuntimeMaxFileSize = RuntimeMaxFileSize,
+MaxRetentionSec = MaxRetentionSec,
+MaxFileSec = MaxFileSec,
+ForwardToSyslog = ForwardToSyslog,
+ForwardToKMsg = ForwardToKMsg,
+ForwardToConsole = ForwardToConsole,
+ForwardToWall = ForwardToWall,
+TTYPath = TTYPath,
+MaxLevelStore = MaxLevelStore,
+MaxLevelSyslog = MaxLevelSyslog,
+MaxLevelKMsg = MaxLevelKMsg,
+MaxLevelConsole = MaxLevelConsole,
+MaxLevelWall = MaxLevelWall,

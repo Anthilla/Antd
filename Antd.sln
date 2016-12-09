@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignoreth
 		ignorethis_misc\converter.sh = ignorethis_misc\converter.sh
 		ignorethis_misc\createUserSmartCardCertificate.sh = ignorethis_misc\createUserSmartCardCertificate.sh
 		dump.txt = dump.txt
+		gluster.cnf = gluster.cnf
 		ignorethis_misc\samba-dc.cnf = ignorethis_misc\samba-dc.cnf
 		ignorethis_misc\samba-user.cnf = ignorethis_misc\samba-user.cnf
 		ignorethis_misc\script_domainController_ca.sh = ignorethis_misc\script_domainController_ca.sh
