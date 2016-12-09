@@ -218,14 +218,12 @@ namespace Antd.Acl {
 
         #region [    Script    ]
         public void ScriptSetup() {
-            var resourceDirectory = Parameter.RootFrameworkAntdResources;
-            var destinationDiretcotur = $"{Parameter.AntdCfgServices}/acls";
             const string homeSkel = ".010_Home_SKEL.acl";
             const string shareSkel = ".011_Shared_SKEL.acl";
             const string script = ".000_define_user_acl.sh";
-            File.Copy($"{resourceDirectory}/{homeSkel}", $"{destinationDiretcotur}/{homeSkel}");
-            File.Copy($"{resourceDirectory}/{shareSkel}", $"{destinationDiretcotur}/{shareSkel}");
-            File.Copy($"{resourceDirectory}/{script}", $"{destinationDiretcotur}/{script}");
+            File.Copy($"/framework/antd/Resources/{homeSkel}", $"{Parameter.AntdCfgServices}/acls/{homeSkel}", true);
+            File.Copy($"/framework/antd/Resources/{shareSkel}", $"{Parameter.AntdCfgServices}/acls/{shareSkel}", true);
+            File.Copy($"/framework/antd/Resources/{script}", $"{Parameter.AntdCfgServices}/acls/{script}", true);
         }
 
         public void ApplyAclScript(string user) {
