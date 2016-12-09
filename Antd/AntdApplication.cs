@@ -375,6 +375,7 @@ namespace Antd {
                 #region [    Acl    ]
                 if(AclConfiguration.IsActive()) {
                     AclConfiguration.Set();
+                    AclConfiguration.ScriptSetup();
                 }
                 #endregion
 

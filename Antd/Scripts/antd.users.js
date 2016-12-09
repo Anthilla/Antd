@@ -2,6 +2,10 @@ $("#ShowUserPanel").on("click", function () {
     $("#UserCreateDashboard").toggle();
 });
 
+$("#ShowUserPanel2").on("click", function () {
+    $("#UserCreateDashboard2").toggle();
+});
+
 $("input:password").keyup(function () {
     CheckPassword();
     return false;

@@ -625,21 +625,21 @@
     <Content Include="novnc\images\tab.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\FILE_etc_collectd.conf">
+    <None Include="Resources\FILE_etc_collectd.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FILE_etc_systemd_journald.conf">
+    </None>
+    <None Include="Resources\FILE_etc_systemd_journald.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FILE_etc_wpa_supplicant_wpa__suplicant.conf">
+    </None>
+    <None Include="Resources\FILE_etc_wpa_supplicant_wpa__suplicant.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\openssl-sc-template.cnf">
+    </None>
+    <None Include="Resources\openssl-sc-template.cnf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\websocketd">
+    </None>
+    <None Include="Resources\websocketd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="novnc\base.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -694,9 +694,15 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Resources\.000_define_user_acl.sh" />
-    <None Include="Resources\.010_Home_SKEL.acl" />
-    <None Include="Resources\.011_Shared_SKEL.acl" />
+    <None Include="Resources\.000_define_user_acl.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\.010_Home_SKEL.acl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\.011_Shared_SKEL.acl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="ShellScript\api\BOND_STATUS">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

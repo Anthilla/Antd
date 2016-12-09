@@ -215,5 +215,25 @@ namespace Antd.Acl {
             var model = acls.FirstOrDefault(_ => _.Guid == guid);
             return model == null ? "Error" : Restore(model.Acl);
         }
+
+        #region [    Script    ]
+        public void ScriptSetup() {
+            var resourceDirectory = Parameter.RootFrameworkAntdResources;
+            var destinationDiretcotur = $"{Parameter.AntdCfgServices}/acls";
+            const string homeSkel = ".010_Home_SKEL.acl";
+            const string shareSkel = ".011_Shared_SKEL.acl";
+            const string script = ".000_define_user_acl.sh";
+            File.Copy($"{resourceDirectory}/{homeSkel}", $"{destinationDiretcotur}/{homeSkel}");
+            File.Copy($"{resourceDirectory}/{shareSkel}", $"{destinationDiretcotur}/{shareSkel}");
+            File.Copy($"{resourceDirectory}/{script}", $"{destinationDiretcotur}/{script}");
+        }
+
+        public void ApplyAclScript(string user) {
+            var directory = $"{Parameter.AntdCfgServices}/acls";
+            var bash = new Bash();
+            const string script = ".000_define_user_acl.sh";
+            bash.Execute($"./{script} {user}", directory);
+        }
+        #endregion
     }
 }

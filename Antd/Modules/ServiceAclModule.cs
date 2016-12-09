@@ -122,6 +122,18 @@ namespace Antd.Modules {
                 var r = aclConfiguration.ApplyAcl(guid);
                 return Response.AsText(r);
             };
+
+            #region [    Script    ]
+            Post["/services/acl/apply/script"] = x => {
+                string user = Request.Form.User;
+                if(string.IsNullOrEmpty(user)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                var aclConfiguration = new AclConfiguration();
+                aclConfiguration.ApplyAclScript(user);
+                return Response.AsRedirect("/");
+            };
+            #endregion
         }
     }
 }
