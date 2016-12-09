@@ -32,6 +32,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using antdlib.common.Tool;
+using IoDir = System.IO.Directory;
 
 namespace antdlib.common {
 
@@ -66,7 +67,7 @@ namespace antdlib.common {
         }
 
         public static void WriteFile(string directory, string filename, string content) {
-            Directory.CreateDirectory(directory);
+            IoDir.CreateDirectory(directory);
             var path = Path.Combine(directory, filename);
             using (var sw = File.CreateText(path)) {
                 sw.Write(content);
@@ -77,17 +78,17 @@ namespace antdlib.common {
         private static readonly Bash Bash = new Bash();
 
         public static void CopyDirectory(string source, string destination) {
-            Directory.CreateDirectory(source);
-            Directory.CreateDirectory(destination);
-            foreach (var dirPath in Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories)) {
+            IoDir.CreateDirectory(source);
+            IoDir.CreateDirectory(destination);
+            foreach (var dirPath in IoDir.EnumerateDirectories(source, "*", SearchOption.AllDirectories)) {
                 try {
-                    Directory.CreateDirectory(dirPath.Replace(source, destination));
+                    IoDir.CreateDirectory(dirPath.Replace(source, destination));
                 }
                 catch (Exception) {
                     Bash.Execute($"mkdir -p {dirPath.Replace(source, destination)}", false);
                 }
             }
-            foreach (var newPath in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
+            foreach (var newPath in IoDir.EnumerateFiles(source, "*", SearchOption.AllDirectories)) {
                 try {
                     File.Copy(newPath, newPath.Replace(source, destination), true);
                     newPath.DosToUnix();

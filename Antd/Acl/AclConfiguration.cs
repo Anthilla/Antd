@@ -218,19 +218,14 @@ namespace Antd.Acl {
 
         #region [    Script    ]
         public void ScriptSetup() {
-            const string homeSkel = ".010_Home_SKEL.acl";
-            const string shareSkel = ".011_Shared_SKEL.acl";
-            const string script = ".000_define_user_acl.sh";
-            File.Copy($"/framework/antd/Resources/{homeSkel}", $"{Parameter.AntdCfgServices}/acls/{homeSkel}", true);
-            File.Copy($"/framework/antd/Resources/{shareSkel}", $"{Parameter.AntdCfgServices}/acls/{shareSkel}", true);
-            File.Copy($"/framework/antd/Resources/{script}", $"{Parameter.AntdCfgServices}/acls/{script}", true);
+            File.Copy("/framework/antd/Resources/.010_Home_SKEL.acl", $"{Parameter.AntdCfgServices}/acls/.010_Home_SKEL.acl", true);
+            File.Copy("/framework/antd/Resources/.011_Shared_SKEL.acl", $"{Parameter.AntdCfgServices}/acls/.011_Shared_SKEL.acl", true);
+            File.Copy("/framework/antd/Resources/.000_define_user_acl.sh", $"{Parameter.AntdCfgServices}/acls/.000_define_user_acl.sh", true);
         }
 
         public void ApplyAclScript(string user) {
-            var directory = $"{Parameter.AntdCfgServices}/acls";
             var bash = new Bash();
-            const string script = ".000_define_user_acl.sh";
-            bash.Execute($"./{script} {user}", directory);
+            bash.Execute($"./.000_define_user_acl.sh {user}", $"{Parameter.AntdCfgServices}/acls");
         }
         #endregion
     }

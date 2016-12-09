@@ -30,10 +30,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.AccessControl;
-using antdlib.Models;
+using IoDir = System.IO.Directory;
 
-namespace antdlib.Directories {
+namespace antdlib.common.Directory {
 
     public class DirectoryLister {
         private readonly DirectoryInfo _root;
@@ -46,10 +45,10 @@ namespace antdlib.Directories {
 
         public HashSet<string> ParentList { get; } = new HashSet<string>();
 
-        private void UpwalkDirectoryTree(DirectoryInfo root) {
+        private void UpwalkDirectoryTree(FileSystemInfo root) {
             try {
                 ParentList.Add(root.FullName);
-                var parent = Directory.GetParent(root.FullName);
+                var parent = IoDir.GetParent(root.FullName);
                 UpwalkDirectoryTree(parent);
             }
             catch (Exception e) {
@@ -76,28 +75,24 @@ namespace antdlib.Directories {
                 return;
             foreach (var fi in files) {
                 FullList2.Add(new DirItemModel {
-                    isFile = true,
-                    path = fi.FullName,
-                    name = Path.GetFileName(fi.FullName)
+                    IsFile = true,
+                    Path = fi.FullName,
+                    Name = Path.GetFileName(fi.FullName)
                 });
                 FullList.Add(fi.FullName);
             }
             var subDirs = root.GetDirectories();
             foreach (var dirInfo in subDirs) {
                 FullList2.Add(new DirItemModel {
-                    isFile = false,
-                    path = dirInfo.FullName,
-                    name = Path.GetDirectoryName(dirInfo.FullName)
+                    IsFile = false,
+                    Path = dirInfo.FullName,
+                    Name = Path.GetDirectoryName(dirInfo.FullName)
                 });
                 FullList.Add(dirInfo.FullName);
                 if (getSubDir) {
                     WalkDirectoryTree(dirInfo, true);
                 }
             }
-        }
-
-        public DirectorySecurity GetFileAcl() {
-            return _root.GetAccessControl();
         }
     }
 }

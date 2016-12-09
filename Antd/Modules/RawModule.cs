@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using antdlib.common;
-using antdlib.Directories;
+using antdlib.common.Directory;
 using Nancy.Security;
 using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
@@ -48,8 +48,8 @@ namespace Antd.Modules {
                 var p = x.path;
                 var list = new DirectoryLister("/" + p, false).FullList2;
                 var model = (from d in list
-                             where d.isFile
-                             select d.path).ToList();
+                             where d.IsFile
+                             select d.Path).ToList();
                 return JsonConvert.SerializeObject(model);
             };
 

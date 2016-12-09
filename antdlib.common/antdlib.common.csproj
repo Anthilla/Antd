@@ -60,6 +60,9 @@
     <Compile Include="MapToModel.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Directory\DirectoryFinder.cs" />
+    <Compile Include="Directory\DirectoryLister.cs" />
+    <Compile Include="Directory\DirItemModel.cs" />
     <Compile Include="Tool\GrepExtension.cs" />
     <Compile Include="Tool\ReplaceExtensions.cs" />
     <Compile Include="Tool\Write.cs" />

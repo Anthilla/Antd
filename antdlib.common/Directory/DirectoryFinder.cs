@@ -27,25 +27,61 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.Models {
-    public class _dirObject {
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using IoDir = System.IO.Directory;
 
-        public bool isDirectory { get; set; }
+namespace antdlib.common.Directory {
 
-        public bool isFile { get; set; }
-    }
+    public class DirectoryFinder {
+        public HashSet<string> List { get; } = new HashSet<string>();
 
-    public class AntdirModel : _dirObject {
+        public DirectoryFinder(string path, string pattern) {
+            Find(path, pattern, true);
+        }
 
-        public string name { get; set; }
-    }
+        private void Find(string path, string pattern, bool getSubDir) {
+            string[] files = null;
+            string[] subDirs = null;
+            string[] foundDirs = null;
 
-    public class DirItemModel {
+            try {
+                files = IoDir.GetFiles(path, pattern);
+            }
+            catch (UnauthorizedAccessException e) {
+                Console.WriteLine(e.Message);
+            }
+            catch (DirectoryNotFoundException e) {
+                Console.WriteLine(e.Message);
+            }
+            if (files != null) {
+                foreach (var f in files) {
+                    List.Add(Path.GetFullPath(f));
+                }
+            }
 
-        public bool isFile { get; set; }
-
-        public string path { get; set; }
-
-        public string name { get; set; }
+            try {
+                subDirs = IoDir.GetDirectories(path);
+                foundDirs = IoDir.GetDirectories(path, pattern);
+            }
+            catch (UnauthorizedAccessException e) {
+                Console.WriteLine(e.Message);
+            }
+            catch (DirectoryNotFoundException e) {
+                Console.WriteLine(e.Message);
+            }
+            if (foundDirs != null) {
+                foreach (var fd in foundDirs) {
+                    List.Add(Path.GetFullPath(fd));
+                }
+            }
+            if (subDirs == null)
+                return;
+            foreach (var d in subDirs.Where(d => getSubDir)) {
+                Find(d, pattern, true);
+            }
+        }
     }
 }

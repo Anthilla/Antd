@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using IoDir = System.IO.Directory;
 
 namespace antdlib.common.Tool {
     public class Grep {
@@ -69,7 +70,7 @@ namespace antdlib.common.Tool {
                 return _empty;
             }
             if(directoryPath == "") {
-                directoryPath = Directory.GetCurrentDirectory();
+                directoryPath = IoDir.GetCurrentDirectory();
             }
             else if(directoryPath != "") {
                 var x = directoryPath;
@@ -82,7 +83,7 @@ namespace antdlib.common.Tool {
         private IEnumerable<KeyValuePair<string, string>> SearchDirectory(string path, string pattern, bool recursive, bool caseInsensitive) {
             var list = new List<KeyValuePair<string, string>>();
             try {
-                var files = recursive ? Directory.GetFiles(path, "*.*", SearchOption.AllDirectories) : Directory.GetFiles(path);
+                var files = recursive ? IoDir.GetFiles(path, "*.*", SearchOption.AllDirectories) : IoDir.GetFiles(path);
                 foreach(var f in files) {
                     var file = new FileInfo(f);
                     if(caseInsensitive) {

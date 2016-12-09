@@ -27,60 +27,54 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using antdlib.common.Tool;
 
-namespace antdlib.Directories {
+namespace Antd {
 
-    public class DirectoryFinder {
-        public HashSet<string> List { get; } = new HashSet<string>();
+    public class Systemctl {
 
-        public DirectoryFinder(string path, string pattern) {
-            Find(path, pattern, true);
+        private static readonly Bash Bash = new Bash();
+
+        public static void DaemonReload() {
+            Bash.Execute("systemctl daemon-reload", false);
         }
 
-        private void Find(string path, string pattern, bool getSubDir) {
-            string[] files = null;
-            string[] subDirs = null;
-            string[] foundDirs = null;
+        public static void Start(string unit) {
+            Bash.Execute("systemctl start " + unit, false);
+        }
 
-            try {
-                files = Directory.GetFiles(path, pattern);
-            }
-            catch (UnauthorizedAccessException e) {
-                Console.WriteLine(e.Message);
-            }
-            catch (DirectoryNotFoundException e) {
-                Console.WriteLine(e.Message);
-            }
-            if (files != null) {
-                foreach (var f in files) {
-                    List.Add(Path.GetFullPath(f));
-                }
-            }
+        public static void Stop(string unit) {
+            Bash.Execute("systemctl stop " + unit, false);
+        }
 
-            try {
-                subDirs = Directory.GetDirectories(path);
-                foundDirs = Directory.GetDirectories(path, pattern);
-            }
-            catch (UnauthorizedAccessException e) {
-                Console.WriteLine(e.Message);
-            }
-            catch (DirectoryNotFoundException e) {
-                Console.WriteLine(e.Message);
-            }
-            if (foundDirs != null) {
-                foreach (var fd in foundDirs) {
-                    List.Add(Path.GetFullPath(fd));
-                }
-            }
-            if (subDirs == null)
-                return;
-            foreach (var d in subDirs.Where(d => getSubDir)) {
-                Find(d, pattern, true);
-            }
+        public static void Restart(string unit) {
+            Bash.Execute("systemctl restart " + unit, false);
+        }
+
+        public static void Reload(string unit) {
+            Bash.Execute("systemctl reload " + unit, false);
+        }
+
+        public static string Status(string unit) {
+            return Bash.Execute("systemctl status " + unit);
+        }
+
+        public static bool IsActive(string unit) {
+            var r = Bash.Execute("systemctl is-active " + unit);
+            return r != "inactive";
+        }
+
+        public static bool IsEnabled(string unit) {
+            var r = Bash.Execute("systemctl is-enabled " + unit);
+            return r != "disabled";
+        }
+
+        public static void Enable(string unit) {
+            Bash.Execute("systemctl enable " + unit, false);
+        }
+
+        public static void Disable(string unit) {
+            Bash.Execute("systemctl disable " + unit, false);
         }
     }
 }

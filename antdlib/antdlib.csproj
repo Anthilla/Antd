@@ -84,8 +84,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ApplicationSetting.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Directories\DirectoryFinder.cs" />
-    <Compile Include="Directories\DirectoryLister.cs" />
     <Compile Include="Models\FreeModel.cs" />
     <Compile Include="Models\LosetupModel.cs" />
     <Compile Include="Models\SystemComponentModel.cs" />
@@ -93,7 +91,6 @@
     <Compile Include="Models\ConfigFileModel.cs" />
     <Compile Include="Models\AosReleaseModel.cs" />
     <Compile Include="Models\CpuinfoModel.cs" />
-    <Compile Include="Models\DirItemModel.cs" />
     <Compile Include="Models\GlobalUserModel.cs" />
     <Compile Include="Models\MeminfoModel.cs" />
     <Compile Include="Models\NetworkdModel.cs" />
@@ -106,11 +103,6 @@
     <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Models\VersionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\RSA.cs" />
-    <Compile Include="Security\RSACore.cs" />
-    <Compile Include="Security\RSAKeys.cs" />
-    <Compile Include="Storage\Volumes.cs" />
-    <Compile Include="Systemd\Systemctl.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\ConnectionFactory.cs" />

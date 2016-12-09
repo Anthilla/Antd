@@ -27,33 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Security.Cryptography;
-
-namespace antdlib.Security {
-    public class RsaKeys {
-        public class Private {
-            public RSAParameters Param { get; set; }
-            public string Xml { get; set; }
-            public byte[] Modulus { get; set; }
-            public byte[] Exponent { get; set; }
-            public byte[] P { get; set; }
-            public byte[] Q { get; set; }
-            public byte[] Dp { get; set; }
-            public byte[] Dq { get; set; }
-            public byte[] InverseQ { get; set; }
-            public byte[] D { get; set; }
-        }
-
-        public class Public {
-            public RSAParameters Param { get; set; }
-            public string Xml { get; set; }
-            public byte[] Modulus { get; set; }
-            public byte[] Exponent { get; set; }
-        }
-
-        public class Pair {
-            public Private Private { get; set; }
-            public Public Public { get; set; }
-        }
+namespace antdlib.common.Directory {
+    public class DirItemModel {
+        public bool IsFile { get; set; }
+        public string Path { get; set; }
+        public string Name { get; set; }
     }
 }

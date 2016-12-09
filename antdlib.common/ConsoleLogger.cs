@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using IoDir = System.IO.Directory;
 using System.IO;
 
 namespace antdlib.common {
@@ -68,13 +69,13 @@ namespace antdlib.common {
         }
 
         private static void Write(string message) {
-            if (!File.Exists("/cfg/antd/antd.log")) {
-                Directory.CreateDirectory("/cfg");
-                Directory.CreateDirectory("/cfg/antd");
+            if(!File.Exists("/cfg/antd/antd.log")) {
+                IoDir.CreateDirectory("/cfg");
+                IoDir.CreateDirectory("/cfg/antd");
                 File.WriteAllText("/cfg/antd/antd.log", "");
                 return;
             }
-            using (var writer = new StreamWriter("/cfg/antd/antd.log", true)) {
+            using(var writer = new StreamWriter("/cfg/antd/antd.log", true)) {
                 writer.WriteLine(message);
             }
         }
