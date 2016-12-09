@@ -105,7 +105,6 @@ namespace Antd.Info {
             var actives = Directory.EnumerateFileSystemEntries(repoSystem).Where(_ => _.Contains("active-")).ToList();
             var repoKernel = Parameter.RepoKernel;
             actives.AddRange(Directory.EnumerateFileSystemEntries(repoKernel).Where(_ => _.Contains("active-")).ToList());
-
             var components = new List<SystemComponentModel>();
             var losetup = GetLosetup().ToList();
             foreach(var file in actives) {
@@ -123,7 +122,6 @@ namespace Antd.Info {
                 };
                 components.Add(comp);
             }
-
             return components;
         }
     }

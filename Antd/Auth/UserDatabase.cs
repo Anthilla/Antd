@@ -31,7 +31,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
-using antdlib.views;
 using Antd.Users;
 using Nancy;
 using Nancy.Authentication.Forms;

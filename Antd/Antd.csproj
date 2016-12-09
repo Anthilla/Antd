@@ -95,6 +95,8 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Kerberos\KerberosConfiguration.cs" />
+    <Compile Include="Kerberos\KerberosConfigurationModel.cs" />
     <Compile Include="Modules\ServiceRsyncModule.cs" />
     <Compile Include="Network\NetworkConfigurationModel.cs" />
     <Compile Include="Rsync\RsyncConfiguration.cs" />
@@ -183,6 +185,8 @@
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Samba\SambaConfiguration.cs" />
     <Compile Include="Samba\SambaConfigurationModel.cs" />
+    <Compile Include="Ssh\SshConfiguration.cs" />
+    <Compile Include="Ssh\SshConfigurationModel.cs" />
     <Compile Include="Ssh\RootKeys.cs" />
     <Compile Include="Ssh\SshKnownHosts.cs" />
     <Compile Include="Storage\BackupClean.cs" />
@@ -194,10 +198,8 @@
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
-    <Compile Include="Users\GroupModel.cs" />
     <Compile Include="Users\ManageMaster.cs" />
     <Compile Include="Users\UserConfiguration.cs" />
-    <Compile Include="Users\SystemGroup.cs" />
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserConfigurationModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />

@@ -5,7 +5,6 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
-using Antd.Bind;
 using Newtonsoft.Json;
 
 namespace Antd.Network {
@@ -132,7 +131,6 @@ namespace Antd.Network {
             const string address = "192.168.1.1";
             const string range = "24";
             _launcher.Launch("ip4-add-addr", new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
-
             var tryBridgeAddress = _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
             if(tryBridgeAddress.FirstOrDefault(_ => _.Contains("inet")) != null) {
                 var bridgeAddress = tryBridgeAddress.Print(2, " ");

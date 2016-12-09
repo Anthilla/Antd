@@ -73,10 +73,8 @@ namespace Antd.Virsh {
             if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
                 return new KeyValuePair<string, string>(null, null);
             }
-            var portRegex = "port='([\\d]*)'";
-            var ipRegex = "listen='([\\d. ]*)'";
-            var port = new Regex(portRegex, RegexOptions.Multiline).Matches(res)[0].Value;
-            var ip = new Regex(ipRegex, RegexOptions.Multiline).Matches(res)[0].Value;
+            var port = new Regex("port='([\\d]*)'", RegexOptions.Multiline).Matches(res)[0].Value;
+            var ip = new Regex("listen='([\\d. ]*)'", RegexOptions.Multiline).Matches(res)[0].Value;
             return new KeyValuePair<string, string>(ip, port);
         }
     }

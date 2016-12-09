@@ -5,12 +5,10 @@ using antd.commands;
 namespace Antd.Network {
     public class LanConfiguration {
         private readonly string[] _interfaces;
-        private readonly string[] _ips;
         private readonly CommandLauncher _launcher;
 
         public LanConfiguration() {
             _interfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).Select(_ => _.Key).ToArray();
-            _ips = Enumerable.Range(1, _interfaces.Length + 1).Select(_ => $"192.168.1.{100 + _}").ToArray();
             _launcher = new CommandLauncher();
         }
 
