@@ -1,0 +1,27 @@
+# file: Data/UserData/Home/g.villa
+# owner: root
+# group: root
+user::rwx
+user:root:rwx
+user:1018:rwx
+user:domain_admins:rwx
+user:VALUETOREPLACE:rwx
+group::---
+group:root:---
+group:1018:rwx
+group:domain_admins:rwx
+group:VALUETOREPLACE:rwx
+mask::rwx
+other::--x
+default:user::rwx
+default:user:root:rwx
+default:user:1018:rwx
+default:user:domain_admins:rwx
+default:user:VALUETOREPLACE:rwx
+default:group::---
+default:group:root:---
+default:group:1018:rwx
+default:group:domain_admins:rwx
+default:group:VALUETOREPLACE:rwx
+default:mask::rwx
+default:other::---

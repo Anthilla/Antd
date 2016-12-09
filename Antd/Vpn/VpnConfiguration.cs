@@ -6,7 +6,6 @@ using antd.commands;
 using antdlib;
 using antdlib.common;
 using antdlib.common.Tool;
-//using antdlib.common.Tool;
 using antdlib.Systemd;
 using Antd.Ssh;
 using Nancy;
@@ -99,6 +98,8 @@ namespace Antd.Vpn {
                 return;
             }
 
+            remoteHost = remoteHost.Split(':').FirstOrDefault();
+
             var bash = new Bash();
             var lsmod = bash.Execute("lsmod").SplitBash().Grep("tun").FirstOrDefault();
             if(lsmod == null) {
@@ -111,39 +112,39 @@ namespace Antd.Vpn {
 
             bash.Execute($"ssh root@{remoteHost} \"systemctl restart {ServiceName}\"");
 
-            var tunnelCreation = bash.Execute($"ssh -o \"Tunnel ethernet\" -f -w 1:1 root@{remoteHost} \"true\"").SplitBash().ToList();
-            if(tunnelCreation.Any(_ => _.ToLower().Contains("connection refused") || _.ToLower().Contains("failed"))) {
-                ConsoleLogger.Warn($"[vpn] remote host {remoteHost} is unreachable via ssh");
+            var unit = SetUnitForTunnel(remoteHost);
+            if(unit == false) {
+                ConsoleLogger.Warn("[vpn] something went wrong while creating the tunnel");
                 return;
             }
 
-            var localTap = bash.Execute("ip link show tap1").SplitBash();
-            if(!localTap.Any()) {
+            var localTap = bash.Execute("ip link show").SplitBash().ToList();
+            if(!localTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the local tunnel interface");
                 return;
             }
             bash.Execute("ip link set dev tap1 up");
             bash.Execute("ip addr flush dev tap1");
             bash.Execute($"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1");
-            localTap = bash.Execute("ip link show tap1").SplitBash();
-            if(localTap.Any(_=>_.ToLower().Contains("up"))) {
+            localTap = bash.Execute("ip link show tap1").SplitBash().ToList();
+            if(localTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] local tunnel interface is up");
             }
 
-            var remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash();
-            if(!remoteTap.Any()) {
+            var remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show\"").SplitBash().ToList();
+            if(!remoteTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the remote tunnel interface");
                 return;
             }
             bash.Execute($"ssh root@{remoteHost} \"ip link set dev tap1 up\"");
             bash.Execute($"ssh root@{remoteHost} \"ip addr flush dev tap1\"");
             bash.Execute($"ssh root@{remoteHost} \"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1\"");
-            remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash();
+            remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash().ToList();
             if(remoteTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] remote tunnel interface is up");
             }
 
-            ConsoleLogger.Log("[vpn] started");
+            ConsoleLogger.Log("[vpn] connection established");
         }
 
         /// <summary>
@@ -183,6 +184,30 @@ namespace Antd.Vpn {
             var launcher = new CommandLauncher();
             var r = launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", _serviceModel.RemotePoint.Address } }).Grep("From");
             return !r.All(_ => _.ToLower().Contains("host unreachable"));
+        }
+
+        private static bool SetUnitForTunnel(string remoteHost) {
+            var lines = new List<string> {
+                "[Unit]",
+                "Description=ExtUnit, VpnConnection",
+                "",
+                "[Service]",
+                $"ExecStart=/usr/bin/ssh -o Tunnel=ethernet -f -w 1:1 root@{remoteHost} true",
+                "SuccessExitStatus=1 2 3 4 5 6 7 8 9 0",
+                "RemainAfterExit=yes",
+                "Type=oneshot",
+                "",
+                "[Install]",
+                "WantedBy=antd.target"
+            };
+            var unitName = $"/mnt/cdrom/Units/antd.target.wants/antd-{remoteHost}-vpn.service";
+            ConsoleLogger.Log(unitName);
+            if(!File.Exists(unitName)) {
+                File.WriteAllLines(unitName, lines);
+                Systemctl.DaemonReload();
+            }
+            Systemctl.Restart($"antd-{remoteHost}-vpn.service");
+            return Systemctl.IsActive($"antd-{remoteHost}-vpn.service");
         }
     }
 }

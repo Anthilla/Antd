@@ -81,7 +81,6 @@ namespace Antd {
         private static readonly FirewallConfiguration FirewallConfiguration = new FirewallConfiguration();
         private static readonly GlusterConfiguration GlusterConfiguration = new GlusterConfiguration();
         private static readonly HostConfiguration HostConfiguration = new HostConfiguration();
-        private static readonly LanConfiguration LanConfiguration = new LanConfiguration();
         private static readonly Mount Mount = new Mount();
         private static readonly NetworkConfiguration NetworkConfiguration = new NetworkConfiguration();
         private static readonly RsyncConfiguration RsyncConfiguration = new RsyncConfiguration();
@@ -258,22 +257,9 @@ namespace Antd {
                 #endregion
 
                 #region [    Network    ]
-                if(LanConfiguration.NothingIsConfigured()) {
-                    ConsoleLogger.Log("lan set configuration");
-                    var netIf = LanConfiguration.ConfigureInterface();
-                    if(!string.IsNullOrEmpty(netIf)) {
-                        ConsoleLogger.Log($"lan configured on {netIf}");
-                    }
-                }
                 NetworkConfiguration.Start();
                 NetworkConfiguration.ApplyNetworkValues();
                 ConsoleLogger.Log("network configured");
-                #endregion
-
-                #region [    Vpn    ]
-                if(VpnConfiguration.IsActive()) {
-                    VpnConfiguration.Set();
-                }
                 #endregion
 
                 #region [    Apply Setup Configuration    ]

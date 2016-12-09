@@ -27,8 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
-using antdlib.common;
 using Antd.Ssh;
 using Nancy;
 using Nancy.Security;
