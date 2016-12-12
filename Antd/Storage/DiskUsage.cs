@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
-using antdlib.Models;
+using antdlib.common.Models;
 
 namespace Antd.Storage {
     public class DiskUsage {

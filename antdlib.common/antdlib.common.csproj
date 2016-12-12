@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nancy">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -49,6 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiConsumer.cs" />
+    <Compile Include="ApplicationSetting.cs" />
+    <Compile Include="Models\AosReleaseModel.cs" />
+    <Compile Include="Models\CpuinfoModel.cs" />
+    <Compile Include="Models\DiskUsageModel.cs" />
+    <Compile Include="Models\FreeModel.cs" />
+    <Compile Include="Models\LosetupModel.cs" />
+    <Compile Include="Models\MeminfoModel.cs" />
+    <Compile Include="Models\ModuleModel.cs" />
+    <Compile Include="Models\SystemComponentModel.cs" />
+    <Compile Include="Models\UnitModel.cs" />
+    <Compile Include="Models\UptimeModel.cs" />
     <Compile Include="Tool\AwkExtension.cs" />
     <Compile Include="Tool\BashExtension.cs" />
     <Compile Include="Tool\Bash.cs" />
@@ -70,6 +85,7 @@
     <Compile Include="Tool\Grep.cs" />
     <Compile Include="Tool\Replace.cs" />
     <Compile Include="Timestamp.cs" />
+    <Compile Include="XmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

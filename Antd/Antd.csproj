@@ -99,7 +99,6 @@
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
-    <Compile Include="Storage\Volumes.cs" />
     <Compile Include="Systemctl.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />
     <Compile Include="Vpn\VpnConfigurationModel.cs" />
@@ -187,7 +186,6 @@
     <Compile Include="AntdApplication.cs" />
     <Compile Include="Helpers\DirectoryModel.cs" />
     <Compile Include="Helpers\SelectizerMapModel.cs" />
-    <Compile Include="Helpers\StatusSysctl.cs" />
     <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="MountPoint\MountModel.cs" />
     <Compile Include="MountPoint\Mount.cs" />
@@ -216,6 +214,28 @@
     <Compile Include="Users\SystemUser.cs" />
     <Compile Include="Users\UserConfigurationModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />
+    <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
+    <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
+    <Compile Include="Websocket\Client\ConnectionFactory.cs" />
+    <Compile Include="Websocket\Client\WebSocket.cs" />
+    <Compile Include="Websocket\Connections\BadRequestConnection.cs" />
+    <Compile Include="Websocket\Connections\ConnectionDetails.cs" />
+    <Compile Include="Websocket\Connections\ConnectionType.cs" />
+    <Compile Include="Websocket\Connections\HttpConnection.cs" />
+    <Compile Include="Websocket\Connections\IConnection.cs" />
+    <Compile Include="Websocket\Connections\IConnectionFactory.cs" />
+    <Compile Include="Websocket\Connections\MimeTypes.cs" />
+    <Compile Include="Websocket\Exceptions\EntityTooLargeException.cs" />
+    <Compile Include="Websocket\Exceptions\WebSocketVersionNotSupportedException.cs" />
+    <Compile Include="Websocket\HttpHelper.cs" />
+    <Compile Include="Websocket\WebServer.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\BinaryReaderWriter.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketConnection.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrame.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrameReader.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketFrameWriter.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketHandshakeHelper.cs" />
+    <Compile Include="Websocket\WebSocketProtocol\WebSocketOpCode.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
     <Content Include="Content\Style\img\disk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2941,10 +2961,6 @@
     <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
       <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>
       <Name>antdlib.views</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\antdlib\antdlib.csproj">
-      <Project>{9d55f357-b584-4f81-a2e7-5cbd9e69789c}</Project>
-      <Name>antdlib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

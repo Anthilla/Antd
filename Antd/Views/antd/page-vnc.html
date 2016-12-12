@@ -112,16 +112,14 @@
 
 @Section['Scripts']
 <script id="DashboardScripts">
-    var $u = jQuery.noConflict();
-
     function SetConnectionLink() {
         //?host=HOST&port=PORT&encrypt=1&true_color=1
-        var host = $u('input#NoVncHost').val();
-        var port = $u('input#NoVncPort').val();
-        $u("a#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
+        var host = $('input#NoVncHost').val();
+        var port = $('input#NoVncPort').val();
+        $("a#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
     }
 
-    $u('input[data-role="novnc-setup"]').keyup(function () {
+    $('input[data-role="novnc-setup"]').keyup(function () {
         SetConnectionLink();
     });
 </script>

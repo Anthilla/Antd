@@ -27,27 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
-using antdlib.common;
-using Antd.Network;
-using Nancy;
-using WebSocket = Antd.Websocket.Client.WebSocket;
-
-namespace Antd.Modules {
-    public class WebsocketModule : CoreModule {
-
-        private readonly ApplicationSetting _applicationSetting = new ApplicationSetting();
-        private readonly PortManagement _portManagement = new PortManagement();
-
-        public WebsocketModule() {
-            Get["/ws/port"] = x => Response.AsJson(_applicationSetting.WebsocketPort());
-
-            Post["/ws/post"] = x => {
-                var port = _portManagement.GetFirstAvailable(45000, 45999);
-                var ws = new WebSocket();
-                ws.Start(port);
-                return Response.AsJson(port);
-            };
-        }
+namespace antdlib.common.Models {
+    public class UnitModel {
+        public string Name { get; set; }
+        public string Load { get; set; }
+        public string Active { get; set; }
+        public string Sub { get; set; }
+        public string Description { get; set; }
     }
 }

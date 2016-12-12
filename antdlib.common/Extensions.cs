@@ -29,15 +29,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using antdlib.common.Tool;
+using Nancy.IO;
 using Newtonsoft.Json;
 
 namespace antdlib.common {
     public static class Extensions {
-
         private static readonly Bash Bash = new Bash();
 
         public static void DosToUnix(this string file, string otherFile = "") {
@@ -64,14 +65,14 @@ namespace antdlib.common {
         }
 
         public static string JoinToString(this IEnumerable<string> stringList, string separator = ",") {
-            if(stringList == null) {
+            if(stringList == null)
                 return string.Empty;
-            }
             stringList = stringList.ToList();
             return !stringList.Any() ? string.Empty : string.Join(separator, stringList.ToList());
         }
 
-        public static List<string> SplitToList(this string str, string separator = ",", StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries) {
+        public static List<string> SplitToList(this string str, string separator = ",",
+            StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries) {
             return str.Split(new[] { separator }, options).ToList();
         }
 
@@ -136,9 +137,8 @@ namespace antdlib.common {
         }
 
         public static string UppercaseFirstLetter(this string str) {
-            if(string.IsNullOrEmpty(str)) {
+            if(string.IsNullOrEmpty(str))
                 return string.Empty;
-            }
             return char.ToUpper(str[0]) + str.Substring(1);
         }
 
@@ -153,9 +153,8 @@ namespace antdlib.common {
         public static string ToHex(this string value) {
             var chars = value.ToCharArray();
             var stringBuilder = new StringBuilder();
-            foreach(var c in chars) {
+            foreach(var c in chars)
                 stringBuilder.Append(((short)c).ToString(""));
-            }
             return stringBuilder.ToString();
         }
 
@@ -163,13 +162,12 @@ namespace antdlib.common {
             var value = GetString(bytes);
             var chars = value.ToCharArray();
             var stringBuilder = new StringBuilder();
-            foreach(var c in chars) {
+            foreach(var c in chars)
                 stringBuilder.Append(((short)c).ToString(""));
-            }
             return stringBuilder.ToString();
         }
 
-        public static byte[] GetBytes(this String str) {
+        public static byte[] GetBytes(this string str) {
             var bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
@@ -208,15 +206,16 @@ namespace antdlib.common {
         public static string RemoveTextBetween(this string input, char start, char end) {
             var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
             var matches = r.Matches(input);
-            var list = (from Match match in matches where match.Groups[1].Value.Length > 0 select match.Groups[1].Value).ToList();
+            var list =
+                (from Match match in matches where match.Groups[1].Value.Length > 0 select match.Groups[1].Value).ToList
+                    ();
             var output = input;
             if(list.Count <= 0)
                 return output;
             var removeThis = list.ToArray()[list.Count - 1];
             var t = input;
-            if(removeThis.Length > 0) {
+            if(removeThis.Length > 0)
                 t = input.Replace(removeThis, "");
-            }
             output = t.RemoveTextBetween(start, end);
             return output;
         }
@@ -227,17 +226,15 @@ namespace antdlib.common {
             var matches = regex.Matches(input);
             if(matches.Count <= 0)
                 return memReplace;
-            for(var i = 0; i < matches.Count; i++) {
+            for(var i = 0; i < matches.Count; i++)
                 memReplace = memReplace.Replace(matches[i].Value, replacement);
-            }
             return memReplace;
         }
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> input) {
             var list = new HashSet<T>();
-            foreach(var i in input) {
+            foreach(var i in input)
                 list.Add(i);
-            }
             return list;
         }
 
@@ -274,23 +271,38 @@ namespace antdlib.common {
 
         public static string RemoveDoubleSpace(this string input) {
             var line = input.Replace("\t", " ");
-            while(line.IndexOf("  ", StringComparison.InvariantCulture) > 0) {
+            while(line.IndexOf("  ", StringComparison.InvariantCulture) > 0)
                 line = line.Replace("  ", " ");
-            }
             return line;
         }
 
         public static string Replace(this string input, string[] values, string rep) {
             var i = input;
-            foreach(var val in values) {
+            foreach(var val in values)
                 i = i.Replace(val, rep);
-            }
             return i;
         }
 
-        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> dictA, Dictionary<TKey, TValue> dictB)
-    where TValue : class {
+        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> dictA,
+            Dictionary<TKey, TValue> dictB)
+            where TValue : class {
             return dictA.Keys.Union(dictB.Keys).ToDictionary(k => k, k => dictA.ContainsKey(k) ? dictA[k] : dictB[k]);
+        }
+
+        public static string ReadAsString(this RequestStream requestStream) {
+            using(var reader = new StreamReader(requestStream)) {
+                return reader.ReadToEnd();
+            }
+        }
+ 
+        public static List<string> TextToList(string text) {
+            var rowDivider = new[] { "\n" };
+            var rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
+            return rowList.Where(row => !string.IsNullOrEmpty(row)).ToList();
+        }
+
+        public static bool ContainsAny(this string text, IEnumerable<string> values) {
+            return values.Any(text.Contains);
         }
     }
 }

@@ -27,27 +27,40 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib;
+using System.Diagnostics;
+using System.Net.Sockets;
 using antdlib.common;
-using Antd.Network;
-using Nancy;
-using WebSocket = Antd.Websocket.Client.WebSocket;
+using Antd.Websocket.WebSocketProtocol;
 
-namespace Antd.Modules {
-    public class WebsocketModule : CoreModule {
+namespace Antd.Websocket.Client {
+    public class CommandWebSocketConnection : WebSocketConnection {
+        public CommandWebSocketConnection(NetworkStream networkStream, TcpClient tcpClient, string header)
+            : base(networkStream, header) {
+            tcpClient.NoDelay = true;
+        }
 
-        private readonly ApplicationSetting _applicationSetting = new ApplicationSetting();
-        private readonly PortManagement _portManagement = new PortManagement();
-
-        public WebsocketModule() {
-            Get["/ws/port"] = x => Response.AsJson(_applicationSetting.WebsocketPort());
-
-            Post["/ws/post"] = x => {
-                var port = _portManagement.GetFirstAvailable(45000, 45999);
-                var ws = new WebSocket();
-                ws.Start(port);
-                return Response.AsJson(port);
+        protected override void OnTextFrame(string command) {
+            if (!Parameter.IsUnix) {
+                Writer.WriteText($"cannot execute this command: {command}");
+                Dispose();
+                return;
+            }
+            var process = new Process {
+                StartInfo = {
+                    FileName = "bash",
+                    Arguments = $"-c \"{command}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
             };
+            process.ErrorDataReceived += (sendingProcess, errorLine) => Writer.WriteText(errorLine.Data);
+            process.OutputDataReceived += (sendingProcess, dataLine) => Writer.WriteText(dataLine.Data);
+            process.Start();
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+            Dispose();
         }
     }
 }
