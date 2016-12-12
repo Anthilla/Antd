@@ -103,7 +103,12 @@ namespace Antd.Host {
 
         public void ApplyHostBlacklistModules() {
             Host = LoadHostModel();
+            var existing = File.ReadAllLines("/etc/modprobe.d/blacklist.conf").Select(_ => _.Replace("blacklist", "").Trim());
+            var configured = Host.ModulesBlacklist;
+            var merge = existing.Union(configured).ToArray();
+            Host.ModulesBlacklist = merge;
             File.WriteAllLines("/etc/modprobe.d/blacklist.conf", Host.ModulesBlacklist.Select(_ => $"blacklist {_}"));
+            Export(Host);
         }
 
         #endregion
@@ -308,7 +313,12 @@ namespace Antd.Host {
 
         public void ApplyNtpd() {
             Host = LoadHostModel();
+            var existing = File.ReadAllLines("/etc/ntp.conf");
+            var configured = Host.NtpdContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NtpdContent = merge;
             File.WriteAllLines("/etc/ntp.conf", Host.NtpdContent);
+            Export(Host);
         }
         #endregion
 
@@ -339,9 +349,12 @@ namespace Antd.Host {
 
         public void ApplyNsHosts() {
             Host = LoadHostModel();
-            if(Host.NsHostsContent != null) {
-                File.WriteAllLines("/etc/hosts", Host.NsHostsContent);
-            }
+            var existing = File.ReadAllLines("/etc/hosts");
+            var configured = Host.NsHostsContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NsHostsContent = merge;
+            File.WriteAllLines("/etc/hosts", Host.NsHostsContent);
+            Export(Host);
         }
         #endregion
 
@@ -362,9 +375,12 @@ namespace Antd.Host {
 
         public void ApplyNsNetworks() {
             Host = LoadHostModel();
-            if(Host.NsNetworksContent != null) {
-                File.WriteAllLines("/etc/networks", Host.NsNetworksContent);
-            }
+            var existing = File.ReadAllLines("/etc/networks");
+            var configured = Host.NsNetworksContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NsNetworksContent = merge;
+            File.WriteAllLines("/etc/networks", Host.NsNetworksContent);
+            Export(Host);
         }
         #endregion
 
@@ -385,9 +401,12 @@ namespace Antd.Host {
 
         public void ApplyNsResolv() {
             Host = LoadHostModel();
-            if(Host.NsResolvContent != null) {
-                File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
-            }
+            var existing = File.ReadAllLines("/etc/resolv.conf");
+            var configured = Host.NsResolvContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NsResolvContent = merge;
+            File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
+            Export(Host);
         }
         #endregion
 
@@ -408,9 +427,12 @@ namespace Antd.Host {
 
         public void ApplyNsSwitch() {
             Host = LoadHostModel();
-            if(Host.NsSwitchContent != null) {
-                File.WriteAllLines("/etc/nsswitch.conf", Host.NsSwitchContent);
-            }
+            var existing = File.ReadAllLines("/etc/nsswitch.conf");
+            var configured = Host.NsSwitchContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NsSwitchContent = merge;
+            File.WriteAllLines("/etc/nsswitch.conf", Host.NsSwitchContent);
+            Export(Host);
         }
         #endregion
 
