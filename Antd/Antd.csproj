@@ -96,6 +96,7 @@
     <Compile Include="Apps\AppTarget.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
     <Compile Include="Systemctl.cs" />
+    <Compile Include="Timer\RemoveUnusedModules.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />
     <Compile Include="Vpn\VpnConfigurationModel.cs" />
     <Compile Include="Journald\JournaldConfiguration.cs" />

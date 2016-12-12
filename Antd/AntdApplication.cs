@@ -366,6 +366,7 @@ namespace Antd {
             Timers.StartAll();
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             new SyncTime().Start(new TimeSpan(0, 42, 00));
+            new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
             ConsoleLogger.Log("scheduled events ready");
             #endregion
 
