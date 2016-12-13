@@ -95,6 +95,8 @@
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
+    <Compile Include="Network\NetworkInterfaceMode.cs" />
+    <Compile Include="Network\NetworkInterfaceStatus.cs" />
     <Compile Include="Systemctl.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />

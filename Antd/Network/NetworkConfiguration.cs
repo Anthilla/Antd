@@ -35,7 +35,6 @@ namespace Antd.Network {
                 catch(Exception) {
                     _serviceModel = new NetworkConfigurationModel();
                 }
-
             }
         }
 
@@ -65,6 +64,11 @@ namespace Antd.Network {
         }
 
         public void Start() {
+            if(HasConfiguration()) {
+                ConsoleLogger.Log("[network] applying saved settings");
+                ApplyInterfaceSetting();
+                return;
+            }
             if(!_physicalNetworkInterfaces.Any()) {
                 ConsoleLogger.Log("[network] no interface to set");
                 StartFallback();
@@ -140,7 +144,7 @@ namespace Antd.Network {
             ConsoleLogger.Log($"[network] {bridge} is unreachable");
         }
 
-        public void ApplyNetworkValues() {
+        public void ApplyDefaultInterfaceSetting() {
             _serviceModel = LoadModel();
             var interfaces = new List<string>();
             interfaces.AddRange(_physicalNetworkInterfaces);
@@ -152,6 +156,13 @@ namespace Antd.Network {
             }
         }
 
+        public bool HasConfiguration() {
+            _serviceModel = LoadModel();
+            var netif = _serviceModel.Interfaces;
+            return netif.Any(_ => _.Status == NetworkInterfaceStatus.Up);
+        }
+
+        #region [     Resolv(D)    ]
         public void SetupResolv() {
             if(!File.Exists("/etc/resolv.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/resolv.conf"))) {
                 var lines = new List<string> {
@@ -178,5 +189,77 @@ namespace Antd.Network {
             _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
             _launcher.Launch("systemctl-daemonreload");
         }
+        #endregion
+
+        #region [    Network Interface    ]
+        public void AddInterfaceSetting(NetworkInterfaceConfigurationModel model) {
+            _serviceModel = LoadModel();
+            var netif = _serviceModel.Interfaces;
+            var check = netif.Where(_ => _.Interface == model.Interface).ToList();
+            if(check.Any()) {
+                check.ForEach(_ => RemoveInterfaceSetting(_.Guid));
+            }
+            netif.Add(model);
+            _serviceModel.Interfaces = netif;
+            Save(_serviceModel);
+        }
+
+        public void RemoveInterfaceSetting(string guid) {
+            _serviceModel = LoadModel();
+            var netif = _serviceModel.Interfaces;
+            var model = netif.First(_ => _.Guid == guid);
+            if(model == null) {
+                return;
+            }
+            netif.Remove(model);
+            _serviceModel.Interfaces = netif;
+            Save(_serviceModel);
+        }
+
+        public void ApplyInterfaceSetting() {
+            _serviceModel = LoadModel();
+            var netifs = _serviceModel.Interfaces;
+            foreach(var netif in netifs) {
+                ApplyInterfaceSetting(netif);
+            }
+        }
+
+        public void ApplyInterfaceSetting(NetworkInterfaceConfigurationModel model) {
+            var launcher = new CommandLauncher();
+            var netif = model.Interface;
+            var mode = model.Mode;
+            switch(mode) {
+                case NetworkInterfaceMode.Null:
+                    return;
+                case NetworkInterfaceMode.Static:
+                    launcher.Launch("ip4-add-addr", new Dictionary<string, string> {
+                        { "$net_if", netif },
+                        { "$address", model.StaticAddres },
+                        { "$range", model.StaticRange }
+                    });
+                    break;
+                case NetworkInterfaceMode.Dynamic:
+                    launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netif } });
+                    break;
+                default:
+                    return;
+            }
+            launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netif }, { "$mtu", model.Mtu } });
+            launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netif }, { "$txqueuelen", model.Txqueuelen } });
+            var status = model.Status;
+            switch(status) {
+                case NetworkInterfaceStatus.Down:
+                    launcher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    break;
+                case NetworkInterfaceStatus.Up:
+                    launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    ConsoleLogger.Log($"[network] interface '{model.Interface}' configured");
+                    break;
+                default:
+                    launcher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    break;
+            }
+        }
+        #endregion
     }
 }

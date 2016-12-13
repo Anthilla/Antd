@@ -255,8 +255,7 @@ namespace Antd {
 
             #region [    Network    ]
             NetworkConfiguration.Start();
-            NetworkConfiguration.ApplyNetworkValues();
-            ConsoleLogger.Log("network configured");
+            NetworkConfiguration.ApplyDefaultInterfaceSetting();
             #endregion
 
             #region [    Apply Setup Configuration    ]

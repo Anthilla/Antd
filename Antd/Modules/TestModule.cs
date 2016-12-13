@@ -43,35 +43,9 @@ namespace Antd.Modules {
 
             Get["Test page", "/test"] = x => Response.AsText("Hello World!");
 
-            Get["/test/page"] = x => View["page-test"];
-
-            Get["/test/page2"] = x => View["page-test-2"];
-
-            Get["/test/vnc"] = x => View["page-vnc"];
-
             Get["/test/hash/{str}"] = x => {
                 string s = x.str;
                 return Response.AsText(Encryption.XHash(s));
-            };
-
-            Get["/test/command1/{val}"] = x => {
-                string val = x.val;
-                if(string.IsNullOrEmpty(val)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var launcher = new CommandLauncher();
-                var result = launcher.Launch("test-sub-string", new Dictionary<string, string> { { "$obj", val } });
-                return Response.AsJson(result);
-            };
-
-            Get["/test/command2/{val}"] = x => {
-                string val = x.val;
-                if(string.IsNullOrEmpty(val)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var launcher = new CommandLauncher();
-                var result = launcher.Launch("test-sub-list", new Dictionary<string, string> { { "$obj", val }, { "$value", val + "2" } });
-                return Response.AsJson(result);
             };
         }
     }

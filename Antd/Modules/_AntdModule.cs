@@ -395,34 +395,13 @@ namespace Antd.Modules {
                     dynamic viewModel = new ExpandoObject();
                     var nif = new NetworkInterfaces();
                     var networkInterfaces = nif.GetAll().ToList();
-                    var phyIf =
-                        networkInterfaces.Where(
-                                _ =>
-                                    _.Value ==
-                                    NetworkInterfaces.NetworkInterfaceType.Physical)
-                            .OrderBy(_ => _.Key);
+                    var phyIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).OrderBy(_ => _.Key);
                     viewModel.NetworkPhysicalIf = phyIf;
-                    var brgIf =
-                        networkInterfaces.Where(
-                                _ =>
-                                    _.Value ==
-                                    NetworkInterfaces.NetworkInterfaceType.Bridge)
-                            .OrderBy(_ => _.Key);
+                    var brgIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bridge).OrderBy(_ => _.Key);
                     viewModel.NetworkBridgeIf = brgIf;
-                    var bndIf =
-                        networkInterfaces.Where(
-                                _ =>
-                                    _.Value ==
-                                    NetworkInterfaces.NetworkInterfaceType.Bond)
-                            .OrderBy(_ => _.Key);
+                    var bndIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bond).OrderBy(_ => _.Key);
                     viewModel.NetworkBondIf = bndIf;
-                    var vrtIf =
-                        networkInterfaces.Where(
-                                _ =>
-                                    _.Value ==
-                                    NetworkInterfaces.NetworkInterfaceType.Virtual)
-                            .OrderBy(_ => _.Key)
-                            .ToList();
+                    var vrtIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Virtual).OrderBy(_ => _.Key).ToList();
                     foreach(var v in vrtIf) {
                         if(phyIf.Contains(v) || brgIf.Contains(v) || bndIf.Contains(v)) {
                             vrtIf.Remove(v);
