@@ -1,63 +1,170 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-	<legend id="SyslogNG">Syslog-NG - Server Configuration</legend>
-	<table class="table" style="table-layout: fixed !important;">
-		<tbody data-role="SyslogNgConfiguration">
-		<tr>
-			<td>
-				<label>Root Path</label>
-			</td>
-			<td>
-				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgRootPath" value="@Model.SyslogConfig.RootPath" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Port #1 - Application Log</label>
-			</td>
-			<td>
-				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet1" value="@Model.SyslogConfig.PortNet1" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Port #2 - Security Log</label>
-			</td>
-			<td>
-				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet2" value="@Model.SyslogConfig.PortNet2" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Port #3 - System Log</label>
-			</td>
-			<td>
-				<input type="text" style="width: 90%; height: 28px;" class="bg-anthilla-gray" data-type="SyslogNgPortNet3" value="@Model.SyslogConfig.PortNet3" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<input type="button" style="width: 90%; height: 28px;" class="bg-anthilla-violet" data-role="SyslogNgUpdate" value="Update" />
-			</td>
-		</tr>
-		</tbody>
-	</table>
-	<legend>Syslog-NG - Log </legend>
-	<input type="text" class="span5 search-field" style="position: relative; margin-bottom: -15px; height: 30px; padding-left: 25px;" placeholder="Search">
-	<p style="position: relative; top: -10px; left: 5px; width: 10px;">
-		<i class="icon-search fg-anthilla-green"></i>
-	</p>
-	<table class="table searchable" style="table-layout: fixed !important;">
-		<tbody data-role="SyslogNgConfiguration">
-		<tr><td>Content</td></tr>
-		@Each.SyslogNgContent
-		<tr data-id="@Current.Host@Current.Date" data-role="ToggleNextRow">
-			<td>@Current.Host</td>
-			<td>@Current.Date</td>
-		</tr>
-		<tr data-hidden="@Current.Host@Current.Date">
-			<td colspan="2">@Current.LogText</td>
-		</tr>
-		@EndEach
-		</tbody>
-	</table>
+    <legend>SyslogNg
+        @IfNot.SyslogNgIsActive
+        <i id="EnableSyslogNg" class="icon-checkmark fg-anthilla-green" data-hint="|Enable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        @EndIf
+        @If.SyslogNgIsActive
+        <i id="StopSyslogNg" class="icon-cancel-2 fg-yellow" data-hint="|Stop" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        <i id="DisableSyslogNg" class="icon-blocked fg-orange" data-hint="|Disable" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ReloadSyslogNg" class="icon-cycle fg-anthilla-green" data-hint="|Reload" data-hint-position="bottom" style="float: right; cursor: pointer; margin: auto 10px;"></i>
+        <i id="ApplyConfigSyslogNg" class="icon-download-2 fg-anthilla-blu" data-hint="|Apply Saved Settings" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+        @EndIf
+    </legend>
+
+    <form action="/services/syslogng/options" method="POST" enctype="multipart/form-data">
+        <table class="table" style="table-layout: fixed;">
+            <tbody>
+                <tr>
+                    <td>
+                        <label>Threaded</label>
+                    </td>
+                    <td>
+                        <input name="Threaded" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.Threaded" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>ChainHostname</label>
+                    </td>
+                    <td>
+                        <input name="ChainHostname" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.ChainHostname" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>StatsFrequency</label>
+                    </td>
+                    <td>
+                        <input name="StatsFrequency" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.StatsFrequency" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>MarkFrequency</label>
+                    </td>
+                    <td>
+                        <input name="MarkFrequency" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.MarkFrequency" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>CheckHostname</label>
+                    </td>
+                    <td>
+                        <input name="CheckHostname" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.CheckHostname" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>CreateDirectories</label>
+                    </td>
+                    <td>
+                        <input name="CreateDirectories" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.CreateDirectories" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>DnsCache</label>
+                    </td>
+                    <td>
+                        <input name="DnsCache" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.DnsCache" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>KeepHostname</label>
+                    </td>
+                    <td>
+                        <input name="KeepHostname" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.KeepHostname" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>DirAcl</label>
+                    </td>
+                    <td>
+                        <input name="DirAcl" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.DirAcl" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>Acl</label>
+                    </td>
+                    <td>
+                        <input name="Acl" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.Acl" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>UseDns</label>
+                    </td>
+                    <td>
+                        <input name="UseDns" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.UseDns" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>UseFqdn</label>
+                    </td>
+                    <td>
+                        <input name="UseFqdn" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.UseFqdn" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>RootPath</label>
+                    </td>
+                    <td>
+                        <input name="RootPath" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.RootPath" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>PortLevelApplication</label>
+                    </td>
+                    <td>
+                        <input name="PortLevelApplication" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.PortLevelApplication" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>PortLevelSecurity</label>
+                    </td>
+                    <td>
+                        <input name="PortLevelSecurity" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.PortLevelSecurity" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>PortLevelSystem</label>
+                    </td>
+                    <td>
+                        <input name="PortLevelSystem" style="width: 90%;" type="text" value="@Model.SyslogNgOptions.PortLevelSystem" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input style="width: 90%; height: 28px;" type="submit" value="Save Settings" class="bg-anthilla-green fg-anthilla-gray" />
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>

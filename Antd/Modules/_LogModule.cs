@@ -33,11 +33,9 @@ using System.Dynamic;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
-using antdlib.views;
-using Antd.Configuration;
-using Antd.Database;
 using Antd.Journald;
 using Antd.Log;
+using Antd.SyslogNg;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
@@ -118,11 +116,10 @@ namespace Antd.Modules {
             Get["/part/log/syslog"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    var syslogRepository = new SyslogRepository();
-                    var syslogConfig = syslogRepository.Get();
-                    viewModel.SyslogConfig = syslogConfig ?? new SyslogSchema();
-                    var syslogNg = new SyslogNg();
-                    viewModel.SyslogNgContent = syslogNg.GetAll().OrderBy(_ => _.Host).ThenByDescending(_ => _.DateTime);
+                    var syslogNgConfiguration = new SyslogNgConfiguration();
+                    var dhcpdIsActive = syslogNgConfiguration.IsActive();
+                    viewModel.DhcpdIsActive = dhcpdIsActive;
+                    viewModel.DhcpdOptions = syslogNgConfiguration.Get() ?? new SyslogNgConfigurationModel();
                     return View["antd/part/page-log-syslog", viewModel];
                 }
                 catch(Exception ex) {
@@ -134,30 +131,6 @@ namespace Antd.Modules {
             #endregion
 
             #region [    Actions    ]
-            Post["/log/syslog/set"] = x => {
-                var root = Request.Form.Root;
-                var p1 = Request.Form.Path1;
-                var p2 = Request.Form.Path2;
-                var p3 = Request.Form.Path3;
-                var syslogRepository = new SyslogRepository();
-                syslogRepository.Set(root, p1, p2, p3);
-                var syslogConfiguration = new SyslogConfiguration();
-                syslogConfiguration.Set();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/log/syslog/enable"] = x => {
-                var syslogRepository = new SyslogRepository();
-                syslogRepository.Enable();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/log/syslog/disable"] = x => {
-                var syslogRepository = new SyslogRepository();
-                syslogRepository.Disable();
-                return HttpStatusCode.OK;
-            };
-
             Get["/log/journalctl/all"] = x => {
                 var journalctl = new Journalctl();
                 var result = journalctl.GetAllLog().ToList();

@@ -94,11 +94,14 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Modules\ServiceSyslogNgModule.cs" />
     <Compile Include="Modules\ServiceNetworkModule.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
     <Compile Include="Network\NetworkInterfaceMode.cs" />
     <Compile Include="Network\NetworkInterfaceStatus.cs" />
     <Compile Include="Network\NetworkInterfaceType.cs" />
+    <Compile Include="SyslogNg\SyslogNgConfiguration.cs" />
+    <Compile Include="SyslogNg\SyslogNgConfigurationModel.cs" />
     <Compile Include="Systemctl.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />
@@ -133,11 +136,8 @@
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />
-    <Compile Include="Configuration\SyslogConfiguration.cs" />
     <Compile Include="Database\AuthorizedKeysRepository.cs" />
     <Compile Include="Database\ApplicationRepository.cs" />
-    <Compile Include="Database\SyslogRepository.cs" />
-    <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
     <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
     <Compile Include="Dhcpd\DhcpdConfigurationModel.cs" />
@@ -151,7 +151,6 @@
     <Compile Include="Hubs\Websocketd.cs" />
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
-    <Compile Include="Log\SyslogNg.cs" />
     <Compile Include="Modules\ServiceGlusterModule.cs" />
     <Compile Include="Modules\HostModule.cs" />
     <Compile Include="Modules\ServiceBindModule.cs" />
@@ -251,6 +250,9 @@
     <Content Include="Scripts\antd.service.acl.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\antd.service.syslogng.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\antd.service.vpn.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -335,6 +337,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-acl.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-log-syslog.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-net-vpn.html">
@@ -428,9 +433,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-apps-manage.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-log-syslog.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-boot-svc.html">

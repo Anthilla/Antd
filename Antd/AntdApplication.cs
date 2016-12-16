@@ -54,6 +54,7 @@ using Antd.Rsync;
 using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
+using Antd.SyslogNg;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Users;
@@ -84,7 +85,7 @@ namespace Antd {
         private static readonly SambaConfiguration SambaConfiguration = new SambaConfiguration();
         private static readonly SetupConfiguration SetupConfiguration = new SetupConfiguration();
         private static readonly SshdConfiguration SshdConfiguration = new SshdConfiguration();
-        private static readonly SyslogConfiguration SyslogConfiguration = new SyslogConfiguration();
+        private static readonly SyslogNgConfiguration SyslogNgConfiguration = new SyslogNgConfiguration();
         private static readonly Timers Timers = new Timers();
         private static readonly UserConfiguration UserConfiguration = new UserConfiguration();
         private static readonly Zpool Zpool = new Zpool();
@@ -173,7 +174,6 @@ namespace Antd {
             Database.RegisterView(new ApplicationView());
             Database.RegisterView(new AuthorizedKeysView());
             Database.RegisterView(new TimerView());
-            Database.RegisterView(new SyslogView());
             ConsoleLogger.Log("database ready");
             #endregion
 
@@ -325,8 +325,8 @@ namespace Antd {
             #endregion
 
             #region [    Syslog    ]
-            if(SyslogConfiguration.Set()) {
-                ConsoleLogger.Log("syslog ready");
+            if(SyslogNgConfiguration.IsActive()) {
+                SyslogNgConfiguration.Set();
             }
             #endregion
 
