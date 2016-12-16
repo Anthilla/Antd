@@ -401,12 +401,20 @@ namespace Antd.Host {
 
         public void ApplyNsResolv() {
             Host = LoadHostModel();
-            var existing = File.ReadAllLines("/etc/resolv.conf");
-            var configured = Host.NsResolvContent;
-            var merge = existing.Union(configured).ToArray();
-            Host.NsResolvContent = merge;
-            File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
-            Export(Host);
+            if(!File.Exists("/etc/resolv.conf")) {
+                return;
+            }
+            try {
+                var existing = File.ReadAllLines("/etc/resolv.conf");
+                var configured = Host.NsResolvContent;
+                var merge = existing.Union(configured).ToArray();
+                Host.NsResolvContent = merge;
+                File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
+                Export(Host);
+            }
+            catch(Exception) {
+                return;
+            }
         }
         #endregion
 

@@ -173,7 +173,6 @@ namespace Antd {
             Database.RegisterView(new ApplicationView());
             Database.RegisterView(new AuthorizedKeysView());
             Database.RegisterView(new TimerView());
-            Database.RegisterView(new MacAddressView());
             Database.RegisterView(new SyslogView());
             ConsoleLogger.Log("database ready");
             #endregion

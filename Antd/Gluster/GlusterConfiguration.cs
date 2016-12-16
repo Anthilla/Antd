@@ -110,6 +110,7 @@ namespace Antd.Gluster {
             }
         }
 
+        #region [    Private - Volumes Management    ]
         private void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
             var volString = string.Join(" ", volumesList);
             Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
@@ -125,6 +126,7 @@ namespace Antd.Gluster {
                 _bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
             }
         }
+        #endregion
 
         public void AddNode(string model) {
             var node = _serviceModel.Nodes;

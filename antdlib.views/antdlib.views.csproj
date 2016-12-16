@@ -53,7 +53,6 @@
     <Compile Include="ApplicationModel.cs" />
     <Compile Include="SyslogModel.cs" />
     <Compile Include="TimerModel.cs" />
-    <Compile Include="MacAddressModel.cs" />
     <Compile Include="_DatabaseHelper.cs" />
     <Compile Include="_EntityStatus.cs" />
     <Compile Include="_EntityModel.cs" />

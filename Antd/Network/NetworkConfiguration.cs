@@ -13,15 +13,18 @@ namespace Antd.Network {
         private NetworkConfigurationModel _serviceModel;
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
         private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
-        private readonly IEnumerable<string> _networkInterfaces;
-        private readonly IEnumerable<string> _physicalNetworkInterfaces;
-        private readonly IEnumerable<string> _bridgeNetworkInterfaces;
         private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public NetworkConfiguration() {
-            _networkInterfaces = new NetworkInterfaces().GetAll().Select(_ => _.Key).OrderBy(_ => _);
-            _physicalNetworkInterfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).Select(_ => _.Key).OrderBy(_ => _);
-            _bridgeNetworkInterfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bridge).Select(_ => _.Key).OrderBy(_ => _);
+            _networkInterfaces = GetAllNames();
+            InterfacePhysical = GetPhysicalInterfaces();
+            InterfaceVirtual = GetVirtualInterfaces();
+            InterfaceBond = GetBondInterfaces();
+            InterfaceBridge = GetBridgeInterfaces();
+            InterfacePhysicalModel = GetPhysicalInterfacesModel();
+            InterfaceVirtualModel = GetVirtualInterfacesModel();
+            InterfaceBondModel = GetBondInterfacesModel();
+            InterfaceBridgeModel = GetBridgeInterfacesModel();
             Directory.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
                 _serviceModel = new NetworkConfigurationModel();
@@ -37,6 +40,17 @@ namespace Antd.Network {
                 }
             }
         }
+
+        private readonly IEnumerable<string> _networkInterfaces;
+        public IEnumerable<string> InterfacePhysical;
+        public IEnumerable<string> InterfaceVirtual;
+        public IEnumerable<string> InterfaceBond;
+        public IEnumerable<string> InterfaceBridge;
+
+        public IEnumerable<NetworkInterfaceConfigurationModel> InterfacePhysicalModel;
+        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceVirtualModel;
+        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBondModel;
+        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBridgeModel;
 
         private NetworkConfigurationModel LoadModel() {
             if(!File.Exists(_cfgFile)) {
@@ -69,12 +83,12 @@ namespace Antd.Network {
                 ApplyInterfaceSetting();
                 return;
             }
-            if(!_physicalNetworkInterfaces.Any()) {
+            if(!InterfacePhysical.Any()) {
                 ConsoleLogger.Log("[network] no interface to set");
                 StartFallback();
                 return;
             }
-            var netIf = _physicalNetworkInterfaces.FirstOrDefault();
+            var netIf = InterfacePhysical.FirstOrDefault();
             var tryStart = _launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryStart.Any()) {
                 ConsoleLogger.Log("[network] dhclient started");
@@ -123,11 +137,11 @@ namespace Antd.Network {
                 _launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", bridge } });
                 ConsoleLogger.Log($"[network] {bridge} configured");
             }
-            foreach(var phy in _physicalNetworkInterfaces) {
+            foreach(var phy in InterfacePhysical) {
                 _launcher.Launch("brctl-addif", new Dictionary<string, string> { { "$bridge", bridge }, { "$net_if", phy } });
                 ConsoleLogger.Log($"[network] {phy} add to {bridge}");
             }
-            foreach(var phy in _physicalNetworkInterfaces) {
+            foreach(var phy in InterfacePhysical) {
                 _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", phy } });
             }
             _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", bridge } });
@@ -147,8 +161,8 @@ namespace Antd.Network {
         public void ApplyDefaultInterfaceSetting() {
             _serviceModel = LoadModel();
             var interfaces = new List<string>();
-            interfaces.AddRange(_physicalNetworkInterfaces);
-            interfaces.AddRange(_bridgeNetworkInterfaces);
+            interfaces.AddRange(InterfacePhysical);
+            interfaces.AddRange(InterfaceBridge);
             var launcher = new CommandLauncher();
             foreach(var netIf in interfaces) {
                 launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
@@ -188,6 +202,149 @@ namespace Antd.Network {
             }
             _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
             _launcher.Launch("systemctl-daemonreload");
+        }
+        #endregion
+
+        #region [    Interface Detection and Mapping  ]
+        private static IEnumerable<string> GetAllNames() {
+            if(!Parameter.IsUnix) {
+                return new List<string>();
+            }
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            return list.Select(f => f.Print(9, " ")).ToList();
+        }
+
+        private IEnumerable<string> GetPhysicalInterfaces() {
+            var ifList = new List<string>();
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            foreach(var f in list) {
+                if(f.Contains("bond")) { }
+                else if(f.Contains("br")) { }
+                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+                else if(!f.Contains("virtual/net")) {
+                    var name = f.Print(9, " ");
+                    ifList.Add(name.Trim());
+                }
+            }
+            return ifList;
+        }
+
+        private IEnumerable<NetworkInterfaceConfigurationModel> GetPhysicalInterfacesModel() {
+            _serviceModel = LoadModel();
+            var netifs = _serviceModel.Interfaces;
+            var list = new List<NetworkInterfaceConfigurationModel>();
+            foreach(var pi in InterfacePhysical) {
+                if(netifs.Any(_ => _.Interface == pi)) {
+                    list.Add(netifs.FirstOrDefault(_ => _.Interface == pi));
+                }
+                else {
+                    list.Add(new NetworkInterfaceConfigurationModel {
+                        Interface = pi
+                    });
+                }
+            }
+            return list;
+        }
+
+        private IEnumerable<string> GetVirtualInterfaces() {
+            var ifList = new List<string>();
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            foreach(var f in list) {
+                if(f.Contains("bond")) { }
+                else if(f.Contains("br")) { }
+                else if(f.Contains("virtual/net") || f.Contains("platform")) {
+                    var name = f.Print(9, " ");
+                    ifList.Add(name.Trim());
+                }
+                else if(!f.Contains("virtual/net")) { }
+            }
+            return ifList;
+        }
+
+        private IEnumerable<NetworkInterfaceConfigurationModel> GetVirtualInterfacesModel() {
+            _serviceModel = LoadModel();
+            var netifs = _serviceModel.Interfaces;
+            var list = new List<NetworkInterfaceConfigurationModel>();
+            foreach(var pi in InterfaceVirtual) {
+                if(netifs.Any(_ => _.Interface == pi)) {
+                    list.Add(netifs.FirstOrDefault(_ => _.Interface == pi));
+                }
+                else {
+                    list.Add(new NetworkInterfaceConfigurationModel {
+                        Interface = pi
+                    });
+                }
+            }
+            return list;
+        }
+
+        private IEnumerable<string> GetBondInterfaces() {
+            var ifList = new List<string>();
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            foreach(var f in list) {
+                if(f.Contains("bond")) {
+                    var name = f.Print(9, " ");
+                    ifList.Add(name.Trim());
+                }
+                else if(f.Contains("br")) { }
+                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+                else if(!f.Contains("virtual/net")) { }
+            }
+            return ifList;
+        }
+
+        private IEnumerable<NetworkInterfaceConfigurationModel> GetBondInterfacesModel() {
+            _serviceModel = LoadModel();
+            var netifs = _serviceModel.Interfaces;
+            var list = new List<NetworkInterfaceConfigurationModel>();
+            foreach(var pi in InterfaceBond) {
+                if(netifs.Any(_ => _.Interface == pi)) {
+                    list.Add(netifs.FirstOrDefault(_ => _.Interface == pi));
+                }
+                else {
+                    list.Add(new NetworkInterfaceConfigurationModel {
+                        Interface = pi
+                    });
+                }
+            }
+            return list;
+        }
+
+        private IEnumerable<string> GetBridgeInterfaces() {
+            var ifList = new List<string>();
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            foreach(var f in list) {
+                if(f.Contains("bond")) { }
+                else if(f.Contains("br")) {
+                    var name = f.Print(9, " ");
+                    ifList.Add(name.Trim());
+                }
+                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+                else if(!f.Contains("virtual/net")) { }
+            }
+            return ifList;
+        }
+
+        private IEnumerable<NetworkInterfaceConfigurationModel> GetBridgeInterfacesModel() {
+            _serviceModel = LoadModel();
+            var netifs = _serviceModel.Interfaces;
+            var list = new List<NetworkInterfaceConfigurationModel>();
+            foreach(var pi in InterfaceBridge) {
+                if(netifs.Any(_ => _.Interface == pi)) {
+                    list.Add(netifs.FirstOrDefault(_ => _.Interface == pi));
+                }
+                else {
+                    list.Add(new NetworkInterfaceConfigurationModel {
+                        Interface = pi
+                    });
+                }
+            }
+            return list;
         }
         #endregion
 

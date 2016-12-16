@@ -12,8 +12,8 @@ namespace Antd.Network {
         public string Interface { get; set; }
         public NetworkInterfaceMode Mode { get; set; } = NetworkInterfaceMode.Dynamic;
         public NetworkInterfaceStatus Status { get; set; } = NetworkInterfaceStatus.Down;
-        public string StaticAddres { get; set; }
-        public string StaticRange { get; set; }
+        public string StaticAddres { get; set; } = "";
+        public string StaticRange { get; set; } = "";
         public string Txqueuelen { get; set; } = "10000";
         public string Mtu { get; set; } = "6000";
     }

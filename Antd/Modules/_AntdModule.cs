@@ -393,21 +393,22 @@ namespace Antd.Modules {
             Get["/part/net"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    var nif = new NetworkInterfaces();
-                    var networkInterfaces = nif.GetAll().ToList();
-                    var phyIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).OrderBy(_ => _.Key);
-                    viewModel.NetworkPhysicalIf = phyIf;
-                    var brgIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bridge).OrderBy(_ => _.Key);
-                    viewModel.NetworkBridgeIf = brgIf;
-                    var bndIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Bond).OrderBy(_ => _.Key);
-                    viewModel.NetworkBondIf = bndIf;
-                    var vrtIf = networkInterfaces.Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Virtual).OrderBy(_ => _.Key).ToList();
-                    foreach(var v in vrtIf) {
-                        if(phyIf.Contains(v) || brgIf.Contains(v) || bndIf.Contains(v)) {
-                            vrtIf.Remove(v);
+                    var networkConfiguration = new NetworkConfiguration();
+                    var physicalInterfaces = networkConfiguration.InterfacePhysicalModel.ToList();
+                    viewModel.NetworkPhysicalIf = physicalInterfaces;
+                    var bridgeInterfaces = networkConfiguration.InterfaceBridgeModel.ToList();
+                    viewModel.NetworkBridgeIf = bridgeInterfaces;
+                    var bondInterfaces = networkConfiguration.InterfaceBondModel.ToList();
+                    viewModel.NetworkBondIf = bondInterfaces;
+                    var virtualInterfaces = networkConfiguration.InterfaceVirtualModel.ToList();
+                    foreach(var vif in virtualInterfaces) {
+                        if(physicalInterfaces.Any(_ => _.Interface == vif.Interface) ||
+                        bridgeInterfaces.Any(_ => _.Interface == vif.Interface) ||
+                        bondInterfaces.Any(_ => _.Interface == vif.Interface)) {
+                            virtualInterfaces.Remove(vif);
                         }
                     }
-                    viewModel.NetworkVirtualIf = vrtIf;
+                    viewModel.NetworkVirtualIf = virtualInterfaces;
                     return View["antd/part/page-antd-network", viewModel];
                 }
                 catch(Exception ex) {
@@ -457,19 +458,19 @@ namespace Antd.Modules {
                 }
             };
 
-            Get["/part/fw/mac"] = x => {
-                try {
-                    dynamic viewModel = new ExpandoObject();
-                    viewModel.MacAddressList = new MacAddressRepository().GetAll();
-                    return View["antd/part/page-antd-firewall-mac", viewModel];
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(
-                        $"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return View["antd/part/page-error"];
-                }
-            };
+            //Get["/part/fw/mac"] = x => {
+            //    try {
+            //        dynamic viewModel = new ExpandoObject();
+            //        viewModel.MacAddressList = new MacAddressRepository().GetAll();
+            //        return View["antd/part/page-antd-firewall-mac", viewModel];
+            //    }
+            //    catch(Exception ex) {
+            //        ConsoleLogger.Error(
+            //            $"{Request.Url} request failed: {ex.Message}");
+            //        ConsoleLogger.Error(ex);
+            //        return View["antd/part/page-error"];
+            //    }
+            //};
 
             Get["/part/cron"] = x => {
                 try {

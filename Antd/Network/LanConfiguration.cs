@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using antd.commands;
+using antdlib.common.Tool;
 
 namespace Antd.Network {
     public class LanConfiguration {
@@ -8,8 +9,24 @@ namespace Antd.Network {
         private readonly CommandLauncher _launcher;
 
         public LanConfiguration() {
-            _interfaces = new NetworkInterfaces().GetAll().Where(_ => _.Value == NetworkInterfaces.NetworkInterfaceType.Physical).Select(_ => _.Key).ToArray();
+            _interfaces = GetPhysicalInterfaces();
             _launcher = new CommandLauncher();
+        }
+
+        private string[] GetPhysicalInterfaces() {
+            var ifList = new List<string>();
+            var bash = new Bash();
+            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            foreach(var f in list) {
+                if(f.Contains("bond")) { }
+                else if(f.Contains("br")) { }
+                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+                else if(!f.Contains("virtual/net")) {
+                    var name = f.Print(9, " ");
+                    ifList.Add(name.Trim());
+                }
+            }
+            return ifList.ToArray();
         }
 
         public bool NothingIsConfigured() {

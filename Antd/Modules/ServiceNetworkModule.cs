@@ -28,22 +28,49 @@
 //-------------------------------------------------------------------------------------
 
 using antdlib.common;
+using Antd.Network;
 using Nancy;
+using Nancy.Security;
 
 namespace Antd.Modules {
-    public class TestModule : CoreModule {
+    public class ServiceNetworkModule : CoreModule {
 
-        public class TestClass {
-            public string Text { get; set; }
-        }
+        public ServiceNetworkModule() {
+            this.RequiresAuthentication();
 
-        public TestModule() {
+            Post["/services/network/restart"] = x => {
+                var networkConfiguration = new NetworkConfiguration();
+                networkConfiguration.Start();
+                return HttpStatusCode.OK;
+            };
 
-            Get["Test page", "/test"] = x => Response.AsText("Hello World!");
+            Post["/services/network/interface"] = x => {
+                string Interface = Request.Form.Interface;
+                string mode = Request.Form.Mode;
+                string status = Request.Form.Status;
+                string staticAddres = Request.Form.StaticAddres;
+                string staticRange = Request.Form.StaticRange;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                var model = new NetworkInterfaceConfigurationModel {
+                    Interface = Interface,
+                    Mode = mode.ToEnum<NetworkInterfaceMode>(),
+                    Status = status.ToEnum<NetworkInterfaceStatus>(),
+                    StaticAddres = staticAddres,
+                    StaticRange = staticRange,
+                    Txqueuelen = txqueuelen,
+                    Mtu = mtu
+                };
+                var networkConfiguration = new NetworkConfiguration();
+                networkConfiguration.AddInterfaceSetting(model);
+                return Response.AsRedirect("/");
+            };
 
-            Get["/test/hash/{str}"] = x => {
-                string s = x.str;
-                return Response.AsText(Encryption.XHash(s));
+            Post["/services/network/interface/del"] = x => {
+                string guid = Request.Form.Guid;
+                var networkConfiguration = new NetworkConfiguration();
+                networkConfiguration.RemoveInterfaceSetting(guid);
+                return HttpStatusCode.OK;
             };
         }
     }

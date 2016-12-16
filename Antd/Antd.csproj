@@ -94,9 +94,11 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="Modules\ServiceNetworkModule.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
     <Compile Include="Network\NetworkInterfaceMode.cs" />
     <Compile Include="Network\NetworkInterfaceStatus.cs" />
+    <Compile Include="Network\NetworkInterfaceType.cs" />
     <Compile Include="Systemctl.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />
@@ -137,7 +139,6 @@
     <Compile Include="Database\SyslogRepository.cs" />
     <Compile Include="Database\FastObjectRepository.cs" />
     <Compile Include="Database\TimerRepository.cs" />
-    <Compile Include="Database\MacAddressRepository.cs" />
     <Compile Include="Dhcpd\DhcpdConfiguration.cs" />
     <Compile Include="Dhcpd\DhcpdConfigurationModel.cs" />
     <Compile Include="Dhcpd\DhcpdLeaseModel.cs" />
@@ -190,7 +191,6 @@
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="Network\LanConfiguration.cs" />
     <Compile Include="Network\NetworkConfiguration.cs" />
-    <Compile Include="Network\NetworkInterfaces.cs" />
     <Compile Include="Network\PortManagement.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Samba\SambaConfiguration.cs" />
@@ -361,7 +361,7 @@
     <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-firewall-mac.html">
+    <Content Include="Views\antd\part\page-antd-firewall-macOLD.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-info-modules.html">
