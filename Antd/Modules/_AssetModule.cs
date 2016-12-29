@@ -36,6 +36,7 @@ using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Asset;
 using Antd.Ssh;
+using Antd.SyncMachine;
 using Nancy;
 using Nancy.Security;
 
@@ -114,6 +115,22 @@ namespace Antd.Modules {
                     var values = set.Values.Where(_ => !string.IsNullOrEmpty(_.Label));
                     viewModel.Values = values.ToDictionary(k => k.Label, v => set.Subnet + v.Number + ".0");
                     return View["antd/part/page-asset-scan", viewModel];
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
+                    ConsoleLogger.Error(ex);
+                    return View["antd/part/page-error"];
+                }
+            };
+
+            Get["/part/asset/sync"] = x => {
+                try {
+                    dynamic viewModel = new ExpandoObject();
+                    var settings = new SyncMachineConfiguration();
+                    var set = settings.Get();
+                    var syncedMachines = set.Machines.Any() ? set.Machines : new List<SyncMachineModel>();
+                    viewModel.SyncedMachines = syncedMachines.OrderBy(_ => _.MachineAddress);
+                    return View["antd/part/page-asset-syncmachine", viewModel];
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");

@@ -36,6 +36,10 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dotMemory.Unit, Version=103.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.dotMemoryUnit.2.3.20160517.113140\lib\dotMemory.Unit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -94,12 +98,18 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
+    <Compile Include="DataHandlerExtensions.cs" />
+    <Compile Include="DataHandler.cs" />
+    <Compile Include="Modules\ServiceSyncMachineModule.cs" />
     <Compile Include="Modules\ServiceSyslogNgModule.cs" />
     <Compile Include="Modules\ServiceNetworkModule.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
     <Compile Include="Network\NetworkInterfaceMode.cs" />
     <Compile Include="Network\NetworkInterfaceStatus.cs" />
     <Compile Include="Network\NetworkInterfaceType.cs" />
+    <Compile Include="SyncMachine\SyncMachineConfiguration.cs" />
+    <Compile Include="SyncMachine\SyncMachineConfigurationModel.cs" />
+    <Compile Include="SyncMachine\SyncMachinePostModel.cs" />
     <Compile Include="SyslogNg\SyslogNgConfiguration.cs" />
     <Compile Include="SyslogNg\SyslogNgConfigurationModel.cs" />
     <Compile Include="Systemctl.cs" />
@@ -249,6 +259,9 @@
     <Content Include="Scripts\antd.service.acl.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\antd.service.syncmachine.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\antd.service.syslogng.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -336,6 +349,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-antd-acl.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\antd\part\page-asset-syncmachine.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\antd\part\page-log-syslog.html">

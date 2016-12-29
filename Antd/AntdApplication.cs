@@ -54,6 +54,7 @@ using Antd.Rsync;
 using Antd.Samba;
 using Antd.Ssh;
 using Antd.Storage;
+using Antd.SyncMachine;
 using Antd.SyslogNg;
 using Antd.SystemdTimer;
 using Antd.Timer;
@@ -90,6 +91,7 @@ namespace Antd {
         private static readonly UserConfiguration UserConfiguration = new UserConfiguration();
         private static readonly Zpool Zpool = new Zpool();
         private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
+        private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
         #endregion
 
         private static void Main() {
@@ -381,6 +383,12 @@ namespace Antd {
             }
             if(RsyncConfiguration.IsActive()) {
                 RsyncConfiguration.Set();
+            }
+            #endregion
+
+            #region [    SyncMachine    ]
+            if(SyncMachineConfiguration.IsActive()) {
+                SyncMachineConfiguration.Set();
             }
             #endregion
 

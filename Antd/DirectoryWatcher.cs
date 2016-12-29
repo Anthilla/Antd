@@ -34,16 +34,26 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using Antd.Rsync;
+using Antd.SyncMachine;
 
 namespace Antd {
     public class DirectoryWatcher {
         private readonly RsyncObjectModel[] _directoriesModel;
         private readonly string[] _paths;
         private FileSystemWatcher _fsw;
+        private readonly bool _isSyncMachineService;
+        private readonly SyncMachineConfiguration _syncMachineConfiguration = new SyncMachineConfiguration();
+
 
         public DirectoryWatcher(RsyncObjectModel[] paths) {
             _directoriesModel = paths;
             _paths = paths.Select(_ => _.Type == "file" ? Path.GetDirectoryName(_.Source) : _.Source).ToArray();
+            _isSyncMachineService = false;
+        }
+
+        public DirectoryWatcher(string[] paths, bool isSyncMachineService = true) {
+            _paths = paths;
+            _isSyncMachineService = isSyncMachineService;
         }
 
         public void StartWatching() {
@@ -61,10 +71,17 @@ namespace Antd {
                             NotifyFilters.DirectoryName,
                         IncludeSubdirectories = true,
                     };
-                    _fsw.Changed += OnChanged;
-                    _fsw.Created += OnChanged;
-                    _fsw.Deleted += OnChanged;
-                    _fsw.Renamed += OnRenamed;
+                    if(_isSyncMachineService) {
+                        _fsw.Changed += SyncMachineChanged;
+                        _fsw.Created += SyncMachineChanged;
+                        _fsw.Deleted += SyncMachineChanged;
+                    }
+                    else {
+                        _fsw.Changed += RsyncChanged;
+                        _fsw.Created += RsyncChanged;
+                        _fsw.Deleted += RsyncChanged;
+                        _fsw.Renamed += RsyncRenamed;
+                    }
                     _fsw.EnableRaisingEvents = true;
                 }
             }
@@ -78,7 +95,8 @@ namespace Antd {
             _fsw?.Dispose();
         }
 
-        private void OnChanged(object source, FileSystemEventArgs e) {
+        #region [    Rsync Service    ]
+        private void RsyncChanged(object source, FileSystemEventArgs e) {
             ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
             var files = _directoriesModel.Where(_ => _.Source == e.FullPath).ToList();
             if(!files.Any()) {
@@ -118,7 +136,7 @@ namespace Antd {
             }
         }
 
-        private void OnRenamed(object source, RenamedEventArgs e) {
+        private void RsyncRenamed(object source, RenamedEventArgs e) {
             ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
             var files = _directoriesModel.Where(_ => _.Source == e.FullPath).ToList();
             if(!files.Any()) {
@@ -157,5 +175,36 @@ namespace Antd {
                 }
             }
         }
+        #endregion
+
+        #region [    Sync Machine Service    ]
+        private void SyncMachineChanged(object source, FileSystemEventArgs e) {
+            if(e.Name.Contains("syncmachine.conf")) {
+                return;
+            }
+            if(e.Name.Contains(".bck")) {
+                return;
+            }
+            ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
+            var file = e.FullPath;
+            var text = File.ReadAllText(file);
+            if(string.IsNullOrEmpty(text)) {
+                return;
+            }
+
+            var syncMachineConfiguration = _syncMachineConfiguration.Get();
+            if(syncMachineConfiguration == null) {
+                return;
+            }
+            var machines = syncMachineConfiguration.Machines.Select(_ => _.MachineAddress).ToList();
+            if(!machines.Any()) {
+                return;
+            }
+            var data = new SyncMachinePostModel { File = file, Content = text };
+            foreach(var machine in machines) {
+                new ApiConsumer().Post($"http://{machine}/services/syncmachine/accept", data.ToDictionary());
+            }
+        }
+        #endregion
     }
 }
