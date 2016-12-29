@@ -132,7 +132,6 @@
     <Compile Include="Host\HostConfiguration.cs" />
     <Compile Include="Host\HostModel.cs" />
     <Compile Include="Configuration\AntdConfigurationModel.cs" />
-    <Compile Include="AntdViewEngine.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Configuration\ConfigurationFlow.cs" />
     <Compile Include="Configuration\SetupConfiguration.cs" />

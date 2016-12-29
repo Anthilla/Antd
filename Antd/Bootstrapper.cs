@@ -75,16 +75,5 @@ namespace Antd {
             };
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
         }
-
-        protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
-            base.ConfigureApplicationContainer(container);
-            container
-                .Register<IEnumerable<ISuperSimpleViewEngineMatcher>>(
-                    (c, p) => new List<ISuperSimpleViewEngineMatcher> {
-                        new AntdViewEngine()
-                    });
-        }
-
-        //protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = "@Nancy12e3" };
     }
 }
