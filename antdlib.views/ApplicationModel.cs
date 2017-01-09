@@ -42,7 +42,6 @@ namespace antdlib.views {
         public string Guid { get; set; }
         public string Timestamp { get; set; }
         public string EntityCode { get; set; }
-        public string Tags { get; set; }
         //---
         public string Name { get; set; }
         public string RepositoryName { get; set; }
@@ -62,7 +61,7 @@ namespace antdlib.views {
             isActive = true;
             BackgroundIndexing = false;
             ConsistentSaveToThisView = true;
-            Version = 8;
+            Version = 10;
             Schema = typeof(ApplicationSchema);
             Mapper = (api, docid, doc) => {
                 if (doc.Status != EntityStatus.New) return;
@@ -75,7 +74,6 @@ namespace antdlib.views {
                     doc.Guid,
                     doc.Timestamp,
                     doc.EntityCode,
-                    doc.Tags.JoinToString(),
                     doc.Name,
                     doc.RepositoryName,
                     doc.Exes.JoinToString(),
