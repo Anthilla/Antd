@@ -56,7 +56,7 @@ namespace Antd.Modules {
                     Interface = Interface,
                     Mode = mode.ToEnum<NetworkInterfaceMode>(),
                     Status = status.ToEnum<NetworkInterfaceStatus>(),
-                    StaticAddres = staticAddres,
+                    StaticAddress = staticAddres,
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu

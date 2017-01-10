@@ -391,7 +391,7 @@ namespace Antd.Network {
                 case NetworkInterfaceMode.Static:
                     launcher.Launch("ip4-add-addr", new Dictionary<string, string> {
                         { "$net_if", netif },
-                        { "$address", model.StaticAddres },
+                        { "$address", model.StaticAddress },
                         { "$range", model.StaticRange }
                     });
                     break;
