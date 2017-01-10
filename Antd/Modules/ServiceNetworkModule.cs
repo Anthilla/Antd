@@ -27,7 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
+using System;
 using Antd.Network;
 using Nancy;
 using Nancy.Security;
@@ -54,8 +54,8 @@ namespace Antd.Modules {
                 string mtu = Request.Form.Mtu;
                 var model = new NetworkInterfaceConfigurationModel {
                     Interface = Interface,
-                    Mode = mode.ToEnum<NetworkInterfaceMode>(),
-                    Status = status.ToEnum<NetworkInterfaceStatus>(),
+                    Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
+                    Status = (NetworkInterfaceStatus)Enum.Parse(typeof(NetworkInterfaceStatus), status),
                     StaticAddress = staticAddres,
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,

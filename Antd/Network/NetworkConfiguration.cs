@@ -389,11 +389,22 @@ namespace Antd.Network {
                 case NetworkInterfaceMode.Null:
                     return;
                 case NetworkInterfaceMode.Static:
+                    var networkdIsActive = Systemctl.IsActive("systemd-networkd");
+                    if(networkdIsActive) {
+                        Systemctl.Stop("systemd-networkd");
+                    }
+                    launcher.Launch("dhclient-killall");
+                    launcher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
+                        { "$net_if", netif }
+                    });
                     launcher.Launch("ip4-add-addr", new Dictionary<string, string> {
                         { "$net_if", netif },
                         { "$address", model.StaticAddress },
                         { "$range", model.StaticRange }
                     });
+                    if(networkdIsActive) {
+                        Systemctl.Start("systemd-networkd");
+                    }
                     break;
                 case NetworkInterfaceMode.Dynamic:
                     launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netif } });

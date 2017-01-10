@@ -1,7 +1,7 @@
 ﻿namespace Antd.Network {
-    public enum NetworkInterfaceMode : byte {
-        Null = 0,
-        Static = 1,
-        Dynamic = 2
+    public enum NetworkInterfaceMode {
+        Null,
+        Static,
+        Dynamic
     }
 }
