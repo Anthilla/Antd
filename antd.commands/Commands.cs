@@ -96,6 +96,10 @@ namespace antd.commands {
                 Arguments = new[] { "mkpasswd -m sha-512 $password" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["ssh-keyscan-getkeys"] = new Command {
+                Arguments = new[] { "ssh-keyscan -H $ip >> ~/.ssh/known_hosts" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Bond    ]
@@ -842,6 +846,7 @@ namespace antd.commands {
                 Function = (x, y) => BashTool.Execute(x, false).SplitBash()
             };
             #endregion
+
             return dict;
         }
     }

@@ -80,7 +80,7 @@ namespace Antd {
                         _fsw.Changed += RsyncChanged;
                         _fsw.Created += RsyncChanged;
                         _fsw.Deleted += RsyncChanged;
-                        _fsw.Renamed += RsyncRenamed;
+                        //_fsw.Renamed += RsyncRenamed;
                     }
                     _fsw.EnableRaisingEvents = true;
                 }
@@ -99,23 +99,26 @@ namespace Antd {
         private void RsyncChanged(object source, FileSystemEventArgs e) {
             ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
             var files = _directoriesModel.Where(_ => _.Source == e.FullPath).ToList();
+            var launcher = new CommandLauncher();
             if(!files.Any()) {
+                ConsoleLogger.Log($"[watcher] applying {e.FullPath} change");
                 var parent = Path.GetDirectoryName(e.FullPath);
                 var dirs = _directoriesModel.Where(_ => _.Source == parent).ToList();
                 if(!dirs.Any()) {
+                    ConsoleLogger.Log("[watcher] nothing in db");
                     return;
                 }
                 foreach(var dir in dirs) {
                     if(dir.Type == "directory") {
                         var src = dir.Source.EndsWith("/") ? dir.Source : dir.Source + "/";
                         var dst = dir.Destination.EndsWith("/") ? dir.Destination : dir.Destination + "/";
-                        var launcher = new CommandLauncher();
+                        ConsoleLogger.Log($"[watcher] rsync, src {src}; dst {dst};");
                         launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
                     }
                     if(dir.Type == "file") {
                         var src = dir.Source.EndsWith("/") ? dir.Source.TrimEnd('/') : dir.Source;
                         var dst = dir.Destination.EndsWith("/") ? dir.Destination.TrimEnd('/') : dir.Destination;
-                        var launcher = new CommandLauncher();
+                        ConsoleLogger.Log($"[watcher] rsync, src {src}; dst {dst};");
                         launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
                     }
                 }
@@ -124,57 +127,57 @@ namespace Antd {
                 if(file.Type == "directory") {
                     var src = file.Source.EndsWith("/") ? file.Source : file.Source + "/";
                     var dst = file.Destination.EndsWith("/") ? file.Destination : file.Destination + "/";
-                    var launcher = new CommandLauncher();
+                    ConsoleLogger.Log($"[watcher] rsync, src {src}; dst {dst};");
                     launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
                 }
                 if(file.Type == "file") {
                     var src = file.Source.EndsWith("/") ? file.Source.TrimEnd('/') : file.Source;
                     var dst = file.Destination.EndsWith("/") ? file.Destination.TrimEnd('/') : file.Destination;
-                    var launcher = new CommandLauncher();
+                    ConsoleLogger.Log($"[watcher] rsync, src {src}; dst {dst};");
                     launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
                 }
             }
         }
 
-        private void RsyncRenamed(object source, RenamedEventArgs e) {
-            ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
-            var files = _directoriesModel.Where(_ => _.Source == e.FullPath).ToList();
-            if(!files.Any()) {
-                var parent = Path.GetDirectoryName(e.FullPath);
-                var dirs = _directoriesModel.Where(_ => _.Source == parent).ToList();
-                if(!dirs.Any()) {
-                    return;
-                }
-                foreach(var dir in dirs) {
-                    if(dir.Type == "directory") {
-                        var src = dir.Source.EndsWith("/") ? dir.Source : dir.Source + "/";
-                        var dst = dir.Destination.EndsWith("/") ? dir.Destination : dir.Destination + "/";
-                        var launcher = new CommandLauncher();
-                        launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
-                    }
-                    if(dir.Type == "file") {
-                        var src = dir.Source.EndsWith("/") ? dir.Source.TrimEnd('/') : dir.Source;
-                        var dst = dir.Destination.EndsWith("/") ? dir.Destination.TrimEnd('/') : dir.Destination;
-                        var launcher = new CommandLauncher();
-                        launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
-                    }
-                }
-            }
-            foreach(var file in files) {
-                if(file.Type == "directory") {
-                    var src = file.Source.EndsWith("/") ? file.Source : file.Source + "/";
-                    var dst = file.Destination.EndsWith("/") ? file.Destination : file.Destination + "/";
-                    var launcher = new CommandLauncher();
-                    launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
-                }
-                if(file.Type == "file") {
-                    var src = file.Source.EndsWith("/") ? file.Source.TrimEnd('/') : file.Source;
-                    var dst = file.Destination.EndsWith("/") ? file.Destination.TrimEnd('/') : file.Destination;
-                    var launcher = new CommandLauncher();
-                    launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
-                }
-            }
-        }
+        //private void RsyncRenamed(object source, RenamedEventArgs e) {
+        //    ConsoleLogger.Log($"[watcher] change at {e.FullPath}");
+        //    var files = _directoriesModel.Where(_ => _.Source == e.FullPath).ToList();
+        //    if(!files.Any()) {
+        //        var parent = Path.GetDirectoryName(e.FullPath);
+        //        var dirs = _directoriesModel.Where(_ => _.Source == parent).ToList();
+        //        if(!dirs.Any()) {
+        //            return;
+        //        }
+        //        foreach(var dir in dirs) {
+        //            if(dir.Type == "directory") {
+        //                var src = dir.Source.EndsWith("/") ? dir.Source : dir.Source + "/";
+        //                var dst = dir.Destination.EndsWith("/") ? dir.Destination : dir.Destination + "/";
+        //                var launcher = new CommandLauncher();
+        //                launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
+        //            }
+        //            if(dir.Type == "file") {
+        //                var src = dir.Source.EndsWith("/") ? dir.Source.TrimEnd('/') : dir.Source;
+        //                var dst = dir.Destination.EndsWith("/") ? dir.Destination.TrimEnd('/') : dir.Destination;
+        //                var launcher = new CommandLauncher();
+        //                launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
+        //            }
+        //        }
+        //    }
+        //    foreach(var file in files) {
+        //        if(file.Type == "directory") {
+        //            var src = file.Source.EndsWith("/") ? file.Source : file.Source + "/";
+        //            var dst = file.Destination.EndsWith("/") ? file.Destination : file.Destination + "/";
+        //            var launcher = new CommandLauncher();
+        //            launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
+        //        }
+        //        if(file.Type == "file") {
+        //            var src = file.Source.EndsWith("/") ? file.Source.TrimEnd('/') : file.Source;
+        //            var dst = file.Destination.EndsWith("/") ? file.Destination.TrimEnd('/') : file.Destination;
+        //            var launcher = new CommandLauncher();
+        //            launcher.Launch("rsync", new Dictionary<string, string> { { "$source", src }, { "$destination", dst } });
+        //        }
+        //    }
+        //}
         #endregion
 
         #region [    Sync Machine Service    ]

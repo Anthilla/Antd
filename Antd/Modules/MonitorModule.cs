@@ -5,6 +5,7 @@ using antdlib.common;
 using Antd.Info;
 using Antd.Storage;
 using Nancy;
+using RestSharp;
 
 //-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
