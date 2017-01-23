@@ -1,3 +1,11 @@
+$("#NewZPOOL").on("click", function () {
+    $("#ZPOOLDashboard").toggle();
+});
+
+$("#NewZFS").on("click", function () {
+    $("#ZFSDashboard").toggle();
+});
+
 $("i.show-units-mgmt").on("click", function () {
     var g = $(this).attr("data-guid");
     $('tr.Mount-units[data-guid="' + g + '"]').toggle();
@@ -23,34 +31,6 @@ $('i[data-role="remove-this-unit"]').on("click", function () {
         },
         success: function () {
             location.reload(true);
-        }
-    });
-    _requests.push(aj);
-});
-
-$('[data-role="CreatePartitionTable"]').on("click", function () {
-    var d = $(this).attr("data-name");
-    var t = $(this).parents("td").find("select > option:selected").val();
-    var aj = $.ajax({
-        url: "/parted/mklabel",
-        type: "POST",
-        data: {
-            Disk: d,
-            Type: t,
-            Confirm: "Yes"
-        },
-        success: function () {
-            var aj = $.ajax({
-                url: "/parted/print",
-                type: "POST",
-                data: {
-                    Disk: d
-                },
-                success: function (data) {
-                    $('[data-partitiontable="' + g + '"]').text(data);
-                }
-            });
-            _requests.push(aj);
         }
     });
     _requests.push(aj);

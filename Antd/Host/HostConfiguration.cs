@@ -402,7 +402,7 @@ namespace Antd.Host {
         public void ApplyNsResolv() {
             Host = LoadHostModel();
             if(!File.Exists("/etc/resolv.conf")) {
-                return;
+                File.WriteAllText("/etc/resolv.conf", "");
             }
             try {
                 var existing = File.ReadAllLines("/etc/resolv.conf");

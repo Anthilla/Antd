@@ -31,29 +31,25 @@
             <tr data-row="@Current.Guid" style="display: none;">
                 <td colspan="10" style="padding-left: 50px;">
                     <div data-role="CmdContainer" style="display: inline-block; margin-left: 20px;">
-                        <input type="hidden" data="$disk_device" value="@Current.Name" />
+                        <input type="hidden" data="$disk_device" value="@Current.Name" style="width: 60%;" />
                         <span data="CmdGet" data-role="CmdResult" data-name="fdisk-print" data-par="$disk_device" style="border-width: 0; max-width: 60%; min-width: 60%; height: auto;"></span>
                     </div>
-                    <div>
-                        <br>
-                        <p>Partition Table</p>
-                        <br>
-                        <p data-partitiontable="@Current.Guid">Create Partition Table</p>
-                        <p style="display: inline-block; margin: auto 15px;">of type</p>
-                        <select data="$zpool_label">
-                            <option disabled="disabled" selected="selected">Select a partition type</option>
-                            <option value="bsd">bsd</option>
-                            <option value="loop">loop</option>
-                            <option value="gpt">gpt</option>
-                            <option value="mac">mac</option>
-                            <option value="msdos">msdos</option>
-                            <option value="pc98">pc98</option>
-                            <option value="sun">sun</option>
-                        </select>
-                        <br />
-                        <input type="hidden" data="$disk_device" value="@Current.Name" />
-                        <input type="button" data-role="CmdLaunch" data-name="zpool-mklabel" data-par="$disk_device,$zpool_label" value="Create" class="float-right" />
-                    </div>
+                    <br>
+                    <p>Partition Table</p>
+                    <br>
+                    <p data-partitiontable="@Current.Guid"></p>
+                    <button data-role="CreatePartitionTable" data-name="@Current.Name" data-button="@Current.Guid" style="width: 250px;" class="bg-anthilla-green upcase">Create Partition Table</button>
+                    <p style="display: inline-block; margin: auto 15px;">of type</p>
+                    <select>
+                        <option disabled="disabled" selected="selected">Select a partition type</option>
+                        <option value="bsd">bsd</option>
+                        <option value="loop">loop</option>
+                        <option value="gpt">gpt</option>
+                        <option value="mac">mac</option>
+                        <option value="msdos">msdos</option>
+                        <option value="pc98">pc98</option>
+                        <option value="sun">sun</option>
+                    </select>
                 </td>
             </tr>
             <tr data-row="@Current.Guid" style="display: none;">

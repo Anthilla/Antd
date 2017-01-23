@@ -510,6 +510,9 @@ namespace Antd.Modules {
                     viewModel.ZfsList = zfs.List();
                     viewModel.ZfsSnap = zfsSnap.List();
                     viewModel.ZpoolHistory = zpool.History();
+                    var disks = new Disks();
+                    viewModel.DisksList = disks.GetList().Where(_=>_.Type == "disk" && string.IsNullOrEmpty(_.Mountpoint));
+
                     return View["antd/part/page-antd-storage-zfs", viewModel];
                 }
                 catch(Exception ex) {

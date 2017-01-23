@@ -805,7 +805,21 @@ namespace antd.commands {
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["zpool-create"] = new Command {
-                Arguments = new[] { "zpool create -f -o altroot=$pool_altroot -o ashift=12 -O casesensitivity=insensitive -O normalization=formD $pool_name $pool_type $disk_byid" },
+                Arguments = new[] { "zpool create -f " +
+                                        "-o altroot=$pool_altroot " +
+                                        "-o ashift=12 " +
+                                        "-O casesensitivity=insensitive " +
+                                        "-O normalization=formD " +
+                                        "$pool_name $pool_type $disk" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["zpool-create-2"] = new Command {
+                Arguments = new[] { "zpool create -f " +
+                                        "-o altroot=$pool_altroot " +
+                                        "-o ashift=12 " +
+                                        "-O casesensitivity=insensitive " +
+                                        "-O normalization=formD " +
+                                        "$pool_name $disk" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["zpool-create-simple"] = new Command {
@@ -814,16 +828,44 @@ namespace antd.commands {
             };
             dict["zfs-create"] = new Command {
                 Arguments = new[] {
-                    "zfs create -o compression=lz4 -o atime=off $pool_name/$dataset_name",
-                    "zfs set xattr=on $pool_name/$dataset_name",
-                    "zfs set acltype=posixacl $pool_name/$dataset_name",
-                    "zfs set aclinherit=passthrough-x $pool_name/$dataset_name",
-                    "zfs set mountpoint=/$pool_altroot/$pool_name/$dataset_name $pool_name/$dataset_name",
-                    "zpool add $pool_name log $disk_log",
-                    "zpool add $pool_name cache $disk_cache",
-                    "zpool set cachefile=/etc/zfs/zpool.cache $pool_name",
-                    "zpool set cachefile=/etc/zfs/zpool.cache $pool_name"
+                    "zfs create " +
+                        "-o atime=off " +
+                        "-o compression=lz4 " +
+                        "-o checksum=fletcher4 "+
+                        "-o dedup=off "+
+                        "-o xattr=on " +
+                        "-o acltype=posixacl " +
+                        "-o aclinherit=passthrough-x " +
+                        "-o mountpoint=/$pool_altroot/$pool_name/$dataset_name " +
+                        "$pool_name/$dataset_name"
                 },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["zfs-create-dedupverify"] = new Command {
+                Arguments = new[] {
+                    "zfs create " +
+                        "-o atime=off " +
+                        "-o compression=lz4 " +
+                        "-o checksum=fletcher4 "+
+                        "-o dedup=verify "+
+                        "-o xattr=on " +
+                        "-o acltype=posixacl " +
+                        "-o aclinherit=passthrough-x " +
+                        "-o mountpoint=/$pool_altroot/$pool_name/$dataset_name " +
+                        "$pool_name/$dataset_name"
+                },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["zfs-add-log-disk"] = new Command {
+                Arguments = new[] { "zpool add $pool_name log $disk_log" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["zfs-add-log-cache"] = new Command {
+                Arguments = new[] { "zpool add $pool_name cache $disk_cache" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
+            dict["zfs-set-cachefile"] = new Command {
+                Arguments = new[] { "zpool set cachefile=/etc/zfs/zpool.cache $pool_name" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
             dict["df"] = new Command {
@@ -847,6 +889,12 @@ namespace antd.commands {
             };
             #endregion
 
+            #region [    Command - Users & Groups Management    ]
+            dict["getent-passwd"] = new Command {
+                Arguments = new[] { "getent passwd" },
+                Function = (x, y) => BashTool.Execute(x, false).SplitBash()
+            };
+            #endregion
             return dict;
         }
     }

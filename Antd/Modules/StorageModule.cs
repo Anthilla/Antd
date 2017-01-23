@@ -27,7 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Linq;
+using antd.commands;
+using antdlib.common;
 using antdlib.common.Tool;
 using Antd.Database;
 using Antd.SystemdTimer;
@@ -39,6 +42,7 @@ namespace Antd.Modules {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Bash _bash = new Bash();
+        private readonly CommandLauncher _launcher = new CommandLauncher();
         private readonly Timers _timers = new Timers();
 
         public StorageModule() {
@@ -80,6 +84,38 @@ namespace Antd.Modules {
                 var yn = (string)Request.Form.Confirm;
                 var result = _bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
                 return Response.AsText(result);
+            };
+
+            Post["/zpool/create"] = x => {
+                var altroot = (string)Request.Form.Altroot;
+                var poolname = (string)Request.Form.Name;
+                var pooltype = (string)Request.Form.Type;
+                var diskid = (string)Request.Form.Id;
+                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(pooltype) || string.IsNullOrEmpty(diskid)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                ConsoleLogger.Log($"[zpool] create => altroot:{altroot} poolname:{poolname} pooltype:{pooltype} diskid:{diskid} ");
+                _launcher.Launch("zpool-create", new Dictionary<string, string> {
+                    { "$pool_altroot", altroot },
+                    { "$pool_name", poolname.Replace("/dev/", "") },
+                    { "$disk_byid", diskid }
+                });
+                return HttpStatusCode.OK;
+            };
+
+            Post["/zfs/create"] = x => {
+                var altroot = (string)Request.Form.Altroot;
+                var poolname = (string)Request.Form.Name;
+                var datasetname = (string)Request.Form.Dataset;
+                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(datasetname)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                _launcher.Launch("zfs-create", new Dictionary<string, string> {
+                    { "$pool_altroot", altroot },
+                    { "$pool_name", poolname },
+                    { "$dataset_name", datasetname }
+                });
+                return HttpStatusCode.OK;
             };
         }
     }

@@ -1,5 +1,55 @@
 ﻿<div class="border-2-anthilla-gray" style="width: 100%; min-height: 100px; margin-bottom: 15px; padding: 15px;">
-    <legend>Zpool</legend>
+    <legend>
+        Zpool
+        <i id="NewZPOOL" class="icon-plus fg-anthilla-green" data-hint="|New zpool" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+    </legend>
+
+    <form id="ZPOOLDashboard" action="/zpool/create" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; display: none; width: 100%; min-height: 120px; margin-bottom: 5px;">
+        <div class="row">
+            <div class="span2">
+                <label>Altroot</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Altroot" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Name</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Name" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Type</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Type" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Disk</label>
+            </div>
+            <div class="span8">
+                <select name="Id" style="width: 90%; height: 28px;">
+                    @Each.DisksList
+                    <option value="/dev/@Current.Name" class="fg-white bg-anthilla-gray border-anthilla-green">/dev/@Current.Name</option>
+                    @EndEach
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+            </div>
+            <div class="span8">
+                <input type="submit" value="Create" class="bg-anthilla-green fg-anthilla-gray" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
             <tr>
@@ -64,7 +114,53 @@
             @EndEach
         </tbody>
     </table>
-    <legend>Zfs</legend>
+    <legend>
+        Zfs
+        <i id="NewZFS" class="icon-plus fg-anthilla-green" data-hint="|New zfs dataset" data-hint-position="bottom" style="float: right; cursor: pointer;"></i>
+    </legend>
+
+    <form id="ZFSDashboard" action="/zfs/create" method="POST" enctype="multipart/form-data" class="border-2-anthilla-gray grid" style="padding-bottom: 10px; display: none; width: 100%; min-height: 120px; margin-bottom: 5px;">
+        <div class="row">
+            <div class="span2">
+                <label>Altroot</label>
+            </div>
+            <div class="span8">
+                <select name="Altroot" style="width: 90%; height: 28px;">
+                    @Each.ZpoolList
+                    <option value="@Current.Altroot" class="fg-white bg-anthilla-gray border-anthilla-green">@Current.Altroot</option>
+                    @EndEach
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Altroot</label>
+            </div>
+            <div class="span8">
+                <select name="Name" style="width: 90%; height: 28px;">
+                    @Each.ZpoolList
+                    <option value="@Current.Name" class="fg-white bg-anthilla-gray border-anthilla-green">@Current.Name</option>
+                    @EndEach
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <label>Name</label>
+            </div>
+            <div class="span8">
+                <input type="text" name="Dataset" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="span2">
+            </div>
+            <div class="span8">
+                <input type="submit" value="Create" class="bg-anthilla-green fg-anthilla-gray" style="width: 90%; height: 28px;" />
+            </div>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
             <tr>
@@ -98,7 +194,7 @@
             @EndEach
         </tbody>
     </table>
-    <legend>Zfs - Snapshot</legend>
+    <legend>Zfs - Snapshots</legend>
     <table class="table">
         <thead>
             <tr>
@@ -136,7 +232,8 @@
         <tbody>
             @Each.ZpoolHistory
             <tr>
-                <td style="font-size: 11px !important; font-weight: normal !important;" class="fg-white">@Current
+                <td style="font-size: 11px !important; font-weight: normal !important;" class="fg-white">
+                    @Current
                 </td>
             </tr>
             @EndEach
