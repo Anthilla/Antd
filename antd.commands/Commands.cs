@@ -100,6 +100,10 @@ namespace antd.commands {
                 Arguments = new[] { "ssh-keyscan -H $ip >> ~/.ssh/known_hosts" },
                 Function = (x, y) => BashTool.Execute(x).SplitBash()
             };
+            dict["dmidecode"] = new Command {
+                Arguments = new[] { "dmidecode" },
+                Function = (x, y) => BashTool.Execute(x).SplitBash()
+            };
             #endregion
 
             #region [    Command - Bond    ]

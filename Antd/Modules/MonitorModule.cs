@@ -5,7 +5,6 @@ using antdlib.common;
 using Antd.Info;
 using Antd.Storage;
 using Nancy;
-using RestSharp;
 
 //-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -84,6 +83,11 @@ namespace Antd.Modules {
                     ConsoleLogger.Error(ex);
                     return Response.AsText(GetResourcesHtmlDiv("Unable to obtain data"));
                 }
+            };
+
+            Get["/machineuuid"] = x => {
+                var machineUuid = Machine.MachineId.Get;
+                return machineUuid;
             };
         }
     }

@@ -204,6 +204,10 @@ namespace Antd {
                 }
                 #endregion
 
+                #region [    MachineID    ]
+                ConsoleLogger.Log($"[machineid] {Machine.MachineId.Get}");
+                #endregion
+
                 #region [    Host Configuration    ]
                 HostConfiguration.ApplyHostInfo();
                 ConsoleLogger.Log("host configured");
