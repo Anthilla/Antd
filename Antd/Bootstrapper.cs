@@ -60,6 +60,7 @@ namespace Antd {
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
+            base.RequestStartup(requestContainer, pipelines, context);
             var formsAuthConfiguration = new FormsAuthenticationConfiguration {
                 RedirectUrl = "/login",
                 UserMapper = requestContainer.Resolve<IUserMapper>()

@@ -6,7 +6,7 @@ using AntdUi.Database;
 namespace AntdUi.TmplTextFile {
     public class TextFileRepository {
 
-        private readonly string _templateDirectory = $"{Parameter.DirectoryCfg}/text_file";
+        private readonly string _templateDirectory = $"{antdlib.common.Parameter.DirectoryCfg}/text_file";
         private readonly Actions<TextFileModel> _repository;
 
         public TextFileRepository() {

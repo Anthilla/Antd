@@ -1,7 +1,8 @@
-﻿using Nancy;
+﻿using AntdUi.AppConfig;
+using Nancy;
 using Newtonsoft.Json;
 
-namespace AntdUi.AppConfig {
+namespace Antd.AppConfig {
 
     public class AppConfigurationModule : NancyModule {
 

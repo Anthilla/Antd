@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{75E4104E-7A15-474D-9067-6D23EFB6ABDE}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AntdUi</RootNamespace>
     <AssemblyName>AntdUi</AssemblyName>
@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\framework\antdui\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -103,14 +103,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiConsumer.cs" />
     <Compile Include="AppConfig\AppConfiguration.cs" />
-    <Compile Include="AppConfig\AppConfigurationModel.cs" />
     <Compile Include="AppConfig\AppConfigurationModule.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
+    <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Configuration.cs" />
     <Compile Include="Enum\Gender.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\SelectizeCacheModule.cs" />
     <Compile Include="Models\SelectizeCacheRepository.cs" />
@@ -123,28 +122,15 @@
     <Compile Include="Modules\LanguageModule.cs" />
     <Compile Include="Modules\AppModule.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="NancyExtensions.cs" />
-    <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TmplMaiRecap\MaiRecapModel.cs" />
-    <Compile Include="TmplMaiRecap\MaiRecapModule.cs" />
-    <Compile Include="TmplMaiRecap\MaiRecapRepository.cs" />
-    <Compile Include="TmplRequestMaterialCleaning\RequestMaterialCleaningModel.cs" />
-    <Compile Include="TmplRequestMaterialCleaning\RequestMaterialCleaningModule.cs" />
-    <Compile Include="TmplRequestMaterialCleaning\RequestMaterialCleaningRepository.cs" />
-    <Compile Include="TmplRequestMaterialSanitary\RequestMaterialSanitaryModel.cs" />
-    <Compile Include="TmplRequestMaterialSanitary\RequestMaterialSanitaryModule.cs" />
-    <Compile Include="TmplRequestMaterialSanitary\RequestMaterialSanitaryRepository.cs" />
     <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericModel.cs" />
     <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericModule.cs" />
     <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericRepository.cs" />
-    <Compile Include="TmplRequestMedicine\RequestMedicineModel.cs" />
-    <Compile Include="TmplRequestMedicine\RequestMedicineModule.cs" />
-    <Compile Include="TmplRequestMedicine\RequestMedicineRepository.cs" />
     <Compile Include="TmplTextFile\RequestWarehouseModel.cs" />
     <Compile Include="TmplTextFile\RequestWarehouseModule.cs" />
     <Compile Include="TmplTextFile\RequestWarehouseRepository.cs" />
-    <Compile Include="Users\ManageMaster.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-material.css" />
@@ -196,13 +182,7 @@
     <Content Include="Scripts\controller-config.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\controller-request_material_sanitary.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\controller-request_material_cleaning.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\controller-mai_recap.js">
+    <Content Include="Scripts\controller-login.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Style\selectize.bootstrap2.css">
@@ -365,9 +345,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\metro.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\controller-request_medicine.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Style\select2.css">
@@ -547,9 +524,6 @@
     <Content Include="Style\trumbowyg.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="plugin.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\config\content.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -562,43 +536,16 @@
     <Content Include="Views\Pages\home\dashboard.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\mai_recap\print.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_material_sanitary\content.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_material_sanitary\dashboard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_material_cleaning\content.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_material_cleaning\dashboard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\request_material_generic\content.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\request_material_generic\dashboard.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\mai_recap\content.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\mai_recap\dashboard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\text_file\content.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\text_file\dashboard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_medicine\content.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\request_medicine\dashboard.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
@@ -823,6 +770,10 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
+      <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>
+      <Name>antdlib.models</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
       <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>

@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\framework\antd\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -95,6 +95,9 @@
     <Compile Include="Acl\AclAuto.cs" />
     <Compile Include="Acl\AclConfiguration.cs" />
     <Compile Include="Acl\AclConfigurationModel.cs" />
+    <Compile Include="AppConfig\AppConfiguration.cs" />
+    <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="Users\UserConfigurationModule.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="SyslogNg\SyslogNgConfigurationModel.cs" />
     <Compile Include="Systemctl.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
+    <Compile Include="AppConfig\AppConfigurationModule.cs" />
     <Compile Include="Vpn\VpnConfiguration.cs" />
     <Compile Include="Vpn\VpnConfigurationModel.cs" />
     <Compile Include="Journald\JournaldConfiguration.cs" />
@@ -190,7 +194,6 @@
     <Compile Include="Modules\ServiceDhcpdModule.cs" />
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
-    <Compile Include="Modules\UsersModule.cs" />
     <Compile Include="Modules\WebsocketModule.cs" />
     <Compile Include="AntdApplication.cs" />
     <Compile Include="Helpers\DirectoryModel.cs" />
@@ -220,7 +223,6 @@
     <Compile Include="Users\ManageMaster.cs" />
     <Compile Include="Users\UserConfiguration.cs" />
     <Compile Include="Users\SystemUser.cs" />
-    <Compile Include="Users\UserConfigurationModel.cs" />
     <Compile Include="Virsh\Virsh.cs" />
     <Compile Include="Websocket\Client\ChatWebSocketConnection.cs" />
     <Compile Include="Websocket\Client\CommandWebSocketConnection.cs" />
@@ -2968,6 +2970,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ShellScript\scripts\previous\" />
+    <Folder Include="Ui\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\antd.commands\antd.commands.csproj">
@@ -2977,6 +2980,10 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
+      <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>
+      <Name>antdlib.models</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
       <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>

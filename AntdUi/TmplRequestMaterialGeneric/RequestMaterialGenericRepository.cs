@@ -6,7 +6,7 @@ using AntdUi.Database;
 namespace AntdUi.TmplRequestMaterialGeneric {
     public class RequestMaterialGenericRepository {
 
-        private readonly string _templateDirectory = $"{Parameter.DirectoryCfg}/request_material_generic";
+        private readonly string _templateDirectory = $"{antdlib.common.Parameter.DirectoryCfg}/request_material_generic";
         private readonly Actions<RequestMaterialGenericModel> _repository;
 
         public RequestMaterialGenericRepository() {

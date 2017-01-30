@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignoreth
 		ignorethis_misc\samba-user.cnf = ignorethis_misc\samba-user.cnf
 		ignorethis_misc\script_domainController_ca.sh = ignorethis_misc\script_domainController_ca.sh
 		ignorethis_misc\setCaStructure.sh = ignorethis_misc\setCaStructure.sh
+		ignorethis_misc\todo-ui.txt = ignorethis_misc\todo-ui.txt
 		ignorethis_misc\TODO.txt = ignorethis_misc\TODO.txt
 	EndProjectSection
 EndProject
@@ -34,6 +35,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antd.commands", "antd.commands\antd.commands.csproj", "{3E77920A-6201-48D8-A9CE-8D01A477E0F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntdUi", "AntdUi\AntdUi.csproj", "{75E4104E-7A15-474D-9067-6D23EFB6ABDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.models", "antdlib.models\antdlib.models.csproj", "{AD9E49CE-4817-4F27-B0B2-94A395FF4229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +81,12 @@ Global
 		{75E4104E-7A15-474D-9067-6D23EFB6ABDE}.Library|Any CPU.Build.0 = Library|Any CPU
 		{75E4104E-7A15-474D-9067-6D23EFB6ABDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75E4104E-7A15-474D-9067-6D23EFB6ABDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Library|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Library|Any CPU.Build.0 = Release|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,21 +7,39 @@ using Nancy.Diagnostics;
 using Nancy.TinyIoc;
 
 namespace AntdUi {
+
+    public class CustomRootPathProvider : IRootPathProvider {
+        public string GetRootPath() {
+            return "/framework";
+        }
+    }
+
     public class Bootstrapper : DefaultNancyBootstrapper {
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = "Nancy" };
 
+        protected override IRootPathProvider RootPathProvider => new CustomRootPathProvider();
+
         protected override void ConfigureConventions(NancyConventions conv) {
             base.ConfigureConventions(conv);
             conv.StaticContentsConventions.Clear();
-            var staticContentPrefix = "anthilladoc/";
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "Style", @"/Style"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "Scripts", @"/Scripts"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "Fonts", @"/Fonts"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "partials", @"/Views/Partials/"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "pages", @"/Views/Pages"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "images", @"/Images"));
-            conv.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(staticContentPrefix + "file", @"/Content"));
+            conv.StaticContentsConventions.AddDirectory("Style", @"/antdui/Style");
+            conv.StaticContentsConventions.AddDirectory("Scripts", @"/antdui/Scripts");
+            conv.StaticContentsConventions.AddDirectory("Fonts", @"/antdui/Fonts");
+            conv.StaticContentsConventions.AddDirectory("partials", @"/antdui/Views/Partials");
+            conv.StaticContentsConventions.AddDirectory("pages", @"/antdui/Views/Pages");
+            conv.StaticContentsConventions.AddDirectory("images", @"/antdui/Images");
+            conv.StaticContentsConventions.AddDirectory("file", @"/antdui/Content");
+
+            conv.ViewLocationConventions.Add((viewName, model, context) => {
+                var path = string.Concat("antdui", "/Views/", viewName);
+                return path;
+            });
+
+            conv.ViewLocationConventions.Add((viewName, model, context) => {
+                var path = string.Concat("/framework/antdui", "/Views/", viewName);
+                return path;
+            });
         }
 
 
@@ -32,15 +50,16 @@ namespace AntdUi {
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines) {
             base.ApplicationStartup(container, pipelines);
-            pipelines.RegisterCompressionCheck();
+            StaticConfiguration.EnableRequestTracing = true;
+            StaticConfiguration.DisableErrorTraces = false;
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
-            var formsAuthConfiguration = new FormsAuthenticationConfiguration {
-                RedirectUrl = "/login",
-                UserMapper = requestContainer.Resolve<IUserMapper>()
-            };
-            FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
+            base.RequestStartup(requestContainer, pipelines, context);
+            FormsAuthentication.Enable(pipelines, new FormsAuthenticationConfiguration {
+                RedirectUrl = "~/login",
+                UserMapper = requestContainer.Resolve<IUserMapper>(),
+            });
         }
     }
 }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3E77920A-6201-48D8-A9CE-8D01A477E0F9}</ProjectGuid>
+    <ProjectGuid>{AD9E49CE-4817-4F27-B0B2-94A395FF4229}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>antd.commands</RootNamespace>
-    <AssemblyName>antd.commands</AssemblyName>
+    <RootNamespace>antdlib.models</RootNamespace>
+    <AssemblyName>antdlib.models</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -33,24 +33,14 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandLauncher.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="Commands.cs" />
-    <Compile Include="ICommand.cs" />
+    <Compile Include="AppConfigurationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
-      <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
-      <Name>antdlib.common</Name>
-    </ProjectReference>
+    <Compile Include="UserConfigurationModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

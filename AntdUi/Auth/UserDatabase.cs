@@ -31,31 +31,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
-using AntdUi.Users;
+using antdlib.models;
+using AntdUi.AppConfig;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
 
 namespace AntdUi.Auth {
-
-    public class UserIdentity : IUserIdentity {
-        public Guid UserGuid { get; set; }
-        public string UserName { get; set; }
-        public IEnumerable<string> Claims { get; set; }
-    }
-
     public class UserDatabase : IUserMapper {
+
+        private static readonly ApiConsumer Api = new ApiConsumer();
+        private static readonly AppConfiguration AppConfiguration = new AppConfiguration();
+
         private static IEnumerable<UserIdentity> Users() {
-            //todo usa APICONSUMEr per ottenere dati
-            var manageMaster = new ManageMaster();
-            var userList = new List<UserIdentity> {
-                new UserIdentity {
-                    UserGuid = Guid.Parse("00000000-0000-0000-0000-000000000500"),
-                    UserName = manageMaster.Name,
-                    Claims = new List<string> { manageMaster.Password, "00000000-0000-0000-0000-000000000500" }
-                }
-            };
-            return userList;
+            var config = AppConfiguration.Get();
+            var users = Api.Get<List<User>>($"http://localhost:{config.AntdPort}/users").ToList();
+            return (from user in users
+                    let guid = Guid.Parse("4B640B85-1DCD-4C70-8981-2F3FD03E3013")
+                    select new UserIdentity {
+                        UserGuid = guid,
+                        UserName = user.Name,
+                        Claims = new List<string> { user.Password, guid.ToString() }
+                    }).ToList();
         }
 
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {

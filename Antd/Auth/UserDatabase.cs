@@ -37,14 +37,8 @@ using Nancy.Authentication.Forms;
 using Nancy.Security;
 
 namespace Antd.Auth {
-
-    public class UserIdentity : IUserIdentity {
-        public Guid UserGuid { get; set; }
-        public string UserName { get; set; }
-        public IEnumerable<string> Claims { get; set; }
-    }
-
     public class UserDatabase : IUserMapper {
+
         private static IEnumerable<UserIdentity> Users() {
             var manageMaster = new ManageMaster();
             var userList = new List<UserIdentity> {

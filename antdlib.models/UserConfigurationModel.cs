@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Antd.Users {
+namespace antdlib.models {
     public class UserConfigurationModel {
         public List<User> Users { get; set; } = new List<User>();
     }
