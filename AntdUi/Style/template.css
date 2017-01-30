@@ -111,3 +111,6 @@
 .font-weight-bold {
     font-weight: bold !important;
 }
+.capitalize {
+    text-transform: capitalize !important;
+}

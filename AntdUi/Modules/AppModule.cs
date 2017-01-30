@@ -4,7 +4,7 @@ using Nancy.Security;
 namespace AntdUi.Modules {
     public class AppModule : NancyModule {
         public AppModule() {
-            this.RequiresAuthentication();
+            //this.RequiresAuthentication();
 
             Get["/"] = _ => {
                 return Response.AsRedirect("/antd");

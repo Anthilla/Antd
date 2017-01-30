@@ -8,70 +8,110 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
 
     $stateProvider
-    .state("home", {
+    .state("antd", {
         cache: false,
         url: "^/",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/home/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/home/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() },
+            'content': { templateUrl: "pages/antd/antd.info.html?v=" + new Date() }
         }
     })
-    .state("config", {
+    .state("info", { cache: false, url: "^/info", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.info.html?v=" + new Date() } } })
+    .state("memory", { cache: false, url: "^/memory", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.memory.html?v=" + new Date() } } })
+    .state("cpu", { cache: false, url: "^/cpu", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.cpu.html?v=" + new Date() } } })
+    .state("svcs", { cache: false, url: "^/svcs", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.svcs.html?v=" + new Date() } } })
+    .state("mod", { cache: false, url: "^/mod", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.mod.html?v=" + new Date() } } })
+    .state("system", { cache: false, url: "^/system", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.system.html?v=" + new Date() } } })
+    .state("losetup", { cache: false, url: "^/losetup", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.losetup.html?v=" + new Date() } } })
+    .state("update", { cache: false, url: "^/update", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.update.html?v=" + new Date() } } })
+    .state("host", { cache: false, url: "^/host", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.host.html?v=" + new Date() } } })
+    .state("app", { cache: false, url: "^/app", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.app.html?v=" + new Date() } } })
+    .state("time", { cache: false, url: "^/time", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.time.html?v=" + new Date() } } })
+    .state("ns", { cache: false, url: "^/ns", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.ns.html?v=" + new Date() } } })
+    .state("bind", { cache: false, url: "^/bind", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.bind.html?v=" + new Date() } } })
+    .state("sshd", { cache: false, url: "^/sshd", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.sshd.html?v=" + new Date() } } })
+    .state("network", { cache: false, url: "^/network", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.network.html?v=" + new Date() } } })
+    .state("dhcpd", { cache: false, url: "^/dhcpd", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.dhcpd.html?v=" + new Date() } } })
+    .state("leases", { cache: false, url: "^/leases", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.leases.html?v=" + new Date() } } })
+    .state("vpn", { cache: false, url: "^/vpn", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.vpn.html?v=" + new Date() } } })
+    .state("fw", { cache: false, url: "^/fw", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.fw.html?v=" + new Date() } } })
+    .state("cron", { cache: false, url: "^/cron", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.cron.html?v=" + new Date() } } })
+    .state("storage", { cache: false, url: "^/storage", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.storage.html?v=" + new Date() } } })
+    .state("zfs", { cache: false, url: "^/zfs", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.zfs.html?v=" + new Date() } } })
+    .state("disk", { cache: false, url: "^/disk", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.disk.html?v=" + new Date() } } })
+    .state("om", { cache: false, url: "^/om", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.om.html?v=" + new Date() } } })
+    .state("overlay", { cache: false, url: "^/overlay", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.overlay.html?v=" + new Date() } } })
+    .state("acl", { cache: false, url: "^/acl", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.acl.html?v=" + new Date() } } })
+    .state("sync", { cache: false, url: "^/sync", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.sync.html?v=" + new Date() } } })
+    .state("rsync", { cache: false, url: "^/rsync", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.rsync.html?v=" + new Date() } } })
+    .state("vm", { cache: false, url: "^/vm", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.vm.html?v=" + new Date() } } })
+    .state("samba", { cache: false, url: "^/samba", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.samba.html?v=" + new Date() } } })
+    .state("users", { cache: false, url: "^/users", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/antd.users.html?v=" + new Date() } } })
+    .state("apps", {
         cache: false,
-        url: "^/config",
+        url: "^/apps",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/config/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/config/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/apps.html?v=" + new Date() },
+            'content': { templateUrl: "pages/apps/appsmgmt.html?v=" + new Date() }
         }
     })
-    .state("requestmedicine", {
+    .state("appsmgmt", { cache: false, url: "^/appsmgmt", views: { 'menu': { templateUrl: "pages/menus/apps.html?v=" + new Date() }, 'content': { templateUrl: "pages/apps/appsmgmt.html?v=" + new Date() } } })
+    .state("appsdetect", { cache: false, url: "^/appsdetect", views: { 'menu': { templateUrl: "pages/menus/apps.html?v=" + new Date() }, 'content': { templateUrl: "pages/apps/appsdetect.html?v=" + new Date() } } })
+    .state("log", {
         cache: false,
-        url: "^/requestmedicine",
+        url: "^/log",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/request_medicine/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/request_medicine/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/log.html?v=" + new Date() },
+            'content': { templateUrl: "pages/log/log.html?v=" + new Date() }
         }
     })
-    .state("requestmaterialgeneric", {
+    .state("journal", { cache: false, url: "^/journal", views: { 'menu': { templateUrl: "pages/menus/log.html?v=" + new Date() }, 'content': { templateUrl: "pages/log/journal.html?v=" + new Date() } } })
+    .state("logconfig", { cache: false, url: "^/logconfig", views: { 'menu': { templateUrl: "pages/menus/log.html?v=" + new Date() }, 'content': { templateUrl: "pages/log/logconfig.html?v=" + new Date() } } })
+    .state("report", { cache: false, url: "^/report", views: { 'menu': { templateUrl: "pages/menus/log.html?v=" + new Date() }, 'content': { templateUrl: "pages/log/report.html?v=" + new Date() } } })
+    .state("syslogng", { cache: false, url: "^/syslogng", views: { 'menu': { templateUrl: "pages/menus/log.html?v=" + new Date() }, 'content': { templateUrl: "pages/log/syslogng.html?v=" + new Date() } } })
+    .state("vnc", {
         cache: false,
-        url: "^/requestmaterialgeneric",
+        url: "^/vnc",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/request_material_generic/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/request_material_generic/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/vnc.html?v=" + new Date() },
+            'content': { templateUrl: "pages/vnc/content.html?v=" + new Date() }
         }
     })
-    .state("requestmaterialcleaning", {
+    .state("asset", {
         cache: false,
-        url: "^/requestmaterialcleaning",
+        url: "^/asset",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/request_material_cleaning/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/request_material_cleaning/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() },
+            'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() }
         }
     })
-    .state("requestmaterialsanitary", {
+    .state("discovery", { cache: false, url: "^/discovery", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() } } })
+    .state("scan", { cache: false, url: "^/scan", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/scan.html?v=" + new Date() } } })
+    .state("assetsync", { cache: false, url: "^/assetsync", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/assetsync.html?v=" + new Date() } } })
+    .state("assetconfig", { cache: false, url: "^/assetconfig", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/assetconfig.html?v=" + new Date() } } })
+    .state("ca", {
         cache: false,
-        url: "^/requestmaterialsanitary",
+        url: "^/ca",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/request_material_sanitary/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/request_material_sanitary/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/ca.html?v=" + new Date() },
+            'content': { templateUrl: "pages/ca/ca.html?v=" + new Date() }
         }
     })
-    .state("textfile", {
+    .state("cert", { cache: false, url: "^/cert", views: { 'menu': { templateUrl: "pages/menus/ca.html?v=" + new Date() }, 'content': { templateUrl: "pages/ca/cert.html?v=" + new Date() } } })
+    .state("dc", { cache: false, url: "^/dc", views: { 'menu': { templateUrl: "pages/menus/ca.html?v=" + new Date() }, 'content': { templateUrl: "pages/ca/dc.html?v=" + new Date() } } })
+    .state("dcusers", { cache: false, url: "^/dcusers", views: { 'menu': { templateUrl: "pages/menus/ca.html?v=" + new Date() }, 'content': { templateUrl: "pages/ca/dcusers.html?v=" + new Date() } } })
+    .state("boot", {
         cache: false,
-        url: "^/textfile",
+        url: "^/boot",
         views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/text_file/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/text_file/content.html?v=" + new Date() }
+            'menu': { templateUrl: "pages/menus/boot.html?v=" + new Date() },
+            'content': { templateUrl: "pages/boot/bootcmd.html?v=" + new Date() }
         }
     })
-    .state("mairecap", {
-        cache: false,
-        url: "^/mairecap",
-        views: {
-            'dashboard': { templateUrl: "anthilladoc/pages/mai_recap/dashboard.html?v=" + new Date() },
-            'content': { templateUrl: "anthilladoc/pages/mai_recap/content.html?v=" + new Date() }
-        }
-    })
+    .state("bootcmd", { cache: false, url: "^/bootcmd", views: { 'menu': { templateUrl: "pages/menus/boot.html?v=" + new Date() }, 'content': { templateUrl: "pages/boot/bootcmd.html?v=" + new Date() } } })
+    .state("bootmod", { cache: false, url: "^/bootmod", views: { 'menu': { templateUrl: "pages/menus/boot.html?v=" + new Date() }, 'content': { templateUrl: "pages/boot/bootmod.html?v=" + new Date() } } })
+    .state("bootsvc", { cache: false, url: "^/bootsvc", views: { 'menu': { templateUrl: "pages/menus/boot.html?v=" + new Date() }, 'content': { templateUrl: "pages/boot/bootsvc.html?v=" + new Date() } } })
+    .state("bootparam", { cache: false, url: "^/bootparam", views: { 'menu': { templateUrl: "pages/menus/boot.html?v=" + new Date() }, 'content': { templateUrl: "pages/boot/bootparam.html?v=" + new Date() } } })
     ;
 });
 
@@ -89,7 +129,6 @@ app.filter("orderByOnce", function (item) {
         return out;
     };
 });
-
 
 app.controller("LanguageSwitchController", ["$scope", "$rootScope", "$translate",
   function ($scope, $rootScope, $translate) {

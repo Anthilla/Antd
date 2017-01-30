@@ -17,15 +17,15 @@
     <div>
         @Partial['Partials/navbar.html'];
     </div>
-    <div class="padding-left20">
+    <div class="padding-left20 padding-right20">
         @Partial['Partials/toolbar.html'];
     </div>
     <hr class="no-margin bg-anthilla-green" style="height: 5px;">
     <!--Page Content-->
-    <div ui-view="dashboard" class="padding-left20 padding-right20 padding-bottom20"></div>
-    <hr class="no-margin bg-anthilla-gray-3" style="height: 4px;">
-    <hr class="no-margin" style="background-color: #6B6B6B; height: 2px;">
-    <div ui-view="content" class="padding-left20 padding-right20 padding-top20"></div>
+    <div>
+        <div ui-view="menu" class="padding20 bg-anthilla-gray-2 place-left width25pc bd-anthilla-gray-2" style="border: 2px solid;"></div>
+        <div ui-view="content" class="padding20 place-left width75pc bd-anthilla-gray-2" style="border: 2px solid;"></div>
+    </div>
     <!--Scripts-->
     <script src="/Scripts/jquery-3.1.1.min.js"></script>
     <script src="/Scripts/jquery-ui-1.12.1.min.js"></script>

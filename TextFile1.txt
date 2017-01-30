@@ -1,0 +1,4 @@
+touch bootcmd.html
+touch bootmod.html
+touch bootsvc.html
+touch bootparam.html
