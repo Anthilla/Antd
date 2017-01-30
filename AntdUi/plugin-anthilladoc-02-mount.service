@@ -1,0 +1,10 @@
+[Unit]
+Description=External Volume Unit, Plugin: AnthillaDoc Mount Service
+
+[Service]
+ExecStart=/bin/mount /mnt/cdrom/Apps/Anthilla_AnthillaDoc/active-version /framework/plugin/anthilladoc
+SuccessExitStatus=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=app.target

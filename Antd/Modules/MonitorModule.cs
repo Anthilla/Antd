@@ -51,6 +51,7 @@ namespace Antd.Modules {
             return p <= 100 ? p : 0;
         }
 
+
         public MonitorModule() {
 
             Get["/monitor/resources/html"] = x => {

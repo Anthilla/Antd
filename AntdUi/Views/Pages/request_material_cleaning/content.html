@@ -1,0 +1,158 @@
+﻿<div ng-controller="RequestMaterialCleaningControllerContent">
+    <div class="input-control text width50pc fg-white">
+        <span class="mif-search prepend-icon fg-anthilla-green"></span>
+        <input ng-model="query" type="text" placeholder="{{ 'SEARCH' | translate }}" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+    </div>
+    <!--WIP-->
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'TODO_REQUESTS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="file in files | orderBy: '-Date' | filter : { Status: -1} : true" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr ng-click="ExpandRows(file.Guid)" data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">{{ 'WARD' | translate }}:&nbsp;{{file.Ward}}</p>
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3 fg-anthilla-green">
+                    <div ng-repeat="material in file.Materials">
+                        <div class="grid condensed demo-grid" ng-init="material.Status=false;material.Note=ok;">
+                            <div class="row cells7">
+                                <div class="cell padding-left20">
+                                    <h5 class="uppercase fg-anthilla-green"># {{ GetElementPosition(file.Materials, material) }}</h5>
+                                </div>
+                                <div class="cell colspan2 padding-right20">
+                                    <selectize ng-model="material.MaterialName" config="MaterialNameConfig" options="MaterialNameOptions"></selectize>
+                                </div>
+                                <div class="cell colspan2 padding-right20" style="margin-top: -4px;">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input placeholder="{{ 'QTY' | translate }}" type="number" ng-model="material.MaterialQty" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </div>
+                                <div class="cell colspan2 padding-right20" style="margin-top: -4px;">
+                                    <div class="input-control text width100pc fg-white">
+                                        <input placeholder="{{ 'FORMAT' | translate }}" type="text" ng-model="material.MaterialFormat" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3">
+                    <button ng-click="Increase(file)" class="button bg-anthilla-blue bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus"></span>&nbsp;{{ 'ADD' | translate }}&nbsp;{{ 'MATERIAL' | translate }}</button>
+                    <button ng-click="SaveFile(file)" ng-hide="HideIfMinor(file.Materials.length, 1)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SAVE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="SubmitFile(file)" ng-hide="HideIfMinor(file.Materials.length, 1)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SUBMIT' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="DeleteFile(file)" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;{{ 'DELETE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <!--SUBMITTED-->
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width5pc">{{ 'STATUS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'NEW_REQUESTS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="file in files | orderBy: '-Date' | filter : greaterThan('Status', -1) | filter : smallerThan('Status', 6) | filter:query" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr ng-click="ExpandRows(file.Guid)" data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">{{GetStatusString(file.Status) | translate }}</td>
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">{{ 'REQUEST_FROM' | translate }}&nbsp;{{ 'WARD' | translate }}:&nbsp;{{file.Ward}}</p>
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3"></td>
+                <td class="bd-anthilla-gray-3 fg-anthilla-green">
+                    <div ng-repeat="material in file.Materials">
+                        <div class="grid condensed demo-grid">
+                            <div class="row cells5">
+                                <div class="cell padding-left20">
+                                    <h5 class="uppercase fg-white"># {{ GetElementPosition(file.Materials, material) }}</h5>
+                                </div>
+                                <div class="cell colspan2 padding-right20">
+                                    <p class="place-left padding-right20 fg-white">{{material.MaterialName}}&nbsp;{{material.MaterialFormat}}&nbsp;-&nbsp;{{material.MaterialQty}}</p>
+                                </div>
+                                <div class="cell padding-right20">
+                                    <div ng-switch="material.Status">
+                                        <div ng-switch-when="true">
+                                            <md-switch class="place-left padding-right20" ng-model="material.Status" aria-label="Status">
+                                                <input type="checkbox" checked="{{material.Status}}" class="margin10" />
+                                            </md-switch>
+                                        </div>
+                                        <div ng-switch-when="false">
+                                            <md-switch class="place-left padding-right20" ng-model="material.Status" aria-label="Status">
+                                                <input type="checkbox" class="margin10" />
+                                            </md-switch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3"></td>
+                <td class="bd-anthilla-gray-3">
+                    <button ng-click="RejectFile(file)" class="button bg-yellow bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-keyboard-return"></span>&nbsp;{{ 'REJECT' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="SaveFile(file)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SAVE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="CompleteTask(file)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'ARCHIVE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+
+                    <button ng-click="DeleteFile(file)" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;{{ 'DELETE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <!--ARCHIVE-->
+    <div class="width40pc" style="line-height: 40px;">
+        <h4 class="place-left fg-white padding-right20">{{ 'SHOW_COMPLETED' | translate}}</h4>
+        <label class="switch plage-right" id="ShowSwitch">
+            <input type="checkbox" ng-model="ShowModel" ng-change="Show('#ShowSwitch')">
+            <span class="check"></span>
+        </label>
+    </div>
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width5pc">{{ 'STATUS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'REQUESTS_ARCHIVE' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-hide="hide" ng-repeat="file in files | orderBy: '-Date' | filter : { Status: 6 } : true | filter : greaterThan('Status', 0) | filter:query" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">{{ GetStatusString(file.Status) | translate }}</td>
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">{{ 'REQUEST_FROM' | translate }}&nbsp;{{ 'WARD' | translate }}:&nbsp;{{file.Ward}}</p>
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

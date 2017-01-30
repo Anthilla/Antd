@@ -1,0 +1,54 @@
+﻿<ul class="breadcrumbs dark bg-anthilla-gray-1">
+    <li>
+        <p ui-sref="home" class="fg-white sub-header" style="cursor: pointer;"><span class="icon mif-files-empty"></span>&nbsp;{{ 'DOCS' | translate }}</p>
+    </li>
+    <li>
+        <p class="fg-white sub-header"><span class="icon mif-file-text"></span>&nbsp;{{ 'REQUEST_MATERIAL_CLEANING' | translate }}</p>
+    </li>
+    <li>
+        <p class="fg-anthilla-green sub-header" onclick="Toggle('#Dashboard')" style="cursor: pointer;"><span class="icon mif-plus"></span>&nbsp;{{ 'NEW' | translate }}</p>
+    </li>
+
+</ul>
+<div id="Dashboard" style="display: none;" ng-controller="RequestMaterialCleaningControllerDashboard">
+    <hr class="no-margin bg-anthilla-green" style="height: 5px; margin-bottom: 10px !important;">
+
+    <div class="grid condensed demo-grid">
+        <div class="grid condensed demo-grid">
+            <div class="row cells4">
+                <div class="cell padding-left20">
+                    <h5 class="uppercase fg-anthilla-green">{{ 'WARD' | translate }}</h5>
+                </div>
+                <div class="cell colspan3">
+                    <div class="input-control text width100pc fg-white">
+                        <selectize config="CacheConfig" ng-model="Ward" options="WardOptions"></selectize>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid condensed demo-grid" ng-hide="HideNurse">
+            <div class="row cells4">
+                <div class="cell padding-left20">
+                    <h5 class="uppercase fg-anthilla-green">{{ 'NURSE' | translate }}</h5>
+                </div>
+                <div class="cell colspan3">
+                    <div class="input-control text width100pc fg-white">
+                        <selectize config="CacheConfig" ng-model="Nurse" options="NurseOptions"></selectize>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid condensed demo-grid">
+            <div class="row cells4">
+                <div class="cell padding-left20">
+                </div>
+                <div class="cell colspan3">
+                    <button ng-click="Create('#Dashboard')" ng-hide="Hide(hide)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    <button ng-click="CloseDashboard('#Dashboard')" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;{{ 'CANCEL' | translate }}</button>
+                    <button ng-click="ResetDashboard('#Dashboard')" class="button bg-anthilla-violet bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-undo"></span>&nbsp;{{ 'RESET' | translate }}</button>
+                </div>
+            </div>
+        </div>
+        <hr class="no-margin bg-anthilla-green" style="height: 5px; margin-top: 10px !important;">
+    </div>
+</div>

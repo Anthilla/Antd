@@ -1,0 +1,490 @@
+﻿<div ng-controller="MaiRecapControllerContent">
+    <div class="input-control text width50pc fg-white">
+        <span class="mif-search prepend-icon fg-anthilla-green"></span>
+        <input ng-model="query" type="text" placeholder="{{ 'SEARCH' | translate }}" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+    </div>
+    <!--WIP-->
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'TODO_REQUESTS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="file in files | orderBy: '-Date' | filter : { Status: -1} : true" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr ng-click="ExpandRows(file.Guid)" data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">
+                        {{file.Ward}}&nbsp;{{file.Month}}&nbsp;-&nbsp;{{ 'WITH' | translate }}&nbsp;{{file.TotalBed}}&nbsp;{{ 'BED_ROOMS' | translate }}
+                    </p>
+                    <input id="{{file.Guid}}" type="hidden" value="{{file.TotalBed}}" />
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3 fg-anthilla-green no-padding" colspan="2">
+                    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-1 no-margin" style="table-layout: fixed; margin: -1px !important; ">
+                        <thead class="bd-anthilla-gray-3 uppercase">
+                            <tr>
+                                <th colspan="2" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    #
+                                    <!--<button ng-click="" class="button mini-button cycle-button fg-anthilla-green bg-anthilla-gray-1 bd-anthilla-green bg-active-anthilla-gray-3 place-right"><span class="mif-redo"></span></button>-->
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    F/M
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'GUEST' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BATH' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'NAIL_CUT' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_FEMALE_SHAVE | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'FEMALE_SHAVE' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_MALE_SHAVE | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'MALE_SHAVE' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BARBER' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'SUPPORTS' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_BED_CLEAN | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BED_CLEAN' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_NOT_MOBILIZED | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'NOT_MOBILIZED' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_REST | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'REST' | translate }}
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'NOTES' | translate }}
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'EXIT' | translate }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="guest in file.Guests" class="bd-anthilla-gray-3">
+                            <tr>
+                                <td colspan="2" class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.BedIndex" value="1" min="1" max="{{file.TotalBed}}" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control text width100pc fg-white">
+                                        <input type="text" ng-model="guest.Gender" maxlength="1" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green upcase">
+                                    </div>
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control text width100pc fg-white">
+                                        <input type="text" ng-model="guest.GuestName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalBath" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalNail" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalFemaleShave" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalMaleShave" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalBarber" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalSupport" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalBedClean" min="0" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalNotMobilized" min="0" max="1" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    <div class="input-control number width100pc fg-white">
+                                        <input type="number" ng-model="guest.TotalRest" min="0" max="1" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3">
+                                    <div class="input-control text width100pc fg-white">
+                                        <input type="text" ng-model="guest.Note" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                    </div>
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3">
+                                    <div class="input-control text width100pc" data-role="datepicker">
+                                        <input type="text" ng-model="guest.Exit" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                        <button class="button fg-anthilla-green bg-anthilla-gray-2 bd-anthilla-gray-3 bd-focus-anthilla-green"><span class="mif-calendar"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3">
+                    <div class="grid condensed demo-grid">
+                        <div class="row cells6">
+                            <div class="cell">
+                                <p>{{ 'TOT' | translate }}&nbsp;{{ 'KITCHEN_CLEAN' | translate }}</p>
+                            </div>
+                            <div class="cell colspan2 padding-right20">
+                                <div class="input-control number width100pc fg-white">
+                                    <input type="number" ng-model="file.TotalKitchenClean" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                </div>
+                            </div>
+                            <div class="cell">
+                                <p>{{ 'TOT' | translate }}&nbsp;{{ 'NIGHT_DIAPER_CHANGE' | translate }}</p>
+                            </div>
+                            <div class="cell colspan2 padding-right20">
+                                <div class="input-control number width100pc fg-white">
+                                    <input type="number" ng-model="file.TotalNightDiaperChange" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3">
+                    <button ng-click="Increase(file)" class="button bg-anthilla-blue bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus"></span>&nbsp;{{ 'ADD' | translate }}&nbsp;{{ 'GUEST' | translate }}</button>
+                    <button ng-click="SaveFile(file)" ng-hide="HideIfMinor(file.Guests.length, 1)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SAVE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="SubmitFile(file)" ng-hide="HideIfMinor(file.Guests.length, 1)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SUBMIT' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="DeleteFile(file)" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;{{ 'DELETE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <!--SUBMITTED-->
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width5pc">{{ 'STATUS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'NEW_REQUESTS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="file in files | orderBy: '-Date' | filter : { Status: 0} : true | filter:query" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr ng-click="ExpandRows(file.Guid)" data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">{{GetStatusString(file.Status) | translate }}</td>
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">
+                        {{file.Ward}}&nbsp;{{file.Month}}&nbsp;-&nbsp;{{ 'WITH' | translate }}&nbsp;{{file.TotalBed}}&nbsp;{{ 'BED_ROOMS' | translate }}
+                    </p>
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3 fg-anthilla-green no-padding" colspan="3">
+                    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-1 no-margin" style="table-layout: fixed;">
+                        <thead class="bd-anthilla-gray-3 uppercase">
+                            <tr>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    #
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    F/M
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'GUEST' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BATH' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'NAIL_CUT' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_FEMALE_SHAVE | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'FEMALE_SHAVE' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_MALE_SHAVE | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'MALE_SHAVE' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BARBER' | translate }}
+                                </th>
+                                <th class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'SUPPORTS' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_BED_CLEAN | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'BED_CLEAN' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_NOT_MOBILIZED | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'NOT_MOBILIZED' | translate }}
+                                </th>
+                                <th data-role="hint" data-hint-background="bg-anthilla-gray-2"
+                                    data-hint-color="fg-white" data-hint-mode="2"
+                                    data-hint-position="top" data-hint="{{ HINT_REST | translate }}"
+                                    class="bd-anthilla-gray-3 fg-anthilla-green no-overflow">
+                                    {{ 'REST' | translate }}
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'NOTES' | translate }}
+                                </th>
+                                <th colspan="4" class="bd-anthilla-gray-3 fg-anthilla-green">
+                                    {{ 'EXIT' | translate }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="guest in file.Guests | orderBy: 'BedIndex'" class="bd-anthilla-gray-3">
+                            <tr>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.BedIndex }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.Gender }}
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.GuestName }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalBath }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalNail }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalFemaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalMaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalBarber }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalSupport }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalBedClean }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalNotMobilized }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ guest.TotalRest }}
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3">
+                                    {{ guest.Note }}
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3">
+                                    {{ guest.Exit }}
+                                </td>
+                            </tr>
+                        <tbody>
+                        <tbody class="bg-anthilla-gray-2">
+                            <tr>
+                                <td class="bd-anthilla-gray-3 padding-right10"></td>
+                                <td class="bd-anthilla-gray-3 padding-right10"></td>
+                                <td colspan="4" class="bd-anthilla-gray-3 padding-right10">
+                                    <p class="place-right">
+                                        {{ 'TOT' | translate}}
+                                    </p>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalBath }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalNail }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalFemaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalMaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalBarber }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalSupport }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalBedClean }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalNotMobilized }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.TotalRest }}
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3"></td>
+                                <td colspan="4" class="bd-anthilla-gray-3"></td>
+                            </tr>
+                        <tbody>
+                        <tbody class="bg-anthilla-gray-2">
+                            <tr>
+                                <td class="bd-anthilla-gray-3 padding-right10"></td>
+                                <td class="bd-anthilla-gray-3 padding-right10"></td>
+                                <td colspan="4" class="bd-anthilla-gray-3 padding-right10">
+                                    <p class="place-right">
+                                        {{ 'AVG' | translate}}
+                                    </p>
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageBath }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageNail }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageFemaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageMaleShave }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageBarber }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageSupport }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageBedClean }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageNotMobilized }}
+                                </td>
+                                <td class="bd-anthilla-gray-3 padding-right10">
+                                    {{ file.AverageRest }}
+                                </td>
+                                <td colspan="4" class="bd-anthilla-gray-3"></td>
+                                <td colspan="4" class="bd-anthilla-gray-3"></td>
+                            </tr>
+                        <tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3" colspan="3">
+                    <div class="grid condensed demo-grid">
+                        <div class="row cells6">
+                            <div class="cell">
+                                <p class="fg-anthilla-green">{{ 'TOT' | translate }}&nbsp;{{ 'KITCHEN_CLEAN' | translate }}:</p>
+                            </div>
+                            <div class="cell colspan5">
+                                <p class="bold">{{ file.TotalKitchenClean }}</p>
+                            </div>
+                            <div class="cell">
+                            </div>
+                        </div>
+                        <div class="row cells6">
+                            <div class="cell">
+                                <p class="fg-anthilla-green">{{ 'TOT' | translate }}&nbsp;{{ 'NIGHT_DIAPER_CHANGE' | translate }}:</p>
+                            </div>
+                            <div class="cell colspan5">
+                                <p class="bold">{{ file.TotalNightDiaperChange }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+                <td class="bd-anthilla-gray-3" colspan="2">
+                    <button ng-click="RejectFile(file)" class="button bg-yellow bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-keyboard-return"></span>&nbsp;{{ 'REJECT' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <button ng-click="CompleteTask(file)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'ARCHIVE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                    <a href="/repo/mairecap/print/{{file.Guid}}" target="_blank" class="button bg-anthilla-blue bd-anthilla-gray-3 fg-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-printer"></span>&nbsp;{{ 'PRINT_PREVIEW' | translate }}</a>
+
+                    <button ng-click="DeleteFile(file)" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;{{ 'DELETE' | translate }}&nbsp;{{ 'DOC' | translate }}</button>
+                </td>
+                <td class="bd-anthilla-gray-3"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <!--ARCHIVE-->
+    <div class="width40pc" style="line-height: 40px;">
+        <h4 class="place-left fg-white padding-right20">{{ 'SHOW_COMPLETED' | translate}}</h4>
+        <label class="switch plage-right" id="ShowSwitch">
+            <input type="checkbox" ng-model="ShowModel" ng-change="Show('#ShowSwitch')">
+            <span class="check"></span>
+        </label>
+    </div>
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+            <tr>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width5pc">{{ 'STATUS' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'REQUESTS_ARCHIVE' | translate }}</th>
+                <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+            </tr>
+        </thead>
+        <tbody ng-hide="hide" ng-repeat="file in files | orderBy: '-Date' | filter : { Status: 6 } : true | filter : greaterThan('Status', 0) | filter:query" data-status="{{file.Status}}" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+            <tr data-file="{{file}}">
+                <td class="bd-anthilla-gray-3">{{ GetStatusString(file.Status) | translate }}</td>
+                <td class="bd-anthilla-gray-3">
+                    <p class="place-left padding-right20">{{ file.Date | date : 'yyyy-MM-dd HH:mm' }}</p>
+                    <p class="place-left padding-right20">
+                        {{file.Ward}}&nbsp;{{file.Month}}&nbsp;-&nbsp;{{ 'WITH' | translate }}&nbsp;{{file.TotalBed}}&nbsp;{{ 'BED_ROOMS' | translate }}
+                    </p>
+                </td>
+                <td class="bd-anthilla-gray-3">
+                    <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="utf-8" />
+    <title>Template</title>
+
+    <link href="/Style/metro.css" rel="stylesheet">
+    <link href="/Style/metro-icons.css" rel="stylesheet">
+    <link href="/Style/template.css" rel="stylesheet">
+    <link href="/Style/template-colors.css" rel="stylesheet">
+    <link href="/Style/template.metro.css" rel="stylesheet">
+</head>
+<body class="bg-anthilla-gray-1">
+    <form action="/login" method="POST" enctype="multipart/form-data" class="width400" style="position: absolute; left: 50%; margin-left: -200px; margin-top: 30px;">
+        <img alt="anthillasp" src="/Images/anthilla_logo_300x50_verde.png" style="margin-left: 50px;">
+        <h4 class="text-light align-center fg-white">Anthilla SP</h4>
+        <h6 class="fg-anthilla-green uppercase font-weight-bold margin-bottom10">username</h6>
+        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+            <input type="text" name="Username" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+        </div>
+        <br>
+        <h6 class="fg-anthilla-green uppercase font-weight-bold margin-bottom10">password</h6>
+        <div data-role="input" class="input-control password full-size bd-anthilla-green bg-anthilla-gray-2">
+            <input type="password" name="Password" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+            <button class="button helper-button reveal bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-looks"></span></button>
+        </div>
+        <br>
+        <br>
+        <div class="form-actions">
+            <button class="button bg-anthilla-green width100pc uppercase bd-anthilla-green" type="submit">Login</button>
+        </div>
+    </form>
+
+    <!--Scripts-->
+    <script src="/Scripts/jquery-3.1.0.min.js"></script>
+    <script src="/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="/Scripts/metro.min.js"></script>
+    <script src="/Scripts/select2.min.js"></script>
+    <script src="/Scripts/angular.min.js"></script>
+    <script src="/Scripts/angular-mocks.js"></script>
+    <script src="/Scripts/angular-route.min.js"></script>
+    <script src="/Scripts/angular-animate.min.js"></script>
+    <script src="/Scripts/angular-resource.min.js"></script>
+    <script src="/Scripts/angular-ui-router.min.js"></script>
+    <script src="/Scripts/angular-translate.min.js"></script>
+    <script src="/Scripts/angular-translate-loader-url.min.js"></script>
+    <script src="/Scripts/template.js"></script>
+    <script src="/Scripts/template.app.js"></script>
+</body>
+</html>

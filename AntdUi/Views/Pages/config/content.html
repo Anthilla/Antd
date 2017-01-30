@@ -1,0 +1,27 @@
+﻿<div ng-controller="ConfigControllerContent">
+    <div class="grid condensed demo-grid">
+        <div class="row cells4">
+            <div class="cell padding-left20">
+                <h5 class="uppercase fg-anthilla-green">{{ 'PORT' | translate }}</h5>
+            </div>
+            <div class="cell colspan2">
+                <div class="input-control number width100pc fg-white">
+                    <input type="number" ng-model="Port" ng-change="Show('#Port')" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                </div>
+            </div>
+            <div class="cell padding-left20" style="display: none;" id="Port">
+                <h5 class="fg-anthilla-orange">{{ 'APP_RESTART_REQUIRED' | translate }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="grid condensed demo-grid">
+        <div class="row cells4">
+            <div class="cell padding-left20">
+            </div>
+            <div class="cell colspan2">
+                <button ng-click="Create()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            </div>
+        </div>
+    </div>
+    <hr class="no-margin bg-anthilla-green" style="height: 5px; margin-top: 10px !important;">
+</div>

@@ -1,0 +1,84 @@
+﻿<div ng-controller="TextFileControllerContent">
+    
+    <input type="hidden" ng-model="guid" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+    <div class="input-control text width100pc fg-white">
+        <input type="text" ng-model="filename" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+    </div>
+    <div trumbowyg-ng
+         ng-model="content"
+         ng-model-options="{ getterSetter: true, updateOn: 'default blur' }"
+         ng-change="UpdateContent(content)"
+         editor-config="{btns: [
+                                'viewHTML',
+                                'formatting',
+                                'btnGrp-semantic',
+                                '|',
+                                'link',
+                                'insertImage',
+                                '|',
+                                'btnGrp-justify',
+                                'btnGrp-lists',
+                                '|',
+                                'removeformat',
+                            ]}"
+         class="bg-white fg-anthilla-gray-3 trumbo">
+    </div>
+    <button ng-click="SaveFile()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;SAVE</button>
+
+    <hr/>
+
+    <div class="input-control text width100pc fg-white">
+        <span class="mif-search prepend-icon fg-anthilla-green"></span>
+        <input ng-model="query" type="text" placeholder="{{ 'SEARCH' | translate }}" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+    </div>
+    <table class="table border bordered bd-anthilla-gray-3 fg-white bg-anthilla-gray-2">
+        <thead class="bd-anthilla-gray-3 uppercase">
+        <tr>
+            <th class="bd-anthilla-gray-3 fg-anthilla-green width25pc">{{ 'DATE' | translate }}</th>
+            <th class="bd-anthilla-gray-3 fg-anthilla-green">{{ 'FILE' | translate }}</th>
+            <th class="bd-anthilla-gray-3 fg-anthilla-green width100"></th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="file in files | orderBy: 'Date' | filter:query" class="bd-anthilla-gray-3" data-file-table="{{file.Guid}}">
+        <tr ng-click="ExpandRows(file.Guid)" data-file="{{file}}">
+            <td class="bd-anthilla-gray-3">{{file.Date}}</td>
+            <td class="bd-anthilla-gray-3">
+                <p class="place-left">{{file.Name}}</p>
+            </td>
+            <td class="bd-anthilla-gray-3">
+                <span data-icon="{{file.Guid}}" class="icon mif-chevron-right fg-anthilla-green"></span>
+            </td>
+        </tr>
+        <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+            <td class="bd-anthilla-gray-3 fg-anthilla-green ">{{ 'FILENAME' | translate }}
+            </td>
+            <td class="bd-anthilla-gray-3" ng-dblclick="EnableEdit(file)" data-static="{{file.Guid}}">{{file.Name}}
+            </td>
+            <td class="bd-anthilla-gray-3" style="display: none;" data-editable="{{file.Guid}}">
+                <div class="input-control text width100pc fg-white">
+                    <input type="text" value="{{file.Name}}" ng-model="name" ng-change="UpdateName(name)" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                </div>
+            </td>
+            <td class="bd-anthilla-gray-3"></td>
+        </tr>
+        <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+            <td class="bd-anthilla-gray-3 fg-anthilla-green ">{{ 'CONTENT' | translate }}
+            </td>
+            <td class="bd-anthilla-gray-3" ng-dblclick="EnableEdit(file)">{{file.Content}}
+            </td>
+            <td class="bd-anthilla-gray-3" style="display: none;"></td>
+            <td class="bd-anthilla-gray-3"></td>
+        </tr>
+        <tr data-row="{{file.Guid}}" style="display: none !important;" class="bg-anthilla-gray-1">
+            <td class="bd-anthilla-gray-3 fg-anthilla-green "></td>
+            <td class="bd-anthilla-gray-3">
+                <button ng-click="EditFiles(file.Guid)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;Confirm</button>
+                <button ng-click="CloseFilesEditing(file.Guid)" class="button bg-anthilla-violet bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-undo"></span>&nbsp;Close</button>
+                <a href="/repo/requestmedicine/print?id={{file.Guid}}" target="_blank" class="button bg-anthilla-blue bd-anthilla-gray-3 padding-left20 padding-right20 fg-anthilla-gray-3"><span class="mif-printer"></span>&nbsp;Print</a>
+                <button ng-click="DeleteFiles(file.Guid)" class="button bg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-cross"></span>&nbsp;Delete</button>
+            </td>
+            <td class="bd-anthilla-gray-3"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
