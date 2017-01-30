@@ -52,10 +52,11 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Users;
 using Antd.Vpn;
+using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class AntdModule : CoreModule {
+    public class AntdModule : NancyModule {
 
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);

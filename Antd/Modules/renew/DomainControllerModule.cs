@@ -46,7 +46,7 @@
 
 //namespace Antd.Modules {
 
-//    public class DomainControllerModule : CoreModule {
+//    public class DomainControllerModule : NancyModule {
 
 //        private readonly string[] _directories = {
 //            "/etc/samba",

@@ -36,7 +36,7 @@ using Nancy;
 //-------------------------------------------------------------------------------------
 
 namespace Antd.Modules {
-    public class MonitorModule : CoreModule {
+    public class MonitorModule : NancyModule {
 
         private static string GetResourcesHtmlDiv(string value, string iconName = "") {
             var ico = string.IsNullOrEmpty(iconName) ? "" : $"<i class=\"icon-{iconName} fg-anthilla-blu on-left-more\" style=\"line-height: 5px;\"></i>";

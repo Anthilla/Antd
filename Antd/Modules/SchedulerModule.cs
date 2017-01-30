@@ -34,7 +34,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class SchedulerModule : CoreModule {
+    public class SchedulerModule : NancyModule {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Timers _timers = new Timers();

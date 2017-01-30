@@ -41,7 +41,7 @@ using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
-    public class LogModule : CoreModule {
+    public class LogModule : NancyModule {
 
         public LogModule() {
             this.RequiresAuthentication();

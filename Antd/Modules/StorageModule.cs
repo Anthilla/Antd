@@ -38,7 +38,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class StorageModule : CoreModule {
+    public class StorageModule : NancyModule {
 
         private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Bash _bash = new Bash();

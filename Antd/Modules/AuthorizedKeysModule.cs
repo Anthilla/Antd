@@ -39,7 +39,7 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class AuthorizedKeysModule : CoreModule {
+    public class AuthorizedKeysModule : NancyModule {
 
         private readonly AuthorizedKeysRepository _authorizedKeysRepository = new AuthorizedKeysRepository();
         private readonly Bash _bash = new Bash();

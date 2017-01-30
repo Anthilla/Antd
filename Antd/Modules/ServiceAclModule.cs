@@ -35,7 +35,7 @@ using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
-    public class ServiceAclModule : CoreModule {
+    public class ServiceAclModule : NancyModule {
 
         public ServiceAclModule() {
             this.RequiresAuthentication();

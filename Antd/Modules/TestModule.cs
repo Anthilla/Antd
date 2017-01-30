@@ -31,7 +31,7 @@ using antdlib.common;
 using Nancy;
 
 namespace Antd.Modules {
-    public class TestModule : CoreModule {
+    public class TestModule : NancyModule {
 
         public class TestClass {
             public string Text { get; set; }

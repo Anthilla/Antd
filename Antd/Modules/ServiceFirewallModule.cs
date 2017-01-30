@@ -34,7 +34,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceFirewallModule : CoreModule {
+    public class ServiceFirewallModule : NancyModule {
 
         public ServiceFirewallModule() {
             this.RequiresAuthentication();

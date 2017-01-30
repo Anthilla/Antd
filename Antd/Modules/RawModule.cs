@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using antdlib.common;
 using antdlib.common.Directory;
+using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
 
 namespace Antd.Modules {
-    public class RawModule : CoreModule {
+    public class RawModule : NancyModule {
         public RawModule() {
             this.RequiresAuthentication();
 

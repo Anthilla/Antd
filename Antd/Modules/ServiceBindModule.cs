@@ -34,7 +34,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceBindModule : CoreModule {
+    public class ServiceBindModule : NancyModule {
 
         public ServiceBindModule() {
             this.RequiresAuthentication();

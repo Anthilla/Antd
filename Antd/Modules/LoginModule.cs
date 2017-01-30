@@ -37,7 +37,7 @@ using Nancy.Cookies;
 using Nancy.Extensions;
 
 namespace Antd.Modules {
-    public class LoginModule : CoreModule {
+    public class LoginModule : NancyModule {
         public LoginModule() {
 
             Get["/login/{message?}"] = x => {

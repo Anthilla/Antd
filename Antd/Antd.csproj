@@ -180,7 +180,6 @@
     <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Modules\_AntdModule.cs" />
     <Compile Include="Modules\renew\DomainControllerModule.cs" />
-    <Compile Include="Modules\CoreModule.cs" />
     <Compile Include="Modules\OverlayModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
     <Compile Include="Modules\AuthenticationModule.cs" />

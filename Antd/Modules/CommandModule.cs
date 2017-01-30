@@ -37,7 +37,7 @@ using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
-    public class CommandModule : CoreModule {
+    public class CommandModule : NancyModule {
         private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public CommandModule() {

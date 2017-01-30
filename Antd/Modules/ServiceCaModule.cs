@@ -36,7 +36,7 @@ using Nancy.Security;
 
 namespace Antd.Modules {
 
-    public class ServiceCaModule : CoreModule {
+    public class ServiceCaModule : NancyModule {
         public ServiceCaModule() {
             this.RequiresAuthentication();
             Post["/services/ca/set"] = x => {

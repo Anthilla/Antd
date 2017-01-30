@@ -32,7 +32,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class OverlayModule : CoreModule {
+    public class OverlayModule : NancyModule {
 
         private readonly OverlayWatcher _overlayWatcher = new OverlayWatcher();
 

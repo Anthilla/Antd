@@ -31,10 +31,11 @@ using System;
 using System.Dynamic;
 using antdlib.common;
 using Antd.Certificates;
+using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class CaModule : CoreModule {
+    public class CaModule : NancyModule {
 
         public CaModule() {
             this.RequiresAuthentication();

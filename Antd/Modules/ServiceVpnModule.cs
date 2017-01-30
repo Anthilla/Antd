@@ -32,7 +32,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceVpnModule : CoreModule {
+    public class ServiceVpnModule : NancyModule {
 
         public ServiceVpnModule() {
             this.RequiresAuthentication();

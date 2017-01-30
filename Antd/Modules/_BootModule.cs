@@ -39,7 +39,7 @@ using Nancy.ModelBinding;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class BootModule : CoreModule {
+    public class BootModule : NancyModule {
 
         public BootModule() {
             this.RequiresAuthentication();

@@ -32,7 +32,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceSyslogNgModule : CoreModule {
+    public class ServiceSyslogNgModule : NancyModule {
 
         public ServiceSyslogNgModule() {
             this.RequiresAuthentication();

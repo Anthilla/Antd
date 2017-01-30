@@ -33,7 +33,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceSyncMachineModule : CoreModule {
+    public class ServiceSyncMachineModule : NancyModule {
 
         public ServiceSyncMachineModule() {
             this.RequiresAuthentication();

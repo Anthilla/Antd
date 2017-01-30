@@ -36,7 +36,7 @@ using Nancy;
 
 namespace Antd.Modules {
 
-    public class AuthenticationModule : CoreModule {
+    public class AuthenticationModule : NancyModule {
         public class TempUser {
             public string Username { get; set; }
             public byte[] Password { get; set; }

@@ -35,7 +35,7 @@ using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
-    public class FeedModule : CoreModule {
+    public class FeedModule : NancyModule {
         public FeedModule() {
 
             Get["/feed/list"] = x => {

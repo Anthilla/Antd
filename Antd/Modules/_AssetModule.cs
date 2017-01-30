@@ -41,7 +41,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class AssetModule : CoreModule {
+    public class AssetModule : NancyModule {
 
         public class AvahiServiceViewModel {
             public string HostName { get; set; }

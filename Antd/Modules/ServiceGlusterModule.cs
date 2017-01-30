@@ -34,7 +34,7 @@ using Antd.Gluster;
 using Nancy;
 
 namespace Antd.Modules {
-    public class ServiceGlusterModule : CoreModule {
+    public class ServiceGlusterModule : NancyModule {
 
         public ServiceGlusterModule() {
 

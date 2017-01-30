@@ -36,7 +36,7 @@ using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
-    public class HostModule : CoreModule {
+    public class HostModule : NancyModule {
         public HostModule() {
             this.RequiresAuthentication();
 

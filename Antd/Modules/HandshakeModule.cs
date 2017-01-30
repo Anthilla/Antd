@@ -37,7 +37,7 @@ using Antd.Ssh;
 using Nancy;
 
 namespace Antd.Modules {
-    public class HandshakeModule : CoreModule {
+    public class HandshakeModule : NancyModule {
 
         public HandshakeModule() {
 

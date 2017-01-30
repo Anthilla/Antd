@@ -32,7 +32,7 @@ using Nancy;
 using Nancy.Security;
 
 namespace Antd.Modules {
-    public class ServiceJournaldModule : CoreModule {
+    public class ServiceJournaldModule : NancyModule {
 
         public ServiceJournaldModule() {
             this.RequiresAuthentication();

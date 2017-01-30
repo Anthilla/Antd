@@ -33,7 +33,7 @@ using Nancy;
 using WebSocket = Antd.Websocket.Client.WebSocket;
 
 namespace Antd.Modules {
-    public class WebsocketModule : CoreModule {
+    public class WebsocketModule : NancyModule {
 
         private readonly ApplicationSetting _applicationSetting = new ApplicationSetting();
         private readonly PortManagement _portManagement = new PortManagement();
