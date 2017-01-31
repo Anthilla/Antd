@@ -58,6 +58,7 @@ using Antd.SyncMachine;
 using Antd.SyslogNg;
 using Antd.SystemdTimer;
 using Antd.Timer;
+using Antd.Ui;
 using Antd.Users;
 using Nancy;
 using Nancy.Hosting.Self;
@@ -416,6 +417,11 @@ namespace Antd {
             }
             //AppTarget.StartAll();
             ConsoleLogger.Log("apps ready");
+            #endregion
+
+            #region [    AntdUI    ]
+            UiService.Setup();
+            ConsoleLogger.Log("antduisetup");
             #endregion
         }
 

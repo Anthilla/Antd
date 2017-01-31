@@ -47,6 +47,10 @@
     <Reference Include="library.u2f">
       <HintPath>..\libraries\library.u2f.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.3.0.0\lib\net35\LiteDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Posix.4.0.0.0\lib\net40\Mono.Posix.dll</HintPath>
       <Private>True</Private>
@@ -97,6 +101,7 @@
     <Compile Include="Acl\AclConfigurationModel.cs" />
     <Compile Include="AppConfig\AppConfiguration.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="Ui\UiService.cs" />
     <Compile Include="Users\UserConfigurationModule.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
@@ -2969,7 +2974,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ShellScript\scripts\previous\" />
-    <Folder Include="Ui\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\antd.commands\antd.commands.csproj">
