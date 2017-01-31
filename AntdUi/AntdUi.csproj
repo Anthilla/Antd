@@ -103,13 +103,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig\AppConfigurationModule.cs" />
+    <Compile Include="Modules\AntdInfoModule.cs" />
+    <Compile Include="Modules\AppConfigurationModule.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Models\SelectizeCacheModule.cs" />
-    <Compile Include="Models\SelectizeCacheRepository.cs" />
-    <Compile Include="Models\SelectizeCacheModel.cs" />
     <Compile Include="Modules\ContentModule.cs" />
     <Compile Include="Database\Actions.cs" />
     <Compile Include="Database\Backup.cs" />

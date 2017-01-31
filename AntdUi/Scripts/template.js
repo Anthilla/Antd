@@ -77,4 +77,3 @@ var RequestStatus = [
 $(document).ready(function () {
     $(".textEditor").trumbowyg();
 });
-

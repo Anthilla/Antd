@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.models;
 using Antd.Info;
 using Antd.Storage;
 using Nancy;
+using Newtonsoft.Json;
 
 //-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -84,6 +86,35 @@ namespace Antd.Modules {
                     ConsoleLogger.Error(ex);
                     return Response.AsText(GetResourcesHtmlDiv("Unable to obtain data"));
                 }
+            };
+
+            Get["/monitor/resources"] = x => {
+                var hostname = File.ReadAllText("/etc/hostname");
+                var machineInfo = new MachineInfo();
+                var uptime = machineInfo.GetUptime();
+                var memoryUsage = 0;
+                var memory = machineInfo.GetFree().FirstOrDefault();
+                if(memory != null) {
+                    var tot = memory?.Total;
+                    var used = memory?.Used;
+                    int resultTot;
+                    int.TryParse(new string(tot?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultTot);
+                    int resultPart;
+                    int.TryParse(new string(used?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
+                    memoryUsage = GetPercentage(resultTot, resultPart);
+                }
+                var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
+                var diskUsage = 0;
+                if(du != null) {
+                    int.TryParse(du.UsePercentage, out diskUsage);
+                }
+                var model = new PageMonitorModel {
+                    Hostname = hostname,
+                    Uptime = uptime,
+                    MemoryUsage = memoryUsage,
+                    DiskUsage = diskUsage
+                };
+                return JsonConvert.SerializeObject(model);
             };
 
             Get["/machineuuid"] = x => {

@@ -68,6 +68,8 @@
     <Compile Include="MountModel.cs" />
     <Compile Include="NetscanSettingModel.cs" />
     <Compile Include="NetworkConfigurationModel.cs" />
+    <Compile Include="PageMonitorModel.cs" />
+    <Compile Include="PageInfoModel.cs" />
     <Compile Include="PartitionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RsyncConfigurationModel.cs" />

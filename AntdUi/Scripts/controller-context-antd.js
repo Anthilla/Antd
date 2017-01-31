@@ -1,5 +1,13 @@
 "use strict";
 
+app.controller("AntdInfoController", ["$scope", "$http", AntdInfoController]);
+
+function AntdInfoController($scope, $http) {
+    $http.get("/info").success(function (data) {
+        $scope.Info = data;
+    });
+}
+
 app.controller("AntdHostParamController", ["$scope", "$http", AntdHostParamController]);
 
 function AntdHostParamController($scope, $http) {

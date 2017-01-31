@@ -42,6 +42,11 @@ namespace antdlib.config {
             File.WriteAllText(_file, JsonConvert.SerializeObject(_model, Formatting.Indented));
         }
 
+        public AppConfigurationModel UiGet() {
+            _model = _api.Get<AppConfigurationModel>($"http://localhost:{_model.AntdPort}/config");
+            return _model;
+        }
+
         public void UiSave(AppConfigurationModel model) {
             var savedModel = Get();
             _model = model;

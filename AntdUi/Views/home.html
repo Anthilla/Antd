@@ -13,16 +13,17 @@
     <link href="/Style/selectize.anthilla.css" rel="stylesheet">
 </head>
 <body class="bg-anthilla-gray-1">
+    <div class="bg-anthilla-gray-1" style="z-index: -2; position: fixed; width: 100%; height: 100%; top: 0; left:0;"></div>
     <!--Static Content-->
-    <div>
+    <div class="width100pc" style="position: fixed; top: 0; z-index: 99;">
         @Partial['Partials/navbar.html'];
     </div>
-    <div class="padding-left20 padding-right20">
+    <div class="padding-left10 padding-right10 width100pc bg-anthilla-gray-1" style="position: fixed; top: 50px; z-index: 99;">
         @Partial['Partials/toolbar.html'];
+        <hr class="no-margin bg-anthilla-green" style="height: 5px;">
     </div>
-    <hr class="no-margin bg-anthilla-green" style="height: 5px;">
     <!--Page Content-->
-    <div>
+    <div class="padding-left10 padding-right10" style="margin-top: 147px;">
         <div ui-view="menu" class="bg-anthilla-gray-2 place-left width20pc bd-anthilla-gray-2" style="border: 2px solid;"></div>
         <div ui-view="content" class="padding20 place-left width80pc bd-anthilla-gray-2" style="border-top: 6px solid;"></div>
     </div>

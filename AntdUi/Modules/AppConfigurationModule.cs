@@ -3,7 +3,7 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace AntdUi.AppConfig {
+namespace AntdUi.Modules {
 
     public class AppConfigurationModule : NancyModule {
 
@@ -12,7 +12,7 @@ namespace AntdUi.AppConfig {
         public AppConfigurationModule() {
 
             Get["/config"] = _ => {
-                var list = _appConfiguration.Get();
+                var list = _appConfiguration.UiGet();
                 return JsonConvert.SerializeObject(list);
             };
 

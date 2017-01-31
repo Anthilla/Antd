@@ -1,11 +1,4 @@
-﻿using System;
-using System.Globalization;
-using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -34,16 +27,36 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+using antd.commands;
+using antdlib.common;
+using antdlib.models;
+using Antd.Info;
+using Nancy;
+using Newtonsoft.Json;
 
-        private readonly ApiConsumer _api = new ApiConsumer();
+namespace Antd.ServerModules {
+    public class AntdInfoModule : NancyModule {
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
-                var json = JsonConvert.SerializeObject(model);
-                return json;
+        public AntdInfoModule() {
+            Get["/info"] = x => {
+                var bash = new Bash();
+                var launcher = new CommandLauncher();
+                var machineInfo = new MachineInfo();
+                var versionOs = bash.Execute("uname -a");
+                var aosInfo = machineInfo.GetAosrelease();
+                var uptime = machineInfo.GetUptime();
+                var gentooRelease = launcher.Launch("cat-etc-gentoorel");
+                var lsbRelease = launcher.Launch("cat-etc-lsbrel");
+                var osRelease = launcher.Launch("cat-etc-osrel");
+                var model = new PageInfoModel {
+                    VersionOs = versionOs,
+                    AosInfo = aosInfo,
+                    Uptime = uptime,
+                    GentooRelease = gentooRelease,
+                    LsbRelease = lsbRelease,
+                    OsRelease = osRelease
+                };
+                return JsonConvert.SerializeObject(model);
             };
         }
     }

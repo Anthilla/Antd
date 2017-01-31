@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="ServerModules\AntdInfoModule.cs" />
     <Compile Include="Ui\UiService.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />

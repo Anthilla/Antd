@@ -5,16 +5,21 @@ using Nancy.Hosting.Self;
 
 namespace AntdUi {
     internal class Application {
+
+        public static int Port;
+        public static int ServerPort;
+
         public static void Main() {
             ConsoleLogger.Log("starting antdui");
             var startTime = DateTime.Now;
             var app = new AppConfiguration().Get();
-            var port = app.AntdUiPort;
-            var uri = $"http://localhost:{app.AntdUiPort}/";
+            Port = app.AntdUiPort;
+            ServerPort = app.AntdPort;
+            var uri = $"http://localhost:{Port}/";
             var host = new NancyHost(new Uri(uri));
             host.Start();
             ConsoleLogger.Log("host ready");
-            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log($"http port: {Port}");
             ConsoleLogger.Log("antdui is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             KeepAlive();
