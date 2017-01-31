@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
     public static class AwkExtension {
 
         private static readonly string Empty = string.Empty;

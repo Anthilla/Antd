@@ -1,4 +1,4 @@
-﻿namespace Antd.Storage {
+﻿namespace antdlib.models {
     public class PartitionModel {
 
         public PartitionModel(LsblkJsonModel.Partition source) {

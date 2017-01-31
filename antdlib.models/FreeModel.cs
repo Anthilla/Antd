@@ -27,19 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-namespace antdlib.common.Tool {
-    public static class BashExtension {
-
-        private static readonly IEnumerable<string> Empty = new List<string>();
-
-        public static IEnumerable<string> SplitBash(this string input, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries) {
-            if(input.Contains("\n")) {
-                return string.IsNullOrEmpty(input) ? Empty : input.Split(new[] { "\n" }, options);
-            }
-            return string.IsNullOrEmpty(input) ? Empty : input.Split(new[] { Environment.NewLine }, options);
-        }
+namespace antdlib.models {
+    public class FreeModel {
+        public string Name { get; set; }
+        public string Total { get; set; }
+        public string Used { get; set; }
+        public string Free { get; set; }
+        public string Shared { get; set; }
+        public string BuffCache { get; set; }
+        public string Available { get; set; }
     }
 }

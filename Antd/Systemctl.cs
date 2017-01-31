@@ -27,7 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common.Tool;
+using antdlib.common;
 
 namespace Antd {
 

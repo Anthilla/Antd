@@ -27,9 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class AosReleaseModel {
-        public string Key { get; set; }
-        public string Value { get; set; }
+namespace antdlib.models {
+    public class UptimeModel {
+        public string Uptime { get; set; }
+        public string Users { get; set; }
+        public string LoadAverage { get; set; }
     }
 }

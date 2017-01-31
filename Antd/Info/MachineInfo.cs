@@ -33,8 +33,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using antdlib.common;
-using antdlib.common.Models;
-using antdlib.common.Tool;
+using antdlib.models;
 
 namespace Antd.Info {
     public class MachineInfo {

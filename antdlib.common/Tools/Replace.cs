@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
 
     public class Replace {
 

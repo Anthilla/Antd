@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 using SysFile = System.IO.File;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
 
     public class Write {
 

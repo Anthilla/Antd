@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Antd.Storage {
+namespace antdlib.models {
     public class ZfsSnapModel {
         public string Guid { get; set; }
         public string Name { get; set; }

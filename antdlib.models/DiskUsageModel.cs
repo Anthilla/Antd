@@ -1,4 +1,4 @@
-﻿////-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -27,36 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using SysFiles = System.IO.File;
-
-namespace antdlib.common.Tool {
-
-    public class Read {
-
-        private readonly string[] _empty = { };
-
-        public string File(string path) {
-            return SysFiles.Exists(path) ? SysFiles.ReadAllText(path) : string.Empty;
-        }
-
-        public string Files(IEnumerable<string> paths) {
-            var result = "";
-            foreach(var path in paths) {
-                result += File(path);
-                result += Environment.NewLine;
-            }
-            return result;
-        }
-
-        public string[] FileLines(string path) {
-            return SysFiles.Exists(path) ? SysFiles.ReadAllLines(path) : _empty;
-        }
-
-        public string[] FilesLines(IEnumerable<string> paths) {
-            return paths.Select(FileLines).Aggregate(_empty, (current, lines) => current.Concat(lines).ToArray());
-        }
+namespace antdlib.models {
+    public class DiskUsageModel {
+        public string Filesystem { get; set; }
+        public string Type { get; set; }
+        public string Size { get; set; }
+        public string Used { get; set; }
+        public string Avail { get; set; }
+        public string UsePercentage { get; set; }
+        public string MountedOn { get; set; }
     }
 }

@@ -30,7 +30,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using antdlib.common.Tool;
 
 namespace antdlib.common {
     public class MapToModel {

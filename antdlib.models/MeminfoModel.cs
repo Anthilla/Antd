@@ -27,14 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class DiskUsageModel {
-        public string Filesystem { get; set; }
-        public string Type { get; set; }
-        public string Size { get; set; }
-        public string Used { get; set; }
-        public string Avail { get; set; }
-        public string UsePercentage { get; set; }
-        public string MountedOn { get; set; }
+namespace antdlib.models {
+    public class MeminfoModel {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -20,7 +20,6 @@ function AntdHostParamController($scope, $http) {
         });
     };
 
-    //$scope.GetConfig();
     $http.get("/config").success(function (data) {
         $scope.AntdPort = data.AntdPort;
         $scope.AntdUiPort = data.AntdUiPort;

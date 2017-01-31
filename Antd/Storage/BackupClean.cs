@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using antdlib.common;
-using antdlib.common.Tool;
 
 namespace Antd.Storage {
     public class BackupClean {

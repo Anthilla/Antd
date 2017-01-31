@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using antdlib.common.Tool;
+using antdlib.common;
 
 namespace Antd.Virsh {
     public class Virsh {

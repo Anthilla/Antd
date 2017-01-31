@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using antdlib.common.Tool;
+using antdlib.common;
 
 namespace Antd.Ssh {
     public class RootKeys {

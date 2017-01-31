@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using antdlib.common;
-using antdlib.common.Tool;
 
 namespace antdsh {
     internal class AntdshApplication {

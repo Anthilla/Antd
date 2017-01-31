@@ -34,7 +34,6 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.models;
-using Antd.Rsync;
 using Antd.SyncMachine;
 
 namespace Antd {

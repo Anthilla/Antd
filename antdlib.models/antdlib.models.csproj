@@ -44,20 +44,27 @@
   <ItemGroup>
     <Compile Include="AclConfigurationModel.cs" />
     <Compile Include="AntdConfigurationModel.cs" />
+    <Compile Include="AosReleaseModel.cs" />
     <Compile Include="AppConfigurationModel.cs" />
     <Compile Include="BindConfigurationModel.cs" />
     <Compile Include="CaConfigurationModel.cs" />
     <Compile Include="CertificateModel.cs" />
+    <Compile Include="CpuinfoModel.cs" />
     <Compile Include="DhcpdConfigurationModel.cs" />
     <Compile Include="DhcpdLeaseModel.cs" />
     <Compile Include="DirectoryModel.cs" />
     <Compile Include="DiskModel.cs" />
+    <Compile Include="DiskUsageModel.cs" />
     <Compile Include="FirewallConfigurationModel.cs" />
+    <Compile Include="FreeModel.cs" />
     <Compile Include="GlusterConfigurationModel.cs" />
     <Compile Include="HostModel.cs" />
     <Compile Include="JournaldConfigurationModel.cs" />
     <Compile Include="KerberosConfigurationModel.cs" />
+    <Compile Include="LosetupModel.cs" />
     <Compile Include="LsblkJsonModel.cs" />
+    <Compile Include="MeminfoModel.cs" />
+    <Compile Include="ModuleModel.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetscanSettingModel.cs" />
     <Compile Include="NetworkConfigurationModel.cs" />
@@ -70,6 +77,9 @@
     <Compile Include="SyncMachineConfigurationModel.cs" />
     <Compile Include="SyncMachinePostModel.cs" />
     <Compile Include="SyslogNgConfigurationModel.cs" />
+    <Compile Include="SystemComponentModel.cs" />
+    <Compile Include="UnitModel.cs" />
+    <Compile Include="UptimeModel.cs" />
     <Compile Include="UserConfigurationModel.cs" />
     <Compile Include="VpnConfigurationModel.cs" />
     <Compile Include="ZfsModel.cs" />

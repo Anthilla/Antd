@@ -1,4 +1,4 @@
-﻿namespace Antd.Storage {
+﻿namespace antdlib.models {
     public class ZpoolModel {
         public string Guid { get; set; }
         public string Name { get; set; }

@@ -27,7 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
+namespace antdlib.models {
     public class ModuleModel {
         public string Name { get; set; }
         public string Size { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace antdlib.common {
     public static class ObjectExtensions {
@@ -16,6 +17,10 @@ namespace antdlib.common {
                 }
             }
             return result;
+        }
+
+        public static string ToJson<T>(this T obj) {
+            return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
         }
     }
 }

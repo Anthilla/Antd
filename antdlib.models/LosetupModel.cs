@@ -27,10 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class UptimeModel {
-        public string Uptime { get; set; }
-        public string Users { get; set; }
-        public string LoadAverage { get; set; }
+namespace antdlib.models {
+    public class LosetupModel {
+        public string Name { get; set; }
+        public string Sizelimit { get; set; }
+        public string Offset { get; set; }
+        public string Autoclear { get; set; }
+        public string Readonly { get; set; }
+        public string Backfile { get; set; }
+        public string Dio { get; set; }
+        public string Hash { get; set; }
     }
 }

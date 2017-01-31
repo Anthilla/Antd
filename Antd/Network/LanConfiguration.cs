@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using antd.commands;
-using antdlib.common.Tool;
+using antdlib.common;
 
 namespace Antd.Network {
     public class LanConfiguration {

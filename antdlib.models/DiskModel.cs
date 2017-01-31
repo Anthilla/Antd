@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using antdlib.common.Tool;
+using antdlib.common;
 
-namespace Antd.Storage {
+namespace antdlib.models {
     public class DiskModel {
         public DiskModel(LsblkJsonModel.Blockdevice source) {
             Guid = System.Guid.NewGuid().ToString();

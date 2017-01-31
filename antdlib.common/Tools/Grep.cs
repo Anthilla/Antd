@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using IoDir = System.IO.Directory;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
     public class Grep {
 
         private readonly IEnumerable<KeyValuePair<string, string>> _empty = new List<KeyValuePair<string, string>>();

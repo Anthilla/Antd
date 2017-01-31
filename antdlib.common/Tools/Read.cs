@@ -1,4 +1,4 @@
-﻿//-------------------------------------------------------------------------------------
+﻿////-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -27,15 +27,36 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class LosetupModel {
-        public string Name { get; set; }
-        public string Sizelimit { get; set; }
-        public string Offset { get; set; }
-        public string Autoclear { get; set; }
-        public string Readonly { get; set; }
-        public string Backfile { get; set; }
-        public string Dio { get; set; }
-        public string Hash { get; set; }
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SysFiles = System.IO.File;
+
+namespace antdlib.common {
+
+    public class Read {
+
+        private readonly string[] _empty = { };
+
+        public string File(string path) {
+            return SysFiles.Exists(path) ? SysFiles.ReadAllText(path) : string.Empty;
+        }
+
+        public string Files(IEnumerable<string> paths) {
+            var result = "";
+            foreach(var path in paths) {
+                result += File(path);
+                result += Environment.NewLine;
+            }
+            return result;
+        }
+
+        public string[] FileLines(string path) {
+            return SysFiles.Exists(path) ? SysFiles.ReadAllLines(path) : _empty;
+        }
+
+        public string[] FilesLines(IEnumerable<string> paths) {
+            return paths.Select(FileLines).Aggregate(_empty, (current, lines) => current.Concat(lines).ToArray());
+        }
     }
 }

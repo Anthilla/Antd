@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
     public static class GrepExtension {
 
         private static readonly IEnumerable<string> Empty = new List<string>();

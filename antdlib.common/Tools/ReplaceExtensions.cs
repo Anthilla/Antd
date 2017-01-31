@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
 
     public static class ReplaceExtensions {
 

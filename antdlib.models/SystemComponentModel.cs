@@ -27,14 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class FreeModel {
-        public string Name { get; set; }
-        public string Total { get; set; }
-        public string Used { get; set; }
-        public string Free { get; set; }
-        public string Shared { get; set; }
-        public string BuffCache { get; set; }
-        public string Available { get; set; }
+namespace antdlib.models {
+    public class SystemComponentModel {
+        public string Alias { get; set; }
+        public string Active { get; set; }
+        public string Recovery { get; set; }
+        public string Running { get; set; }
+        public string Newest { get; set; }
     }
 }

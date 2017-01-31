@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace antdlib.common.Tool {
+namespace antdlib.common {
     public class Bash {
         public string Execute(string command, bool redirectStandard = true) {
             try {

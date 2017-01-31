@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using antdlib.common.Tool;
+using antdlib.common;
 
 namespace antdsh {
     public class Target {

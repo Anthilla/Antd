@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Antd.Storage {
+namespace antdlib.models {
     public class LsblkJsonModel {
         public class Lsblk {
             public List<Blockdevice> blockdevices { get; set; }

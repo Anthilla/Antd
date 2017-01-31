@@ -27,12 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class SystemComponentModel {
-        public string Alias { get; set; }
-        public string Active { get; set; }
-        public string Recovery { get; set; }
-        public string Running { get; set; }
-        public string Newest { get; set; }
+namespace antdlib.models {
+    public class AosReleaseModel {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -31,7 +31,6 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.common;
-using antdlib.common.Tool;
 
 namespace antdsh {
     public class SystemShellMgmt {

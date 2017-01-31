@@ -27,8 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.common.Models {
-    public class MeminfoModel {
+namespace antdlib.models {
+    public class CpuinfoModel {
         public string Key { get; set; }
         public string Value { get; set; }
     }
