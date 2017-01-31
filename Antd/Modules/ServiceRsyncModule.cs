@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.models;
 using Antd.Rsync;
 using Nancy;
 using Nancy.Security;

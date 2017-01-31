@@ -29,6 +29,7 @@
 
 using System.Linq;
 using antdlib.common;
+using antdlib.models;
 using Antd.Dhcpd;
 using Nancy;
 using Nancy.Security;

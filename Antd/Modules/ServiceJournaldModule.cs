@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.models;
 using Antd.Journald;
 using Nancy;
 using Nancy.Security;

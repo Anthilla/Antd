@@ -34,6 +34,7 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using antdlib.common.Tool;
+using antdlib.models;
 using Antd.Asset;
 using Antd.Ssh;
 using Antd.SyncMachine;

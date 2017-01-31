@@ -54,6 +54,13 @@
   <ItemGroup>
     <Compile Include="ApiConsumer.cs" />
     <Compile Include="ApplicationSetting.cs" />
+    <Compile Include="Enum\Gender.cs" />
+    <Compile Include="Enum\NetworkInterfaceMode.cs" />
+    <Compile Include="Enum\NetworkInterfaceStatus.cs" />
+    <Compile Include="Enum\NetworkInterfaceType.cs" />
+    <Compile Include="Enum\RequestStatus.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\AosReleaseModel.cs" />
     <Compile Include="Models\CpuinfoModel.cs" />
     <Compile Include="Models\DiskUsageModel.cs" />

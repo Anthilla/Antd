@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using antdlib.common;
 
 namespace AntdUi.TmplRequestMaterialGeneric {
     public class RequestMaterialGenericModel : Database.BaseModel {

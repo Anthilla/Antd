@@ -108,9 +108,6 @@
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Enum\Gender.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\SelectizeCacheModule.cs" />
     <Compile Include="Models\SelectizeCacheRepository.cs" />
     <Compile Include="Models\SelectizeCacheModel.cs" />
@@ -118,7 +115,6 @@
     <Compile Include="Database\Actions.cs" />
     <Compile Include="Database\Backup.cs" />
     <Compile Include="Database\BaseModel.cs" />
-    <Compile Include="Enum\RequestStatus.cs" />
     <Compile Include="Modules\LanguageModule.cs" />
     <Compile Include="Modules\AppModule.cs" />
     <Compile Include="Application.cs" />
