@@ -1,8 +1,8 @@
 "use strict";
 
-app.controller("AntdHostParam", ["$rootScope", "$scope", "$http", AntdHostParam]);
+app.controller("AntdHostParamController", ["$rootScope", "$scope", "$http", AntdHostParamController]);
 
-function AntdHostParam($rootScope, $scope, $http) {
+function AntdHostParamController($rootScope, $scope, $http) {
 
     $scope.Save = function () {
         var data = $.param({
