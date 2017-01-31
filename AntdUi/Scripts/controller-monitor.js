@@ -8,5 +8,5 @@ function MonitorController($scope, $http, $interval) {
         $scope.Resources = data;
         $scope.digest();
     });
-    $interval(function () { console.log(1); }, 3000);
+    $interval(function () { $scope.GetResources(); }, 3000);
 }
