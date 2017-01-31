@@ -93,6 +93,9 @@
 .width100pc {
     width: 100% !important;
 }
+.width80pc {
+    width: 80% !important;
+}
 .width75pc {
     width: 75% !important;
 }
@@ -107,6 +110,9 @@
 }
 .width25pc {
     width: 25% !important;
+}
+.width20pc {
+    width: 20% !important;
 }
 .font-weight-bold {
     font-weight: bold !important;

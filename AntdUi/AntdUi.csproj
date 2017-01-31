@@ -121,12 +121,6 @@
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="NancyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericModel.cs" />
-    <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericModule.cs" />
-    <Compile Include="TmplRequestMaterialGeneric\RequestMaterialGenericRepository.cs" />
-    <Compile Include="TmplTextFile\RequestWarehouseModel.cs" />
-    <Compile Include="TmplTextFile\RequestWarehouseModule.cs" />
-    <Compile Include="TmplTextFile\RequestWarehouseRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-material.css" />

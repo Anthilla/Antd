@@ -13,7 +13,7 @@ namespace Antd.Network {
             _launcher = new CommandLauncher();
         }
 
-        private string[] GetPhysicalInterfaces() {
+        private static string[] GetPhysicalInterfaces() {
             var ifList = new List<string>();
             var bash = new Bash();
             var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
