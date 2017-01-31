@@ -33,8 +33,8 @@ using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
+using antdlib.config;
 using Antd.Database;
-using Antd.MountPoint;
 
 namespace Antd.Apps {
     public class AppsManagement {
@@ -61,7 +61,7 @@ namespace Antd.Apps {
 
         private readonly Bash _bash = new Bash();
         private readonly AppsUnits _appsUnits = new AppsUnits();
-        private readonly Mount _mount = new Mount();
+        private readonly MountManagement _mount = new MountManagement();
 
         public void Setup(string appName) {
             ConsoleLogger.Log("=========================================");

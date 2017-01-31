@@ -33,10 +33,9 @@ using System.Dynamic;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
 using Antd.Asset;
-using Antd.Ssh;
-using Antd.SyncMachine;
 using Nancy;
 using Nancy.Security;
 
@@ -110,7 +109,7 @@ namespace Antd.Modules {
             Get["/part/asset/scan"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    var settings = new NetscanSetting();
+                    var settings = new NetscanConfiguration();
                     var set = settings.Get();
                     var values = set.Values.Where(_ => !string.IsNullOrEmpty(_.Label));
                     viewModel.Values = values.ToDictionary(k => k.Label, v => set.Subnet + v.Number + ".0");
@@ -142,7 +141,7 @@ namespace Antd.Modules {
             Get["/part/asset/setting"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    var settings = new NetscanSetting();
+                    var settings = new NetscanConfiguration();
                     var set = settings.Get();
                     viewModel.SettingsSubnet = set.Subnet;
                     viewModel.SettingsSubnetLabel = set.SubnetLabel;
@@ -164,7 +163,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(subnet) || string.IsNullOrEmpty(label)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var settings = new NetscanSetting();
+                var settings = new NetscanConfiguration();
                 settings.SetSubnet(subnet, label);
                 settings.SaveEtcNetworks();
                 return HttpStatusCode.OK;
@@ -177,7 +176,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(letter) || string.IsNullOrEmpty(number) || string.IsNullOrEmpty(label)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var settings = new NetscanSetting();
+                var settings = new NetscanConfiguration();
                 settings.SetLabel(letter, number, label);
                 return HttpStatusCode.OK;
             };

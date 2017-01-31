@@ -27,8 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.config;
 using antdlib.models;
-using Antd.Vpn;
 using Nancy;
 using Nancy.Security;
 

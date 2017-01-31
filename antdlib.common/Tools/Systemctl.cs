@@ -27,22 +27,52 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.config;
-using Nancy;
-using WebSocket = Antd.Websocket.Client.WebSocket;
+namespace antdlib.common {
 
-namespace Antd.Modules {
-    public class WebsocketModule : NancyModule {
+    public class Systemctl {
 
-        private readonly PortManagement _portManagement = new PortManagement();
+        private static readonly Bash Bash = new Bash();
 
-        public WebsocketModule() {
-            Post["/ws/post"] = x => {
-                var port = _portManagement.GetFirstAvailable(45000, 45999);
-                var ws = new WebSocket();
-                ws.Start(port);
-                return Response.AsJson(port);
-            };
+        public static void DaemonReload() {
+            Bash.Execute("systemctl daemon-reload", false);
+        }
+
+        public static void Start(string unit) {
+            Bash.Execute("systemctl start " + unit, false);
+        }
+
+        public static void Stop(string unit) {
+            Bash.Execute("systemctl stop " + unit, false);
+        }
+
+        public static void Restart(string unit) {
+            Bash.Execute("systemctl restart " + unit, false);
+        }
+
+        public static void Reload(string unit) {
+            Bash.Execute("systemctl reload " + unit, false);
+        }
+
+        public static string Status(string unit) {
+            return Bash.Execute("systemctl status " + unit);
+        }
+
+        public static bool IsActive(string unit) {
+            var r = Bash.Execute("systemctl is-active " + unit);
+            return r != "inactive";
+        }
+
+        public static bool IsEnabled(string unit) {
+            var r = Bash.Execute("systemctl is-enabled " + unit);
+            return r != "disabled";
+        }
+
+        public static void Enable(string unit) {
+            Bash.Execute("systemctl enable " + unit, false);
+        }
+
+        public static void Disable(string unit) {
+            Bash.Execute("systemctl disable " + unit, false);
         }
     }
 }

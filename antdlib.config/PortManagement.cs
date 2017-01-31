@@ -27,22 +27,18 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.config;
-using Nancy;
-using WebSocket = Antd.Websocket.Client.WebSocket;
+using System.Linq;
+using System.Net.NetworkInformation;
 
-namespace Antd.Modules {
-    public class WebsocketModule : NancyModule {
-
-        private readonly PortManagement _portManagement = new PortManagement();
-
-        public WebsocketModule() {
-            Post["/ws/post"] = x => {
-                var port = _portManagement.GetFirstAvailable(45000, 45999);
-                var ws = new WebSocket();
-                ws.Start(port);
-                return Response.AsJson(port);
-            };
+namespace antdlib.config {
+    public class PortManagement {
+        public int GetFirstAvailable(int port, int portMax) {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var tcpConnPortList = ipGlobalProperties.GetActiveTcpConnections().Select(_ => _.LocalEndPoint.Port).ToList();
+            if (tcpConnPortList.Contains(port)) {
+                GetFirstAvailable(port + 1, portMax);
+            }
+            return port;
         }
     }
 }

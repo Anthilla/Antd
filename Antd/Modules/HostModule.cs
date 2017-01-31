@@ -29,7 +29,7 @@
 
 using System;
 using antdlib.common;
-using Antd.Host;
+using antdlib.config;
 using Nancy;
 using Nancy.Security;
 using Newtonsoft.Json;

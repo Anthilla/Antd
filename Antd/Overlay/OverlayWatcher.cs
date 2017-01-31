@@ -33,7 +33,7 @@ using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
-using Antd.MountPoint;
+using antdlib.config;
 
 namespace Antd.Overlay {
     public class OverlayWatcher {
@@ -86,7 +86,7 @@ namespace Antd.Overlay {
             }
         }
 
-        private readonly Mount _mount = new Mount();
+        private readonly MountManagement _mount = new MountManagement();
 
         public void SetOverlayDirectory(string overlayPath) {
             var overlayDir = Parameter.Overlay;

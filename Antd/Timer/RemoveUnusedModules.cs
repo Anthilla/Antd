@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using antd.commands;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
-using Antd.Host;
 
 namespace Antd.Timer {
     public class RemoveUnusedModules {

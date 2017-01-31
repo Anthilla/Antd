@@ -34,24 +34,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using antd.commands;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
-using Antd.Acl;
-using Antd.Bind;
-using Antd.Dhcpd;
-using Antd.Firewall;
-using Antd.Gluster;
-using Antd.Host;
 using Antd.Info;
-using Antd.MountPoint;
-using Antd.Network;
 using Antd.Overlay;
-using Antd.Rsync;
-using Antd.Samba;
-using Antd.Ssh;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Users;
-using Antd.Vpn;
 using Nancy;
 using Nancy.Security;
 
@@ -540,7 +529,7 @@ namespace Antd.Modules {
             Get["/part/storage/mounts"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
-                    viewModel.Mounts = new Mount().GetAll();
+                    viewModel.Mounts = new MountManagement().GetAll();
                     return View["antd/part/page-antd-storage-mounts", viewModel];
                 }
                 catch(Exception ex) {

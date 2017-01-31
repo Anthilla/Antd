@@ -61,6 +61,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Tools\Systemctl.cs" />
     <Compile Include="Tools\AwkExtension.cs" />
     <Compile Include="Tools\BashExtension.cs" />
     <Compile Include="Tools\Bash.cs" />

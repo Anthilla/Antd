@@ -49,13 +49,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AclConfiguration.cs" />
     <Compile Include="AppConfiguration.cs" />
+    <Compile Include="BindConfiguration.cs" />
+    <Compile Include="CaConfiguration.cs" />
+    <Compile Include="CaConfigurationFiles.cs" />
+    <Compile Include="ConfigurationFlow.cs" />
+    <Compile Include="DhcpdConfiguration.cs" />
+    <Compile Include="DhcpdLeases.cs" />
+    <Compile Include="DirectoryWatcher.cs" />
+    <Compile Include="FirewallConfiguration.cs" />
+    <Compile Include="GlusterConfiguration.cs" />
+    <Compile Include="HostConfiguration.cs" />
+    <Compile Include="JournaldConfiguration.cs" />
+    <Compile Include="KerberosConfiguration.cs" />
+    <Compile Include="LanConfiguration.cs" />
+    <Compile Include="ManageMaster.cs" />
+    <Compile Include="MountManagement.cs" />
+    <Compile Include="NetscanConfiguration.cs" />
+    <Compile Include="NetworkConfiguration.cs" />
+    <Compile Include="PortManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RootKeys.cs" />
+    <Compile Include="RsyncConfiguration.cs" />
+    <Compile Include="SambaConfiguration.cs" />
+    <Compile Include="SetupConfiguration.cs" />
+    <Compile Include="SshdConfiguration.cs" />
+    <Compile Include="SshKnownHosts.cs" />
+    <Compile Include="SyncMachineConfiguration.cs" />
+    <Compile Include="SyslogNgConfiguration.cs" />
+    <Compile Include="SystemUser.cs" />
+    <Compile Include="UserConfiguration.cs" />
+    <Compile Include="VpnConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\antd.commands\antd.commands.csproj">
+      <Project>{3E77920A-6201-48D8-A9CE-8D01A477E0F9}</Project>
+      <Name>antd.commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
       <Name>antdlib.common</Name>

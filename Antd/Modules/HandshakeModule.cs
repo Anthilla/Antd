@@ -31,8 +31,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using antdlib.common;
+using antdlib.config;
 using Antd.Database;
-using Antd.Ssh;
 using Nancy;
 
 namespace Antd.Modules {
