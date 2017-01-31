@@ -3,19 +3,17 @@ using System.IO;
 using antdlib.common;
 using antdlib.models;
 using Newtonsoft.Json;
-using IoDir = System.IO.Directory;
 
 namespace AntdUi.AppConfig {
     public class AppConfiguration {
 
         private AppConfigurationModel _model;
 
-        private readonly string _file = $"{Parameter.DirectoryCfg}/app.conf";
+        private readonly string _file = $"{Parameter.AntdCfg}/app.conf";
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
         public AppConfiguration() {
-            IoDir.CreateDirectory(Parameter.DirectoryCfg);
             if(!File.Exists(_file)) {
                 _model = new AppConfigurationModel();
             }

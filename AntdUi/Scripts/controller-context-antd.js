@@ -1,8 +1,8 @@
 "use strict";
 
-app.controller("AntdHostParamController", ["$rootScope", "$scope", "$http", AntdHostParamController]);
+app.controller("AntdHostParamController", ["$scope", "$http", AntdHostParamController]);
 
-function AntdHostParamController($rootScope, $scope, $http) {
+function AntdHostParamController($scope, $http) {
 
     $scope.Save = function () {
         var data = $.param({
@@ -14,15 +14,14 @@ function AntdHostParamController($rootScope, $scope, $http) {
         $http.post("/config", data).then(
             function () {
                 alert("Ok!");
-                $scope.GetConfig();
             },
         function (response) {
             console.log(response);
         });
     };
 
-    $scope.GetConfig();
-    $scope.GetConfig = $http.get("/config").success(function (data) {
+    //$scope.GetConfig();
+    $http.get("/config").success(function (data) {
         $scope.AntdPort = data.AntdPort;
         $scope.AntdUiPort = data.AntdUiPort;
         $scope.DatabasePath = data.DatabasePath;

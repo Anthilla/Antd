@@ -35,7 +35,6 @@ namespace AntdUi.Modules {
     public class MonitorModule : NancyModule {
 
         public MonitorModule() {
-
             Get["/monitor/resources"] = x => {
                 //todo prendi dati da server
                 return DateTime.Now.ToString(CultureInfo.InvariantCulture);

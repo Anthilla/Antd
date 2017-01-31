@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntdUi", "AntdUi\AntdUi.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.models", "antdlib.models\antdlib.models.csproj", "{AD9E49CE-4817-4F27-B0B2-94A395FF4229}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.config\antdlib.config.csproj", "{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,12 @@ Global
 		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Library|Any CPU.Build.0 = Release|Any CPU
 		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD9E49CE-4817-4F27-B0B2-94A395FF4229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Library|Any CPU.ActiveCfg = Release|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Library|Any CPU.Build.0 = Release|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
