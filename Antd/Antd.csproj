@@ -35,6 +35,9 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Antd.Application</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="dotMemory.Unit, Version=103.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.dotMemoryUnit.2.3.20160517.113140\lib\dotMemory.Unit.dll</HintPath>
@@ -175,7 +178,7 @@
     <Compile Include="Modules\StorageModule.cs" />
     <Compile Include="Modules\TestModule.cs" />
     <Compile Include="Modules\WebsocketModule.cs" />
-    <Compile Include="AntdApplication.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="MountPoint\Dfp.cs" />
     <Compile Include="MountPoint\Mount.cs" />
     <Compile Include="Network\LanConfiguration.cs" />

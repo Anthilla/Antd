@@ -30,7 +30,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using IoDir = System.IO.Directory;
 using System.IO;
 
 namespace antdlib.common {
@@ -47,37 +46,22 @@ namespace antdlib.common {
             var src = source.Length > 0 ? $" src={source}" : "";
             var logEntry = $"app=antd lvl=0 msg={message}{src}";
             Console.WriteLine(logEntry);
-            Write(logEntry);
         }
 
         public static void Warn(dynamic message, string source = "") {
             var src = source.Length > 0 ? $" src={source}" : "";
             var logEntry = $"app=antd lvl=1 msg={message}{src}";
             Console.WriteLine(logEntry);
-            Write(logEntry);
         }
 
         public static void Error(dynamic message, string source = "") {
             var src = source.Length > 0 ? $" src={source}" : "";
             var logEntry = $"app=antd lvl=2 msg={message}{src}";
             Console.WriteLine(logEntry);
-            Write(logEntry);
         }
 
         public static void Point(dynamic message) {
             Console.WriteLine($"→→ {message}");
-        }
-
-        private static void Write(string message) {
-            if(!File.Exists("/cfg/antd/antd.log")) {
-                IoDir.CreateDirectory("/cfg");
-                IoDir.CreateDirectory("/cfg/antd");
-                File.WriteAllText("/cfg/antd/antd.log", "");
-                return;
-            }
-            using(var writer = new StreamWriter("/cfg/antd/antd.log", true)) {
-                writer.WriteLine(message);
-            }
         }
     }
 }

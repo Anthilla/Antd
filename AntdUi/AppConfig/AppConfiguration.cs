@@ -10,12 +10,12 @@ namespace AntdUi.AppConfig {
 
         private AppConfigurationModel _model;
 
-        private readonly string _file = $"{antdlib.common.Parameter.DirectoryCfg}/app.conf";
+        private readonly string _file = $"{Parameter.DirectoryCfg}/app.conf";
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
         public AppConfiguration() {
-            IoDir.CreateDirectory(antdlib.common.Parameter.DirectoryCfg);
+            IoDir.CreateDirectory(Parameter.DirectoryCfg);
             if(!File.Exists(_file)) {
                 _model = new AppConfigurationModel();
             }

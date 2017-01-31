@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using antdlib.common;
 using antdlib.common.Tool;
 using antdlib.models;
+using Antd.AppConfig;
 using Newtonsoft.Json;
 using IoDir = System.IO.Directory;
 
@@ -201,8 +202,8 @@ namespace Antd.Certificates {
 
         public void PrepareIntermediateConfigurationFile() {
             if(!File.Exists($"{_caIntermediateDirectory}/openssl.cnf")) {
-                var applicationSetting = new ApplicationSetting();
-                File.WriteAllLines($"{_caIntermediateDirectory}/openssl.cnf", CaConfigurationFiles.IntermediateCaOpensslCnf(_caIntermediateDirectory, $"http://{GetThisIp()}:{applicationSetting.HttpPort()}/services/ca/crl"));
+                var applicationSetting = new AppConfiguration().Get();
+                File.WriteAllLines($"{_caIntermediateDirectory}/openssl.cnf", CaConfigurationFiles.IntermediateCaOpensslCnf(_caIntermediateDirectory, $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl"));
             }
         }
 
@@ -296,10 +297,10 @@ namespace Antd.Certificates {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
-                var applicationSetting = new ApplicationSetting();
+                var applicationSetting = new AppConfiguration().Get();
                 File.WriteAllLines(config, CaConfigurationFiles.IntermediateCaDomainControllerOpensslCnf(
                         _caIntermediateDirectory,
-                        $"http://{GetThisIp()}:{applicationSetting.HttpPort()}/services/ca/crl",
+                        $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl",
                         dcGuid,
                         dcDns
                     ));
@@ -324,10 +325,10 @@ namespace Antd.Certificates {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
-                var applicationSetting = new ApplicationSetting();
+                var applicationSetting = new AppConfiguration().Get();
                 File.WriteAllLines(config, CaConfigurationFiles.IntermediateCaSmartCardOpensslCnf(
                         _caIntermediateDirectory,
-                        $"http://{GetThisIp()}:{applicationSetting.HttpPort()}/services/ca/crl",
+                        $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl",
                         upn
                     ));
             }

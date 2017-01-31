@@ -17,17 +17,17 @@ namespace Antd.Database {
         private const string ViewName = "Application";
 
         public IEnumerable<ApplicationSchema> GetAll() {
-            var result = DatabaseRepository.Query<ApplicationSchema>(AntdApplication.Database, ViewName);
+            var result = DatabaseRepository.Query<ApplicationSchema>(Application.Database, ViewName);
             return result;
         }
 
         public ApplicationSchema GetByGuid(string guid) {
-            var result = DatabaseRepository.Query<ApplicationSchema>(AntdApplication.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
+            var result = DatabaseRepository.Query<ApplicationSchema>(Application.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
             return result.FirstOrDefault();
         }
 
         public ApplicationSchema GetByName(string alias) {
-            var result = DatabaseRepository.Query<ApplicationSchema>(AntdApplication.Database, ViewName, schema => schema.Name == alias);
+            var result = DatabaseRepository.Query<ApplicationSchema>(Application.Database, ViewName, schema => schema.Name == alias);
             return result.FirstOrDefault();
         }
 
@@ -48,7 +48,7 @@ namespace Antd.Database {
                 UnitMount = unitMount,
                 UnitLauncher = unitLauncher.SplitToList()
             };
-            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            var result = DatabaseRepository.Save(Application.Database, obj, true);
             return result;
         }
 
@@ -71,12 +71,12 @@ namespace Antd.Database {
                 UnitMount = unitMount,
                 UnitLauncher = unitLauncher.SplitToList()
             };
-            var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
+            var result = DatabaseRepository.Edit(Application.Database, objUpdate, true);
             return result;
         }
 
         public bool Delete(string guid) {
-            var result = DatabaseRepository.Delete<ApplicationModel>(AntdApplication.Database, Guid.Parse(guid));
+            var result = DatabaseRepository.Delete<ApplicationModel>(Application.Database, Guid.Parse(guid));
             return result;
         }
 

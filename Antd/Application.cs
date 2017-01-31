@@ -37,6 +37,7 @@ using antdlib.common.Helpers;
 using antdlib.common.Tool;
 using antdlib.views;
 using Antd.Acl;
+using Antd.AppConfig;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Bind;
@@ -66,13 +67,12 @@ using RaptorDB;
 using HostConfiguration = Antd.Host.HostConfiguration;
 
 namespace Antd {
-    internal class AntdApplication {
+    internal class Application {
         public static RaptorDB.RaptorDB Database;
 
         #region [    private classes init    ]
         private static readonly AclConfiguration AclConfiguration = new AclConfiguration();
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
-        private static readonly ApplicationSetting ApplicationSetting = new ApplicationSetting();
         private static readonly AppTarget AppTarget = new AppTarget();
         private static readonly Bash Bash = new Bash();
         private static readonly BindConfiguration BindConfiguration = new BindConfiguration();
@@ -100,8 +100,9 @@ namespace Antd {
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
             Procedure();
-            var port = ApplicationSetting.HttpPort();
-            var uri = $"http://localhost:{port}/";
+            var app = new AppConfiguration().Get();
+            var port = app.AntdPort;
+            var uri = $"http://localhost:{app.AntdPort}/";
             var host = new NancyHost(new Uri(uri));
             host.Start();
             ConsoleLogger.Log("host ready");
@@ -131,6 +132,7 @@ namespace Antd {
         }
 
         private static void Procedure() {
+            var appConfiguration = new AppConfiguration().Get();
 
             #region [    Remove Limits    ]
             if(Parameter.IsUnix) {
@@ -165,13 +167,8 @@ namespace Antd {
             ConsoleLogger.Log("working directories ready");
             #endregion
 
-            #region [    Core Parameters    ]
-            ApplicationSetting.WriteDefaults();
-            ConsoleLogger.Log("antd core parameters ready");
-            #endregion
-
             #region [    Database    ]
-            Database = RaptorDB.RaptorDB.Open(ApplicationSetting.DatabasePath());
+            Database = RaptorDB.RaptorDB.Open(appConfiguration.DatabasePath);
             Global.RequirePrimaryView = false;
             Global.BackupCronSchedule = null;
             Global.SaveIndexToDiskTimerSeconds = 30;
@@ -343,7 +340,7 @@ namespace Antd {
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
-            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(ApplicationSetting.HttpPort()));
+            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdPort.ToString()));
             Bash.Execute("chmod 755 /etc/avahi/services", false);
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");

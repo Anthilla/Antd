@@ -18,9 +18,11 @@ namespace AntdUi.AppConfig {
             Post["/config"] = _ => {
                 var antdPort = Request.Form.AntdPort;
                 var antdUiPort = Request.Form.AntdUiPort;
+                var databasePath = Request.Form.DatabasePath;
                 var model = new AppConfigurationModel {
                     AntdPort = antdPort,
-                    AntdUiPort = antdUiPort
+                    AntdUiPort = antdUiPort,
+                    DatabasePath = databasePath
                 };
                 _appConfiguration.Save(model);
                 return HttpStatusCode.OK;

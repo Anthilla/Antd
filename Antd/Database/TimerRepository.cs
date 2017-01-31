@@ -10,17 +10,17 @@ namespace Antd.Database {
         private const string ViewName = "Timer";
 
         public IEnumerable<TimerSchema> GetAll() {
-            var result = DatabaseRepository.Query<TimerSchema>(AntdApplication.Database, ViewName);
+            var result = DatabaseRepository.Query<TimerSchema>(Application.Database, ViewName);
             return result;
         }
 
         public TimerSchema GetByGuid(string guid) {
-            var result = DatabaseRepository.Query<TimerSchema>(AntdApplication.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
+            var result = DatabaseRepository.Query<TimerSchema>(Application.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
             return result.FirstOrDefault();
         }
 
         public TimerSchema GetByName(string name) {
-            var result = DatabaseRepository.Query<TimerSchema>(AntdApplication.Database, ViewName, schema => schema.Alias == name);
+            var result = DatabaseRepository.Query<TimerSchema>(Application.Database, ViewName, schema => schema.Alias == name);
             return result.FirstOrDefault();
         }
 
@@ -36,7 +36,7 @@ namespace Antd.Database {
                 Command = command,
                 TimerStatus = "active"
             };
-            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            var result = DatabaseRepository.Save(Application.Database, obj, true);
             return result;
         }
 
@@ -57,12 +57,12 @@ namespace Antd.Database {
                 Command = command.IsNullOrEmpty() ? null : command,
                 TimerStatus = timerStatus.IsNullOrEmpty() ? null : timerStatus
             };
-            var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
+            var result = DatabaseRepository.Edit(Application.Database, objUpdate, true);
             return result;
         }
 
         public bool Delete(string guid) {
-            var result = DatabaseRepository.Delete<TimerModel>(AntdApplication.Database, Guid.Parse(guid));
+            var result = DatabaseRepository.Delete<TimerModel>(Application.Database, Guid.Parse(guid));
             return result;
         }
     }

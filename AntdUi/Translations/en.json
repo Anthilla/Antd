@@ -55,5 +55,6 @@
   "TEXT_FILE": "Text File",
   "NOTES": "Notes",
   "EXIT": "Exit",
-  "WELCOME": "Welcome"
+  "WELCOME": "Welcome",
+  "DATABASE_PATH": "Database Path" 
 }

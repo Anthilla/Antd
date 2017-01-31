@@ -11,12 +11,12 @@ namespace Antd.Database {
         private const string ViewName = "AuthorizedKeys";
 
         public IEnumerable<AuthorizedKeysSchema> GetAll() {
-            var result = DatabaseRepository.Query<AuthorizedKeysSchema>(AntdApplication.Database, ViewName);
+            var result = DatabaseRepository.Query<AuthorizedKeysSchema>(Application.Database, ViewName);
             return result;
         }
 
         public AuthorizedKeysSchema GetByGuid(string guid) {
-            var result = DatabaseRepository.Query<AuthorizedKeysSchema>(AntdApplication.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
+            var result = DatabaseRepository.Query<AuthorizedKeysSchema>(Application.Database, ViewName, schema => schema.Id == guid || schema.Guid == guid);
             return result.FirstOrDefault();
         }
 
@@ -29,7 +29,7 @@ namespace Antd.Database {
                 User = user,
                 KeyValue = keyValue
             };
-            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            var result = DatabaseRepository.Save(Application.Database, obj, true);
             return result;
         }
 
@@ -44,12 +44,12 @@ namespace Antd.Database {
                 User = user,
                 KeyValue = keyValue
             };
-            var result = DatabaseRepository.Edit(AntdApplication.Database, objUpdate, true);
+            var result = DatabaseRepository.Edit(Application.Database, objUpdate, true);
             return result;
         }
 
         public bool Delete(string guid) {
-            var result = DatabaseRepository.Delete<AuthorizedKeysModel>(AntdApplication.Database, Guid.Parse(guid));
+            var result = DatabaseRepository.Delete<AuthorizedKeysModel>(Application.Database, Guid.Parse(guid));
             return result;
         }
 
@@ -66,7 +66,7 @@ namespace Antd.Database {
                 User = user,
                 KeyValue = keyValue
             };
-            var result = DatabaseRepository.Save(AntdApplication.Database, obj, true);
+            var result = DatabaseRepository.Save(Application.Database, obj, true);
             return result;
         }
     }

@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiConsumer.cs" />
-    <Compile Include="ApplicationSetting.cs" />
     <Compile Include="Enum\Gender.cs" />
     <Compile Include="Enum\NetworkInterfaceMode.cs" />
     <Compile Include="Enum\NetworkInterfaceStatus.cs" />
@@ -92,7 +91,6 @@
     <Compile Include="Tool\Grep.cs" />
     <Compile Include="Tool\Replace.cs" />
     <Compile Include="Timestamp.cs" />
-    <Compile Include="XmlWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
