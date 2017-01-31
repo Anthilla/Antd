@@ -51,14 +51,17 @@
     <Compile Include="DhcpdConfigurationModel.cs" />
     <Compile Include="DhcpdLeaseModel.cs" />
     <Compile Include="DirectoryModel.cs" />
+    <Compile Include="DiskModel.cs" />
     <Compile Include="FirewallConfigurationModel.cs" />
     <Compile Include="GlusterConfigurationModel.cs" />
     <Compile Include="HostModel.cs" />
     <Compile Include="JournaldConfigurationModel.cs" />
     <Compile Include="KerberosConfigurationModel.cs" />
+    <Compile Include="LsblkJsonModel.cs" />
     <Compile Include="MountModel.cs" />
     <Compile Include="NetscanSettingModel.cs" />
     <Compile Include="NetworkConfigurationModel.cs" />
+    <Compile Include="PartitionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RsyncConfigurationModel.cs" />
     <Compile Include="SambaConfigurationModel.cs" />
@@ -69,6 +72,9 @@
     <Compile Include="SyslogNgConfigurationModel.cs" />
     <Compile Include="UserConfigurationModel.cs" />
     <Compile Include="VpnConfigurationModel.cs" />
+    <Compile Include="ZfsModel.cs" />
+    <Compile Include="ZfsSnapModel.cs" />
+    <Compile Include="ZpoolModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -8,39 +8,20 @@ using Antd.SystemdTimer;
 
 namespace Antd.Storage {
     public class Zpool {
-        public class Model {
-            public string Guid { get; set; }
-            public string Name { get; set; }
-            public string Size { get; set; }
-            public string Alloc { get; set; }
-            public string Free { get; set; }
-            public string Expandsz { get; set; }
-            public string Frag { get; set; }
-            public string Cap { get; set; }
-            public string Dedup { get; set; }
-            public string Health { get; set; }
-            public string Altroot { get; set; }
-            public string Status { get; set; }
-
-            public bool HasSnapshot { get; set; }
-            public string SnapshotGuid { get; set; } = "";
-            public string Snapshot { get; set; } = "";
-        }
-
         private static readonly TimerRepository TimerRepository = new TimerRepository();
         private static readonly Bash Bash = new Bash();
         private readonly Timers _timers = new Timers();
 
-        public List<Model> List() {
+        public List<ZpoolModel> List() {
             var result = Bash.Execute("zpool list");
-            var list = new List<Model>();
+            var list = new List<ZpoolModel>();
             if(string.IsNullOrEmpty(result)) {
                 return list;
             }
             var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList().Skip(1);
             foreach(var line in lines) {
                 var cells = Regex.Split(line, @"\s+");
-                var model = new Model {
+                var model = new ZpoolModel {
                     Guid = Guid.NewGuid().ToString(),
                     Name = cells[0],
                     Size = cells[1],
@@ -70,16 +51,16 @@ namespace Antd.Storage {
             return list;
         }
 
-        public  IEnumerable<string> ImportList() {
+        public IEnumerable<string> ImportList() {
             var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2, " ");
             return text;
         }
 
-        public  void Import(string poolName) {
+        public void Import(string poolName) {
             Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}", false);
         }
 
-        public  List<string> History() {
+        public List<string> History() {
             var obj = Bash.Execute("zpool history");
             var list = obj.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return list.ToList();
