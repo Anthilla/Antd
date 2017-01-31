@@ -1,4 +1,31 @@
-touch bootcmd.html
-touch bootmod.html
-touch bootsvc.html
-touch bootparam.html
+mv antd.acl.html acl.html
+mv antd.bind.html bind.html
+mv antd.cpu.html cpu.html
+mv antd.cron.html cron.html
+mv antd.dhcpd.html dhcpd.html
+mv antd.disk.html disk.html
+mv antd.fw.html fw.html
+mv antd.host.html host.html
+mv antd.hostparam.html hostparam.html
+mv antd.info.html info.html
+mv antd.leases.html leases.html
+mv antd.losetup.html losetup.html
+mv antd.memory.html memory.html
+mv antd.mod.html mod.html
+mv antd.network.html network.html
+mv antd.ns.html ns.html
+mv antd.om.html om.html
+mv antd.overlay.html overlay.html
+mv antd.rsync.html rsync.html
+mv antd.samba.html samba.html
+mv antd.sshd.html sshd.html
+mv antd.storage.html storage.html
+mv antd.svcs.html svcs.html
+mv antd.sync.html sync.html
+mv antd.system.html system.html
+mv antd.time.html time.html
+mv antd.update.html update.html
+mv antd.users.html users.html
+mv antd.vm.html vm.html
+mv antd.vpn.html vpn.html
+mv antd.zfs.html zfs.html

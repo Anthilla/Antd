@@ -1,8 +1,9 @@
 "use strict";
 
-app.controller("RequestMaterialGenericControllerDashboard", ["$rootScope", "$scope", "$http", RequestMaterialGenericControllerDashboard]);
+app.controller("RequestMaterialGenericControllerContent", ["$rootScope", "$scope", "$http", RequestMaterialGenericControllerContent]);
 
-function RequestMaterialGenericControllerDashboard($rootScope, $scope, $http) {
+function RequestMaterialGenericControllerContent($rootScope, $scope, $http) {
+
     $scope.Create = function (el) {
         var data = $.param({
             Ward: $scope.Ward,
@@ -81,11 +82,6 @@ function RequestMaterialGenericControllerDashboard($rootScope, $scope, $http) {
     $scope.HideIfExist = function (v1, v2) {
         return v1 === null || v2 === null;
     }
-}
-
-app.controller("RequestMaterialGenericControllerContent", ["$rootScope", "$scope", "$http", RequestMaterialGenericControllerContent]);
-
-function RequestMaterialGenericControllerContent($rootScope, $scope, $http) {
 
     $scope.SaveFile = function (file) {
         var mats = "";
