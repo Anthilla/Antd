@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
 using antdlib.common.Tool;
+using antdlib.config;
 using antdlib.models;
-using Antd.AppConfig;
 using Newtonsoft.Json;
 using IoDir = System.IO.Directory;
 

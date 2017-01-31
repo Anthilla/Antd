@@ -7,7 +7,7 @@ using AntdUi.Database;
 namespace AntdUi.Models {
     public class SelectizeCacheRepository {
 
-        private readonly string _templateDirectory = $"{antdlib.common.Parameter.DirectoryCfg}/cache";
+        private readonly string _templateDirectory = $"{antdlib.common.Parameter.AntdCfg}/cache";
         private readonly Actions<SelectizeCacheModel> _repository;
 
         public SelectizeCacheRepository() {

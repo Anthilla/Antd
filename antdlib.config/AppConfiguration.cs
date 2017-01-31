@@ -4,7 +4,7 @@ using antdlib.common;
 using antdlib.models;
 using Newtonsoft.Json;
 
-namespace AntdUi.AppConfig {
+namespace antdlib.config {
     public class AppConfiguration {
 
         private AppConfigurationModel _model;
@@ -35,6 +35,14 @@ namespace AntdUi.AppConfig {
         }
 
         public void Save(AppConfigurationModel model) {
+            _model = model;
+            if(File.Exists(_file)) {
+                File.Copy(_file, $"{_file}.bck", true);
+            }
+            File.WriteAllText(_file, JsonConvert.SerializeObject(_model, Formatting.Indented));
+        }
+
+        public void UiSave(AppConfigurationModel model) {
             var savedModel = Get();
             _model = model;
             _api.Post($"http://localhost:{savedModel.AntdPort}/config", _model.ToDictionary());

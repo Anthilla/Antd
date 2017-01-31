@@ -103,7 +103,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppConfig\AppConfiguration.cs" />
     <Compile Include="AppConfig\AppConfigurationModule.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Auth\UserIdentity.cs" />
@@ -923,6 +922,10 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.config\antdlib.config.csproj">
+      <Project>{06b1b8fb-783f-40e1-9b85-2fadba91ea50}</Project>
+      <Name>antdlib.config</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
       <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>

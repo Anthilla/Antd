@@ -35,6 +35,7 @@ using System.Runtime.InteropServices;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.common.Tool;
+using antdlib.config;
 using antdlib.views;
 using Antd.Acl;
 using Antd.AppConfig;

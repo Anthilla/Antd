@@ -1,4 +1,5 @@
-﻿using antdlib.models;
+﻿using antdlib.config;
+using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -24,7 +25,7 @@ namespace AntdUi.AppConfig {
                     AntdUiPort = antdUiPort,
                     DatabasePath = databasePath
                 };
-                _appConfiguration.Save(model);
+                _appConfiguration.UiSave(model);
                 return HttpStatusCode.OK;
             };
         }
