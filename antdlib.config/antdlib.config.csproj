@@ -80,6 +80,7 @@
     <Compile Include="SyslogNgConfiguration.cs" />
     <Compile Include="SystemUser.cs" />
     <Compile Include="UserConfiguration.cs" />
+    <Compile Include="Virsh.cs" />
     <Compile Include="VpnConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
