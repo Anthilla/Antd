@@ -41,6 +41,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.models", "antdlib.m
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.config\antdlib.config.csproj", "{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working_antd", "working_antd", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working_antdui", "working_antdui", "{2FC51048-FBFA-4A78-B38A-139717C9EFE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
