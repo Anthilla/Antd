@@ -34,6 +34,8 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Antd.Application</StartupObject>
@@ -102,6 +104,10 @@
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="ServerModules\AntdInfoModule.cs" />
     <Compile Include="ServerModules\AntdCpuStatusModule.cs" />
+    <Compile Include="ServerModules\AntdOvermountStatusModule.cs" />
+    <Compile Include="ServerModules\AntdLosetupStatusModule.cs" />
+    <Compile Include="ServerModules\AntdSystemStatusModule.cs" />
+    <Compile Include="ServerModules\AntdServicesModule.cs" />
     <Compile Include="ServerModules\AntdModulesStatusModule.cs" />
     <Compile Include="ServerModules\AntdMemoryStatusModule.cs" />
     <Compile Include="ServerModules\MonitorModule.cs" />

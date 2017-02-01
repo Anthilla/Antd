@@ -27,13 +27,22 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace antdlib.models {
-    public class UnitModel {
-        public string Name { get; set; }
-        public string Load { get; set; }
-        public string Active { get; set; }
-        public string Sub { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
+namespace AntdUi.Modules {
+    public class AntdSystemStatusModule : NancyModule {
+
+        private readonly ApiConsumer _api = new ApiConsumer();
+
+        public AntdSystemStatusModule() {
+            Get["/systemstatus"] = x => {
+                var model = _api.Get<PageSystemStatusModel>($"http://127.0.0.1:{Application.ServerPort}/systemstatus");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
+            };
+        }
     }
 }

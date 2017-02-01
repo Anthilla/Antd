@@ -1,1 +1,40 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">system status</h1>
+
+<div ng-controller="AntdSystemStatusController">
+    <div class="grid fg-white">
+        <div class="row cells9">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Alias</p>
+            </div>
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Active</p>
+            </div>
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Recovery</p>
+            </div>
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Running</p>
+            </div>
+            <div class="cell uppercase fg-anthilla-green">
+                <p>Newest</p>
+            </div>
+        </div>
+        <div ng-repeat="comp in SystemStatus.Components" class="row cells9 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2">
+                <p> {{ comp.Alias }} </p>
+            </div>
+            <div class="cell colspan2">
+                <p> {{ comp.Active }} </p>
+            </div>
+            <div class="cell colspan2">
+                <p> {{ comp.Recovery }} </p>
+            </div>
+            <div class="cell colspan2">
+                <p> {{ comp.Running }} </p>
+            </div>
+            <div class="cell">
+                <p> {{ comp.Newest }} </p>
+            </div>
+        </div>
+    </div>
+</div>

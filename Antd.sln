@@ -41,9 +41,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.models", "antdlib.m
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.config\antdlib.config.csproj", "{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working_antd", "working_antd", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
+	ProjectSection(SolutionItems) = preProject
+		_frequentregex.txt = _frequentregex.txt
+	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working_antdui", "working_antdui", "{2FC51048-FBFA-4A78-B38A-139717C9EFE0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,5 +108,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
+		{EA498959-0DEB-4A9A-97E2-54F099447C64} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
 	EndGlobalSection
 EndGlobal

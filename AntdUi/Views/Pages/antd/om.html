@@ -1,1 +1,34 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">overmounts status</h1>
+
+<div ng-controller="AntdOvermountStatusController">
+    <div class="grid fg-white">
+        <div class="row cells11">
+            <div class="cell uppercase fg-anthilla-green colspan2">
+                <p>Type</p>
+            </div>
+            <div class="cell uppercase fg-anthilla-green colspan4">
+                <p>System Path</p>
+            </div>
+            <div class="cell uppercase fg-anthilla-green">
+                <p>&nbsp;</p>
+            </div>
+            <div class="cell uppercase fg-anthilla-green colspan4">
+                <p>DIRS Path</p>
+            </div>
+        </div>
+        <div ng-repeat="comp in OvermountStatus.Components" class="row cells11 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2">
+                <p>{{ comp.Context }}&nbsp;{{ comp.Context }}</p>
+            </div>
+            <div class="cell colspan4">
+                <p>{{ comp.SystemPath }}</p>
+            </div>
+            <div class="cell">
+                <p><span class="icon mif-link fg-anthilla-violet"></span></p>
+            </div>
+            <div class="cell colspan4">
+                <p>{{ comp.RepoDirsPath }}</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -71,8 +71,11 @@ namespace Antd.Info {
             return result;
         }
 
-        public IEnumerable<UnitModel> GetUnits(string type) {
-            var result = Mapper.FromCommand<UnitModel>($"systemctl list-units --no-legend --no-pager -t {type}", 3).ToList().Skip(1);
+        public List<UnitModel> GetUnits(string type) {
+            var result = Mapper.FromCommand<UnitModel>($"systemctl list-units --no-legend --no-pager -t {type}", 3).ToList().Skip(1).ToList();
+            foreach(var r in result) {
+                r.Type = type;
+            }
             return result;
         }
 
