@@ -101,6 +101,10 @@
   <ItemGroup>
     <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="ServerModules\AntdInfoModule.cs" />
+    <Compile Include="ServerModules\AntdCpuStatusModule.cs" />
+    <Compile Include="ServerModules\AntdModulesStatusModule.cs" />
+    <Compile Include="ServerModules\AntdMemoryStatusModule.cs" />
+    <Compile Include="ServerModules\MonitorModule.cs" />
     <Compile Include="Ui\UiService.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
@@ -2912,6 +2916,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

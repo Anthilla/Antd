@@ -27,35 +27,21 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
 using antdlib.common;
 using antdlib.models;
-using Antd.Info;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace Antd.ServerModules {
-    public class AntdInfoModule : NancyModule {
+namespace AntdUi.Modules {
+    public class AntdModulesStatusModule : NancyModule {
 
-        public AntdInfoModule() {
-            Get["/info"] = x => {
-                var bash = new Bash();
-                var machineInfo = new MachineInfo();
-                var versionOs = bash.Execute("uname -a");
-                var aosInfo = machineInfo.GetAosrelease();
-                var uptime = machineInfo.GetUptime();
-                var gentooRelease = File.ReadAllText("/etc/gentoo-release");
-                var lsbRelease = File.ReadAllText("/etc/lsb-release");
-                var osRelease = File.ReadAllText("/etc/os-release");
-                var model = new PageInfoModel {
-                    VersionOs = versionOs,
-                    AosInfo = aosInfo,
-                    Uptime = uptime,
-                    GentooRelease = gentooRelease,
-                    LsbRelease = lsbRelease,
-                    OsRelease = osRelease
-                };
-                return JsonConvert.SerializeObject(model);
+        private readonly ApiConsumer _api = new ApiConsumer();
+
+        public AntdModulesStatusModule() {
+            Get["/modulesstatus"] = x => {
+                var model = _api.Get<PageModulesStatusModel>($"http://127.0.0.1:{Application.ServerPort}/modulesstatus");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
         }
     }

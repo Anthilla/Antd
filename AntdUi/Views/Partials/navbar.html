@@ -2,19 +2,36 @@
     <a class="app-bar-element bg-hover-anthilla-gray-3 fg-anthilla-green" href="#" style="cursor: default !important;">
         <span id="LoadingSpinner" class="icon mif-spinner5 mif-ani-spin mif-2x" style="display: none;"></span>
     </a>
-    <a class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 fg-anthilla-green" ui-sref="home">
+    <a class="app-bar-element bg-hover-anthilla-gray-3 fg-anthilla-green" style="cursor: default;">
         <span class="padding-right10 padding-left10">Antd</span>
     </a>
     <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
-    
+
     <div ng-controller="MonitorController">
-        <a  class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="icon mif-meter mif-2x"></span>
-            <span class="padding-right10 padding-left10">&nbsp;{{Resources}}</span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
+            <span class="icon mif-display mif-2x"></span>
+            <span class="padding-right10 padding-left10">&nbsp;{{Resources.Hostname}}</span>
         </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
+            <span class="padding-right10 padding-left10 capitalize">{Resources.Uptime}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
+            <span class="padding-right10 padding-left10">&nbsp;{{Resources.LoadAverage}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
+            <span class="padding-right10 padding-left10 capitalize">memory used&nbsp;{{Resources.MemoryUsage}}%</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
+            <span class="padding-right10 padding-left10 capitalize">disk used&nbsp;{{Resources.DiskUsage}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
     </div>
-    
-    <a class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3">
+
+    <a class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3" style="cursor: default;">
         <span class="padding-right10 padding-left10" ng-controller="CurrentDateTimeController">{{date | date:'yyyy-MM-dd HH:mm'}}</span>
     </a>
     <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px;"></span>

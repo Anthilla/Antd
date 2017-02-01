@@ -1,5 +1,29 @@
 "use strict";
 
+app.controller("AntdModulesStatusController", ["$scope", "$http", AntdModulesStatusController]);
+
+function AntdModulesStatusController($scope, $http) {
+    $http.get("/modulesstatus").success(function (data) {
+        $scope.ModulesStatus = data;
+    });
+}
+
+app.controller("AntdCpuStatusController", ["$scope", "$http", AntdCpuStatusController]);
+
+function AntdCpuStatusController($scope, $http) {
+    $http.get("/cpustatus").success(function (data) {
+        $scope.CpuStatus = data;
+    });
+}
+
+app.controller("AntdMemoryStatusController", ["$scope", "$http", AntdMemoryStatusController]);
+
+function AntdMemoryStatusController($scope, $http) {
+    $http.get("/memorystatus").success(function (data) {
+        $scope.MemoryStatus = data;
+    });
+}
+
 app.controller("AntdInfoController", ["$scope", "$http", AntdInfoController]);
 
 function AntdInfoController($scope, $http) {

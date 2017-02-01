@@ -65,6 +65,7 @@ namespace Antd.Modules {
             #endregion
 
             #region [    Partials    ]
+            //antdui
             Get["/part/info"] = x => {
                 try {
                     var bash = new Bash();
@@ -86,6 +87,7 @@ namespace Antd.Modules {
                 }
             };
 
+            //antdui
             Get["/part/info/memory"] = x => {
                 try {
                     dynamic viewModel = new ExpandoObject();
@@ -101,6 +103,7 @@ namespace Antd.Modules {
                 }
             };
 
+            //antdui
             Get["/part/info/cpu"] = x => {
                 try {
                     var machineInfo = new MachineInfo();

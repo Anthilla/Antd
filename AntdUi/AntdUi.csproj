@@ -103,6 +103,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\AntdCpuStatusModule.cs" />
+    <Compile Include="Modules\AntdModulesStatusModule.cs" />
+    <Compile Include="Modules\AntdMemoryStatusModule.cs" />
     <Compile Include="Modules\AntdInfoModule.cs" />
     <Compile Include="Modules\AppConfigurationModule.cs" />
     <Compile Include="Auth\UserDatabase.cs" />

@@ -1,1 +1,14 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">CPU status</h1>
+
+<div ng-controller="AntdCpuStatusController">
+    <div class="grid fg-white">
+        <div ng-repeat="cpu in CpuStatus.Cpuinfo" class="row cells5 bg-hover-anthilla-gray-2">
+            <div class="cell uppercase">
+                <p>{{ mem.Key }}:&nbsp;</p>
+            </div>
+            <div class="cell colspan4">
+                <p>{{ mem.Value }}</p>
+            </div>
+        </div>
+    </div>
+</div>

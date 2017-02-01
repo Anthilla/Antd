@@ -68,6 +68,9 @@
     <Compile Include="MountModel.cs" />
     <Compile Include="NetscanSettingModel.cs" />
     <Compile Include="NetworkConfigurationModel.cs" />
+    <Compile Include="PageCpuStatusModel.cs" />
+    <Compile Include="PageModulesStatusModel.cs" />
+    <Compile Include="PageMemoryStatusModel.cs" />
     <Compile Include="PageMonitorModel.cs" />
     <Compile Include="PageInfoModel.cs" />
     <Compile Include="PartitionModel.cs" />

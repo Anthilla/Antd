@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using antdlib.common;
 using antdlib.models;
@@ -37,13 +36,8 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace Antd.Modules {
+namespace Antd.ServerModules {
     public class MonitorModule : NancyModule {
-
-        private static string GetResourcesHtmlDiv(string value, string iconName = "") {
-            var ico = string.IsNullOrEmpty(iconName) ? "" : $"<i class=\"icon-{iconName} fg-anthilla-blu on-left-more\" style=\"line-height: 5px;\"></i>";
-            return $"<a class=\"element nav-button no-overlay bg-darker\" href=\"#\">{ico}<span>{value}</span></a><div class=\"element-divider\"></div>";
-        }
 
         private static int GetPercentage(int tot, int part) {
             if(tot == 0 || part == 0) {
@@ -55,41 +49,30 @@ namespace Antd.Modules {
 
         public MonitorModule() {
 
-            Get["/monitor/resources/html"] = x => {
-                try {
-                    var hostname = File.ReadAllText("/etc/hostname");
-                    var hostnameHtml = GetResourcesHtmlDiv(hostname);
-                    var machineInfo = new MachineInfo();
-                    var uptime = machineInfo.GetUptime();
-                    var up = uptime.Uptime.SplitToList("up").Last().Trim();
-                    var upHtml = GetResourcesHtmlDiv($"Up: {up}");
-                    var la = uptime.LoadAverage.Replace(" load average:", "").Trim();
-                    var laHtml = GetResourcesHtmlDiv(la);
-                    var memory = machineInfo.GetFree().FirstOrDefault();
-                    var tot = memory?.Total;
-                    var used = memory?.Used;
+            Get["/monitor/resources"] = x => {
+                var hostname = File.ReadAllText("/etc/hostname");
+                var machineInfo = new MachineInfo();
+                var uptime = machineInfo.GetUptime();
+                var memoryUsage = 0;
+                var memory = machineInfo.GetFree().FirstOrDefault();
+                if(memory != null) {
+                    var tot = memory.Total;
+                    var used = memory.Used;
                     int resultTot;
                     int.TryParse(new string(tot?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultTot);
                     int resultPart;
                     int.TryParse(new string(used?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
-                    var perc = GetPercentage(resultTot, resultPart);
-                    var memHtml = GetResourcesHtmlDiv($"Memory Used: {perc}%");
-                    var diskUsage = new DiskUsage();
-                    var du = diskUsage.GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
-                    var duHtml = GetResourcesHtmlDiv($"Disk Used: {du?.UsePercentage}");
-                    var response = $"{hostnameHtml}{upHtml}{laHtml}{memHtml}{duHtml}";
-                    return Response.AsText(response);
+                    memoryUsage = GetPercentage(resultTot, resultPart);
                 }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"{Request.Url} request failed: {ex.Message}");
-                    ConsoleLogger.Error(ex);
-                    return Response.AsText(GetResourcesHtmlDiv("Unable to obtain data"));
-                }
-            };
-
-            Get["/machineuuid"] = x => {
-                var machineUuid = Machine.MachineId.Get;
-                return machineUuid;
+                var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
+                var model = new PageMonitorModel {
+                    Hostname = hostname,
+                    Uptime = uptime.Uptime.SplitToList("up").Last().Trim(),
+                    LoadAverage = uptime.LoadAverage.Replace(" load average:", "").Trim(),
+                    MemoryUsage = memoryUsage.ToString(),
+                    DiskUsage = du?.UsePercentage
+                };
+                return JsonConvert.SerializeObject(model);
             };
         }
     }
