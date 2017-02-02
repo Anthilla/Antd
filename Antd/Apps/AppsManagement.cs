@@ -34,17 +34,11 @@ using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
+using antdlib.models;
 using Antd.Database;
 
 namespace Antd.Apps {
     public class AppsManagement {
-        public class AppInfo {
-            public string Name { get; set; }
-            public string Repository { get; set; }
-            public List<KeyValuePair<string, string>> Values { get; set; } = new List<KeyValuePair<string, string>>();
-            public bool IsSetup { get; set; }
-        }
-
         private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
 
         public IEnumerable<AppInfo> Detect() {

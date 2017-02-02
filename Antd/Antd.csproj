@@ -102,8 +102,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="ServerModules\BootOsParametersModule.cs" />
+    <Compile Include="ServerModules\BootServicesModule.cs" />
+    <Compile Include="ServerModules\BootModulesModule.cs" />
+    <Compile Include="ServerModules\CaModule.cs" />
+    <Compile Include="ServerModules\BootCommandsModule.cs" />
+    <Compile Include="ServerModules\LogSyslogNgModule.cs" />
+    <Compile Include="ServerModules\LogJournaldModule.cs" />
+    <Compile Include="ServerModules\LogConfigModule.cs" />
+    <Compile Include="ServerModules\LogReportModule.cs" />
+    <Compile Include="ServerModules\LogJournalModule.cs" />
+    <Compile Include="ServerModules\LogModule.cs" />
     <Compile Include="ServerModules\AntdBindModule.cs" />
     <Compile Include="ServerModules\AntdAclModule.cs" />
+    <Compile Include="ServerModules\AppsDetectModule.cs" />
+    <Compile Include="ServerModules\AppsManagementModule.cs" />
+    <Compile Include="ServerModules\AssetSettingModule.cs" />
+    <Compile Include="ServerModules\AssetSyncMachineModule.cs" />
+    <Compile Include="ServerModules\AssetScanModule.cs" />
+    <Compile Include="ServerModules\AssetDiscoveryModule.cs" />
     <Compile Include="ServerModules\AntdVmModule.cs" />
     <Compile Include="ServerModules\AntdRsyncModule.cs" />
     <Compile Include="ServerModules\AntdGlusterModule.cs" />

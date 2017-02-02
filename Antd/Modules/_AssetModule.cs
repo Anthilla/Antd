@@ -42,20 +42,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class AssetModule : NancyModule {
 
-        public class AvahiServiceViewModel {
-            public string HostName { get; set; }
-            public string Ip { get; set; }
-            public string Port { get; set; }
-            public string MacAddress { get; set; }
-            public bool IsKnown { get; set; }
-        }
-
-        public class NmapScanStatus {
-            public string Protocol { get; set; } = "";
-            public string Status { get; set; } = "";
-            public string Type { get; set; } = "";
-        }
-
         public AssetModule() {
             this.RequiresAuthentication();
 
@@ -78,7 +64,7 @@ namespace Antd.Modules {
                     var kh = new SshKnownHosts();
                     foreach(var ls in localServices) {
                         var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                        var mo = new AssetModule.AvahiServiceViewModel {
+                        var mo = new AvahiServiceViewModel {
                             HostName = arr[0].Trim(),
                             Ip = arr[1].Trim(),
                             Port = arr[2].Trim(),
