@@ -463,8 +463,8 @@ namespace Antd.Modules {
 
             Get["/part/cron"] = x => {
                 try {
-                    var timers = new Timers();
                     dynamic viewModel = new ExpandoObject();
+                    var timers = new Timers();
                     var scheduledJobs = timers.GetAll();
                     viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
                     return View["antd/part/page-antd-scheduler", viewModel];
@@ -611,7 +611,7 @@ namespace Antd.Modules {
 
             Get["/part/vm"] = x => {
                 try {
-                    var virsh = new Virsh.Virsh();
+                    var virsh = new Virsh();
                     dynamic viewModel = new ExpandoObject();
                     var vmList = virsh.GetVmList();
                     viewModel.VMListAny = vmList.Any();

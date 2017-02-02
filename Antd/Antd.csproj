@@ -102,8 +102,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\UserIdentity.cs" />
-    <Compile Include="ServerModules\AntdTimeModule.cs" />
+    <Compile Include="ServerModules\AntdBindModule.cs" />
+    <Compile Include="ServerModules\AntdAclModule.cs" />
+    <Compile Include="ServerModules\AntdVmModule.cs" />
+    <Compile Include="ServerModules\AntdRsyncModule.cs" />
+    <Compile Include="ServerModules\AntdGlusterModule.cs" />
+    <Compile Include="ServerModules\AntdDiskUsageModule.cs" />
+    <Compile Include="ServerModules\AntdZfsModule.cs" />
+    <Compile Include="ServerModules\AntdStorageModule.cs" />
+    <Compile Include="ServerModules\AntdSchedulerModule.cs" />
+    <Compile Include="ServerModules\AntdFirewallModule.cs" />
+    <Compile Include="ServerModules\AntdVpnModule.cs" />
+    <Compile Include="ServerModules\AntdDhcpLeasesModule.cs" />
     <Compile Include="ServerModules\AntdHostModule.cs" />
+    <Compile Include="ServerModules\AntdSambaModule.cs" />
+    <Compile Include="ServerModules\AntdDhcpdModule.cs" />
+    <Compile Include="ServerModules\AntdSshdModule.cs" />
+    <Compile Include="ServerModules\AntdNameServiceModule.cs" />
+    <Compile Include="ServerModules\AntdTimeModule.cs" />
+    <Compile Include="ServerModules\AntdNetworkModule.cs" />
     <Compile Include="ServerModules\AntdUpdateModule.cs" />
     <Compile Include="ServerModules\AntdUsersModule.cs" />
     <Compile Include="ServerModules\AntdOverlayModule.cs" />
@@ -141,7 +158,6 @@
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Modules\ServiceGlusterModule.cs" />
-    <Compile Include="Modules\HostModule.cs" />
     <Compile Include="Modules\ServiceBindModule.cs" />
     <Compile Include="Modules\ServiceSambaModule.cs" />
     <Compile Include="Modules\_AppsModule.cs" />

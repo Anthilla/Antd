@@ -50,7 +50,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 	ProjectSection(SolutionItems) = preProject
 		Antd\Modules\_AntdModule.cs = Antd\Modules\_AntdModule.cs
-		Antd\ServerModules\AntdHostModule.cs = Antd\ServerModules\AntdHostModule.cs
+		Antd\ServerModules\AntdNetworkModule.cs = Antd\ServerModules\AntdNetworkModule.cs
 		Antd\ServerModules\AntdTimeModule.cs = Antd\ServerModules\AntdTimeModule.cs
 	EndProjectSection
 EndProject

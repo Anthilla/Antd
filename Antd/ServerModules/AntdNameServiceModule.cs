@@ -28,22 +28,42 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using antd.commands;
 using antdlib.common;
 using antdlib.config;
+using antdlib.models;
 using Nancy;
-using Nancy.Security;
+using Newtonsoft.Json;
 
-namespace Antd.Modules {
+namespace Antd.ServerModules {
+    public class AntdNameServiceModule : NancyModule {
 
-    public class HostModule : NancyModule {
-        public HostModule() {
-            this.RequiresAuthentication();
+        public AntdNameServiceModule() {
+            Get["/nameservice"] = x => {
+                var launcher = new CommandLauncher();
+                var hostConfiguration = new HostConfiguration();
+                var model = new PageNameServiceModel();
+                var hosts = launcher.Launch("cat-etc-hosts").ToArray();
+                var networks = launcher.Launch("cat-etc-networks").ToArray();
+                var resolv = launcher.Launch("cat-etc-resolv").ToArray();
+                var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
+                model.Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />");
+                model.DomainInt = hostConfiguration.Host.InternalDomain;
+                model.DomainExt = hostConfiguration.Host.ExternalDomain;
+                model.Hosts = hosts.JoinToString("<br />");
+                model.HostsEdit = hosts.JoinToString(Environment.NewLine);
+                model.Networks = networks.JoinToString("<br />");
+                model.NetworksEdit = networks.JoinToString(Environment.NewLine);
+                model.Resolv = resolv.JoinToString("<br />");
+                model.ResolvEdit = resolv.JoinToString(Environment.NewLine);
+                model.Nsswitch = nsswitch.JoinToString("<br />");
+                model.NsswitchEdit = nsswitch.JoinToString(Environment.NewLine);
+                return JsonConvert.SerializeObject(model);
+            };
 
-            Post["/host/ns/hosts"] = x => {
+            Post["/nameservice/hosts"] = x => {
                 string hosts = Request.Form.Hosts;
-                if(string.IsNullOrEmpty(hosts)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsHosts(hosts.Contains("\n")
                     ? hosts.SplitToList("\n").ToArray()
@@ -52,11 +72,8 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/host/ns/networks"] = x => {
+            Post["/nameservice/networks"] = x => {
                 string networks = Request.Form.Networks;
-                if(string.IsNullOrEmpty(networks)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsNetworks(networks.Contains("\n")
                   ? networks.SplitToList("\n").ToArray()
@@ -65,11 +82,8 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/host/ns/resolv"] = x => {
+            Post["/nameservice/resolv"] = x => {
                 string resolv = Request.Form.Resolv;
-                if(string.IsNullOrEmpty(resolv)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsResolv(resolv.Contains("\n")
                   ? resolv.SplitToList("\n").ToArray()
@@ -78,11 +92,8 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/host/ns/switch"] = x => {
+            Post["/nameservice/switch"] = x => {
                 string @switch = Request.Form.Switch;
-                if(string.IsNullOrEmpty(@switch)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetNsSwitch(@switch.Contains("\n")
                   ? @switch.SplitToList("\n").ToArray()
@@ -93,9 +104,6 @@ namespace Antd.Modules {
 
             Post["/host/int/domain"] = x => {
                 string domain = Request.Form.Domain;
-                if(string.IsNullOrEmpty(domain)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetInternalDomain(domain);
                 return HttpStatusCode.OK;
@@ -103,9 +111,6 @@ namespace Antd.Modules {
 
             Post["/host/ext/domain"] = x => {
                 string domain = Request.Form.Domain;
-                if(string.IsNullOrEmpty(domain)) {
-                    return HttpStatusCode.BadRequest;
-                }
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetExtenalDomain(domain);
                 return HttpStatusCode.OK;

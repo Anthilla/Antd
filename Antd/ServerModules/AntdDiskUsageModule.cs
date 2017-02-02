@@ -27,48 +27,22 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using antdlib.common;
 using antdlib.models;
+using Antd.Storage;
+using Nancy;
+using Newtonsoft.Json;
 
-namespace antdlib.config {
-    public class Virsh {
+namespace Antd.ServerModules {
+    public class AntdDiskUsageModule : NancyModule {
 
-        private readonly Bash _bash = new Bash();
-
-        public IEnumerable<VirtualMachineInfo> GetVmList() {
-            var vms = new List<VirtualMachineInfo>();
-            var res = _bash.Execute("virsh list --all | sed '1,2d'");
-            if(res.Length < 1) {
-                return vms;
-            }
-            var virshVms = res.Split(new[] { Environment.NewLine }, 3, StringSplitOptions.RemoveEmptyEntries);
-            foreach(var i in virshVms) {
-                var info = i.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                var vm = new VirtualMachineInfo {
-                    Id = info[0],
-                    Domain = info[1],
-                    State = info[2],
+        public AntdDiskUsageModule() {
+            Get["/diskusage"] = x => {
+                var diskUsage = new DiskUsage();
+                var model = new PageDiskUsageModel {
+                    DisksUsage = diskUsage.GetInfo()
                 };
-                var vnc = GetVmVncAddress(vm.Domain);
-                vm.VncIp = vnc.Key;
-                vm.VncPort = vnc.Value;
-                vms.Add(vm);
-            }
-            return vms;
-        }
-
-        private KeyValuePair<string, string> GetVmVncAddress(string domain) {
-            var res = _bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
-            if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
-                return new KeyValuePair<string, string>(null, null);
-            }
-            var port = new Regex("port='([\\d]*)'", RegexOptions.Multiline).Matches(res)[0].Value;
-            var ip = new Regex("listen='([\\d. ]*)'", RegexOptions.Multiline).Matches(res)[0].Value;
-            return new KeyValuePair<string, string>(ip, port);
+                return JsonConvert.SerializeObject(model);
+            };
         }
     }
 }
