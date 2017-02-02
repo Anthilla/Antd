@@ -1,1 +1,17 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">overlay</h1>
+
+<div ng-controller="AntdOverlayController">
+    <div class="grid fg-white">
+        <div ng-repeat="dir in Overlay.Directories" class="row cells5 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2">
+                <p>{{ dir.Key }}</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ dir.Value }}</p>
+            </div>
+            <div class="cell">
+                <button ng-click="SetDirectory(dir)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20">Set Directory</button>
+            </div>
+        </div>
+    </div>
+</div>

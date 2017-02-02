@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,16 +27,40 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
 namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+    public class AntdUsersModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+        public AntdUsersModule() {
+            Get["/users"] = x => {
+                var model = _api.Get<PageUsersModel>($"http://127.0.0.1:{Application.ServerPort}/users/list");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
+            };
+
+            Post["/users"] = x => {
+                string user = Request.Form.User;
+                string password = Request.Form.Password;
+                var dict = new Dictionary<string, string> {
+                    {"User", user},
+                    {"Password", password}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/users", dict);
+            };
+
+            Post["/users/master/password"] = x => {
+                string password = Request.Form.Password;
+                var dict = new Dictionary<string, string> {
+                    {"Password", password}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/users/master/password", dict);
             };
         }
     }

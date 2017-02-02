@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,16 +27,48 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
 namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+    public class AntdTimeModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+        public AntdTimeModule() {
+            Get["/time"] = x => {
+                var model = _api.Get<HostModel>($"http://127.0.0.1:{Application.ServerPort}/time");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
+            };
+
+            Post["/time/timezone"] = x => {
+                string timezone = Request.Form.Timezone;
+                var dict = new Dictionary<string, string> {
+                    {"Timezone", timezone}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/timezone", dict);
+            };
+
+            Post["/time/synctime"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/synctime", null);
+
+            Post["/time/ntpdate"] = x => {
+                string ntpdate = Request.Form.Ntpdate;
+                var dict = new Dictionary<string, string> {
+                    {"Ntpdate", ntpdate}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpdate", dict);
+            };
+
+            Post["/time/ntpd"] = x => {
+                string ntpd = Request.Form.Ntpd;
+                var dict = new Dictionary<string, string> {
+                    {"Ntpd", ntpd}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpd", dict);
             };
         }
     }

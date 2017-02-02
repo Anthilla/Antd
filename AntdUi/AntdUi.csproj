@@ -104,6 +104,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modules\AntdCpuStatusModule.cs" />
+    <Compile Include="Modules\AntdTimeModule.cs" />
+    <Compile Include="Modules\AntdHostModule.cs" />
+    <Compile Include="Modules\AntdUpdateModule.cs" />
+    <Compile Include="Modules\AntdOverlayModule.cs" />
+    <Compile Include="Modules\AntdUsersModule.cs" />
     <Compile Include="Modules\AntdOvermountStatusModule.cs" />
     <Compile Include="Modules\AntdLosetupStatusModule.cs" />
     <Compile Include="Modules\AntdSystemStatusModule.cs" />

@@ -69,6 +69,11 @@
     <Compile Include="NetscanSettingModel.cs" />
     <Compile Include="NetworkConfigurationModel.cs" />
     <Compile Include="PageCpuStatusModel.cs" />
+    <Compile Include="PageTimeModel.cs" />
+    <Compile Include="PageHostModel.cs" />
+    <Compile Include="PageUpdateModel.cs" />
+    <Compile Include="PageUsersModel.cs" />
+    <Compile Include="PageOverlayModel.cs" />
     <Compile Include="PageOvermountStatusModel.cs" />
     <Compile Include="PageLosetupStatusModel.cs" />
     <Compile Include="PageSystemStatusModel.cs" />

@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,16 +27,50 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
-namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+using System.Linq;
+using antdlib.config;
+using antdlib.models;
+using Antd.Users;
+using Nancy;
+using Newtonsoft.Json;
 
-        private readonly ApiConsumer _api = new ApiConsumer();
+namespace Antd.ServerModules {
+    public class AntdUsersModule : NancyModule {
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
-                var json = JsonConvert.SerializeObject(model);
-                return json;
+        public AntdUsersModule() {
+            Get["/users/list"] = x => {
+                var master = new ManageMaster().Name;
+                var userConfiguration = new UserConfiguration();
+                var users = userConfiguration.Get()
+                    .Where(_ => _.Name.ToLower() != "root")
+                    .OrderBy(_ => _.Name)
+                    .ToList();
+                var model = new PageUsersModel {
+                    Master = master,
+                    Users = users
+                };
+                return JsonConvert.SerializeObject(model);
+            };
+
+            Post["/users"] = x => {
+                string user = Request.Form.User;
+                string password = Request.Form.Password;
+                var systemUser = new SystemUser();
+                var hpwd = systemUser.HashPasswd(password);
+                var mo = new User {
+                    Name = user,
+                    Password = hpwd
+                };
+                var userConfiguration = new UserConfiguration();
+                userConfiguration.AddUser(mo);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/users/master/password"] = x => {
+                string password = Request.Form.Password;
+                var masterManager = new ManageMaster();
+                masterManager.ChangePassword(password);
+                return HttpStatusCode.OK;
             };
         }
     }

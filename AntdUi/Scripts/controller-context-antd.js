@@ -1,5 +1,212 @@
 "use strict";
 
+app.controller("AntdTimeController", ["$scope", "$http", AntdTimeController]);
+
+function AntdTimeController($scope, $http) {
+    $scope.SaveTimeNtp = function (ntp) {
+        var data = $.param({
+            Ntp: ntp
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/time/ntpd", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveTimeNtpdate = function (ntpdate) {
+        var data = $.param({
+            Ntpdate: ntpdate
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/time/ntpdate", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveTimeSync = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/time/synctime").then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveTimeTimezone = function (timezone) {
+        var data = $.param({
+            Timezone: timezone
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/time/timezone", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/time").success(function (data) {
+        $scope.Time = data;
+    });
+}
+
+app.controller("AntdHostController", ["$scope", "$http", AntdHostController]);
+
+function AntdHostController($scope, $http) {
+    $scope.SaveHostLocation = function (location) {
+        var data = $.param({
+            Location: location
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/location", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveHostDeployment = function (deployment) {
+        var data = $.param({
+            Deployment: deployment
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/deployment", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveHostChassis = function (chassis) {
+        var data = $.param({
+            Chassis: chassis
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/chassis", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.SaveHostName = function (staticHostname) {
+        var data = $.param({
+            Name: staticHostname
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/name", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/host").success(function (data) {
+        $scope.Host = data;
+    });
+}
+
+app.controller("AntdUpdateController", ["$scope", "$http", AntdUpdateController]);
+
+function AntdUpdateController($scope, $http) {
+    $scope.ApplyUpdate = function (context) {
+        var data = $.param({
+            Context: context
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/update", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/update").success(function (data) {
+        $scope.Update = data;
+    });
+}
+
+app.controller("AntdUsersController", ["$scope", "$http", AntdUsersController]);
+
+function AntdUsersController($scope, $http) {
+    $scope.masterPassword = "";
+    $scope.EditMaster = function () {
+        var data = $.param({
+            Password: $scope.masterPassword
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/users/master/password", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.AddUser = function (user) {
+        var data = $.param({
+            User: user.Name,
+            Password: user.Password
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/users", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/users").success(function (data) {
+        $scope.Users = data;
+    });
+}
+
+app.controller("AntdOverlayController", ["$scope", "$http", AntdOverlayController]);
+
+function AntdOverlayController($scope, $http) {
+    $scope.SetDirectory = function(dir) {
+        var data = $.param({
+            Directory: dir.Key
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/overlay/setdirectory", data).then(
+            function () {
+                alert("Ok!");
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/overlay").success(function (data) {
+        $scope.Overlay = data;
+    });
+}
+
 app.controller("AntdOvermountStatusController", ["$scope", "$http", AntdOvermountStatusController]);
 
 function AntdOvermountStatusController($scope, $http) {

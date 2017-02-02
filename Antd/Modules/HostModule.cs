@@ -32,117 +32,12 @@ using antdlib.common;
 using antdlib.config;
 using Nancy;
 using Nancy.Security;
-using Newtonsoft.Json;
 
 namespace Antd.Modules {
 
     public class HostModule : NancyModule {
         public HostModule() {
             this.RequiresAuthentication();
-
-            Get["/host"] = x => {
-                var hostconfiguration = new HostConfiguration();
-                return JsonConvert.SerializeObject(hostconfiguration.Host);
-            };
-
-            Post["/host/info/name"] = x => {
-                string name = Request.Form.Name;
-                if(string.IsNullOrEmpty(name)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoName(name);
-                hostconfiguration.ApplyHostInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/info/chassis"] = x => {
-                string chassis = Request.Form.Chassis;
-                if(string.IsNullOrEmpty(chassis)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoChassis(chassis);
-                hostconfiguration.ApplyHostInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/info/deployment"] = x => {
-                string deployment = Request.Form.Deployment;
-                if(string.IsNullOrEmpty(deployment)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoDeployment(deployment);
-                hostconfiguration.ApplyHostInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/info/location"] = x => {
-                string location = Request.Form.Location;
-                if(string.IsNullOrEmpty(location)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoLocation(location);
-                hostconfiguration.ApplyHostInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/info"] = x => {
-                string name = Request.Form.Name;
-                string chassis = Request.Form.Chassis;
-                string deployment = Request.Form.Deployment;
-                string location = Request.Form.Location;
-                if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(chassis) || string.IsNullOrEmpty(deployment) || string.IsNullOrEmpty(location)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfo(name, chassis, deployment, location);
-                hostconfiguration.ApplyHostInfo();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/timezone"] = x => {
-                string timezone = Request.Form.Timezone;
-                if(string.IsNullOrEmpty(timezone)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetTimezone(timezone);
-                hostconfiguration.ApplyTimezone();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/synctime"] = x => {
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SyncClock();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/ntpdate"] = x => {
-                string ntpdate = Request.Form.Ntpdate;
-                if(string.IsNullOrEmpty(ntpdate)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetNtpdate(ntpdate);
-                hostconfiguration.ApplyNtpdate();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/host/ntpd"] = x => {
-                string ntpd = Request.Form.Ntpd;
-                if(string.IsNullOrEmpty(ntpd)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNtpd(ntpd.Contains("\n")
-                  ? ntpd.SplitToList("\n").ToArray()
-                  : ntpd.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNtpd();
-                return HttpStatusCode.OK;
-            };
 
             Post["/host/ns/hosts"] = x => {
                 string hosts = Request.Form.Hosts;

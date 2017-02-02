@@ -15,7 +15,7 @@ namespace antdlib.models {
         public DateTime DateTime => DateTime.Now;
 
         [JsonIgnore]
-        public string Path => $"{antdlib.common.Parameter.AntdCfg}/host.conf";
+        public string Path => $"{common.Parameter.AntdCfg}/host.conf";
 
         /// <summary>
         /// First configuration steps

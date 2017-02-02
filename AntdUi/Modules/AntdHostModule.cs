@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,16 +27,54 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
 namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+    public class AntdHostModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+        public AntdHostModule() {
+            Get["/host"] = x => {
+                var model = _api.Get<HostModel>($"http://127.0.0.1:{Application.ServerPort}/host");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
+            };
+
+            Post["/host/name"] = x => {
+                string name = Request.Form.Name;
+                var dict = new Dictionary<string, string> {
+                    {"Name", name}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/name", dict);
+            };
+
+            Post["/host/chassis"] = x => {
+                string chassis = Request.Form.Chassis;
+                var dict = new Dictionary<string, string> {
+                    {"Chassis", chassis}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/chassis", dict);
+            };
+
+            Post["/host/deployment"] = x => {
+                string deployment = Request.Form.Deployment;
+                var dict = new Dictionary<string, string> {
+                    {"Deployment", deployment}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/deployment", dict);
+            };
+
+            Post["/host/location"] = x => {
+                string location = Request.Form.Location;
+                var dict = new Dictionary<string, string> {
+                    {"Location", location}
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/location", dict);
             };
         }
     }

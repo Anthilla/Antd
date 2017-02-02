@@ -1,1 +1,112 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">time and date</h1>
+
+<div ng-controller="AntdTimeController">
+    <div class="grid fg-white">
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Local Time</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.LocalTime }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Univ Time</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.UnivTime }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Rtc Time</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.RtcTime }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Timezone</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.ChassisTimezone }}</p>
+            </div>
+            <div class="cell colspan2">
+                <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                    <input type="text" ng-model="Timezone" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                    <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                </div>
+                <button ng-click="SaveTimeTimezone(Timezone)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Update</button>
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Net time on</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.Nettimeon }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Ntpsync</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.Ntpsync }}</p>
+            </div>
+            <div class="cell colspan2">
+                <button ng-click="SaveTimeSync()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Sync</button>
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Rtc intz</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.Rtcintz }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Ntp Server</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.NtpServer }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Ntpd</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.Ntpd }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+        <div class="row cells6 bg-hover-anthilla-gray-2">
+            <div class="cell colspan2 uppercase fg-anthilla-green">
+                <p>Ntpd Edit</p>
+            </div>
+            <div class="cell colspan2">
+                <p>{{ Time.NtpdEdit }}</p>
+            </div>
+            <div class="cell colspan2">
+            </div>
+        </div>
+    </div>
+</div>

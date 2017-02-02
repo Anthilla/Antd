@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,16 +27,28 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
 namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+    public class AntdUpdateModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+        public AntdUpdateModule() {
+            Get["/update"] = x => {
+                var model = _api.Get<PageUpdateModel>($"http://127.0.0.1:{Application.ServerPort}/update");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
+            };
+
+            Post["/update"] = x => {
+                string context = Request.Form.Context;
+                var dict = new Dictionary<string, string> { { "Context", context } };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/update", dict);
             };
         }
     }

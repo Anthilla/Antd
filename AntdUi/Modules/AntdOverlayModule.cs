@@ -1,9 +1,4 @@
-﻿using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
-
-//-------------------------------------------------------------------------------------
+﻿//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -32,14 +27,28 @@ using Newtonsoft.Json;
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using antdlib.common;
+using antdlib.models;
+using Nancy;
+using Newtonsoft.Json;
+
 namespace AntdUi.Modules {
-    public class MonitorModule : NancyModule {
+    public class AntdOverlayModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public MonitorModule() {
-            Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+        public AntdOverlayModule() {
+            Get["/overlay"] = x => {
+                var model = _api.Get<PageOverlayModel>($"http://127.0.0.1:{Application.ServerPort}/overlay");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
+            };
+
+            Post["/overlay/setdirectory"] = x => {
+                string dir = Request.Form.Directory;
+                var dict = new Dictionary<string, string> { { "Directory", dir } };
+                var model = _api.Post($"http://127.0.0.1:{Application.ServerPort}/overlay/setdirectory", dict);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

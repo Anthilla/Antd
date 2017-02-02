@@ -102,6 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth\UserIdentity.cs" />
+    <Compile Include="ServerModules\AntdTimeModule.cs" />
+    <Compile Include="ServerModules\AntdHostModule.cs" />
+    <Compile Include="ServerModules\AntdUpdateModule.cs" />
+    <Compile Include="ServerModules\AntdUsersModule.cs" />
+    <Compile Include="ServerModules\AntdOverlayModule.cs" />
     <Compile Include="ServerModules\AntdInfoModule.cs" />
     <Compile Include="ServerModules\AntdCpuStatusModule.cs" />
     <Compile Include="ServerModules\AntdOvermountStatusModule.cs" />
