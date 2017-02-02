@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Linq;
 using antdlib.models;
 using Antd.Overlay;
 using Nancy;
@@ -39,7 +40,11 @@ namespace Antd.ServerModules {
 
         public AntdOverlayModule() {
             Get["/overlay"] = x => {
-                var dirs = OverlayWatcher.ChangedDirectories;
+                var dirs = OverlayWatcher.ChangedDirectories
+                    .Select(_ => new PageOverlayDirectoryModel {
+                        Path = _.Key,
+                        Dimension = _.Value
+                    });
                 var model = new PageOverlayModel {
                     Directories = dirs
                 };

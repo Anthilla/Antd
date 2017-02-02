@@ -40,11 +40,9 @@ namespace Antd.ServerModules {
         public AntdUsersModule() {
             Get["/users/list"] = x => {
                 var master = new ManageMaster().Name;
-                var userConfiguration = new UserConfiguration();
-                var users = userConfiguration.Get()
-                    .Where(_ => _.Name.ToLower() != "root")
-                    .OrderBy(_ => _.Name)
-                    .ToList();
+                var systemUser = new SystemUser();
+                var users = systemUser.GetAll()
+                    .Select(_ => new User { Name = _, Password = "" });
                 var model = new PageUsersModel {
                     Master = master,
                     Users = users

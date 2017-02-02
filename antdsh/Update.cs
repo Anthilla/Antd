@@ -48,21 +48,31 @@ namespace antdsh {
         #region Private Parameters
 
         private const string UpdateVerbForAntd = "update.antd";
+        private const string UpdateVerbForAntdUi = "update.antdui";
         private const string UpdateVerbForAntdsh = "update.antdsh";
         private const string UpdateVerbForSystem = "update.system";
         private const string UpdateVerbForKernel = "update.kernel";
         private const string UpdateVerbForUnits = "update.units";
+
         private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
-        private static string _publicRepositoryUrlHttps = "http://srv.anthilla.com/";
-        //private static string _publicRepositoryUrlHttp = "http://srv.anthilla.com/";
+
+        private static string _officialRepo = "https://srv.anthilla.com/";
+        private static string _publicRepositoryUrlHttps = _officialRepo;
+        private static string _publicRepositoryUrlHttp = _officialRepo.Replace("https", "http");
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string TmpDirectory => $"{Parameter.RepoTemp}/update";
+
         private static string AntdDirectory => $"{AppsDirectory}/Anthilla_Antd";
         private static string AntdActive => $"{AntdDirectory}/active-version";
+
+        private static string AntdUiDirectory => $"{AppsDirectory}/Anthilla_AntdUi";
+        private static string AntdUiActive => $"{AntdUiDirectory}/active-version";
+
         private static string AntdshDirectory => "/mnt/cdrom/Apps/Anthilla_antdsh";
         private static string AntdshActive => $"{AntdshDirectory}/active-version";
+
         private static string SystemDirectory => "/mnt/cdrom/System";
         private static string SystemActive => $"{SystemDirectory}/active-system";
         private static string KernelDirectory => "/mnt/cdrom/Kernel";
@@ -111,9 +121,20 @@ namespace antdsh {
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
+            Directory.CreateDirectory(AntdDirectory);
+            Directory.CreateDirectory(AntdUiDirectory);
+
+            UpdateContext(UpdateVerbForAntdUi, AntdUiActive, AntdUiDirectory, forced);
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntdUi.");
+            //RestartAntdUi();
+
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntd.");
-            RestartAntd();
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntd.");
+            //RestartAntd();
+
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl restart antd.target");
+
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
@@ -334,8 +355,7 @@ namespace antdsh {
             Directory.CreateDirectory(tmpMountDirectory);
             Bash.Execute($"umount {tmpMountDirectory}");
             var repositoryInfo = GetRepositoryInfo().ToList();
-            var latestFileInfo =
-                repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.Contains(filter));
+            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileContext == UpdateVerbForUnits && _.FileName.ToLower().Contains(filter.ToLower()));
             if(latestFileInfo == null)
                 return;
             DownloadLatestFile(latestFileInfo);
@@ -440,7 +460,7 @@ namespace antdsh {
         }
 
         private static IEnumerable<string> GetServerList(string filter = "") {
-            var text = new ApiConsumer().GetString("http://srv.anthilla.com/server.txt");
+            var text = new ApiConsumer().GetString("https://srv.anthilla.com/server.txt");
             var list = text.SplitToList("\n");
             if(!string.IsNullOrEmpty(filter)) {
                 list = list.Where(_ => _.StartsWith(filter)).ToList();
@@ -466,6 +486,14 @@ namespace antdsh {
             }
         }
         #endregion
+
+        private static void RestartAntdUi() {
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl stop app-antdui-03-launcher.service");
+            Bash.Execute("systemctl stop framework-antdui.mount");
+            Bash.Execute("systemctl restart app-antdui-02-mount.service");
+            Bash.Execute("systemctl restart app-antdui-03-launcher.service");
+        }
 
         private static void RestartAntd() {
             Bash.Execute("systemctl daemon-reload");

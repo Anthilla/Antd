@@ -40,7 +40,7 @@ namespace AntdUi.Modules {
 
         public AntdTimeModule() {
             Get["/time"] = x => {
-                var model = _api.Get<HostModel>($"http://127.0.0.1:{Application.ServerPort}/time");
+                var model = _api.Get<PageTimeModel>($"http://127.0.0.1:{Application.ServerPort}/time/info");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

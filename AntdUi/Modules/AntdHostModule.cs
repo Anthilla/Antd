@@ -40,7 +40,7 @@ namespace AntdUi.Modules {
 
         public AntdHostModule() {
             Get["/host"] = x => {
-                var model = _api.Get<HostModel>($"http://127.0.0.1:{Application.ServerPort}/host");
+                var model = _api.Get<PageHostModel>($"http://127.0.0.1:{Application.ServerPort}/host/info");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
